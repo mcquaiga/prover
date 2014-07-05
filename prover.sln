@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core", "Prover.Core\Prover.Core.csproj", "{DE48160F-095D-40B1-8790-6CB560024CE5}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Prover.SerialProtocol", "serialprotocol\miSerialProtocol\Prover.SerialProtocol.vbproj", "{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.DebugTools", "Prover.DebugTools\Prover.DebugTools.csproj", "{A2C4C7A4-410B-4DBC-BC28-B69053B9ACB7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B4E0078F-873F-4E5C-BFB3-3ED3B8FAFB9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core.Tests", "Tests\Prover.Core.Tests\Prover.Core.Tests.csproj", "{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2C4C7A4-410B-4DBC-BC28-B69053B9ACB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2C4C7A4-410B-4DBC-BC28-B69053B9ACB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2C4C7A4-410B-4DBC-BC28-B69053B9ACB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2C4C7A4-410B-4DBC-BC28-B69053B9ACB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA} = {B4E0078F-873F-4E5C-BFB3-3ED3B8FAFB9B}
+	EndGlobalSection
+EndGlobal

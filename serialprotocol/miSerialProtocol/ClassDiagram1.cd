@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="NameAndType">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="miSerialProtocol.ECATClass">
+    <Position X="5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ECATClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+    <NestedTypes>
+      <Enum Name="miSerialProtocol.ECATClass.BaudRateEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ECATClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="miSerialProtocol.ECATClass.AlarmsEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ECATClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+  </Class>
+  <Class Name="miSerialProtocol.MiniATClass">
+    <Position X="5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MiniATClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+    <NestedTypes>
+      <Enum Name="miSerialProtocol.MiniATClass.BaudRateEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MiniATClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="miSerialProtocol.MiniATClass.AlarmsEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MiniATClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+  </Class>
+  <Class Name="miSerialProtocol.MiniMaxClass">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MiniMaxClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+    <NestedTypes>
+      <Enum Name="miSerialProtocol.MiniMaxClass.BaudRateEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MiniMaxClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="miSerialProtocol.MiniMaxClass.AlarmsEnum" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MiniMaxClass.vb</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+  </Class>
+  <Class Name="miSerialProtocol.miSerialProtocolClass">
+    <Position X="7" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>gAYADgIAgGiYMkAAIAYAAIEAKCQQgEIgICAAwAGGAIA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="miSerialProtocol.CommExceptions" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.CommInUseException" Collapsed="true">
+    <Position X="1" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.InstrumentBusyException" Collapsed="true">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.NoPhysicalConnectionException" Collapsed="true">
+    <Position X="10" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.InstrumentCommunicationException" Collapsed="true">
+    <Position X="14.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.CheckByteException" Collapsed="true">
+    <Position X="16.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.MessageFormatException" Collapsed="true">
+    <Position X="19" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.FramingErrorException" Collapsed="true">
+    <Position X="3.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.InsufficientPowerException" Collapsed="true">
+    <Position X="7.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.InvalidItemNumberException" Collapsed="true">
+    <Position X="12.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.TestForm" Collapsed="true">
+    <Position X="25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>TestForm.vb</FileName>
+      <HashCode>AAIKMAQAUCCAQAAAAACIADwCAAIAdAAAAICYEIQAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="miSerialProtocol.My.MySettings" Collapsed="true">
+    <Position X="23.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="miSerialProtocol.InstrumentErrorsEnum" Collapsed="true">
+    <Position X="23.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AgABAAkkAgAAAAAAAAAqIAAgQAAAAABAAgABgBEAAgA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.BaudRateEnum" Collapsed="true">
+    <Position X="23.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>ACAAAACAoAAAAAAAAAAAEAAAQAQAAAAAIAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.InstrumentTypeCode" Collapsed="true">
+    <Position X="25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAEAAEAAAAJAAAAAAAFAAAAAIAAACAACAAAgACA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.CommStateEnum" Collapsed="true">
+    <Position X="21.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>DACCAgAAAAAAAAAAAAhAAAAAAAAAAQAIAICAAMRBAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.MessageStateEnum" Collapsed="true">
+    <Position X="21.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AgAAAAAAAACAEAAAAAAAAAAAAAAAAQAAEAAEAAAAAQA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.CommCharEnum" Collapsed="true">
+    <Position X="25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>IAgAAAIABAAAAQBAAAAAAAAAgACAAAAAAAAAAAAAIAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="miSerialProtocol.AlarmValuesEnum" Collapsed="true">
+    <Position X="21.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>miSerialProtocolClass.vb</FileName>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Module Name="miSerialProtocol.My.MySettingsProperty" Collapsed="true">
+    <Position X="21.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Module>
+  <Module Name="miSerialProtocol.My.Resources.Resources" Collapsed="true">
+    <Position X="23.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Module>
+</ClassDiagram>
