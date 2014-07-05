@@ -173,3 +173,5 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 */bin/Debug/*
+*/bin/*
+*.dll
