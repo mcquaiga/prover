@@ -50,3 +50,4 @@ C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.csproj.Ge
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.pdb
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempFixes.resources
+C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempTestFixes.resources

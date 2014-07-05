@@ -84,6 +84,10 @@
     <Compile Include="Migrations\201407051628566_TempFixes.Designer.cs">
       <DependentUpon>201407051628566_TempFixes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407051701526_TempTestFixes.cs" />
+    <Compile Include="Migrations\201407051701526_TempTestFixes.Designer.cs">
+      <DependentUpon>201407051701526_TempTestFixes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
@@ -116,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407051628566_TempFixes.resx">
       <DependentUpon>201407051628566_TempFixes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407051701526_TempTestFixes.resx">
+      <DependentUpon>201407051701526_TempTestFixes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

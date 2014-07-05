@@ -112,7 +112,7 @@ namespace Prover.Core.Models.Instruments
 
         public virtual Temperature Temp { get; set; }
 
-        public string Data
+        public string InstrumentData
         {
             get { return JsonConvert.SerializeObject(InstrumentValues); }
             set { _data = value; }
