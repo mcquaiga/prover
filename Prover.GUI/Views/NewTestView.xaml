@@ -1,0 +1,691 @@
+﻿<UserControl x:Class="Prover.GUI.Views.NewTestView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 d:DesignWidth="1000"
+			 mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+        <DataTemplate x:Key="BaudRates">
+            <WrapPanel>
+                <RadioButton Command="{Binding DataContext.SetBaudRateCommand,
+											   RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+							 CommandParameter="{Binding .}"
+							 Content="{Binding .}"
+							 IsChecked="{Binding BaudRateSettings}"
+							 GroupName="BaudRates"/>
+            </WrapPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="CommPorts">
+            <WrapPanel>
+                <RadioButton Command="{Binding DataContext.SetCommPortCommand,
+											   RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+							 CommandParameter="{Binding .}"
+							 Content="{Binding .}"
+							 IsChecked="{Binding CommPortSettings}"
+							 Style="{DynamicResource radio2}"
+							 GroupName="{Binding .}"/>
+            </WrapPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="TachCommPorts">
+            <WrapPanel>
+                <RadioButton Command="{Binding DataContext.SetTachCommPortCommand,
+											   RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+							 CommandParameter="{Binding .}"
+							 Content="{Binding .}"
+							 Style="{DynamicResource radio2}"
+							 GroupName="{Binding .}"/>
+            </WrapPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PressureItem">
+            <UniformGrid Columns="8">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Height="75"
+							Command="{Binding DataContext.fetchPressureCommand,
+											  RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+							CommandParameter="{Binding LevelIndex}"
+							Content="{Binding LevelDescription}"
+							Style="{StaticResource SimpleButton}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox Text="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}"  />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ATMPressure}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding EVCPressure}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding EVCFactor}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding EVCUnsqr}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ActualPressureFactor}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding PercentError}" />
+                </StackPanel>
+            </UniformGrid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TemperatureItem">
+            <UniformGrid Columns="6">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Height="75"
+							Command="{Binding DataContext.fetchTemperatureCommand,
+											  RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+							CommandParameter="{Binding LevelIndex}"
+							Content="{Binding LevelDescription}"
+							Style="{StaticResource SimpleButton}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox Width="150"
+							 Style="{DynamicResource SimpleTextBox}"
+							 Text="{Binding GaugeTemperature,
+											UpdateSourceTrigger=LostFocus,
+											Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock  Text="{Binding EVCTemperature}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding EVCFactor}" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding TemperatureFactor}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding PercentError}" />
+                </StackPanel>
+            </UniformGrid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ItemFile">
+            <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Key.Number}" />
+                    <TextBlock Grid.Column="1" Text="{Binding Key.ShortDescription}" />
+                    <TextBlock Grid.Column="2" Text="{Binding Value}" />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">
+
+        <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock 
+					Style="{DynamicResource InstrumentSectionHeader}">
+					SETTINGS
+                </TextBlock>
+
+
+                <!--  <ContentControl Content="{Binding Source={StaticResource Instrument}, Mode=OneWay}" />  -->
+
+                <Grid Grid.Row="1"
+					  Margin="15"
+					  Visibility="{Binding ShowCommButtons,
+										   UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Margin="20,0,0,0"
+								   
+								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" />
+                        <GroupBox Margin="20,0,0,0" BorderThickness="0">
+                            <WrapPanel Margin="5">
+                                <RadioButton Command="{Binding MiniMaxCommand}"
+											 Content="MiniMax"
+											 Name="MiniMax"
+											 FontSize="24"
+											 Foreground="White"
+											 Style="{DynamicResource radio2}" />
+                                <RadioButton Margin="15,0,0,0"
+											 Name="EC300"
+											 Command="{Binding EC300Command}"
+											 Content="EC300"
+											 FontSize="24"
+											 Foreground="White"
+											 Style="{DynamicResource radio2}" />
+                            </WrapPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <!--  Ports  -->
+                    <StackPanel Grid.Row="1" Grid.Column="0">
+                        <TextBlock Margin="20,0,0,0"
+								   
+								   Text="Port" Foreground="{DynamicResource HeaderFontColour}" />
+                        <GroupBox Margin="20,0,0,0"
+								  BorderThickness="0"
+								  FontSize="18.667">
+                            <ItemsControl Margin="5"
+										  ItemTemplate="{StaticResource ResourceKey=CommPorts}"
+										  ItemsSource="{Binding CommPorts}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0"
+								Grid.RowSpan="2"
+								Grid.Column="1">
+                        <TextBlock Margin="20,0,0,0"
+									
+								   Foreground="{DynamicResource HeaderFontColour}"
+								   Text="Baud Rate" />
+                        <GroupBox Margin="20,0,0,0"
+								  BorderThickness="0"
+								  FontSize="18.667">
+                            <ItemsControl Margin="5"
+										  ItemTemplate="{StaticResource ResourceKey=BaudRates}"
+										  ItemsSource="{Binding BaudRates}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Margin="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </GroupBox>
+                    </StackPanel>
+                    <!--  Ports  -->
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Margin="20,0,0,0"
+								   Style="{DynamicResource ItemDescriptions}"
+								   Text="Tach Port" Foreground="{DynamicResource HeaderFontColour}" />
+                        <GroupBox Margin="20,0,0,0"
+								  BorderThickness="0"
+								  FontSize="18.667">
+                            <ItemsControl Margin="5"
+										  ItemTemplate="{StaticResource ResourceKey=TachCommPorts}"
+										  ItemsSource="{Binding TachCommPorts}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </GroupBox>
+                    </StackPanel>
+
+                    <Button Grid.Row="3"
+							
+							Margin="10,0,0,0"
+							HorizontalAlignment="left"
+							HorizontalContentAlignment="Left"
+							VerticalContentAlignment="Center"
+							Command="{Binding FetchInstrumentInfoCommand}"
+							Content="Download Info"
+							Style="{StaticResource SimpleButton}" />
+                </Grid>
+            </Grid>
+
+            <Border Margin="0"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,1,0,0"
+					Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="10*" />
+                    </Grid.RowDefinitions>
+                    <!--  Basic Details Info  -->
+                    <TextBlock Grid.Row="0"
+								   Style="{DynamicResource InstrumentSectionHeader}">
+							SITE INFORMATION
+                    </TextBlock>
+
+                    <Grid Grid.Row="1" Margin="15">
+                        <StackPanel>
+                            <UniformGrid Columns="5">
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemValues}"
+											   Text="{Binding Instrument.SerialNumber,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Serial Number" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   
+											   Text="{Binding Instrument.SiteNumber1,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Text="Site Number 1" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   
+											   Text="{Binding Instrument.SiteNumber2,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   
+											   Text="Site Number 2" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   
+											   Text="{Binding Instrument.FirmwareVersion,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Firmware Version" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemValues}"
+											   Text="{Binding Instrument.PulseASelect,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Pulse A Select" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemValues}"
+											   Text="{Binding Instrument.PulseAScaling,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Pulse A Scaling" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemValues}"
+											   Text="{Binding Instrument.PulseBSelect,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Pulse B Select" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                                <StackPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemValues}"
+											   Text="{Binding Instrument.PulseBScaling,
+															  UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock HorizontalAlignment="Right"
+											   Style="{StaticResource ItemDescriptions}"
+											   Text="Pulse B Scaling" Foreground="{DynamicResource HeaderFontColour}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+            </Border>
+
+            <!--  Temperature - Start  -->
+            <Border Margin="0"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,1,0,0"
+					Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="10*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock   Grid.Row="0"
+									 Style="{DynamicResource InstrumentSectionHeader}">
+							TEMPERATURES
+                    </TextBlock>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <UniformGrid Grid.Row="0" Columns="3">
+                            <StackPanel Margin="5">
+                                <TextBlock HorizontalAlignment="Right"
+										   Style="{StaticResource ItemValues}"
+										   Text="{Binding Instrument.Temperature.TemperatureUnits,
+														  UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock HorizontalAlignment="Right"
+										   Style="{StaticResource ItemDescriptions}"
+										   Text="Units" Foreground="{DynamicResource HeaderFontColour}" />
+                            </StackPanel>
+                            <StackPanel Margin="5">
+                                <TextBlock HorizontalAlignment="Right"
+										   Style="{StaticResource ItemValues}"
+										   Text="{Binding Instrument.Temperature.BaseTemperature,
+														  UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock HorizontalAlignment="Right"
+										   Style="{StaticResource ItemDescriptions}"
+										   Text="Base" Foreground="{DynamicResource HeaderFontColour}" />
+                            </StackPanel>
+                        </UniformGrid>
+
+
+                        <UniformGrid Grid.Row="1"
+									 Grid.Column="1"
+									 Margin="5"
+									 Columns="6">
+                            <TextBlock />
+                            <TextBlock Style="{StaticResource ItemDescriptions}"
+									   Text="Gauge"
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+                            <TextBlock Style="{StaticResource ItemDescriptions}"
+									   Text="EVC Temp."
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+                            <TextBlock Style="{StaticResource ItemDescriptions}"
+									   Text="EVC Factor"
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+                            <TextBlock Style="{StaticResource ItemDescriptions}"
+									   Text="Actual Factor"
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+
+                            <TextBlock Style="{StaticResource ItemDescriptions}"
+									   Text="% Error"
+									   TextAlignment="right"
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+                        </UniformGrid>
+                        <ItemsControl Grid.Row="2"
+									  Margin="5"
+									  ItemTemplate="{StaticResource ResourceKey=TemperatureItem}"
+									  ItemsSource="{Binding TemperatureTests,
+															Mode=TwoWay}" />
+                    </Grid>
+
+                </Grid>
+            </Border>
+            <!--  Temperature - End  -->
+
+            <!--
+				Pressure Items
+				<Border Margin="0"
+				BorderBrush="White"
+				BorderThickness="0,1,0,0"
+				Padding="0" Visibility="Hidden">
+				<Grid>
+				<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*" />
+				<ColumnDefinition Width="10*" />
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				BorderBrush="White"
+				BorderThickness="0,0,1,0">
+				<TextBlock HorizontalAlignment=" Left"
+				FontSize="72"
+				Foreground="White">
+				P
+				</TextBlock>
+				</Border>
+				
+				
+				<Grid Grid.Column="1">
+				<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition />
+				</Grid.RowDefinitions>
+				<UniformGrid Grid.Row="0" Columns="8">
+				<TextBlock />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="Gauge"
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="ATM"
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="EVC P"
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="EVC Factor"
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="EVC Unsqr."
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="Actual P Factor"
+				TextWrapping="Wrap" />
+				<TextBlock Style="{StaticResource ItemDescriptions}"
+				Text="% Error"
+				TextAlignment="right"
+				TextWrapping="Wrap" />
+				</UniformGrid>
+				<ItemsControl Grid.Row="1"
+				Margin="5"
+				ItemTemplate="{StaticResource ResourceKey=PressureItem}"
+				ItemsSource="{Binding Instrument.PressureTests}" />
+				</Grid>
+				</Grid>
+				</Border>
+			-->
+            <Border Margin="0"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,1,0,0"
+					Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="10*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+							
+								   Style="{DynamicResource InstrumentSectionHeader}">
+			   
+							VOLUME
+                    </TextBlock>
+
+                    <Grid Grid.Row="1" Margin="10,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.ColumnSpan="3">
+                            <UniformGrid Columns="5">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.CorrectedMultiplierDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. Multi. (90)</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.UnCorrectedMultiplierDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. Multi. (92)</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.DriveRateDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Drive Rate (98)</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.MeterType, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Type (432)</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.MeterDisplacement, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Displacement</TextBlock>
+                                </StackPanel>
+                            </UniformGrid>
+
+                        </Grid>
+                        <Grid Grid.Row="1" Grid.Column="0">
+                            <StackPanel>
+                                <Border Margin="5,5,5,5"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                    <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="Start" />
+                                </Border>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.StartCorrected, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.StartUncorrected, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Grid.Column="1">
+                            <StackPanel>
+                                <Border Margin="5,5,5,5"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                    <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="End" />
+                                </Border>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.EndCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.EndUnCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1" Grid.Column="2">
+                            <StackPanel>
+                                <Border Margin="5,5,5,5"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                    <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="Calculated" />
+                                </Border>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.EvcCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Corrected Volume</TextBlock>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.VolumeTest.EvcUnCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Uncorrected Volume</TextBlock>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <Border Grid.Row="2"
+								Grid.ColumnSpan="3"
+								Margin="5,5,5,5"
+								BorderBrush="{DynamicResource HeaderColour}"
+								BorderThickness="0,1,0,0">
+                            <Grid Grid.Row="2"
+								  Grid.ColumnSpan="2"
+								  Margin="0,10,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <UniformGrid Columns="2" Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0">
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock Style="{DynamicResource ItemValues}" Text="{Binding Instrument.VolumeTest.PulserACount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse A</TextBlock>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right" Margin="20,0,0,0">
+                                        <TextBlock Style="{DynamicResource ItemValues}" Text="{Binding Instrument.VolumeTest.PulserBCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse B</TextBlock>
+                                    </StackPanel>
+                                </UniformGrid>
+                                <Grid Grid.Row="1" Grid.Column="0">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBox Width="150" Style="{DynamicResource SimpleTextBox}"
+													Text="{Binding Instrument.VolumeTest.AppliedInput, 
+																	Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock HorizontalAlignment="Center" Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Applied Input</TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <StackPanel HorizontalAlignment="Left">
+                                            <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Text="{Binding Instrument.VolumeTest.UnCorrectedPercentError, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. % Error</TextBlock>
+                                        </StackPanel>
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Text="{Binding Instrument.VolumeTest.CorrectedPercentError, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. % Error</TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <Button Width="100"
+											Command="{Binding StartTestCommand}"
+											Content="Start Test"
+											Style="{StaticResource SimpleButton}" />
+                                    <Button Width="100"
+											Command="{Binding StopTestCommand}"
+											Content="Stop"
+											Style="{StaticResource SimpleButton}" />
+                                </StackPanel>
+                            </Grid>
+
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Margin="15,0,15,5"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,0,0,1" />
+            <WrapPanel HorizontalAlignment="right">
+                <Button Width="150"
+						Margin="10"
+						Command="{Binding SaveCommand}"
+						Content="Save"
+						Style="{StaticResource SimpleButton}" />
+                <Button Command="{Binding CancelCommand}"
+						Content="Clear"
+						Style="{StaticResource SimpleButton}" />
+            </WrapPanel>
+
+            <WrapPanel Width="5" Height="16" />
+            <WrapPanel Width="144" Height="14.5" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

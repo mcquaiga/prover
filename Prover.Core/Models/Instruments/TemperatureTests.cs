@@ -63,6 +63,12 @@ namespace Prover.Core.Models.Instruments
         public Instrument Instrument { get; set; }
 
         [NotMapped]
+        public List<Item> Items
+        {
+            get { return (Instrument.Items.Where(x => x.IsTemperatureTest == true)).ToList(); }
+        }
+        
+        [NotMapped]
         public ICollection<InstrumentValue> InstrumentValues { get; set; }
         
         [NotMapped]

@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.SerialProtocol;
 
 namespace Prover.Core.Tests
 {
@@ -18,6 +20,13 @@ namespace Prover.Core.Tests
             }
         }
 
+        [TestMethod]
+        public void DownloadItems()
+        {
+            var instr = new Instrument();
+            InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, Item.LoadItems(InstrumentType.MiniMax));
+
+        }
 
     }
 }

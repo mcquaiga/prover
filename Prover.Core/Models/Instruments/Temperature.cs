@@ -22,7 +22,17 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public IEnumerable<InstrumentValue> InstrumentValues { get; set; }
-        
+
+        [NotMapped]
+        public Instrument Instrument { get; set; }
+
+
+        [NotMapped]
+        public List<Item> Items
+        {
+            get { return Instrument.Items.Where(x => x.IsTemperature == true).ToList(); }
+        }
+
         [NotMapped]
         public string Range
         {

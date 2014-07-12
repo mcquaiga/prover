@@ -5,15 +5,12 @@ C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.DebugToo
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.DebugTools.pdb
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\EntityFramework.dll
-C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\miSerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Newtonsoft.Json.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\InTheHand.Net.Personal.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\NLog.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.Core.pdb
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\EntityFramework.xml
-C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\miSerialProtocol.pdb
-C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\miSerialProtocol.xml
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Newtonsoft.Json.xml
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.xml
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\InTheHand.Net.Personal.xml
@@ -22,3 +19,6 @@ C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugToo
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.exe
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.pdb
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.dll
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.pdb
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.xml

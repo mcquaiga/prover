@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8C7E475A-15BB-477B-99F3-7B2ABF41E43F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>miSerialProtocol</RootNamespace>
-    <AssemblyName>miSerialProtocol</AssemblyName>
+    <RootNamespace>Prover.SerialProtocol</RootNamespace>
+    <AssemblyName>Prover.SerialProtocol</AssemblyName>
     <MyType>Windows</MyType>
     <StartupObject>
     </StartupObject>
@@ -45,7 +45,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>miSerialProtocol.xml</DocumentationFile>
+    <DocumentationFile>Prover.SerialProtocol.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>
@@ -57,7 +57,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>miSerialProtocol.xml</DocumentationFile>
+    <DocumentationFile>Prover.SerialProtocol.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
     <WarningsAsErrors>
     </WarningsAsErrors>

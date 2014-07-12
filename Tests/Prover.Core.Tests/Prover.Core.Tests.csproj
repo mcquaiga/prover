@@ -50,13 +50,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="InstrumentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\serialprotocol\miSerialProtocol\Prover.SerialProtocol.vbproj">
+      <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
+      <Name>Prover.SerialProtocol</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

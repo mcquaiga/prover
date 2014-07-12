@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\amcquaig\Development\prover\Prover.GUI\App.xaml
-11151548125
+101094964878
 
-9-909371002
-19-227354751
-MainWindow.xaml;
+161195181501
+341424750349
+Views\Themes\Button.xaml;Views\Themes\CheckboxStyle.xaml;Views\Themes\CheckboxTemplate.xaml;Views\Themes\Colours.xaml;Views\Themes\RadioButtonStyle.xaml;Views\Themes\ScrollViewerStyle.xaml;Views\Themes\SimpleStyles.xaml;Views\MainMenuView.xaml;Views\NewTestView.xaml;Views\ShellView.xaml;
 
-False
+True
 

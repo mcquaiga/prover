@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/SimpleStyles.xaml"/>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/RadioButtonStyle.xaml"/>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/Button.xaml"/>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxStyle.xaml"/>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxTemplate.xaml"/>
+		<ResourceDictionary Source="/Prover.GUI;component/Views/Themes/Colours.xaml"/>
+	</ResourceDictionary.MergedDictionaries>
+	<!-- Resource dictionary entries should be defined here. -->
+</ResourceDictionary>

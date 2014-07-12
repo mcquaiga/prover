@@ -1,16 +1,18 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.ComponentModel;
+using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Startup
 {
-    public class Bootstrapper
+    public class CoreBootstrapper
     {
-        public Bootstrapper()
-        {
-            var container = new UnityContainer();
+        public UnityContainer Container;
 
-            container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore());           
+        public CoreBootstrapper()
+        {
+            Container = new UnityContainer();
+            Container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore());           
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.Core.Startup;
 
 namespace Prover.GUI
 {
@@ -14,6 +15,9 @@ namespace Prover.GUI
     /// </summary>
     public partial class App : Application
     {
-        
+        public App()
+        {
+            InitializeComponent();
+        }
     }
 }

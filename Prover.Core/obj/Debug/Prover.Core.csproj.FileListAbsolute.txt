@@ -27,14 +27,11 @@ C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\EntityFramework.SqlSe
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Microsoft.Practices.Unity.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.dll
-C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\miSerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Newtonsoft.Json.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\System.Data.SqlServerCe.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\System.Data.SqlServerCe.Entity.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\InTheHand.Net.Personal.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\NLog.dll
-C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\miSerialProtocol.pdb
-C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\miSerialProtocol.xml
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\EntityFramework.xml
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\EntityFramework.SqlServerCompact.xml
@@ -51,3 +48,6 @@ C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.pdb
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempFixes.resources
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempTestFixes.resources
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.dll
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.pdb
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.xml

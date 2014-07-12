@@ -1,8 +1,17 @@
 ﻿<Application x:Class="Prover.GUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             xmlns:gui="clr-namespace:Prover.GUI">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/Themes/SimpleStyles.xaml" />
+                <ResourceDictionary Source="Views/Themes/RadioButtonStyle.xaml" />
+                <ResourceDictionary Source="Views/Themes/ScrollViewerStyle.xaml" />
+                <ResourceDictionary>
+                    <gui:AppBootstrapper x:Key="ProverBootstrapper" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
