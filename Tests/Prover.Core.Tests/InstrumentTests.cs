@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Startup;
+using Prover.Core.Storage;
 using Prover.SerialProtocol;
 
 namespace Prover.Core.Tests
@@ -12,7 +14,7 @@ namespace Prover.Core.Tests
         [TestMethod]
         public void LoadItems()
         {
-            var mylist = Item.LoadItems(InstrumentType.MiniMax);
+            var mylist = ItemsBase.Item.LoadItems(InstrumentType.MiniMax);
 
             foreach (var i in mylist)
             {
@@ -21,11 +23,22 @@ namespace Prover.Core.Tests
         }
 
         [TestMethod]
-        public void DownloadItems()
+        public void QueryInstruments()
+        {
+            var boot = new CoreBootstrapper();
+            var allInstr = new InstrumentStore();
+            var myinstr = allInstr.Query();
+            foreach (var i in myinstr)
+            {
+                Console.WriteLine(i.SerialNumber);
+            }
+        }
+
+        [TestMethod]
+        public async void DownloadItems()
         {
             var instr = new Instrument();
-            InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, Item.LoadItems(InstrumentType.MiniMax));
-
+            instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
         }
 
     }

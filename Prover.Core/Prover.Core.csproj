@@ -72,24 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\InstrumentCommunication.cs" />
-    <Compile Include="Migrations\201407031800082_initialcreate.cs" />
-    <Compile Include="Migrations\201407031800082_initialcreate.Designer.cs">
-      <DependentUpon>201407031800082_initialcreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407051423000_Items.cs" />
-    <Compile Include="Migrations\201407051423000_Items.Designer.cs">
-      <DependentUpon>201407051423000_Items.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407051628566_TempFixes.cs" />
-    <Compile Include="Migrations\201407051628566_TempFixes.Designer.cs">
-      <DependentUpon>201407051628566_TempFixes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407051701526_TempTestFixes.cs" />
-    <Compile Include="Migrations\201407051701526_TempTestFixes.Designer.cs">
-      <DependentUpon>201407051701526_TempTestFixes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Communication\InstrumentManager.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
+    <Compile Include="Models\Instruments\ItemsBase.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\Temperature.cs" />
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
@@ -110,20 +95,6 @@
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.SerialProtocol</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201407031800082_initialcreate.resx">
-      <DependentUpon>201407031800082_initialcreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407051423000_Items.resx">
-      <DependentUpon>201407051423000_Items.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407051628566_TempFixes.resx">
-      <DependentUpon>201407051628566_TempFixes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407051701526_TempTestFixes.resx">
-      <DependentUpon>201407051701526_TempTestFixes.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MiniMaxItems.xml">

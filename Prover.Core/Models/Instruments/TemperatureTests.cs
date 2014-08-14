@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class TemperatureTest
+    public class TemperatureTest : ItemsBase
     {
         private const double TempCorrection = 459.67;
         private const double MetericTempCorrection = 273.15;
@@ -35,7 +35,6 @@ namespace Prover.Core.Models.Instruments
             Id = Guid.NewGuid();
         }
 
-        public Guid Id { get; set; }
         public Level TestLevel { get; set; }
         public double Gauge { get; set; }
         public double PercentError { get; set; }
@@ -61,15 +60,6 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public Instrument Instrument { get; set; }
-
-        [NotMapped]
-        public List<Item> Items
-        {
-            get { return (Instrument.Items.Where(x => x.IsTemperatureTest == true)).ToList(); }
-        }
-        
-        [NotMapped]
-        public ICollection<InstrumentValue> InstrumentValues { get; set; }
         
         [NotMapped]
         public string Units
@@ -85,10 +75,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Number == (int)TempItems.Base);
-                if (firstOrDefault != null)
-                    return firstOrDefault.Value;
-                return null;
+                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Base);
+                return Convert.ToDouble(firstOrDefault.Value);
             }
         }
 
@@ -97,10 +85,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Number == (int)TempItems.Gas);
-                if (firstOrDefault != null)
-                    return firstOrDefault.Value;
-                return null;
+                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Gas);
+                return Convert.ToDouble(firstOrDefault.Value);
             }
         }
 
@@ -109,20 +95,12 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Number == (int)TempItems.Factor);
-                if (firstOrDefault != null)
-                    return firstOrDefault.Value;
-                return null;
+                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Factor);
+                return Convert.ToDouble(firstOrDefault.Value);
+
             }
         }
 
         public virtual Temperature Temp { get; set; }
-
-        public string InstrumentData
-        {
-            get { return JsonConvert.SerializeObject(InstrumentValues); }
-            set { _data = value; }
-        }
-
     }
 }

@@ -7,7 +7,7 @@ namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
-        public UnityContainer Container;
+        public IUnityContainer Container;
 
         public CoreBootstrapper()
         {

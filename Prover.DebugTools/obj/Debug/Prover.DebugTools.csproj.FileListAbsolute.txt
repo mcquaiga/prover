@@ -22,3 +22,8 @@ C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugToo
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.pdb
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Prover.SerialProtocol.xml
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.dll
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.Form1.resources

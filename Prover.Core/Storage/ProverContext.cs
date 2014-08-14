@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Prover.Core.Migrations;
+//using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 
@@ -17,9 +17,8 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
-            Debug.WriteLine(this.Database.Connection.ConnectionString);
         }
 
         public DbSet<Certificate> Certificates { get; set; }

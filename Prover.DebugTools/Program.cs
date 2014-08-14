@@ -19,7 +19,6 @@ namespace Prover.DebugTools
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             var boot = new CoreBootstrapper();
-
         }
     }
 }

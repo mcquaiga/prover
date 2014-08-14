@@ -41,13 +41,8 @@ C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Microsoft.Practices.U
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Newtonsoft.Json.xml
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\InTheHand.Net.Personal.xml
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.csprojResolveAssemblyReference.cache
-C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.initialcreate.resources
-C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.Items.resources
-C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.pdb
-C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempFixes.resources
-C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.Migrations.TempTestFixes.resources
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.pdb
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.xml

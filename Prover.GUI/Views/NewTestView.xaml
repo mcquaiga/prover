@@ -3,6 +3,8 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:cal="http://www.caliburnproject.org"
 			 d:DesignWidth="1000"
 			 mc:Ignorable="d">
 
@@ -15,18 +17,31 @@
 							 CommandParameter="{Binding .}"
 							 Content="{Binding .}"
 							 IsChecked="{Binding BaudRateSettings}"
-							 GroupName="BaudRates"/>
+							 GroupName="BaudRates">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SetBaudRate">
+                                <cal:Parameter Value="{Binding .}" />
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </RadioButton>
             </WrapPanel>
         </DataTemplate>
         <DataTemplate x:Key="CommPorts">
             <WrapPanel>
-                <RadioButton Command="{Binding DataContext.SetCommPortCommand,
-											   RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-							 CommandParameter="{Binding .}"
-							 Content="{Binding .}"
+                <RadioButton Content="{Binding .}"
 							 IsChecked="{Binding CommPortSettings}"
 							 Style="{DynamicResource radio2}"
-							 GroupName="{Binding .}"/>
+							 GroupName="{Binding .}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SetCommPort">
+                                <cal:Parameter Value="{Binding .}" />
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </RadioButton>
             </WrapPanel>
         </DataTemplate>
         <DataTemplate x:Key="TachCommPorts">
@@ -174,9 +189,11 @@
 											 Name="MiniMax"
 											 FontSize="24"
 											 Foreground="White"
+                                             IsChecked="True"
 											 Style="{DynamicResource radio2}" />
                                 <RadioButton Margin="15,0,0,0"
 											 Name="EC300"
+                                             Visibility="Hidden"
 											 Command="{Binding EC300Command}"
 											 Content="EC300"
 											 FontSize="24"
@@ -187,8 +204,7 @@
                     </StackPanel>
                     <!--  Ports  -->
                     <StackPanel Grid.Row="1" Grid.Column="0">
-                        <TextBlock Margin="20,0,0,0"
-								   
+                        <TextBlock Margin="20,0,0,0" 
 								   Text="Port" Foreground="{DynamicResource HeaderFontColour}" />
                         <GroupBox Margin="20,0,0,0"
 								  BorderThickness="0"
@@ -246,14 +262,18 @@
                     </StackPanel>
 
                     <Button Grid.Row="3"
-							
 							Margin="10,0,0,0"
 							HorizontalAlignment="left"
 							HorizontalContentAlignment="Left"
 							VerticalContentAlignment="Center"
-							Command="{Binding FetchInstrumentInfoCommand}"
 							Content="Download Info"
-							Style="{StaticResource SimpleButton}" />
+							Style="{StaticResource SimpleButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="FetchInstrumentItems" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
                 </Grid>
             </Grid>
 
@@ -278,8 +298,7 @@
                                 <StackPanel Margin="5">
                                     <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
-											   Text="{Binding Instrument.SerialNumber,
-															  UpdateSourceTrigger=PropertyChanged}" />
+                                               Name="Instrument_SerialNumber" />
                                     <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Serial Number" Foreground="{DynamicResource HeaderFontColour}" />
@@ -678,10 +697,21 @@
 						Margin="10"
 						Command="{Binding SaveCommand}"
 						Content="Save"
-						Style="{StaticResource SimpleButton}" />
-                <Button Command="{Binding CancelCommand}"
-						Content="Clear"
-						Style="{StaticResource SimpleButton}" />
+						Style="{StaticResource SimpleButton}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SaveInstrument" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Clear"
+						Style="{StaticResource SimpleButton}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="ClearTest" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
             </WrapPanel>
 
             <WrapPanel Width="5" Height="16" />

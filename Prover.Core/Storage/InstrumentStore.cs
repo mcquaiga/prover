@@ -25,7 +25,8 @@ namespace Prover.Core.Storage
 
         public void Save(Instrument entity)
         {
-            _proverContext.Instruments.Attach(entity);
+            _proverContext.Instruments.Add(entity);
+            _proverContext.SaveChanges();
         }
 
         public void Delete(Instrument entity)

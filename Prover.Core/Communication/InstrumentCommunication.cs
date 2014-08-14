@@ -19,16 +19,22 @@ namespace Prover.Core.Communication
             return ports;
         }
 
-        public static Dictionary<int, string> DownloadItemsAsync(ICommPort commPort, Instrument instrument, IEnumerable<Item> itemsToDownload )
+        public static async Task<Dictionary<int, string>> DownloadItemsAsync(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload )
+        {
+            return await Task.Run(()=> DownloadItems(commPort, instrument, itemsToDownload));
+        }
+
+        public static Dictionary<int, string> DownloadItems(ICommPort commPort, Instrument instrument,
+            IEnumerable<ItemsBase.Item> itemsToDownload)
         {
             miSerialProtocolClass miSerial = null;
             switch (instrument.Type)
             {
-                case InstrumentType.MiniMax:
-                    miSerial = new MiniMaxClass(commPort);
-                    break;
                 case InstrumentType.Ec300:
                     miSerial = new EC300Class(commPort);
+                    break;
+                default:
+                    miSerial = new MiniMaxClass(commPort);
                     break;
             }
 
@@ -36,6 +42,22 @@ namespace Prover.Core.Communication
             var myItems = miSerial.RG((from i in itemsToDownload select i.Number).ToList());
             miSerial.Disconnect();
             return myItems;
-        }  
+        }
+
+        public static ICommPort CreateCommPortObject(string commName, BaudRateEnum baudRate)
+        {
+            if (!GetCommPortList().Contains(commName)) return null;
+
+            ICommPort commPort;
+            if (commName == "IrDA")
+            {
+                commPort = new IrDAPort();
+            }
+            else
+            {
+                commPort = new SerialPort(commName, baudRate);
+            }
+            return commPort;
+        }
     }
 }

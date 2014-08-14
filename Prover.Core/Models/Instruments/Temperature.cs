@@ -7,31 +7,16 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class Temperature
+    public class Temperature : ItemsBase
     {
         public Temperature()
         {
             Id = Guid.NewGuid();
 
         }
-
-        public Guid Id { get; set; }
-        public string InstrumentData { get; set; }
-
+      
         public virtual ICollection<TemperatureTest> Tests { get; set; }
-
-        [NotMapped]
-        public IEnumerable<InstrumentValue> InstrumentValues { get; set; }
-
-        [NotMapped]
-        public Instrument Instrument { get; set; }
-
-
-        [NotMapped]
-        public List<Item> Items
-        {
-            get { return Instrument.Items.Where(x => x.IsTemperature == true).ToList(); }
-        }
+        public virtual Instrument Instrument { get; set; }
 
         [NotMapped]
         public string Range

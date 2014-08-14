@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class Volume
+    public class Volume : ItemsBase
     {
         private string _data;
 
@@ -19,9 +19,6 @@ namespace Prover.Core.Models.Instruments
             Pressure,
             Temperature
         }
-        
-        [Key]
-        public Guid Id { get; set; }
 
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
@@ -32,10 +29,8 @@ namespace Prover.Core.Models.Instruments
             set { _data = value; }
         }
 
-        public IEnumerable<Item> Items { get; set; }
-        
-        [NotMapped]
-        public TemperatureTest TemperatureTest { get; set; }
+        public virtual Instrument Instrument { get; set; }
+        public virtual TemperatureTest TemperatureTest { get; set; }
 
         [NotMapped]
         public EvcType CorrectionType { get; set; }

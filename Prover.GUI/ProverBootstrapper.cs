@@ -14,7 +14,7 @@ namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private UnityContainer _container;
+        private IUnityContainer _container;
         public AppBootstrapper()
         {
             Initialize();

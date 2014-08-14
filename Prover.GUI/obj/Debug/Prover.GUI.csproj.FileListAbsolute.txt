@@ -31,7 +31,6 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.Platform.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.Blend.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.dll
-C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.Xaml.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Interfaces.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Linq.dll
@@ -42,7 +41,6 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.Platform.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.Blend.xml
-C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\ReactiveUI.Xaml.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Core.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Interfaces.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\System.Reactive.Linq.xml
@@ -73,3 +71,6 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\NLog.config
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Prover.SerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Prover.SerialProtocol.pdb
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Prover.SerialProtocol.xml
+C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.ReactiveUI.dll
+C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.dll
+C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.pdb
