@@ -51,5 +51,55 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public virtual Temperature Temperature { get; set; }
+
+        [NotMapped]
+        public virtual Volume Volume { get; set; }
+
+        [NotMapped]
+        public decimal? FirmwareVersion
+        {
+            get
+            {
+                if (InstrumentValues != null)
+                    return Convert.ToDecimal(InstrumentValues.FirstOrDefault(x => x.Key == 122).Value);
+                return null;
+            }
+        }
+
+        [NotMapped]
+        public double? PulseAScaling
+        {
+            get { return NumericValue(56); }
+        }
+
+        [NotMapped]
+        public string PulseASelect
+        {
+            get { return DescriptionValue(93); }
+        }
+
+        [NotMapped]
+        public double? PulseBScaling
+        {
+            get { return NumericValue(57); }
+        }
+
+        [NotMapped]
+        public string PulseBSelect
+        {
+            get { return DescriptionValue(94); }
+        }
+
+        [NotMapped]
+        public double? SiteNumber1
+        {
+            get { return NumericValue(200); }
+        }
+
+        [NotMapped]
+        public double? SiteNumber2
+        {
+            get { return NumericValue(201); }
+        }
     }    
 }

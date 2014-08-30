@@ -9,9 +9,16 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class Volume : ItemsBase
+    public sealed class Volume : ItemsBase
     {
         private string _data;
+
+        public Volume(Instrument instrument)
+        {
+            Instrument = instrument;
+            Id = new Guid();
+            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
+        }
 
         public enum EvcType
         {
@@ -29,14 +36,70 @@ namespace Prover.Core.Models.Instruments
             set { _data = value; }
         }
 
-        public virtual Instrument Instrument { get; set; }
-        public virtual TemperatureTest TemperatureTest { get; set; }
+        public Instrument Instrument { get; set; }
+        public TemperatureTest TemperatureTest { get; set; }
 
         [NotMapped]
-        public EvcType CorrectionType { get; set; }
+        public double? StartCorrected
+        {
+            get { return NumericValue(0); }
+        }
 
         [NotMapped]
-        public decimal EvcMeterDisplacement { get; set; }
+        public double? StartUnCorrected
+        {
+            get { return NumericValue(2); }
+        }
+
+        [NotMapped]
+        public EvcType CorrectionType
+        {
+            get
+            {
+                //Pressure Live
+                if (DescriptionValue(109).ToLower() == "live" && DescriptionValue(111).ToLower() == "live")
+                {
+                    return EvcType.PressureTemperature;
+                }
+                
+                if (DescriptionValue(109).ToLower() == "live")
+                {
+                    return EvcType.Pressure;
+                }
+
+                return EvcType.Temperature;
+            }
+        }
+
+        [NotMapped]
+        public string MeterType
+        {
+            get { return DescriptionValue(432); }
+        }
+
+        [NotMapped]
+        public string DriveRate
+        {
+            get { return DescriptionValue(98); }
+        }
+
+        [NotMapped]
+        public string CorrectedMultiplierDescription
+        {
+            get { return DescriptionValue(90); }
+        }
+
+        [NotMapped]
+        public string UnCorrectedMultiplierDescription
+        {
+            get { return DescriptionValue(92); }
+        }
+
+        [NotMapped]
+        public double? EvcMeterDisplacement
+        {
+            get { return NumericValue(439); }
+        }
 
     }
 }

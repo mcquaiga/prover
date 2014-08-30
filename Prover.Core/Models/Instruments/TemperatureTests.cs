@@ -30,9 +30,11 @@ namespace Prover.Core.Models.Instruments
             High = 2
         }
 
-        public TemperatureTest()
+        public TemperatureTest(Instrument instrument, Level level)
         {
+            Instrument = instrument;
             Id = Guid.NewGuid();
+            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsTemperatureTest == true).ToList();
         }
 
         public Level TestLevel { get; set; }

@@ -36,6 +36,7 @@ namespace Prover.Core.Models.Instruments
         public string DescriptionValue(int number) // Is only available when there's something in the list of ItemDescriptions
         {
             var item = Items.FirstOrDefault(x => x.Number == number);
+            if (InstrumentValues == null) return null;
             var value = InstrumentValues[number];
 
             if (item == null || value == null) return "";
@@ -52,6 +53,7 @@ namespace Prover.Core.Models.Instruments
         public double? NumericValue(int number)
         {
             var item = Items.FirstOrDefault(x => x.Number == number);
+            if (InstrumentValues == null) return null;
             string value = InstrumentValues[number];
 
             if (item == null || value == null) return null;

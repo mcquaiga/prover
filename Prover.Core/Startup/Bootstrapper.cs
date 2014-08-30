@@ -2,6 +2,7 @@
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
+using Caliburn.Micro;
 
 namespace Prover.Core.Startup
 {
@@ -12,7 +13,7 @@ namespace Prover.Core.Startup
         public CoreBootstrapper()
         {
             Container = new UnityContainer();
-            Container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore());           
+            Container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore());
         }
     }
 }

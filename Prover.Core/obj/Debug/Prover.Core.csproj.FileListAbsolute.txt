@@ -46,3 +46,9 @@ C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.pdb
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.pdb
 C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Prover.SerialProtocol.xml
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Caliburn.Micro.dll
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Caliburn.Micro.Platform.dll
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Caliburn.Micro.xml
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\Caliburn.Micro.Platform.xml
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\System.Windows.Interactivity.xml

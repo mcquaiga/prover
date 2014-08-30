@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.SerialProtocol;
@@ -12,6 +14,7 @@ namespace Prover.Core.Communication
     public class InstrumentManager
     {
         private readonly Instrument _instrument;
+        private readonly IUnityContainer _container;
         public ICommPort CommPort { get; set; }
 
         public Instrument Instrument
@@ -19,12 +22,15 @@ namespace Prover.Core.Communication
             get { return _instrument; }
         }
 
-        public InstrumentManager()
+        public InstrumentManager(IUnityContainer container)
         {
+            _container = container;
             _instrument = new Instrument();
+            _instrument.Temperature = new Temperature(_instrument);
+            _instrument.Volume = new Volume(_instrument);
         }
 
-        public InstrumentManager(ICommPort commPort)
+        public InstrumentManager(IUnityContainer container, ICommPort commPort)
         {
             _instrument = new Instrument();
             CommPort = commPort;
@@ -36,12 +42,12 @@ namespace Prover.Core.Communication
             CommPort = commPort;
         }
 
-        public async void DownloadInstrumentItems()
+        public async Task DownloadInstrumentItemsAsync()
         {
             _instrument.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Items);
         }
 
-        public async void DownloadTemperatureItems()
+        public async Task DownloadTemperatureItems()
         {
             _instrument.Temperature.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument,_instrument.Temperature.Items);
         }

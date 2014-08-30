@@ -74,3 +74,5 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Prover.SerialProtocol.
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Caliburn.Micro.ReactiveUI.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.pdb
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.g.cs
