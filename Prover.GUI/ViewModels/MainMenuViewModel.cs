@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.GUI.Events;
+using Prover.GUI.Views;
 
 namespace Prover.GUI.ViewModels
 {
@@ -20,7 +21,7 @@ namespace Prover.GUI.ViewModels
 
         public void CreateCertificateButton()
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container)));
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new CreateCertificateViewModel(_container)));
         }
     }
 }

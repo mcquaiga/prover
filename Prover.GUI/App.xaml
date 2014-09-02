@@ -9,7 +9,7 @@
                 <ResourceDictionary Source="Views/Themes/RadioButtonStyle.xaml" />
                 <ResourceDictionary Source="Views/Themes/ScrollViewerStyle.xaml" />
                 <ResourceDictionary>
-                    <gui:AppBootstrapper x:Key="ProverBootstrapper" />
+                    <gui:AppBootstrapper x:Key="AppBootstrapper" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

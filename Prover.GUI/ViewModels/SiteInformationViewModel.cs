@@ -24,7 +24,7 @@ namespace Prover.GUI.ViewModels
         public Instrument Instrument { get; set; }
         public void Handle(InstrumentUpdateEvent message)
         {
-            Instrument = message.Instrument;
+            Instrument = message.InstrumentManager.Instrument;
         }
     }
 }

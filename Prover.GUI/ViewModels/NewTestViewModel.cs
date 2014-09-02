@@ -10,6 +10,7 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using Prover.GUI.Properties;
 using Prover.SerialProtocol;
 using ReactiveUI;
 
@@ -45,20 +46,33 @@ namespace Prover.GUI.ViewModels
             get { return InstrumentCommunication.GetCommPortList(); }
         }
 
+        public bool CommPortSettings(string commName)
+        {
+            return (Settings.Default.CommPort == commName);
+        }
+
+        public bool BaudRateSettings(string baudRate)
+        {
+            return (Settings.Default.BaudRate == baudRate);
+        }
+
         #region Methods
         public void SetCommPort(string comm)
         {
             CommName = comm;
+            Settings.Default.CommPort = comm;
         }
 
         public void SetBaudRate(string baudRate)
         {
             BaudRate = (BaudRateEnum) Enum.Parse(typeof (BaudRateEnum), baudRate);
+            Settings.Default.BaudRate = baudRate;
         }
 
         public async void FetchInstrumentItems()
         {
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
             if (CommName == null)
             {
                 MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
@@ -70,7 +84,7 @@ namespace Prover.GUI.ViewModels
             NotifyOfPropertyChange(() => Instrument);
 
             //Publish the change in instrument state to anyone who's listening
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(Instrument));
+            
         }
 
         public void SaveInstrument()

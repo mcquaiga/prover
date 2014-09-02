@@ -62,9 +62,11 @@ namespace Prover.Core.Communication
             _instrument.Temperature.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument,_instrument.Temperature.Items);
         }
 
-        public async Task DownloadTemperatureTestItems(int index)
+        public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
-            _instrument.Temperature.Tests.Where(x=>x.TestLevel == index) = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Temperature.Items);
+            var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
+            if (test != null)
+                test.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, test.Items);
         }
 
         public void Save()

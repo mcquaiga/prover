@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="Prover.GUI.Views.CreateCertificateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+
+        <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="ItemsControl.AlternationIndex" Value="1" />
+                        <Condition Property="IsSelected" Value="False" />
+                        <Condition Property="IsMouseOver" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#EEEEEEEE" />
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Flat">
+            <Setter Property="Control.Background" Value="{x:Null}" />
+            <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+            <Style.Triggers>
+                <Trigger Property="Control.IsMouseOver" Value="True">
+                    <Setter Property="Control.Background" Value="{x:Null}" />
+                    <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+                    <Setter Property="Control.FontWeight" Value="Bold" />
+                </Trigger>
+                <Trigger Property="Control.IsFocused" Value="True">
+                    <Setter Property="Control.FontWeight" Value="Bold" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource MainBackgroundColour}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*" />
+
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Margin="10, 0, 0, 0"
+                    Orientation=" Horizontal">
+            <Button Command="{Binding OneWeekFilterCommand}"
+                    Content="Last 7 Days"
+                    Style="{DynamicResource SimpleButton}" />
+            <Button Command="{Binding OneMonthFilterCommand}"
+                    Content="Last 30 Days"
+                    Style="{DynamicResource SimpleButton}" />
+            <!--<Button Command="{Binding MiniMaxFilterCommand}"
+                    Content="Mini Max"
+                    Style="{DynamicResource SimpleButton}" />-->
+            <!--<Button Command="{Binding EC300FilterCommand}"
+                    Content="EC 300"
+                    Style="{DynamicResource SimpleButton}" />-->
+
+            <!--<TextBlock HorizontalAlignment="Right">Serial Number:</TextBlock>-->
+        </StackPanel>
+        <Button Command="{Binding ResetFilterCommand}" Grid.Row="0"
+                    Content="Reset"
+                    HorizontalAlignment="Right"
+                    Style="{DynamicResource SimpleButton}" />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <ContentControl cal:View.Model="{Binding InstrumentsListViewModel}"></ContentControl>
+
+            <!--  Certificate Information  -->
+            <Grid Grid.Column="1">
+                <StackPanel>
+
+                    <TextBlock>Created By:</TextBlock>
+                    <TextBox Text="{Binding Path=CreatedBy}" />
+                    <ComboBox Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
+                    </ComboBox>
+                    <TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
+                    <TextBlock Text="{Binding Path=SealExpirationDate}" />
+
+                    <Button Margin="0,20,0,0"  Command="{Binding Path=CreateNewCertCommand}" Content="Create New" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

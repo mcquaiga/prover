@@ -137,13 +137,23 @@
     <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Interfaces\IShell.cs" />
-    <Compile Include="ProverBootstrapper.cs" />
+    <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsListViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\TemperatureViewModel.cs" />
+    <Compile Include="Views\CreateCertificateView.xaml.cs">
+      <DependentUpon>CreateCertificateView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\InstrumentsListView.xaml.cs">
+      <DependentUpon>InstrumentsListView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
@@ -170,6 +180,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="Views\CreateCertificateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SiteInformationView.xaml">
       <SubType>Designer</SubType>

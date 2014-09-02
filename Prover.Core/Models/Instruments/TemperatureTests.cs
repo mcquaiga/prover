@@ -34,6 +34,7 @@ namespace Prover.Core.Models.Instruments
             Instrument = instrument;
             Id = Guid.NewGuid();
             Items = Item.LoadItems(Instrument.Type).Where(x => x.IsTemperatureTest == true).ToList();
+            TestLevel = level;
         }
 
         public Level TestLevel { get; set; }

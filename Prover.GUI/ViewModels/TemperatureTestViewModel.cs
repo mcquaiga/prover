@@ -17,28 +17,27 @@ namespace Prover.GUI.ViewModels
         private IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
         public TemperatureTest Test { get; set; }
-        public int TestIndex { get; set; }
 
         public string TestLevel
         {
             get { return "";  }
         }
 
-        public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, int testIndex)
+        public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test)
         {
             _container = container;
-            TestIndex = testIndex;
-            InstrumentManager = instrumentManager;
+            Test = test;
         }
 
         public async void FetchTestItems()
         {
-           await InstrumentManager.DownloadTemperatureTestItems();
+            if (InstrumentManager != null)
+                await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
         }
 
         public void Handle(InstrumentUpdateEvent message)
         {
-            //Test = message;
+            InstrumentManager = message.InstrumentManager;
         }
     }
 }

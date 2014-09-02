@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
@@ -16,24 +17,26 @@ namespace Prover.GUI.ViewModels
     {
         private IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
-        public IEnumerable<TemperatureTestViewModel> TestViewModels { get; set; } 
+        public ICollection<TemperatureTestViewModel> TestViewModels { get; set; } 
 
         public TemperatureViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-
-            TestViewModels = new Collection<TemperatureTestViewModel>
-            {
-                new TemperatureTestViewModel(_container, InstrumentManager, 0),
-                new TemperatureTestViewModel(_container, InstrumentManager, 1),
-                new TemperatureTestViewModel(_container, InstrumentManager, 2)
-            };
         }
 
         public void Handle(InstrumentUpdateEvent message)
         {
-            InstrumentManager= message.InstrumentManager;
+            InstrumentManager = message.InstrumentManager;
+
+            if (TestViewModels != null) return;
+
+            TestViewModels = new Collection<TemperatureTestViewModel>();
+            InstrumentManager.Instrument.Temperature.Tests.ForEach(
+                x => TestViewModels.Add(new TemperatureTestViewModel(_container, x))
+                );
+
+            NotifyOfPropertyChange(()=> TestViewModels);
         }
     }
 }
