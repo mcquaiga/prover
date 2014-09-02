@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlServerCe;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.ViewModels;
-using Prover.GUI.Views;
 
 namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private readonly IUnityContainer _container;
+        private IUnityContainer _container;
 
         public AppBootstrapper()
         {
@@ -23,12 +17,15 @@ namespace Prover.GUI
 
             //Start Prover.Core
             var coreBootstrap = new CoreBootstrapper();
-            _container = coreBootstrap.Container;
+            ConfigureContainer(coreBootstrap.Container);
+        }
 
+        private void ConfigureContainer(IUnityContainer container)
+        {
+            _container = container;
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IEventAggregator, EventAggregator>();
-
+            _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
         }
 
         protected override object GetInstance(Type service, string key)

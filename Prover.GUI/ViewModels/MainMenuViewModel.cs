@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro;
 using Microsoft.Practices.Unity;
+using Prover.GUI.Events;
 
 namespace Prover.GUI.ViewModels
 {
@@ -19,12 +15,12 @@ namespace Prover.GUI.ViewModels
 
         public void NewTestButton()
         {
-            ActivateItem(new NewTestViewModel(_container));
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container)));
         }
 
         public void CreateCertificateButton()
         {
-            
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container)));
         }
     }
 }

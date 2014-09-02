@@ -39,6 +39,8 @@ namespace Prover.Core.Models.Instruments
         public Instrument Instrument { get; set; }
         public TemperatureTest TemperatureTest { get; set; }
 
+        public double AppliedInput { get; set; }
+
         [NotMapped]
         public double? StartCorrected
         {
@@ -46,7 +48,19 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? StartUnCorrected
+        public double? StartUncorrected
+        {
+            get { return NumericValue(2); }
+        }
+
+        [NotMapped]
+        public double? EndCorrected
+        {
+            get { return NumericValue(0); }
+        }
+
+        [NotMapped]
+        public double? EndUncorrected
         {
             get { return NumericValue(2); }
         }
@@ -78,7 +92,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public string DriveRate
+        public string DriveRateDescription
         {
             get { return DescriptionValue(98); }
         }
@@ -101,5 +115,32 @@ namespace Prover.Core.Models.Instruments
             get { return NumericValue(439); }
         }
 
+
+        //TODO
+        [NotMapped]
+        public double? MeterDisplacement
+        {
+            get { return NumericValue(439); }
+        }
+
+        public double? EvcCorrected
+        {
+            get { return 0; }
+        }
+
+        public double? EvcUncorrected
+        {
+            get { return 0; }
+        }
+
+        public double? UnCorrectedPercentError
+        {
+            get { return 0.00; }
+        }
+
+        public double? CorrectedPercentError
+        {
+            get { return 0.00; }
+        }
     }
 }

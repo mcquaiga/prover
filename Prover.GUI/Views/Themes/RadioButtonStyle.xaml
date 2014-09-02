@@ -20,7 +20,7 @@
                                        HorizontalAlignment="Stretch"
                                        VerticalAlignment="Stretch"
                                        Opacity="100"
-                                       Source="Resources/check.png"
+                                       Source="../../Resources/check.png"
                                        Stretch="Uniform" />
                                 <Border BorderBrush="{DynamicResource HeaderColour}"
                                         BorderThickness="2"

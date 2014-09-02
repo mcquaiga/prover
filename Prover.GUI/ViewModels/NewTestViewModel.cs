@@ -9,6 +9,7 @@ using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.Events;
 using Prover.SerialProtocol;
 using ReactiveUI;
 
@@ -16,7 +17,7 @@ namespace Prover.GUI.ViewModels
 {
     public class NewTestViewModel : ReactiveScreen
     {
-        private IUnityContainer _container;
+        private readonly IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
 
         public NewTestViewModel(IUnityContainer container)
@@ -28,12 +29,6 @@ namespace Prover.GUI.ViewModels
         public Instrument Instrument
         {
             get { return InstrumentManager.Instrument; }
-        }
-
-        //Views
-        public SiteInformationViewModel SiteInformationItem
-        {
-            get { return new SiteInformationViewModel(_container); }
         }
 
         public ICommPort CommPort { get; set; }
@@ -50,7 +45,7 @@ namespace Prover.GUI.ViewModels
             get { return InstrumentCommunication.GetCommPortList(); }
         }
 
-        //Actions
+        #region Methods
         public void SetCommPort(string comm)
         {
             CommName = comm;
@@ -63,21 +58,19 @@ namespace Prover.GUI.ViewModels
 
         public async void FetchInstrumentItems()
         {
-            //Publish the change in instrument state to anyone who's listening
-            _container.Resolve<IEventAggregator>().Publish(Instrument, action => Task.Factory.StartNew(action));
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
             if (CommName == null)
             {
                 MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
                 return;
             }
+            InstrumentManager.SetupCommPort(CommName, BaudRate);
 
-            CommPort = InstrumentCommunication.CreateCommPortObject(CommName, BaudRate);
-
-            InstrumentManager.CommPort = CommPort;
             await InstrumentManager.DownloadInstrumentItemsAsync();
             NotifyOfPropertyChange(() => Instrument);
 
-            
+            //Publish the change in instrument state to anyone who's listening
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(Instrument));
         }
 
         public void SaveInstrument()
@@ -87,5 +80,18 @@ namespace Prover.GUI.ViewModels
                 InstrumentManager.Save();
             }      
         }
+        #endregion
+
+        #region Views
+        public SiteInformationViewModel SiteInformationItem
+        {
+            get { return new SiteInformationViewModel(_container); }
+        }
+
+        public TemperatureViewModel TemperatureInformationItem
+        {
+            get {  return new TemperatureViewModel(_container);}
+        }
+        #endregion
     }
 }

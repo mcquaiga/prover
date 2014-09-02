@@ -10,8 +10,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
             <RowDefinition/>
+            <RowDefinition Height="25px" />
         </Grid.RowDefinitions>
-        <Button Grid.Column="1" Grid.Row="0" x:Name="HomeButton">Home</Button>
+        <Button Grid.Column="1" Grid.Row="0" x:Name="HomeButton">
+            <StackPanel>
+                <Image Source="..\Resources\Home.png"></Image>
+            </StackPanel>
+        </Button>
         <ContentControl Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"  x:Name="ActiveItem" />
-    </Grid> 
+        <TextBlock Grid.Column="0" Grid.Row="2" Name="ApplicationEventMessage" FontWeight="Bold" FontStyle="Italic"></TextBlock>
+    </Grid>
 </Window>

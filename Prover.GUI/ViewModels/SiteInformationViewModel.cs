@@ -8,10 +8,11 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.Events;
 
 namespace Prover.GUI.ViewModels
 {
-    public class SiteInformationViewModel : ReactiveScreen, IHandle<Instrument>
+    public class SiteInformationViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
         private IUnityContainer _container;
         public SiteInformationViewModel(IUnityContainer container)
@@ -21,9 +22,9 @@ namespace Prover.GUI.ViewModels
         }
 
         public Instrument Instrument { get; set; }
-        public void Handle(Instrument message)
+        public void Handle(InstrumentUpdateEvent message)
         {
-            MessageBox.Show("Hey Adam!");
+            Instrument = message.Instrument;
         }
     }
 }

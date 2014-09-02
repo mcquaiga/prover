@@ -30,6 +30,16 @@ namespace Prover.Core.Communication
             _instrument.Volume = new Volume(_instrument);
         }
 
+        public InstrumentManager(IUnityContainer container, string commName, BaudRateEnum baudRate) : this(container)
+        {
+            SetupCommPort(commName, baudRate);
+        }
+
+        public void SetupCommPort(string commName, BaudRateEnum baudRate)
+        {
+            CommPort = InstrumentCommunication.CreateCommPortObject(commName, baudRate);
+        }
+
         public InstrumentManager(IUnityContainer container, ICommPort commPort)
         {
             _instrument = new Instrument();
@@ -50,6 +60,11 @@ namespace Prover.Core.Communication
         public async Task DownloadTemperatureItems()
         {
             _instrument.Temperature.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument,_instrument.Temperature.Items);
+        }
+
+        public async Task DownloadTemperatureTestItems(int index)
+        {
+            _instrument.Temperature.Tests.Where(x=>x.TestLevel == index) = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Temperature.Items);
         }
 
         public void Save()

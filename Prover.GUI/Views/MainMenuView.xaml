@@ -7,9 +7,13 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <StackPanel>
-            <Button x:Name="NewTestButton">New Test</Button>
+            <Button x:Name="NewTestButton" Width="128" Height="150">
+                <StackPanel>
+                    <Image Source="..\Resources\tests-icon.png" Width="128" Height="128" />
+                    <TextBlock HorizontalAlignment="Center">New Test</TextBlock>
+                </StackPanel> 
+            </Button>
             <Button x:Name="CreateCertificateButton">Create Certificate</Button>
         </StackPanel>
-        <ContentControl x:Name="ActiveItem" />
     </Grid>
 </UserControl>

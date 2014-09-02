@@ -12,7 +12,6 @@ namespace Prover.Core.Models.Instruments
     {
         private const double TempCorrection = 459.67;
         private const double MetericTempCorrection = 273.15;
-        private string _data = null;
 
         private enum TempItems
         {
@@ -68,7 +67,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return Instrument.DescriptionValue((int)TempItems.Units);
+                return DescriptionValue((int)TempItems.Units);
             }
         }
 
@@ -77,8 +76,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Base);
-                return Convert.ToDouble(firstOrDefault.Value);
+                return NumericValue((int)TempItems.Base);
             }
         }
 
@@ -87,8 +85,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Gas);
-                return Convert.ToDouble(firstOrDefault.Value);
+                return NumericValue((int)TempItems.Gas);
             }
         }
 
@@ -97,9 +94,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var firstOrDefault = InstrumentValues.FirstOrDefault(x => x.Key == (int)TempItems.Factor);
-                return Convert.ToDouble(firstOrDefault.Value);
-
+                return NumericValue((int)TempItems.Factor);
             }
         }
 

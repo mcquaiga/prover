@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class ItemsBase
+    public abstract class ItemsBase
     {
         private Dictionary<int, string> _instrumentValues;
         private string _data;

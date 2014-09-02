@@ -76,3 +76,8 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Splat.pdb
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Reactive.EventAggregator.dll
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.g.cs

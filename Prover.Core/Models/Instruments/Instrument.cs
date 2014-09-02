@@ -36,13 +36,9 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public long? SerialNumber
+        public double? SerialNumber
         {
-            get {
-                if (InstrumentValues != null)
-                    return Convert.ToInt64(InstrumentValues.FirstOrDefault(x => x.Key == 62).Value);
-                return null;
-            }
+            get { return NumericValue(62); }
         }
 
         public DateTime TestDateTime { get; set; }
