@@ -27,6 +27,7 @@ namespace Prover.GUI.ViewModels
         {
             _container = container;
             Test = test;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public async void FetchTestItems()

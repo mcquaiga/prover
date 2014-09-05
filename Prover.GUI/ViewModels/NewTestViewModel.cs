@@ -72,7 +72,6 @@ namespace Prover.GUI.ViewModels
         public async void FetchInstrumentItems()
         {
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
             if (CommName == null)
             {
                 MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
@@ -84,7 +83,7 @@ namespace Prover.GUI.ViewModels
             NotifyOfPropertyChange(() => Instrument);
 
             //Publish the change in instrument state to anyone who's listening
-            
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
         }
 
         public void SaveInstrument()

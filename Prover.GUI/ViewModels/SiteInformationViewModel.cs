@@ -25,6 +25,7 @@ namespace Prover.GUI.ViewModels
         public void Handle(InstrumentUpdateEvent message)
         {
             Instrument = message.InstrumentManager.Instrument;
+            NotifyOfPropertyChange(()=>Instrument);
         }
     }
 }

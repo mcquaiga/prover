@@ -23,20 +23,16 @@ namespace Prover.GUI.ViewModels
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-        }
-
-        public void Handle(InstrumentUpdateEvent message)
-        {
-            InstrumentManager = message.InstrumentManager;
-
-            if (TestViewModels != null) return;
 
             TestViewModels = new Collection<TemperatureTestViewModel>();
             InstrumentManager.Instrument.Temperature.Tests.ForEach(
                 x => TestViewModels.Add(new TemperatureTestViewModel(_container, x))
                 );
+        }
 
-            NotifyOfPropertyChange(()=> TestViewModels);
+        public void Handle(InstrumentUpdateEvent message)
+        {
+            InstrumentManager = message.InstrumentManager;
         }
     }
 }
