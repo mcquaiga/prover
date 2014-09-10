@@ -16,12 +16,13 @@ namespace Prover.Core.Storage
 
         public IQueryable<Instrument> Query()
         {
+
             return _proverContext.Instruments.AsQueryable();
         }
 
         public IQueryable<Instrument> Get(Guid id)
         {
-            return _proverContext.Instruments.Where(x => x.Id == id).Include(temp => temp.Temperature);
+            return _proverContext.Instruments.Where(x=> x.Id == id);
         }
 
         public void Save(Instrument entity)

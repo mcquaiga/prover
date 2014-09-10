@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -26,11 +27,12 @@ namespace Prover.GUI.ViewModels
         {
             if (certificateGuid == Guid.Empty)
             {
-                Instruments =
-                    _container.Resolve<IInstrumentStore<Instrument>>()
-                        .Query()
+                using (var store = _container.Resolve<IInstrumentStore<Instrument>>()) 
+                { 
+                    Instruments = store.Query()
                         .Where(x => x.CertificateGuid == Guid.Empty)
                         .ToList();
+                }
             }
             else
             {
