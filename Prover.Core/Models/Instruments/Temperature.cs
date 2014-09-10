@@ -34,6 +34,19 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public string Units { get; set; }
+        public string Units
+        {
+            get { return DescriptionValue(89); }
+        }
+
+        [NotMapped]
+        public double? EvcBase
+        {
+            get
+            {
+                return NumericValue(34);
+            }      
+        }
+
     }
 }

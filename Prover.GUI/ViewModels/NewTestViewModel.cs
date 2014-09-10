@@ -11,6 +11,8 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using Prover.GUI.Properties;
+using Prover.GUI.Views;
+using Prover.GUI.Views.Temperature;
 using Prover.SerialProtocol;
 using ReactiveUI;
 
@@ -80,6 +82,8 @@ namespace Prover.GUI.ViewModels
             InstrumentManager.SetupCommPort(CommName, BaudRate);
 
             await InstrumentManager.DownloadInstrumentItemsAsync();
+            await InstrumentManager.DownloadTemperatureItems();
+
             NotifyOfPropertyChange(() => Instrument);
 
             //Publish the change in instrument state to anyone who's listening

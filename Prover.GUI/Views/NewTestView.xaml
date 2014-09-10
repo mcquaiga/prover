@@ -5,6 +5,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 			 xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:temperature="clr-namespace:Prover.GUI.Views.Temperature"
 			 d:DesignWidth="1000"
 			 mc:Ignorable="d">
 
@@ -216,7 +217,7 @@
 					</StackPanel>
 
 					<Button Grid.Row="3"
-                            Grid.Column="1"
+							Grid.Column="1"
 							Width="250"
 							HorizontalAlignment="Center"
 							HorizontalContentAlignment="Center"

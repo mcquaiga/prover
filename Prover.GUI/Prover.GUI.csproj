@@ -170,11 +170,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\TemperatureView.xaml.cs">
+      <DependentUpon>TemperatureView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TemperatureTestView.xaml.cs">
       <DependentUpon>TemperatureTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureView.xaml.cs">
-      <DependentUpon>TemperatureView.xaml</DependentUpon>
+    <Compile Include="Views\Temperature\TemperatureHeader.xaml.cs">
+      <DependentUpon>TemperatureHeader.xaml</DependentUpon>
     </Compile>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
@@ -193,11 +196,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TemperatureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TemperatureTestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureView.xaml">
+    <Page Include="Views\Temperature\TemperatureHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -288,6 +295,7 @@
   <ItemGroup>
     <Resource Include="Resources\tests-icon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

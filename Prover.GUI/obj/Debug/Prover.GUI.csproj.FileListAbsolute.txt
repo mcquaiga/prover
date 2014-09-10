@@ -1,7 +1,5 @@
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.csprojResolveAssemblyReference.cache
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\Button.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\CheckboxStyle.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\CheckboxTemplate.baml
@@ -13,8 +11,6 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\MainMenuView.bam
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\NewTestView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\ShellView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\MainMenuView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\NewTestView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\ShellView.g.cs
@@ -85,3 +81,9 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.exe
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.pdb
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\CreateCertificateView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsListView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Temperature\TemperatureHeader.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Temperature\TemperatureHeader.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.g.cs

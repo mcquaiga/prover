@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
 
             <Button Height="45" Grid.Column="0" Margin="0,0,15,0"
-                 Name="TestIndex"
+                 Name="TestLevel"
 					            Style="{StaticResource SimpleButton}">
 
                 <i:Interaction.Triggers>
@@ -29,14 +29,14 @@
 
             <TextBox Grid.Column="1" Height="50" Margin="15,0,15,0"
 							            Style="{DynamicResource SimpleTextBox}"
-							           Name="Test_GaugeTemperature" />
+							           Name="Test_Gauge" />
 
-            <TextBlock Grid.Column="2" Margin="15,0,15,0" Name="EVCTemperature" />
+        <TextBlock Grid.Column="2" Margin="15,0,15,0" Name="Test_EvcReading" />
 
-            <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EVCFactor" />
+        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" />
 
-            <TextBlock Grid.Column="4" Margin="15,0,15,0" Name="Test_TemperatureFactor" />
+        <TextBlock Grid.Column="4" Margin="15,0,15,0" Name="Test_ActualFactor" />
 
-            <TextBlock Grid.Column="5" Style="{StaticResource ItemValues}" Name="Test_PercentError" />
+        <TextBlock Grid.Column="5" Style="{StaticResource ItemValues}" Name="Test_PercentError" />
     </Grid>
 </UserControl>

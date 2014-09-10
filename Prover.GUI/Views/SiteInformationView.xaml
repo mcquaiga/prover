@@ -17,7 +17,7 @@
 
         <Grid Grid.Row="1" Margin="15">
             <StackPanel>
-                <UniformGrid Columns="5">
+                <UniformGrid Columns="4">
                     <StackPanel Margin="5">
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
@@ -32,6 +32,7 @@
                                                Style="{StaticResource ItemValues}"
 											   Name="Instrument_SiteNumber1" />
                         <TextBlock HorizontalAlignment="Right"
+                                    Style="{StaticResource ItemDescriptions}"
 											   Text="Site Number 1" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
                     <StackPanel Margin="5">
@@ -39,7 +40,7 @@
 											   Style="{StaticResource ItemValues}"
                                                Name="Instrument_SiteNumber2"/>
                         <TextBlock HorizontalAlignment="Right"
-											   
+											   Style="{StaticResource ItemDescriptions}"
 											   Text="Site Number 2" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
                     <StackPanel Margin="5">

@@ -24,9 +24,9 @@ namespace Prover.Core.Models.Instruments
 
         public enum Level
         {
-            Low = 0,
-            Medium = 1,
-            High = 2
+            Low,
+            Medium,
+            High
         }
 
         public TemperatureTest(Instrument instrument, Level level)
@@ -39,21 +39,23 @@ namespace Prover.Core.Models.Instruments
 
         public Level TestLevel { get; set; }
         public double Gauge { get; set; }
+
         public double PercentError { get; set; }
+        
         public double HasPassed { get; set; }
 
         public double? ActualFactor
         {
             get
             {
-                switch (Units)
+                switch (Instrument.Temperature.Units)
                 {
                     case "K":
                     case "C":
-                        return Math.Round((double) ((MetericTempCorrection + EvcBase)/(Gauge + MetericTempCorrection)), 4);
+                        return Math.Round((double) ((MetericTempCorrection + Instrument.Temperature.EvcBase)/(Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
-                        return Math.Round((double) ((TempCorrection + EvcBase)/(Gauge + TempCorrection)), 4);
+                        return Math.Round((double)((TempCorrection + Instrument.Temperature.EvcBase) / (Gauge + TempCorrection)), 4);
                 }
 
                 return 0.00;
@@ -62,24 +64,7 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public Instrument Instrument { get; set; }
-        
-        [NotMapped]
-        public string Units
-        {
-            get
-            {
-                return DescriptionValue((int)TempItems.Units);
-            }
-        }
-
-        [NotMapped]
-        public double? EvcBase
-        {
-            get
-            {
-                return NumericValue((int)TempItems.Base);
-            }
-        }
+       
 
         [NotMapped]
         public double? EvcReading

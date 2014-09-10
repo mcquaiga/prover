@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
@@ -12,28 +8,34 @@ using Prover.GUI.Events;
 
 namespace Prover.GUI.ViewModels
 {
-    public class TemperatureTestViewModel: ReactiveScreen, IHandle<InstrumentUpdateEvent>
+    public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
         private IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
+
         public TemperatureTest Test { get; set; }
 
-        public string TestLevel
+        public TemperatureTest.Level TestLevel
         {
-            get { return "";  }
+            get { return Test.TestLevel; }
         }
 
-        public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test)
+        public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, TemperatureTest test)
         {
             _container = container;
             Test = test;
+            InstrumentManager = instrumentManager;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public async void FetchTestItems()
         {
             if (InstrumentManager != null)
+            {
                 await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
+                Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
+            }
+            NotifyOfPropertyChange(() => Test);
         }
 
         public void Handle(InstrumentUpdateEvent message)
