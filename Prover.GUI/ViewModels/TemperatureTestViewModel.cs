@@ -38,6 +38,16 @@ namespace Prover.GUI.ViewModels
             NotifyOfPropertyChange(() => Test);
         }
 
+        public double Gauge
+        {
+            get { return Test.Gauge; }
+            set
+            {
+                Test.Gauge = value;
+                NotifyOfPropertyChange(() => Test);
+            }
+        }
+
         public void Handle(InstrumentUpdateEvent message)
         {
             InstrumentManager = message.InstrumentManager;

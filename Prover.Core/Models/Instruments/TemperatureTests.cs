@@ -38,11 +38,22 @@ namespace Prover.Core.Models.Instruments
         }
 
         public Level TestLevel { get; set; }
+
         public double Gauge { get; set; }
 
-        public double PercentError { get; set; }
-        
-        public double HasPassed { get; set; }
+        public double? PercentError
+        {
+            get
+            {
+                if (EvcFactor == null) return null;
+                return Math.Round((double) ((EvcFactor - ActualFactor) / ActualFactor) * 100, 2);
+            }
+        }
+
+        public bool HasPassed
+        {
+            get { return (PercentError < 1 && PercentError > -1); }
+        }
 
         public double? ActualFactor
         {

@@ -83,6 +83,7 @@ namespace Prover.GUI.ViewModels
 
             await InstrumentManager.DownloadInstrumentItemsAsync();
             await InstrumentManager.DownloadTemperatureItems();
+            await InstrumentManager.DownloadVolumeItems();
 
             NotifyOfPropertyChange(() => Instrument);
 
@@ -95,6 +96,7 @@ namespace Prover.GUI.ViewModels
             if (InstrumentManager != null)
             {
                 InstrumentManager.Save();
+                
             }      
         }
         #endregion
@@ -108,6 +110,11 @@ namespace Prover.GUI.ViewModels
         public TemperatureViewModel TemperatureInformationItem
         {
             get {  return new TemperatureViewModel(_container);}
+        }
+
+        public VolumeViewModel VolumeInformationItem
+        {
+            get { return new VolumeViewModel(_container); }
         }
         #endregion
     }

@@ -24,6 +24,11 @@ namespace Prover.Core.Communication
             return await Task.Run(()=> DownloadItems(commPort, instrument, itemsToDownload));
         }
 
+        public static void Connect(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload)
+        {
+            
+        }
+
         public static Dictionary<int, string> DownloadItems(ICommPort commPort, Instrument instrument,
             IEnumerable<ItemsBase.Item> itemsToDownload)
         {

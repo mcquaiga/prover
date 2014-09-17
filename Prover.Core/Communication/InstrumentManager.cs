@@ -64,9 +64,15 @@ namespace Prover.Core.Communication
 
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
+
             var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
             if (test != null)
                 test.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, test.Items);
+        }
+
+        public async Task DownloadVolumeItems()
+        {
+            _instrument.Volume.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Volume.Items);
         }
 
         public void Save()
@@ -74,5 +80,7 @@ namespace Prover.Core.Communication
             var store = new InstrumentStore();
             store.Save(_instrument);
         }
+
+        
     }
 }
