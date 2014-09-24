@@ -93,22 +93,6 @@
 			</UniformGrid>
 		</DataTemplate>
 
-		
-
-		<DataTemplate x:Key="ItemFile">
-			<StackPanel Orientation="Horizontal">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Text="{Binding Key.Number}" />
-					<TextBlock Grid.Column="1" Text="{Binding Key.ShortDescription}" />
-					<TextBlock Grid.Column="2" Text="{Binding Value}" />
-				</Grid>
-			</StackPanel>
-		</DataTemplate>
 	</UserControl.Resources>
 
 	<ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -16,6 +17,7 @@ namespace Prover.Core.Communication
         private readonly Instrument _instrument;
         private readonly IUnityContainer _container;
         public ICommPort CommPort { get; set; }
+        private InstrumentCommunication _instrumentCommunication;
 
         public Instrument Instrument
         {
@@ -38,6 +40,7 @@ namespace Prover.Core.Communication
         public void SetupCommPort(string commName, BaudRateEnum baudRate)
         {
             CommPort = InstrumentCommunication.CreateCommPortObject(commName, baudRate);
+            _instrumentCommunication = new InstrumentCommunication(CommPort, _instrument);
         }
 
         public InstrumentManager(IUnityContainer container, ICommPort commPort)
@@ -52,33 +55,48 @@ namespace Prover.Core.Communication
             CommPort = commPort;
         }
 
+        public async Task DownloadInfo()
+        {
+            await _instrumentCommunication.Connect();
+            await DownloadInstrumentItemsAsync();
+            await DownloadTemperatureItems();
+            await DownloadVolumeItems();
+            await _instrumentCommunication.Disconnect();
+        }
+
         public async Task DownloadInstrumentItemsAsync()
         {
-            _instrument.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Items);
+            _instrument.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync( _instrument.Items);
         }
 
         public async Task DownloadTemperatureItems()
         {
-            _instrument.Temperature.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument,_instrument.Temperature.Items);
+            _instrument.Temperature.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Temperature.Items);
         }
 
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
-
+            await _instrumentCommunication.Connect();
             var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
             if (test != null)
-                test.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, test.Items);
+                test.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(test.Items);
+            await _instrumentCommunication.Disconnect();
         }
 
         public async Task DownloadVolumeItems()
         {
-            _instrument.Volume.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(CommPort, _instrument, _instrument.Volume.Items);
+            _instrument.Volume.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.Items);
+        }
+
+        public async Task DownloadVolumeAfterTestItems()
+        {
+            _instrument.Volume.TestInstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.AfterTestItems);
         }
 
         public void Save()
         {
             var store = new InstrumentStore();
-            store.Save(_instrument);
+            store.Upsert(_instrument);
         }
 
         

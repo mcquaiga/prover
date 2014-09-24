@@ -10,8 +10,30 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Communication
 {
-    public static class InstrumentCommunication
+    public class InstrumentCommunication
     {
+        private readonly Instrument _instrument;
+        private readonly ICommPort _commPort;
+        private miSerialProtocolClass _miSerial;
+
+        public InstrumentCommunication(ICommPort commPort, Instrument instrument)
+        {
+            _commPort = commPort;
+            _instrument = instrument;
+         
+            switch (_instrument.Type)
+            {
+                case InstrumentType.Ec300:
+                   _miSerial = new EC300Class(commPort);
+                    break;
+                default:
+                    _miSerial = new MiniMaxClass(commPort);
+                    break;
+            }
+
+            IsConnected = false;
+        }
+
         public static List<string> GetCommPortList()
         {
             var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
@@ -19,33 +41,36 @@ namespace Prover.Core.Communication
             return ports;
         }
 
-        public static async Task<Dictionary<int, string>> DownloadItemsAsync(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload )
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
         {
-            return await Task.Run(()=> DownloadItems(commPort, instrument, itemsToDownload));
+            return await Task.Run(()=> DownloadItems(itemsToDownload));
         }
 
-        public static void Connect(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload)
-        {
-            
-        }
+        public bool IsConnected { get; set; }
 
-        public static Dictionary<int, string> DownloadItems(ICommPort commPort, Instrument instrument,
-            IEnumerable<ItemsBase.Item> itemsToDownload)
+        public async Task Connect()
         {
-            miSerialProtocolClass miSerial = null;
-            switch (instrument.Type)
+            try
             {
-                case InstrumentType.Ec300:
-                    miSerial = new EC300Class(commPort);
-                    break;
-                default:
-                    miSerial = new MiniMaxClass(commPort);
-                    break;
+                if (!IsConnected) await Task.Run(()=> _miSerial.Connect());
+                IsConnected = true;
             }
+            catch
+            {
+                IsConnected = false;
+            }
+        }
 
-            miSerial.Connect();
-            var myItems = miSerial.RG((from i in itemsToDownload select i.Number).ToList());
-            miSerial.Disconnect();
+        public async Task Disconnect()
+        {
+            await Task.Run(()=> _miSerial.Disconnect());
+            IsConnected = false;
+        }
+
+        public Dictionary<int, string> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
+        {
+            if (!IsConnected) Connect();
+            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
             return myItems;
         }
 

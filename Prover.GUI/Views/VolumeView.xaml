@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
@@ -46,15 +47,15 @@
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. Multi. (92)</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.DriveRateDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_DriveRateDescription" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Drive Rate (98)</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.MeterType, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterType" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Type (432)</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.MeterDisplacement, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterDisplacement" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Displacement</TextBlock>
                             </StackPanel>
                         </UniformGrid>
@@ -70,11 +71,11 @@
 											   Text="Start" />
                             </Border>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.StartCorrected, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartCorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.StartUncorrected, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartUncorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
                             </StackPanel>
                         </StackPanel>
@@ -90,11 +91,11 @@
 											   Text="End" />
                             </Border>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.EndCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndCorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.EndUncorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndUncorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
 
                             </StackPanel>
@@ -110,11 +111,11 @@
 											   Text="Calculated" />
                             </Border>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.EvcCorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcCorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Corrected Volume</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Text="{Binding Instrument.Volume.EvcUncorrected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcUncorrected" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Uncorrected Volume</TextBlock>
 
                             </StackPanel>
@@ -139,30 +140,29 @@
                             </Grid.ColumnDefinitions>
                             <UniformGrid Columns="2" Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0">
                                 <StackPanel HorizontalAlignment="Left">
-                                    <TextBlock Style="{DynamicResource ItemValues}" Text="{Binding Instrument.Volume.PulseACount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseACount" />
                                     <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse A</TextBlock>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Right" Margin="20,0,0,0">
-                                    <TextBlock Style="{DynamicResource ItemValues}" Text="{Binding Instrument.Volume.PulseBCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseBCount" />
                                     <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse B</TextBlock>
                                 </StackPanel>
                             </UniformGrid>
                             <Grid Grid.Row="1" Grid.Column="0">
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBox Width="150" Style="{DynamicResource SimpleTextBox}"
-													Text="{Binding Instrument.Volume.AppliedInput, 
-																	Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+													Name="Volume_AppliedInput" />
                                     <TextBlock HorizontalAlignment="Center" Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Applied Input</TextBlock>
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
                                 <StackPanel HorizontalAlignment="Center">
                                     <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Text="{Binding Instrument.Volume.UnCorrectedPercentError, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_UnCorrectedPercentError" />
                                         <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. % Error</TextBlock>
                                     </StackPanel>
                                     <StackPanel HorizontalAlignment="Center">
-                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Text="{Binding Instrument.Volume.CorrectedPercentError, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_CorrectedPercentError" />
                                         <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. % Error</TextBlock>
                                     </StackPanel>
                                 </StackPanel>
@@ -171,11 +171,23 @@
                                 <Button Width="100"
 											Command="{Binding StartTestCommand}"
 											Content="Start Test"
-											Style="{StaticResource SimpleButton}" />
+											Style="{StaticResource SimpleButton}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <cal:ActionMessage MethodName="StartTestCommand" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
                                 <Button Width="100"
 											Command="{Binding StopTestCommand}"
 											Content="Stop"
-											Style="{StaticResource SimpleButton}" />
+											Style="{StaticResource SimpleButton}">
+                                        <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <cal:ActionMessage MethodName="StopTestCommand" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
                             </StackPanel>
                         </Grid>
 

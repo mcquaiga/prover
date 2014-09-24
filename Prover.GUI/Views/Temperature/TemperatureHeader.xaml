@@ -70,7 +70,7 @@
                         <TextBlock Style="{StaticResource ItemDescriptions}"
 									   Text="% Error"
 									   TextAlignment="right"
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
+									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" HorizontalAlignment="Center"/>
                     </UniformGrid>
 
                 

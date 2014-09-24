@@ -37,6 +37,11 @@ namespace Prover.GUI.ViewModels
             }
         }
 
+        public void StartTestCommand()
+        {
+            //Do Something
+        }
+
         public void Handle(InstrumentUpdateEvent message)
         {
             InstrumentManager = message.InstrumentManager;

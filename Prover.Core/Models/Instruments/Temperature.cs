@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class Temperature : ItemsBase
+    public class Temperature : ItemsBase
     {
         public Temperature(Instrument instrument)
         {
             Instrument = instrument;
-            Id = Guid.NewGuid();
             Items = Item.LoadItems(Instrument.Type).Where(x => x.IsTemperature == true).ToList();
-
             Tests = new Collection<TemperatureTest>()
             {
                 new TemperatureTest(Instrument, TemperatureTest.Level.Low),
@@ -23,8 +21,11 @@ namespace Prover.Core.Models.Instruments
                 new TemperatureTest(Instrument, TemperatureTest.Level.High)
             };
         }
-      
-        public ICollection<TemperatureTest> Tests { get; set; }
+        
+        public virtual ICollection<TemperatureTest> Tests { get; set; }
+
+        public Guid InstrumentId { get; set; }
+        [ForeignKey("InstrumentId")]
         public Instrument Instrument { get; set; }
 
         [NotMapped]

@@ -10,10 +10,18 @@ Public Class SerialPort
     Private _timeOut As Integer
 
     Sub New(ByVal PortName As String, ByVal BaudRate As BaudRateEnum, Optional ByVal Timeout As Integer = 50)
+        comm = New System.IO.Ports.SerialPort
         _portName = PortName
         _baudRate = BaudRate
         _timeOut = Timeout
-        comm = New System.IO.Ports.SerialPort
+
+        With comm
+            .PortName = _portName
+            .BaudRate = _baudRate
+            .NewLine = "\\"
+            .ReadTimeout = 200
+            .WriteTimeout = 150
+        End With
     End Sub
 
     Public Sub ClosePort() Implements ICommPort.ClosePort
@@ -21,16 +29,8 @@ Public Class SerialPort
     End Sub
 
     Public Sub OpenPort() Implements ICommPort.OpenPort
-        If comm Is Nothing Then
-            comm = New System.IO.Ports.SerialPort
-        End If
         If Not comm.IsOpen Then
             With comm
-                .PortName = _portName
-                .BaudRate = _baudRate
-                .NewLine = "\\"
-                .ReadTimeout = 200
-                .WriteTimeout = 150
                 'This will throw an exception if the port is already in use
                 Try
                     .Open()

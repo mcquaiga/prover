@@ -33,12 +33,12 @@
                                     Watermark="Gauge"
 							        Value="{Binding Gauge}" />
 
-        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" />
+        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" HorizontalAlignment="Center"/>
 
-        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" />
+        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" HorizontalAlignment="Center"/>
 
-        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" />
+        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center"/>
 
-        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_PercentError" />
+        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_PercentError" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

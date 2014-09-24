@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -10,9 +12,15 @@ namespace Prover.Core.Models.Instruments
 {
     public abstract class ItemsBase
     {
+        protected ItemsBase()
+        {
+            Id = Guid.NewGuid();
+        }
+
         private Dictionary<int, string> _instrumentValues;
         private string _data;
 
+        [Key]
         public Guid Id { get; set; }
         [NotMapped]
         public ICollection<Item> Items { get; set; }
@@ -33,9 +41,9 @@ namespace Prover.Core.Models.Instruments
             set { _instrumentValues = value; }
         }
 
-        public string DescriptionValue(int number) // Is only available when there's something in the list of ItemDescriptions
+        public string DescriptionValue(int number, ICollection<Item> items ) // Is only available when there's something in the list of ItemDescriptions
         {
-            var item = Items.FirstOrDefault(x => x.Number == number);
+            var item = items.FirstOrDefault(x => x.Number == number);
             if (InstrumentValues == null) return null;
             var value = InstrumentValues[number];
 
@@ -50,9 +58,14 @@ namespace Prover.Core.Models.Instruments
 
             return Convert.ToString(value);
         }
-        public double? NumericValue(int number)
+        public string DescriptionValue(int number)
         {
-            var item = Items.FirstOrDefault(x => x.Number == number);
+            return DescriptionValue(number, this.Items);
+        }
+        
+        public double? NumericValue(int number, ICollection<Item> items)
+        {
+            var item = items.FirstOrDefault(x => x.Number == number);
             if (InstrumentValues == null) return null;
             string value = InstrumentValues[number];
 
@@ -67,7 +80,24 @@ namespace Prover.Core.Models.Instruments
 
             return Convert.ToDouble(value);
         }
+        public double? NumericValue(int number)
+        {
+            return NumericValue(number, this.Items);
+        }
 
+        public double? ParseHighResReading(double? highResReading)
+        {
+            if (highResReading == 0) return 0;
+
+            var highResString = Convert.ToString(highResReading);
+            if (highResReading > 0 && highResString.IndexOf(".", StringComparison.Ordinal) > -1)
+            {
+                return
+                    Convert.ToDouble(highResString.Substring(highResString.IndexOf(".", StringComparison.Ordinal), highResString.Length - highResString.IndexOf(".", StringComparison.Ordinal)));
+            }
+
+            return 0;
+        }
 
         public class Item
         {
@@ -81,6 +111,7 @@ namespace Prover.Core.Models.Instruments
             public bool? IsTemperature { get; set; }
             public bool? IsTemperatureTest { get; set; }
             public bool? IsVolume { get; set; }
+            public bool? IsVolumeTest { get; set; }
 
             [NotMapped]
             public IEnumerable<ItemDescription> ItemDescriptions { get; set; }
@@ -111,6 +142,7 @@ namespace Prover.Core.Models.Instruments
                             IsTemperature = x.Attribute("isTemperature") != null && Convert.ToBoolean(x.Attribute("isTemperature").Value),
                             IsTemperatureTest = x.Attribute("isTemperatureTest") != null && Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
                             IsVolume = x.Attribute("isVolume") != null && Convert.ToBoolean(x.Attribute("isVolume").Value),
+                            IsVolumeTest = x.Attribute("isVolumeTest") != null && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
                             ItemDescriptions =
                                 (from y in x.Descendants("value")
                                  select new ItemDescription()
@@ -127,17 +159,17 @@ namespace Prover.Core.Models.Instruments
 
             }
         }
-        public class InstrumentValue
-        {
-            public int Number { get; set; }
-            public double Value { get; set; }
-        }
-        public class ItemValues
-        {
-            public Item Item { get; set; }
-            public InstrumentValue InstrumentValue { get; set; }
+        //public class InstrumentValue
+        //{
+        //    public int Number { get; set; }
+        //    public double Value { get; set; }
+        //}
+        //public class ItemValues
+        //{
+        //    public Item Item { get; set; }
+        //    public InstrumentValue InstrumentValue { get; set; }
 
-        }
+        //}
         public class ItemDescription
         {
             public int Id { get; set; } //Maps to the Id that the instrument uses

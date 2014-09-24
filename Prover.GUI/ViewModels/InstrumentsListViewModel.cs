@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -27,11 +28,11 @@ namespace Prover.GUI.ViewModels
         {
             if (certificateGuid == Guid.Empty)
             {
-                using (var store = _container.Resolve<IInstrumentStore<Instrument>>()) 
-                { 
+                using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
+                {
                     Instruments = store.Query()
-                        .Where(x => x.CertificateGuid == Guid.Empty)
-                        .ToList();
+                                        .Where(x => x.CertificateGuid == Guid.Empty)
+                                        .ToList();
                 }
             }
             else

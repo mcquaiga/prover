@@ -6,14 +6,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <StackPanel>
+        <UniformGrid>
             <Button x:Name="NewTestButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\Resources\tests-icon.png" Width="128" Height="128" />
                     <TextBlock HorizontalAlignment="Center">New Test</TextBlock>
-                </StackPanel> 
+                </StackPanel>
             </Button>
-            <Button x:Name="CreateCertificateButton">Create Certificate</Button>
-        </StackPanel>
+            <Button x:Name="CreateCertificateButton" Width="128" Height="150">
+                <StackPanel>
+                    <Image Source="..\Resources\cert-icon.png" Width="128" Height="128" />
+                    <TextBlock HorizontalAlignment="Center">Create Certificate</TextBlock>
+                </StackPanel>
+            </Button>
+        </UniformGrid>
     </Grid>
 </UserControl>

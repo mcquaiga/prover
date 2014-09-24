@@ -32,8 +32,8 @@ namespace Prover.DebugTools
         {
             var store = Unity.Resolve<IInstrumentStore<Instrument>>();
             var instr = new Instrument();
-            instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
-            store.Save(instr);
+            //instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
+            store.Upsert(instr);
         }
     }
 }

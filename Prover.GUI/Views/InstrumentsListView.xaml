@@ -7,8 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <!--<local:BooleanToPassConverter x:Key="BooleanToPassConverter" />-->
-        <CollectionViewSource x:Key="Instruments" Source="{Binding Path=Instruments, Mode=TwoWay}"/>
-        <DataTemplate x:Key="temp">
+        <DataTemplate x:Key="TemperatureTests">
             <Grid>
                 <StackPanel  Orientation="Vertical" DataContext="{Binding}" Margin="10,0,0,0" >
                     <TextBlock Foreground="Black" Text="{Binding LevelDescription}" FontStyle="Oblique" FontWeight="Bold" HorizontalAlignment="Center"/>

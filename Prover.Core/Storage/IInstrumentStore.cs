@@ -11,7 +11,7 @@ namespace Prover.Core.Storage
     {
         IQueryable<T> Query();
         IQueryable<Instrument> Get(Guid id);
-        void Save(T entity);
+        void Upsert(T entity);
         void Delete(T entity);
     }
 }

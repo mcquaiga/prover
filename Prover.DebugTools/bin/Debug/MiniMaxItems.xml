@@ -1,6 +1,6 @@
 <InstrumentItems>
-	<item number="0" code="COR_VOL" shortDescription="Corrected Vol" description="Corrected Volume" isVolume="true"/>
-	<item number="2" code="UNCOR_VOL" shortDescription="UnCor Vol" description="Uncorrected Volume" isVolume="true"/>
+	<item number="0" code="COR_VOL" shortDescription="Corrected Vol" description="Corrected Volume" isVolume="true" isVolumeTest="true"/>
+	<item number="2" code="UNCOR_VOL" shortDescription="UnCor Vol" description="Uncorrected Volume" isVolume="true" isVolumeTest="true"/>
 	<item number="5" code="PULSER_A" shortDescription="Pulser A #" description="Pulser A # o"/>
 	<item number="6" code="PULSER_B" shortDescription="Pulser B #" description="Pulser B # o"/>
 	<item number="8" code="GAS_PRESS" shortDescription="Gas Press" description="Gas Pressure" isPressure="true"/>
@@ -114,7 +114,7 @@
 		<value id="0" description="Gauge" numericvalue="0" />
 		<value id="1" description="Absolute" numericvalue="1" />
 	</item>
-	<item number="113" code="HIGH_RES_CORRECTED" shortDescription="High Res COR" description="High Resolution Corrected Volume" isVolume="true" />
+	<item number="113" code="HIGH_RES_CORRECTED" shortDescription="High Res COR" description="High Resolution Corrected Volume" isVolume="true" isVolumeTest="true"/>
 	<item number="122" code="FIRMwARE" shortDescription="Firm. Ver." description="Firmware Version" />
 	<item number="140" code="ENERGY" shortDescription="Energy" description="Energy" isVolume="true" />
 	<item number="141" code="ENERGY_UNITS" shortDescription="Energy Units" description="Energy Units" isVolume="true">
@@ -168,5 +168,5 @@
 		<value id="33" description="RM1000n" />
 	</item>
 	<item number="439" code="METER_DISPLACEMENT" shortDescription="Meter Displacement" description="Meter Displacement" isVolume="true" />
-	<item number="892" code="HIGH_RES_UNCOR" shortDescription="High Res. Uncor. Volume" description="High Resolution Uncor. Volume" isVolume="true" />
+	<item number="892" code="HIGH_RES_UNCOR" shortDescription="High Res. Uncor. Volume" description="High Resolution Uncor. Volume" isVolume="true" isVolumeTest="true" />
 </InstrumentItems>
