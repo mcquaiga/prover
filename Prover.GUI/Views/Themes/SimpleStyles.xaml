@@ -1479,7 +1479,7 @@
 	<Style x:Key="ItemValues" TargetType="{x:Type TextBlock}">
 		<Setter Property="Foreground" Value="Black" />
 		<Setter Property="OpacityMask" Value="Black" />
-		<Setter Property="FontSize" Value="18.667" />
+		<Setter Property="FontSize" Value="20" />
 		<Setter Property="Height" Value="Auto" />
 	</Style>
 

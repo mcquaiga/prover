@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class Volume : ItemsBase
+    public class Volume : ItemsBase
     {
-        private string _data;
-
-        public Volume(Instrument instrument)
-        {
-            Instrument = instrument;
-            Id = new Guid();
-            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
-        }
-
         public enum EvcType
         {
             PressureTemperature,
@@ -27,42 +19,93 @@ namespace Prover.Core.Models.Instruments
             Temperature
         }
 
-        public int PulseACount { get; set; }
-        public int PulseBCount { get; set; }
+        private string _data;
+        
+        private Dictionary<int, string> _testInstrumentValues;
 
-        public string Data
+        public Volume()
         {
-            get { return JsonConvert.SerializeObject(Items); }
-            set { _data = value; }
+            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolume == true).ToList();
+            AfterTestItems = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolumeTest == true).ToList();
         }
 
-        public Instrument Instrument { get; set; }
-        public TemperatureTest TemperatureTest { get; set; }
+        public Volume(Instrument instrument)
+        {
+            Instrument = instrument;
+            InstrumentId = Instrument.Id;
+            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
+            AfterTestItems = Item.LoadItems(Instrument.Type).Where(x => x.IsVolumeTest == true).ToList();
+        }
 
+        public int PulseACount { get; set; }
+        public int PulseBCount { get; set; }
         public double AppliedInput { get; set; }
+
+        public Guid InstrumentId { get; set; }
+        [Required]
+        public virtual Instrument Instrument { get; set; }
+        
+        public string TestInstrumentData
+        {
+            get { return JsonConvert.SerializeObject(TestInstrumentValues); }
+            set
+            {
+                _data = value;
+                _testInstrumentValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
+            }
+        }
+
+        [NotMapped]
+        public TemperatureTest TemperatureTest
+        {
+            get { return Instrument.Temperature.Tests.FirstOrDefault(x => x.IsVolumeTestTemperature); }
+        }
+
+        [NotMapped]
+        public ICollection<Item> AfterTestItems { get; set; }
+
+        [NotMapped]
+        public double? EvcCorrected
+        {
+            get { return Math.Round((double)((EndCorrected - StartCorrected) * CorrectedMultiplier), 4); }
+        }
+
+        [NotMapped]
+        public double? EvcUncorrected
+        {
+            get { return Math.Round((double)((EndUncorrected - StartUncorrected) * UnCorrectedMultiplier), 4); }
+
+        }
+
+        [NotMapped]
+        public Dictionary<int, string> TestInstrumentValues
+        {
+            get { return _testInstrumentValues; }
+            set { _testInstrumentValues = value; }
+        }
 
         [NotMapped]
         public double? StartCorrected
         {
-            get { return NumericValue(0); }
+            get { return NumericValue(0) + ParseHighResReading(NumericValue(113)); }
         }
 
         [NotMapped]
         public double? StartUncorrected
         {
-            get { return NumericValue(2); }
+            get { return NumericValue(2) + ParseHighResReading(NumericValue(892)); }
         }
 
         [NotMapped]
         public double? EndCorrected
         {
-            get { return NumericValue(0); }
+            get { return NumericValue(0, AfterTestItems) + ParseHighResReading(NumericValue(113, AfterTestItems)); }
         }
 
         [NotMapped]
         public double? EndUncorrected
         {
-            get { return NumericValue(2); }
+            get { return NumericValue(2, AfterTestItems) + ParseHighResReading(NumericValue(892, AfterTestItems)); }
         }
 
         [NotMapped]
@@ -98,9 +141,21 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public double? CorrectedMultiplier
+        {
+            get { return NumericValue(90); }
+        }
+
+        [NotMapped]
         public string CorrectedMultiplierDescription
         {
             get { return DescriptionValue(90); }
+        }
+
+        [NotMapped]
+        public double? UnCorrectedMultiplier
+        {
+            get { return NumericValue(92); }
         }
 
         [NotMapped]
@@ -115,32 +170,57 @@ namespace Prover.Core.Models.Instruments
             get { return NumericValue(439); }
         }
 
+        [NotMapped]
+        public double? TrueUncorrected
+        {
+            get { return (MeterDisplacement * AppliedInput); }
+        }
 
-        //TODO
+        [NotMapped]
+        public double? TrueCorrected
+        {
+            get
+            {
+                if (TemperatureTest == null) return null;
+                if (CorrectionType == EvcType.Temperature)
+                {
+                    return (TemperatureTest.ActualFactor * TrueUncorrected);
+                }
+                return null;
+            }
+        }
+
         [NotMapped]
         public double? MeterDisplacement
         {
             get { return NumericValue(439); }
         }
 
-        public double? EvcCorrected
-        {
-            get { return 0; }
-        }
-
-        public double? EvcUncorrected
-        {
-            get { return 0; }
-        }
-
+        [NotMapped]
         public double? UnCorrectedPercentError
         {
-            get { return 0.00; }
+            get
+            {
+                if (TrueUncorrected != 0)
+                {
+                    return Math.Round((double) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
+                }
+                return null;
+            }
         }
 
+        [NotMapped]
         public double? CorrectedPercentError
         {
-            get { return 0.00; }
+            get
+            {
+                if (TrueCorrected != 0 && TrueCorrected != null)
+                {
+                    return Math.Round((double)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);    
+                }
+
+                return null;
+            }
         }
     }
 }

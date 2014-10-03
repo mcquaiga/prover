@@ -10,59 +10,63 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Communication
 {
-    public static class InstrumentCommunication
+    public class InstrumentCommunication
     {
-        public static List<string> GetCommPortList()
-        {
-            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-            ports.Add("IrDA");
-            return ports;
-        }
+        private readonly Instrument _instrument;
+        private readonly ICommPort _commPort;
+        private miSerialProtocolClass _miSerial;
 
-        public static async Task<Dictionary<int, string>> DownloadItemsAsync(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload )
+        public InstrumentCommunication(ICommPort commPort, Instrument instrument)
         {
-            return await Task.Run(()=> DownloadItems(commPort, instrument, itemsToDownload));
-        }
-
-        public static void Connect(ICommPort commPort, Instrument instrument, IEnumerable<ItemsBase.Item> itemsToDownload)
-        {
-            
-        }
-
-        public static Dictionary<int, string> DownloadItems(ICommPort commPort, Instrument instrument,
-            IEnumerable<ItemsBase.Item> itemsToDownload)
-        {
-            miSerialProtocolClass miSerial = null;
-            switch (instrument.Type)
+            _commPort = commPort;
+            _instrument = instrument;
+         
+            switch (_instrument.Type)
             {
                 case InstrumentType.Ec300:
-                    miSerial = new EC300Class(commPort);
+                   _miSerial = new EC300Class(commPort);
                     break;
                 default:
-                    miSerial = new MiniMaxClass(commPort);
+                    _miSerial = new MiniMaxClass(commPort);
                     break;
             }
 
-            miSerial.Connect();
-            var myItems = miSerial.RG((from i in itemsToDownload select i.Number).ToList());
-            miSerial.Disconnect();
+            IsConnected = false;
+        }
+
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
+        {
+            return await Task.Run(()=> DownloadItems(itemsToDownload));
+        }
+
+        public bool IsConnected { get; set; }
+
+        public async Task Connect()
+        {
+            try
+            {
+                if (!IsConnected) await Task.Run(()=> _miSerial.Connect());
+                IsConnected = true;
+            }
+            catch
+            {
+                IsConnected = false;
+            }
+        }
+
+        public async Task Disconnect()
+        {
+            await Task.Run(()=> _miSerial.Disconnect());
+            IsConnected = false;
+        }
+
+        public Dictionary<int, string> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
+        {
+            if (!IsConnected) Connect();
+            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
             return myItems;
         }
 
-        public static ICommPort CreateCommPortObject(string commName, BaudRateEnum baudRate)
-        {
-            if (!GetCommPortList().Contains(commName)) return null;
-
-            ICommPort commPort;
-            if (commName == "IrDA")
-            {
-                commPort = new IrDAPort();
-            }
-            else
-            {
-                commPort = new SerialPort(commName, baudRate);
-            }
-            return commPort;
-        }
+        
     }
 }

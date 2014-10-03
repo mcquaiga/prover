@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="Prover.GUI.Views.InstrumentsList.InstrumentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="75" d:DesignWidth="800">
+    <Grid>
+        <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <!--Text="{Binding HasPassed, Converter={StaticResource BooleanToPassConverter}}"-->
+                <TextBlock Margin="15"  Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                FontSize="24"/>
+
+                <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <TextBlock Width="125"
+                                   Foreground="Black"
+                                   Name="Type" />
+                    <TextBlock Width="125"
+                                   Margin="2"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="22"
+                                   Foreground="Black"
+                                   Name="Instrument_SerialNumber" />
+                </StackPanel>
+                <Grid Height="50" Margin="2" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="MFG.: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" Name="Instrument_SerialNumber2"  HorizontalAlignment="Right" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="CO.: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" Name="Instrument_SiteNumber2" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="Firm. Ver.: " FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Name="Instrument_FirmwareVersion"  HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="3" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="Meter Type: " FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Foreground="Black" Name="Instrument_Volume_MeterType" FontSize="16" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="Meter Displacement: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" Name="Instrument_Volume_MeterDisplacement" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="Date Tested: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" Name="Instrument_CreatedDate" />
+                    </StackPanel>
+                </Grid>
+
+                <ContentControl Name="TemperatureItem" Grid.Column="4"></ContentControl>
+
+                <Grid Grid.Column="5">
+                   
+                </Grid>
+
+                <Grid Grid.Column="6" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--Row 1 - SiteInformation-->
+                    <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Vertical">
+                        <TextBlock Foreground="Black" Text="UnCor. Multi." FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Text="{Binding VolumeTest.UnCorrectedMultiplierDescription}" />
+                    </StackPanel>
+
+                    <!--Row 2-->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                        <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Text="{Binding VolumeTest.CorrectedMultiplierDescription}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="7" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0"  Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                        <TextBlock Foreground="Black" Text="UnCor. % Error" FontWeight="Bold"  />
+                        <TextBlock Foreground="Black" Text="{Binding VolumeTest.UnCorrectedPercentError}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                        <TextBlock Foreground="Black" Text="Cor. % Error"  FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Text="{Binding VolumeTest.CorrectedPercentError}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

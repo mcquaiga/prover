@@ -157,7 +157,10 @@
     <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsListViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
@@ -169,9 +172,18 @@
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\InstrumentsListView.xaml.cs">
+    <Compile Include="Views\InstrumentsList\InstrumentsListView.xaml.cs">
       <DependentUpon>InstrumentsListView.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\InstrumentsList\InstrumentTempView.xaml.cs">
+      <DependentUpon>InstrumentTempView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentsList\InstrumentTempTestView.xaml.cs">
+      <DependentUpon>InstrumentTempTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentsList\InstrumentView.xaml.cs">
+      <DependentUpon>InstrumentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -210,7 +222,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentsListView.xaml">
+    <Page Include="Views\InstrumentsList\InstrumentsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsList\InstrumentTempView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsList\InstrumentTempTestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsList\InstrumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -321,7 +345,9 @@
   <ItemGroup>
     <Resource Include="Resources\tests-icon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\cert-icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -93,22 +93,6 @@
 			</UniformGrid>
 		</DataTemplate>
 
-		
-
-		<DataTemplate x:Key="ItemFile">
-			<StackPanel Orientation="Horizontal">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Text="{Binding Key.Number}" />
-					<TextBlock Grid.Column="1" Text="{Binding Key.ShortDescription}" />
-					<TextBlock Grid.Column="2" Text="{Binding Value}" />
-				</Grid>
-			</StackPanel>
-		</DataTemplate>
 	</UserControl.Resources>
 
 	<ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">
@@ -174,6 +158,7 @@
 								</ItemsControl.ItemsPanel>
 							</ItemsControl>
 						</GroupBox>
+         
 					</StackPanel>
 					<StackPanel Grid.Row="0"
 								Grid.RowSpan="2"
@@ -206,7 +191,7 @@
 								  FontSize="18.667">
 							<ItemsControl Margin="5"
 										  ItemTemplate="{StaticResource ResourceKey=TachCommPorts}"
-										  ItemsSource="{Binding TachCommPorts}">
+										  ItemsSource="{Binding TachPorts}">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>
 										<WrapPanel />
@@ -216,7 +201,7 @@
 						</GroupBox>
 					</StackPanel>
 
-					<Button Grid.Row="3"
+                    <Button Grid.Row="3"
 							Grid.Column="1"
 							Width="250"
 							HorizontalAlignment="Center"

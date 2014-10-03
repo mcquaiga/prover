@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views
+namespace Prover.GUI.Views.InstrumentsList
 {
     /// <summary>
-    /// Interaction logic for InstrumentsListView.xaml
+    /// Interaction logic for TempTestView.xaml
     /// </summary>
-    public partial class InstrumentsListView : UserControl
+    public partial class InstrumentTempTestView : UserControl
     {
-        public InstrumentsListView()
+        public InstrumentTempTestView()
         {
             InitializeComponent();
         }

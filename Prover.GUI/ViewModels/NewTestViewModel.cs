@@ -26,7 +26,7 @@ namespace Prover.GUI.ViewModels
         public NewTestViewModel(IUnityContainer container)
         {
             _container = container;
-            InstrumentManager = new InstrumentManager(_container);
+            
         }
 
         public Instrument Instrument
@@ -45,7 +45,12 @@ namespace Prover.GUI.ViewModels
 
         public List<string> CommPorts
         {
-            get { return InstrumentCommunication.GetCommPortList(); }
+            get { return Communications.GetCommPortList(); }
+        }
+
+        public List<string> TachPorts
+        {
+            get { return Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList(); }
         }
 
         public bool CommPortSettings(string commName)
@@ -79,14 +84,16 @@ namespace Prover.GUI.ViewModels
                 MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
                 return;
             }
-            InstrumentManager.SetupCommPort(CommName, BaudRate);
+            if (InstrumentManager == null)
+            {
+                InstrumentManager = new InstrumentManager(_container);
+                InstrumentManager.SetupCommPort(CommName, BaudRate);
+            }
 
-            await InstrumentManager.DownloadInstrumentItemsAsync();
-            await InstrumentManager.DownloadTemperatureItems();
-            await InstrumentManager.DownloadVolumeItems();
+            await InstrumentManager.DownloadInfo();
 
             NotifyOfPropertyChange(() => Instrument);
-
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
             //Publish the change in instrument state to anyone who's listening
             _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
         }
@@ -96,7 +103,7 @@ namespace Prover.GUI.ViewModels
             if (InstrumentManager != null)
             {
                 InstrumentManager.Save();
-                
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
             }      
         }
         #endregion

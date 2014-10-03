@@ -29,16 +29,17 @@
                 </i:Interaction.Triggers>
             </Button>
 
-        <xctk:DecimalUpDown Grid.Column="1" Height="35" Margin="15,0,15,0"
+        <xctk:DecimalUpDown Grid.Column="1" Height="35" Margin="15,0,15,0" VerticalAlignment="Center"
+                                FontSize="20"                           
                                     Watermark="Gauge"
 							        Value="{Binding Gauge}" />
 
-        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" />
+        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" />
+        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" />
+        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_PercentError" />
+        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

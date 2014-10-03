@@ -10,28 +10,32 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
-    public class InstrumentStore : IInstrumentStore<Instrument>, IDisposable
+    public class InstrumentStore : IInstrumentStore<Instrument>
     {
         private readonly ProverContext _proverContext = new ProverContext();
 
         public IQueryable<Instrument> Query()
         {
-
             return _proverContext.Instruments.AsQueryable();
         }
 
-        public IQueryable<Instrument> Get(Guid id)
+        public Instrument Get(Guid id)
         {
-            return _proverContext.Instruments.Where(x=> x.Id == id);
+            return _proverContext.Instruments.First(x => x.Id == id);
         }
 
-        public void Save(Instrument entity)
+        public Temperature GetTemperature(Guid id)
         {
-            _proverContext.Instruments.Add(entity);
-            _proverContext.Temperatures.Add(entity.Temperature);
-            entity.Temperature.Tests.ForEach(test => _proverContext.TemperatureTests.Add(test));
-                
-            _proverContext.SaveChanges();
+            return _proverContext.Temperatures.Find(id);
+        }
+
+        public void Upsert(Instrument instrument)
+        {
+            using (var context = new ProverContext())
+            {
+                context.Instruments.Add(instrument);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(Instrument entity)

@@ -73,14 +73,12 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Newtonsoft.Json.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\InTheHand.Net.Personal.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\App.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\CreateCertificateView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsListView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.g.resources
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.Properties.Resources.resources
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.exe
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.pdb
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\CreateCertificateView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsListView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Temperature\TemperatureHeader.baml
@@ -105,3 +103,11 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\sv\Xceed.Wpf.AvalonDoc
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\VolumeView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\VolumeView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentsListView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempTestView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentsListView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempTestView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentView.g.cs

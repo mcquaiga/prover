@@ -410,9 +410,7 @@ Public MustInherit Class miSerialProtocolClass
 
             'Give the instrument half a second 
             System.Threading.Thread.Sleep(500)
-
             Me._commPort.ClosePort()
-
         End If
     End Sub
 

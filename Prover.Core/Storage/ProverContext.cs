@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,18 @@ namespace Prover.Core.Storage
         {
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
+            //Configuration.LazyLoadingEnabled = false;
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            //modelBuilder.Entity<Temperature>().HasRequired(a => a.Instrument).WithRequiredDependent();
+            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithRequiredDependent();
+            ////modelBuilder.Entity<TemperatureTest>().HasRequired(a => a.Temperature).WithMany().HasForeignKey(a => a.TemperatureId);
+            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithMany().HasForeignKey(a => a.InstrumentId);
+          
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Certificate> Certificates { get; set; }

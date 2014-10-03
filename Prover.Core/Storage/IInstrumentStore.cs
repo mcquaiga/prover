@@ -10,8 +10,9 @@ namespace Prover.Core.Storage
     public interface IInstrumentStore<T> : IDisposable where T : class 
     {
         IQueryable<T> Query();
-        IQueryable<Instrument> Get(Guid id);
-        void Save(T entity);
+        Instrument Get(Guid id);
+        Temperature GetTemperature(Guid id);
+        void Upsert(T entity);
         void Delete(T entity);
     }
 }
