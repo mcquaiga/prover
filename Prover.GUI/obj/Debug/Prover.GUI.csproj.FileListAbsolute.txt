@@ -105,3 +105,5 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\sv\Xceed.Wpf.AvalonDoc
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\VolumeView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\VolumeView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentView.g.cs

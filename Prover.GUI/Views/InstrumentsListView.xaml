@@ -8,14 +8,7 @@
     <UserControl.Resources>
         <!--<local:BooleanToPassConverter x:Key="BooleanToPassConverter" />-->
         <DataTemplate x:Key="TemperatureTests">
-            <Grid>
-                <StackPanel  Orientation="Vertical" DataContext="{Binding}" Margin="10,0,0,0" >
-                    <TextBlock Foreground="Black" Text="{Binding LevelDescription}" FontStyle="Oblique" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Foreground="Black" Text="{Binding PercentError}" HorizontalAlignment="Center" />
-                    <TextBlock Foreground="Black" Text="{Binding EVCTemperature}" HorizontalAlignment="Center"/>
-                    <TextBlock Foreground="Black" Text="{Binding GaugeTemperature}" HorizontalAlignment="Center" />
-                </StackPanel>
-            </Grid>
+
         </DataTemplate>
 
         <DataTemplate x:Key="inst">
@@ -210,18 +203,14 @@
 
 
     <Grid>
-
-        <ListBox x:Name="InstrumentList"
+        <ListBox x:Name="Instruments"
                      Grid.Column="0"
                      Margin="10"
                      HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Stretch"
                      Background="{DynamicResource MainBackgroundColour}"
-                     BorderThickness="0"
-                     ItemContainerStyle="{StaticResource InstrumentStyle}"
-                     ItemTemplate="{StaticResource ResourceKey=inst}"
-                     ItemsSource="{Binding Source={StaticResource Instruments}}"
-                     SelectionMode="Multiple" />
+                     SelectionMode="Multiple"
+                     BorderThickness="0"/>
 
     </Grid>
 </UserControl>

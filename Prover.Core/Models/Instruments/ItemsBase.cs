@@ -16,12 +16,12 @@ namespace Prover.Core.Models.Instruments
         {
             Id = Guid.NewGuid();
         }
+        [Key]
+        public Guid Id { get; set; }
 
         private Dictionary<int, string> _instrumentValues;
         private string _data;
 
-        [Key]
-        public Guid Id { get; set; }
         [NotMapped]
         public ICollection<Item> Items { get; set; }
         public string InstrumentData

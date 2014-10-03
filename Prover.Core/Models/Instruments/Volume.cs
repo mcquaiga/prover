@@ -23,23 +23,27 @@ namespace Prover.Core.Models.Instruments
         
         private Dictionary<int, string> _testInstrumentValues;
 
+        public Volume()
+        {
+            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolume == true).ToList();
+            AfterTestItems = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolumeTest == true).ToList();
+        }
+
         public Volume(Instrument instrument)
         {
             Instrument = instrument;
+            InstrumentId = Instrument.Id;
             Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
             AfterTestItems = Item.LoadItems(Instrument.Type).Where(x => x.IsVolumeTest == true).ToList();
         }
+
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
         public double AppliedInput { get; set; }
 
         public Guid InstrumentId { get; set; }
-        [ForeignKey("InstrumentId")]
-        public Instrument Instrument { get; set; }
-
-        public Guid TemperatureTestId { get; set; }
-        [ForeignKey("TemperatureTestId"),]
-        public TemperatureTest TemperatureTest { get; set; }
+        [Required]
+        public virtual Instrument Instrument { get; set; }
         
         public string TestInstrumentData
         {
@@ -49,6 +53,12 @@ namespace Prover.Core.Models.Instruments
                 _data = value;
                 _testInstrumentValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
             }
+        }
+
+        [NotMapped]
+        public TemperatureTest TemperatureTest
+        {
+            get { return Instrument.Temperature.Tests.FirstOrDefault(x => x.IsVolumeTestTemperature); }
         }
 
         [NotMapped]

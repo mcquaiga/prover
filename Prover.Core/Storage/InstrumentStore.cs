@@ -19,19 +19,23 @@ namespace Prover.Core.Storage
             return _proverContext.Instruments.AsQueryable();
         }
 
-        public IQueryable<Instrument> Get(Guid id)
+        public Instrument Get(Guid id)
         {
-            return _proverContext.Instruments.Where(x=> x.Id == id);
+            return _proverContext.Instruments.First(x => x.Id == id);
+        }
+
+        public Temperature GetTemperature(Guid id)
+        {
+            return _proverContext.Temperatures.Find(id);
         }
 
         public void Upsert(Instrument instrument)
         {
-            //New or updated
-            _proverContext.Entry(instrument).State = instrument.Id == Guid.Empty ? 
-                        EntityState.Added : EntityState.Modified;
-
-            _proverContext.Instruments.Add(instrument);
-            _proverContext.SaveChanges();
+            using (var context = new ProverContext())
+            {
+                context.Instruments.Add(instrument);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(Instrument entity)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Reactive.Linq;
@@ -21,8 +22,9 @@ namespace Prover.GUI.ViewModels
         {
             _container = container;
             GetInstruments(Guid.Empty);
+           
         }
-        public IList<Instrument> Instruments { get; set; }
+        public ObservableCollection<InstrumentViewModel> Instruments { get; set; }
 
         private void GetInstruments(Guid certificateGuid)
         {
@@ -30,18 +32,20 @@ namespace Prover.GUI.ViewModels
             {
                 using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
                 {
-                    Instruments = store.Query()
+                    Instruments = new ObservableCollection<InstrumentViewModel>();
+                    var instruments = store.Query()
                                         .Where(x => x.CertificateGuid == Guid.Empty)
                                         .ToList();
+                    instruments.ForEach(i => Instruments.Add(new InstrumentViewModel(i)));
                 }
             }
             else
             {
-                Instruments =
-                    _container.Resolve<IInstrumentStore<Instrument>>()
-                        .Query()
-                        .Where(x => x.CertificateGuid == certificateGuid)
-                        .ToList();
+                //Instruments =
+                //    _container.Resolve<IInstrumentStore<Instrument>>()
+                //        .Query()
+                //        .Where(x => x.CertificateGuid == certificateGuid)
+                //        .ToList();
             }
 
             NotifyOfPropertyChange(() => Instruments);

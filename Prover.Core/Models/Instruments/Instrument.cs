@@ -26,7 +26,6 @@ namespace Prover.Core.Models.Instruments
     {
         public Instrument(InstrumentType type)
         {
-            Id = Guid.NewGuid();
             TestDateTime = DateTime.Now;
             Type = type;
             Items = Item.LoadItems(type);
@@ -40,15 +39,11 @@ namespace Prover.Core.Models.Instruments
         {
             get { return NumericValue(62); }
         }
-
         public DateTime TestDateTime { get; set; }
         public InstrumentType Type { get; set; }
         public Guid CertificateGuid { get; set; }
 
-        [NotMapped]
         public virtual Temperature Temperature { get; set; }
-
-        [NotMapped]
         public virtual Volume Volume { get; set; }
 
         [NotMapped]

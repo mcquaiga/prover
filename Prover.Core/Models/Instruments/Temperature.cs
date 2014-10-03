@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,23 +11,29 @@ namespace Prover.Core.Models.Instruments
 {
     public class Temperature : ItemsBase
     {
+        public Temperature()
+        {
+            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperature == true).ToList();
+        }
+
         public Temperature(Instrument instrument)
         {
             Instrument = instrument;
+            InstrumentId = instrument.Id;
             Items = Item.LoadItems(Instrument.Type).Where(x => x.IsTemperature == true).ToList();
             Tests = new Collection<TemperatureTest>()
             {
-                new TemperatureTest(Instrument, TemperatureTest.Level.Low),
-                new TemperatureTest(Instrument, TemperatureTest.Level.Medium),
-                new TemperatureTest(Instrument, TemperatureTest.Level.High)
+                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.Low),
+                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.Medium),
+                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.High)
             };
         }
-        
+
         public virtual ICollection<TemperatureTest> Tests { get; set; }
 
         public Guid InstrumentId { get; set; }
-        [ForeignKey("InstrumentId")]
-        public Instrument Instrument { get; set; }
+        [Required]
+        public virtual Instrument Instrument { get; set; }
 
         [NotMapped]
         public string Range

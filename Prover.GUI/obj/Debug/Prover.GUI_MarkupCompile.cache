@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\amcquaig\Development\prover\Prover.GUI\App.xaml
-17-1243662298
+18612918198
 
-281601405739
+302115211477
 92-1295586914
-Views\CreateCertificateView.xaml;Views\InstrumentsListView.xaml;Views\SiteInformationView.xaml;Views\TemperatureView.xaml;Views\TemperatureTestView.xaml;Views\Temperature\TemperatureHeader.xaml;Views\Themes\Button.xaml;Views\Themes\CheckboxStyle.xaml;Views\Themes\CheckboxTemplate.xaml;Views\Themes\Colours.xaml;Views\Themes\RadioButtonStyle.xaml;Views\Themes\ScrollViewerStyle.xaml;Views\Themes\SimpleStyles.xaml;Views\MainMenuView.xaml;Views\NewTestView.xaml;Views\ShellView.xaml;Views\VolumeView.xaml;
+Views\CreateCertificateView.xaml;Views\InstrumentsListView.xaml;Views\InstrumentView.xaml;Views\SiteInformationView.xaml;Views\TemperatureView.xaml;Views\TemperatureTestView.xaml;Views\Temperature\TemperatureHeader.xaml;Views\Themes\Button.xaml;Views\Themes\CheckboxStyle.xaml;Views\Themes\CheckboxTemplate.xaml;Views\Themes\Colours.xaml;Views\Themes\RadioButtonStyle.xaml;Views\Themes\ScrollViewerStyle.xaml;Views\Themes\SimpleStyles.xaml;Views\MainMenuView.xaml;Views\NewTestView.xaml;Views\ShellView.xaml;Views\VolumeView.xaml;
 
 False
 

@@ -158,6 +158,8 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsListViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentTempTestViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
@@ -172,6 +174,12 @@
     <Compile Include="Views\InstrumentsListView.xaml.cs">
       <DependentUpon>InstrumentsListView.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\InstrumentTempTestView.xaml.cs">
+      <DependentUpon>InstrumentTempTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentView.xaml.cs">
+      <DependentUpon>InstrumentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -211,6 +219,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentTempTestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
