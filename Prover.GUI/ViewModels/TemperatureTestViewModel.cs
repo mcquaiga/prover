@@ -32,9 +32,12 @@ namespace Prover.GUI.ViewModels
         {
             if (InstrumentManager != null)
             {
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
                 await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
                 Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
             }
+
             NotifyOfPropertyChange(() => Test);
         }
 

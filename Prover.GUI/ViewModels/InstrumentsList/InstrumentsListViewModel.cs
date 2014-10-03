@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.ObjectBuilder2;
+using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Caliburn.Micro.ReactiveUI;
 
-namespace Prover.GUI.ViewModels
+namespace Prover.GUI.ViewModels.InstrumentsList
 {
     public class InstrumentsListViewModel : ReactiveScreen
     {

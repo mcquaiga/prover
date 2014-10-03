@@ -34,13 +34,6 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public static List<string> GetCommPortList()
-        {
-            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-            ports.Add("IrDA");
-            return ports;
-        }
-
         public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
         {
             return await Task.Run(()=> DownloadItems(itemsToDownload));
@@ -74,20 +67,6 @@ namespace Prover.Core.Communication
             return myItems;
         }
 
-        public static ICommPort CreateCommPortObject(string commName, BaudRateEnum baudRate)
-        {
-            if (!GetCommPortList().Contains(commName)) return null;
-
-            ICommPort commPort;
-            if (commName == "IrDA")
-            {
-                commPort = new IrDAPort();
-            }
-            else
-            {
-                commPort = new SerialPort(commName, baudRate);
-            }
-            return commPort;
-        }
+        
     }
 }

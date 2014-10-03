@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Prover.GUI.Views.InstrumentView"
+﻿<UserControl x:Class="Prover.GUI.Views.InstrumentsList.InstrumentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -76,26 +76,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid Grid.Column="4" Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="T. Units: " FontWeight="Bold"/>
-                        <TextBlock Foreground="Black" Name="Instrument_Temperature_Units" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="Base T.: " FontWeight="Bold" />
-                        <TextBlock Foreground="Black" Name="Instrument_Temperature_Base" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="T. Range: " FontWeight="Bold" />
-                        <TextBlock Foreground="Black" Text="{Binding Temperature.Range}" />
-                    </StackPanel>
-                </Grid>
+                <ContentControl Name="TemperatureItem" Grid.Column="4"></ContentControl>
 
                 <Grid Grid.Column="5">
                    

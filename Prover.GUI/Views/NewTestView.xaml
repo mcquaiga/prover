@@ -191,7 +191,7 @@
 								  FontSize="18.667">
 							<ItemsControl Margin="5"
 										  ItemTemplate="{StaticResource ResourceKey=TachCommPorts}"
-										  ItemsSource="{Binding TachCommPorts}">
+										  ItemsSource="{Binding TachPorts}">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>
 										<WrapPanel />

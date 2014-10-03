@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
+using Prover.GUI.ViewModels.InstrumentsList;
 
 namespace Prover.GUI.ViewModels
 {

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments;
 
-namespace Prover.GUI.ViewModels
+namespace Prover.GUI.ViewModels.InstrumentsList
 {
-    public class InstrumentTempTestViewModel : ReactiveScreen
+    public class InstrumentTempTestViewModel
     {
-        public TemperatureTest Test;
+        public TemperatureTest Test { get; set; }
+
         public InstrumentTempTestViewModel(TemperatureTest test)
         {
             Test = test;

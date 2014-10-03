@@ -80,8 +80,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Communications.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="Communication\InstrumentManager.cs" />
+    <Compile Include="Communication\TachometerCommunications.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\ItemsBase.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />

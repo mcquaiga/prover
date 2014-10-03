@@ -39,7 +39,7 @@ namespace Prover.Core.Communication
 
         public void SetupCommPort(string commName, BaudRateEnum baudRate)
         {
-            CommPort = InstrumentCommunication.CreateCommPortObject(commName, baudRate);
+            CommPort = Communications.CreateCommPortObject(commName, baudRate);
             _instrumentCommunication = new InstrumentCommunication(CommPort, _instrument);
         }
 

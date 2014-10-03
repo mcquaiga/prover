@@ -45,7 +45,12 @@ namespace Prover.GUI.ViewModels
 
         public List<string> CommPorts
         {
-            get { return InstrumentCommunication.GetCommPortList(); }
+            get { return Communications.GetCommPortList(); }
+        }
+
+        public List<string> TachPorts
+        {
+            get { return Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList(); }
         }
 
         public bool CommPortSettings(string commName)
