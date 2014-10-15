@@ -51,12 +51,16 @@
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Drive Rate (98)</TextBlock>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterType" />
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterTypeDescription" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Type (432)</TextBlock>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterDisplacement" />
                                 <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Displacement</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcMeterDisplacement" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Meter Displacement</TextBlock>
                             </StackPanel>
                         </UniformGrid>
 

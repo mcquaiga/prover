@@ -27,3 +27,4 @@ C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugToo
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.exe
 C:\Users\amcquaig\Development\prover\Prover.DebugTools\obj\Debug\Prover.DebugTools.pdb
+C:\Users\amcquaig\Development\prover\Prover.DebugTools\bin\Debug\MeterIndexes.xml

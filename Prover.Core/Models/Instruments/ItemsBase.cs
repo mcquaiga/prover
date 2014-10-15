@@ -75,7 +75,7 @@ namespace Prover.Core.Models.Instruments
             {
                 var firstOrDefault = item.ItemDescriptions.FirstOrDefault(x => x.Id == Convert.ToInt32(value));
                 if (firstOrDefault != null)
-                    return firstOrDefault.Value;
+                    return firstOrDefault.Value ?? firstOrDefault.Id;
             }
 
             return Convert.ToDouble(value);

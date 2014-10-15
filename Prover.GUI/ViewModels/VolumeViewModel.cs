@@ -37,9 +37,30 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        public void StartTestCommand()
+        public async void StartTestCommand()
         {
-            //Do Something
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
+            await InstrumentManager.StartVolumeTest();
+            await Task.Run(() =>
+            {
+                do
+                {
+                    InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
+                    NotifyOfPropertyChange(() => Volume.PulseACount);
+                    InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.AInputBoard.ReadInput();
+                    NotifyOfPropertyChange(() => Volume.PulseBCount);
+                } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected());
+            });
+            
+            await InstrumentManager.StopVolumeTest();
+            NotifyOfPropertyChange(() => Volume);
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
+        }
+
+        public async void StopTestCommand()
+        {
+            if (InstrumentManager != null)
+                await InstrumentManager.StopVolumeTest();
         }
 
         public void Handle(InstrumentUpdateEvent message)

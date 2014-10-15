@@ -36,6 +36,7 @@ namespace Prover.Core.Communication
 
         public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
         {
+            await Connect();
             return await Task.Run(()=> DownloadItems(itemsToDownload));
         }
 

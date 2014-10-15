@@ -19,3 +19,4 @@ C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\InTheHand
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.csprojResolveAssemblyReference.cache
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.pdb
+C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\MeterIndexes.xml
