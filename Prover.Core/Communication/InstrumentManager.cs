@@ -5,6 +5,7 @@ using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using MccDaq;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -18,7 +19,12 @@ namespace Prover.Core.Communication
         private readonly IUnityContainer _container;
         public ICommPort CommPort { get; set; }
         private InstrumentCommunication _instrumentCommunication;
+        private TachometerCommunication _tachCommunication;
 
+        public DataAcqBoard OutputBoard { get; private set; }
+        public DataAcqBoard AInputBoard { get; private set; }
+        public DataAcqBoard BInputBoard { get; private set; }
+        
         public Instrument Instrument
         {
             get { return _instrument; }
@@ -41,6 +47,13 @@ namespace Prover.Core.Communication
         {
             CommPort = Communications.CreateCommPortObject(commName, baudRate);
             _instrumentCommunication = new InstrumentCommunication(CommPort, _instrument);
+        }
+
+        public void SetupTachCommPort(string commName)
+        {
+            if (_tachCommunication == null)
+                _tachCommunication = new TachometerCommunication(commName);
+
         }
 
         public InstrumentManager(IUnityContainer container, ICommPort commPort)
@@ -86,6 +99,7 @@ namespace Prover.Core.Communication
         public async Task DownloadVolumeItems()
         {
             _instrument.Volume.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.Items);
+            _instrument.Volume.LoadMeterIndex();
         }
 
         public async Task DownloadVolumeAfterTestItems()
@@ -99,6 +113,44 @@ namespace Prover.Core.Communication
             store.Upsert(_instrument);
         }
 
-        
+        public async Task StartVolumeTest()
+        {
+            await Task.Run(async () =>
+            {
+                await _instrumentCommunication.Disconnect();
+
+                OutputBoard = new DataAcqBoard(0, 0, 0);
+                AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
+                BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
+
+                //Reset Tach setting
+                if (_tachCommunication != null) await _tachCommunication.ResetTach();
+
+                Instrument.Volume.PulseACount = 0;
+                Instrument.Volume.PulseBCount = 0;
+
+                OutputBoard.StartMotor();
+
+                System.Threading.Thread.Sleep(500);
+            });
+        }
+
+
+        public async Task StopVolumeTest()
+        {
+            await Task.Run(async () =>
+            {
+                OutputBoard.StopMotor();
+                System.Threading.Thread.Sleep(2000);
+
+                if (_tachCommunication != null)
+                {
+                    Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
+                }
+
+                await DownloadVolumeAfterTestItems();
+                await _instrumentCommunication.Disconnect();
+            });
+        }
     }
 }

@@ -58,6 +58,8 @@ namespace Prover.Core.Models.Instruments
                 return Math.Round((double) ((EvcFactor - ActualFactor)/ActualFactor)*100, 2);
             }
         }
+
+        [NotMapped]
         public bool HasPassed
         {
             get { return (PercentError < 1 && PercentError > -1); }

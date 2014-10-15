@@ -2,15 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <!--<local:BooleanToPassConverter x:Key="BooleanToPassConverter" />-->
-        <DataTemplate x:Key="TemperatureTests">
-
-        </DataTemplate>
-
+        <converters:BooleanToPassConverter x:Key="BooleanToPassConverter"/>
         <DataTemplate x:Key="inst">
             <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
                 <Grid DataContext="{Binding .}" Name="Instrument" >
@@ -24,14 +21,14 @@
                         <ColumnDefinition Width="0.5*"/>
                         <ColumnDefinition Width="0.5*"/>
                     </Grid.ColumnDefinitions>
-                    <!--Text="{Binding HasPassed, Converter={StaticResource BooleanToPassConverter}}"-->
                     <TextBlock Margin="15"  Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Text="{Binding HasPassed, Converter={StaticResource BooleanToPassConverter}}"
                                 FontSize="24"/>
 
                     <StackPanel Orientation="Vertical" Grid.Column="1">
                         <TextBlock Width="125"
                                    Foreground="Black"
-                                   Name="Type" />
+                                   Name="TypeString" />
                         <TextBlock Width="125"
                                    Margin="2"
                                    HorizontalAlignment="Center"
@@ -138,13 +135,13 @@
                         <!--Row 1 - SiteInformation-->
                         <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Vertical">
                             <TextBlock Foreground="Black" Text="UnCor. Multi." FontWeight="Bold"/>
-                            <TextBlock Foreground="Black" Text="{Binding VolumeTest.UnCorrectedMultiplierDescription}" />
+                            <TextBlock Foreground="Black" Text="{Binding Volume.UnCorrectedMultiplierDescription}" />
                         </StackPanel>
 
                         <!--Row 2-->
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
                             <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold"/>
-                            <TextBlock Foreground="Black" Text="{Binding VolumeTest.CorrectedMultiplierDescription}" />
+                            <TextBlock Foreground="Black" Text="{Binding Volume.CorrectedMultiplierDescription}" />
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Column="7" Margin="5">
@@ -158,12 +155,12 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0"  Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
                             <TextBlock Foreground="Black" Text="UnCor. % Error" FontWeight="Bold"  />
-                            <TextBlock Foreground="Black" Text="{Binding VolumeTest.UnCorrectedPercentError}" />
+                            <TextBlock Foreground="Black" Text="{Binding Volume.UnCorrectedPercentError}" />
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
                             <TextBlock Foreground="Black" Text="Cor. % Error"  FontWeight="Bold"/>
-                            <TextBlock Foreground="Black" Text="{Binding VolumeTest.CorrectedPercentError}" />
+                            <TextBlock Foreground="Black" Text="{Binding Volume.CorrectedPercentError}" />
                         </StackPanel>
                     </Grid>
                 </Grid>

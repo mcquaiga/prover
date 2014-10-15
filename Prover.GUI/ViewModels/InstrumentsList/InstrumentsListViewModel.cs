@@ -32,14 +32,6 @@ namespace Prover.GUI.ViewModels.InstrumentsList
                     instruments.ForEach(i => Instruments.Add(new InstrumentViewModel(i)));
                 }
             }
-            else
-            {
-                //Instruments =
-                //    _container.Resolve<IInstrumentStore<Instrument>>()
-                //        .Query()
-                //        .Where(x => x.CertificateGuid == certificateGuid)
-                //        .ToList();
-            }
 
             NotifyOfPropertyChange(() => Instruments);
         }

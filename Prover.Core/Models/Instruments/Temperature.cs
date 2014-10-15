@@ -56,5 +56,10 @@ namespace Prover.Core.Models.Instruments
             }      
         }
 
+        [NotMapped]
+        public bool HasPassed
+        {
+            get { return Tests.All(x=> x.HasPassed); }
+        }
     }
 }

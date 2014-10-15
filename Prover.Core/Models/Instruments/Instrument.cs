@@ -41,6 +41,13 @@ namespace Prover.Core.Models.Instruments
         }
         public DateTime TestDateTime { get; set; }
         public InstrumentType Type { get; set; }
+
+        [NotMapped]
+        public string TypeString
+        {
+            get { return Type.ToString(); }
+        }
+
         public Guid CertificateGuid { get; set; }
 
         public virtual Temperature Temperature { get; set; }
@@ -91,6 +98,12 @@ namespace Prover.Core.Models.Instruments
         public double? SiteNumber2
         {
             get { return NumericValue(201); }
+        }
+
+        [NotMapped]
+        public bool HasPassed
+        {
+            get { return this.Temperature.HasPassed && this.Volume.HasPassed; }
         }
     }    
 }

@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
@@ -36,9 +38,75 @@ namespace Prover.Core.Models.Instruments
             Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
             AfterTestItems = Item.LoadItems(Instrument.Type).Where(x => x.IsVolumeTest == true).ToList();
         }
+        [NotMapped]
+        public MeterIndexInfo MeterIndex { get; set; } 
+
+        public void LoadMeterIndex()
+        {
+            var xDoc = XDocument.Load("MeterIndexes.xml");
+            var indexes = 
+                (from x in xDoc.Descendants("value")
+                 where Convert.ToInt32(x.Attribute("id").Value) == MeterTypeId
+                select new MeterIndexInfo()
+                {
+                    Id = Convert.ToInt32(x.Attribute("id").Value),
+                    Description = x.Attribute("description").Value,
+                    UnCorPulsesX10 = Convert.ToInt32(x.Attribute("UnCorPulsesX10").Value),
+                    UnCorPulsesX100 = Convert.ToInt32(x.Attribute("UnCorPulsesX100").Value),
+                    MeterDisplacement = Convert.ToDouble(x.Attribute("MeterDisplacement").Value)
+                }).ToList();
+            //
+
+            MeterIndex = indexes.FirstOrDefault();
+        }
 
         public int PulseACount { get; set; }
+        [NotMapped]
+        public string PulseASelect
+        {
+            get { return DescriptionValue(93); }
+        }
+
         public int PulseBCount { get; set; }
+        [NotMapped]
+        public string PulseBSelect
+        {
+            get { return DescriptionValue(94); }
+        }
+
+        [NotMapped]
+        public int UncPulseCount
+        {
+            get
+            {
+                if (PulseASelect == "UncVol")
+                    return PulseACount;
+                return PulseBCount;
+            }
+        }
+
+        [NotMapped]
+        public int CorPulseCount
+        {
+            get
+            {
+                if (PulseASelect == "CorVol")
+                    return PulseACount;
+                return PulseBCount;
+            }
+        }
+
+        public int MaxUnCorrected()
+        {
+            if (UnCorrectedMultiplier == 10)
+                return MeterIndex.UnCorPulsesX10;
+
+            if (UnCorrectedMultiplier == 100)
+                return MeterIndex.UnCorPulsesX100;
+
+            return 10; //Low standard number if we can't find anything
+        }
+
         public double AppliedInput { get; set; }
 
         public Guid InstrumentId { get; set; }
@@ -129,9 +197,21 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public string MeterTypeDescription
+        {
+            get { return MeterIndex.Description; }
+        }
+
+        [NotMapped]
         public string MeterType
         {
             get { return DescriptionValue(432); }
+        }
+
+        [NotMapped]
+        public double? MeterTypeId
+        {
+            get { return NumericValue(432); }
         }
 
         [NotMapped]
@@ -193,7 +273,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public double? MeterDisplacement
         {
-            get { return NumericValue(439); }
+            get { return MeterIndex.MeterDisplacement; }
         }
 
         [NotMapped]
@@ -222,5 +302,32 @@ namespace Prover.Core.Models.Instruments
                 return null;
             }
         }
+
+        [NotMapped]
+        public bool HasPassed
+        {
+            get { return (CorrectedPercentError < 1 && CorrectedPercentError > -1) && (UnCorrectedPercentError < 1 && UnCorrectedPercentError > -1); }
+        }
     }
+
+
+    public class MeterIndexInfo
+    {
+        public MeterIndexInfo() { }
+        public MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100, double? meterDisplacement)
+        {
+            Id = id;
+            Description = description;
+            UnCorPulsesX10 = unCorPulsesX10;
+            UnCorPulsesX100 = unCorPulsesX100;
+            MeterDisplacement = meterDisplacement;
+        }
+
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public int UnCorPulsesX10 { get; set; }
+        public int UnCorPulsesX100 { get; set; }
+        public double? MeterDisplacement { get; set; }
+    }
+    
 }

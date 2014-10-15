@@ -9,7 +9,7 @@
         <StackPanel  Orientation="Vertical" DataContext="{Binding}" Margin="10,0,0,0" >
             <TextBlock Foreground="Black" Name="Test_TestLevel" FontStyle="Oblique" FontWeight="Bold" HorizontalAlignment="Center"/>
             <TextBlock Foreground="Black" Name="Test_PercentError" HorizontalAlignment="Center" />
-            <TextBlock Foreground="Black" Name="Test_EVCReading" HorizontalAlignment="Center"/>
+            <TextBlock Foreground="Black" Name="Test_EvcReading" HorizontalAlignment="Center"/>
             <TextBlock Foreground="Black" Name="Test_Gauge" HorizontalAlignment="Center" />
         </StackPanel>
     </Grid>

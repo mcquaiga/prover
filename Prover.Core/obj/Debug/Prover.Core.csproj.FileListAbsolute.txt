@@ -52,3 +52,4 @@ C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\InTheHand.Net.Persona
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.csprojResolveAssemblyReference.cache
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.dll
 C:\Users\amcquaig\Development\prover\Prover.Core\obj\Debug\Prover.Core.pdb
+C:\Users\amcquaig\Development\prover\Prover.Core\bin\Debug\MeterIndexes.xml
