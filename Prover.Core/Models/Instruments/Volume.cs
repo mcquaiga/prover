@@ -29,6 +29,7 @@ namespace Prover.Core.Models.Instruments
         {
             Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolume == true).ToList();
             AfterTestItems = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolumeTest == true).ToList();
+            LoadMeterIndex();
         }
 
         public Volume(Instrument instrument)
@@ -167,13 +168,23 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public double? EndCorrected
         {
-            get { return NumericValue(0, AfterTestItems) + ParseHighResReading(NumericValue(113, AfterTestItems)); }
+            get
+            {
+                if (TestInstrumentValues != null)
+                    return NumericValue(0, AfterTestItems, TestInstrumentValues) + ParseHighResReading(NumericValue(113, AfterTestItems, TestInstrumentValues));
+                return NumericValue(0) + ParseHighResReading(NumericValue(113));
+            }
         }
 
         [NotMapped]
         public double? EndUncorrected
         {
-            get { return NumericValue(2, AfterTestItems) + ParseHighResReading(NumericValue(892, AfterTestItems)); }
+            get
+            {   
+                if (TestInstrumentValues != null)
+                    return NumericValue(2, AfterTestItems, TestInstrumentValues) + ParseHighResReading(NumericValue(892, AfterTestItems, TestInstrumentValues));
+                return NumericValue(2) + ParseHighResReading(NumericValue(892));
+            }
         }
 
         [NotMapped]
@@ -273,7 +284,12 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public double? MeterDisplacement
         {
-            get { return MeterIndex.MeterDisplacement; }
+            get
+            {
+                if (MeterIndex != null)
+                    return MeterIndex.MeterDisplacement;
+                return null;
+            }
         }
 
         [NotMapped]

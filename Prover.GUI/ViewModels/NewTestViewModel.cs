@@ -11,8 +11,9 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using Prover.GUI.Properties;
+using Prover.GUI.ViewModels.TemperatureViews;
 using Prover.GUI.Views;
-using Prover.GUI.Views.Temperature;
+using Prover.GUI.Views.TemperatureViews;
 using Prover.SerialProtocol;
 using ReactiveUI;
 

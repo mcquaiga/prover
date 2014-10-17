@@ -6,7 +6,7 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 
-namespace Prover.GUI.ViewModels
+namespace Prover.GUI.ViewModels.TemperatureViews
 {
     public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {

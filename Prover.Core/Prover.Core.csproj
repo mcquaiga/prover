@@ -86,6 +86,7 @@
     <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="Communication\InstrumentManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
+    <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\ItemsBase.cs" />

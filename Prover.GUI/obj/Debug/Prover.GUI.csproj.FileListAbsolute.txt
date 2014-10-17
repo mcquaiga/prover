@@ -1,3 +1,4 @@
+C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\MeterIndexes.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\MiniMaxItems.xml
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\NLog.config
 C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\Prover.GUI.exe.config
@@ -73,8 +74,9 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempTestView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Temperature\TemperatureHeader.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\LiveTemperatureReadView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureTestView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\Button.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\CheckboxStyle.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Themes\CheckboxTemplate.baml
@@ -91,9 +93,9 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentTempTestView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\SiteInformationView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureTestView.g.cs
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\Temperature\TemperatureHeader.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\LiveTemperatureReadView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureTestView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\MainMenuView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\NewTestView.g.cs
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\ShellView.g.cs
@@ -104,11 +106,11 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI_MarkupCompi
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI_MarkupCompile.lref
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\App.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\InstrumentsList\InstrumentsListView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\NewTestView.baml
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.g.resources
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.Properties.Resources.resources
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.exe
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.pdb
-C:\Users\amcquaig\Development\prover\Prover.GUI\bin\Debug\MeterIndexes.xml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureHeaderView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureHeaderView.g.cs

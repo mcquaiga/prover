@@ -5,7 +5,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 			 xmlns:cal="http://www.caliburnproject.org"
-			 xmlns:temperature="clr-namespace:Prover.GUI.Views.Temperature"
+			 xmlns:temperature="clr-namespace:Prover.GUI.Views.TemperatureViews"
 			 d:DesignWidth="1000"
 			 mc:Ignorable="d">
 
@@ -241,7 +241,6 @@
 			<WrapPanel HorizontalAlignment="right">
 				<Button Width="150"
 						Margin="10"
-						Command="{Binding SaveCommand}"
 						Content="Save"
 						Style="{StaticResource SimpleButton}">
 					<i:Interaction.Triggers>

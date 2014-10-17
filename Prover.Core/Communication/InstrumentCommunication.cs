@@ -61,13 +61,21 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public Dictionary<int, string> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
+        public async Task<Dictionary<int, string>> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
         {
-            if (!IsConnected) Connect();
+            if (!IsConnected) await Connect();
             var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
             return myItems;
         }
 
+        public async Task<double> LiveReadItem(int itemNumber)
+        {
+            return await Task.Run(async () =>
+            {
+                if (!IsConnected) await Connect();
+                return (double)_miSerial.LR(itemNumber);
+            });
+        }
         
     }
 }

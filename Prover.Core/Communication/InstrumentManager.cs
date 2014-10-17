@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using MccDaq;
 using Microsoft.Practices.Unity;
+using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.SerialProtocol;
@@ -20,6 +21,7 @@ namespace Prover.Core.Communication
         public ICommPort CommPort { get; set; }
         private InstrumentCommunication _instrumentCommunication;
         private TachometerCommunication _tachCommunication;
+        private bool _keepLiveReading = false;
 
         public DataAcqBoard OutputBoard { get; private set; }
         public DataAcqBoard AInputBoard { get; private set; }
@@ -105,6 +107,26 @@ namespace Prover.Core.Communication
         public async Task DownloadVolumeAfterTestItems()
         {
             _instrument.Volume.TestInstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.AfterTestItems);
+        }
+
+        public async Task StartLiveReadTemperature()
+        {
+            await _instrumentCommunication.Connect();
+
+            do
+            {
+                var liveValue = await _instrumentCommunication.LiveReadItem(26);
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
+            } while (_keepLiveReading);
+        }
+
+        public async Task StopLiveReadTemperature()
+        {
+            if (_keepLiveReading)
+            {
+                _keepLiveReading = false;
+                await _instrumentCommunication.Disconnect();
+            } 
         }
 
         public void Save()

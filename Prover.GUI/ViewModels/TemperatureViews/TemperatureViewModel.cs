@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.ObjectBuilder2;
@@ -6,14 +7,19 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
-using Prover.GUI.ViewModels;
 
-namespace Prover.GUI.ViewModels
+namespace Prover.GUI.ViewModels.TemperatureViews
 {
     public class TemperatureViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
         private IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
+
+        public LiveTemperatureReadViewModel LiveReadItem
+        {
+            get { return new LiveTemperatureReadViewModel(_container); }
+        }
+
         public ObservableCollection<TemperatureTestViewModel> TestViews { get; set; }
 
         public TemperatureViewModel(IUnityContainer container)

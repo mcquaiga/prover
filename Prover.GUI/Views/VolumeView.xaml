@@ -155,7 +155,7 @@
                             <Grid Grid.Row="1" Grid.Column="0">
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBox Width="150" Style="{DynamicResource SimpleTextBox}"
-													Name="Volume_AppliedInput" />
+													Name="AppliedInput" />
                                     <TextBlock HorizontalAlignment="Center" Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Applied Input</TextBlock>
                                 </StackPanel>
                             </Grid>

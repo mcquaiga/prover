@@ -63,11 +63,11 @@ namespace Prover.Core.Models.Instruments
             return DescriptionValue(number, this.Items);
         }
         
-        public double? NumericValue(int number, ICollection<Item> items)
+        public double? NumericValue(int number, ICollection<Item> items, Dictionary<int, string> values )
         {
             var item = items.FirstOrDefault(x => x.Number == number);
-            if (InstrumentValues == null) return null;
-            string value = InstrumentValues[number];
+            if (values == null) return null;
+            string value = values[number];
 
             if (item == null || value == null) return null;
 
@@ -82,7 +82,7 @@ namespace Prover.Core.Models.Instruments
         }
         public double? NumericValue(int number)
         {
-            return NumericValue(number, this.Items);
+            return NumericValue(number, this.Items, this.InstrumentValues);
         }
 
         public double? ParseHighResReading(double? highResReading)

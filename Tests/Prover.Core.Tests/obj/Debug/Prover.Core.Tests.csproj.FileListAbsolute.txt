@@ -1,3 +1,4 @@
+C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\MeterIndexes.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\MiniMaxItems.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\NLog.config
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Prover.Core.Tests.dll
@@ -6,6 +7,7 @@ C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Prover.Co
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Prover.SerialProtocol.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\EntityFramework.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Microsoft.Practices.Unity.dll
+C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Caliburn.Micro.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\InTheHand.Net.Personal.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\NLog.dll
@@ -14,9 +16,9 @@ C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Prover.Se
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Prover.SerialProtocol.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\EntityFramework.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Microsoft.Practices.Unity.xml
+C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Caliburn.Micro.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\Newtonsoft.Json.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\InTheHand.Net.Personal.xml
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.csprojResolveAssemblyReference.cache
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.dll
 C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\obj\Debug\Prover.Core.Tests.pdb
-C:\Users\amcquaig\Development\prover\Tests\Prover.Core.Tests\bin\Debug\MeterIndexes.xml

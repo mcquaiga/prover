@@ -37,6 +37,23 @@ namespace Prover.GUI.ViewModels
             }
         }
 
+        public double AppliedInput
+        {
+            get
+            {
+                if (InstrumentManager != null)
+                {
+                    return InstrumentManager.Instrument.Volume.AppliedInput;
+                }
+                return 0.00;
+            }
+            set
+            {
+                InstrumentManager.Instrument.Volume.AppliedInput = value;
+                NotifyOfPropertyChange(() => Volume);
+            }
+        }
+
         public async void StartTestCommand()
         {
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
@@ -46,13 +63,13 @@ namespace Prover.GUI.ViewModels
                 do
                 {
                     InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
-                    NotifyOfPropertyChange(() => Volume.PulseACount);
-                    InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.AInputBoard.ReadInput();
-                    NotifyOfPropertyChange(() => Volume.PulseBCount);
+                    InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.BInputBoard.ReadInput();
+                    NotifyOfPropertyChange(() => Volume);
                 } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected());
             });
             
             await InstrumentManager.StopVolumeTest();
+            NotifyOfPropertyChange(()=> AppliedInput);
             NotifyOfPropertyChange(() => Volume);
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
         }

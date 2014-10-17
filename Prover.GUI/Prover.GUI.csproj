@@ -166,8 +166,9 @@
     <Compile Include="ViewModels\NewTestViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\TemperatureTestViewModel.cs" />
-    <Compile Include="ViewModels\TemperatureViewModel.cs" />
+    <Compile Include="ViewModels\TemperatureViews\LiveTemperatureReadViewModel.cs" />
+    <Compile Include="ViewModels\TemperatureViews\TemperatureTestViewModel.cs" />
+    <Compile Include="ViewModels\TemperatureViews\TemperatureViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
     <Compile Include="Views\CreateCertificateView.xaml.cs">
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
@@ -202,14 +203,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\TemperatureView.xaml.cs">
+    <Compile Include="Views\TemperatureViews\LiveTemperatureReadView.xaml.cs">
+      <DependentUpon>LiveTemperatureReadView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TemperatureViews\TemperatureView.xaml.cs">
       <DependentUpon>TemperatureView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureTestView.xaml.cs">
+    <Compile Include="Views\TemperatureViews\TemperatureTestView.xaml.cs">
       <DependentUpon>TemperatureTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Temperature\TemperatureHeader.xaml.cs">
-      <DependentUpon>TemperatureHeader.xaml</DependentUpon>
+    <Compile Include="Views\TemperatureViews\TemperatureHeaderView.xaml.cs">
+      <DependentUpon>TemperatureHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VolumeView.xaml.cs">
       <DependentUpon>VolumeView.xaml</DependentUpon>
@@ -243,15 +247,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureView.xaml">
+    <Page Include="Views\TemperatureViews\LiveTemperatureReadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureTestView.xaml">
+    <Page Include="Views\TemperatureViews\TemperatureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Temperature\TemperatureHeader.xaml">
+    <Page Include="Views\TemperatureViews\TemperatureTestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TemperatureViews\TemperatureHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
