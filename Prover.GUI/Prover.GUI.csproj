@@ -212,7 +212,7 @@
     <Compile Include="Views\TemperatureViews\TemperatureTestView.xaml.cs">
       <DependentUpon>TemperatureTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureViews\TemperatureHeaderView.xaml.cs">
+    <Compile Include="Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml.cs">
       <DependentUpon>TemperatureHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VolumeView.xaml.cs">
@@ -259,7 +259,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureViews\TemperatureHeaderView.xaml">
+    <Page Include="Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

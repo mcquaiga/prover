@@ -173,7 +173,6 @@
                             </Grid>
                             <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
                                 <Button Width="100"
-											Command="{Binding StartTestCommand}"
 											Content="Start Test"
 											Style="{StaticResource SimpleButton}">
                                     <i:Interaction.Triggers>
@@ -183,7 +182,6 @@
                                     </i:Interaction.Triggers>
                                 </Button>
                                 <Button Width="100"
-											Command="{Binding StopTestCommand}"
 											Content="Stop"
 											Style="{StaticResource SimpleButton}">
                                         <i:Interaction.Triggers>

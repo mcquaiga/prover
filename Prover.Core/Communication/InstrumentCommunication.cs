@@ -73,7 +73,7 @@ namespace Prover.Core.Communication
             return await Task.Run(async () =>
             {
                 if (!IsConnected) await Connect();
-                return (double)_miSerial.LR(itemNumber);
+                return Convert.ToDouble(_miSerial.LR(itemNumber));
             });
         }
         

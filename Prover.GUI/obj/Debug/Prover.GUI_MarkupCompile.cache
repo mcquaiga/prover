@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\amcquaig\Development\prover\Prover.GUI\App.xaml
-21-2100189170
+21-13206829
 
-37-992123355
+37-854939659
 92-1295586914
-Views\CreateCertificateView.xaml;Views\InstrumentsList\InstrumentsListView.xaml;Views\InstrumentsList\InstrumentTempView.xaml;Views\InstrumentsList\InstrumentTempTestView.xaml;Views\InstrumentsList\InstrumentView.xaml;Views\SiteInformationView.xaml;Views\TemperatureViews\LiveTemperatureReadView.xaml;Views\TemperatureViews\TemperatureView.xaml;Views\TemperatureViews\TemperatureTestView.xaml;Views\TemperatureViews\TemperatureHeaderView.xaml;Views\Themes\Button.xaml;Views\Themes\CheckboxStyle.xaml;Views\Themes\CheckboxTemplate.xaml;Views\Themes\Colours.xaml;Views\Themes\RadioButtonStyle.xaml;Views\Themes\ScrollViewerStyle.xaml;Views\Themes\SimpleStyles.xaml;Views\MainMenuView.xaml;Views\NewTestView.xaml;Views\ShellView.xaml;Views\VolumeView.xaml;
+Views\CreateCertificateView.xaml;Views\InstrumentsList\InstrumentsListView.xaml;Views\InstrumentsList\InstrumentTempView.xaml;Views\InstrumentsList\InstrumentTempTestView.xaml;Views\InstrumentsList\InstrumentView.xaml;Views\SiteInformationView.xaml;Views\TemperatureViews\LiveTemperatureReadView.xaml;Views\TemperatureViews\TemperatureView.xaml;Views\TemperatureViews\TemperatureTestView.xaml;Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml;Views\Themes\Button.xaml;Views\Themes\CheckboxStyle.xaml;Views\Themes\CheckboxTemplate.xaml;Views\Themes\Colours.xaml;Views\Themes\RadioButtonStyle.xaml;Views\Themes\ScrollViewerStyle.xaml;Views\Themes\SimpleStyles.xaml;Views\MainMenuView.xaml;Views\NewTestView.xaml;Views\ShellView.xaml;Views\VolumeView.xaml;
 
 False
 

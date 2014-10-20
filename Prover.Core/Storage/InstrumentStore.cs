@@ -24,17 +24,12 @@ namespace Prover.Core.Storage
             return _proverContext.Instruments.First(x => x.Id == id);
         }
 
-        public Temperature GetTemperature(Guid id)
-        {
-            return _proverContext.Temperatures.Find(id);
-        }
-
-        public void Upsert(Instrument instrument)
+        public async Task UpsertAsync(Instrument instrument)
         {
             using (var context = new ProverContext())
             {
                 context.Instruments.Add(instrument);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 

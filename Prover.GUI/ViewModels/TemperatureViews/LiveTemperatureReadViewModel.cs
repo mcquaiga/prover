@@ -16,6 +16,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         public LiveTemperatureReadViewModel(IUnityContainer container)
         {
             _container = container;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public double LiveReadTemperature { get; set; }

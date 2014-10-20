@@ -29,7 +29,7 @@
 		<DataTemplate x:Key="CommPorts">
 			<WrapPanel>
 				<RadioButton Content="{Binding .}"
-							 IsChecked="{Binding CommPortSettings}"
+							
 							 Style="{DynamicResource radio2}"
 							 GroupName="{Binding .}">
 					<i:Interaction.Triggers>
@@ -44,7 +44,7 @@
 		</DataTemplate>
 		<DataTemplate x:Key="TachCommPorts">
 			<WrapPanel>
-				<RadioButton IsChecked="{Binding TachCommPortSettings}"
+				<RadioButton
 							 Content="{Binding .}"
 							 Style="{DynamicResource radio2}"
 							 GroupName="{Binding .}"/>
@@ -205,8 +205,21 @@
 							</ItemsControl>
 						</GroupBox>
 					</StackPanel>
-
-					<Button Grid.Row="3"
+                    <Button Grid.Row="3"
+							Grid.Column="0"
+							Width="150"
+							HorizontalAlignment="Left"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Refresh Comm Ports"
+							Style="{StaticResource SimpleButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="RefreshCommSettingsCommand" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button Grid.Row="3"
 							Grid.Column="1"
 							Width="250"
 							HorizontalAlignment="Center"
@@ -249,15 +262,7 @@
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 				</Button>
-				<Button Content="Clear"
-						Style="{StaticResource SimpleButton}">
-					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Click">
-							<cal:ActionMessage MethodName="ClearTest" />
-						</i:EventTrigger>
-					</i:Interaction.Triggers>
-				</Button>
-			</WrapPanel>
+            </WrapPanel>
 
 			<WrapPanel Width="5" Height="16" />
 			<WrapPanel Width="144" Height="14.5" />

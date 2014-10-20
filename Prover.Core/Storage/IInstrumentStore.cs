@@ -11,8 +11,7 @@ namespace Prover.Core.Storage
     {
         IQueryable<T> Query();
         Instrument Get(Guid id);
-        Temperature GetTemperature(Guid id);
-        void Upsert(T entity);
+        Task UpsertAsync(T entity);
         void Delete(T entity);
     }
 }

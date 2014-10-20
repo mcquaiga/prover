@@ -13,7 +13,7 @@
           <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{DynamicResource InstrumentSectionHeader}">LIVE READ</TextBlock>
-        <TextBlock Grid.Row="1" FontSize="45" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LiveTemperature">25</TextBlock>
+        <TextBlock Grid.Row="1" FontSize="45" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LiveReadTemperature">0</TextBlock>
       <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center"> 
           <Button Content="Start" HorizontalAlignment="Center" Height="50" VerticalAlignment="Bottom" Width="125" Style="{DynamicResource SimpleButton}">
                 <i:Interaction.Triggers>

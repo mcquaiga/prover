@@ -112,5 +112,5 @@ C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.Properties.
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.csproj.GenerateResource.Cache
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.exe
 C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Prover.GUI.pdb
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureHeaderView.baml
-C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\TemperatureHeaderView.g.cs
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\Temperature\TemperatureHeaderView.baml
+C:\Users\amcquaig\Development\prover\Prover.GUI\obj\Debug\Views\TemperatureViews\Temperature\TemperatureHeaderView.g.cs

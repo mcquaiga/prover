@@ -85,6 +85,12 @@ namespace Prover.GUI.ViewModels
             Settings.Default.BaudRate = baudRate;
         }
 
+        public void RefreshCommSettingsCommand()
+        {
+            NotifyOfPropertyChange(() => CommPorts);
+            NotifyOfPropertyChange(() => TachPorts);
+        }
+
         public async void FetchInstrumentItems()
         {
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
@@ -107,13 +113,12 @@ namespace Prover.GUI.ViewModels
             _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
         }
 
-        public void SaveInstrument()
+        public async void SaveInstrument()
         {
-            if (InstrumentManager != null)
-            {
-                InstrumentManager.Save();
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
-            }      
+            if (InstrumentManager == null) return;
+
+            await InstrumentManager.SaveAsync();
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
         }
         #endregion
 

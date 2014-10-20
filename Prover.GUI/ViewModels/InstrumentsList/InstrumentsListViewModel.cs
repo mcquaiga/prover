@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
@@ -28,6 +29,7 @@ namespace Prover.GUI.ViewModels.InstrumentsList
                     Instruments = new ObservableCollection<InstrumentViewModel>();
                     var instruments = store.Query()
                                         .Where(x => x.CertificateGuid == Guid.Empty)
+                                        .OrderBy(i => i.TestDateTime)
                                         .ToList();
                     instruments.ForEach(i => Instruments.Add(new InstrumentViewModel(i)));
                 }

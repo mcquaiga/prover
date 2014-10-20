@@ -286,8 +286,9 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (MeterIndex != null)
-                    return MeterIndex.MeterDisplacement;
+                if (MeterIndex == null) LoadMeterIndex();
+
+                if (MeterIndex != null) return MeterIndex.MeterDisplacement;
                 return null;
             }
         }
@@ -297,7 +298,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TrueUncorrected != 0)
+                if (TrueUncorrected != 0 && TrueUncorrected != null)
                 {
                     return Math.Round((double) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
                 }

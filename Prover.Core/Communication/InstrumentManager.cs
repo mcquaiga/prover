@@ -21,7 +21,8 @@ namespace Prover.Core.Communication
         public ICommPort CommPort { get; set; }
         private InstrumentCommunication _instrumentCommunication;
         private TachometerCommunication _tachCommunication;
-        private bool _keepLiveReading = false;
+        private bool _isLiveReading = false;
+        private bool _isBusy = false;
 
         public DataAcqBoard OutputBoard { get; private set; }
         public DataAcqBoard AInputBoard { get; private set; }
@@ -72,107 +73,153 @@ namespace Prover.Core.Communication
 
         public async Task DownloadInfo()
         {
-            await _instrumentCommunication.Connect();
-            await DownloadInstrumentItemsAsync();
-            await DownloadTemperatureItems();
-            await DownloadVolumeItems();
-            await _instrumentCommunication.Disconnect();
+            if (!_isBusy)
+            {
+                await _instrumentCommunication.Connect();
+                await DownloadInstrumentItemsAsync();
+                await DownloadTemperatureItems();
+                await DownloadVolumeItems();
+                await _instrumentCommunication.Disconnect();
+            }
         }
 
         public async Task DownloadInstrumentItemsAsync()
         {
-            _instrument.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync( _instrument.Items);
+            if (!_isBusy)
+            {
+                _isBusy = true;
+                _instrument.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Items);
+                _isBusy = false;
+            }
         }
 
         public async Task DownloadTemperatureItems()
         {
-            _instrument.Temperature.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Temperature.Items);
+            if (!_isBusy)
+            {
+                _isBusy = true;
+                _instrument.Temperature.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Temperature.Items);
+                _isBusy = false;
+            }
+            
         }
 
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
-            await _instrumentCommunication.Connect();
-            var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
-            if (test != null)
-                test.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(test.Items);
-            await _instrumentCommunication.Disconnect();
+            if (!_isBusy || (_isBusy && _isLiveReading))
+            {
+                _isBusy = true;
+                if (_isLiveReading) await StopLiveReadTemperature();
+                await _instrumentCommunication.Connect();
+                var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
+                if (test != null)
+                    test.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(test.Items);
+                await _instrumentCommunication.Disconnect();
+                _isBusy = false;
+            }
         }
 
         public async Task DownloadVolumeItems()
         {
-            _instrument.Volume.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.Items);
-            _instrument.Volume.LoadMeterIndex();
+            if (!_isBusy)
+            {
+                _isBusy = true;
+                _instrument.Volume.InstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.Items);
+                _instrument.Volume.LoadMeterIndex();
+                _isBusy = false;
+            }
+           
         }
 
         public async Task DownloadVolumeAfterTestItems()
         {
-            _instrument.Volume.TestInstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.AfterTestItems);
+            if (!_isBusy)
+            {
+                _isBusy = true;
+                _instrument.Volume.TestInstrumentValues = await _instrumentCommunication.DownloadItemsAsync(_instrument.Volume.AfterTestItems);
+                _isBusy = false;
+            }
+            
         }
 
         public async Task StartLiveReadTemperature()
         {
-            await _instrumentCommunication.Connect();
-
-            do
+            if (!_isBusy)
             {
-                var liveValue = await _instrumentCommunication.LiveReadItem(26);
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
-            } while (_keepLiveReading);
+                await _instrumentCommunication.Connect();
+                _isLiveReading = true;
+                do
+                {
+                    var liveValue = await _instrumentCommunication.LiveReadItem(26);
+                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
+                } while (_isLiveReading);
+            } 
         }
 
         public async Task StopLiveReadTemperature()
         {
-            if (_keepLiveReading)
+            if (_isLiveReading)
             {
-                _keepLiveReading = false;
+                _isLiveReading = false;
                 await _instrumentCommunication.Disconnect();
+                _isBusy = false;
             } 
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
             var store = new InstrumentStore();
-            store.Upsert(_instrument);
+            await store.UpsertAsync(_instrument);
         }
 
         public async Task StartVolumeTest()
         {
-            await Task.Run(async () =>
+            if (!_isBusy)
             {
-                await _instrumentCommunication.Disconnect();
+                await Task.Run(async () =>
+                {
+                    _isBusy = true;
+                    await _instrumentCommunication.Disconnect();
 
-                OutputBoard = new DataAcqBoard(0, 0, 0);
-                AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
-                BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
+                    OutputBoard = new DataAcqBoard(0, 0, 0);
+                    AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
+                    BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
 
-                //Reset Tach setting
-                if (_tachCommunication != null) await _tachCommunication.ResetTach();
+                    //Reset Tach setting
+                    if (_tachCommunication != null) await _tachCommunication.ResetTach();
 
-                Instrument.Volume.PulseACount = 0;
-                Instrument.Volume.PulseBCount = 0;
+                    Instrument.Volume.PulseACount = 0;
+                    Instrument.Volume.PulseBCount = 0;
 
-                OutputBoard.StartMotor();
+                    OutputBoard.StartMotor();
 
-                System.Threading.Thread.Sleep(500);
-            });
+                    System.Threading.Thread.Sleep(500);
+                    _isBusy = false;
+                });
+            }
         }
 
 
         public async Task StopVolumeTest()
         {
-            await Task.Run(async () =>
+            if (!_isBusy)
             {
-                OutputBoard.StopMotor();
-                System.Threading.Thread.Sleep(2000);
-
-                if (_tachCommunication != null)
+                await Task.Run(async () =>
                 {
-                    Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
-                }
+                    _isBusy = true;
+                    OutputBoard.StopMotor();
+                    System.Threading.Thread.Sleep(1000);
 
-                await DownloadVolumeAfterTestItems();
-                await _instrumentCommunication.Disconnect();
-            });
+                    if (_tachCommunication != null)
+                    {
+                        Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
+                    }
+
+                    await DownloadVolumeAfterTestItems();
+                    await _instrumentCommunication.Disconnect();
+                    _isBusy = false;
+                });
+            } 
         }
     }
 }

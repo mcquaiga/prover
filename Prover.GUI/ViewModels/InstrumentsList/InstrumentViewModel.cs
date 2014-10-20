@@ -19,6 +19,11 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             get { return new InstrumentTempViewModel(Instrument.Temperature); }
         }
 
+        public string HasPassed
+        {
+            get { return Instrument.HasPassed ? "PASS" : "FAIL"; }
+        }
+
         public bool IsSelected { get; set; }
     }
 }
