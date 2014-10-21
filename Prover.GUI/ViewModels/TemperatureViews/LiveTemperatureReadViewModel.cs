@@ -26,9 +26,9 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             await _instrumentManager.StartLiveReadTemperature();
         }
 
-        public async Task StopLiveReadCommand()
+        public void StopLiveReadCommand()
         {
-            await _instrumentManager.StopLiveReadTemperature();
+            _instrumentManager.StopLiveReadTemperature();
         }
 
         public void Handle(LiveReadEvent message)

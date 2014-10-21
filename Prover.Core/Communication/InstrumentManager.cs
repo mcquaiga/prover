@@ -109,7 +109,7 @@ namespace Prover.Core.Communication
             if (!_isBusy || (_isBusy && _isLiveReading))
             {
                 _isBusy = true;
-                if (_isLiveReading) await StopLiveReadTemperature();
+                if (_isLiveReading) StopLiveReadTemperature();
                 await _instrumentCommunication.Connect();
                 var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
                 if (test != null)
@@ -153,16 +153,17 @@ namespace Prover.Core.Communication
                     var liveValue = await _instrumentCommunication.LiveReadItem(26);
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
                 } while (_isLiveReading);
+
+                await _instrumentCommunication.Disconnect();
+                _isBusy = false;
             } 
         }
 
-        public async Task StopLiveReadTemperature()
+        public void StopLiveReadTemperature()
         {
             if (_isLiveReading)
             {
                 _isLiveReading = false;
-                await _instrumentCommunication.Disconnect();
-                _isBusy = false;
             } 
         }
 

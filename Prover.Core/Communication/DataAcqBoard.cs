@@ -22,9 +22,8 @@ namespace Prover.Core.Communication
     public class DataAcqBoard : IDisposable
     {
         private MccBoard _board;
-        private DigitalPortType _channelType;
-        private int _channelNum;
-        private DigitalPortDirection _direction;
+        private readonly DigitalPortType _channelType;
+        private readonly int _channelNum;
         private ErrorInfo _ulStatErrorInfo;
         private bool _pulseIsCleared;
 
