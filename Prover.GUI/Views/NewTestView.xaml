@@ -14,6 +14,7 @@
 		<DataTemplate x:Key="BaudRates">
 			<WrapPanel>
 				<RadioButton Content="{Binding .}"
+                             Name="BaudRates"
 							 Style="{DynamicResource radio2}"
 							 GroupName="{Binding .}">
 					<i:Interaction.Triggers>
@@ -29,7 +30,7 @@
 		<DataTemplate x:Key="CommPorts">
 			<WrapPanel>
 				<RadioButton Content="{Binding .}"
-							
+							 Name="CommPorts"
 							 Style="{DynamicResource radio2}"
 							 GroupName="{Binding .}">
 					<i:Interaction.Triggers>
@@ -46,8 +47,10 @@
 			<WrapPanel>
 				<RadioButton
 							 Content="{Binding .}"
+                             Name="TachCommPorts"
 							 Style="{DynamicResource radio2}"
-							 GroupName="{Binding .}"/>
+							
+                             GroupName="{Binding .}"/>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="SetTachCommPort">

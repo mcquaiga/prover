@@ -16,17 +16,6 @@ namespace Prover.GUI.Properties {
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-        public string TachCommPort
-        {
-            get
-            {
-                return ((string)(this["TachCommPort"]));
-            }
-            set
-            {
-                this["TachCommPort"] = value;
-            }
-        }
         
         public static Settings Default {
             get {
@@ -55,6 +44,18 @@ namespace Prover.GUI.Properties {
             }
             set {
                 this["BaudRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TachCommPort {
+            get {
+                return ((string)(this["TachCommPort"]));
+            }
+            set {
+                this["TachCommPort"] = value;
             }
         }
     }

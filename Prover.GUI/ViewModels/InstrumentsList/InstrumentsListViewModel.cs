@@ -18,7 +18,7 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             GetInstruments(Guid.Empty);
            
         }
-        public ObservableCollection<InstrumentViewModel> Instruments { get; set; }
+        public ObservableCollection<InstrumentViewModel> InstrumentItems { get; set; }
 
         private void GetInstruments(Guid certificateGuid)
         {
@@ -26,16 +26,16 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             {
                 using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
                 {
-                    Instruments = new ObservableCollection<InstrumentViewModel>();
+                    InstrumentItems = new ObservableCollection<InstrumentViewModel>();
                     var instruments = store.Query()
-                                        .Where(x => x.CertificateGuid == Guid.Empty)
+                                        .Where(x => x.CertificateId == null)
                                         .OrderBy(i => i.TestDateTime)
                                         .ToList();
-                    instruments.ForEach(i => Instruments.Add(new InstrumentViewModel(i)));
+                    instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
                 }
             }
 
-            NotifyOfPropertyChange(() => Instruments);
+            NotifyOfPropertyChange(() => InstrumentItems);
         }
     }
 }

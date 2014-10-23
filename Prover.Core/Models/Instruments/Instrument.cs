@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using Microsoft.Practices.ObjectBuilder2;
 using Newtonsoft.Json;
 using Prover.Core.Communication;
+using Prover.Core.Models.Certificates;
 using Prover.SerialProtocol;
 
 namespace Prover.Core.Models.Instruments
@@ -29,6 +30,7 @@ namespace Prover.Core.Models.Instruments
             TestDateTime = DateTime.Now;
             Type = type;
             Items = Item.LoadItems(type);
+            CertificateId = null;
         }
 
         public Instrument() : this(InstrumentType.MiniMax)
@@ -48,7 +50,8 @@ namespace Prover.Core.Models.Instruments
             get { return Type.ToString(); }
         }
 
-        public Guid CertificateGuid { get; set; }
+        public Guid? CertificateId { get; set; }
+        public Certificate Certificate { get; set; }
 
         public virtual Temperature Temperature { get; set; }
         public virtual Volume Volume { get; set; }

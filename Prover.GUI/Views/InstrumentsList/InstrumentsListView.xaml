@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Prover.GUI.Converters"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -41,14 +43,16 @@
 
 
     <Grid>
-        <ListBox x:Name="Instruments"
+        <ListBox x:Name="InstrumentItems"
                      Grid.Column="0"
                      Margin="10"
                      HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Stretch"
                      Background="{DynamicResource MainBackgroundColour}"
                      SelectionMode="Multiple"
-                     BorderThickness="0"/>
+                     BorderThickness="0">
+       
+        </ListBox>
 
     </Grid>
 </UserControl>

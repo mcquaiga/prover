@@ -25,13 +25,13 @@ namespace Prover.Core.Tests
         [TestMethod]
         public void QueryInstruments()
         {
-            var boot = new CoreBootstrapper();
-            var allInstr = new InstrumentStore();
-            var myinstr = allInstr.Query();
-            foreach (var i in myinstr)
-            {
-                Console.WriteLine(i.SerialNumber);
-            }
+            //var boot = new CoreBootstrapper();
+            ////var allInstr = new InstrumentStore();
+            //var myinstr = allInstr.Query();
+            //foreach (var i in myinstr)
+            //{
+            //    Console.WriteLine(i.SerialNumber);
+            //}
         }
 
         [TestMethod]

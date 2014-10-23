@@ -66,6 +66,22 @@ namespace Prover.GUI.ViewModels
         }
 
         #region Methods
+
+        public string SelectedCommPort()
+        {
+            return Settings.Default.CommPort;
+        }
+
+        public string SelectedTachCommPort()
+        {
+            return Settings.Default.TachCommPort;
+        }
+
+        public string SelectedBaudRate()
+        {
+            return Settings.Default.BaudRate;
+        }
+
         public void SetCommPort(string comm)
         {
             CommName = comm;

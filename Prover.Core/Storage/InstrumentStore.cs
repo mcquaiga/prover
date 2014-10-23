@@ -6,13 +6,18 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
+using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
     public class InstrumentStore : IInstrumentStore<Instrument>
     {
-        private readonly ProverContext _proverContext = new ProverContext();
+        private ProverContext _proverContext;
+        public InstrumentStore(IUnityContainer container)
+        {
+            _proverContext = container.Resolve<ProverContext>();
+        }
 
         public IQueryable<Instrument> Query()
         {
@@ -26,11 +31,8 @@ namespace Prover.Core.Storage
 
         public async Task UpsertAsync(Instrument instrument)
         {
-            using (var context = new ProverContext())
-            {
-                context.Instruments.Add(instrument);
-                await context.SaveChangesAsync();
-            }
+            _proverContext.Instruments.Add(instrument);
+            await _proverContext.SaveChangesAsync();
         }
 
         public void Delete(Instrument entity)

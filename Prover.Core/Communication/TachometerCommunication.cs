@@ -56,7 +56,8 @@ namespace Prover.Core.Communication
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _serialPort.ClosePort();
+            _outputBoard.Dispose();
         }
     }
 }

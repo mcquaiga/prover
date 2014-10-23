@@ -22,7 +22,9 @@ namespace Prover.Core.Communication
         private InstrumentCommunication _instrumentCommunication;
         private TachometerCommunication _tachCommunication;
         private bool _isLiveReading = false;
+        private bool _stopLiveReading;
         private bool _isBusy = false;
+        
 
         public DataAcqBoard OutputBoard { get; private set; }
         public DataAcqBoard AInputBoard { get; private set; }
@@ -108,8 +110,9 @@ namespace Prover.Core.Communication
         {
             if (!_isBusy || (_isBusy && _isLiveReading))
             {
-                _isBusy = true;
                 if (_isLiveReading) StopLiveReadTemperature();
+                System.Threading.Thread.Sleep(1000);
+                _isBusy = true;
                 await _instrumentCommunication.Connect();
                 var test = _instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
                 if (test != null)
@@ -147,14 +150,16 @@ namespace Prover.Core.Communication
             if (!_isBusy)
             {
                 await _instrumentCommunication.Connect();
+                _stopLiveReading = false;
                 _isLiveReading = true;
                 do
                 {
                     var liveValue = await _instrumentCommunication.LiveReadItem(26);
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
-                } while (_isLiveReading);
+                } while (!_stopLiveReading);
 
                 await _instrumentCommunication.Disconnect();
+                _isLiveReading = false;
                 _isBusy = false;
             } 
         }
@@ -163,13 +168,13 @@ namespace Prover.Core.Communication
         {
             if (_isLiveReading)
             {
-                _isLiveReading = false;
-            } 
+                _stopLiveReading = true;
+            }
         }
 
         public async Task SaveAsync()
         {
-            var store = new InstrumentStore();
+            var store = new InstrumentStore(_container);
             await store.UpsertAsync(_instrument);
         }
 

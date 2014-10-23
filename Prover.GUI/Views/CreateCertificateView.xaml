@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     
@@ -82,13 +83,19 @@
                 <StackPanel>
 
                     <TextBlock>Created By:</TextBlock>
-                    <TextBox Text="{Binding Path=CreatedBy}" />
-                    <ComboBox Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
+                    <TextBox Name="CreatedBy" />
+                    <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
                     </ComboBox>
                     <TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
-                    <TextBlock Text="{Binding Path=SealExpirationDate}" />
+                    <TextBlock Name="SealExpirationDate" />
 
-                    <Button Margin="0,20,0,0"  Command="{Binding Path=CreateNewCertCommand}" Content="Create New" />
+                    <Button Margin="0,20,0,0" Content="Create New">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="CreateCertificate" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Grid>

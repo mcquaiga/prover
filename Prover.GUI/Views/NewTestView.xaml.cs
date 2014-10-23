@@ -23,6 +23,13 @@ namespace Prover.GUI.Views
         public NewTestView()
         {
             InitializeComponent();
+            Loaded += ControlLoaded;
+        }
+
+        void ControlLoaded(object sender, RoutedEventArgs e)
+        {
+            var my = sender.ToString();
+
         }
     }
 }
