@@ -52,25 +52,37 @@
         <StackPanel Grid.Row="0"
                     Margin="10, 0, 0, 0"
                     Orientation=" Horizontal">
-            <Button Command="{Binding OneWeekFilterCommand}"
-                    Content="Last 7 Days"
-                    Style="{DynamicResource SimpleButton}" />
-            <Button Command="{Binding OneMonthFilterCommand}"
+            <Button Content="Last 7 Days"
+                    Style="{DynamicResource SimpleButton}"> 
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="OneWeekFilter" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button
                     Content="Last 30 Days"
-                    Style="{DynamicResource SimpleButton}" />
-            <!--<Button Command="{Binding MiniMaxFilterCommand}"
-                    Content="Mini Max"
-                    Style="{DynamicResource SimpleButton}" />-->
-            <!--<Button Command="{Binding EC300FilterCommand}"
-                    Content="EC 300"
-                    Style="{DynamicResource SimpleButton}" />-->
+                    Style="{DynamicResource SimpleButton}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="OneMonthFilter" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
 
-            <!--<TextBlock HorizontalAlignment="Right">Serial Number:</TextBlock>-->
-        </StackPanel>
-        <Button Command="{Binding ResetFilterCommand}" Grid.Row="0"
-                    Content="Reset"
+            <Button
+                    Content="All"
                     HorizontalAlignment="Right"
-                    Style="{DynamicResource SimpleButton}" />
+                Width="75"
+                    Style="{DynamicResource SimpleButton}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="ResetFilter" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+       
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" />
@@ -83,11 +95,11 @@
                 <StackPanel>
 
                     <TextBlock>Created By:</TextBlock>
-                    <TextBox Name="CreatedBy" />
+                    <TextBox x:Name="TestedBy" />
                     <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
                     </ComboBox>
                     <TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
-                    <TextBlock Name="SealExpirationDate" />
+                    <TextBlock x:Name="SealExpirationDate" />
 
                     <Button Margin="0,20,0,0" Content="Create New">
                         <i:Interaction.Triggers>

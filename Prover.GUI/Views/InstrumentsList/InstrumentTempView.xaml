@@ -5,28 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
-             d:DesignHeight="75" d:DesignWidth="350">
+             d:DesignHeight="80" d:DesignWidth="350">
     
         <StackPanel Orientation="Horizontal">
-            <Grid Margin="5, 5, 25, 5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+           <Grid Margin="5, 5, 50, 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Foreground="Black" Text="T. Units: " FontWeight="Bold"/>
-                <TextBlock Foreground="Black" Name="Temperature_Units" />
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="T. Units: " FontWeight="Bold"/>
+                    <TextBlock Foreground="Black" x:Name="Temperature_Units" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="Base T.: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" x:Name="Temperature_EvcBase" />
+                    </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <TextBlock Foreground="Black" Text="T. Range: " FontWeight="Bold" />
+                    <TextBlock Foreground="Black" x:Name="Temperature_Range" />
                 </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock Foreground="Black" Text="Base T.: " FontWeight="Bold" />
-                    <TextBlock Foreground="Black" Name="Temperature_EvcBase" />
-                </StackPanel>
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Foreground="Black" Text="T. Range: " FontWeight="Bold" />
-                <TextBlock Foreground="Black" Name="Temperature_Range" />
-            </StackPanel>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -40,10 +39,15 @@
                 <TextBlock Margin="0,2,0,0" FontWeight="Bold">A</TextBlock>
                 <TextBlock Margin="0,2,0,0" FontWeight="Bold">G</TextBlock>
             </StackPanel>
-            <ListBox MinWidth="200" MaxWidth="200" Grid.Column="1" Margin="5, 5, 5, 5" Name="Tests" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="1" IsEnabled="False">
+            <ListBox MaxHeight="75" MinHeight="75" 
+                     MinWidth="160" MaxWidth="160" 
+                     Grid.Column="1" Margin="10, 0, 5, 0" 
+                     Name="Tests" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     IsEnabled="False">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5,5,5,5" IsItemsHost="True" />
+                        <StackPanel Orientation="Horizontal" Margin="5,0,5,0" IsItemsHost="True" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemContainerStyle>

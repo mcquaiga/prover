@@ -109,24 +109,28 @@ namespace Prover.GUI.ViewModels
 
         public async void FetchInstrumentItems()
         {
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-            if (CommName == null)
+            await Task.Run(async () =>
             {
-                MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
-                return;
-            }
-            if (InstrumentManager == null)
-            {
-                InstrumentManager = new InstrumentManager(_container);
-                InstrumentManager.SetupCommPort(CommName, BaudRate);
-            }
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
+                if (CommName == null)
+                {
+                    MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
+                    return;
+                }
+                if (InstrumentManager == null)
+                {
+                    InstrumentManager = new InstrumentManager(_container);
+                    InstrumentManager.SetupCommPort(CommName, BaudRate);
+                }
 
-            await InstrumentManager.DownloadInfo();
+                await InstrumentManager.DownloadInfo();
 
-            NotifyOfPropertyChange(() => Instrument);
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
-            //Publish the change in instrument state to anyone who's listening
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
+                NotifyOfPropertyChange(() => Instrument);
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
+                //Publish the change in instrument state to anyone who's listening
+                _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
+            });
+           
         }
 
         public async void SaveInstrument()

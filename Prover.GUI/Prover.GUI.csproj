@@ -67,6 +67,7 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="Reactive.EventAggregator">
       <HintPath>..\packages\Reactive.EventAggregator.1.1.0\lib\Net45\Reactive.EventAggregator.dll</HintPath>
     </Reference>
@@ -93,6 +94,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8854.1\lib\net40\System.Data.SqlServerCe.Entity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Printing" />
     <Reference Include="System.Reactive.Core, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -145,6 +147,7 @@
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
@@ -158,6 +161,9 @@
     <Compile Include="ViewModels\TemperatureViews\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\TemperatureViews\TemperatureViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
+    <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
+      <DependentUpon>CertificateReportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateCertificateView.xaml.cs">
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -210,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="Views\CertificateReport\CertificateReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreateCertificateView.xaml">
       <SubType>Designer</SubType>
@@ -344,6 +354,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cert-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,21 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Xps.Packaging;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
+using Prover.GUI.ViewModels.CertificateReport;
 using Prover.GUI.ViewModels.InstrumentsList;
+using Prover.GUI.Views.CertificateReport;
+using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 
 namespace Prover.GUI.ViewModels
 {
     public class CreateCertificateViewModel: ReactiveScreen
     {
         private IUnityContainer _container;
+
+        public List<string> VerificationTypes
+        {
+            get
+            {
+                return new List<string> {"Verification", "Re-Verification"};
+            }
+        } 
 
         public CreateCertificateViewModel(IUnityContainer container)
         {
@@ -30,27 +45,91 @@ namespace Prover.GUI.ViewModels
         public string CreatedDateTime { get; set; }
         public string VerificationType { get; set; }
         public string TestedBy { get; set; }
-        
+
+        public string SealExpirationDate
+        {
+            get { return DateTime.Now.AddYears(5).ToString("yyyy-MM-dd"); }
+        }
+
+        public void OneWeekFilter()
+        {
+            InstrumentsListViewModel.GetInstrumentsWithNoCertificateLastWeek();
+        }
+
+        public void OneMonthFilter()
+        {
+            InstrumentsListViewModel.GetInstrumentsWithNoCertificateLastMonth();
+        }
+
+        public void ResetFilter()
+        {
+            InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
+        }
+
         public void CreateCertificate()
         {
-            Certificate = new Certificate
-            {
-                CreatedDateTime = DateTime.Now,
-                TestedBy = TestedBy,
-                Instruments = new Collection<Instrument>()
-            };
-
             var selectedInstruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected == true).ToList();
-            selectedInstruments.ForEach(i =>
+
+            if (selectedInstruments.Count() > 8)
             {
-                i.Instrument.CertificateId = Certificate.Id;
-                i.Instrument.Certificate = Certificate;
-                Certificate.Instruments.Add(i.Instrument);
+                MessageBox.Show("Maximum 8 instruments allowed per certificate.");
+                return;
+            }
 
-            });
+            if (!selectedInstruments.Any())
+            {
+                MessageBox.Show("Please select at least one instrument.");
+                return;
+            }
 
-            var certificateStore = new CertificateStore(_container);
-            certificateStore.Upsert(Certificate);
+            if (VerificationType == null || TestedBy == null)
+            {
+                MessageBox.Show("Please enter a tested by and verificate type.");
+                return;
+            }
+
+            var instruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
+            Certificate = Certificate.CreateCertificate(_container, TestedBy, VerificationType, instruments);
+            
+            InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
+
+            //Set up the WPF Control to be printed
+            var controlToPrint = new CertificateReportView();
+            controlToPrint.DataContext = new CertificateReportViewModel(_container, Certificate);
+
+            FixedDocument fixedDoc = new FixedDocument();
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
+            PageContent pageContent = new PageContent();
+            FixedPage fixedPage = new FixedPage();
+            fixedPage.Width = 96 * 11;
+            fixedPage.Height = 96 * 8.5;
+
+            //Create first page of document
+            fixedPage.Children.Add(controlToPrint);
+            ((System.Windows.Markup.IAddChild)pageContent).AddChild(fixedPage);
+            fixedDoc.Pages.Add(pageContent);
+            //Create any other required pages here
+
+            // Configure save file dialog box
+            var dlg = new Microsoft.Win32.SaveFileDialog { FileName = "MyReport", DefaultExt = ".xps", Filter = "XPS Documents (.xps)|*.xps" };
+
+            // Show save file dialog box
+            bool? result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+
+                //View the document
+                var xpsWriter = new XpsDocument(filename, FileAccess.ReadWrite);
+                var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
+                xw.Write(fixedDoc);
+                xpsWriter.Close();
+
+                System.Diagnostics.Process.Start(filename);
+            }
         }
     }
 }

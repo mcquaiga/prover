@@ -10,17 +10,17 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+            <!--<Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Style.Triggers>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
                         <Condition Property="ItemsControl.AlternationIndex" Value="1" />
-                        <Condition Property="IsSelected" Value="False" />
+                        --><!--<Condition Property="IsSelected" Value="False" />--><!--
                         <Condition Property="IsMouseOver" Value="False" />
                     </MultiTrigger.Conditions>
                     <Setter Property="Background" Value="#EEEEEEEE" />
                 </MultiTrigger>
-            </Style.Triggers>
+            </Style.Triggers>-->
         </Style>
         <Style x:Key="Flat">
             <Setter Property="Control.Background" Value="{x:Null}" />
@@ -36,16 +36,16 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type ListBoxItem}">
+        <!--<Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>
+        </Style>-->
     </UserControl.Resources>
 
 
     <Grid>
         <ListBox x:Name="InstrumentItems"
                      Grid.Column="0"
-                     Margin="10"
+                     Margin="5,0,5,0"
                      HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Stretch"
                      Background="{DynamicResource MainBackgroundColour}"

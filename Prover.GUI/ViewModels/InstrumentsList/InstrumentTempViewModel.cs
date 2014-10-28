@@ -11,7 +11,7 @@ namespace Prover.GUI.ViewModels.InstrumentsList
     public class InstrumentTempViewModel : ReactiveScreen
     {
         private readonly ObservableCollection<InstrumentTempTestViewModel> _testViewModels;
-        public Temperature Temperature;
+        public Temperature Temperature { get; set; }
         public InstrumentTempViewModel(Temperature temperature)
         {
             Temperature = temperature;

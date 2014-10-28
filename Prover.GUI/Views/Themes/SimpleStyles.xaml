@@ -532,7 +532,7 @@
 	</Style>
 
 	<!--  Simple ListBox - This uses SimpleScrollViewer to allow items to be scrolled and SimpleListBoxItem to define the look of each item  -->
-	<Style x:Key="SimpleListBox" TargetType="{x:Type ListBox}">
+	<!--<Style x:Key="SimpleListBox" TargetType="{x:Type ListBox}">
 		<Setter Property="SnapsToDevicePixels" Value="true" />
 		<Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SolidBorderBrush}" />
@@ -551,7 +551,7 @@
 									  Focusable="false"
 									  Style="{DynamicResource SimpleScrollViewer}">
 
-							<!--  The StackPanel is used to display the children by setting IsItemsHost to be Trus  -->
+							--><!--  The StackPanel is used to display the children by setting IsItemsHost to be Trus  --><!--
 							<StackPanel Margin="2" IsItemsHost="true" />
 
 						</ScrollViewer>
@@ -568,11 +568,11 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-	</Style>
+	</Style>-->
 
 	<!--  Simple ListBoxItem - This is used for each Item in a ListBox. The item's content is placed in the ContentPresenter  -->
 
-	<Style x:Key="SimpleListBoxItem"
+	<!--<Style x:Key="SimpleListBoxItem"
 		   TargetType="{x:Type ListBoxItem}"
 		   d:IsControlPart="True">
 		<Setter Property="SnapsToDevicePixels" Value="true" />
@@ -589,7 +589,7 @@
 					</Grid>
 					<ControlTemplate.Triggers>
 
-						<!--  Change IsSelected SelectedBackgroundBrush to set the selection color for the items  -->
+						--><!--  Change IsSelected SelectedBackgroundBrush to set the selection color for the items  --><!--
 						<Trigger Property="IsSelected" Value="true">
 							<Setter TargetName="Border" Property="Background" Value="{DynamicResource SelectedBackgroundBrush}" />
 						</Trigger>
@@ -601,7 +601,7 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-	</Style>
+	</Style>-->
 
 	<!--  Simple Expander ToggleButton - This Button is used by the Expander control. When it is toggled it switches visibility on the Up_Arrow and Down_Arrow  -->
 	<ControlTemplate x:Key="ExpanderToggleButton" TargetType="{x:Type ToggleButton}">

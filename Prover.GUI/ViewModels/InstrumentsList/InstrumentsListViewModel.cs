@@ -15,24 +15,54 @@ namespace Prover.GUI.ViewModels.InstrumentsList
         public InstrumentsListViewModel(IUnityContainer container)
         {
             _container = container;
-            GetInstruments(Guid.Empty);
+            GetInstrumentsByCertificateId(null);
            
         }
         public ObservableCollection<InstrumentViewModel> InstrumentItems { get; set; }
 
-        private void GetInstruments(Guid certificateGuid)
+        public void GetInstrumentsByCertificateId(Guid? certificateGuid)
         {
-            if (certificateGuid == Guid.Empty)
+
+            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
-                using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
-                {
-                    InstrumentItems = new ObservableCollection<InstrumentViewModel>();
-                    var instruments = store.Query()
-                                        .Where(x => x.CertificateId == null)
-                                        .OrderBy(i => i.TestDateTime)
-                                        .ToList();
-                    instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
-                }
+                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
+                var instruments = store.Query()
+                                    .Where(x => x.CertificateId == certificateGuid)
+                                    .OrderBy(i => i.TestDateTime)
+                                    .ToList();
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+            }
+
+            NotifyOfPropertyChange(() => InstrumentItems);
+        }
+
+        public void GetInstrumentsWithNoCertificateLastWeek()
+        {
+            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
+            {
+                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
+                var dateFilter = DateTime.Now.AddDays(-7);
+                var instruments = store.Query()
+                                    .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
+                                    .OrderBy(i => i.TestDateTime)
+                                    .ToList();
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+            }
+           
+            NotifyOfPropertyChange(() => InstrumentItems);
+        }
+
+        public void GetInstrumentsWithNoCertificateLastMonth()
+        {
+            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
+            {
+                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
+                var dateFilter = DateTime.Now.AddDays(-30);
+                var instruments = store.Query()
+                                    .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
+                                    .OrderBy(i => i.TestDateTime)
+                                    .ToList();
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);
