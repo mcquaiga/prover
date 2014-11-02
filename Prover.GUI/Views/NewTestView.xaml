@@ -43,65 +43,23 @@
 				</RadioButton>
 			</WrapPanel>
 		</DataTemplate>
-		<DataTemplate x:Key="TachCommPorts">
-			<WrapPanel>
-				<RadioButton
-							 Content="{Binding .}"
-                             Name="TachCommPorts"
+        <DataTemplate x:Key="TachCommPorts">
+            <WrapPanel>
+                <RadioButton Content="{Binding .}"
+							 Name="TachCommPorts"
 							 Style="{DynamicResource radio2}"
-							
-                             GroupName="{Binding .}"/>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="SetTachCommPort">
-                            <cal:Parameter Value="{Binding .}" />
-                        </cal:ActionMessage>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+							 GroupName="{Binding .}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SetTachCommPort">
+                                <cal:Parameter Value="{Binding .}" />
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </RadioButton>
             </WrapPanel>
-		</DataTemplate>
-
-		<DataTemplate x:Key="PressureItem">
-			<UniformGrid Columns="8">
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<Button Height="75"
-							Command="{Binding DataContext.fetchPressureCommand,
-											  RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-							CommandParameter="{Binding LevelIndex}"
-							Content="{Binding LevelDescription}"
-							Style="{StaticResource SimpleButton}" />
-				</StackPanel>
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBox Text="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}"  />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="{Binding ATMPressure}" />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="{Binding EVCPressure}" />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="{Binding EVCFactor}" />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="{Binding EVCUnsqr}" />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="{Binding ActualPressureFactor}" />
-				</StackPanel>
-
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Style="{StaticResource ItemValues}" Text="{Binding PercentError}" />
-				</StackPanel>
-			</UniformGrid>
-		</DataTemplate>
-
-	</UserControl.Resources>
+        </DataTemplate>
+    </UserControl.Resources>
 
 	<ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">
 

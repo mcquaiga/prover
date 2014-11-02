@@ -22,13 +22,11 @@ namespace Prover.GUI.ViewModels
     public class NewTestViewModel : ReactiveScreen
     {
         private readonly IUnityContainer _container;
-        private string TachCommName;
         public InstrumentManager InstrumentManager { get; set; }
 
         public NewTestViewModel(IUnityContainer container)
         {
-            _container = container;
-            
+            _container = container; 
         }
 
         public Instrument Instrument
@@ -38,6 +36,7 @@ namespace Prover.GUI.ViewModels
 
         public ICommPort CommPort { get; set; }
         public string CommName { get; set; }
+        public string TachCommName { get; set; }
         public BaudRateEnum BaudRate { get; set; }
 
         public List<String> BaudRates
@@ -92,7 +91,6 @@ namespace Prover.GUI.ViewModels
         {
             TachCommName = comm;
             Settings.Default.TachCommPort = comm;
-            if (InstrumentManager != null) InstrumentManager.SetupTachCommPort(comm);
         }
 
         public void SetBaudRate(string baudRate)
@@ -121,6 +119,7 @@ namespace Prover.GUI.ViewModels
                 {
                     InstrumentManager = new InstrumentManager(_container);
                     InstrumentManager.SetupCommPort(CommName, BaudRate);
+                   if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
                 }
 
                 await InstrumentManager.DownloadInfo();

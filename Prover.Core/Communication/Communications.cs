@@ -28,7 +28,6 @@ namespace Prover.Core.Communication
         public static List<string> GetCommPortList()
         {
             var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-            ports.Add("IrDA");
             return ports;
         }
 

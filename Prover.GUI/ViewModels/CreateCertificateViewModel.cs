@@ -66,6 +66,11 @@ namespace Prover.GUI.ViewModels
             InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
         }
 
+        public int InstrumentCount 
+        {
+            get { return InstrumentsListViewModel.InstrumentItems.Count(x => x.IsSelected);  }
+        }
+
         public void CreateCertificate()
         {
             var selectedInstruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected == true).ToList();
@@ -110,26 +115,28 @@ namespace Prover.GUI.ViewModels
             fixedDoc.Pages.Add(pageContent);
             //Create any other required pages here
 
-            // Configure save file dialog box
-            var dlg = new Microsoft.Win32.SaveFileDialog { FileName = "MyReport", DefaultExt = ".xps", Filter = "XPS Documents (.xps)|*.xps" };
+            //var dlg = new Microsoft.Win32.SaveFileDialog { FileName = "Certificate", DefaultExt = ".xps", Filter = "XPS Documents (.xps)|*.xps" };
+            //bool? result = dlg.ShowDialog();
 
-            // Show save file dialog box
-            bool? result = dlg.ShowDialog();
-
-            // Process save file dialog box results
-            if (result == true)
-            {
+            //// Process save file dialog box results
+            //if (result == true)
+            //{
                 // Save document
-                string filename = dlg.FileName;
+            var path = Directory.GetCurrentDirectory();
+            string filename = "certificate_" + Certificate.Number + ".xps";
+                //dlg.FileName;
 
-                //View the document
-                var xpsWriter = new XpsDocument(filename, FileAccess.ReadWrite);
-                var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
-                xw.Write(fixedDoc);
-                xpsWriter.Close();
+            //View the document
+            var filePath = Path.Combine(path, "Certificates");
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+            filePath = Path.Combine(filePath, filename);
+            var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
+            var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
+            xw.Write(fixedDoc);
+            xpsWriter.Close();
 
-                System.Diagnostics.Process.Start(filename);
-            }
+            System.Diagnostics.Process.Start(filePath);
+            //}
         }
     }
 }
