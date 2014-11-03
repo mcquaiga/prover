@@ -52,7 +52,7 @@ namespace Prover.Core.Communication
                 }
                 catch (Exception)
                 {
-                    return 0;
+                    throw;
                 }
                 
             });
