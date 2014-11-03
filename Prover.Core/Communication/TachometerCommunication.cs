@@ -58,10 +58,11 @@ namespace Prover.Core.Communication
             });
         }
 
-        private static int ParseTachValue(string value)
+        public static int ParseTachValue(string value)
         {
             if (value.Length < 1) return 0;
-            return Convert.ToInt32(value.Trim(Convert.ToChar(value.Right(value.Length - value.IndexOf((char)13, value.IndexOf((char)13) + 1) - 1))));
+            var index = value.LastIndexOf((char) 13);
+            return Convert.ToInt32(value.Substring(index + 1, (value.Length - 1) - index).Trim());
         }
 
         public void Dispose()
