@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.ObjectBuilder2;
@@ -56,22 +57,29 @@ namespace Prover.GUI.ViewModels
 
         public async void StartTestCommand()
         {
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
-            await InstrumentManager.StartVolumeTest();
-            await Task.Run(() =>
+            try
             {
-                do
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
+                await InstrumentManager.StartVolumeTest();
+                await Task.Run(() =>
                 {
-                    InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
-                    InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.BInputBoard.ReadInput();
-                    NotifyOfPropertyChange(() => Volume);
-                } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected());
-            });
-            
-            await InstrumentManager.StopVolumeTest();
-            NotifyOfPropertyChange(()=> AppliedInput);
-            NotifyOfPropertyChange(() => Volume);
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
+                    do
+                    {
+                        InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
+                        InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.BInputBoard.ReadInput();
+                        NotifyOfPropertyChange(() => Volume);
+                    } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected());
+                });
+
+                await InstrumentManager.StopVolumeTest();
+                NotifyOfPropertyChange(() => AppliedInput);
+                NotifyOfPropertyChange(() => Volume);
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public async void StopTestCommand()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +11,12 @@ namespace Prover.Core.Communication
 {
     public class TachometerCommunication : IDisposable
     {
-        private SerialPort _serialPort;
+        private readonly System.IO.Ports.SerialPort _serialPort;
         private DataAcqBoard _outputBoard;
 
         public TachometerCommunication(string portName)
         {
-            _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
+            _serialPort = new System.IO.Ports.SerialPort(portName, 9600);
             _outputBoard = new DataAcqBoard(0, 0, 1);
         }
 
@@ -34,29 +35,38 @@ namespace Prover.Core.Communication
         {
             return await Task.Run(() =>
             {
-                if (!_serialPort.IsOpen()) _serialPort.OpenPort();
+                try
+                {
+                    if (!_serialPort.IsOpen) _serialPort.Open();
 
-                _serialPort.DiscardInBuffer();
-                _serialPort.SendDataToPort("@D0");
-                _serialPort.SendDataToPort(((char) 13).ToString());
-                _serialPort.DiscardInBuffer();
+                    _serialPort.DiscardInBuffer();
+                    _serialPort.WriteLine("@D0");
+                    //_serialPort.WriteLine(((char)13).ToString(CultureInfo.InvariantCulture));
+                    _serialPort.DiscardInBuffer();
 
-                System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(300);
 
-                var tachString = _serialPort.ReceiveDataFromPort();
+                    var tachString = _serialPort.ReadLine();
 
-                return ParseTachValue(tachString);
+                    return ParseTachValue(tachString);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+                
             });
         }
 
         private static int ParseTachValue(string value)
         {
+            if (value.Length < 1) return 0;
             return Convert.ToInt32(value.Trim(Convert.ToChar(value.Right(value.Length - value.IndexOf((char)13, value.IndexOf((char)13) + 1) - 1))));
         }
 
         public void Dispose()
         {
-            _serialPort.ClosePort();
+            _serialPort.Close();
             _outputBoard.Dispose();
         }
     }

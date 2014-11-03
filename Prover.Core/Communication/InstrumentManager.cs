@@ -212,18 +212,27 @@ namespace Prover.Core.Communication
             {
                 await Task.Run(async () =>
                 {
-                    _isBusy = true;
-                    OutputBoard.StopMotor();
-                    System.Threading.Thread.Sleep(1000);
-
-                    if (_tachCommunication != null)
+                    try
                     {
-                        Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
-                    }
+                        _isBusy = true;
+                        OutputBoard.StopMotor();
 
-                    await DownloadVolumeAfterTestItems();
-                    await _instrumentCommunication.Disconnect();
-                    _isBusy = false;
+                        if (_tachCommunication != null)
+                        {
+                            Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
+                        }
+                       
+                        await DownloadVolumeAfterTestItems();
+                        await _instrumentCommunication.Disconnect();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        _isBusy = false;
+                    }
                 });
             } 
         }

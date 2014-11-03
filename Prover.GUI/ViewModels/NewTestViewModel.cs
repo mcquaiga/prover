@@ -119,7 +119,7 @@ namespace Prover.GUI.ViewModels
                 {
                     InstrumentManager = new InstrumentManager(_container);
                     InstrumentManager.SetupCommPort(CommName, BaudRate);
-                   if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
+                    if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
                 }
 
                 await InstrumentManager.DownloadInfo();
