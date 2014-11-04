@@ -214,7 +214,6 @@ namespace Prover.Core.Communication
                 {
                     try
                     {
-                        _isBusy = true;
                         OutputBoard.StopMotor();
 
                         if (_tachCommunication != null)

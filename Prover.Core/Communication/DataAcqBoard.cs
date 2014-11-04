@@ -61,8 +61,10 @@ namespace Prover.Core.Communication
                         return 1;
                     }
                 }
-
-                _pulseIsCleared = true;
+                else
+                {
+                    _pulseIsCleared = true;
+                } 
             }
             return 0;
         }
