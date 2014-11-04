@@ -218,8 +218,10 @@ namespace Prover.Core.Communication
 
                         if (_tachCommunication != null)
                         {
+
                             Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
                             _tachCommunication.Dispose();
+                            
                         }
                        
                         await DownloadVolumeAfterTestItems();

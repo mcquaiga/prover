@@ -12,12 +12,12 @@ namespace Prover.Core.Communication
 {
     public class TachometerCommunication : IDisposable
     {
-        private readonly System.IO.Ports.SerialPort _serialPort;
+        private readonly SerialPort _serialPort;
         private DataAcqBoard _outputBoard;
 
         public TachometerCommunication(string portName)
         {
-            _serialPort = new System.IO.Ports.SerialPort(portName, 9600);
+            _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
             _outputBoard = new DataAcqBoard(0, 0, 1);
         }
 
@@ -39,15 +39,15 @@ namespace Prover.Core.Communication
                 string tachString = string.Empty;
                 try
                 {
-                    if (!_serialPort.IsOpen) _serialPort.Open();
+                    if (!_serialPort.IsOpen()) _serialPort.OpenPort();
 
                     _serialPort.DiscardInBuffer();
-                    _serialPort.WriteLine("@D0");
-                    _serialPort.WriteLine(((char)13).ToString(CultureInfo.InvariantCulture));
+                    _serialPort.SendDataToPort("@D0");
+                    _serialPort.SendDataToPort(((char)13).ToString());
                     _serialPort.DiscardInBuffer();
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(500);
 
-                    tachString = _serialPort.ReadLine();
+                    tachString = _serialPort.ReceiveDataFromPort();
 
                     return ParseTachValue(tachString);
                 }
@@ -68,7 +68,7 @@ namespace Prover.Core.Communication
 
         public void Dispose()
         {
-            _serialPort.Close();
+            _serialPort.ClosePort();
             _outputBoard.Dispose();
         }
     }
