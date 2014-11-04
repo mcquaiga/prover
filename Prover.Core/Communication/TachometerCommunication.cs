@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog.Targets;
 using Prover.SerialProtocol;
 using Prover.Core.Extensions;
 
@@ -35,24 +36,24 @@ namespace Prover.Core.Communication
         {
             return await Task.Run(() =>
             {
+                string tachString = string.Empty;
                 try
                 {
                     if (!_serialPort.IsOpen) _serialPort.Open();
 
                     _serialPort.DiscardInBuffer();
                     _serialPort.WriteLine("@D0");
-                    //_serialPort.WriteLine(((char)13).ToString(CultureInfo.InvariantCulture));
+                    _serialPort.WriteLine(((char)13).ToString(CultureInfo.InvariantCulture));
                     _serialPort.DiscardInBuffer();
-
                     System.Threading.Thread.Sleep(300);
 
-                    var tachString = _serialPort.ReadLine();
+                    tachString = _serialPort.ReadLine();
 
                     return ParseTachValue(tachString);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    throw new Exception(string.Format("Exception: {0}; Tachometer Reading: {1};", ex.Message, tachString));
                 }
                 
             });

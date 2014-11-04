@@ -10,9 +10,9 @@ namespace Prover.Core.Tests
         [TestMethod]
         public void TestParseTachometer()
         {
-            var test = TachometerCommunication.ParseTachValue(@"@D0
-OK
-13479");
+
+            var value = "D0" + (char) 13 + "OK" + (char) 13 + "10000";
+            var test = TachometerCommunication.ParseTachValue(value);
         }
     }
 }
