@@ -61,7 +61,10 @@ namespace Prover.Core.Communication
             if (value.Length < 1) return 0;
             var index = value.LastIndexOf(Environment.NewLine, System.StringComparison.Ordinal);
 
+            if (index == (value.Length - 2)) value = value.Substring(0, index);
+
             int returnValue;
+            index = value.LastIndexOf(Environment.NewLine, System.StringComparison.Ordinal);
             if (Int32.TryParse(value.Substring(index + 1, (value.Length - 1) - index).Trim(), out returnValue))
                 return returnValue;
 
