@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
@@ -39,35 +40,32 @@ namespace Prover.Core.Communication
             return await Task.Run(() =>
             {
                 string tachString = string.Empty;
-                try
-                {
-                    if (!_serialPort.IsOpen()) _serialPort.OpenPort();
+                if (!_serialPort.IsOpen()) _serialPort.OpenPort();
 
-                    _serialPort.DiscardInBuffer();
-                    _serialPort.SendDataToPort("@D0");
-                    _serialPort.SendDataToPort(((char)13).ToString());
-                    _serialPort.DiscardInBuffer();
-                    System.Threading.Thread.Sleep(500);
+                _serialPort.DiscardInBuffer();
+                _serialPort.SendDataToPort("@D0");
+                _serialPort.SendDataToPort(((char)13).ToString());
+                _serialPort.DiscardInBuffer();
+                System.Threading.Thread.Sleep(500);
 
-                    tachString = _serialPort.ReceiveDataFromPort();
-                    _log.Debug(string.Format("Raw data from Tach: {0}", tachString));
-                    var tachReading = ParseTachValue(tachString);
-                    _log.Debug(string.Format("Tach Reading: {0}", tachReading));
-                    return tachReading;
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-                
+                tachString = _serialPort.ReceiveDataFromPort();
+                _log.Info(string.Format("Read data from Tach: {0}", tachString));
+                var tachReading = ParseTachValue(tachString);
+                _log.Info(string.Format("Tach Reading: {0}", tachReading));
+                return tachReading;
             });
         }
 
         public static int ParseTachValue(string value)
         {
             if (value.Length < 1) return 0;
-            var index = value.LastIndexOf((char) 13);
-            return Convert.ToInt32(value.Substring(index + 1, (value.Length - 1) - index).Trim());
+            var index = value.LastIndexOf(Environment.NewLine, System.StringComparison.Ordinal);
+
+            int returnValue;
+            if (Int32.TryParse(value.Substring(index + 1, (value.Length - 1) - index).Trim(), out returnValue))
+                return returnValue;
+
+            return 0;
         }
 
         public void Dispose()

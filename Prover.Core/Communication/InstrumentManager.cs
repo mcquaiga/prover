@@ -188,7 +188,7 @@ namespace Prover.Core.Communication
             {
                 await Task.Run(async () =>
                 {
-                    _log.Debug("Starting volume test...");
+                    _log.Info("Starting volume test...");
                     _isBusy = true;
                     await _instrumentCommunication.Disconnect();
 
@@ -219,7 +219,7 @@ namespace Prover.Core.Communication
                 {
                     try
                     {
-                        _log.Debug("Stopping volume test...");
+                        _log.Info("Stopping volume test...");
                         OutputBoard.StopMotor();
 
                         if (_tachCommunication != null)
@@ -230,13 +230,13 @@ namespace Prover.Core.Communication
                             }
                             catch (Exception ex)
                             {
-                                _log.Error("An error occured:", ex);
+                                _log.Error(string.Format("An error occured: {0}", ex));
                             }
                         }
                        
                         await DownloadVolumeAfterTestItems();
                         await _instrumentCommunication.Disconnect();
-                        _log.Debug("Volume test finished!");
+                        _log.Info("Volume test finished!");
                     }
                     catch (Exception ex)
                     {
