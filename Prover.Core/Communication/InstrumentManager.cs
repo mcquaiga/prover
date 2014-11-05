@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using MccDaq;
 using Microsoft.Practices.Unity;
+using NLog;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -24,6 +25,7 @@ namespace Prover.Core.Communication
         private bool _isLiveReading = false;
         private bool _stopLiveReading;
         private bool _isBusy = false;
+        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
         
 
         public DataAcqBoard OutputBoard { get; private set; }
@@ -149,6 +151,7 @@ namespace Prover.Core.Communication
         {
             if (!_isBusy)
             {
+                _log.Debug("Starting live temperature read...");
                 await _instrumentCommunication.Connect();
                 _stopLiveReading = false;
                 _isLiveReading = true;
@@ -161,6 +164,7 @@ namespace Prover.Core.Communication
                 await _instrumentCommunication.Disconnect();
                 _isLiveReading = false;
                 _isBusy = false;
+                _log.Debug("Finished live temperature read!");
             } 
         }
 
@@ -184,6 +188,7 @@ namespace Prover.Core.Communication
             {
                 await Task.Run(async () =>
                 {
+                    _log.Debug("Starting volume test...");
                     _isBusy = true;
                     await _instrumentCommunication.Disconnect();
 
@@ -214,18 +219,24 @@ namespace Prover.Core.Communication
                 {
                     try
                     {
+                        _log.Debug("Stopping volume test...");
                         OutputBoard.StopMotor();
 
                         if (_tachCommunication != null)
                         {
-
-                            Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
-                            _tachCommunication.Dispose();
-                            
+                            try
+                            {
+                                Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
+                            }
+                            catch (Exception ex)
+                            {
+                                _log.Error("An error occured:", ex);
+                            }
                         }
                        
                         await DownloadVolumeAfterTestItems();
                         await _instrumentCommunication.Disconnect();
+                        _log.Debug("Volume test finished!");
                     }
                     catch (Exception ex)
                     {
@@ -233,6 +244,7 @@ namespace Prover.Core.Communication
                     }
                     finally
                     {
+                        if (_tachCommunication != null) _tachCommunication.Dispose();
                         _isBusy = false;
                     }
                 });

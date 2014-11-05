@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 using NLog.Targets;
 using Prover.SerialProtocol;
 using Prover.Core.Extensions;
@@ -14,6 +15,7 @@ namespace Prover.Core.Communication
     {
         private readonly SerialPort _serialPort;
         private DataAcqBoard _outputBoard;
+        private Logger _log = LogManager.GetCurrentClassLogger();
 
         public TachometerCommunication(string portName)
         {
@@ -48,12 +50,14 @@ namespace Prover.Core.Communication
                     System.Threading.Thread.Sleep(500);
 
                     tachString = _serialPort.ReceiveDataFromPort();
-
-                    return ParseTachValue(tachString);
+                    _log.Debug(string.Format("Raw data from Tach: {0}", tachString));
+                    var tachReading = ParseTachValue(tachString);
+                    _log.Debug(string.Format("Tach Reading: {0}", tachReading));
+                    return tachReading;
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(string.Format("Exception: {0}; Tachometer Reading: {1};", ex.Message, tachString));
+                    throw;
                 }
                 
             });
