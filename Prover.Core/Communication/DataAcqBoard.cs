@@ -83,8 +83,6 @@ namespace Prover.Core.Communication
 
         public void Dispose()
         {
-            if (_board == null) return;
-            _board.DeviceLogout();
             _board = null;
         }
     }

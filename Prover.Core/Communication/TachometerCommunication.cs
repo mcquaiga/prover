@@ -39,7 +39,6 @@ namespace Prover.Core.Communication
         {
             return await Task.Run(() =>
             {
-                string tachString = string.Empty;
                 if (!_serialPort.IsOpen()) _serialPort.OpenPort();
 
                 _serialPort.DiscardInBuffer();
@@ -48,7 +47,7 @@ namespace Prover.Core.Communication
                 _serialPort.DiscardInBuffer();
                 System.Threading.Thread.Sleep(500);
 
-                tachString = _serialPort.ReceiveDataFromPort();
+                var tachString = _serialPort.ReceiveDataFromPort();
                 _log.Info(string.Format("Read data from Tach: {0}", tachString));
                 var tachReading = ParseTachValue(tachString);
                 _log.Info(string.Format("Tach Reading: {0}", tachReading));

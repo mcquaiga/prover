@@ -8,6 +8,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
+using NLog;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
@@ -18,7 +19,9 @@ namespace Prover.GUI.ViewModels
     {
 
         private readonly IUnityContainer _container;
+        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public InstrumentManager InstrumentManager { get; set; }
+        
 
         public VolumeViewModel(IUnityContainer container)
         {
@@ -78,7 +81,7 @@ namespace Prover.GUI.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                _log.Error(string.Format("An error occured: {0}", ex.Message), ex);
             }
         }
 
