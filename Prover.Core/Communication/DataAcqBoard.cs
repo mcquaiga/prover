@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MccDaq;
+using NLog;
 
 namespace Prover.Core.Communication
 {
@@ -26,6 +27,7 @@ namespace Prover.Core.Communication
         private readonly int _channelNum;
         private ErrorInfo _ulStatErrorInfo;
         private bool _pulseIsCleared;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public DataAcqBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
         {
@@ -34,6 +36,7 @@ namespace Prover.Core.Communication
             _channelNum = channelNumber;
             _ulStatErrorInfo = MccService.ErrHandling(ErrorReporting.PrintAll, ErrorHandling.StopAll);
             _pulseIsCleared = true;
+            _log.Info("Initialized DataAcqBoard: {0}, channel type {1}, channel number {2}", boardNumber, channelType, channelNumber);
         }
 
         public void StartMotor()

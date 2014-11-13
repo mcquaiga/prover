@@ -49,9 +49,7 @@ namespace Prover.Core.Communication
 
                 var tachString = _serialPort.ReceiveDataFromPort();
                 _log.Info(string.Format("Read data from Tach: {0}", tachString));
-                var tachReading = ParseTachValue(tachString);
-                _log.Info(string.Format("Tach Reading: {0}", tachReading));
-                return tachReading;
+                return ParseTachValue(tachString);
             });
         }
 

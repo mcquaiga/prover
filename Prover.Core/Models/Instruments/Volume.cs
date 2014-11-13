@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using NLog;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -44,6 +45,7 @@ namespace Prover.Core.Models.Instruments
 
         public void LoadMeterIndex()
         {
+        
             var xDoc = XDocument.Load("MeterIndexes.xml");
             var indexes = 
                 (from x in xDoc.Descendants("value")
@@ -57,8 +59,9 @@ namespace Prover.Core.Models.Instruments
                     MeterDisplacement = Convert.ToDouble(x.Attribute("MeterDisplacement").Value)
                 }).ToList();
             //
-
+            
             MeterIndex = indexes.FirstOrDefault();
+            if (MeterIndex != null) LogManager.GetCurrentClassLogger().Info(string.Format("Meter Id:{0}; Type: {1}; Displacement: {2}", MeterIndex.Id, MeterIndex.Description, MeterIndex.MeterDisplacement));
         }
 
         public int PulseACount { get; set; }

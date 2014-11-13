@@ -227,6 +227,7 @@ namespace Prover.Core.Communication
                             try
                             {
                                 Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
+                                _log.Info(string.Format("Tachometer reading: {0}", Instrument.Volume.AppliedInput));
                             }
                             catch (Exception ex)
                             {
@@ -236,6 +237,7 @@ namespace Prover.Core.Communication
                        
                         await DownloadVolumeAfterTestItems();
                         await _instrumentCommunication.Disconnect();
+                        
                         _log.Info("Volume test finished!");
                     }
                     catch (Exception ex)
