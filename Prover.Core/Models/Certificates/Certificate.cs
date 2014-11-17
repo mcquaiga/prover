@@ -43,7 +43,7 @@ namespace Prover.Core.Models.Certificates
         {
 
             var certificateStore = new CertificateStore(container);
-            var number = certificateStore.Query().Max(x => x.Number) + 1;
+            var number = certificateStore.Query().DefaultIfEmpty().Max(x => x.Number == null ? 0 : x.Number) + 1;
 
             var certificate = new Certificate
             {
