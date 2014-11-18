@@ -54,7 +54,6 @@ namespace Prover.Core.Models.Certificates
                 Instruments = new Collection<Instrument>()
             };
 
-
             instruments.ForEach(i =>
             {
                 i.CertificateId = certificate.Id;
@@ -62,8 +61,6 @@ namespace Prover.Core.Models.Certificates
                 certificate.Instruments.Add(i);
 
             });
-
-            
 
             certificateStore.Upsert(certificate);
             return certificate;
