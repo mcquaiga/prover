@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NLog;
 using NLog.Targets;
@@ -55,16 +56,15 @@ namespace Prover.Core.Communication
 
         public static int ParseTachValue(string value)
         {
-            if (value.Length < 1) return -1;
-            var index = value.LastIndexOf(Environment.NewLine, System.StringComparison.Ordinal);
-
-            if (index == (value.Length - 2)) value = value.Substring(0, index);
-
-            int returnValue;
-            index = value.LastIndexOf(Environment.NewLine, System.StringComparison.Ordinal);
-            if (Int32.TryParse(value.Substring(index + 1, (value.Length - 1) - index).Trim(), out returnValue))
-                return returnValue;
-
+            const string pattern = @"(\d+)";
+            int result;
+            value = value.Replace("\n", " ").Replace("\r", " ");
+            value = value.Substring(value.IndexOf("D0", System.StringComparison.Ordinal) + 2);
+            var regEx = new Regex(pattern, RegexOptions.IgnoreCase);
+            if (Int32.TryParse(regEx.Match(value).Value, out result))
+            {
+                return result;
+            }
             return -1;
         }
 

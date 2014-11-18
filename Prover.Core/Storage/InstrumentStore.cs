@@ -26,13 +26,21 @@ namespace Prover.Core.Storage
 
         public Instrument Get(Guid id)
         {
-            return _proverContext.Instruments.First(x => x.Id == id);
+            return _proverContext.Instruments.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task UpsertAsync(Instrument instrument)
+        public async Task<Instrument> UpsertAsync(Instrument instrument)
         {
-            _proverContext.Instruments.Add(instrument);
+            if (this.Get(instrument.Id) != null)
+            {
+                _proverContext.Instruments.Attach(instrument);
+            }
+            else
+            {
+                _proverContext.Instruments.Add(instrument);
+            }
             await _proverContext.SaveChangesAsync();
+            return instrument;
         }
 
         public void Delete(Instrument entity)
