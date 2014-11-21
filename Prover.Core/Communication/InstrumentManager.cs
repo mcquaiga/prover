@@ -221,6 +221,11 @@ namespace Prover.Core.Communication
                     {
                         _log.Info("Stopping volume test...");
                         OutputBoard.StopMotor();
+                        
+                        System.Threading.Thread.Sleep(500);
+
+                        await DownloadVolumeAfterTestItems();
+                        await _instrumentCommunication.Disconnect();
 
                         if (_tachCommunication != null)
                         {
@@ -235,9 +240,6 @@ namespace Prover.Core.Communication
                             }
                         }
                        
-                        await DownloadVolumeAfterTestItems();
-                        await _instrumentCommunication.Disconnect();
-                        
                         _log.Info("Volume test finished!");
                     }
                     catch (Exception ex)
