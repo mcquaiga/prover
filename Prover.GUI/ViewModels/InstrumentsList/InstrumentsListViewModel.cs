@@ -25,12 +25,17 @@ namespace Prover.GUI.ViewModels.InstrumentsList
 
             using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
+                int count = 1;
                 InstrumentItems = new ObservableCollection<InstrumentViewModel>();
                 var instruments = store.Query()
                                     .Where(x => x.CertificateId == certificateGuid)
                                     .OrderBy(i => i.TestDateTime)
                                     .ToList();
-                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+                instruments.ForEach(i =>
+                {
+                    InstrumentItems.Add(new InstrumentViewModel(i, count));
+                    count++;
+                });
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);

@@ -10,8 +10,8 @@
         MinWidth="1056" MaxWidth="1056"
         MinHeight="816" MaxHeight="816">
         <Grid.RowDefinitions>
-            <RowDefinition Height="90" />
-            <RowDefinition Height="675" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="665" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" >
@@ -23,14 +23,18 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1.25*" />
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0"  HorizontalAlignment="Left" Height="57" VerticalAlignment="Top" Width="234" Source="../../Resources/uniongas-logo.png" Stretch="Fill" Margin="10,10,0,-27" Grid.RowSpan="4"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" FontSize="24" HorizontalAlignment="Center">Measurement Device <LineBreak/>
-        Inspection Certificate
-            </TextBlock>
+            <Image Grid.Column="0"  HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="305" Source="../../Resources/uglogo.jpg" Stretch="Fill" Margin="10,5,5,5" Grid.RowSpan="4"/>
+                
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <TextBlock  FontSize="24" HorizontalAlignment="Center">Measurement Device</TextBlock>
+                <TextBlock  FontSize="24" HorizontalAlignment="Center">Inspection Certificate</TextBlock>
+                    
+            </StackPanel>
+               
             <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -43,7 +47,7 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" FontWeight="Bold">Union Gas Limited</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="10" FontWeight="Bold" Grid.ColumnSpan="2">MC Accredited Org.: Union Gas Limited</TextBlock>
                         <TextBlock Grid.Column="0" Grid.Row="1" FontSize="10">36 Charles St.</TextBlock>
                         <TextBlock Grid.Column="0" Grid.Row="2" FontSize="10">North Bay, Ontario</TextBlock>
                         <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10">P1B 8K7</TextBlock>
@@ -53,25 +57,29 @@
                     </Grid>
                     <TextBlock Margin="0,3,0,0" FontSize="10">Accreditation Certificate: A-049</TextBlock>
                     <TextBlock FontSize="10">Certificate Number: UGMI-<TextBlock FontSize="10" Text="{Binding Path=Certificate.Number}"></TextBlock></TextBlock>
-            </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold">Test Date: <TextBlock Text="{Binding Path=Certificate.CreatedDateTime}" /></TextBlock>
+                        
+                    </StackPanel>
+                </StackPanel>
         </Grid>
         </Border>
         <ContentControl Grid.Row="1" cal:View.Model="{Binding InstrumentsView}"></ContentControl>
         <Border Grid.Row="2" BorderThickness="2" BorderBrush="Black" Margin="2">
             <Grid VerticalAlignment="Center" Margin="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.5*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold">Created By: </TextBlock>
-                        <TextBlock Text="{Binding Path=Certificate.TestedBy}"></TextBlock>
+                        <TextBlock FontWeight="Bold">Verification Type:</TextBlock>
+                        <TextBlock Text="{Binding Path=Certificate.VerificationType}"></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold">Verification Type: </TextBlock>
-                        <TextBlock Text="{Binding Path=Certificate.VerificationType}"></TextBlock>
+                        <TextBlock FontWeight="Bold">Manufacturer:</TextBlock>
+                        <TextBlock>Mercury Instruments</TextBlock>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
@@ -82,6 +90,17 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold"> Seal Expiration Date: </TextBlock>
                         <TextBlock Text="{Binding Path=Certificate.SealExpirationDate}"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock>Signed By: </TextBlock>
+                        <TextBlock>_________________________________________________________________________</TextBlock>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=Certificate.TestedBy}"></TextBlock>
+                        <TextBlock FontWeight="Bold">, Accredited Meter Verifier Designate</TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>

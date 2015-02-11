@@ -73,7 +73,7 @@ namespace Prover.GUI.ViewModels
 
         public void CreateCertificate()
         {
-            var selectedInstruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected == true).ToList();
+            var selectedInstruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).ToList();
 
             if (selectedInstruments.Count() > 8)
             {
