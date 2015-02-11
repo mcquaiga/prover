@@ -58,7 +58,7 @@
                     <TextBlock Margin="0,3,0,0" FontSize="10">Accreditation Certificate: A-049</TextBlock>
                     <TextBlock FontSize="10">Certificate Number: UGMI-<TextBlock FontSize="10" Text="{Binding Path=Certificate.Number}"></TextBlock></TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold">Test Date: <TextBlock Text="{Binding Path=Certificate.CreatedDateTime}" /></TextBlock>
+                        <TextBlock>Test Date: <TextBlock Text="{Binding Path=CertificateDate}" /></TextBlock>
                         
                     </StackPanel>
                 </StackPanel>
@@ -74,33 +74,33 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold">Verification Type:</TextBlock>
-                        <TextBlock Text="{Binding Path=Certificate.VerificationType}"></TextBlock>
+                        <TextBlock FontWeight="Bold">Verification Type: <TextBlock FontWeight="Normal" Text="{Binding Path=Certificate.VerificationType}"></TextBlock></TextBlock>
+                        
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold">Manufacturer:</TextBlock>
-                        <TextBlock>Mercury Instruments</TextBlock>
+                        <TextBlock FontWeight="Bold">Manufacturer: <TextBlock FontWeight="Normal">Mercury Instruments</TextBlock></TextBlock>
+                        
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold"> Number of Instruments:</TextBlock>
-                        <TextBlock Text="{Binding Path=Certificate.InstrumentCount}"></TextBlock>
+                        <TextBlock FontWeight="Bold"> Number of Instruments: <TextBlock FontWeight="Normal" Text="{Binding Path=Certificate.InstrumentCount}"></TextBlock></TextBlock>
+                        
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold"> Seal Expiration Date: </TextBlock>
-                        <TextBlock Text="{Binding Path=Certificate.SealExpirationDate}"></TextBlock>
+                        <TextBlock FontWeight="Bold"> Seal Expiration Date: <TextBlock FontWeight="Normal" Text="{Binding Path=Certificate.SealExpirationDate}"></TextBlock></TextBlock>
+                        
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock>Signed By: </TextBlock>
-                        <TextBlock>_________________________________________________________________________</TextBlock>
+                        <TextBlock>Signed By: <TextBlock>_________________________________________________________________________</TextBlock></TextBlock>
+                        
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=Certificate.TestedBy}"></TextBlock>
-                        <TextBlock FontWeight="Bold">, Accredited Meter Verifier Designate</TextBlock>
+                        <TextBlock>, Accredited Meter Verifier Designate</TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>
