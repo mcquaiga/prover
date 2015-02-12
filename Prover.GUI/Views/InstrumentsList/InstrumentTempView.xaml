@@ -39,7 +39,7 @@
                 <TextBlock Margin="0,2,0,0" FontWeight="Bold">A</TextBlock>
                 <TextBlock Margin="0,2,0,0" FontWeight="Bold">G</TextBlock>
             </StackPanel>
-            <ListBox MaxHeight="75" MinHeight="75" 
+            <ListBox MaxHeight="72" MinHeight="72" 
                      MinWidth="160" MaxWidth="160" 
                      Grid.Column="1" Margin="10, 0, 5, 0" 
                      Name="Tests" 

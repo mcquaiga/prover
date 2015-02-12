@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Prover.GUI.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="75" d:DesignWidth="816">
+             d:DesignHeight="73" d:DesignWidth="816">
 
-    <Grid Height="80">
+    <Grid Height="73">
         <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.25*"/>
+                    <ColumnDefinition Width="0.1*"/>
                     <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*"/>
@@ -21,9 +21,9 @@
                     <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="0.5*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Margin="15" Grid.Column="0" x:Name="RowNumber" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Margin="15" Grid.Column="0" x:Name="RowNumber" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <TextBlock Margin="15"  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                               x:Name="HasPassed" FontSize="24"/>
+                               x:Name="HasPassed" FontSize="20"/>
 
                 <StackPanel Orientation="Vertical" Grid.Column="2">
                     <TextBlock Width="125"
@@ -86,7 +86,7 @@
 
                 </Grid>
 
-                <Grid Grid.Column="7" Margin="5">
+                <Grid Grid.Column="7" Margin="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
@@ -107,7 +107,7 @@
                         <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold"/>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Column="8" Margin="5">
+                <Grid Grid.Column="8" Margin="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
@@ -118,12 +118,12 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0"  Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
                         <TextBlock Foreground="Black" FontSize="14" x:Name="Instrument_Volume_UnCorrectedPercentError" />
-                        <TextBlock Foreground="Black" Text="UnCor. %" FontWeight="Bold"  />
+                        <TextBlock Foreground="Black" Text="UnCor.%" FontWeight="Bold"  />
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
                         <TextBlock Foreground="Black" FontSize="14" x:Name="Instrument_Volume_CorrectedPercentError" />
-                        <TextBlock Foreground="Black" Text="Cor. %"  FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Text="Cor.%"  FontWeight="Bold"/>
                     </StackPanel>
                 </Grid>
             </Grid>

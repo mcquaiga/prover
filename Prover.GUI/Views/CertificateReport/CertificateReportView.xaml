@@ -14,7 +14,7 @@
             <RowDefinition Height="665" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" >
+        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" Margin="2,5,0,2" >
             <Grid >
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -32,8 +32,10 @@
             <StackPanel Grid.Row="0" Grid.Column="1">
                 <TextBlock  FontSize="24" HorizontalAlignment="Center">Measurement Device</TextBlock>
                 <TextBlock  FontSize="24" HorizontalAlignment="Center">Inspection Certificate</TextBlock>
-                    
-            </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock FontSize="15">Test Date: <TextBlock Text="{Binding Path=CertificateDate}" /></TextBlock>
+                    </StackPanel>
+                </StackPanel>
                
             <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
                     <Grid>
@@ -46,26 +48,24 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="10" FontWeight="Bold" Grid.ColumnSpan="2">MC Accredited Org.: Union Gas Limited</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="10">36 Charles St.</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="2" FontSize="10">North Bay, Ontario</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10">P1B 8K7</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="10" Grid.ColumnSpan="2" FontWeight="Bold">Accredited Meter Verifier</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="10" FontWeight="Bold" Grid.ColumnSpan="2">MC Accredited Org.: Union Gas Limited</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="2" FontSize="10">36 Charles St.</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10">North Bay, Ontario</TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="4" FontSize="10">P1B 8K7</TextBlock>
 
-                        <TextBlock Grid.Column="1" Grid.Row="1"  FontSize="10">P: (705) 474-8483</TextBlock>
-                        <TextBlock Grid.Column="1" Grid.Row="2" FontSize="10">F: (705) 475-7926</TextBlock>
+                        <TextBlock Grid.Column="1" Grid.Row="2"  FontSize="10">P: (705) 474-8483</TextBlock>
+                        <TextBlock Grid.Column="1" Grid.Row="3" FontSize="10">F: (705) 475-7926</TextBlock>
                     </Grid>
-                    <TextBlock Margin="0,3,0,0" FontSize="10">Accreditation Certificate: A-049</TextBlock>
+                    <TextBlock Margin="0,0,0,0" FontSize="9">Accreditation Certificate: A0049 || MC Registration #: 60394</TextBlock>
                     <TextBlock FontSize="10">Certificate Number: UGMI-<TextBlock FontSize="10" Text="{Binding Path=Certificate.Number}"></TextBlock></TextBlock>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock>Test Date: <TextBlock Text="{Binding Path=CertificateDate}" /></TextBlock>
-                        
-                    </StackPanel>
                 </StackPanel>
         </Grid>
         </Border>
-        <ContentControl Grid.Row="1" cal:View.Model="{Binding InstrumentsView}"></ContentControl>
-        <Border Grid.Row="2" BorderThickness="2" BorderBrush="Black" Margin="2">
+        <ContentControl Grid.Row="1" cal:View.Model="{Binding InstrumentsView}" Margin="0,0,0,-5"></ContentControl>
+        <Border Grid.Row="2" BorderThickness="2" BorderBrush="Black" Margin="2,5,2,5">
             <Grid VerticalAlignment="Center" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
