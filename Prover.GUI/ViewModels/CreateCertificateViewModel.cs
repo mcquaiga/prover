@@ -102,28 +102,19 @@ namespace Prover.GUI.ViewModels
             var controlToPrint = new CertificateReportView();
             controlToPrint.DataContext = new CertificateReportViewModel(_container, Certificate);
 
-            FixedDocument fixedDoc = new FixedDocument();
+            var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
-            PageContent pageContent = new PageContent();
-            FixedPage fixedPage = new FixedPage();
-            fixedPage.Width = 96 * 11;
-            fixedPage.Height = 96 * 8.5;
-
+            var pageContent = new PageContent();
+            var fixedPage = new FixedPage {Width = 96*11, Height = 96*8.5};
+            
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);
             ((System.Windows.Markup.IAddChild)pageContent).AddChild(fixedPage);
             fixedDoc.Pages.Add(pageContent);
-            //Create any other required pages here
-
-            //var dlg = new Microsoft.Win32.SaveFileDialog { FileName = "Certificate", DefaultExt = ".xps", Filter = "XPS Documents (.xps)|*.xps" };
-            //bool? result = dlg.ShowDialog();
-
-            //// Process save file dialog box results
-            //if (result == true)
-            //{
+            
                 // Save document
             var path = Directory.GetCurrentDirectory();
-            string filename = "certificate_" + Certificate.Number + ".xps";
+            var filename = "certificate_" + Certificate.Number + ".xps";
                 //dlg.FileName;
 
             //View the document
@@ -131,12 +122,13 @@ namespace Prover.GUI.ViewModels
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
             filePath = Path.Combine(filePath, filename);
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
+            
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
             xw.Write(fixedDoc);
             xpsWriter.Close();
 
             System.Diagnostics.Process.Start(filePath);
-            //}
+
         }
     }
 }
