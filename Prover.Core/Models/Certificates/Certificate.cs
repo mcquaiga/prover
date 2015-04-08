@@ -30,7 +30,16 @@ namespace Prover.Core.Models.Certificates
         [NotMapped]
         public string SealExpirationDate
         {
-            get {  return CreatedDateTime.AddYears(5).ToString("yyyy-MM-dd"); }
+            get
+            {
+                var period = 10; //Re-Verification
+                if (VerificationType == "Verification")
+                {
+                    period = 12;
+                }
+                
+                return CreatedDateTime.AddYears(period).ToString("yyyy-MM-dd");
+            }
         }
         
         [NotMapped]

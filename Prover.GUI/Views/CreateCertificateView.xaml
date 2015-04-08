@@ -98,8 +98,9 @@
                     <TextBox x:Name="TestedBy" />
                     <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
                     </ComboBox>
-                    <TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
-                    <TextBlock x:Name="SealExpirationDate" />
+                    
+                    <!--<TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
+                    <TextBlock x:Name="SealExpirationDate" />-->
 
                     <Button Margin="0,20,0,0" Content="Create New">
                         <i:Interaction.Triggers>

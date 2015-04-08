@@ -42,14 +42,23 @@ namespace Prover.GUI.ViewModels
 
         public Certificate Certificate { get; set; }
 
-        public string CreatedDateTime { get; set; }
+        public DateTime CreatedDateTime { get; set; }
         public string VerificationType { get; set; }
         public string TestedBy { get; set; }
 
-        public string SealExpirationDate
-        {
-            get { return DateTime.Now.AddYears(5).ToString("yyyy-MM-dd"); }
-        }
+        //public string SealExpirationDate
+        //{
+        //    get
+        //    {
+        //        var period = 10; //Re-Verification
+        //        if (VerificationType == "Verification")
+        //        {
+        //            period = 12;
+        //        }
+
+        //        return DateTime.Now.AddYears(period).ToString("yyyy-MM-dd");
+        //    }
+        //}
 
         public void OneWeekFilter()
         {
