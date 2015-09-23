@@ -34,6 +34,7 @@ namespace Prover.Core.Models.Instruments
         {
             Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperatureTest == true).ToList();
         }
+
         public TemperatureTest(Temperature temp, InstrumentType type, Level level)
         {
             Temperature = temp;
@@ -60,10 +61,8 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool HasPassed
-        {
-            get { return (PercentError < 1 && PercentError > -1); }
-        }
+        public bool HasPassed => (PercentError < 1 && PercentError > -1);
+
         public double? ActualFactor
         {
             get
