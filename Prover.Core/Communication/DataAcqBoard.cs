@@ -78,15 +78,10 @@ namespace Prover.Core.Communication
             
         }
 
-        private void In(int value)
-        {
-            
-        }
-
-
         public void Dispose()
         {
             _board = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

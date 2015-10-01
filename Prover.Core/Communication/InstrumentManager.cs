@@ -242,10 +242,6 @@ namespace Prover.Core.Communication
                        
                         _log.Info("Volume test finished!");
                     }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
                     finally
                     {
                         if (_tachCommunication != null) _tachCommunication.Dispose();

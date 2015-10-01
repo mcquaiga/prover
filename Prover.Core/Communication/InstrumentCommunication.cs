@@ -15,6 +15,7 @@ namespace Prover.Core.Communication
         private readonly Instrument _instrument;
         private readonly ICommPort _commPort;
         private miSerialProtocolClass _miSerial;
+        private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
         public InstrumentCommunication(ICommPort commPort, Instrument instrument)
         {
@@ -49,8 +50,9 @@ namespace Prover.Core.Communication
                 if (!IsConnected) await Task.Run(()=> _miSerial.Connect());
                 IsConnected = true;
             }
-            catch
+            catch (Exception ex)
             {
+                _log.Error("An error occured connecting to instrumnet.", ex);
                 IsConnected = false;
             }
         }
