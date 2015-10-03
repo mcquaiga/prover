@@ -40,6 +40,6 @@
 
         <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Foreground="{Binding PercentColour}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

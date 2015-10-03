@@ -41,6 +41,7 @@ namespace Prover.Core.Communication
         {
             _container = container;
             _instrument = new Instrument();
+
             _instrument.Temperature = new Temperature(_instrument);
             _instrument.Volume = new Volume(_instrument);
         }

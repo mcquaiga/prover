@@ -176,3 +176,4 @@ FakesAssemblies/
 */bin/*
 .nuget/*
 .vs/*
+src/.vs/config/applicationhost.config

@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {
@@ -39,6 +40,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             }
 
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => PercentColour);
         }
 
         public double Gauge
@@ -48,8 +50,11 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             {
                 Test.Gauge = value;
                 NotifyOfPropertyChange(() => Test);
+                NotifyOfPropertyChange(() => PercentColour);
             }
         }
+
+        public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
 
         public void Handle(InstrumentUpdateEvent message)
         {

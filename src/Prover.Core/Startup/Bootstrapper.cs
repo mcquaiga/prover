@@ -18,8 +18,6 @@ namespace Prover.Core.Startup
             Container.RegisterInstance(new ProverContext());
             Container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore(Container));
             Container.RegisterInstance<ICertificateStore<Certificate>>(new CertificateStore(Container));
-            Container.RegisterInstance<ISettings>(new Settings());
-
         }
     }
 }
