@@ -5,41 +5,49 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="90" d:DesignWidth="600">
-    <Grid Margin="0,15,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
+             d:DesignHeight="200" d:DesignWidth="200">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <wpf:Card>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
 
-            <Button Height="45" Grid.Column="0" Margin="0,0,15,0"
-                 Name="TestLevel"
-					            Style="{StaticResource SimpleButton}">
+            </Grid.RowDefinitions>
+            <xctk:DecimalUpDown Grid.Row="0" Height="35" VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                        Watermark="Gauge"
+							            Value="{Binding Gauge}" />
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <TextBlock Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+            
+                <TextBlock Grid.Row="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Foreground="{Binding PercentColour}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Height="45" Grid.Row="3"
+                     Name="TestLevel"
+					                Style="{StaticResource SimpleButton}">
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="FetchTestItems" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-
-        <xctk:DecimalUpDown Grid.Column="1" Height="35" Margin="15,0,15,0" VerticalAlignment="Center"
-                                FontSize="20"                           
-                                    Watermark="Gauge"
-							        Value="{Binding Gauge}" />
-
-        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Foreground="{Binding PercentColour}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Grid>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="FetchTestItems" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            
+            </Grid>
+        </wpf:Card>
 </UserControl>

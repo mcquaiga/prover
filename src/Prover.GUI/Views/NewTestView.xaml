@@ -11,175 +11,45 @@
 
 	<UserControl.Resources>
 		<BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-		<DataTemplate x:Key="BaudRates">
-			<WrapPanel>
-				<RadioButton Content="{Binding .}"
-                             Name="BaudRates"
-							 Style="{DynamicResource radio2}"
-							 GroupName="{Binding .}">
-					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Click">
-							<cal:ActionMessage MethodName="SetBaudRate">
-								<cal:Parameter Value="{Binding .}" />
-							</cal:ActionMessage>
-						</i:EventTrigger>
-					</i:Interaction.Triggers>
-				</RadioButton>
-			</WrapPanel>
-		</DataTemplate>
-		<DataTemplate x:Key="CommPorts">
-			<WrapPanel>
-				<RadioButton Content="{Binding .}"
-							 Name="CommPorts"
-							 Style="{DynamicResource radio2}"
-							 GroupName="{Binding .}">
-					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Click">
-							<cal:ActionMessage MethodName="SetCommPort">
-								<cal:Parameter Value="{Binding .}" />
-							</cal:ActionMessage>
-						</i:EventTrigger>
-					</i:Interaction.Triggers>
-				</RadioButton>
-			</WrapPanel>
-		</DataTemplate>
-        <DataTemplate x:Key="TachCommPorts">
-            <WrapPanel>
-                <RadioButton Content="{Binding .}"
-							 Name="TachCommPorts"
-							 Style="{DynamicResource radio2}"
-							 GroupName="{Binding .}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="SetTachCommPort">
-                                <cal:Parameter Value="{Binding .}" />
-                            </cal:ActionMessage>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </RadioButton>
-            </WrapPanel>
-        </DataTemplate>
     </UserControl.Resources>
 
 	<ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">
 
 		<StackPanel Margin="0,0,0,25">
 			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition />
-					<RowDefinition />
-				</Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-				<TextBlock 
-					Style="{DynamicResource InstrumentSectionHeader}">
-					SETTINGS
-				</TextBlock>
-
-
-				<!--  <ContentControl Content="{Binding Source={StaticResource Instrument}, Mode=OneWay}" />  -->
-
-				<Grid Grid.Row="1"
+                <Grid Grid.Row="1"
 					  Margin="1">
-					<Grid.RowDefinitions>
-						<RowDefinition />
-						<RowDefinition />
-						<RowDefinition />
-						<RowDefinition />
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<StackPanel Grid.Row="0" Grid.Column="0">
-						<TextBlock Margin="20,0,0,0"
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Margin="20,0,0,0"
 								   
 								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" />
-						<GroupBox Margin="20,0,0,0" BorderThickness="0">
-							<WrapPanel Margin="5">
-								<RadioButton
+                        <GroupBox Margin="20,0,0,0" BorderThickness="0">
+                            <WrapPanel Margin="5">
+                                <RadioButton
 											 Content="MiniMax"
 											 Name="MiniMax"
 											 FontSize="24"
 											 Foreground="White"
 											 IsChecked="True"
 											 Style="{DynamicResource radio2}" />
-							</WrapPanel>
-						</GroupBox>
-					</StackPanel>
-					<!--  Ports  -->
-					<StackPanel Grid.Row="1" Grid.Column="0">
-						<TextBlock Margin="20,0,0,0" 
-								   Text="Port" Foreground="{DynamicResource HeaderFontColour}" />
-						<GroupBox Margin="20,0,0,0"
-								  BorderThickness="0"
-								  FontSize="18.667">
-							<ItemsControl Margin="5"
-										  ItemTemplate="{StaticResource ResourceKey=CommPorts}"
-										  ItemsSource="{Binding CommPorts}">
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<WrapPanel />
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
-							</ItemsControl>
-						</GroupBox>
-		 
-					</StackPanel>
-					<StackPanel Grid.Row="0"
-								Grid.RowSpan="2"
-								Grid.Column="1">
-						<TextBlock Margin="20,0,0,0"
-									
-								   Foreground="{DynamicResource HeaderFontColour}"
-								   Text="Baud Rate" />
-						<GroupBox Margin="20,0,0,0"
-								  BorderThickness="0"
-								  FontSize="18.667">
-							<ItemsControl Margin="5"
-										  ItemTemplate="{StaticResource ResourceKey=BaudRates}"
-										  ItemsSource="{Binding BaudRates}">
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<UniformGrid Margin="4" />
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
-							</ItemsControl>
-						</GroupBox>
-					</StackPanel>
-					<!--  Ports  -->
-					<StackPanel Grid.Row="0" Grid.Column="2">
-						<TextBlock Margin="20,0,0,0"
-								   Style="{DynamicResource ItemDescriptions}"
-								   Text="Tach Port" Foreground="{DynamicResource HeaderFontColour}" />
-						<GroupBox Margin="20,0,0,0"
-								  BorderThickness="0"
-								  FontSize="18.667">
-							<ItemsControl Margin="5"
-										  ItemTemplate="{StaticResource ResourceKey=TachCommPorts}"
-										  ItemsSource="{Binding TachPorts}">
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<WrapPanel />
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
-							</ItemsControl>
-						</GroupBox>
-					</StackPanel>
-                    <Button Grid.Row="3"
-							Grid.Column="0"
-							Width="150"
-							HorizontalAlignment="Left"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center"
-							Content="Refresh Comm Ports"
-							Style="{StaticResource SimpleButton}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">
-                                <cal:ActionMessage MethodName="RefreshCommSettingsCommand" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Button>
+                            </WrapPanel>
+                        </GroupBox>
+                    </StackPanel>
                     <Button Grid.Row="3"
 							Grid.Column="1"
 							Width="250"
@@ -188,14 +58,14 @@
 							VerticalContentAlignment="Center"
 							Content="Download Info"
 							Style="{StaticResource SimpleButton}">
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="Click">
-								<cal:ActionMessage MethodName="FetchInstrumentItems" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</Button>
-				</Grid>
-			</Grid>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="FetchInstrumentItems" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </Grid>
+            </Grid>
 			<Grid>
 				<ContentControl cal:View.Model="{Binding SiteInformationItem}"/>
 			</Grid>

@@ -38,6 +38,16 @@ namespace Prover.GUI.ViewModels
             ShowMainMenu();
         }
 
+        public void SettingsButton()
+        {
+            ShowSettingsWindow();
+        }
+
+        private void ShowSettingsWindow()
+        {
+            _container.Resolve<IWindowManager>().ShowWindow(new SettingsViewModel(_container));
+        }
+
         public string ApplicationEventMessage
         {
             get { return _applicationEventMessage; }

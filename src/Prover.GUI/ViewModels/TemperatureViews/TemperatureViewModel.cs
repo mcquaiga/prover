@@ -12,6 +12,15 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 {
     public class TemperatureViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
+        
+        public TemperatureViewModel(IUnityContainer container)
+        {
+            _container = container;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
+
+            TestViews = new ObservableCollection<TemperatureTestViewModel>();
+        }
+
         private IUnityContainer _container;
         public InstrumentManager InstrumentManager { get; set; }
 
@@ -21,27 +30,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         }
 
         public ObservableCollection<TemperatureTestViewModel> TestViews { get; set; }
-
-        public TemperatureViewModel(IUnityContainer container)
-        {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
-
-            TestViews = new ObservableCollection<TemperatureTestViewModel>();
-        }
-
-        public void Handle(InstrumentUpdateEvent message)
-        {
-            InstrumentManager = message.InstrumentManager;
-            InstrumentManager.Instrument.Temperature.Tests.ForEach(
-                x => TestViews.Add(new TemperatureTestViewModel(_container,InstrumentManager, x))
-                );
-            NotifyOfPropertyChange(() => InstrumentManager);
-            NotifyOfPropertyChange(() => Temperature);
-            NotifyOfPropertyChange(() => TestViews);
-
-        }
-
         public Temperature Temperature
         {
             get
@@ -54,5 +42,17 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             }
         }
 
+        public void Handle(InstrumentUpdateEvent message)
+        {
+            InstrumentManager = message.InstrumentManager;
+
+            InstrumentManager.Instrument.Temperature.Tests.ForEach(x =>
+                TestViews.Add(new TemperatureTestViewModel(_container, InstrumentManager, x))
+            );
+
+            NotifyOfPropertyChange(() => InstrumentManager);
+            NotifyOfPropertyChange(() => Temperature);
+            NotifyOfPropertyChange(() => TestViews);
+        }
     }
 }

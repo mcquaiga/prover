@@ -17,6 +17,7 @@ using Prover.GUI.Views.TemperatureViews;
 using Prover.SerialProtocol;
 using ReactiveUI;
 using Settings = Prover.Core.Settings;
+using System.Threading;
 
 namespace Prover.GUI.ViewModels
 {
@@ -24,14 +25,17 @@ namespace Prover.GUI.ViewModels
     {
         readonly IUnityContainer _container;
 
-        
-
         public NewTestViewModel(IUnityContainer container)
         {
             _container = container;
             CommPortName = Settings.Instrument.CommPortName;
             BaudRate = Settings.Instrument.BaudRate;
             TachCommName = Settings.Tachometer.CommPortName;
+
+            InstrumentManager = new InstrumentManager(_container, CommPortName, BaudRate);
+            if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
+            base.NotifyOfPropertyChange(() => Instrument);
+
         }
 
         public InstrumentManager InstrumentManager { get; set; }
@@ -42,61 +46,7 @@ namespace Prover.GUI.ViewModels
         public BaudRateEnum BaudRate { get; set; }
         public Instrument Instrument => InstrumentManager.Instrument;
 
-        //public List<String> BaudRates
-        //{
-        //    get { return Enum.GetNames(typeof(BaudRateEnum)).ToList(); }
-        //}
-
-        //public List<string> CommPorts
-        //{
-        //    get { return Communications.GetCommPortList(); }
-        //}
-
-        //public List<string> TachPorts
-        //{
-        //    get { return Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList(); }
-        //}
-
         #region Methods
-
-        //public string SelectedCommPort()
-        //{
-        //    return Settings.Default.CommPort;
-        //}
-
-        //public string SelectedTachCommPort()
-        //{
-        //    return Settings.Default.TachCommPort;
-        //}
-
-        //public string SelectedBaudRate()
-        //{
-        //    return Settings.Default.BaudRate;
-        //}
-
-        //public void SetCommPort(string comm)
-        //{
-        //    CommPort = comm;
-        //    Settings.Default.CommPort = comm;
-        //}
-
-        //public void SetTachCommPort(string comm)
-        //{
-        //    TachCommName = comm;
-        //    Settings.Default.TachCommPort = comm;
-        //}
-
-        //public void SetBaudRate(string baudRate)
-        //{
-        //    BaudRate = (BaudRateEnum) Enum.Parse(typeof (BaudRateEnum), baudRate);
-        //    Settings.Default.BaudRate = baudRate;
-        //}
-
-        //public void RefreshCommSettingsCommand()
-        //{
-        //    NotifyOfPropertyChange(() => CommPorts);
-        //    NotifyOfPropertyChange(() => TachPorts);
-        //}
 
         public async void FetchInstrumentItems()
         {
@@ -108,15 +58,10 @@ namespace Prover.GUI.ViewModels
                     MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
                     return;
                 }
-                if (InstrumentManager == null)
-                {
-                    InstrumentManager = new InstrumentManager(_container, CommPortName, BaudRate);
-                    if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
-                }
-
+                
                 await InstrumentManager.DownloadInfo();
-
                 base.NotifyOfPropertyChange(() => Instrument);
+                
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
                 //Publish the change in instrument state to anyone who's listening
                 _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
@@ -143,3 +88,4 @@ namespace Prover.GUI.ViewModels
         #endregion
     }
 }
+

@@ -17,10 +17,15 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ContentControl Grid.Row="0" x:Name="TemperatureHeaderView" cal:View.Model="{Binding}" cal:View.Context="TemperatureHeaderView"/>
-        
-        <ItemsControl Grid.Row="1" 
-                                  ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                                  ItemsSource="{Binding TestViews}"/>
+
+        <ItemsControl Grid.Row="1" ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                                  ItemsSource="{Binding TestViews}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
 
     </Grid>
 </UserControl>
