@@ -12,6 +12,8 @@ using Prover.GUI.Interfaces;
 using Prover.GUI.Views;
 using ReactiveUI;
 using System.Timers;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels
 {
@@ -45,7 +47,7 @@ namespace Prover.GUI.ViewModels
 
         private void ShowSettingsWindow()
         {
-            _container.Resolve<IWindowManager>().ShowWindow(new SettingsViewModel(_container));
+            _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container));
         }
 
         public string ApplicationEventMessage

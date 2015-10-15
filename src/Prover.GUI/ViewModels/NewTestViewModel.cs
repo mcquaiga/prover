@@ -16,7 +16,7 @@ using Prover.GUI.Views;
 using Prover.GUI.Views.TemperatureViews;
 using Prover.SerialProtocol;
 using ReactiveUI;
-using Settings = Prover.Core.Settings;
+using Prover.Core.Settings;
 using System.Threading;
 
 namespace Prover.GUI.ViewModels
@@ -28,12 +28,12 @@ namespace Prover.GUI.ViewModels
         public NewTestViewModel(IUnityContainer container)
         {
             _container = container;
-            CommPortName = Settings.Instrument.CommPortName;
-            BaudRate = Settings.Instrument.BaudRate;
-            TachCommName = Settings.Tachometer.CommPortName;
+            InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
+            BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
+            TachCommPortName = SettingsManager.SettingsInstance.TachCommPort;
 
-            InstrumentManager = new InstrumentManager(_container, CommPortName, BaudRate);
-            if (TachCommName != null) InstrumentManager.SetupTachCommPort(TachCommName);
+            InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate);
+            if (TachCommPortName != null) InstrumentManager.SetupTachCommPort(TachCommPortName);
             base.NotifyOfPropertyChange(() => Instrument);
 
         }
@@ -41,9 +41,10 @@ namespace Prover.GUI.ViewModels
         public InstrumentManager InstrumentManager { get; set; }
         
         public ICommPort CommPort { get; set; }
-        public string CommPortName { get; set; }
-        public string TachCommName { get; set; }
-        public BaudRateEnum BaudRate { get; set; }
+        public string InstrumentCommPortName { get; private set; }
+        public string TachCommPortName { get; private set; }
+        public BaudRateEnum BaudRate { get; private set; }
+
         public Instrument Instrument => InstrumentManager.Instrument;
 
         #region Methods
@@ -53,7 +54,7 @@ namespace Prover.GUI.ViewModels
             await Task.Run((Func<Task>)(async () =>
             {
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-                if (this.CommPortName == null)
+                if (this.InstrumentCommPortName == null)
                 {
                     MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
                     return;

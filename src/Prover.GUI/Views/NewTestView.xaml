@@ -49,6 +49,16 @@
 											 Style="{DynamicResource radio2}" />
                             </WrapPanel>
                         </GroupBox>
+     
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="Instrument Settings"/>
+                        <TextBlock Name="InstrumentCommPortName"/>
+                        <TextBlock Name="BaudRate"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Text="Tach Settings"/>
+                        <TextBlock Name="TachCommPortName"/>
                     </StackPanel>
                     <Button Grid.Row="3"
 							Grid.Column="1"

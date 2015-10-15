@@ -1,74 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
-using Prover.SerialProtocol;
 using Prover.Core.Communication;
 using Prover.Core.Settings;
-using Caliburn.Micro.ReactiveUI;
+using Prover.SerialProtocol;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Prover.GUI.ViewModels
 {
     public class SettingsViewModel : ReactiveScreen
     {
-        private IUnityContainer _container;
+        IUnityContainer _container;
+        string          _selectedCommPort;
+        BaudRateEnum    _selectedBaudRate;
+        string          _selectedTachCommPort;
 
         public SettingsViewModel(IUnityContainer _container)
         {
             this._container = _container;
+            _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
+            _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
+            _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
         }
 
-        public List<String> BaudRates
+        public List<String> BaudRate
         {
             get { return Enum.GetNames(typeof(BaudRateEnum)).ToList(); }
         }
 
-        public List<string> CommPorts
+        public List<string> CommPort
         {
             get { return Communications.GetCommPortList(); }
         }
 
-        public List<string> TachPorts
+        public List<string> TachCommPort
         {
             get { return Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList(); }
         }
 
-        public static string SelectedCommPort()
+        public string SelectedCommPort
         {
-            return Instrument.CommPortName;
+            get
+            {
+                return _selectedCommPort;
+            }
+            set
+            {
+                _selectedCommPort = value;
+                SettingsManager.SettingsInstance.InstrumentCommPort = value;
+                SettingsManager.Save();
+            }
         }
 
-        public static string SelectedTachCommPort()
+        public string SelectedTachCommPort
         {
-            return Tachometer.CommPortName;
+            get
+            {
+                return _selectedTachCommPort;
+            }
+            set
+            {
+                SettingsManager.SettingsInstance.TachCommPort = value;
+                _selectedTachCommPort = value;
+                SettingsManager.Save();
+            }
         }
 
-        public static string SelectedBaudRate()
+        public BaudRateEnum SelectedBaudRate
         {
-            return Instrument.BaudRate.ToString();
+            get
+            {
+                return _selectedBaudRate;
+            }
+            set
+            {
+                SettingsManager.SettingsInstance.InstrumentBaudRate = value;
+                SettingsManager.Save();
+                _selectedBaudRate = value;
+            }
         }
 
-        public static void SetCommPort(string comm)
-        {
-            Instrument.CommPortName = comm;
-        }
+        //public static void SetCommPort(string comm)
+        //{
+        //    Instrument.CommPortName = comm;
+        //}
 
-        public static void SetTachCommPort(string comm)
-        {
-            Tachometer.CommPortName = comm;
-        }
+        //public static void SetTachCommPort(string comm)
+        //{
+        //    Tachometer.CommPortName = comm;
+        //}
 
-        public static void SetBaudRate(string baudRate)
-        {
-            Instrument.BaudRate = (BaudRateEnum)Enum.Parse(typeof(BaudRateEnum), baudRate);
-        }
+        //public static void SetBaudRate(string baudRate)
+        //{
+        //    Instrument.BaudRate = (BaudRateEnum)Enum.Parse(typeof(BaudRateEnum), baudRate);
+        //}
 
         public void RefreshCommSettingsCommand()
         {
-            NotifyOfPropertyChange(() => CommPorts);
-            NotifyOfPropertyChange(() => TachPorts);
+            NotifyOfPropertyChange(() => CommPort);
+            NotifyOfPropertyChange(() => TachCommPort);
         }
     }
 }

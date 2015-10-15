@@ -1,59 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prover.SerialProtocol;
-using JsonConfig;
+﻿using Prover.SerialProtocol;
 
 namespace Prover.Core.Settings
 {
-    public static class Instrument
+    public interface ISettings
     {
-        public static string CommPortName
-        {
-            get
-            {
-                if (Config.Global.Instrument.CommPortName != null)
-                    return Config.Global.Instrument.CommPortName;
-                return string.Empty;
-            }
-
-            set
-            {
-                Config.Global.Instrument.CommPort = value;
-            }
-        }
-
-        public static BaudRateEnum BaudRate
-        {
-            get
-            {
-                if (Config.Global.Instrument.BaudRate != null)
-                    return (BaudRateEnum)Enum.Parse(typeof(BaudRateEnum), Config.Global.Instrument.BaudRate.ToString());
-                return BaudRateEnum.b38400;            }
-            set
-            {
-                Config.Global.Instrument.BaudRate = value.ToString();
-            }
-        }
+        string InstrumentCommPort { get; set;}
+        BaudRateEnum InstrumentBaudRate { get; set; }
+        string TachCommPort { get; set; }
     }
 
-    public static class Tachometer
+    public class Settings
     {
-        public static string CommPortName
+        public Settings()
         {
-            get
-            {
-                if (Config.Global.Tachometer.CommPortName != null)
-                    return Config.Global.Tachometer.CommPortName;
-                return string.Empty;
-            }
-
-            set
-            {
-                Config.Global.TachometerSettings.CommPort = value;
-            }
+            InstrumentCommPort = string.Empty;
+            InstrumentBaudRate = BaudRateEnum.b38400;
+            TachCommPort = string.Empty;
         }
+
+        public string InstrumentCommPort { get; set; }
+        public BaudRateEnum InstrumentBaudRate { get; set; }
+        public string TachCommPort { get; set; }
     }
 }

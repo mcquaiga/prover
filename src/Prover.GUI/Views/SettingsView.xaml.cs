@@ -18,7 +18,7 @@ namespace Prover.GUI.Views
     /// <summary>
     /// Interaction logic for SettingsView.xaml
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SettingsView : Window
     {
         public SettingsView()
         {
