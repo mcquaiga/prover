@@ -37,7 +37,7 @@
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <TextBlock Margin="20,0,0,0"
 								   
-								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" />
+								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" FontSize="16" />
                         <GroupBox Margin="20,0,0,0" BorderThickness="0">
                             <WrapPanel Margin="5">
                                 <RadioButton
@@ -52,12 +52,12 @@
      
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1">
-                        <TextBlock Text="Instrument Settings"/>
+                        <TextBlock Text="Instrument Settings" FontSize="16"/>
                         <TextBlock Name="InstrumentCommPortName"/>
                         <TextBlock Name="BaudRate"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2">
-                        <TextBlock Text="Tach Settings"/>
+                        <TextBlock Text="Tach Settings" FontSize="16"/>
                         <TextBlock Name="TachCommPortName"/>
                     </StackPanel>
                     <Button Grid.Row="3"

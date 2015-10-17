@@ -103,6 +103,7 @@
     <Compile Include="Communication\InstrumentManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
+    <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />

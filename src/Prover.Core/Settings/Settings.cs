@@ -5,7 +5,7 @@ namespace Prover.Core.Settings
     public interface ISettings
     {
         string InstrumentCommPort { get; set;}
-        BaudRateEnum InstrumentBaudRate { get; set; }
+        int InstrumentBaudRate { get; set; }
         string TachCommPort { get; set; }
     }
 

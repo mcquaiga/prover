@@ -47,7 +47,7 @@ namespace Prover.GUI.ViewModels
 
         private void ShowSettingsWindow()
         {
-            _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container));
+            _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
         }
 
         public string ApplicationEventMessage

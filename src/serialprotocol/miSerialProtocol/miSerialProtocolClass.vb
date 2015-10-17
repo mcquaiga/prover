@@ -25,17 +25,6 @@ Imports NLog
 
 #Region "Enums"
 
-Public Enum BaudRateEnum
-    'All the instrument baud rates
-    b300 = 300
-    b600 = 600
-    b1200 = 1200
-    b2400 = 2400
-    b4800 = 4800
-    b9600 = 9600
-    b19200 = 19200
-    b38400 = 38400
-End Enum
 Public Enum InstrumentTypeCode
     Mini = 2
     ECAT = 0
@@ -120,10 +109,23 @@ Public Enum AlarmValuesEnum
     NoAlarm = 0
 End Enum
 
+Public Enum BaudRateEnum
+    b300 = 300
+    b600 = 600
+    b1200 = 1200
+    b2400 = 2400
+    b4800 = 4800
+    b9600 = 9600
+    b19200 = 19200
+    b38400 = 38400
+End Enum
+
 #End Region
 
 Public MustInherit Class miSerialProtocolClass
     Implements IDisposable
+    Public BaudRates = {300, 600, 1200, 2400, 4800, 9600, 19200, 38400}
+
 
     'Using the new SerialPort class that comes with VB 2005, it seems to be alot more robust then the
     'previous MSComm Control
@@ -133,7 +135,7 @@ Public MustInherit Class miSerialProtocolClass
     Protected _commPort As ICommPort
 
     Protected i_CommPort As String
-    Protected i_BaudRate As BaudRateEnum
+    Protected i_BaudRate As Integer
     Protected i_Timeout As Integer
     Protected i_AccessCode As Integer = 33333
 
@@ -215,8 +217,6 @@ Public MustInherit Class miSerialProtocolClass
 #Region "Properties"
 
     Public Property CommunicationsPort As ICommPort
-
-
 
     Public Property AccessCode() As Integer
         Get

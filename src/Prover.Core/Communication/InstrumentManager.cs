@@ -27,7 +27,6 @@ namespace Prover.Core.Communication
         private bool _isBusy = false;
         private Logger _log = NLog.LogManager.GetCurrentClassLogger();
         
-
         public DataAcqBoard OutputBoard { get; private set; }
         public DataAcqBoard AInputBoard { get; private set; }
         public DataAcqBoard BInputBoard { get; private set; }

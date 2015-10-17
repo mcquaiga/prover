@@ -18,28 +18,21 @@ using Prover.SerialProtocol;
 using ReactiveUI;
 using Prover.Core.Settings;
 using System.Threading;
+using Prover.Core.Events;
 
 namespace Prover.GUI.ViewModels
 {
-    public class NewTestViewModel : ReactiveScreen
+    public class NewTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
     {
         readonly IUnityContainer _container;
 
         public NewTestViewModel(IUnityContainer container)
         {
             _container = container;
-            InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
-            BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
-            TachCommPortName = SettingsManager.SettingsInstance.TachCommPort;
-
-            InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate);
-            if (TachCommPortName != null) InstrumentManager.SetupTachCommPort(TachCommPortName);
-            base.NotifyOfPropertyChange(() => Instrument);
-
+            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public InstrumentManager InstrumentManager { get; set; }
-        
+        public InstrumentManager InstrumentManager { get; set; }        
         public ICommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
         public string TachCommPortName { get; private set; }
@@ -48,11 +41,39 @@ namespace Prover.GUI.ViewModels
         public Instrument Instrument => InstrumentManager.Instrument;
 
         #region Methods
+        private void SetupInstrument()
+        {
+            InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
+            BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
+            TachCommPortName = SettingsManager.SettingsInstance.TachCommPort;
+
+            base.NotifyOfPropertyChange(() => InstrumentCommPortName);
+            base.NotifyOfPropertyChange(() => BaudRate);
+            base.NotifyOfPropertyChange(() => TachCommPortName);
+
+            if (string.IsNullOrEmpty(InstrumentCommPortName))
+            {
+                _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
+            }
+            else
+            {
+                InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate);
+                if (!string.IsNullOrEmpty(TachCommPortName)) InstrumentManager.SetupTachCommPort(TachCommPortName);
+                base.NotifyOfPropertyChange(() => Instrument);
+            }
+        }
+
+        protected override void OnViewReady(object view)
+        {
+            base.OnViewReady(view);
+            SetupInstrument();
+        }
 
         public async void FetchInstrumentItems()
         {
             await Task.Run((Func<Task>)(async () =>
             {
+                if (InstrumentManager == null) SetupInstrument();
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
                 if (this.InstrumentCommPortName == null)
                 {
@@ -79,6 +100,11 @@ namespace Prover.GUI.ViewModels
 
             await InstrumentManager.SaveAsync();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
+        }
+
+        public void Handle(SettingsChangeEvent message)
+        {
+            SetupInstrument();
         }
         #endregion
 
