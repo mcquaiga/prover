@@ -11,16 +11,21 @@
             <ContentControl cal:View.Model="{Binding .}"></ContentControl>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ContentControl Grid.Row="0" x:Name="TemperatureHeaderView" cal:View.Model="{Binding}" cal:View.Context="TemperatureHeaderView"/>
-        
-        <ItemsControl Grid.Row="1" 
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <ContentControl  x:Name="TemperatureHeaderView" cal:View.Model="{Binding}" cal:View.Context="TemperatureHeaderView"/>    
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" >
+            <ItemsControl 
                                   ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
                                   ItemsSource="{Binding TestViews}"/>
+        </StackPanel>
+
 
     </Grid>
 </UserControl>

@@ -7,16 +7,16 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="816" d:DesignWidth="1056">
-    <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
+    <Viewbox Width="795" Height="1040" Stretch="UniformToFill">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="0.75*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" cal:View.Model="{Binding SiteInformation}" Margin="0,0,0,-5"></ContentControl>
-            <ContentControl Grid.Row="1" cal:View.Model="{Binding Temperature}" Margin="0,0,0,-5"></ContentControl>
-            <ContentControl Grid.Row="2" cal:View.Model="{Binding Volume}" Margin="0,0,0,-5"></ContentControl>
+            <ContentControl Grid.Row="0" cal:View.Model="{Binding SiteInformation}"></ContentControl>
+            <ContentControl Grid.Row="1" cal:View.Model="{Binding Temperature}" ></ContentControl>
+            <ContentControl Grid.Row="2" cal:View.Model="{Binding Volume}"></ContentControl>
         </Grid>
     </Viewbox>
 </UserControl>
