@@ -21,6 +21,14 @@ namespace Prover.GUI.ViewModels
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
+        public SiteInformationViewModel(IUnityContainer container, Instrument instrument)
+        {
+            _container = container;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
+
+            Instrument = instrument;
+        }
+
         public Instrument Instrument { get; set; }
         public void Handle(InstrumentUpdateEvent message)
         {

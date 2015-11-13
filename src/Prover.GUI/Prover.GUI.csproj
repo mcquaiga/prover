@@ -165,8 +165,11 @@
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Reporting\CertificateGenerator.cs" />
+    <Compile Include="Reporting\InstrumentGenerator.cs" />
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
@@ -186,6 +189,9 @@
     <Compile Include="Views\CreateCertificateView.xaml.cs">
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\InstrumentReport\InstrumentReportView.xaml.cs">
+      <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentsList\InstrumentsListView.xaml.cs">
       <DependentUpon>InstrumentsListView.xaml</DependentUpon>
@@ -244,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreateCertificateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentReport\InstrumentReportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -346,7 +356,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="settings.conf" />
     <Resource Include="Resources\uglogo.jpg" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -394,6 +403,7 @@
   <ItemGroup>
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

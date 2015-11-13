@@ -20,13 +20,19 @@ namespace Prover.GUI.ViewModels
 
         private readonly IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public InstrumentManager InstrumentManager { get; set; }
-        
 
+        public InstrumentManager InstrumentManager { get; set; }
+        public Instrument Instrument { get; set; }
+        
         public VolumeViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
+        }
+
+        public VolumeViewModel(IUnityContainer container, Instrument instrument) : this(container)
+        {
+            Instrument = instrument;
         }
 
         public Volume Volume
@@ -37,7 +43,7 @@ namespace Prover.GUI.ViewModels
                 {
                     return InstrumentManager.Instrument.Volume;
                 }
-                return null;
+                return Instrument?.Volume;
             }
         }
 
@@ -48,6 +54,10 @@ namespace Prover.GUI.ViewModels
                 if (InstrumentManager != null)
                 {
                     return InstrumentManager.Instrument.Volume.AppliedInput;
+                }
+                else if (Instrument != null)
+                {
+                    return Instrument?.Volume?.AppliedInput ?? 0.00;
                 }
                 return 0.00;
             }

@@ -6,12 +6,15 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using System.Windows.Media;
+using System;
+using NLog;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {
     public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
         private IUnityContainer _container;
+        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public InstrumentManager InstrumentManager { get; set; }
 
         public TemperatureTest Test { get; set; }
@@ -33,10 +36,18 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         {
             if (InstrumentManager != null)
             {
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
-                await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
-                Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
+                try
+                {
+                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
+                    await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
+                    Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
+                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
+                }
+                catch (Exception ex)
+                {
+                    
+                    _container.Resolve<EventAggregator>().PublishOnBackgroundThread("Framing error! Try again.");
+                }
             }
 
             NotifyOfPropertyChange(() => Test);

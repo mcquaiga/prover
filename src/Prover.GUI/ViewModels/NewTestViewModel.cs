@@ -19,6 +19,7 @@ using ReactiveUI;
 using Prover.Core.Settings;
 using System.Threading;
 using Prover.Core.Events;
+using Prover.GUI.Reporting;
 
 namespace Prover.GUI.ViewModels
 {
@@ -80,15 +81,23 @@ namespace Prover.GUI.ViewModels
                     MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
                     return;
                 }
-                
-                await InstrumentManager.DownloadInfo();
-                base.NotifyOfPropertyChange(() => Instrument);
-                
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
-                //Publish the change in instrument state to anyone who's listening
-                _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
-            }));
-           
+
+                try
+                {
+                    await InstrumentManager.DownloadInfo();
+                    base.NotifyOfPropertyChange(() => Instrument);
+                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
+                    //Publish the change in instrument state to anyone who's listening
+                    _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occured communicating with the instrument." + Environment.NewLine
+                        + ex.Message,
+                        "Error",
+                        MessageBoxButton.OK);
+                }
+            }));          
         }
 
         public async void SaveInstrument()
@@ -100,6 +109,12 @@ namespace Prover.GUI.ViewModels
 
             await InstrumentManager.SaveAsync();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
+        }
+
+        public void InstrumentReport()
+        {
+            var instrumentReport = new InstrumentGenerator(InstrumentManager.Instrument, _container);
+            instrumentReport.Generate();
         }
 
         public void Handle(SettingsChangeEvent message)

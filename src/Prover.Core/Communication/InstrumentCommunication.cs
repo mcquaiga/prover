@@ -7,6 +7,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using Prover.Core.Storage;
 using Prover.SerialProtocol;
 using Prover.Core.Models.Instruments;
+using System.Windows;
 
 namespace Prover.Core.Communication
 {
@@ -45,15 +46,27 @@ namespace Prover.Core.Communication
 
         public async Task Connect()
         {
-            try
+            int tryCount = 0;
+            do
             {
-                if (!IsConnected) await Task.Run(()=> _miSerial.Connect());
-                IsConnected = true;
-            }
-            catch (Exception ex)
+                try
+                {
+                    if (!IsConnected) await Task.Run(() => _miSerial.Connect());
+                    IsConnected = true;
+                }
+                catch (Exception ex)
+                {
+                    _log.Error("An error occured connecting to instrumnet.", ex);
+                    tryCount++;
+                    IsConnected = false;
+                }
+            } while (!IsConnected && tryCount < 10);
+
+            if (tryCount >= 10)
             {
-                _log.Error("An error occured connecting to instrumnet.", ex);
-                IsConnected = false;
+                _miSerial.Dispose();
+                _log.Error("Could not connect to instrument.");
+                throw new InstrumentCommunicationException(InstrumentErrorsEnum.TooManyRetransmissionsError);
             }
         }
 

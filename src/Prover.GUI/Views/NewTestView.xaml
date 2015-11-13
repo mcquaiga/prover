@@ -92,8 +92,19 @@
 			<Border Margin="15,0,15,5"
 					BorderBrush="{DynamicResource HeaderColour}"
 					BorderThickness="0,0,0,1" />
-			<WrapPanel HorizontalAlignment="right">
-				<Button Width="150"
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="150"
+						Margin="10"
+						Content="Instrument Report"
+						Style="{StaticResource SimpleButton}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="InstrumentReport" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Width="150"
 						Margin="10"
 						Content="Save"
 						Style="{StaticResource SimpleButton}">
@@ -103,7 +114,7 @@
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 				</Button>
-            </WrapPanel>
+            </StackPanel>
 
 			<WrapPanel Width="5" Height="16" />
 			<WrapPanel Width="144" Height="14.5" />

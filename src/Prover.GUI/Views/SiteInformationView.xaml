@@ -11,15 +11,15 @@
              d:DesignHeight="300" d:DesignWidth="882">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*" />
             <RowDefinition Height="1*" />
-            <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
         <!--  Basic Details Info  -->
         <TextBlock Grid.Row="0" Style="{DynamicResource InstrumentSectionHeader}" Margin="0,0,0,263" Grid.RowSpan="2">
 		    SITE INFORMATION
         </TextBlock>
 
-        <Grid Grid.Row="1" Margin="15">
+        <Grid Grid.Row="1" Margin="4">
             <StackPanel>
                 <UniformGrid Columns="4">
                     <StackPanel Margin="5">

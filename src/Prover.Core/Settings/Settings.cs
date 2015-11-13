@@ -11,13 +11,6 @@ namespace Prover.Core.Settings
 
     public class Settings
     {
-        public Settings()
-        {
-            InstrumentCommPort = string.Empty;
-            InstrumentBaudRate = BaudRateEnum.b38400;
-            TachCommPort = string.Empty;
-        }
-
         public string InstrumentCommPort { get; set; }
         public BaudRateEnum InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }

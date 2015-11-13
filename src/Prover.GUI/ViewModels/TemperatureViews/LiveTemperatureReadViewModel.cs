@@ -5,6 +5,8 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Events;
 using Prover.GUI.Events;
+using System.Windows;
+using System;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {
@@ -23,7 +25,17 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public async Task StartLiveReadCommand()
         {
-            await _instrumentManager.StartLiveReadTemperature();
+            try
+            {
+                await _instrumentManager.StartLiveReadTemperature();
+            }
+            catch(Exception ex)
+            {  
+                MessageBox.Show("An error occured communicating with the instrument." + Environment.NewLine 
+                    + ex.Message, 
+                    "Error",
+                    MessageBoxButton.OK);
+            }
         }
 
         public void StopLiveReadCommand()
