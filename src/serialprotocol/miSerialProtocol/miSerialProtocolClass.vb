@@ -571,11 +571,7 @@ Public MustInherit Class miSerialProtocolClass
                 End With
             End If
         Catch ex As CommInUseException
-            If MessageBox.Show(ex.Message & " Try Again?", "Serial Port Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) = DialogResult.Retry Then
-                Me.OpenCommPort()
-            Else
-                Throw New Exception("Connection Cancelled.", ex)
-            End If
+            Throw New CommInUseException(_commPort.ToString)
         Catch ex As Exception
             logger.Error(ex.Message)
             Throw New Exception(ex.Message)
