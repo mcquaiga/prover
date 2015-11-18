@@ -51,12 +51,22 @@ namespace Prover.Core.Communication
             {
                 try
                 {
-                    if (!IsConnected) await Task.Run(() => _miSerial.Connect());
+                    if (!IsConnected)
+                        await Task.Run(() => _miSerial.Connect());
                     IsConnected = true;
                 }
-                catch (Exception ex)
+                catch (AggregateException ae)
                 {
-                    _log.Error("An error occured connecting to instrumnet.", ex);
+                    ae.Handle((x) =>
+                    {
+                        if (x is CommExceptions)
+                        {
+                            _log.Error("An error occured connecting to instrumnet.", x);
+                            return true;
+                        }
+
+                        return false;                        
+                    });
                     tryCount++;
                     IsConnected = false;
                 }

@@ -21,10 +21,8 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public bool ShowGaugeDecimalControl => ShowCommButton;
         public bool ShowGaugeText => !ShowCommButton;
-        public TemperatureTest.Level TestLevel
-        {
-            get { return Test.TestLevel; }
-        }
+
+        public TemperatureTest.Level TestLevel => Test.TestLevel;
 
         public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, TemperatureTest test, bool showCommButton = true)
         {

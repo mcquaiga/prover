@@ -55,7 +55,7 @@ namespace Prover.GUI.Reporting
             System.Diagnostics.Process.Start(_filePath);
         }
 
-        public string FileName => string.Format("instrument-{0}-{1}.xps", _instrument.SerialNumber, DateTime.Now.ToFileTime());
+        public string FileName => string.Format("{0}-instrument-{1}.xps", _instrument.SerialNumber, DateTime.Now.ToFileTime().ToString().Substring(0, 10));
         public string InstrumentsFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
 
         void CreateFileName()

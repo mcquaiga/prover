@@ -179,10 +179,10 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
-                           
-                                <Button Width="150" Grid.Row="2" Grid.Column="0"
+
+                            <Button Width="150" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"
 											Content="Start Test"
-											Style="{StaticResource SimpleButton}"
+											Style="{StaticResource SimpleButton}" HorizontalAlignment="Right"
                                         Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
@@ -190,7 +190,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Button>
-                            <Button Width="150" Grid.Row="2" Grid.Column="1"
+                            <Button Width="150" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0"
 											Content="Stop/Download Data"
 											Style="{StaticResource SimpleButton}"
                                         Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
