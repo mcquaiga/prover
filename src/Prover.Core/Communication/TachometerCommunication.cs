@@ -56,6 +56,8 @@ namespace Prover.Core.Communication
 
         public static int ParseTachValue(string value)
         {
+            if (string.IsNullOrEmpty(value)) return 0;
+
             const string pattern = @"(\d+)";
             int result;
             value = value.Replace("\n", " ").Replace("\r", " ");

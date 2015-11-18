@@ -16,19 +16,22 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public InstrumentManager InstrumentManager { get; set; }
-
+        public bool ShowCommButton { get; }
         public TemperatureTest Test { get; set; }
 
+        public bool ShowGaugeDecimalControl => ShowCommButton;
+        public bool ShowGaugeText => !ShowCommButton;
         public TemperatureTest.Level TestLevel
         {
             get { return Test.TestLevel; }
         }
 
-        public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, TemperatureTest test)
+        public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, TemperatureTest test, bool showCommButton = true)
         {
             _container = container;
             Test = test;
             InstrumentManager = instrumentManager;
+            ShowCommButton = showCommButton;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
@@ -45,7 +48,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
                 }
                 catch (Exception ex)
                 {
-                    
                     _container.Resolve<EventAggregator>().PublishOnBackgroundThread("Framing error! Try again.");
                 }
             }

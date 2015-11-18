@@ -30,6 +30,13 @@ namespace Prover.Core.Models.Instruments
             High
         }
 
+        public enum SuggestedGauges
+        {
+            Low = 32,
+            Medium = 60,
+            High = 90
+        }
+
         public TemperatureTest()
         {
             Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperatureTest == true).ToList();
@@ -41,6 +48,7 @@ namespace Prover.Core.Models.Instruments
             Items = Item.LoadItems(type).Where(x => x.IsTemperatureTest == true).ToList();
             TestLevel = level;
             IsVolumeTestTemperature = TestLevel == Level.Low;
+            SetDefaultGauge(level);
         }
 
         public Guid TemperatureId { get; set; }
@@ -85,6 +93,22 @@ namespace Prover.Core.Models.Instruments
                 }
 
                 return 0.00;
+            }
+        }
+        
+        public void SetDefaultGauge(Level templevel)
+        {
+            switch (templevel)
+            {
+                case Level.Low:
+                    Gauge = 32;
+                    break;
+                case Level.Medium:
+                    Gauge = 60;
+                    break;
+                case Level.High:
+                    Gauge = 90;
+                    break;
             }
         }
 

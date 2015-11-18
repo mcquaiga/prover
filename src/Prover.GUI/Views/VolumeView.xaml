@@ -179,8 +179,8 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
-                            <StackPanel Grid.Row="2" Margin="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Button Width="100"
+                           
+                                <Button Width="150" Grid.Row="2" Grid.Column="0"
 											Content="Start Test"
 											Style="{StaticResource SimpleButton}"
                                         Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
@@ -190,8 +190,8 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Button>
-                                <Button Width="100"
-											Content="Stop"
+                            <Button Width="150" Grid.Row="2" Grid.Column="1"
+											Content="Stop/Download Data"
 											Style="{StaticResource SimpleButton}"
                                         Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
                                         <i:Interaction.Triggers>
@@ -200,7 +200,7 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Button>
-                            </StackPanel>
+        
                         </Grid>
 
                     </Border>

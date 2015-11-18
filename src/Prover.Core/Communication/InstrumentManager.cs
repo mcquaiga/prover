@@ -220,7 +220,7 @@ namespace Prover.Core.Communication
                     try
                     {
                         _log.Info("Stopping volume test...");
-                        OutputBoard.StopMotor();
+                        OutputBoard?.StopMotor();
                         
                         System.Threading.Thread.Sleep(500);
 
@@ -231,8 +231,8 @@ namespace Prover.Core.Communication
                         {
                             try
                             {
-                                Instrument.Volume.AppliedInput = await _tachCommunication.ReadTach();
-                                _log.Info(string.Format("Tachometer reading: {0}", Instrument.Volume.AppliedInput));
+                                Instrument.Volume.AppliedInput = await _tachCommunication?.ReadTach();
+                                _log.Info(string.Format("Tachometer reading: {0}", Instrument.Volume?.AppliedInput));
                             }
                             catch (Exception ex)
                             {

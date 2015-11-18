@@ -13,7 +13,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
     public class TemperatureViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
         
-        public TemperatureViewModel(IUnityContainer container, bool showLiveRead = true)
+        public TemperatureViewModel(IUnityContainer container, bool showLiveRead = true, bool showCommButtons = true)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -21,14 +21,14 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             TestViews = new ObservableCollection<TemperatureTestViewModel>();
         }
         
-        public TemperatureViewModel(IUnityContainer container, Instrument instrument, bool showLiveRead = true) : this(container, showLiveRead)
+        public TemperatureViewModel(IUnityContainer container, Instrument instrument, bool showLiveRead = true, bool showCommButtons = true) : this(container, showLiveRead, showCommButtons)
         {
             Instrument = instrument;
 
             TestViews = new ObservableCollection<TemperatureTestViewModel>();
 
             Temperature.Tests.ForEach(x =>
-                TestViews.Add(new TemperatureTestViewModel(_container, InstrumentManager, x)));
+                TestViews.Add(new TemperatureTestViewModel(_container, InstrumentManager, x, showCommButtons)));
         }
 
         public bool ShowLiveRead
