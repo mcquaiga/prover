@@ -5,11 +5,9 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 			 xmlns:cal="http://www.caliburnproject.org"
-             xmlns:local="clr-namespace:Prover.GUI.Views"
-                          xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+    
              mc:Ignorable="d"
              d:DesignHeight="250" d:DesignWidth="500">
     <Grid>
@@ -26,8 +24,8 @@
         <StackPanel Grid.Row="0" Grid.Column="0">
             <TextBlock Margin="0,0,0,0" Style="{DynamicResource ItemDescriptions}"
 								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" />
-            <ComboBox x:Name="CommPort" wpf:TextFieldAssist.Hint="CommPort" />
-            <ComboBox x:Name="BaudRate" wpf:TextFieldAssist.Hint="BaudRate" />
+            <ComboBox x:Name="CommPort" />
+            <ComboBox x:Name="BaudRate" />
         </StackPanel>
         <StackPanel Grid.Row="0"
 								Grid.Column="1">
@@ -39,7 +37,7 @@
             <TextBlock Margin="20,0,0,0"
 								   Style="{DynamicResource ItemDescriptions}"
 								   Text="Tachometer" Foreground="{DynamicResource HeaderFontColour}" />
-            <ComboBox x:Name="TachCommPort" wpf:TextFieldAssist.Hint="CommPort" />
+            <ComboBox x:Name="TachCommPort"/>
         </StackPanel>
         <Button Grid.Row="1" Grid.ColumnSpan="2"
 							Grid.Column="0"
