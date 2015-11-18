@@ -74,7 +74,6 @@ namespace Prover.Core.Communication
 
             if (tryCount >= 10)
             {
-                _miSerial.Dispose();
                 _log.Error("Could not connect to instrument.");
                 throw new InstrumentCommunicationException(InstrumentErrorsEnum.TooManyRetransmissionsError);
             }

@@ -21,12 +21,13 @@ namespace Prover.Core.Communication
         private readonly IUnityContainer _container;
         public ICommPort CommPort { get; set; }
         private InstrumentCommunication _instrumentCommunication;
-        private TachometerCommunication _tachCommunication;
         private bool _isLiveReading = false;
         private bool _stopLiveReading;
         private bool _isBusy = false;
+        private string _tachCommPort;
         private Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        
+        private bool _runningTest;
+
         public DataAcqBoard OutputBoard { get; private set; }
         public DataAcqBoard AInputBoard { get; private set; }
         public DataAcqBoard BInputBoard { get; private set; }
@@ -43,24 +44,20 @@ namespace Prover.Core.Communication
 
             _instrument.Temperature = new Temperature(_instrument);
             _instrument.Volume = new Volume(_instrument);
+            _runningTest = false;
         }
 
-        public InstrumentManager(IUnityContainer container, string commName, BaudRateEnum baudRate) : this(container)
+        public InstrumentManager(IUnityContainer container, string commName, BaudRateEnum baudRate, string tachCommName) : this(container)
         {
             SetupCommPort(commName, baudRate);
+            _tachCommPort = tachCommName;
         }
 
         public void SetupCommPort(string commName, BaudRateEnum baudRate)
         {
             CommPort = Communications.CreateCommPortObject(commName, baudRate);
+            if (CommPort == null) throw new NullReferenceException("No comm port has been detected based on the settings. Check your default Comm Port setting.");
             _instrumentCommunication = new InstrumentCommunication(CommPort, _instrument);
-        }
-
-        public void SetupTachCommPort(string commName)
-        {
-            if (_tachCommunication == null)
-                _tachCommunication = new TachometerCommunication(commName);
-
         }
 
         public InstrumentManager(IUnityContainer container, ICommPort commPort)
@@ -184,7 +181,7 @@ namespace Prover.Core.Communication
 
         public async Task StartVolumeTest()
         {
-            if (!_isBusy)
+            if (!_isBusy && !_runningTest)
             {
                 await Task.Run(async () =>
                 {
@@ -197,7 +194,13 @@ namespace Prover.Core.Communication
                     BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
 
                     //Reset Tach setting
-                    if (_tachCommunication != null) await _tachCommunication.ResetTach();
+                    if (!string.IsNullOrEmpty(_tachCommPort))
+                    {
+                        using (var tach = new TachometerCommunication(_tachCommPort))
+                        {
+                            await tach.ResetTach();
+                        }
+                    }
 
                     Instrument.Volume.PulseACount = 0;
                     Instrument.Volume.PulseBCount = 0;
@@ -206,6 +209,7 @@ namespace Prover.Core.Communication
 
                     System.Threading.Thread.Sleep(500);
                     _isBusy = false;
+                    _runningTest = true;
                 });
             }
         }
@@ -213,7 +217,7 @@ namespace Prover.Core.Communication
 
         public async Task StopVolumeTest()
         {
-            if (!_isBusy)
+            if (!_isBusy && _runningTest)
             {
                 await Task.Run(async () =>
                 {
@@ -221,31 +225,35 @@ namespace Prover.Core.Communication
                     {
                         _log.Info("Stopping volume test...");
                         OutputBoard?.StopMotor();
-                        
+
                         System.Threading.Thread.Sleep(500);
 
                         await DownloadVolumeAfterTestItems();
                         await _instrumentCommunication.Disconnect();
 
-                        if (_tachCommunication != null)
+                        if (!string.IsNullOrEmpty(_tachCommPort))
                         {
-                            try
+                            using (var tach = new TachometerCommunication(_tachCommPort))
                             {
-                                Instrument.Volume.AppliedInput = await _tachCommunication?.ReadTach();
-                                _log.Info(string.Format("Tachometer reading: {0}", Instrument.Volume?.AppliedInput));
+                                try
+                                {
+                                    Instrument.Volume.AppliedInput = await tach?.ReadTach();
+                                    _log.Info(string.Format("Tachometer reading: {0}", Instrument.Volume?.AppliedInput));
+                                }
+                                catch (Exception ex)
+                                {
+                                    _log.Error(string.Format("An error occured: {0}", ex));
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                _log.Error(string.Format("An error occured: {0}", ex));
-                            }
-                        }
-                       
+                        }                       
+
                         _log.Info("Volume test finished!");
+                    
                     }
                     finally
                     {
-                        if (_tachCommunication != null) _tachCommunication.Dispose();
                         _isBusy = false;
+                        _runningTest = false;
                     }
                 });
             } 

@@ -58,8 +58,8 @@ namespace Prover.GUI.ViewModels
             }
             else
             {
-                InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate);
-                if (!string.IsNullOrEmpty(TachCommPortName)) InstrumentManager.SetupTachCommPort(TachCommPortName);
+                InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate, TachCommPortName);
+                
                 base.NotifyOfPropertyChange(() => Instrument);
             }
         }

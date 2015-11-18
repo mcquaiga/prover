@@ -21,6 +21,7 @@ namespace Prover.GUI.ViewModels
         private readonly IUnityContainer _container;
         
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private bool _userHasRequestedStop;
 
         public InstrumentManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
@@ -31,6 +32,7 @@ namespace Prover.GUI.ViewModels
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
             ShowButtons = showButtons;
+            _userHasRequestedStop = false;
         }
 
         public VolumeViewModel(IUnityContainer container, Instrument instrument, bool showButtons = true) : this(container, showButtons)
@@ -84,9 +86,9 @@ namespace Prover.GUI.ViewModels
                         InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
                         InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.BInputBoard.ReadInput();
                         NotifyOfPropertyChange(() => Volume);
-                    } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected());
+                    } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected() || _userHasRequestedStop);
                 });
-
+                _userHasRequestedStop = false;
                 await InstrumentManager.StopVolumeTest();
                 NotifyOfPropertyChange(() => AppliedInput);
                 NotifyOfPropertyChange(() => Volume);
@@ -100,6 +102,7 @@ namespace Prover.GUI.ViewModels
 
         public async void StopTestCommand()
         {
+            _userHasRequestedStop = true;
             if (InstrumentManager != null)
                 await InstrumentManager.StopVolumeTest();
         }
