@@ -19,18 +19,21 @@ namespace Prover.GUI.ViewModels
     {
 
         private readonly IUnityContainer _container;
+        
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
         public InstrumentManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
-        
-        public VolumeViewModel(IUnityContainer container)
+        public bool ShowButtons { get; }
+
+        public VolumeViewModel(IUnityContainer container, bool showButtons = true)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
+            ShowButtons = showButtons;
         }
 
-        public VolumeViewModel(IUnityContainer container, Instrument instrument) : this(container)
+        public VolumeViewModel(IUnityContainer container, Instrument instrument, bool showButtons = true) : this(container, showButtons)
         {
             Instrument = instrument;
         }

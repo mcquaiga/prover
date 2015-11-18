@@ -30,7 +30,7 @@ namespace Prover.GUI.ViewModels.InstrumentReport
         {
             SiteInformation = new SiteInformationViewModel(_container, Instrument);
             Temperature = new TemperatureViewModel(_container, Instrument, false);
-            Volume = new VolumeViewModel(_container, Instrument);
+            Volume = new VolumeViewModel(_container, Instrument, false);
         }
         
     }

@@ -1470,7 +1470,7 @@
 	<Style x:Key="ItemDescriptions" TargetType="{x:Type TextBlock}">
 		<Setter Property="Foreground" Value="{DynamicResource HeaderColour}" />
 		<Setter Property="OpacityMask" Value="Black" />
-		<Setter Property="Margin" Value="5,5,5,5" />
+		<Setter Property="Margin" Value="2" />
 		<Setter Property="FontSize" Value="18.667" />
 		<Setter Property="Height" Value="Auto" />
 		<Setter Property="FontFamily" Value="Euphemia" />

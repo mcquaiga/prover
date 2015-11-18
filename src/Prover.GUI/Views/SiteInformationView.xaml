@@ -22,7 +22,7 @@
         <Grid Grid.Row="1" Margin="0,4,0,0">
             <StackPanel>
                 <UniformGrid Columns="4">
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
                                                Name="Instrument_SerialNumber" />
@@ -31,7 +31,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Serial Number" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel>
                         <TextBlock HorizontalAlignment="Right"
                                                Style="{StaticResource ItemValues}"
 											   Name="Instrument_SiteNumber1" />
@@ -39,7 +39,7 @@
                                     Style="{StaticResource ItemDescriptions}"
 											   Text="Site Number 1" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
                                                Name="Instrument_SiteNumber2"/>
@@ -47,7 +47,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Site Number 2" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
                                                Style="{StaticResource ItemValues}"
 											   Name="Instrument_FirmwareVersion"/>
@@ -55,7 +55,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Firmware Version" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
 											   Name="Instrument_PulseASelect" />
@@ -63,7 +63,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Pulse A Select" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel>
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
 											   Text="{Binding Instrument.PulseAScaling,
@@ -72,7 +72,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Pulse A Scaling" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
 											   Text="{Binding Instrument.PulseBSelect,
@@ -81,7 +81,7 @@
 											   Style="{StaticResource ItemDescriptions}"
 											   Text="Pulse B Select" Foreground="{DynamicResource HeaderFontColour}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel >
                         <TextBlock HorizontalAlignment="Right"
 											   Style="{StaticResource ItemValues}"
 											   Text="{Binding Instrument.PulseBScaling,

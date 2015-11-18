@@ -5,8 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Prover.GUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:BoolToVisibilityConverter
+         x:Key="BoolToHiddenConverter"
+         TrueValue="Visible" FalseValue="Hidden" />
+    </UserControl.Resources>
     <Grid>
         <Border Margin="0"
 					BorderBrush="{DynamicResource HeaderColour}"
@@ -14,8 +20,8 @@
 					Padding="0">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="0.075*" />
                     <RowDefinition Height="1*" />
-                    <RowDefinition Height="10*" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
@@ -35,6 +41,7 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Grid.ColumnSpan="3">
                         <UniformGrid Columns="3">
@@ -67,7 +74,7 @@
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="0">
                         <StackPanel>
-                            <Border Margin="5,5,5,5"
+                            <Border Margin="1"
 										BorderBrush="{DynamicResource HeaderColour}"
 										BorderThickness="0,0,0,1">
                                 <TextBlock FontSize="24"
@@ -87,7 +94,7 @@
 
                     <Grid Grid.Row="1" Grid.Column="1">
                         <StackPanel>
-                            <Border Margin="5,5,5,5"
+                            <Border Margin="1"
 										BorderBrush="{DynamicResource HeaderColour}"
 										BorderThickness="0,0,0,1">
                                 <TextBlock FontSize="24"
@@ -107,7 +114,7 @@
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="2">
                         <StackPanel>
-                            <Border Margin="5,5,5,5"
+                            <Border Margin="1"
 										BorderBrush="{DynamicResource HeaderColour}"
 										BorderThickness="0,0,0,1">
                                 <TextBlock FontSize="24"
@@ -136,11 +143,12 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
-                                <ColumnDefinition />
+                            
                             </Grid.ColumnDefinitions>
                             <UniformGrid Columns="2" Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0">
                                 <StackPanel HorizontalAlignment="Left">
@@ -171,10 +179,11 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
-                            <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                            <StackPanel Grid.Row="2" Margin="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
                                 <Button Width="100"
 											Content="Start Test"
-											Style="{StaticResource SimpleButton}">
+											Style="{StaticResource SimpleButton}"
+                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <cal:ActionMessage MethodName="StartTestCommand" />
@@ -183,7 +192,8 @@
                                 </Button>
                                 <Button Width="100"
 											Content="Stop"
-											Style="{StaticResource SimpleButton}">
+											Style="{StaticResource SimpleButton}"
+                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
                                         <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <cal:ActionMessage MethodName="StopTestCommand" />
