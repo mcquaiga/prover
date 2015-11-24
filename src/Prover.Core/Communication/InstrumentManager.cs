@@ -56,7 +56,7 @@ namespace Prover.Core.Communication
         public void SetupCommPort(string commName, BaudRateEnum baudRate)
         {
             CommPort = Communications.CreateCommPortObject(commName, baudRate);
-            if (CommPort == null) throw new NullReferenceException("No comm port has been detected based on the settings. Check your default Comm Port setting.");
+            if (CommPort == null) throw new NullReferenceException("No comm port has been detected based on the settings. Check your default Comm Port setting and make sure the USB adapter is plugged in.");
             _instrumentCommunication = new InstrumentCommunication(CommPort, _instrument);
         }
 
@@ -207,7 +207,7 @@ namespace Prover.Core.Communication
 
                     OutputBoard.StartMotor();
 
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(250);
                     _isBusy = false;
                     _runningTest = true;
                 });
@@ -217,7 +217,7 @@ namespace Prover.Core.Communication
 
         public async Task StopVolumeTest()
         {
-            if (!_isBusy && _runningTest)
+            if (!_isBusy)
             {
                 await Task.Run(async () =>
                 {

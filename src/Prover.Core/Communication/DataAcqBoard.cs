@@ -52,6 +52,7 @@ namespace Prover.Core.Communication
         public int ReadInput()
         {
             short value = 0;
+
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
 
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
@@ -68,6 +69,10 @@ namespace Prover.Core.Communication
                 {
                     _pulseIsCleared = true;
                 } 
+            }
+            else
+            {
+                _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
             }
             return 0;
         }

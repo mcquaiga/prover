@@ -22,6 +22,7 @@ namespace Prover.GUI.ViewModels
         
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private bool _userHasRequestedStop;
+        private bool _isFirstVolumeTest = true;
 
         public InstrumentManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
@@ -78,6 +79,10 @@ namespace Prover.GUI.ViewModels
             try
             {
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
+
+                if (!_isFirstVolumeTest) await InstrumentManager.DownloadVolumeItems();
+                _isFirstVolumeTest = false;
+
                 await InstrumentManager.StartVolumeTest();
                 await Task.Run(() =>
                 {
@@ -102,9 +107,14 @@ namespace Prover.GUI.ViewModels
 
         public async void StopTestCommand()
         {
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Finishing volume test..."));
             _userHasRequestedStop = true;
             if (InstrumentManager != null)
+            {
                 await InstrumentManager.StopVolumeTest();
+                NotifyOfPropertyChange(() => AppliedInput);
+                NotifyOfPropertyChange(() => Volume);
+            }    
         }
 
         public void Handle(InstrumentUpdateEvent message)
