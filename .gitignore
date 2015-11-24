@@ -178,3 +178,4 @@ FakesAssemblies/
 .vs/*
 src/.vs/config/applicationhost.config
 **/**/settings.conf
+**/**/*.orig
