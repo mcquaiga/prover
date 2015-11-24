@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="Prover.GUI.Views.NewTestView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:temperature="clr-namespace:Prover.GUI.Views.TemperatureViews"
+			 d:DesignWidth="1000"
+			 mc:Ignorable="d">
+
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+    </UserControl.Resources>
+
+	<ScrollViewer Style="{DynamicResource styleScrollViewer}" VerticalScrollBarVisibility="Auto">
+
+		<StackPanel Margin="0,0,0,25">
+			<Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="1"
+					  Margin="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Margin="20,0,0,0"
+								   
+								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" FontSize="16" />
+                        <GroupBox Margin="20,0,0,0" BorderThickness="0">
+                            <WrapPanel Margin="5">
+                                <RadioButton
+											 Content="MiniMax"
+											 Name="MiniMax"
+											 FontSize="24"
+											 Foreground="White"
+											 IsChecked="True"
+											 Style="{DynamicResource radio2}" />
+                            </WrapPanel>
+                        </GroupBox>
+     
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="Instrument Settings" FontSize="16"/>
+                        <TextBlock Name="InstrumentCommPortName"/>
+                        <TextBlock Name="BaudRate"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Text="Tach Settings" FontSize="16"/>
+                        <TextBlock Name="TachCommPortName"/>
+                    </StackPanel>
+                    <Button Grid.Row="3"
+							Grid.Column="1"
+							Width="250"
+							HorizontalAlignment="Center"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Download Info"
+							Style="{StaticResource SimpleButton}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="FetchInstrumentItems" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </Grid>
+            </Grid>
+			<Grid>
+				<ContentControl cal:View.Model="{Binding SiteInformationItem}"/>
+			</Grid>
+
+			<Grid>
+				<ContentControl cal:View.Model="{Binding TemperatureInformationItem}"/>
+			</Grid>
+
+			<Grid>
+				<ContentControl cal:View.Model="{Binding VolumeInformationItem}"/>
+			</Grid>
+
+
+			<Border Margin="15,0,15,5"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,0,0,1" />
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="150"
+						Margin="10"
+						Content="Instrument Report"
+						Style="{StaticResource SimpleButton}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="InstrumentReport" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Width="150"
+						Margin="10"
+						Content="Save"
+						Style="{StaticResource SimpleButton}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<cal:ActionMessage MethodName="SaveInstrument" />
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</Button>
+            </StackPanel>
+
+			<WrapPanel Width="5" Height="16" />
+			<WrapPanel Width="144" Height="14.5" />
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

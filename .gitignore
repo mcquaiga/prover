@@ -174,4 +174,8 @@ UpgradeLog*.htm
 FakesAssemblies/
 */bin/Debug/*
 */bin/*
-*.dll
+.nuget/*
+.vs/*
+src/.vs/config/applicationhost.config
+**/**/settings.conf
+**/**/*.orig

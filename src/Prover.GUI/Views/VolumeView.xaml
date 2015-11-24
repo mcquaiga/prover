@@ -1,0 +1,211 @@
+﻿<UserControl x:Class="Prover.GUI.Views.VolumeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:Prover.GUI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:BoolToVisibilityConverter
+         x:Key="BoolToHiddenConverter"
+         TrueValue="Visible" FalseValue="Hidden" />
+    </UserControl.Resources>
+    <Grid>
+        <Border Margin="0"
+					BorderBrush="{DynamicResource HeaderColour}"
+					BorderThickness="0,1,0,0"
+					Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.075*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+							
+								   Style="{DynamicResource InstrumentSectionHeader}">
+			   
+							VOLUME
+                </TextBlock>
+
+                <Grid Grid.Row="1" Margin="10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.ColumnSpan="3">
+                        <UniformGrid Columns="3">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_CorrectedMultiplierDescription" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. Multi. (90)</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_UnCorrectedMultiplierDescription" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. Multi. (92)</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_DriveRateDescription" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Drive Rate (98)</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterTypeDescription" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Type (432)</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterDisplacement" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Displacement</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcMeterDisplacement" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Meter Displacement</TextBlock>
+                            </StackPanel>
+                        </UniformGrid>
+
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        <StackPanel>
+                            <Border Margin="1"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="Start" />
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartCorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartUncorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <StackPanel>
+                            <Border Margin="1"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="End" />
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndCorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndUncorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <StackPanel>
+                            <Border Margin="1"
+										BorderBrush="{DynamicResource HeaderColour}"
+										BorderThickness="0,0,0,1">
+                                <TextBlock FontSize="24"
+											   Foreground="{DynamicResource HeaderFontColour}"
+											   Text="Calculated" />
+                            </Border>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcCorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Corrected Volume</TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcUncorrected" />
+                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Uncorrected Volume</TextBlock>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Border Grid.Row="2"
+								Grid.ColumnSpan="3"
+								Margin="5,5,5,5"
+								BorderBrush="{DynamicResource HeaderColour}"
+								BorderThickness="0,1,0,0">
+                        <Grid Grid.Row="2"
+								  Grid.ColumnSpan="2"
+								  Margin="0,10,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            
+                            </Grid.ColumnDefinitions>
+                            <UniformGrid Columns="2" Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0">
+                                <StackPanel HorizontalAlignment="Left">
+                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseACount" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse A</TextBlock>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Right" Margin="20,0,0,0">
+                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseBCount" />
+                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse B</TextBlock>
+                                </StackPanel>
+                            </UniformGrid>
+                            <Grid Grid.Row="1" Grid.Column="0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBox Width="150" Style="{DynamicResource SimpleTextBox}"
+													Name="AppliedInput" />
+                                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Applied Input</TextBlock>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_UnCorrectedPercentError" />
+                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. % Error</TextBlock>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_CorrectedPercentError" />
+                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. % Error</TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <Button Width="150" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"
+											Content="Start Test"
+											Style="{StaticResource SimpleButton}" HorizontalAlignment="Right"
+                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <cal:ActionMessage MethodName="StartTestCommand" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            <Button Width="150" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0"
+											Content="Stop/Download Data"
+											Style="{StaticResource SimpleButton}"
+                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                                        <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <cal:ActionMessage MethodName="StopTestCommand" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+        
+                        </Grid>
+
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
