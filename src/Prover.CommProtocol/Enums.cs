@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Prover.CommProtocol
 {
-    public enum InstrumentTypeCode
+    public enum InstrumentType
     {
         Mini = 2,
         ECAT = 0,
@@ -36,7 +36,7 @@ namespace Prover.CommProtocol
         b38400 = 38400
     }
 
-    public enum CommStates
+    public enum CommState
     {
         UnlinkedIdle,
         IncomingAwaitingSITE,
