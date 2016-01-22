@@ -170,11 +170,11 @@
                             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
                                 <StackPanel HorizontalAlignment="Center">
                                     <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_UnCorrectedPercentError" />
+                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Foreground="{Binding UnCorrectedPercentColour}" Name="Volume_UnCorrectedPercentError" />
                                         <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. % Error</TextBlock>
                                     </StackPanel>
                                     <StackPanel HorizontalAlignment="Center">
-                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Name="Volume_CorrectedPercentError" />
+                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Foreground="{Binding CorrectedPercentColour}" Name="Volume_CorrectedPercentError" />
                                         <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. % Error</TextBlock>
                                     </StackPanel>
                                 </StackPanel>

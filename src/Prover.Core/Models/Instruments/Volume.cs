@@ -289,9 +289,12 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (MeterIndex == null) LoadMeterIndex();
+                if (MeterIndex == null)
+                    LoadMeterIndex();
 
-                if (MeterIndex != null) return MeterIndex.MeterDisplacement;
+                if (MeterIndex != null)
+                    return MeterIndex.MeterDisplacement;
+
                 return null;
             }
         }
@@ -307,7 +310,10 @@ namespace Prover.Core.Models.Instruments
                 {
                     return Math.Round((double) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
                 }
-                return null;
+                else
+                {
+                    return 0;
+                }
             }
         }
 
@@ -320,8 +326,10 @@ namespace Prover.Core.Models.Instruments
                 {
                     return Math.Round((double)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);    
                 }
-
-                return null;
+                else
+                {
+                    return 0;
+                }
             }
         }
 
@@ -339,14 +347,29 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public bool CorrectedHasPassed
+        {
+            get { return (CorrectedPercentError < 1.5 && CorrectedPercentError > -1.5); }
+        }
+
+        [NotMapped]
+        public bool UnCorrectedHasPassed
+        {
+            get { return (UnCorrectedPercentError < 0.1 && UnCorrectedPercentError > -0.1); }
+        }
+
+        [NotMapped]
+        public bool MeterDisplacementHasPassed
+        {
+            get { return (MeterDisplacementPercentError < 1.0 && MeterDisplacementPercentError > -1.0); }
+        }
+
+        [NotMapped]
         public bool HasPassed
         {
             get 
-            { 
-                return 
-                        (CorrectedPercentError < 1.5 && CorrectedPercentError > -1.5) 
-                   &&   (UnCorrectedPercentError < 0.1 && UnCorrectedPercentError > -0.1)
-                   &&   (MeterDisplacementPercentError < 1.0 && MeterDisplacementPercentError > -1.0); 
+            {
+                return CorrectedHasPassed && UnCorrectedHasPassed && MeterDisplacementHasPassed;
             }
         }
     }

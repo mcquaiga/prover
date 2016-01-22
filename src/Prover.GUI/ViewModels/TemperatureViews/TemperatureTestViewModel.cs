@@ -37,17 +37,10 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         {
             if (InstrumentManager != null)
             {
-                try
-                {
-                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
-                    await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
-                    Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
-                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
-                }
-                catch (Exception ex)
-                {
-                    _container.Resolve<EventAggregator>().PublishOnBackgroundThread("Framing error! Try again.");
-                }
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
+                await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
+                Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
+                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
             }
 
             NotifyOfPropertyChange(() => Test);

@@ -12,6 +12,7 @@ using NLog;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels
 {
@@ -70,7 +71,7 @@ namespace Prover.GUI.ViewModels
             set
             {
                 InstrumentManager.Instrument.Volume.AppliedInput = value;
-                NotifyOfPropertyChange(() => Volume);
+                RaisePropertyChanges();
             }
         }
 
@@ -95,8 +96,9 @@ namespace Prover.GUI.ViewModels
                 });
                 _userHasRequestedStop = false;
                 await InstrumentManager.StopVolumeTest();
-                NotifyOfPropertyChange(() => AppliedInput);
-                NotifyOfPropertyChange(() => Volume);
+
+                RaisePropertyChanges();
+
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
             }
             catch (Exception ex)
@@ -112,15 +114,26 @@ namespace Prover.GUI.ViewModels
             if (InstrumentManager != null)
             {
                 await InstrumentManager.StopVolumeTest();
-                NotifyOfPropertyChange(() => AppliedInput);
-                NotifyOfPropertyChange(() => Volume);
+                RaisePropertyChanges();
             }    
+        }
+
+        public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush MeterDisplacementPercentColour => Volume?.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+
+        private void RaisePropertyChanges()
+        {
+            NotifyOfPropertyChange(() => AppliedInput);
+            NotifyOfPropertyChange(() => Volume);
+            NotifyOfPropertyChange(() => UnCorrectedPercentColour);
+            NotifyOfPropertyChange(() => CorrectedPercentColour);
         }
 
         public void Handle(InstrumentUpdateEvent message)
         {
             InstrumentManager = message.InstrumentManager;
-            NotifyOfPropertyChange(() => Volume);
+            RaisePropertyChanges();
         }
     }
 }

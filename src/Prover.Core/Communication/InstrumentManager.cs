@@ -192,6 +192,7 @@ namespace Prover.Core.Communication
                     OutputBoard = new DataAcqBoard(0, 0, 0);
                     AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
                     BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
+                
 
                     //Reset Tach setting
                     if (!string.IsNullOrEmpty(_tachCommPort))
@@ -206,7 +207,7 @@ namespace Prover.Core.Communication
                     Instrument.Volume.PulseBCount = 0;
 
                     OutputBoard.StartMotor();
-
+               
                     System.Threading.Thread.Sleep(250);
                     _isBusy = false;
                     _runningTest = true;
