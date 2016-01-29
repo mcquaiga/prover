@@ -24,18 +24,6 @@ namespace Prover.CommProtocol
         AutoDetect = 99
     }
 
-    public enum BaudRate
-    {
-        b300 = 300,
-        b600 = 600,
-        b1200 = 1200,
-        b2400 = 2400,
-        b4800 = 4800,
-        b9600 = 9600,
-        b19200 = 19200,
-        b38400 = 38400
-    }
-
     public enum CommState
     {
         UnlinkedIdle,
@@ -68,17 +56,17 @@ namespace Prover.CommProtocol
         OtherError
     }
 
-    internal enum CommChar
+    public enum CommChar
     {
-        SOH = 1,
-        STX = 2,
-        ETX = 3,
-        EOT = 4,
-        ENQ = 5,
-        ACK = 6,
-        CR = 13,
-        NAK = 21,
-        RS = 30
+        SOH = (char)1,
+        STX = (char)2,
+        ETX = (char)3,
+        EOT = (char)4,
+        ENQ = (char)5,
+        ACK = (char)6,
+        CR = (char)13,
+        NAK = (char)21,
+        RS = (char)30
     }
 
     internal enum InstrumentErrors
