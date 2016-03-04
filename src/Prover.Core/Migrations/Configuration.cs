@@ -9,7 +9,8 @@ namespace Prover.Core.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
+            ContextKey = "Prover.Core.Storage.ProverContext";
         }
 
         protected override void Seed(Prover.Core.Storage.ProverContext context)

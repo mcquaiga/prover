@@ -57,7 +57,7 @@ namespace Prover.Core.Models.Instruments
         public bool IsVolumeTestTemperature { get; set; }
 
         public Level TestLevel { get; set; }
-        public decimal Gauge { get; set; }
+        public double Gauge { get; set; }
         public decimal? PercentError
         {
             get
@@ -85,12 +85,12 @@ namespace Prover.Core.Models.Instruments
                             Math.Round(
                                 (decimal)
                                     ((MetericTempCorrection + Temperature.EvcBase)/
-                                     (Gauge + MetericTempCorrection)), 4);
+                                     ((decimal)Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (decimal) ((TempCorrection + Temperature.EvcBase)/(Gauge + TempCorrection)), 4);
+                                (decimal) ((TempCorrection + Temperature.EvcBase)/((decimal)Gauge + TempCorrection)), 4);
                 }
 
                 return 0;

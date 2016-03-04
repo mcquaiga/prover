@@ -116,7 +116,7 @@ namespace Prover.Core.Models.Instruments
             return 10; //Low standard number if we can't find anything
         }
 
-        public decimal AppliedInput { get; set; }
+        public double AppliedInput { get; set; }
 
         public Guid InstrumentId { get; set; }
 
@@ -283,7 +283,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? TrueUncorrected
         {
-            get { return (MeterDisplacement * AppliedInput); }
+            get { return (MeterDisplacement * (decimal)AppliedInput); }
         }
 
         [NotMapped]

@@ -53,8 +53,8 @@ namespace Prover.GUI.ViewModels
                 return Instrument?.Volume;
             }
         }
-
-        public decimal AppliedInput
+       
+        public double AppliedInput
         {
             get
             {
@@ -64,9 +64,9 @@ namespace Prover.GUI.ViewModels
                 }
                 else if (Instrument != null)
                 {
-                    return (decimal)Instrument?.Volume?.AppliedInput;
+                    return Instrument?.Volume?.AppliedInput ?? 0.00;
                 }
-                return 0.00m;
+                return 0.00;
             }
             set
             {

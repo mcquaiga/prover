@@ -47,7 +47,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             NotifyOfPropertyChange(() => PercentColour);
         }
 
-        public decimal Gauge
+        public double Gauge
         {
             get { return Test.Gauge; }
             set

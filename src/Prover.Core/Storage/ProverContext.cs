@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 //using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Migrations;
 
 namespace Prover.Core.Storage
 {
@@ -19,7 +20,7 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
             //Configuration.LazyLoadingEnabled = false;
         }

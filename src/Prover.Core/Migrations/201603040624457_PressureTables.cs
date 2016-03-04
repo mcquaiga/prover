@@ -3,7 +3,7 @@ namespace Prover.Core.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Pressure : DbMigration
+    public partial class PressureTables : DbMigration
     {
         public override void Up()
         {
@@ -24,21 +24,24 @@ namespace Prover.Core.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
+                        PressureId = c.Guid(nullable: false),
                         TestLevel = c.Int(nullable: false),
+                        IsVolumeTestPressure = c.Boolean(nullable: false),
+                        GasGauge = c.Decimal(precision: 18, scale: 2),
+                        AtmosphericGauge = c.Decimal(precision: 18, scale: 2),
                         InstrumentData = c.String(maxLength: 4000),
-                        Pressure_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Pressures", t => t.Pressure_Id)
-                .Index(t => t.Pressure_Id);
+                .ForeignKey("dbo.Pressures", t => t.PressureId)
+                .Index(t => t.PressureId);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.PressureTests", "Pressure_Id", "dbo.Pressures");
+            DropForeignKey("dbo.PressureTests", "PressureId", "dbo.Pressures");
             DropForeignKey("dbo.Pressures", "InstrumentId", "dbo.Instruments");
-            DropIndex("dbo.PressureTests", new[] { "Pressure_Id" });
+            DropIndex("dbo.PressureTests", new[] { "PressureId" });
             DropIndex("dbo.Pressures", new[] { "InstrumentId" });
             DropTable("dbo.PressureTests");
             DropTable("dbo.Pressures");
