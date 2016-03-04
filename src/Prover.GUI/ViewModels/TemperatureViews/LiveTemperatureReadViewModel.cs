@@ -21,7 +21,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public double LiveReadTemperature { get; set; }
+        public decimal LiveReadTemperature { get; set; }
 
         public async Task StartLiveReadCommand()
         {

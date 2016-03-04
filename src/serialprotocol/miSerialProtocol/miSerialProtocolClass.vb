@@ -455,7 +455,7 @@ Public MustInherit Class miSerialProtocolClass
         Dim i_Object As Object
         Dim i_Error As InstrumentErrorsEnum
         Dim i_String As String = ""
-        Dim i_Double As Double
+        Dim i_decimal As decimal
 
         Try
             CommState = CommStateEnum.ReadingItem
@@ -469,8 +469,8 @@ Public MustInherit Class miSerialProtocolClass
                 Throw New InstrumentCommunicationException(i_Error, ItemNumber)
             ElseIf i_Object.GetType.IsClass = True Then
                 Try
-                    i_Double = CDbl(i_Object)
-                    Return i_Double
+                    i_decimal = CDbl(i_Object)
+                    Return i_decimal
                 Catch ex As Exception
                     i_String = i_Object
                     Return i_String

@@ -37,7 +37,7 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public double? SerialNumber
+        public decimal? SerialNumber
         {
             get { return NumericValue(62); }
         }
@@ -68,7 +68,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? PulseAScaling
+        public decimal? PulseAScaling
         {
             get { return NumericValue(56); }
         }
@@ -80,7 +80,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? PulseBScaling
+        public decimal? PulseBScaling
         {
             get { return NumericValue(57); }
         }
@@ -92,13 +92,13 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? SiteNumber1
+        public decimal? SiteNumber1
         {
             get { return NumericValue(200); }
         }
 
         [NotMapped]
-        public double? SiteNumber2
+        public decimal? SiteNumber2
         {
             get { return NumericValue(201); }
         }

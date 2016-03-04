@@ -3,19 +3,19 @@
 	<item number="2" code="UNCOR_VOL" shortDescription="UnCor Vol" description="Uncorrected Volume" isVolume="true" isVolumeTest="true"/>
 	<item number="5" code="PULSER_A" shortDescription="Pulser A #" description="Pulser A # o"/>
 	<item number="6" code="PULSER_B" shortDescription="Pulser B #" description="Pulser B # o"/>
-	<item number="8" code="GAS_PRESS" shortDescription="Gas Press" description="Gas Pressure" isPressure="true"/>
+	<item number="8" code="GAS_PRESS" shortDescription="Gas Press" description="Gas Pressure" isPressureTest="true"/>
 	<item number="10" shortDescription="Press High A" description="Pressure High Alarm" isAlarm ="true"/>
 	<item number="11" shortDescription="Press Low A" description="Pressure Low Alarm" isAlarm="true"/>
 	<item number="12" shortDescription="P Cal Atmos" description="Pressure Corrected Atmospheric"/>
 	<item number="13" code="BASE_PRESS" shortDescription="Base Press" description="Base Pressure" isPressure="true"/>
-	<item number="14" code="ATM_PRESS" shortDescription="ATM Press" description="ATM Pressure" isPressure="true"/>
+	<item number="14" code="ATM_PRESS" shortDescription="ATM Press" description="ATM Pressure" isPressureTest="true"/>
 	
 	<item number="26" shortDescription="Gas Temperat" description="EVC Gas Temperature" isTemperatureTest="true"/>
 	<item number="27" shortDescription="Gas Temp Lo" description="Corrected Volume" isTemperature="true" />
 	<item number="28" shortDescription="Gas Temp Hi" description="Corrected Volume" isTemperature="true" />
 	<item number="34" shortDescription="Base Tempera" description="Base Temperature" isTemperature="true" />
 	<item number="35" shortDescription="Temperature" description="EVC Temperature" isTemperatureTest="true"/>
-	<item number="44" code="PRESS_FACTOR" shortDescription="Press Factor" description="Pressure Factor" isPressure="true"/>
+	<item number="44" code="PRESS_FACTOR" shortDescription="Press Factor" description="Pressure Factor" isPressureTest="true"/>
 	<item number="45" code="TEMP_FACTOR" shortDescription="Temperature Factor" description="Temperature Factor" isTemperatureTest="true"/>
 	<item number="47" code="UNSQRD_SUPER_FACTOR" shortDescription="Unsqrd. Super Factor" description="Unsquared Supercompresibility Factor" isPressure="true"/>
 	<item number="53" code="SPEC_GR" shortDescription="Specific Gravity" description="Specific Gravity" isSuper="true" />
@@ -116,6 +116,7 @@
 	</item>
 	<item number="113" code="HIGH_RES_CORRECTED" shortDescription="High Res COR" description="High Resolution Corrected Volume" isVolume="true" isVolumeTest="true"/>
 	<item number="122" code="FIRMwARE" shortDescription="Firm. Ver." description="Firmware Version" />
+	<item number="137" code="PRESS_RANGE" shortDescription="Pressure Range" description="Pressure Range" isPressure="true" />
 	<item number="140" code="ENERGY" shortDescription="Energy" description="Energy" isVolume="true" />
 	<item number="141" code="ENERGY_UNITS" shortDescription="Energy Units" description="Energy Units" isVolume="true">
 		<value id="0" description="Therms" />

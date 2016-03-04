@@ -92,12 +92,12 @@ namespace Prover.Core.Communication
             return myItems;
         }
 
-        public async Task<double> LiveReadItem(int itemNumber)
+        public async Task<decimal> LiveReadItem(int itemNumber)
         {
             return await Task.Run(async () =>
             {
                 if (!IsConnected) await Connect();
-                return Convert.ToDouble(_miSerial.LR(itemNumber));
+                return Convert.ToDecimal(_miSerial.LR(itemNumber));
             });
         }
         

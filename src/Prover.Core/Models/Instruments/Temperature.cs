@@ -48,7 +48,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? EvcBase
+        public decimal? EvcBase
         {
             get
             {

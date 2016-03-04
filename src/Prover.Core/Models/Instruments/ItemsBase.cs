@@ -16,6 +16,7 @@ namespace Prover.Core.Models.Instruments
         {
             Id = Guid.NewGuid();
         }
+
         [Key]
         public Guid Id { get; set; }
 
@@ -63,7 +64,7 @@ namespace Prover.Core.Models.Instruments
             return DescriptionValue(number, this.Items);
         }
         
-        public double? NumericValue(int number, ICollection<Item> items, Dictionary<int, string> values )
+        public decimal? NumericValue(int number, ICollection<Item> items, Dictionary<int, string> values )
         {
             var item = items.FirstOrDefault(x => x.Number == number);
             if (values == null) return null;
@@ -78,25 +79,40 @@ namespace Prover.Core.Models.Instruments
                     return firstOrDefault.Value ?? firstOrDefault.Id;
             }
 
-            return Convert.ToDouble(value);
+            return Convert.ToDecimal(value);
         }
-        public double? NumericValue(int number)
+
+        public decimal? NumericValue(int number)
         {
             return NumericValue(number, this.Items, this.InstrumentValues);
         }
 
-        public double? ParseHighResReading(double? highResReading)
+        public int GetItemNumber(string itemCode)
         {
-            if (highResReading == 0) return 0;
+            return this.Items.FirstOrDefault(i => i.Code == itemCode).Number;
+        }
 
-            var highResString = Convert.ToString(highResReading);
-            if (highResReading > 0 && highResString.IndexOf(".", StringComparison.Ordinal) > -1)
+        public decimal GetHighResValue(decimal highResValue)
+        {
+            if (highResValue == 0) return 0;
+
+            var highResString = Convert.ToString(highResValue);
+            var pointLocation = highResString.IndexOf(".", StringComparison.Ordinal);
+
+            if (highResValue > 0 && pointLocation > -1)
             {
-                return
-                    Convert.ToDouble(highResString.Substring(highResString.IndexOf(".", StringComparison.Ordinal), highResString.Length - highResString.IndexOf(".", StringComparison.Ordinal)));
+                var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
+
+                return Convert.ToDecimal(result);
             }
 
             return 0;
+        }
+
+        public decimal ParseHighResReading(int lowResValue, decimal highResValue)
+        {
+            var fractional = GetHighResValue(highResValue);
+            return lowResValue + fractional;
         }
 
         public class Item
@@ -108,6 +124,7 @@ namespace Prover.Core.Models.Instruments
 
             public bool? IsAlarm { get; set; }
             public bool? IsPressure { get; set; }
+            public bool? IsPressureTest { get; set; }
             public bool? IsTemperature { get; set; }
             public bool? IsTemperatureTest { get; set; }
             public bool? IsVolume { get; set; }
@@ -118,7 +135,7 @@ namespace Prover.Core.Models.Instruments
 
             public static IList<Item> LoadItems(InstrumentType type)
             {
-                string _path = "";
+                var _path = string.Empty;
                 switch (type)
                 {
                     case InstrumentType.MiniMax:
@@ -139,6 +156,7 @@ namespace Prover.Core.Models.Instruments
                             LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
                             IsAlarm = x.Attribute("isAlarm") != null && Convert.ToBoolean(x.Attribute("isAlarm").Value),
                             IsPressure = x.Attribute("isPressure") != null && Convert.ToBoolean(x.Attribute("isPressure").Value),
+                            IsPressureTest = x.Attribute("isPressureTest") != null && Convert.ToBoolean(x.Attribute("isPressureTest").Value),
                             IsTemperature = x.Attribute("isTemperature") != null && Convert.ToBoolean(x.Attribute("isTemperature").Value),
                             IsTemperatureTest = x.Attribute("isTemperatureTest") != null && Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
                             IsVolume = x.Attribute("isVolume") != null && Convert.ToBoolean(x.Attribute("isVolume").Value),
@@ -149,7 +167,7 @@ namespace Prover.Core.Models.Instruments
                                  {
                                      Id = Convert.ToInt32(y.Attribute("id").Value),
                                      Description = y.Attribute("description").Value,
-                                     Value = y.Attribute("numericvalue") == null ? (double?)null : Convert.ToDouble(y.Attribute("numericvalue").Value)
+                                     Value = y.Attribute("numericvalue") == null ? (decimal?)null : Convert.ToDecimal(y.Attribute("numericvalue").Value)
                                  })
                             .ToList()
 
@@ -162,7 +180,7 @@ namespace Prover.Core.Models.Instruments
         //public class InstrumentValue
         //{
         //    public int Number { get; set; }
-        //    public double Value { get; set; }
+        //    public decimal Value { get; set; }
         //}
         //public class ItemValues
         //{
@@ -174,7 +192,7 @@ namespace Prover.Core.Models.Instruments
         {
             public int Id { get; set; } //Maps to the Id that the instrument uses
             public string Description { get; set; } //Human displayed description
-            public double? Value { get; set; } // Numeric value used for calculations, etc.
+            public decimal? Value { get; set; } // Numeric value used for calculations, etc.
         }
     }
 }

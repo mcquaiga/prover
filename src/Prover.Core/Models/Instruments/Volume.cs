@@ -10,11 +10,16 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
     public class Volume : ItemsBase
     {
+        const decimal COR_ERROR_THRESHOLD = 1.5m;
+        const decimal UNCOR_ERROR_THRESHOLD = 0.1m;
+        const decimal METER_DIS_ERROR_THRESHOLD = 1m;
+
         public enum EvcType
         {
             PressureTemperature,
@@ -56,7 +61,7 @@ namespace Prover.Core.Models.Instruments
                     Description = x.Attribute("description").Value,
                     UnCorPulsesX10 = Convert.ToInt32(x.Attribute("UnCorPulsesX10").Value),
                     UnCorPulsesX100 = Convert.ToInt32(x.Attribute("UnCorPulsesX100").Value),
-                    MeterDisplacement = Convert.ToDouble(x.Attribute("MeterDisplacement").Value)
+                    MeterDisplacement = Convert.ToDecimal(x.Attribute("MeterDisplacement").Value)
                 }).ToList();
             //
             
@@ -111,9 +116,10 @@ namespace Prover.Core.Models.Instruments
             return 10; //Low standard number if we can't find anything
         }
 
-        public double AppliedInput { get; set; }
+        public decimal AppliedInput { get; set; }
 
         public Guid InstrumentId { get; set; }
+
         [Required]
         public virtual Instrument Instrument { get; set; }
         
@@ -137,16 +143,15 @@ namespace Prover.Core.Models.Instruments
         public ICollection<Item> AfterTestItems { get; set; }
 
         [NotMapped]
-        public double? EvcCorrected
+        public decimal? EvcCorrected
         {
-            get { return Math.Round((double)((EndCorrected - StartCorrected) * CorrectedMultiplier), 4); }
+            get { return Math.Round((decimal)((EndCorrected - StartCorrected) * CorrectedMultiplier), 4); }
         }
 
         [NotMapped]
-        public double? EvcUncorrected
+        public decimal? EvcUncorrected
         {
-            get { return Math.Round((double)((EndUncorrected - StartUncorrected) * UnCorrectedMultiplier), 4); }
-
+            get { return Math.Round((decimal)((EndUncorrected - StartUncorrected) * UnCorrectedMultiplier), 4); }
         }
 
         [NotMapped]
@@ -157,36 +162,47 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? StartCorrected
+        public decimal? StartCorrected
         {
-            get { return NumericValue(0) + ParseHighResReading(NumericValue(113)); }
+            get { return ParseHighResReading((int)NumericValue(0), NumericValue(113).Value); }
         }
 
         [NotMapped]
-        public double? StartUncorrected
-        {
-            get { return NumericValue(2) + ParseHighResReading(NumericValue(892)); }
-        }
-
-        [NotMapped]
-        public double? EndCorrected
+        public decimal? StartUncorrected
         {
             get
             {
-                if (TestInstrumentValues != null)
-                    return NumericValue(0, AfterTestItems, TestInstrumentValues) + ParseHighResReading(NumericValue(113, AfterTestItems, TestInstrumentValues));
-                return NumericValue(0) + ParseHighResReading(NumericValue(113));
+                return ParseHighResReading((int)NumericValue(2), NumericValue(892).Value);
             }
         }
 
         [NotMapped]
-        public double? EndUncorrected
+        public decimal? EndCorrected
         {
             get
-            {   
-                if (TestInstrumentValues != null)
-                    return NumericValue(2, AfterTestItems, TestInstrumentValues) + ParseHighResReading(NumericValue(892, AfterTestItems, TestInstrumentValues));
-                return NumericValue(2) + ParseHighResReading(NumericValue(892));
+            {
+                if (TestInstrumentValues == null)
+                    return StartCorrected;
+
+                var lowResValue = (int)NumericValue(0, AfterTestItems, TestInstrumentValues);
+                var highResValue = NumericValue(113, AfterTestItems, TestInstrumentValues).Value;
+
+                return ParseHighResReading(lowResValue, highResValue);
+            }
+        }
+
+        [NotMapped]
+        public decimal? EndUncorrected
+        {
+            get
+            {
+                if (TestInstrumentValues == null)
+                    return StartUncorrected;
+
+                var lowResValue = (int)NumericValue(2, AfterTestItems, TestInstrumentValues);
+                var highResValue = NumericValue(892, AfterTestItems, TestInstrumentValues).Value;
+
+                return ParseHighResReading(lowResValue, highResValue);
             }
         }
 
@@ -223,7 +239,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? MeterTypeId
+        public decimal? MeterTypeId
         {
             get { return NumericValue(432); }
         }
@@ -235,7 +251,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? CorrectedMultiplier
+        public decimal? CorrectedMultiplier
         {
             get { return NumericValue(90); }
         }
@@ -247,7 +263,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? UnCorrectedMultiplier
+        public decimal? UnCorrectedMultiplier
         {
             get { return NumericValue(92); }
         }
@@ -259,19 +275,19 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? EvcMeterDisplacement
+        public decimal? EvcMeterDisplacement
         {
             get { return NumericValue(439); }
         }
 
         [NotMapped]
-        public double? TrueUncorrected
+        public decimal? TrueUncorrected
         {
             get { return (MeterDisplacement * AppliedInput); }
         }
 
         [NotMapped]
-        public double? TrueCorrected
+        public decimal? TrueCorrected
         {
             get
             {
@@ -285,7 +301,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? MeterDisplacement
+        public decimal MeterDisplacement
         {
             get
             {
@@ -293,22 +309,20 @@ namespace Prover.Core.Models.Instruments
                     LoadMeterIndex();
 
                 if (MeterIndex != null)
-                    return MeterIndex.MeterDisplacement;
+                    return MeterIndex.MeterDisplacement.Value;
 
-                return null;
+                return 0;
             }
         }
 
-
-
         [NotMapped]
-        public double? UnCorrectedPercentError
+        public decimal UnCorrectedPercentError
         {
             get
             {
                 if (TrueUncorrected != 0 && TrueUncorrected != null)
                 {
-                    return Math.Round((double) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
+                    return Math.Round((decimal) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
                 }
                 else
                 {
@@ -318,13 +332,13 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? CorrectedPercentError
+        public decimal CorrectedPercentError
         {
             get
             {
                 if (TrueCorrected != 0 && TrueCorrected != null)
                 {
-                    return Math.Round((double)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);    
+                    return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);    
                 }
                 else
                 {
@@ -334,34 +348,34 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? MeterDisplacementPercentError
+        public decimal MeterDisplacementPercentError
         {
             get
             {
-                if (MeterDisplacement != null && MeterDisplacement != 0)
+                if (MeterDisplacement != 0)
                 {
-                    return Math.Round((double)(((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement) * 100), 2);
+                    return Math.Round((decimal)(((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement) * 100), 2);
                 }
-                return null;
+                return 0;
             }
         }
 
         [NotMapped]
         public bool CorrectedHasPassed
         {
-            get { return (CorrectedPercentError < 1.5 && CorrectedPercentError > -1.5); }
+            get { return CorrectedPercentError.IsBetween(COR_ERROR_THRESHOLD); }
         }
 
         [NotMapped]
         public bool UnCorrectedHasPassed
         {
-            get { return (UnCorrectedPercentError < 0.1 && UnCorrectedPercentError > -0.1); }
+            get { return (UnCorrectedPercentError.IsBetween(UNCOR_ERROR_THRESHOLD)); }
         }
 
         [NotMapped]
         public bool MeterDisplacementHasPassed
         {
-            get { return (MeterDisplacementPercentError < 1.0 && MeterDisplacementPercentError > -1.0); }
+            get { return (MeterDisplacementPercentError.IsBetween(METER_DIS_ERROR_THRESHOLD)); }
         }
 
         [NotMapped]
@@ -378,7 +392,7 @@ namespace Prover.Core.Models.Instruments
     public class MeterIndexInfo
     {
         public MeterIndexInfo() { }
-        public MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100, double? meterDisplacement)
+        public MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100, decimal? meterDisplacement)
         {
             Id = id;
             Description = description;
@@ -391,7 +405,7 @@ namespace Prover.Core.Models.Instruments
         public string Description { get; set; }
         public int UnCorPulsesX10 { get; set; }
         public int UnCorPulsesX100 { get; set; }
-        public double? MeterDisplacement { get; set; }
+        public decimal? MeterDisplacement { get; set; }
     }
     
 }

@@ -104,11 +104,27 @@
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
+    <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="Migrations\201602270817053_Init.cs" />
+    <Compile Include="Migrations\201602270817053_Init.Designer.cs">
+      <DependentUpon>201602270817053_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602270822331_Pressure.cs" />
+    <Compile Include="Migrations\201602270822331_Pressure.Designer.cs">
+      <DependentUpon>201602270822331_Pressure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603040557172_pressure-tests.cs" />
+    <Compile Include="Migrations\201603040557172_pressure-tests.Designer.cs">
+      <DependentUpon>201603040557172_pressure-tests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\ItemsBase.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
+    <Compile Include="Models\Instruments\Pressure.cs" />
+    <Compile Include="Models\Instruments\PressureTests.cs" />
     <Compile Include="Models\Instruments\Temperature.cs" />
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
     <Compile Include="Models\Instruments\Volume.cs" />
@@ -123,9 +139,6 @@
     <Compile Include="Storage\ProverContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -147,6 +160,17 @@
     <Content Include="MiniMaxItems.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201602270817053_Init.resx">
+      <DependentUpon>201602270817053_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602270822331_Pressure.resx">
+      <DependentUpon>201602270822331_Pressure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603040557172_pressure-tests.resx">
+      <DependentUpon>201603040557172_pressure-tests.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

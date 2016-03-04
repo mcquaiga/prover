@@ -40,5 +40,7 @@ namespace Prover.Core.Storage
         public DbSet<Volume> Volume { get; set; }
         public DbSet<Temperature> Temperatures { get; set; }
         public DbSet<TemperatureTest> TemperatureTests { get; set; }
+        public DbSet<Pressure> Pressures { get; set; }
+        public DbSet<PressureTest> PressureTests { get; set; }
     }
 }

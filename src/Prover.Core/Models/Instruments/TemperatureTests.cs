@@ -11,8 +11,8 @@ namespace Prover.Core.Models.Instruments
 {
     public class TemperatureTest : ItemsBase
     {
-        private const double TempCorrection = 459.67;
-        private const double MetericTempCorrection = 273.15;
+        private const decimal TempCorrection = 459.67m;
+        private const decimal MetericTempCorrection = 273.15m;
 
         private enum TempItems
         {
@@ -41,11 +41,11 @@ namespace Prover.Core.Models.Instruments
         {
             Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperatureTest == true).ToList();
         }
-        public TemperatureTest(Temperature temp, InstrumentType type, Level level)
+
+        public TemperatureTest(Temperature temp, InstrumentType type, Level level) : this()
         {
             Temperature = temp;
             TemperatureId = temp.Id;
-            Items = Item.LoadItems(type).Where(x => x.IsTemperatureTest == true).ToList();
             TestLevel = level;
             IsVolumeTestTemperature = TestLevel == Level.Low;
             SetDefaultGauge(level);
@@ -57,13 +57,13 @@ namespace Prover.Core.Models.Instruments
         public bool IsVolumeTestTemperature { get; set; }
 
         public Level TestLevel { get; set; }
-        public double Gauge { get; set; }
-        public double? PercentError
+        public decimal Gauge { get; set; }
+        public decimal? PercentError
         {
             get
             {
                 if (EvcFactor == null) return null;
-                return Math.Round((double) ((EvcFactor - ActualFactor)/ActualFactor)*100, 2);
+                return Math.Round((decimal) ((EvcFactor - ActualFactor)/ActualFactor)*100, 2);
             }
         }
 
@@ -72,7 +72,8 @@ namespace Prover.Core.Models.Instruments
         {
             get { return (PercentError < 1 && PercentError > -1); }
         }
-        public double? ActualFactor
+
+        public decimal? ActualFactor
         {
             get
             {
@@ -82,17 +83,17 @@ namespace Prover.Core.Models.Instruments
                     case "C":
                         return
                             Math.Round(
-                                (double)
+                                (decimal)
                                     ((MetericTempCorrection + Temperature.EvcBase)/
                                      (Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (double) ((TempCorrection + Temperature.EvcBase)/(Gauge + TempCorrection)), 4);
+                                (decimal) ((TempCorrection + Temperature.EvcBase)/(Gauge + TempCorrection)), 4);
                 }
 
-                return 0.00;
+                return 0;
             }
         }
         
@@ -113,13 +114,13 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public double? EvcReading
+        public decimal? EvcReading
         {
             get { return NumericValue((int) TempItems.Gas); }
         }
 
         [NotMapped]
-        public double? EvcFactor
+        public decimal? EvcFactor
         {
             get { return NumericValue((int) TempItems.Factor); }
         }
