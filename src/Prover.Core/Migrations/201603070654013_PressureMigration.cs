@@ -3,7 +3,7 @@ namespace Prover.Core.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class PressureTables : DbMigration
+    public partial class PressureMigration : DbMigration
     {
         public override void Up()
         {
@@ -13,11 +13,11 @@ namespace Prover.Core.Migrations
                     {
                         Id = c.Guid(nullable: false),
                         InstrumentId = c.Guid(nullable: false),
-                        InstrumentData = c.String(maxLength: 4000),
+                        InstrumentData = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Instruments", t => t.InstrumentId)
-                .Index(t => t.InstrumentId);
+                .ForeignKey("dbo.Instruments", t => t.Id)
+                .Index(t => t.Id);
             
             CreateTable(
                 "dbo.PressureTests",
@@ -29,7 +29,7 @@ namespace Prover.Core.Migrations
                         IsVolumeTestPressure = c.Boolean(nullable: false),
                         GasGauge = c.Decimal(precision: 18, scale: 2),
                         AtmosphericGauge = c.Decimal(precision: 18, scale: 2),
-                        InstrumentData = c.String(maxLength: 4000),
+                        InstrumentData = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Pressures", t => t.PressureId)
@@ -40,9 +40,9 @@ namespace Prover.Core.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.PressureTests", "PressureId", "dbo.Pressures");
-            DropForeignKey("dbo.Pressures", "InstrumentId", "dbo.Instruments");
+            DropForeignKey("dbo.Pressures", "Id", "dbo.Instruments");
             DropIndex("dbo.PressureTests", new[] { "PressureId" });
-            DropIndex("dbo.Pressures", new[] { "InstrumentId" });
+            DropIndex("dbo.Pressures", new[] { "Id" });
             DropTable("dbo.PressureTests");
             DropTable("dbo.Pressures");
         }

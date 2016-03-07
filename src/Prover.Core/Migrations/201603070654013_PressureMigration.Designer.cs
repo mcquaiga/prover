@@ -7,13 +7,13 @@ namespace Prover.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class PressureTables : IMigrationMetadata
+    public sealed partial class PressureMigration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(PressureTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(PressureMigration));
         
         string IMigrationMetadata.Id
         {
-            get { return "201603040624457_PressureTables"; }
+            get { return "201603070654013_Pressure"; }
         }
         
         string IMigrationMetadata.Source

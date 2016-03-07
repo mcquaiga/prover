@@ -111,9 +111,9 @@
     <Compile Include="Migrations\201510030033541_InitialCreate.Designer.cs">
       <DependentUpon>201510030033541_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201603040624457_PressureTables.cs" />
-    <Compile Include="Migrations\201603040624457_PressureTables.Designer.cs">
-      <DependentUpon>201603040624457_PressureTables.cs</DependentUpon>
+    <Compile Include="Migrations\201603070654013_PressureMigration.cs" />
+    <Compile Include="Migrations\201603070654013_PressureMigration.Designer.cs">
+      <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
@@ -165,8 +165,8 @@
     <EmbeddedResource Include="Migrations\201510030033541_InitialCreate.resx">
       <DependentUpon>201510030033541_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603040624457_PressureTables.resx">
-      <DependentUpon>201603040624457_PressureTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201603070654013_PressureMigration.resx">
+      <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
