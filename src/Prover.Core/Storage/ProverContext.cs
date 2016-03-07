@@ -28,10 +28,6 @@ namespace Prover.Core.Storage
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-            //modelBuilder.Entity<Temperature>().HasRequired(a => a.Instrument).WithRequiredDependent();
-            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithRequiredDependent();
-            ////modelBuilder.Entity<TemperatureTest>().HasRequired(a => a.Temperature).WithMany().HasForeignKey(a => a.TemperatureId);
-            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithMany().HasForeignKey(a => a.InstrumentId);
           
             base.OnModelCreating(modelBuilder);
         }

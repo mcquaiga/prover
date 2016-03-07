@@ -50,6 +50,7 @@ namespace Prover.Core.Models.Instruments
 
         public virtual ICollection<PressureTest> Tests { get; set; }
 
+        #region Not Mapped Properties
         [NotMapped]
         public string Units
         {
@@ -97,6 +98,7 @@ namespace Prover.Core.Models.Instruments
         {
             get { return Tests.All(x => x.HasPassed); }
         }
+        #endregion
 
         public PressureTest AddTest()
         {

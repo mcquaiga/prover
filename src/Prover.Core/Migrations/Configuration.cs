@@ -5,7 +5,7 @@ namespace Prover.Core.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Prover.Core.Storage.ProverContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Storage.ProverContext>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@ namespace Prover.Core.Migrations
             ContextKey = "Prover.Core.Storage.ProverContext";
         }
 
-        protected override void Seed(Prover.Core.Storage.ProverContext context)
+        protected override void Seed(Storage.ProverContext context)
         {
             //  This method will be called after migrating to the latest version.
 
