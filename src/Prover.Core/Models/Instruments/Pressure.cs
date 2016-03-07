@@ -29,7 +29,7 @@ namespace Prover.Core.Models.Instruments
         Absolute = 1
     }
 
-    public class Pressure : ItemsBase
+    public class Pressure : InstrumentTable
     {
         private const string BASE_PRESS = "BASE_PRESS";
         private const string ATM_PRESS = "ATM_PRESS";
@@ -37,17 +37,10 @@ namespace Prover.Core.Models.Instruments
         private const string PRESS_RANGE = "PRESS_RANGE";
         private const string TRANSDUCER_TYPE = "TRANSDUCER_TYPE";
 
-        public Pressure(Instrument instrument)
+        public Pressure(Instrument instrument) : base(instrument.Items.FindItems(i => i.IsPressure == true))
         {
-            Items = Item.LoadItems(instrument.Type).Where(x => x.IsPressure == true).ToList();
             Instrument = instrument;
             InstrumentId = instrument.Id;
-            Tests = new Collection<PressureTest>()
-            {
-                new PressureTest(this, PressureTest.PressureLevel.Low),
-                new PressureTest(this, PressureTest.PressureLevel.Medium),
-                new PressureTest(this, PressureTest.PressureLevel.High)
-            };
         }
 
         public Guid InstrumentId { get; set; }
@@ -60,7 +53,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public string Units
         {
-            get { return DescriptionValue(GetItemNumber(PRESS_UNITS)); }
+            get { return Items.GetItem(PRESS_UNITS).GetDescriptionValue(); }
         }
 
         [NotMapped]
@@ -68,7 +61,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return NumericValue(GetItemNumber(BASE_PRESS));
+                return Items.GetItem(BASE_PRESS).GetNumericValue();
             }
         }
 
@@ -77,7 +70,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return NumericValue(GetItemNumber(ATM_PRESS));
+                return Items.GetItem(ATM_PRESS).GetNumericValue();
             }
         }
 
@@ -86,7 +79,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return NumericValue(GetItemNumber(PRESS_RANGE));
+                return Items.GetItem(PRESS_RANGE).GetNumericValue();
             }
         }
 
@@ -95,7 +88,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return (TransducerType)(int)NumericValue(GetItemNumber(TRANSDUCER_TYPE));
+                return (TransducerType)Items.GetItem(TRANSDUCER_TYPE).GetNumericValue();
             }
         }
 
@@ -103,6 +96,17 @@ namespace Prover.Core.Models.Instruments
         public bool HasPassed
         {
             get { return Tests.All(x => x.HasPassed); }
+        }
+
+        public PressureTest AddTest()
+        {
+            if (Tests.Count() >= 3)
+                throw new NotSupportedException("Only 3 test instances are supported.");
+
+            var test = new PressureTest(this, (PressureTest.PressureLevel)Tests.Count());
+            Tests.Add(test);
+
+            return test;
         }
     }
 }

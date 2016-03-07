@@ -15,7 +15,7 @@ OK
       12000
 
 ";
-            var test = TachometerCommunication.ParseTachValue(value);
+            var test = TachometerCommunicator.ParseTachValue(value);
         }
     }
 }

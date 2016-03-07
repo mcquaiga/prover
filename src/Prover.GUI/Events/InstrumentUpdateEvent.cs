@@ -10,9 +10,9 @@ namespace Prover.GUI.Events
 {
     public class InstrumentUpdateEvent
     {
-        public InstrumentManager InstrumentManager { get; set; }
+        public TestManager InstrumentManager { get; set; }
 
-        public InstrumentUpdateEvent(InstrumentManager instrumentManager)
+        public InstrumentUpdateEvent(TestManager instrumentManager)
         {
             InstrumentManager = instrumentManager;
         } 

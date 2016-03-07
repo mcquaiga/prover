@@ -24,5 +24,10 @@ namespace Prover.Core.Extensions
             else
                 return value.IsBetween(absoluteLimit, (T)inverse);
         }
+
+        public static bool IsInteger(this decimal value)
+        {
+            return (double)Math.Abs(value - (int)value) < double.Epsilon;
+        }
     }
 }

@@ -11,9 +11,9 @@
 	<item number="14" code="ATM_PRESS" shortDescription="ATM Press" description="ATM Pressure" isPressureTest="true"/>
 	
 	<item number="26" shortDescription="Gas Temperat" description="EVC Gas Temperature" isTemperatureTest="true"/>
-	<item number="27" shortDescription="Gas Temp Lo" description="Corrected Volume" isTemperature="true" />
-	<item number="28" shortDescription="Gas Temp Hi" description="Corrected Volume" isTemperature="true" />
-	<item number="34" shortDescription="Base Tempera" description="Base Temperature" isTemperature="true" />
+	<item number="27" shortDescription="Gas Temp Lo" description="Gas Temp Lo" isTemperature="true" />
+	<item number="28" shortDescription="Gas Temp Hi" description="Gas Temp Hi" isTemperature="true" />
+	<item number="34" shortDescription="Base Temp" description="Base Temperature" isTemperature="true" />
 	<item number="35" shortDescription="Temperature" description="EVC Temperature" isTemperatureTest="true"/>
 	<item number="44" code="PRESS_FACTOR" shortDescription="Press Factor" description="Pressure Factor" isPressureTest="true"/>
 	<item number="45" code="TEMP_FACTOR" shortDescription="Temperature Factor" description="Temperature Factor" isTemperatureTest="true"/>
@@ -102,7 +102,7 @@
 		<value id="0" description="Live" numericvalue="0"/>
 		<value id="1" description="Fixed" numericvalue="1"/>
 	</item >
-	<item number="110" code="FIXED_Super_FACTOR" shortDescription="F Super Factor" description="Fixed Super Factor" isSuper="true" isVolume="true">
+	<item number="110" code="FIXED_SUPER_FACTOR" shortDescription="F Super Factor" description="Fixed Super Factor" isSuper="true" isVolume="true">
 		<value id="0" description="Live" numericvalue="0"/>
 		<value id="1" description="Fixed" numericvalue="1"/>
 	</item >
@@ -127,6 +127,7 @@
 		<value id="5" description="KiloWattHours" />
 	</item>
 	<item number="142" code="GAS_ENERGY_VALUE" shortDescription="Gas Energy Value" description="Gas Energy Value" isVolume="true" />
+	<item number="147" code="SUPER_TABLE" shortDescription="Super Compress. Table" description="Super Compress. Table" isVolume="true" />
 	<item number="200" code="SITENUMBER1" shortDescription="Site Number 1" description="Site Number 1" />
 	<item number="201" code="SITENUMBER2" shortDescription="Site Number 2" description="Site Number 2" />
 	<item number="432" code="METER_TYPE" shortDescription="Meter Type" description="Meter Type" isVolume="true" >

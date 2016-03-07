@@ -13,7 +13,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
     public class LiveTemperatureReadViewModel : ReactiveScreen, IHandle<LiveReadEvent>, IHandle<InstrumentUpdateEvent>
     {
         private readonly IUnityContainer _container;
-        private InstrumentManager _instrumentManager;
+        private TestManager _instrumentManager;
 
         public LiveTemperatureReadViewModel(IUnityContainer container)
         {

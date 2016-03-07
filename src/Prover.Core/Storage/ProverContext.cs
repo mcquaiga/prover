@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Migrations;
+using System.Data.Entity.Migrations;
 
 namespace Prover.Core.Storage
 {
@@ -22,7 +23,6 @@ namespace Prover.Core.Storage
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
-            //Configuration.LazyLoadingEnabled = false;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

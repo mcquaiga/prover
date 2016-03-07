@@ -37,7 +37,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         }
 
         private IUnityContainer _container;
-        public InstrumentManager InstrumentManager { get; set; }
+        public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
 
         public LiveTemperatureReadViewModel LiveReadItem => ShowLiveRead ? new LiveTemperatureReadViewModel(_container) : null;

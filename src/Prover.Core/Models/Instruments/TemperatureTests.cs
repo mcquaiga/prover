@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class TemperatureTest : ItemsBase
+    public class TemperatureTest : InstrumentTable
     {
         private const decimal TempCorrection = 459.67m;
         private const decimal MetericTempCorrection = 273.15m;
@@ -37,12 +37,8 @@ namespace Prover.Core.Models.Instruments
             High = 90
         }
 
-        public TemperatureTest()
-        {
-            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperatureTest == true).ToList();
-        }
-
-        public TemperatureTest(Temperature temp, InstrumentType type, Level level) : this()
+        public TemperatureTest(Temperature temp, Level level) : 
+            base(temp.Instrument.Items.FindItems(x => x.IsTemperatureTest == true))
         {
             Temperature = temp;
             TemperatureId = temp.Id;
@@ -116,13 +112,13 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? EvcReading
         {
-            get { return NumericValue((int) TempItems.Gas); }
+            get { return Items.GetItem((int)TempItems.Gas).GetNumericValue(); }
         }
 
         [NotMapped]
         public decimal? EvcFactor
         {
-            get { return NumericValue((int) TempItems.Factor); }
+            get { return Items.GetItem((int) TempItems.Factor).GetNumericValue(); }
         }
     }
 }

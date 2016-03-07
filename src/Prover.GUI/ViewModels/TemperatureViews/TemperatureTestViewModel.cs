@@ -15,7 +15,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public InstrumentManager InstrumentManager { get; set; }
+        public TestManager InstrumentManager { get; set; }
         public bool ShowCommButton { get; }
         public TemperatureTest Test { get; set; }
 
@@ -24,7 +24,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public TemperatureTest.Level TestLevel => Test.TestLevel;
 
-        public TemperatureTestViewModel(IUnityContainer container, InstrumentManager instrumentManager, TemperatureTest test, bool showCommButton = true)
+        public TemperatureTestViewModel(IUnityContainer container, TestManager instrumentManager, TemperatureTest test, bool showCommButton = true)
         {
             _container = container;
             Test = test;

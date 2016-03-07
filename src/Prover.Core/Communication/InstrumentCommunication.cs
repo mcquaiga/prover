@@ -8,25 +8,24 @@ using Prover.Core.Storage;
 using Prover.SerialProtocol;
 using Prover.Core.Models.Instruments;
 using System.Windows;
+using Prover.Core.Models;
 
 namespace Prover.Core.Communication
 {
-    public class InstrumentCommunication
+    public class InstrumentCommunicator
     {
-        private readonly Instrument _instrument;
         private readonly ICommPort _commPort;
         private miSerialProtocolClass _miSerial;
         private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
-        public InstrumentCommunication(ICommPort commPort, Instrument instrument)
+        public InstrumentCommunicator(ICommPort commPort, InstrumentType instrumentType)
         {
             _commPort = commPort;
-            _instrument = instrument;
-         
-            switch (_instrument.Type)
+
+            switch (instrumentType)
             {
                 case InstrumentType.Ec300:
-                   _miSerial = new EC300Class(commPort);
+                    _miSerial = new EC300Class(commPort);
                     break;
                 default:
                     _miSerial = new MiniMaxClass(commPort);
@@ -36,13 +35,32 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
+        public InstrumentCommunicator(ICommPort commPort, Instrument instrument) : this(commPort, instrument.Type) { }
+
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetails> itemsToDownload, bool disconnectAfter = true)
         {
             await Connect();
-            return await Task.Run(()=> DownloadItems(itemsToDownload));
+
+            var result = await Task.Run(()=> DownloadItems(itemsToDownload));
+
+            if (disconnectAfter)
+                await Disconnect();
+
+            return result;
         }
 
-        public bool IsConnected { get; set; }
+        public async Task DownloadItemsAsync(InstrumentItems itemsToDownload, bool disconnectAfter = true)
+        {
+            itemsToDownload.InstrumentValues = await DownloadItemsAsync(itemsToDownload.Items);
+        }
+
+        private Dictionary<int, string> DownloadItems(IEnumerable<ItemDetails> itemsToDownload)
+        {
+            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
+            return myItems;
+        }
+
+        public bool IsConnected { get; private set; }
 
         public async Task Connect()
         {
@@ -52,8 +70,14 @@ namespace Prover.Core.Communication
                 try
                 {
                     if (!IsConnected)
-                        await Task.Run(() => _miSerial.Connect());
-                    IsConnected = true;
+                        await Task.Run(() => _miSerial.Connect()).ContinueWith(taskResult =>
+                        {
+                            if (!taskResult.IsFaulted)
+                                IsConnected = true;
+                            else
+                                IsConnected = false;
+                        });
+                                   
                 }
                 catch (AggregateException ae)
                 {
@@ -81,22 +105,17 @@ namespace Prover.Core.Communication
 
         public async Task Disconnect()
         {
-            await Task.Run(()=> _miSerial.Disconnect());
-            IsConnected = false;
-        }
+            if (IsConnected)
+                await Task.Run(()=> _miSerial.Disconnect());
 
-        public async Task<Dictionary<int, string>> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
-        {
-            if (!IsConnected) await Connect();
-            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
-            return myItems;
+            IsConnected = false;
         }
 
         public async Task<decimal> LiveReadItem(int itemNumber)
         {
             return await Task.Run(async () =>
             {
-                if (!IsConnected) await Connect();
+                await Connect();
                 return Convert.ToDecimal(_miSerial.LR(itemNumber));
             });
         }

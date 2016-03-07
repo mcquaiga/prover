@@ -33,16 +33,32 @@ namespace Prover.GUI.ViewModels
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public InstrumentManager InstrumentManager { get; set; }        
+        public TestManager InstrumentTestManager { get; set; }        
         public ICommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
         public string TachCommPortName { get; private set; }
         public BaudRateEnum BaudRate { get; private set; }
 
-        public Instrument Instrument => InstrumentManager.Instrument;
+        public Instrument Instrument => InstrumentTestManager.Instrument;
 
         #region Methods
-        private void SetupInstrument()
+        private void SetupTestManager()
+        {
+            VerifySettings();
+
+            if (InstrumentTestManager == null)
+            {
+                var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
+                InstrumentTestManager = new TestManager(_container, commPort, TachCommPortName);
+            }
+        }
+
+        protected override void OnViewReady(object view)
+        {
+            base.OnViewReady(view);
+        }
+
+        private void VerifySettings()
         {
             InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
             BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
@@ -56,39 +72,22 @@ namespace Prover.GUI.ViewModels
             {
                 _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
             }
-            else
-            {
-                InstrumentManager = new InstrumentManager(_container, InstrumentCommPortName, BaudRate, TachCommPortName);
-                
-                base.NotifyOfPropertyChange(() => Instrument);
-            }
         }
 
-        protected override void OnViewReady(object view)
-        {
-            base.OnViewReady(view);
-            SetupInstrument();
-        }
-
-        public async void FetchInstrumentItems()
+        public async void ConnectToInstrument()
         {
             await Task.Run((Func<Task>)(async () =>
             {
-                if (InstrumentManager == null) SetupInstrument();
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-                if (this.InstrumentCommPortName == null)
-                {
-                    MessageBox.Show("Please select a Comm Port and Baud Rate first.", "Comm Port");
-                    return;
-                }
 
                 try
                 {
-                    await InstrumentManager.DownloadInfo();
+                    SetupTestManager();
+                    await InstrumentTestManager.InitializeInstrument(InstrumentType.MiniMax);
                     base.NotifyOfPropertyChange(() => Instrument);
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
                     //Publish the change in instrument state to anyone who's listening
-                    _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentManager));
+                    _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentTestManager));
                 }
                 catch (Exception ex)
                 {
@@ -102,24 +101,24 @@ namespace Prover.GUI.ViewModels
 
         public async void SaveInstrument()
         {
-            if (InstrumentManager == null) return;
+            if (InstrumentTestManager == null) return;
 
             if (!Instrument.HasPassed && MessageBox.Show("This instrument hasn't passed all tests." + Environment.NewLine + "Would you still like to save?", "Save", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 return;
 
-            await InstrumentManager.SaveAsync();
+            await InstrumentTestManager.SaveAsync();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
         }
 
         public void InstrumentReport()
         {
-            var instrumentReport = new InstrumentGenerator(InstrumentManager.Instrument, _container);
+            var instrumentReport = new InstrumentGenerator(InstrumentTestManager.Instrument, _container);
             instrumentReport.Generate();
         }
 
         public void Handle(SettingsChangeEvent message)
         {
-            SetupInstrument();
+            SetupTestManager();
         }
         #endregion
 

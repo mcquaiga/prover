@@ -51,6 +51,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="InstrumentTests.cs" />
+    <Compile Include="Models\Instruments\InstrumentTests.cs" />
+    <Compile Include="Models\Instruments\ItemsBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TachometerTests.cs" />
   </ItemGroup>

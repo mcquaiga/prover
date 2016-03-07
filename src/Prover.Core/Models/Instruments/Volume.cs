@@ -14,73 +14,46 @@ using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class Volume : ItemsBase
+    public class Volume : InstrumentTable
     {
+        const int COR_VOLUME = 0;
+        const int COR_VOLUME_HIGH_RES = 113;
+        const int UNCOR_VOL = 2;
+        const int UNCOR_VOL_HIGHRES = 893;
+        const int PULSER_A = 93;
+        const int PULSER_B = 94;
         const decimal COR_ERROR_THRESHOLD = 1.5m;
         const decimal UNCOR_ERROR_THRESHOLD = 0.1m;
         const decimal METER_DIS_ERROR_THRESHOLD = 1m;
 
-        public enum EvcType
-        {
-            PressureTemperature,
-            Pressure,
-            Temperature
-        }
-
-        private string _data;
-        
-        private Dictionary<int, string> _testInstrumentValues;
-
-        public Volume()
-        {
-            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolume == true).ToList();
-            AfterTestItems = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsVolumeTest == true).ToList();
-            LoadMeterIndex();
-        }
-
-        public Volume(Instrument instrument)
+        public Volume(Instrument instrument) : base(instrument.Items.FindItems(i => i.IsVolume == true))
         {
             Instrument = instrument;
             InstrumentId = Instrument.Id;
-            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsVolume == true).ToList();
-            AfterTestItems = Item.LoadItems(Instrument.Type).Where(x => x.IsVolumeTest == true).ToList();
-        }
-        [NotMapped]
-        public MeterIndexInfo MeterIndex { get; set; } 
+            AfterTestItems = Instrument.Items.FindItems(x => x.IsVolumeTest == true);
+            MeterIndex = MeterIndexInfo.Get(MeterTypeId);
 
-        public void LoadMeterIndex()
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+                SuperFactor = new SuperFactor(instrument, TemperatureTest, PressureTest);
+        }
+
+        public Volume(Instrument instrument, InstrumentItems afterTestItems) : this(instrument)
         {
-        
-            var xDoc = XDocument.Load("MeterIndexes.xml");
-            var indexes = 
-                (from x in xDoc.Descendants("value")
-                 where Convert.ToInt32(x.Attribute("id").Value) == MeterTypeId
-                select new MeterIndexInfo()
-                {
-                    Id = Convert.ToInt32(x.Attribute("id").Value),
-                    Description = x.Attribute("description").Value,
-                    UnCorPulsesX10 = Convert.ToInt32(x.Attribute("UnCorPulsesX10").Value),
-                    UnCorPulsesX100 = Convert.ToInt32(x.Attribute("UnCorPulsesX100").Value),
-                    MeterDisplacement = Convert.ToDecimal(x.Attribute("MeterDisplacement").Value)
-                }).ToList();
-            //
-            
-            MeterIndex = indexes.FirstOrDefault();
-            if (MeterIndex != null) LogManager.GetCurrentClassLogger().Info(string.Format("Meter Id:{0}; Type: {1}; Displacement: {2}", MeterIndex.Id, MeterIndex.Description, MeterIndex.MeterDisplacement));
+            AfterTestItems = afterTestItems;
         }
 
         public int PulseACount { get; set; }
         [NotMapped]
         public string PulseASelect
         {
-            get { return DescriptionValue(93); }
+            get { return Items.GetItem(PULSER_A).GetDescriptionValue(); }
         }
 
         public int PulseBCount { get; set; }
         [NotMapped]
         public string PulseBSelect
         {
-            get { return DescriptionValue(94); }
+            get { return Items.GetItem(PULSER_B).GetDescriptionValue(); }
         }
 
         [NotMapped]
@@ -90,6 +63,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (PulseASelect == "UncVol")
                     return PulseACount;
+
                 return PulseBCount;
             }
         }
@@ -101,6 +75,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (PulseASelect == "CorVol")
                     return PulseACount;
+
                 return PulseBCount;
             }
         }
@@ -121,17 +96,19 @@ namespace Prover.Core.Models.Instruments
         public Guid InstrumentId { get; set; }
 
         [Required]
-        public virtual Instrument Instrument { get; set; }
-        
+        public Instrument Instrument { get; set; }
+
         public string TestInstrumentData
         {
-            get { return JsonConvert.SerializeObject(TestInstrumentValues); }
+            get { return JsonConvert.SerializeObject(AfterTestItems.InstrumentValues); }
             set
             {
-                _data = value;
-                _testInstrumentValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
+                Items.InstrumentValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
             }
         }
+
+        [NotMapped]
+        public SuperFactor SuperFactor { get; private set; }
 
         [NotMapped]
         public TemperatureTest TemperatureTest
@@ -140,7 +117,13 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public ICollection<Item> AfterTestItems { get; set; }
+        public PressureTest PressureTest
+        {
+            get { return Instrument.Pressure.Tests.FirstOrDefault(x => x.IsVolumeTestPressure); }
+        }
+
+        [NotMapped]
+        public InstrumentItems AfterTestItems { get; set; }
 
         [NotMapped]
         public decimal? EvcCorrected
@@ -155,16 +138,9 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public Dictionary<int, string> TestInstrumentValues
-        {
-            get { return _testInstrumentValues; }
-            set { _testInstrumentValues = value; }
-        }
-
-        [NotMapped]
         public decimal? StartCorrected
         {
-            get { return ParseHighResReading((int)NumericValue(0), NumericValue(113).Value); }
+            get { return GetHighResolutionValue(Items, COR_VOLUME, COR_VOLUME_HIGH_RES); }
         }
 
         [NotMapped]
@@ -172,22 +148,20 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return ParseHighResReading((int)NumericValue(2), NumericValue(892).Value);
+                return GetHighResolutionValue(Items, UNCOR_VOL, UNCOR_VOL_HIGHRES);
             }
         }
+        
 
         [NotMapped]
         public decimal? EndCorrected
         {
             get
             {
-                if (TestInstrumentValues == null)
+                if (AfterTestItems == null)
                     return StartCorrected;
 
-                var lowResValue = (int)NumericValue(0, AfterTestItems, TestInstrumentValues);
-                var highResValue = NumericValue(113, AfterTestItems, TestInstrumentValues).Value;
-
-                return ParseHighResReading(lowResValue, highResValue);
+                return GetHighResolutionValue(AfterTestItems, COR_VOLUME, COR_VOLUME_HIGH_RES);
             }
         }
 
@@ -196,33 +170,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TestInstrumentValues == null)
-                    return StartUncorrected;
-
-                var lowResValue = (int)NumericValue(2, AfterTestItems, TestInstrumentValues);
-                var highResValue = NumericValue(892, AfterTestItems, TestInstrumentValues).Value;
-
-                return ParseHighResReading(lowResValue, highResValue);
-            }
-        }
-
-        [NotMapped]
-        public EvcType CorrectionType
-        {
-            get
-            {
-                //Pressure Live
-                if (DescriptionValue(109).ToLower() == "live" && DescriptionValue(111).ToLower() == "live")
-                {
-                    return EvcType.PressureTemperature;
-                }
-                
-                if (DescriptionValue(109).ToLower() == "live")
-                {
-                    return EvcType.Pressure;
-                }
-
-                return EvcType.Temperature;
+                return GetHighResolutionValue(AfterTestItems, UNCOR_VOL, UNCOR_VOL_HIGHRES);
             }
         }
 
@@ -235,53 +183,53 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public string MeterType
         {
-            get { return DescriptionValue(432); }
+            get { return Items.GetItem(432).GetDescriptionValue(); }
         }
 
         [NotMapped]
-        public decimal? MeterTypeId
+        public int MeterTypeId
         {
-            get { return NumericValue(432); }
+            get { return (int)Items.GetItem(432).GetNumericValue(); }
         }
 
         [NotMapped]
         public string DriveRateDescription
         {
-            get { return DescriptionValue(98); }
+            get { return Items.GetItem(98).GetDescriptionValue(); }
         }
 
         [NotMapped]
         public decimal? CorrectedMultiplier
         {
-            get { return NumericValue(90); }
+            get { return Items.GetItem(90).GetNumericValue(); }
         }
 
         [NotMapped]
         public string CorrectedMultiplierDescription
         {
-            get { return DescriptionValue(90); }
+            get { return Items.GetItem(90).GetDescriptionValue(); }
         }
 
         [NotMapped]
         public decimal? UnCorrectedMultiplier
         {
-            get { return NumericValue(92); }
+            get { return Items.GetItem(92).GetNumericValue(); }
         }
 
         [NotMapped]
         public string UnCorrectedMultiplierDescription
         {
-            get { return DescriptionValue(92); }
+            get { return Items.GetItem(92).GetDescriptionValue(); }
         }
 
         [NotMapped]
         public decimal? EvcMeterDisplacement
         {
-            get { return NumericValue(439); }
+            get { return Items.GetItem(493).GetNumericValue(); }
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected
+        public decimal? UnCorrectedInputVolume
         {
             get { return (MeterDisplacement * (decimal)AppliedInput); }
         }
@@ -291,11 +239,20 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TemperatureTest == null) return null;
-                if (CorrectionType == EvcType.Temperature)
+                if (Instrument.CorrectorType == CorrectorType.TemperatureOnly && TemperatureTest != null)
                 {
-                    return (TemperatureTest.ActualFactor * TrueUncorrected);
+                    return (TemperatureTest.ActualFactor * UnCorrectedInputVolume);
                 }
+
+                if (Instrument.CorrectorType == CorrectorType.PressureOnly && PressureTest != null)
+                {
+                    return (PressureTest.ActualFactor * UnCorrectedInputVolume);
+                }
+                else if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+                {
+                    return (PressureTest.ActualFactor * TemperatureTest.ActualFactor * SuperFactor.SuperFactorSquared * UnCorrectedInputVolume);
+                }
+
                 return null;
             }
         }
@@ -305,9 +262,6 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (MeterIndex == null)
-                    LoadMeterIndex();
-
                 if (MeterIndex != null)
                     return MeterIndex.MeterDisplacement.Value;
 
@@ -320,9 +274,9 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TrueUncorrected != 0 && TrueUncorrected != null)
+                if (UnCorrectedInputVolume != 0 && UnCorrectedInputVolume != null)
                 {
-                    return Math.Round((decimal) (((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100), 2);
+                    return Math.Round((decimal) (((EvcUncorrected - UnCorrectedInputVolume) / UnCorrectedInputVolume) * 100), 2);
                 }
                 else
                 {
@@ -386,26 +340,44 @@ namespace Prover.Core.Models.Instruments
                 return CorrectedHasPassed && UnCorrectedHasPassed && MeterDisplacementHasPassed;
             }
         }
-    }
 
+        [NotMapped]
+        public MeterIndexInfo MeterIndex { get; private set; }
 
-    public class MeterIndexInfo
-    {
-        public MeterIndexInfo() { }
-        public MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100, decimal? meterDisplacement)
+        public static decimal GetHighResolutionValue(InstrumentItems items, int lowResItemNumber, int highResItemNumber)
         {
-            Id = id;
-            Description = description;
-            UnCorPulsesX10 = unCorPulsesX10;
-            UnCorPulsesX100 = unCorPulsesX100;
-            MeterDisplacement = meterDisplacement;
+            return JoinLowResHighResReading(items.GetItem(lowResItemNumber).GetNumericValue(), items.GetItem(highResItemNumber).GetNumericValue());
         }
 
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public int UnCorPulsesX10 { get; set; }
-        public int UnCorPulsesX100 { get; set; }
-        public decimal? MeterDisplacement { get; set; }
-    }
-    
+        public static decimal GetHighResFractionalValue(decimal highResValue)
+        {
+            if (highResValue == 0) return 0;
+
+            var highResString = Convert.ToString(highResValue);
+            var pointLocation = highResString.IndexOf(".", StringComparison.Ordinal);
+
+            if (highResValue > 0 && pointLocation > -1)
+            {
+                var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
+
+                return Convert.ToDecimal(result);
+            }
+
+            return 0;
+        }
+
+        public static decimal GetHighResolutionItemValue(int lowResValue, decimal highResValue)
+        {
+            var fractional = GetHighResFractionalValue(highResValue);
+            return lowResValue + fractional;
+        }
+
+        public static decimal JoinLowResHighResReading(decimal? lowResValue, decimal? highResValue)
+        {
+            if (!lowResValue.HasValue || !highResValue.HasValue)
+                throw new ArgumentNullException(nameof(lowResValue) + " & " + nameof(highResValue));
+
+            return JoinLowResHighResReading((int)lowResValue.Value, highResValue.Value);
+        }
+    }    
 }

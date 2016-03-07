@@ -23,26 +23,48 @@ namespace Prover.Core.Models.Instruments
         Ec300 = 7
     }
 
-    public class Instrument : ItemsBase
+    public enum CorrectorType
     {
-        public Instrument(InstrumentType type)
+        TemperatureOnly,
+        PressureOnly,
+        PressureTemperature
+    }
+
+    public class Instrument : InstrumentTable
+    {
+        private int FIXED_PRESSURE_FACTOR = 109;
+        private int FIXED_SUPER_FACTOR = 110;
+        private int FIXED_TEMP_FACTOR = 111;
+        private int SERIAL_NUMBER = 62;
+
+        public Instrument(InstrumentType type) : base()
+        {
+            Items = new InstrumentItems(type);
+        }
+
+        public Instrument(InstrumentType type, InstrumentItems items) : base(items)
         {
             TestDateTime = DateTime.Now;
             Type = type;
-            Items = Item.LoadItems(type);
             CertificateId = null;
+            BuildCorrectorTypes();
         }
 
-        public Instrument() : this(InstrumentType.MiniMax)
-        {
-        }
-
-        public decimal? SerialNumber
-        {
-            get { return NumericValue(62); }
-        }
         public DateTime TestDateTime { get; set; }
         public InstrumentType Type { get; set; }
+        public Guid? CertificateId { get; set; }
+        public Certificate Certificate { get; set; }
+
+        public virtual Pressure Pressure { get; set; }
+        public virtual Temperature Temperature { get; set; }
+        public virtual Volume Volume { get; set; }
+
+        #region NotMapped Properties
+        [NotMapped]
+        public int SerialNumber
+        {
+            get { return (int)Items.GetItem(SERIAL_NUMBER).GetNumericValue(); }
+        }
 
         [NotMapped]
         public string TypeString
@@ -50,57 +72,68 @@ namespace Prover.Core.Models.Instruments
             get { return Type.ToString(); }
         }
 
-        public Guid? CertificateId { get; set; }
-        public Certificate Certificate { get; set; }
+        [NotMapped] 
+        public CorrectorType CorrectorType
+        {
+            get
+            {
+                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "Live"
+                  && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                    return CorrectorType.PressureTemperature;
 
-        public virtual Temperature Temperature { get; set; }
-        public virtual Volume Volume { get; set; }
+                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                    return CorrectorType.PressureOnly;
+
+                if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                    return CorrectorType.TemperatureOnly;
+
+                return CorrectorType.TemperatureOnly;
+            }
+        }
 
         [NotMapped]
         public decimal? FirmwareVersion
         {
             get
             {
-                if (InstrumentValues != null)
-                    return Convert.ToDecimal(InstrumentValues.FirstOrDefault(x => x.Key == 122).Value);
-                return null;
+                return Items.GetItem(122).GetNumericValue();
             }
         }
 
         [NotMapped]
         public decimal? PulseAScaling
         {
-            get { return NumericValue(56); }
+            get { return Items.GetItem(56).GetNumericValue(); }
         }
 
         [NotMapped]
         public string PulseASelect
         {
-            get { return DescriptionValue(93); }
+            get { return Items.GetItem(93).GetDescriptionValue(); }
         }
 
         [NotMapped]
         public decimal? PulseBScaling
         {
-            get { return NumericValue(57); }
+            get { return Items.GetItem(57).GetNumericValue(); }
         }
 
         [NotMapped]
         public string PulseBSelect
         {
-            get { return DescriptionValue(94); }
+            get { return Items.GetItem(94).GetDescriptionValue(); }
         }
 
         [NotMapped]
         public decimal? SiteNumber1
         {
-            get { return NumericValue(200); }
+            get { return Items.GetItem(200).GetNumericValue(); }
         }
 
         [NotMapped]
         public decimal? SiteNumber2
         {
-            get { return NumericValue(201); }
+            get { return Items.GetItem(201).GetNumericValue(); }
         }
 
         [NotMapped]
@@ -108,5 +141,21 @@ namespace Prover.Core.Models.Instruments
         {
             get { return this.Temperature.HasPassed && this.Volume.HasPassed; }
         }
-    }    
+        #endregion      
+
+        private void BuildCorrectorTypes()
+        {
+            if (CorrectorType == CorrectorType.PressureOnly || CorrectorType == CorrectorType.PressureTemperature)
+            {
+                Pressure = new Pressure(this);
+            }
+
+            if (CorrectorType == CorrectorType.TemperatureOnly || CorrectorType == CorrectorType.PressureTemperature)
+            {
+                Temperature = new Temperature(this);
+            }
+
+            Volume = new Volume(this);
+        }
+    }
 }

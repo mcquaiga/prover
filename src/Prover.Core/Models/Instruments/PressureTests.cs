@@ -9,8 +9,12 @@ namespace Prover.Core.Models.Instruments
 {
 
 
-    public class PressureTest : ItemsBase
+    public class PressureTest : InstrumentTable
     {
+        private int GAS_PRESSURE = 8;
+        private int PRESSURE_FACTOR = 44;
+        private int UNSQR_FACTOR = 47;
+
         //const decimal LOW_PERCENT = 20;
         //const decimal MID_PERCENT = 50;
         //const decimal HIGH_PERCENT = 80;
@@ -22,12 +26,8 @@ namespace Prover.Core.Models.Instruments
             High = 80
         }
         
-        public PressureTest(InstrumentType type = InstrumentType.MiniMax)
-        {
-            Items = Item.LoadItems(type).Where(x => x.IsPressureTest == true).ToList();
-        }
-
-        public PressureTest(Pressure pressure, PressureLevel level) : this(pressure.Instrument.Type)
+        public PressureTest(Pressure pressure, PressureLevel level) : 
+            base(pressure.Instrument.Items.FindItems(x => x.IsPressureTest == true))
         {
             Pressure = pressure;
             PressureId = pressure.Id;
@@ -41,10 +41,9 @@ namespace Prover.Core.Models.Instruments
 
         public PressureLevel TestLevel { get; set; }
         public bool IsVolumeTestPressure { get; private set; }
+
         public decimal? GasGauge { get; set; }
-
         public decimal? AtmosphericGauge { get; set; }
-
         public decimal? PercentError
         {
             get
@@ -79,11 +78,31 @@ namespace Prover.Core.Models.Instruments
         ** EVC PRopertes
         */
         [NotMapped]
-        public decimal? EvcGasPressure { get; set; }
+        public decimal? EvcGasPressure
+        {
+            get
+            {
+                return Items.GetItem(GAS_PRESSURE).GetNumericValue();
+            }
+        }
+
         [NotMapped]
-        public decimal? EvcFactor { get; set; }
+        public decimal? EvcFactor
+        {
+            get
+            {
+                return Items.GetItem(PRESSURE_FACTOR).GetNumericValue();
+            }
+        }
+
         [NotMapped]
-        public decimal? EvcUnsqrFactor { get; set; }
+        public decimal? EvcUnsqrFactor
+        {
+            get
+            {
+                return Items.GetItem(UNSQR_FACTOR).GetNumericValue();
+            }
+        }
 
         [NotMapped]
         public bool HasPassed

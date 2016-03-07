@@ -100,7 +100,7 @@
     <Compile Include="Communication\Communications.cs" />
     <Compile Include="Communication\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
-    <Compile Include="Communication\InstrumentManager.cs" />
+    <Compile Include="Communication\TestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -117,14 +117,18 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
-    <Compile Include="Models\Instruments\ItemsBase.cs" />
+    <Compile Include="Models\Instruments\InstrumentTable.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
+    <Compile Include="Models\Instruments\MeterIndexes.cs" />
     <Compile Include="Models\Instruments\Pressure.cs" />
     <Compile Include="Models\Instruments\PressureTests.cs" />
+    <Compile Include="Models\Instruments\SuperFactor.cs" />
     <Compile Include="Models\Instruments\Temperature.cs" />
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
     <Compile Include="Models\Instruments\Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\InstrumentItem.cs" />
+    <Compile Include="Settings\InstrumentItems\ItemLoader.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />

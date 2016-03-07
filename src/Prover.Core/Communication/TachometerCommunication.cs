@@ -13,13 +13,13 @@ using Prover.Core.Extensions;
 
 namespace Prover.Core.Communication
 {
-    public class TachometerCommunication : IDisposable
+    public class TachometerCommunicator : IDisposable
     {
         private readonly SerialPort _serialPort;
         private DataAcqBoard _outputBoard;
         private Logger _log = LogManager.GetCurrentClassLogger();
 
-        public TachometerCommunication(string portName)
+        public TachometerCommunicator(string portName)
         {
             _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
             _outputBoard = new DataAcqBoard(0, 0, 1);

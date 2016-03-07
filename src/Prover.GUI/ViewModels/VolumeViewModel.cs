@@ -25,7 +25,7 @@ namespace Prover.GUI.ViewModels
         private bool _userHasRequestedStop;
         private bool _isFirstVolumeTest = true;
 
-        public InstrumentManager InstrumentManager { get; set; }
+        public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
         public bool ShowButtons { get; }
 
@@ -81,8 +81,7 @@ namespace Prover.GUI.ViewModels
             {
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
 
-                if (!_isFirstVolumeTest) await InstrumentManager.DownloadVolumeItems();
-                _isFirstVolumeTest = false;
+ 
 
                 await InstrumentManager.StartVolumeTest();
                 await Task.Run(() =>

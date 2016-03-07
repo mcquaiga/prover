@@ -9,32 +9,26 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class Temperature : ItemsBase
+    public class Temperature : InstrumentTable
     {
-        public Temperature()
-        {
-            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperature == true).ToList();
-        }
+        const int TEMP_UNITS = 89;
+        const int BASE_TEMP = 34;
 
-        public Temperature(Instrument instrument)
+        public Temperature(Instrument instrument) :
+            base(instrument.Items.FindItems(x => x.IsTemperature == true))
         {
             Instrument = instrument;
             InstrumentId = instrument.Id;
-            Items = Item.LoadItems(Instrument.Type).Where(x => x.IsTemperature == true).ToList();
-            Tests = new Collection<TemperatureTest>()
-            {
-                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.Low),
-                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.Medium),
-                new TemperatureTest(this, Instrument.Type, TemperatureTest.Level.High)
-            };
         }
 
-        public virtual ICollection<TemperatureTest> Tests { get; set; }
+        public virtual ICollection<TemperatureTest> Tests { get; set; } = new Collection<TemperatureTest>();
 
         public Guid InstrumentId { get; set; }
+
         [Required]
         public virtual Instrument Instrument { get; set; }
 
+        #region Not Mapped Properties
         [NotMapped]
         public string Range
         {
@@ -42,24 +36,27 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public string Units
-        {
-            get { return DescriptionValue(89); }
-        }
+        public string Units => Instrument.Items.GetItem(TEMP_UNITS).GetDescriptionValue();
 
         [NotMapped]
-        public decimal? EvcBase
-        {
-            get
-            {
-                return NumericValue(34);
-            }      
-        }
+        public decimal? EvcBase => Instrument.Items.GetItem(BASE_TEMP).GetNumericValue();
 
         [NotMapped]
         public bool HasPassed
         {
             get { return Tests.All(x=> x.HasPassed); }
+        }
+        #endregion
+
+        public TemperatureTest AddTemperatureTest()
+        {
+            if (Tests.Count() >= 3)
+                throw new NotSupportedException("Only 3 test instances are supported.");
+
+            var test = new TemperatureTest(this, (TemperatureTest.Level)Tests.Count());
+            Tests.Add(test);
+
+            return test;
         }
     }
 }
