@@ -76,15 +76,19 @@
                     </Button>
                 </Grid>
             </Grid>
-			<Grid>
+			<Grid Margin="0,10,0,10">
 				<ContentControl cal:View.Model="{Binding SiteInformationItem}"/>
 			</Grid>
 
-			<Grid>
+            <Grid Margin="0,10,0,10">
 				<ContentControl cal:View.Model="{Binding TemperatureInformationItem}"/>
 			</Grid>
 
-			<Grid>
+            <Grid Margin="0,10,0,10">
+                <ContentControl cal:View.Model="{Binding PressureInformationItem}"/>
+            </Grid>
+
+            <Grid Margin="0,10,0,10">
 				<ContentControl cal:View.Model="{Binding VolumeInformationItem}"/>
 			</Grid>
 

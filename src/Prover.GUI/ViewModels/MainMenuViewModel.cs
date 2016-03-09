@@ -1,11 +1,12 @@
 ﻿using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.GUI.Events;
 using Prover.GUI.Views;
 
 namespace Prover.GUI.ViewModels
 {
-    public class MainMenuViewModel : Conductor<object>.Collection.OneActive
+    public class MainMenuViewModel : ReactiveScreen
     {
         private readonly IUnityContainer _container;
 
@@ -22,6 +23,11 @@ namespace Prover.GUI.ViewModels
         public void CreateCertificateButton()
         {
             _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new CreateCertificateViewModel(_container)));
+        }
+
+        public void RawInstrumentAccessButton()
+        {
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new InstrumentAccessViewModel(_container)));
         }
     }
 }

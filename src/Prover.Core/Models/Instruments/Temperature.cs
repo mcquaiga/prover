@@ -21,7 +21,7 @@ namespace Prover.Core.Models.Instruments
             InstrumentId = instrument.Id;
         }
 
-        public virtual ICollection<TemperatureTest> Tests { get; set; } = new Collection<TemperatureTest>();
+        public virtual List<TemperatureTest> Tests { get; set; } = new List<TemperatureTest>();
 
         public Guid InstrumentId { get; set; }
 

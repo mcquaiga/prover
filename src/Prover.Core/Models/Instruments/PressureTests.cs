@@ -21,9 +21,9 @@ namespace Prover.Core.Models.Instruments
 
         public enum PressureLevel
         {
-            Low = 20,
-            Medium = 50,
-            High = 80
+            Low,
+            Medium,
+            High
         }
         
         public PressureTest(Pressure pressure, PressureLevel level) : 
@@ -32,7 +32,7 @@ namespace Prover.Core.Models.Instruments
             Pressure = pressure;
             PressureId = pressure.Id;
             TestLevel = level;
-            IsVolumeTestPressure = TestLevel == PressureLevel.Low;
+            IsVolumeTestPressure = TestLevel == PressureLevel.High;
             SetDefaultGauge(TestLevel);
         }
 
@@ -112,7 +112,25 @@ namespace Prover.Core.Models.Instruments
 
         public void SetDefaultGauge(PressureLevel level)
         {
-            GasGauge = ((int)level / 100) * Pressure.EvcPressureRange;
+            int percent;
+
+            switch (level)
+            {
+                case PressureLevel.Low:
+                    percent = 20;
+                    break;
+                case PressureLevel.Medium:
+                    percent = 50;
+                    break;
+                case PressureLevel.High:
+                    percent = 80;
+                    break;
+                default:
+                    percent = 0;
+                    break;
+            }
+
+            GasGauge = ((decimal)percent / 100) * Pressure.EvcPressureRange;
         }
     }
 }

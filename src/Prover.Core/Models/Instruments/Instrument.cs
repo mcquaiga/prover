@@ -81,14 +81,14 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "Live"
-                  && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "live"
+                  && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "live")
                     return CorrectorType.PressureTemperature;
 
-                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue().ToLower() == "live")
                     return CorrectorType.PressureOnly;
 
-                if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "Live")
+                if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue().ToLower() == "live")
                     return CorrectorType.TemperatureOnly;
 
                 return CorrectorType.TemperatureOnly;
@@ -152,11 +152,17 @@ namespace Prover.Core.Models.Instruments
             if (CorrectorType == CorrectorType.PressureOnly || CorrectorType == CorrectorType.PressureTemperature)
             {
                 Pressure = new Pressure(this);
+                Pressure.AddTest();
+                Pressure.AddTest();
+                Pressure.AddTest();
             }
 
             if (CorrectorType == CorrectorType.TemperatureOnly || CorrectorType == CorrectorType.PressureTemperature)
             {
                 Temperature = new Temperature(this);
+                Temperature.AddTemperatureTest();
+                Temperature.AddTemperatureTest();
+                Temperature.AddTemperatureTest();
             }
 
             Volume = new Volume(this);

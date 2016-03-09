@@ -19,6 +19,12 @@
                     <TextBlock HorizontalAlignment="Center">Create Certificate</TextBlock>
                 </StackPanel>
             </Button>
+            <Button x:Name="RawInstrumentAccessButton" Width="128" Height="150">
+                <StackPanel>
+                    <Image Source="..\Resources\tests-icon.png" Width="128" Height="128" />
+                    <TextBlock HorizontalAlignment="Center">Instrument Access</TextBlock>
+                </StackPanel>
+            </Button>
         </UniformGrid>
     </Grid>
 </UserControl>

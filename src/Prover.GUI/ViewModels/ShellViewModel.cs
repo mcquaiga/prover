@@ -22,22 +22,26 @@ namespace Prover.GUI.ViewModels
         private readonly IUnityContainer _container;
         private System.Timers.Timer _timer;
         private string _applicationEventMessage;
+        private MainMenuViewModel _mainMenu;
+        private object _currentView;
 
         public ShellViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
+            _mainMenu = new MainMenuViewModel(_container);
             ShowMainMenu();
         }
 
         private void ShowMainMenu()
         {
-            ActivateItem(new MainMenuViewModel(_container));
+            _currentView = _mainMenu;
+            ActivateItem(_mainMenu);
         }
 
-        public void HomeButton()
+        public async Task HomeButton()
         {
-            ShowMainMenu();
+            await _container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new ScreenChangeEvent(_mainMenu));
         }
 
         public void SettingsButton()
@@ -67,7 +71,13 @@ namespace Prover.GUI.ViewModels
 
         public void Handle(ScreenChangeEvent message)
         {
+            if (_currentView.GetType().GetInterfaces().Contains(typeof(IDisposable)))
+            {
+                (_currentView as IDisposable).Dispose();
+            }
+
             ActivateItem(message.ViewModel);
+            _currentView = message.ViewModel;
         }
 
         public void Handle(NotificationEvent message)
@@ -81,6 +91,7 @@ namespace Prover.GUI.ViewModels
         private void OnApplicationEventMessage(object sender, ElapsedEventArgs e)
         {
             ApplicationEventMessage = "";
+            _timer.Enabled = false;
         }
     }
 }

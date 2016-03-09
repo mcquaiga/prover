@@ -409,7 +409,7 @@ Public MustInherit Class miSerialProtocolClass
             End If
 
             'Give the instrument half a second 
-            System.Threading.Thread.Sleep(500)
+            logger.Info("Disconnected from instrument.")
             Me._commPort.ClosePort()
         End If
     End Sub

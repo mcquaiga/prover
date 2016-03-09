@@ -1,14 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Prover.GUI.Views.TemperatureViews
+namespace Prover.GUI.Views.PressureViews
 {
     /// <summary>
-    /// Interaction logic for LiveTemperatureReadView.xaml
+    /// Interaction logic for LivePressureReadView.xaml
     /// </summary>
-    public partial class LiveTemperatureReadView : UserControl
+    public partial class LivePressureReadView : UserControl
     {
-        public LiveTemperatureReadView()
+        public LivePressureReadView()
         {
             InitializeComponent();
         }

@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Views.TemperatureViews
+namespace Prover.GUI.Views.PressureViews
 {
     /// <summary>
-    /// Interaction logic for TemperatureTestView.xaml
+    /// Interaction logic for PressureTestView.xaml
     /// </summary>
-    public partial class TemperatureTestView : UserControl
+    public partial class PressureTestView : UserControl
     {
-        public TemperatureTestView()
+        public PressureTestView()
         {
             InitializeComponent();
         }

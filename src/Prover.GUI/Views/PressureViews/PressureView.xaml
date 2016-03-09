@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Prover.GUI.Views.TemperatureViews.TemperatureView"
+﻿<UserControl x:Class="Prover.GUI.Views.PressureViews.PressureView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,7 +17,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <ContentControl  x:Name="TemperatureHeaderView" cal:View.Model="{Binding}" cal:View.Context="TemperatureHeaderView"/>    
+            <ContentControl  x:Name="PressureHeaderView" cal:View.Model="{Binding}" cal:View.Context="PressureHeaderView"/>    
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Vertical" >

@@ -48,7 +48,7 @@ namespace Prover.Core.Models.Instruments
         [Required]
         public virtual Instrument Instrument { get; set; }
 
-        public virtual ICollection<PressureTest> Tests { get; set; }
+        public virtual List<PressureTest> Tests { get; set; } = new List<PressureTest>();
 
         #region Not Mapped Properties
         [NotMapped]

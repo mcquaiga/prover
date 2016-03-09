@@ -20,6 +20,7 @@ using Prover.Core.Settings;
 using System.Threading;
 using Prover.Core.Events;
 using Prover.GUI.Reporting;
+using Prover.GUI.ViewModels.PressureViews;
 
 namespace Prover.GUI.ViewModels
 {
@@ -40,6 +41,13 @@ namespace Prover.GUI.ViewModels
         public BaudRateEnum BaudRate { get; private set; }
 
         public Instrument Instrument => InstrumentTestManager.Instrument;
+
+        #region Views
+        public SiteInformationViewModel SiteInformationItem => new SiteInformationViewModel(_container);
+        public TemperatureViewModel TemperatureInformationItem { get; private set; }
+        public PressureViewModel PressureInformationItem { get; private set; }
+        public VolumeViewModel VolumeInformationItem => new VolumeViewModel(_container);
+        #endregion
 
         #region Methods
         private void SetupTestManager()
@@ -84,9 +92,12 @@ namespace Prover.GUI.ViewModels
                 {
                     SetupTestManager();
                     await InstrumentTestManager.InitializeInstrument(InstrumentType.MiniMax);
+
                     base.NotifyOfPropertyChange(() => Instrument);
+
+                    BuildViews();
+
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
-                    //Publish the change in instrument state to anyone who's listening
                     _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentTestManager));
                 }
                 catch (Exception ex)
@@ -97,6 +108,23 @@ namespace Prover.GUI.ViewModels
                         MessageBoxButton.OK);
                 }
             }));          
+        }
+
+        private void BuildViews()
+        {
+            if (Instrument.Temperature != null)
+            {
+                TemperatureInformationItem = new TemperatureViewModel(_container);
+                base.NotifyOfPropertyChange(() => TemperatureInformationItem);
+            }
+
+
+            if (Instrument.Pressure != null)
+            {
+                PressureInformationItem = new PressureViewModel(_container);
+                base.NotifyOfPropertyChange(() => PressureInformationItem);
+            }
+               
         }
 
         public async void SaveInstrument()
@@ -120,12 +148,6 @@ namespace Prover.GUI.ViewModels
         {
             SetupTestManager();
         }
-        #endregion
-
-        #region Views
-        public SiteInformationViewModel SiteInformationItem => new SiteInformationViewModel(_container);
-        public TemperatureViewModel TemperatureInformationItem => new TemperatureViewModel(_container);
-        public VolumeViewModel VolumeInformationItem => new VolumeViewModel(_container);
         #endregion
     }
 }

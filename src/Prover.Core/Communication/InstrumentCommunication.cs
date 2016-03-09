@@ -49,6 +49,28 @@ namespace Prover.Core.Communication
             return result;
         }
 
+        public async Task<string> DownloadItem(int itemNumber, bool disconnectAfter = true)
+        {
+            await Connect();
+
+            var result = await Task.Run(() => _miSerial.RD(itemNumber));
+
+            if (disconnectAfter)
+                await Disconnect();
+
+            return Convert.ToString(result);
+        }
+
+        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = true)
+        {
+            await Connect();
+
+            await Task.Run(() => _miSerial.WD(itemNumber, value));
+
+            if (disconnectAfter)
+                await Disconnect();
+        }
+
         public async Task DownloadItemsAsync(InstrumentItems itemsToDownload, bool disconnectAfter = true)
         {
             itemsToDownload.InstrumentValues = await DownloadItemsAsync(itemsToDownload.Items, disconnectAfter);

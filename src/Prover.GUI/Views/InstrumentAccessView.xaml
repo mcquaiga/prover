@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="Prover.GUI.Views.InstrumentAccessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:cal="http://www.caliburnproject.org"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+    
+             mc:Ignorable="d"
+             d:DesignHeight="250" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="20,0,20,0" VerticalAlignment="Center">
+            <TextBlock Style="{DynamicResource ItemDescriptions}" 
+								   Text="Item Number" Foreground="{DynamicResource HeaderFontColour}" />
+            <TextBox x:Name="ItemNumber" 
+                     Width="150"
+                     Style="{DynamicResource SimpleTextBox}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="20,0,20,0" VerticalAlignment="Center">
+            <TextBlock
+								   Style="{DynamicResource ItemDescriptions}"
+								   Text="Value" Foreground="{DynamicResource HeaderFontColour}" />
+            <TextBox x:Name="ItemValue" Width="150"
+                     Style="{DynamicResource SimpleTextBox}"/>
+        </StackPanel>
+        <Button Grid.Row="1"
+							Grid.Column="0"
+							Width="150"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Read"
+							Style="{StaticResource SimpleButton}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="ReadInstrumentValue" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button Grid.Row="1"
+							Grid.Column="1"
+							Width="150"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Write"
+							Style="{StaticResource SimpleButton}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="WriteInstrumentValue" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        
+    </Grid>
+</UserControl>
