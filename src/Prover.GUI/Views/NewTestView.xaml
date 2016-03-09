@@ -6,6 +6,11 @@
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 			 xmlns:cal="http://www.caliburnproject.org"
 			 xmlns:temperature="clr-namespace:Prover.GUI.Views.TemperatureViews"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 			 d:DesignWidth="1000"
 			 mc:Ignorable="d">
 
@@ -37,16 +42,12 @@
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <TextBlock Margin="20,0,0,0"
 								   
-								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" FontSize="16" />
+								   Text="Instrument" FontSize="16" />
                         <GroupBox Margin="20,0,0,0" BorderThickness="0">
                             <WrapPanel Margin="5">
-                                <RadioButton
-											 Content="MiniMax"
-											 Name="MiniMax"
-											 FontSize="24"
-											 Foreground="White"
-											 IsChecked="True"
-											 Style="{DynamicResource radio2}" />
+                                <RadioButton Content="MiniMax"
+											 Name="MiniMax"		
+											 IsChecked="True"/>
                             </WrapPanel>
                         </GroupBox>
      
@@ -61,13 +62,11 @@
                         <TextBlock Name="TachCommPortName"/>
                     </StackPanel>
                     <Button Grid.Row="3"
-							Grid.Column="1"
-							Width="250"
+							Grid.Column="1"							
 							HorizontalAlignment="Center"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Download Info"
-							Style="{StaticResource SimpleButton}">
+							Content="Download Info">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <cal:ActionMessage MethodName="InitializeTest" />
@@ -101,7 +100,7 @@
                 <Button Width="150"
 						Margin="10"
 						Content="Instrument Report"
-						Style="{StaticResource SimpleButton}">
+						>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cal:ActionMessage MethodName="InstrumentReport" />
@@ -111,7 +110,7 @@
                 <Button Width="150"
 						Margin="10"
 						Content="Save"
-						Style="{StaticResource SimpleButton}">
+						>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
 							<cal:ActionMessage MethodName="SaveInstrument" />

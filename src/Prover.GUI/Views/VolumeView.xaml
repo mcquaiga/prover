@@ -6,6 +6,13 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:Prover.GUI.Converters"
+               xmlns:controls="clr-namespace:Prover.GUI.Controls"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
@@ -24,12 +31,10 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-							
-								   Style="{DynamicResource InstrumentSectionHeader}">
-			   
-							VOLUME
-                </TextBlock>
+                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                              Mode="PrimaryDark" DockPanel.Dock="Top">
+                    Volume
+                </materialDesign:ColorZone>
 
                 <Grid Grid.Row="1" Margin="10,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -45,93 +50,49 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Grid.ColumnSpan="3">
                         <UniformGrid Columns="3">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_CorrectedMultiplierDescription" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. Multi. (90)</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_UnCorrectedMultiplierDescription" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. Multi. (92)</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_DriveRateDescription" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Drive Rate (98)</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterTypeDescription" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Type (432)</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_MeterDisplacement" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Meter Displacement</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcMeterDisplacement" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Meter Displacement</TextBlock>
-                            </StackPanel>
+                            <controls:ValueDescriptionControl Label="Cor. Multi. (90)" Value="{Binding Volume.CorrectedMultiplierDescription}"/>
+                            <controls:ValueDescriptionControl Label="UnCor. Multi. (92)" Value="{Binding Volume.UnCorrectedMultiplierDescription}"/>
+                            <controls:ValueDescriptionControl Label="Drive Rate (98)" Value="{Binding Volume.DriveRateDescription}"/>
+                            <controls:ValueDescriptionControl Label="Meter Type (432)" Value="{Binding Volume.MeterTypeDescription}"/>
+                            <controls:ValueDescriptionControl Label="Meter Displacement" Value="{Binding Volume.MeterDisplacement}"/>
+                            <controls:ValueDescriptionControl Label="EVC Meter Displacement" Value="{Binding Volume.EvcMeterDisplacement}"/>
                         </UniformGrid>
 
                     </Grid>
-                    <Grid Grid.Row="1" Grid.Column="0">
-                        <StackPanel>
-                            <Border Margin="1"
-										BorderBrush="{DynamicResource HeaderColour}"
-										BorderThickness="0,0,0,1">
-                                <TextBlock FontSize="24"
-											   Foreground="{DynamicResource HeaderFontColour}"
-											   Text="Start" />
-                            </Border>
+                    
+                        <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="0">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartCorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                                <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent">
+                                    Start
+                                </materialDesign:ColorZone>
+                                <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.StartCorrected}"/>
+                                <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.StartUncorrected}"/>
                             </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_StartUncorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
+                        </materialDesign:Card>
 
-                    <Grid Grid.Row="1" Grid.Column="1">
-                        <StackPanel>
-                            <Border Margin="1"
-										BorderBrush="{DynamicResource HeaderColour}"
-										BorderThickness="0,0,0,1">
-                                <TextBlock FontSize="24"
-											   Foreground="{DynamicResource HeaderFontColour}"
-											   Text="End" />
-                            </Border>
+                    <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="1">
                             <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndCorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Corrected</TextBlock>
+                                <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent">
+                                    End
+                                </materialDesign:ColorZone>
+                                <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.EndCorrected}"/>
+                                <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.EndUncorrected}"/>
                             </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EndUncorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Uncorrected</TextBlock>
+                        </materialDesign:Card>
 
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="1" Grid.Column="2">
+                    <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="2">
                         <StackPanel>
-                            <Border Margin="1"
-										BorderBrush="{DynamicResource HeaderColour}"
-										BorderThickness="0,0,0,1">
-                                <TextBlock FontSize="24"
-											   Foreground="{DynamicResource HeaderFontColour}"
-											   Text="Calculated" />
-                            </Border>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcCorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Corrected Volume</TextBlock>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource ItemValues}" Name="Volume_EvcUncorrected" />
-                                <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">EVC Uncorrected Volume</TextBlock>
-
-                            </StackPanel>
+                            <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent">
+                                Calculated
+                            </materialDesign:ColorZone>
+                            <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.EvcCorrected}"/>
+                            <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.EvcUncorrected}"/>
                         </StackPanel>
-                    </Grid>
+                    </materialDesign:Card>
+                    
                     <Border Grid.Row="2"
 								Grid.ColumnSpan="3"
 								Margin="5,5,5,5"

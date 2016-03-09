@@ -27,7 +27,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
-                        <RowDefinition/>
+                     
                     </Grid.RowDefinitions>
                     <UniformGrid Grid.Row="0" Columns="3">
                         <StackPanel Margin="5">
@@ -48,7 +48,7 @@
                         </StackPanel>
                     </UniformGrid>
                     <ContentControl Grid.Row="1" cal:View.Model="{Binding LiveReadItem}" />
-                    <UniformGrid Grid.Row="2"
+                    <!--<UniformGrid Grid.Row="2"
 									 Grid.Column="1"
 									 Margin="5"
 									 Columns="6">
@@ -70,7 +70,7 @@
 									   Text="% Error"
 									   TextAlignment="right"
 									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" HorizontalAlignment="Center"/>
-                    </UniformGrid>
+                    </UniformGrid>-->
 
                 
                 </Grid>

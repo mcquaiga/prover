@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Prover.GUI.Controls.ValueDescriptionControl"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            mc:Ignorable="d"
+            x:Name="parent"
+            xmlns:local="clr-namespace:Prover.GUI.Controls"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            Height="65" Width="181.356">
+    <Grid DataContext="{Binding ElementName=parent}">
+        <StackPanel Margin="0 0 0 10">
+            <TextBlock Margin="3 0 0 0" Text="{Binding Path=Label}" HorizontalAlignment="Left" FontSize="16" Foreground="Gray"/>
+            <Border Margin="5 0" BorderBrush="{DynamicResource SecondaryAccentBrush}" BorderThickness="0 0 0 1">
+                <TextBlock Text="{Binding Path=Value}" FontSize="24" HorizontalAlignment="Left"/>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -5,6 +5,13 @@
              xmlns:vm="clr-namespace:Prover.GUI.ViewModels"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DataContext="{d:DesignInstance Type=vm:SiteInformationViewModel, IsDesignTimeCreatable=True}"
              cal:Bind.AtDesignTime="True"
              mc:Ignorable="d" 
@@ -15,81 +22,23 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <!--  Basic Details Info  -->
-        <TextBlock Grid.Row="0" Style="{DynamicResource InstrumentSectionHeader}" Margin="0,0,0,10">
-		    SITE INFORMATION
-        </TextBlock>
+        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                              Mode="PrimaryDark" DockPanel.Dock="Top">
+            Site Information
+        </materialDesign:ColorZone>
+
 
         <Grid Grid.Row="1" Margin="0,4,0,0">
             <StackPanel>
                 <UniformGrid Columns="4">
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-                                               Name="Instrument_SerialNumber" />
-
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Serial Number" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Right"
-                                               Style="{StaticResource ItemValues}"
-											   Name="Instrument_SiteNumber1" />
-                        <TextBlock HorizontalAlignment="Right"
-                                    Style="{StaticResource ItemDescriptions}"
-											   Text="Site Number 1" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-                                               Name="Instrument_SiteNumber2"/>
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Site Number 2" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-                                               Style="{StaticResource ItemValues}"
-											   Name="Instrument_FirmwareVersion"/>
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Firmware Version" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-											   Name="Instrument_PulseASelect" />
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Pulse A Select" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-											   Text="{Binding Instrument.PulseAScaling,
-															  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Pulse A Scaling" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-											   Text="{Binding Instrument.PulseBSelect,
-															  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Pulse B Select" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
-                    <StackPanel >
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemValues}"
-											   Text="{Binding Instrument.PulseBScaling,
-															  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock HorizontalAlignment="Right"
-											   Style="{StaticResource ItemDescriptions}"
-											   Text="Pulse B Scaling" Foreground="{DynamicResource HeaderFontColour}" />
-                    </StackPanel>
+                    <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
+                    <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>
+                    <controls:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}"/>
+                    <controls:ValueDescriptionControl Label="Firmware Version" Value="{Binding Instrument.FirmwareVersion}"/>
+                    <controls:ValueDescriptionControl Label="Pulser A Select" Value="{Binding Instrument.PulseASelect}"/>
+                    <controls:ValueDescriptionControl Label="Pulser A Scaling" Value="{Binding Instrument.PulseAScaling}"/>
+                    <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
+                    <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
                 </UniformGrid>
             </StackPanel>
         </Grid>
