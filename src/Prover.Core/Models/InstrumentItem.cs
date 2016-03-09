@@ -16,19 +16,19 @@ namespace Prover.Core.Models
             Items = ItemHelpers.LoadItems(instrumentType);
         }
 
-        public InstrumentItems(IEnumerable<ItemDetails> items)
+        public InstrumentItems(IEnumerable<ItemDetail> items)
         {
             Items = items;
         }
 
-        public IEnumerable<ItemDetails> Items { get; }        
+        public IEnumerable<ItemDetail> Items { get; }        
 
-        public ItemDetails GetItem(int itemNumber)
+        public ItemDetail GetItem(int itemNumber)
         {
             return Items.FirstOrDefault(i => i.Number == itemNumber);
         }
 
-        public ItemDetails GetItem(string code)
+        public ItemDetail GetItem(string code)
         {
             return Items.FirstOrDefault(i => i.Code == code);
         }
@@ -54,14 +54,14 @@ namespace Prover.Core.Models
             }
         }
 
-        public InstrumentItems FindItems(Func<ItemDetails, bool> predicate)
+        public InstrumentItems CopyItemsByFilter(Func<ItemDetail, bool> predicate)
         {
             var toCopy = this.Items.Where(predicate);
             return new InstrumentItems(toCopy);
         }
     }
 
-    public class ItemDetails
+    public class ItemDetail
     {
         public int Number { get; set; }
         public string RawValue { get; set; }
@@ -83,15 +83,16 @@ namespace Prover.Core.Models
             return !string.IsNullOrEmpty(RawValue);
         }
 
-        public decimal? GetNumericValue()
+        public decimal GetNumericValue()
         {
-            if (string.IsNullOrEmpty(RawValue)) return null;
+            if (string.IsNullOrEmpty(RawValue))
+                throw new NullReferenceException(string.Format("No value was found for Item Number #{0}.", Number));
 
             var decValue = Convert.ToDecimal(RawValue);
-            if (ItemDescriptions != null)
+            if (ItemDescriptions.Any())
             {
                 var intValue = Convert.ToInt32(decValue);
-                return GetItemDescription(intValue)?.Value;
+                return GetItemDescription(intValue)?.Value ?? intValue;
             }
 
             return decValue;
@@ -126,7 +127,7 @@ namespace Prover.Core.Models
 
     public static class ItemHelpers
     {
-        public static IEnumerable<ItemDetails> LoadItems(InstrumentType type)
+        public static IEnumerable<ItemDetail> LoadItems(InstrumentType type)
         {
             var _path = string.Empty;
             switch (type)
@@ -142,7 +143,7 @@ namespace Prover.Core.Models
             var xDoc = XDocument.Load(_path);
 
             return (from x in xDoc.Descendants("item")
-                    select new ItemDetails()
+                    select new ItemDetail()
                     {
                         Number = Convert.ToInt32(x.Attribute("number").Value),
                         Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
@@ -158,7 +159,7 @@ namespace Prover.Core.Models
                         IsSuperFactor = x.Attribute("isSuper") != null && Convert.ToBoolean(x.Attribute("isSuper").Value),
                         ItemDescriptions =
                             (from y in x.Descendants("value")
-                             select new ItemDetails.ItemDescription()
+                             select new ItemDetail.ItemDescription()
                              {
                                  Id = Convert.ToInt32(y.Attribute("id").Value),
                                  Description = y.Attribute("description").Value,

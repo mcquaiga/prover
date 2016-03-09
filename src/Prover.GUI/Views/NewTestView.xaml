@@ -70,7 +70,7 @@
 							Style="{StaticResource SimpleButton}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
-                                <cal:ActionMessage MethodName="FetchInstrumentItems" />
+                                <cal:ActionMessage MethodName="InitializeTest" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>

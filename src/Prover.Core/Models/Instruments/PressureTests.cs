@@ -27,7 +27,7 @@ namespace Prover.Core.Models.Instruments
         }
         
         public PressureTest(Pressure pressure, PressureLevel level) : 
-            base(pressure.Instrument.Items.FindItems(x => x.IsPressureTest == true))
+            base(pressure.Instrument.Items.CopyItemsByFilter(x => x.IsPressureTest == true))
         {
             Pressure = pressure;
             PressureId = pressure.Id;

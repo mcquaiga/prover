@@ -19,19 +19,19 @@ namespace Prover.Core.Models.Instruments
         const int COR_VOLUME = 0;
         const int COR_VOLUME_HIGH_RES = 113;
         const int UNCOR_VOL = 2;
-        const int UNCOR_VOL_HIGHRES = 893;
+        const int UNCOR_VOL_HIGHRES = 892;
         const int PULSER_A = 93;
         const int PULSER_B = 94;
         const decimal COR_ERROR_THRESHOLD = 1.5m;
         const decimal UNCOR_ERROR_THRESHOLD = 0.1m;
         const decimal METER_DIS_ERROR_THRESHOLD = 1m;
 
-        public Volume(Instrument instrument) : base(instrument.Items.FindItems(i => i.IsVolume == true))
+        public Volume(Instrument instrument) : base(instrument.Items.CopyItemsByFilter(i => i.IsVolume == true))
         {
             Instrument = instrument;
             InstrumentId = Instrument.Id;
-            AfterTestItems = Instrument.Items.FindItems(x => x.IsVolumeTest == true);
-            MeterIndex = MeterIndexInfo.Get(MeterTypeId);
+            AfterTestItems = Instrument.Items.CopyItemsByFilter(x => x.IsVolumeTest == true);
+            MeterIndex = MeterIndexInfo.Get((int)Instrument.Items.GetItem(432).GetNumericValue());
 
             if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
                 SuperFactor = new SuperFactor(instrument, TemperatureTest, PressureTest);
@@ -225,7 +225,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? EvcMeterDisplacement
         {
-            get { return Items.GetItem(493).GetNumericValue(); }
+            get { return Items.GetItem(439).GetNumericValue(); }
         }
 
         [NotMapped]
@@ -377,7 +377,7 @@ namespace Prover.Core.Models.Instruments
             if (!lowResValue.HasValue || !highResValue.HasValue)
                 throw new ArgumentNullException(nameof(lowResValue) + " & " + nameof(highResValue));
 
-            return JoinLowResHighResReading((int)lowResValue.Value, highResValue.Value);
+            return GetHighResolutionItemValue((int)lowResValue.Value, highResValue.Value);
         }
     }    
 }

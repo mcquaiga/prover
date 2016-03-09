@@ -37,7 +37,7 @@ namespace Prover.Core.Communication
 
         public InstrumentCommunicator(ICommPort commPort, Instrument instrument) : this(commPort, instrument.Type) { }
 
-        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetails> itemsToDownload, bool disconnectAfter = true)
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetail> itemsToDownload, bool disconnectAfter = true)
         {
             await Connect();
 
@@ -51,10 +51,10 @@ namespace Prover.Core.Communication
 
         public async Task DownloadItemsAsync(InstrumentItems itemsToDownload, bool disconnectAfter = true)
         {
-            itemsToDownload.InstrumentValues = await DownloadItemsAsync(itemsToDownload.Items);
+            itemsToDownload.InstrumentValues = await DownloadItemsAsync(itemsToDownload.Items, disconnectAfter);
         }
 
-        private Dictionary<int, string> DownloadItems(IEnumerable<ItemDetails> itemsToDownload)
+        private Dictionary<int, string> DownloadItems(IEnumerable<ItemDetail> itemsToDownload)
         {
             var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
             return myItems;

@@ -37,6 +37,10 @@ namespace Prover.Core.Models.Instruments
         private int FIXED_TEMP_FACTOR = 111;
         private int SERIAL_NUMBER = 62;
 
+        public Instrument()
+        {
+        }
+
         public Instrument(InstrumentType type) : base()
         {
             Items = new InstrumentItems(type);
@@ -92,7 +96,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? FirmwareVersion
+        public decimal FirmwareVersion
         {
             get
             {
@@ -101,7 +105,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? PulseAScaling
+        public decimal PulseAScaling
         {
             get { return Items.GetItem(56).GetNumericValue(); }
         }
@@ -113,7 +117,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? PulseBScaling
+        public decimal PulseBScaling
         {
             get { return Items.GetItem(57).GetNumericValue(); }
         }
@@ -125,13 +129,13 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? SiteNumber1
+        public decimal SiteNumber1
         {
             get { return Items.GetItem(200).GetNumericValue(); }
         }
 
         [NotMapped]
-        public decimal? SiteNumber2
+        public decimal SiteNumber2
         {
             get { return Items.GetItem(201).GetNumericValue(); }
         }

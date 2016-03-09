@@ -37,7 +37,7 @@ namespace Prover.Core.Models.Instruments
         private const string PRESS_RANGE = "PRESS_RANGE";
         private const string TRANSDUCER_TYPE = "TRANSDUCER_TYPE";
 
-        public Pressure(Instrument instrument) : base(instrument.Items.FindItems(i => i.IsPressure == true))
+        public Pressure(Instrument instrument) : base(instrument.Items.CopyItemsByFilter(i => i.IsPressure == true))
         {
             Instrument = instrument;
             InstrumentId = instrument.Id;

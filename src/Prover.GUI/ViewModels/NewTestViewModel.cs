@@ -74,7 +74,7 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        public async void ConnectToInstrument()
+        public async void InitializeTest()
         {
             await Task.Run((Func<Task>)(async () =>
             {

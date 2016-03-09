@@ -38,7 +38,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         public TemperatureTest(Temperature temp, Level level) : 
-            base(temp.Instrument.Items.FindItems(x => x.IsTemperatureTest == true))
+            base(temp.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
         {
             Temperature = temp;
             TemperatureId = temp.Id;

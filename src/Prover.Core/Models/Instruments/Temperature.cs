@@ -15,7 +15,7 @@ namespace Prover.Core.Models.Instruments
         const int BASE_TEMP = 34;
 
         public Temperature(Instrument instrument) :
-            base(instrument.Items.FindItems(x => x.IsTemperature == true))
+            base(instrument.Items.CopyItemsByFilter(x => x.IsTemperature == true))
         {
             Instrument = instrument;
             InstrumentId = instrument.Id;

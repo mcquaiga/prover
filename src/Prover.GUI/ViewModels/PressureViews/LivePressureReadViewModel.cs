@@ -1,38 +1,41 @@
-﻿using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Events;
 using Prover.GUI.Events;
-using System.Windows;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
-namespace Prover.GUI.ViewModels.TemperatureViews
+namespace Prover.GUI.ViewModels.PressureViews
 {
-    public class LiveTemperatureReadViewModel : ReactiveScreen, IHandle<LiveReadEvent>, IHandle<InstrumentUpdateEvent>
+    public class LivePressureReadViewModel : ReactiveScreen, IHandle<LiveReadEvent>, IHandle<InstrumentUpdateEvent>
     {
         private readonly IUnityContainer _container;
         private TestManager _instrumentManager;
 
-        public LiveTemperatureReadViewModel(IUnityContainer container)
+        public LivePressureReadViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public decimal LiveReadTemperature { get; set; }
+        public decimal LiveReadPressure { get; set; }
 
         public async Task StartLiveReadCommand()
         {
             try
             {
-                await _instrumentManager.StartLiveRead(26);
+                await _instrumentManager.StartLiveRead(8);
             }
-            catch(Exception ex)
-            {  
-                MessageBox.Show("An error occured communicating with the instrument." + Environment.NewLine 
-                    + ex.Message, 
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occured communicating with the instrument." + Environment.NewLine
+                    + ex.Message,
                     "Error",
                     MessageBoxButton.OK);
             }
@@ -45,8 +48,8 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public void Handle(LiveReadEvent message)
         {
-            LiveReadTemperature = message.LiveReadValue;
-            NotifyOfPropertyChange(() => LiveReadTemperature);
+            LiveReadPressure = message.LiveReadValue;
+            NotifyOfPropertyChange(() => LiveReadPressure);
         }
 
         public void Handle(InstrumentUpdateEvent message)

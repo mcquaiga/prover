@@ -64,13 +64,13 @@ namespace Prover.Core.Communication
                 InstrumentCommunicator = new InstrumentCommunicator(_instrumentCommPort, instrumentType);
 
             var items = new InstrumentItems(instrumentType);
-            Instrument.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(Instrument.Items.Items);
+            await InstrumentCommunicator.DownloadItemsAsync(items);
             Instrument = new Instrument(instrumentType, items);
         }
 
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
-            if (_isLiveReading) await StopLiveReadTemperature();
+            if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
             if (test != null)
@@ -79,28 +79,39 @@ namespace Prover.Core.Communication
             _isBusy = false;
         }
 
-        public async Task StartLiveReadTemperature()
+        public async Task DownloadPressureTestItems(PressureTest.PressureLevel level)
+        {
+            //if (_isLiveReading) await StopLiveRead();
+
+            var test = Instrument.Pressure.Tests.FirstOrDefault(x => x.TestLevel == level);
+            if (test != null)
+                test.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(test.Items.Items);
+
+            _isBusy = false;
+        }
+
+        public async Task StartLiveRead(int itemNumber)
         {
             if (!_isBusy)
             {
-                _log.Debug("Starting live temperature read...");
+                _log.Debug("Starting live read...");
                 await InstrumentCommunicator.Connect();
                 _stopLiveReading = false;
                 _isLiveReading = true;
                 do
                 {
-                    var liveValue = await InstrumentCommunicator.LiveReadItem(26);
+                    var liveValue = await InstrumentCommunicator.LiveReadItem(itemNumber);
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
                 } while (!_stopLiveReading);
 
                 await InstrumentCommunicator.Disconnect();
                 _isLiveReading = false;
                 _isBusy = false;
-                _log.Debug("Finished live temperature read!");
+                _log.Debug("Finished live read!");
             } 
         }
 
-        public async Task StopLiveReadTemperature()
+        public async Task StopLiveRead()
         {
             if (_isLiveReading)
             {
