@@ -177,10 +177,6 @@
     <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\LivePressureReadViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\PressureTestViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\PressureViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -216,21 +212,6 @@
     </Compile>
     <Compile Include="Views\NewTestView.xaml.cs">
       <DependentUpon>NewTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PressureViews\LivePressureReadView.xaml.cs">
-      <DependentUpon>LivePressureReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PressureViews\PressureTestView.xaml.cs">
-      <DependentUpon>PressureTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PressureViews\PressureView.xaml.cs">
-      <DependentUpon>PressureView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PressureViews\Pressure\PressureHeaderView.xaml.cs">
-      <DependentUpon>PressureHeaderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentAccessView.xaml.cs">
-      <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -292,26 +273,6 @@
     <Page Include="Views\InstrumentsList\InstrumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PressureViews\LivePressureReadView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PressureViews\PressureTestView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PressureViews\PressureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PressureViews\Pressure\PressureHeaderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\InstrumentAccessView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>

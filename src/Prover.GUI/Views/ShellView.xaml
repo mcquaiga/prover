@@ -1,7 +1,11 @@
 ﻿<Window x:Class="Prover.GUI.Views.ShellView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Prover" Height="600" Width="600">
+        Title="Prover" Height="600" Width="600"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*" />
