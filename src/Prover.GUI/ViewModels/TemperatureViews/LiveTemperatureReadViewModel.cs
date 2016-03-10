@@ -27,7 +27,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         {
             try
             {
-                await _instrumentManager.StartLiveRead(26);
+                await _instrumentManager?.StartLiveRead(26);
             }
             catch(Exception ex)
             {  

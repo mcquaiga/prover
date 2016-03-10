@@ -61,6 +61,8 @@ namespace Prover.Core.Models.Instruments
 
         public virtual Pressure Pressure { get; set; }
         public virtual Temperature Temperature { get; set; }
+        [NotMapped]
+        public virtual List<SuperFactor> SuperFactorTests { get; set; }
         public virtual Volume Volume { get; set; }
 
         #region NotMapped Properties
@@ -163,6 +165,14 @@ namespace Prover.Core.Models.Instruments
                 Temperature.AddTemperatureTest();
                 Temperature.AddTemperatureTest();
                 Temperature.AddTemperatureTest();
+            }
+
+            if (CorrectorType == CorrectorType.PressureTemperature)
+            {
+                SuperFactorTests = new List<SuperFactor>();
+                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[0], Pressure.Tests[2]));
+                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[1], Pressure.Tests[1]));
+                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[2], Pressure.Tests[0]));
             }
 
             Volume = new Volume(this);
