@@ -60,17 +60,23 @@ namespace Prover.Core.Models.Instruments
             {
                 if (Pressure.EvcBase == 0) return 0;
 
+                decimal? result;
+
                 switch (Pressure.TransducerType)
                 {
                     case TransducerType.Gauge:
-                        return (GasGauge + Pressure.EvcAtmospheric) / Pressure.EvcBase;
+                        result = (GasGauge + Pressure.EvcAtmospheric) / Pressure.EvcBase;
+                        break;
 
                     case TransducerType.Absolute:
-                        return (GasGauge + AtmosphericGauge) / Pressure.EvcBase;
-
+                        result = (GasGauge + AtmosphericGauge) / Pressure.EvcBase;
+                        break;
                     default:
-                        return 0;
+                        result = 0;
+                        break;
                 }
+
+                return decimal.Round(result.Value, 4);
             }
         }
 

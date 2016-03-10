@@ -61,6 +61,17 @@ namespace Prover.GUI.ViewModels.PressureViews
             }
         }
 
+        public decimal? AtmosphericGauge
+        {
+            get { return Test.AtmosphericGauge; }
+            set
+            {
+                Test.AtmosphericGauge = value;
+                NotifyOfPropertyChange(() => Test);
+                NotifyOfPropertyChange(() => PercentColour);
+            }
+        }
+
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
 
         public void Handle(InstrumentUpdateEvent message)
