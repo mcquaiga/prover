@@ -6,52 +6,72 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:local="clr-namespace:Prover.GUI.Converters"
-             mc:Ignorable="d" 
-             d:DesignHeight="90" d:DesignWidth="600">
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" d:DesignWidth="365" Height="370">
     <UserControl.Resources>
-        <local:BoolToVisibilityConverter
+        <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <Grid Margin="0,2,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.60*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Button Height="45" Grid.Column="0" Margin="5,0,5,0"
-                 Name="TestLevel"
-					            Style="{StaticResource SimpleButton}"
-                    Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">
-            <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="FetchTestItems" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-        <!-- Instrument Report, textblock instead of displaying the button-->
-        <TextBlock Grid.Column="0" Margin="5,0,5,0" Style="{StaticResource ItemValues}"  VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding TestLevel}" Visibility="{Binding ShowGaugeText, Converter={StaticResource BoolToHiddenConverter}}"/>
-           
+    <materialDesign:Card>
+        <StackPanel Orientation="Vertical" Height="360">
+            <materialDesign:ColorZone Padding="12" Content="{Binding TestLevel}" Margin="3,3,3,10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent" />
+            <!-- Instrument Report, textblock instead of displaying the button-->
+            <StackPanel Orientation="Horizontal">
+                <!--INstrument Report , Text display instead of the decimal control -->
+                <controls:ValueDescriptionControl
+                                               Visibility="{Binding ShowGaugeText, Converter={StaticResource BoolToHiddenConverter}}"
+                                               Label="Gauge"
+                                               Value="{Binding Test.GasGauge}"/>
 
-        <xctk:DecimalUpDown Grid.Column="1" Height="35" Margin="15,0,15,0" VerticalAlignment="Center"
-                                FontSize="20"                           
-                                    Watermark="Gauge"
-							        Value="{Binding GasGauge}"
-                            Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
-        <!--INstrument Report , Text display instead of the decimal control -->
-        <TextBlock Grid.Column="1" Margin="25,0,15,0" Visibility="{Binding ShowGaugeText, Converter={StaticResource BoolToHiddenConverter}}"
-                   Style="{StaticResource ItemValues}" Name="Test_Gauge" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <controls:ValueDescriptionControl
+                                               Label="EVC Reading"
+                                               Value="{Binding Test.EvcGasPressure}"/>
+            </StackPanel>
 
-        <TextBlock Grid.Column="2" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcReading" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal">
+                <controls:ValueDescriptionControl
+                                               Label="Actual Factor"
+                                               Value="{Binding Test.ActualFactor}"/>
+                <controls:ValueDescriptionControl
+                                               Label="EVC Factor"
+                                               Value="{Binding Test.EvcFactor}"/>
+            </StackPanel>
 
-        <TextBlock Grid.Column="3" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_EvcFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Column="4" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Name="Test_ActualFactor" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-        <TextBlock Grid.Column="5" Margin="15,0,15,0" Style="{StaticResource ItemValues}" Foreground="{Binding PercentColour}" Name="Test_PercentError" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Grid>
+            <controls:ValueDescriptionControl
+                                               Label="Percent Error"
+                                               Foreground="{Binding PercentColour}"
+                                               Value="{Binding Test.PercentError}"/>
+            <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" Margin="5">
+                <xctk:DecimalUpDown Width="150" Height="35" VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                        Watermark="ATM Gauge"
+							            Value="{Binding AtmosphericGauge}"
+                                Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
+                <xctk:DecimalUpDown Width="150" Height="35" VerticalAlignment="Center"
+                                    FontSize="20"                           
+                                        Watermark="Gauge"
+							            Value="{Binding Gauge}"
+                                Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
+                <Button Width="150" Margin="10"
+                        Content="Download Items"					
+                        Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="FetchTestItems" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </materialDesign:Card>
 </UserControl>

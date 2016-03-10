@@ -20,153 +20,99 @@
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <Grid>
-        <Border Margin="0"
-					BorderBrush="{DynamicResource HeaderColour}"
-					BorderThickness="0,1,0,0"
-					Padding="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0.075*" />
-                    <RowDefinition Height="1*" />
-                </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical">
 
-                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                               Mode="PrimaryDark" DockPanel.Dock="Top">
-                    Volume
-                </materialDesign:ColorZone>
+            Volume
+        </materialDesign:ColorZone>
 
-                <Grid Grid.Row="1" Margin="10,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Grid.ColumnSpan="3">
-                        <UniformGrid Columns="3">
-                            <controls:ValueDescriptionControl Label="Cor. Multi. (90)" Value="{Binding Volume.CorrectedMultiplierDescription}"/>
+        <StackPanel Orientation="Vertical" Margin="0 5 0 0">
+            <UniformGrid Columns="4">
+                <controls:ValueDescriptionControl Label="Drive Rate (98)" Value="{Binding Volume.DriveRateDescription}"/>
+                <controls:ValueDescriptionControl Label="Meter Type (432)" Value="{Binding Volume.MeterTypeDescription}"/>
+                <controls:ValueDescriptionControl Label="Meter Displacement" Value="{Binding Volume.MeterDisplacement}"/>
+                <controls:ValueDescriptionControl Label="EVC Meter Displacement" Value="{Binding Volume.EvcMeterDisplacement}"/>
+            </UniformGrid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="0">
+                    <StackPanel>
+                        <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent">
+                            UnCorrected
+                        </materialDesign:ColorZone>
+                        <UniformGrid Columns="2">
+                            <controls:ValueDescriptionControl Label="Start Reading" Value="{Binding Volume.StartUncorrected}"/>
+                            <controls:ValueDescriptionControl Label="End Rading" Value="{Binding Volume.EndUncorrected}"/>
+                            <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.EvcUncorrected}"/>
                             <controls:ValueDescriptionControl Label="UnCor. Multi. (92)" Value="{Binding Volume.UnCorrectedMultiplierDescription}"/>
-                            <controls:ValueDescriptionControl Label="Drive Rate (98)" Value="{Binding Volume.DriveRateDescription}"/>
-                            <controls:ValueDescriptionControl Label="Meter Type (432)" Value="{Binding Volume.MeterTypeDescription}"/>
-                            <controls:ValueDescriptionControl Label="Meter Displacement" Value="{Binding Volume.MeterDisplacement}"/>
-                            <controls:ValueDescriptionControl Label="EVC Meter Displacement" Value="{Binding Volume.EvcMeterDisplacement}"/>
+                            <controls:ValueDescriptionControl Label="UnCor. % Error" Value="{Binding Volume.UnCorrectedPercentError}"/>
+                        </UniformGrid>
+  
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="1">
+                    <StackPanel>
+                        <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                      Mode="Accent">
+                            Corrected
+                        </materialDesign:ColorZone>
+                        <UniformGrid Columns="2">
+
+                            <controls:ValueDescriptionControl Label="Start Reading" Value="{Binding Volume.StartCorrected}"/>
+                            <controls:ValueDescriptionControl Label="End Reading" Value="{Binding Volume.EndCorrected}"/>
+                            <controls:ValueDescriptionControl Label="EVC Corrected" Value="{Binding Volume.EvcCorrected}"/>
+                            <controls:ValueDescriptionControl Label="Cor. Multi. (90)" Value="{Binding Volume.CorrectedMultiplierDescription}"/>
+                            <controls:ValueDescriptionControl Label="Cor. % Error" Value="{Binding Volume.CorrectedPercentError}"/>
                         </UniformGrid>
 
-                    </Grid>
-                    
-                        <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="0">
-                            <StackPanel>
-                                <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent">
-                                    Start
-                                </materialDesign:ColorZone>
-                                <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.StartCorrected}"/>
-                                <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.StartUncorrected}"/>
-                            </StackPanel>
-                        </materialDesign:Card>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
 
-                    <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="1">
-                            <StackPanel>
-                                <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent">
-                                    End
-                                </materialDesign:ColorZone>
-                                <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.EndCorrected}"/>
-                                <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.EndUncorrected}"/>
-                            </StackPanel>
-                        </materialDesign:Card>
 
-                    <materialDesign:Card Margin="0 0 5 0" Grid.Row="1" Grid.Column="2">
-                        <StackPanel>
-                            <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+            <materialDesign:Card Margin="5" Grid.Row="1" Grid.Column="2">
+                <StackPanel>
+                    <materialDesign:ColorZone Padding="8" Margin="5 10 5 10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent">
-                                Calculated
-                            </materialDesign:ColorZone>
-                            <controls:ValueDescriptionControl Label="Corrected" Value="{Binding Volume.EvcCorrected}"/>
-                            <controls:ValueDescriptionControl Label="UnCorrected" Value="{Binding Volume.EvcUncorrected}"/>
+                        Calculated
+                    </materialDesign:ColorZone>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <controls:ValueDescriptionControl Label="Pulse A Count" Value="{Binding Volume.PulseACount}"/>
+                            <controls:ValueDescriptionControl Label="Pulse B Count" Value="{Binding Volume.PulseBCount}"/>
                         </StackPanel>
-                    </materialDesign:Card>
-                    
-                    <Border Grid.Row="2"
-								Grid.ColumnSpan="3"
-								Margin="5,5,5,5"
-								BorderBrush="{DynamicResource HeaderColour}"
-								BorderThickness="0,1,0,0">
-                        <Grid Grid.Row="2"
-								  Grid.ColumnSpan="2"
-								  Margin="0,10,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            
-                            </Grid.ColumnDefinitions>
-                            <UniformGrid Columns="2" Grid.Row="0" HorizontalAlignment="Center" Grid.Column="0">
-                                <StackPanel HorizontalAlignment="Left">
-                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseACount" />
-                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse A</TextBlock>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" Margin="20,0,0,0">
-                                    <TextBlock Style="{DynamicResource ItemValues}" Name="Volume_PulseBCount" />
-                                    <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Pulse B</TextBlock>
-                                </StackPanel>
-                            </UniformGrid>
-                            <Grid Grid.Row="1" Grid.Column="0">
-                                <StackPanel HorizontalAlignment="Center">
-                                    <TextBox Width="150" Style="{DynamicResource SimpleTextBox}"
-													Name="AppliedInput" />
-                                    <TextBlock HorizontalAlignment="Center" Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Applied Input</TextBlock>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
-                                <StackPanel HorizontalAlignment="Center">
-                                    <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock  HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Foreground="{Binding UnCorrectedPercentColour}" Name="Volume_UnCorrectedPercentError" />
-                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">UnCor. % Error</TextBlock>
-                                    </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center">
-                                        <TextBlock HorizontalAlignment="Center" Style="{DynamicResource ItemValues}" Foreground="{Binding CorrectedPercentColour}" Name="Volume_CorrectedPercentError" />
-                                        <TextBlock Style="{StaticResource ItemDescriptions}" Foreground="{DynamicResource HeaderFontColour}">Cor. % Error</TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Grid>
+                        <controls:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Width="150" Margin="10"
+                            	        Content="Start Test"
+                            	        HorizontalAlignment="Left"
+                            	        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <cal:ActionMessage MethodName="StartTestCommand" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
 
-                            <Button Width="150" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"
-											Content="Start Test"
-											Style="{StaticResource SimpleButton}" HorizontalAlignment="Right"
-                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <cal:ActionMessage MethodName="StartTestCommand" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </Button>
-                            <Button Width="150" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0"
-											Content="Stop/Download Data"
-											Style="{StaticResource SimpleButton}"
-                                        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
-                                        <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <cal:ActionMessage MethodName="StopTestCommand" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </Button>
-        
-                        </Grid>
+                            <Button Width="150" Margin="10"
+                    		    Content="Stop Test"
+                    		    Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <cal:ActionMessage MethodName="StopTestCommand" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
 
-                    </Border>
-                </Grid>
-            </Grid>
-        </Border>
-    </Grid>
+
+                </StackPanel>
+            </materialDesign:Card>
+            
+        </StackPanel>
+    </StackPanel>
 </UserControl>

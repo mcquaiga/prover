@@ -4,78 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:control="clr-namespace:Prover.GUI.Controls"
+                          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="829">
     <!--  Temperature - Start  -->
-    <Grid>
-        <Border Margin="0"
-					BorderBrush="{DynamicResource HeaderColour}"
-					BorderThickness="0,1,0,0"
-					Padding="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="2*" />
-                    <RowDefinition Height="10*" />
-                </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical">
+        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                              Mode="PrimaryDark" DockPanel.Dock="Top">
+            Temperature
+        </materialDesign:ColorZone>
 
-                <TextBlock   Grid.Row="0"
-									 Style="{DynamicResource InstrumentSectionHeader}">
-							TEMPERATURES
-                </TextBlock>
-
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                     
-                    </Grid.RowDefinitions>
-                    <UniformGrid Grid.Row="0" Columns="3">
-                        <StackPanel Margin="5">
-                            <TextBlock HorizontalAlignment="Right"
-										   Style="{StaticResource ItemValues}"
-										   Name="Temperature_Units" />
-                            <TextBlock HorizontalAlignment="Right"
-										   Style="{StaticResource ItemDescriptions}"
-										   Text="Units" Foreground="{DynamicResource HeaderFontColour}" />
-                        </StackPanel>
-                        <StackPanel Margin="5">
-                            <TextBlock HorizontalAlignment="Right"
-										   Style="{StaticResource ItemValues}"
-										   Name="Temperature_EvcBase" />
-                            <TextBlock HorizontalAlignment="Right"
-										   Style="{StaticResource ItemDescriptions}"
-										   Text="Base" Foreground="{DynamicResource HeaderFontColour}" />
-                        </StackPanel>
-                    </UniformGrid>
-                    <ContentControl Grid.Row="1" cal:View.Model="{Binding LiveReadItem}" />
-                    <!--<UniformGrid Grid.Row="2"
-									 Grid.Column="1"
-									 Margin="5"
-									 Columns="6">
-                        <TextBlock />
-                        <TextBlock Style="{StaticResource ItemDescriptions}"
-									   Text="Gauge"
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
-                        <TextBlock Style="{StaticResource ItemDescriptions}"
-									   Text="EVC Temp."
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
-                        <TextBlock Style="{StaticResource ItemDescriptions}"
-									   Text="EVC Factor"
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
-                        <TextBlock Style="{StaticResource ItemDescriptions}"
-									   Text="Actual Factor"
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" />
-
-                        <TextBlock Style="{StaticResource ItemDescriptions}"
-									   Text="% Error"
-									   TextAlignment="right"
-									   TextWrapping="Wrap" Foreground="{DynamicResource HeaderFontColour}" HorizontalAlignment="Center"/>
-                    </UniformGrid>-->
-
-                
-                </Grid>
-
-            </Grid>
-        </Border>
-    </Grid>
+        <ContentControl cal:View.Model="{Binding LiveReadItem}" />
+        <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
+            <control:ValueDescriptionControl Label="Base Temp." Value="{Binding Temperature.EvcBase}" />
+            <control:ValueDescriptionControl Label="Units" Value="{Binding Temperature.Units}" />
+        </StackPanel>
+    </StackPanel>
 </UserControl>

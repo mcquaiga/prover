@@ -457,7 +457,10 @@
   <ItemGroup>
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\SuperFactorViews\" />
+    <Folder Include="Views\SuperFactorViews\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

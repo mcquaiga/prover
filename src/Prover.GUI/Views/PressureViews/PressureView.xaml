@@ -8,23 +8,28 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate x:Key="TestTemplate">
-            <ContentControl cal:View.Model="{Binding .}"></ContentControl>
+            <ContentControl Margin="5" cal:View.Model="{Binding .}"></ContentControl>
         </DataTemplate>
     </UserControl.Resources>
+
     <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <ContentControl  x:Name="PressureHeaderView" cal:View.Model="{Binding}" cal:View.Context="PressureHeaderView"/>    
+            <ContentControl  x:Name="PressureHeaderView" cal:View.Model="{Binding}" cal:View.Context="PressureHeaderView"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Vertical" >
-            <ItemsControl 
-                                  ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                                  ItemsSource="{Binding TestViews}"/>
-        </StackPanel>
+        <ItemsControl Grid.Row="1" HorizontalAlignment="Center"
+                    ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                    ItemsSource="{Binding TestViews}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
 
 
     </Grid>

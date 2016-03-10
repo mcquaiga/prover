@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate x:Key="TestTemplate">
-            <ContentControl cal:View.Model="{Binding .}"></ContentControl>
+            <ContentControl Margin="5" cal:View.Model="{Binding .}"></ContentControl>
         </DataTemplate>
     </UserControl.Resources>
     
@@ -21,7 +21,7 @@
             <ContentControl  x:Name="TemperatureHeaderView" cal:View.Model="{Binding}" cal:View.Context="TemperatureHeaderView"/>    
         </StackPanel>
 
-        <ItemsControl Grid.Row="1" Margin="15" HorizontalAlignment="Center"
+        <ItemsControl Grid.Row="1" HorizontalAlignment="Center"
                     ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
                     ItemsSource="{Binding TestViews}">
             <ItemsControl.ItemsPanel>
