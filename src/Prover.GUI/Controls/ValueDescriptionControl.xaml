@@ -8,13 +8,19 @@
             xmlns:local="clr-namespace:Prover.GUI.Controls"
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            Background="{DynamicResource MaterialDesignPaper}"
-            Height="65" Width="181.356">
+            Background="{DynamicResource MaterialDesignPaper}">
     <Grid DataContext="{Binding ElementName=parent}">
-        <StackPanel Margin="0 0 0 10">
-            <TextBlock Margin="3 0 0 0" Text="{Binding Path=Label}" HorizontalAlignment="Left" FontSize="16" Foreground="Gray"/>
+        <StackPanel>
+            <TextBlock Margin="3 0 0 0" 
+                       Text="{Binding Path=Label}" 
+                       HorizontalAlignment="Left" 
+                       FontSize="{Binding Path=LabelSize, FallbackValue=16}" 
+                       Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
             <Border Margin="5 0" BorderBrush="{DynamicResource SecondaryAccentBrush}" BorderThickness="0 0 0 1">
-                <TextBlock Text="{Binding Path=Value}" FontSize="24" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding Path=Value}" 
+                           FontSize="{Binding Path=ValueSize, FallbackValue=24}" 
+                           HorizontalAlignment="Left"
+                           Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
             </Border>
         </StackPanel>
     </Grid>

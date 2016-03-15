@@ -164,6 +164,7 @@
     </Compile>
     <Compile Include="Converters\BooleanToPassConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="DesignTimeViewModelLocator.cs" />
     <Compile Include="Events\InstrumentUpdateEvent.cs" />
     <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Events\ScreenChangeEvent.cs" />
@@ -184,6 +185,8 @@
     <Compile Include="ViewModels\PressureViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\PressureViews\PressureViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
+    <Compile Include="ViewModels\PTVerificationViews\PTVerificationSetViewModel.cs" />
+    <Compile Include="ViewModels\PTVerificationViews\PTVerificationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -234,6 +237,15 @@
     </Compile>
     <Compile Include="Views\InstrumentAccessView.xaml.cs">
       <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PTVerificationViews\PTVerificationSetView.xaml.cs">
+      <DependentUpon>PTVerificationSetView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PTVerificationViews\PTVerificationView.xaml.cs">
+      <DependentUpon>PTVerificationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PTVerificationViews\PTVerification\PTVerificationHeaderView.xaml.cs">
+      <DependentUpon>PTVerificationHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -324,6 +336,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\PTVerificationViews\PTVerificationSetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PTVerificationViews\PTVerificationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PTVerificationViews\PTVerification\PTVerificationHeaderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -407,6 +431,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\download.png" />
     <Resource Include="Resources\cloud-upload.png" />
     <Resource Include="Resources\clipboard-check.png" />
     <Resource Include="Resources\clipboard-text.png" />
@@ -457,10 +482,7 @@
   <ItemGroup>
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\SuperFactorViews\" />
-    <Folder Include="Views\SuperFactorViews\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
