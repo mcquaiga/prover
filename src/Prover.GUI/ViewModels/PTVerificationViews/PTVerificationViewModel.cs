@@ -27,8 +27,8 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 
             TestViews = new ObservableCollection<PTVerificationSetViewModel>();
 
-            Temperature.Tests.ForEach(x =>
-                TestViews.Add(new PTVerificationSetViewModel(_container, InstrumentManager, x, showCommButtons)));
+            instrument.VerificationTests.ForEach(x =>
+                TestViews.Add(new PTVerificationSetViewModel(_container, InstrumentManager, x)));
         }
 
         public bool ShowLiveRead
@@ -42,29 +42,15 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 
         public ObservableCollection<PTVerificationSetViewModel> TestViews { get; set; }
 
-        public Temperature Temperature
-        {
-            get
-            {
-                if (InstrumentManager != null)
-                {
-                    return InstrumentManager.Instrument.Temperature;
-                }
-
-                return Instrument?.Temperature;
-            }
-        }
-
         public void Handle(InstrumentUpdateEvent message)
         {
             InstrumentManager = message.InstrumentManager;
 
-            InstrumentManager.Instrument.Temperature.Tests.ForEach(x =>
+            InstrumentManager.Instrument.VerificationTests.ForEach(x =>
                 TestViews.Add(new PTVerificationSetViewModel(_container, InstrumentManager, x))
             );
 
             NotifyOfPropertyChange(() => InstrumentManager);
-            NotifyOfPropertyChange(() => Temperature);
             NotifyOfPropertyChange(() => TestViews);
         }
     }

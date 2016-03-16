@@ -21,6 +21,8 @@ using System.Threading;
 using Prover.Core.Events;
 using Prover.GUI.Reporting;
 using Prover.GUI.ViewModels.PressureViews;
+using Prover.GUI.ViewModels.PTVerificationViews;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.GUI.ViewModels
 {
@@ -44,6 +46,7 @@ namespace Prover.GUI.ViewModels
 
         #region Views
         public SiteInformationViewModel SiteInformationItem => new SiteInformationViewModel(_container);
+        public PTVerificationViewModel PressureTemperatureVerificationSection { get; set; }
         public TemperatureViewModel TemperatureInformationItem { get; private set; }
         public PressureViewModel PressureInformationItem { get; private set; }
         public VolumeViewModel VolumeInformationItem => new VolumeViewModel(_container);
@@ -64,6 +67,7 @@ namespace Prover.GUI.ViewModels
         protected override void OnViewReady(object view)
         {
             base.OnViewReady(view);
+            VerifySettings();
         }
 
         private void VerifySettings()
@@ -112,12 +116,14 @@ namespace Prover.GUI.ViewModels
 
         private void BuildViews()
         {
+            PressureTemperatureVerificationSection = new PTVerificationViewModel(_container);
+            base.NotifyOfPropertyChange(() => PressureTemperatureVerificationSection);
+
             if (Instrument.Temperature != null)
             {
                 TemperatureInformationItem = new TemperatureViewModel(_container);
                 base.NotifyOfPropertyChange(() => TemperatureInformationItem);
             }
-
 
             if (Instrument.Pressure != null)
             {

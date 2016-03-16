@@ -57,7 +57,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? EVCUnsqrSuper
+        public decimal? EVCUnsqrFactor
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal ActualFactor
         {
-            get { return (decimal)CalculateFPV(); }
+            get { return decimal.Round((decimal)CalculateFPV(), 4); }
         }
 
         private double CalculateFPV()
@@ -95,8 +95,13 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return (decimal)(((EVCUnsqrSuper - ActualFactor) / ActualFactor) * 100);
+                return decimal.Round((decimal)(((EVCUnsqrFactor - ActualFactor) / ActualFactor) * 100), 2);
             }
+        }
+
+        public bool HasPassed
+        {
+            get { return (PercentError < 1 && PercentError > -1); }
         }
 
         private double CalculateFactorNX19()

@@ -9,6 +9,9 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Caliburn.Micro;
 using Prover.GUI.Events;
+using Prover.GUI.ViewModels.TemperatureViews;
+using Prover.GUI.ViewModels.PressureViews;
+using Prover.GUI.ViewModels.SuperFactorViews;
 
 namespace Prover.GUI.ViewModels.PTVerificationViews
 {
@@ -17,20 +20,38 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
         private bool showCommButtons;
         private IUnityContainer _container;
 
-        public PTVerificationSetViewModel(IUnityContainer container, TestManager instrumentManager, TemperatureTest temperatureTest, PressureTest pressureTest, SuperFactor superFactorTest)
+        public PTVerificationSetViewModel(IUnityContainer container, TestManager instrumentManager, Instrument.VerificationTest verificationTest)
         {
             _container = container;
             InstrumentManager = instrumentManager;
-            TemperatureTest = temperatureTest;
-            PressureTest = pressureTest;
-            SuperFactorTest = superFactorTest;
+            VerificationTest = verificationTest;
+            TemperatureTestViewModel = new TemperatureTestViewModel(container, instrumentManager, verificationTest.TemperatureTest);
+            PressureTestViewModel = new PressureTestViewModel(container, instrumentManager, verificationTest.PressureTest);
+            SuperFactorTestViewModel = new SuperTestViewModel(container, instrumentManager, verificationTest.SuperTest);
+
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public TemperatureTest TemperatureTest { get; private set; }
-        public PressureTest PressureTest { get; private set; }
-        public SuperFactor SuperFactorTest { get; private set; }
+        public string Level
+        {
+            get
+            {
+                return string.Format("Level {0}", VerificationTest.TestNumber + 1);
+            }
+        }
+
+        public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
+        public PressureTestViewModel PressureTestViewModel { get; private set; }
+        public SuperTestViewModel SuperFactorTestViewModel { get; private set; }
+
         public TestManager InstrumentManager { get; private set; }
+        public Instrument.VerificationTest VerificationTest { get; private set; }
+
+        public async Task DownloadItems()
+        {
+            await InstrumentManager.DownloadVerificationTestItems(VerificationTest.TestNumber);
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new VerificationTestEvent(InstrumentManager));
+        }
 
         public void Handle(InstrumentUpdateEvent message)
         {

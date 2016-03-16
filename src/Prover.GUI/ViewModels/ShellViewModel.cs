@@ -14,6 +14,7 @@ using ReactiveUI;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.GUI.ViewModels
 {
@@ -24,12 +25,15 @@ namespace Prover.GUI.ViewModels
         private string _applicationEventMessage;
         private MainMenuViewModel _mainMenu;
         private object _currentView;
+        private ToastNotificationViewModel _toasts;
 
         public ShellViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
             _mainMenu = new MainMenuViewModel(_container);
+            _toasts = new ToastNotificationViewModel(_container);
+
             ShowMainMenu();
         }
 
@@ -51,6 +55,7 @@ namespace Prover.GUI.ViewModels
 
         private void ShowSettingsWindow()
         {
+            //show the dialog
             _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
         }
 

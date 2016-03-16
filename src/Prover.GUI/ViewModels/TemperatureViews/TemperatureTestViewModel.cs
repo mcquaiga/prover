@@ -11,7 +11,7 @@ using NLog;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {
-    public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
+    public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>, IHandle<VerificationTestEvent>
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
@@ -33,20 +33,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public async void FetchTestItems()
-        {
-            if (InstrumentManager != null)
-            {
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent(string.Format("Downloading {0} Temperature from instrument...", TestLevel.ToString())));
-                await InstrumentManager.DownloadTemperatureTestItems(Test.TestLevel);
-                Test = InstrumentManager.Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == TestLevel);
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Complete!"));
-            }
-
-            NotifyOfPropertyChange(() => Test);
-            NotifyOfPropertyChange(() => PercentColour);
-        }
-
         public double Gauge
         {
             get { return Test.Gauge; }
@@ -63,6 +49,12 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         public void Handle(InstrumentUpdateEvent message)
         {
             InstrumentManager = message.InstrumentManager;
+        }
+
+        public void Handle(VerificationTestEvent @event)
+        {
+            NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => PercentColour);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Prover.Core.Models.Instruments
             if (Tests.Count() >= 3)
                 throw new NotSupportedException("Only 3 test instances are supported.");
 
-            var test = new TemperatureTest(this, (TemperatureTest.Level)(2 - Tests.Count()));
+            var test = new TemperatureTest(this, (TemperatureTest.Level)Tests.Count());
             Tests.Add(test);
 
             return test;

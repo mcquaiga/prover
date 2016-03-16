@@ -33,9 +33,9 @@ namespace Prover.GUI.ViewModels
             }
         }
         
-        public SettingsViewModel(IUnityContainer _container)
+        public SettingsViewModel(IUnityContainer container)
         {
-            this._container = _container;
+            _container = container;
             _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
             _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
             _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;

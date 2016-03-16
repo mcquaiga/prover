@@ -13,14 +13,14 @@
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="829">
-    <StackPanel Orientation="Vertical">
+    <materialDesign:Card Margin="5">
         <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                               Mode="PrimaryDark" DockPanel.Dock="Top">
             Pressure &amp; Temperature Verification
         </materialDesign:ColorZone>
-        <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
+        <!--<StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
             <control:ValueDescriptionControl Label="Base Temp." Value="{Binding Temperature.EvcBase}" />
             <control:ValueDescriptionControl Label="Units" Value="{Binding Temperature.Units}" />
-        </StackPanel>
-    </StackPanel>
+        </StackPanel>-->
+    </materialDesign:Card>
 </UserControl>

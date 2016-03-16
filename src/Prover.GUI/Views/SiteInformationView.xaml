@@ -16,32 +16,25 @@
              cal:Bind.AtDesignTime="True"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="882">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.3*" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
-        <!--  Basic Details Info  -->
-        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                              Mode="PrimaryDark" DockPanel.Dock="Top">
-            Site Information
-        </materialDesign:ColorZone>
+    <materialDesign:Card Margin="5">
+        <StackPanel Orientation="Vertical">
+            <!--  Basic Details Info  -->
+            <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                Site Information
+            </materialDesign:ColorZone>
 
+            <UniformGrid Columns="4" Margin="5">
+                <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
+                <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>
+                <controls:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}"/>
+                <controls:ValueDescriptionControl Label="Firmware Version" Value="{Binding Instrument.FirmwareVersion}"/>
+                <controls:ValueDescriptionControl Label="Pulser A Select" Value="{Binding Instrument.PulseASelect}"/>
+                <controls:ValueDescriptionControl Label="Pulser A Scaling" Value="{Binding Instrument.PulseAScaling}"/>
+                <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
+                <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
+            </UniformGrid>
 
-        <Grid Grid.Row="1" Margin="0,4,0,0">
-            <StackPanel>
-                <UniformGrid Columns="4">
-                    <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
-                    <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>
-                    <controls:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}"/>
-                    <controls:ValueDescriptionControl Label="Firmware Version" Value="{Binding Instrument.FirmwareVersion}"/>
-                    <controls:ValueDescriptionControl Label="Pulser A Select" Value="{Binding Instrument.PulseASelect}"/>
-                    <controls:ValueDescriptionControl Label="Pulser A Scaling" Value="{Binding Instrument.PulseAScaling}"/>
-                    <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
-                    <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
-                </UniformGrid>
-            </StackPanel>
-        </Grid>
-
-    </Grid>
+        </StackPanel>
+    </materialDesign:Card>
 </UserControl>

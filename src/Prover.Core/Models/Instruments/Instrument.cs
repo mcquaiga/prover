@@ -36,14 +36,16 @@ namespace Prover.Core.Models.Instruments
         private int FIXED_SUPER_FACTOR = 110;
         private int FIXED_TEMP_FACTOR = 111;
         private int SERIAL_NUMBER = 62;
+        private InstrumentType _instrumentType;
 
-        public Instrument()
+        private Instrument()
         {
         }
 
-        public Instrument(InstrumentType type) : base()
+        public Instrument(InstrumentType type)
         {
             Items = new InstrumentItems(type);
+            Type = type;
         }
 
         public Instrument(InstrumentType type, InstrumentItems items) : base(items)
@@ -55,7 +57,21 @@ namespace Prover.Core.Models.Instruments
         }
 
         public DateTime TestDateTime { get; set; }
-        public InstrumentType Type { get; set; }
+        public InstrumentType Type
+        {
+            get
+            {
+                return _instrumentType;
+            }
+            set
+            {
+                if (Items == null || !Items.Items.Any())
+                {
+                    Items = new InstrumentItems(value);
+                }
+                _instrumentType = value;                                   
+            }
+        }
         public Guid? CertificateId { get; set; }
         public Certificate Certificate { get; set; }
 
@@ -63,6 +79,8 @@ namespace Prover.Core.Models.Instruments
         public virtual Temperature Temperature { get; set; }
         [NotMapped]
         public virtual List<SuperFactor> SuperFactorTests { get; set; }
+        [NotMapped]
+        public List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
         public virtual Volume Volume { get; set; }
 
         #region NotMapped Properties
@@ -145,7 +163,22 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public bool HasPassed
         {
-            get { return this.Temperature.HasPassed && this.Volume.HasPassed; }
+            get
+            {
+                if (Volume != null)
+                {
+                    if (CorrectorType == CorrectorType.TemperatureOnly && Temperature != null)
+                        return Temperature.HasPassed && Volume.HasPassed;
+
+                    if (CorrectorType == CorrectorType.PressureOnly && Pressure != null)
+                        return Pressure.HasPassed && Volume.HasPassed;
+
+                    if (CorrectorType == CorrectorType.PressureTemperature && Pressure != null && Temperature != null)
+                        return Temperature.HasPassed && Volume.HasPassed && Pressure.HasPassed;
+                }             
+
+                return false;
+            }
         }
         #endregion      
 
@@ -169,13 +202,28 @@ namespace Prover.Core.Models.Instruments
 
             if (CorrectorType == CorrectorType.PressureTemperature)
             {
-                SuperFactorTests = new List<SuperFactor>();
-                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[0], Pressure.Tests[2]));
-                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[1], Pressure.Tests[1]));
-                SuperFactorTests.Add(new SuperFactor(this, Temperature.Tests[2], Pressure.Tests[0]));
+                VerificationTests.Add(new VerificationTest(0, this, Temperature.Tests[0], Pressure.Tests[0]));
+                VerificationTests.Add(new VerificationTest(1, this, Temperature.Tests[1], Pressure.Tests[1]));
+                VerificationTests.Add(new VerificationTest(2, this, Temperature.Tests[2], Pressure.Tests[2]));              
+            }
+            
+            Volume = new Volume(this);
+        }
+
+        public class VerificationTest
+        {
+            public VerificationTest(int level, Instrument instrument, TemperatureTest temperature, PressureTest pressure)
+            {
+                TestNumber = level;
+                TemperatureTest = temperature;
+                PressureTest = pressure;
+                SuperTest = new SuperFactor(instrument, TemperatureTest, PressureTest);
             }
 
-            Volume = new Volume(this);
+            public PressureTest PressureTest { get; private set; }
+            public SuperFactor SuperTest { get; private set; }
+            public TemperatureTest TemperatureTest { get; private set; }
+            public int TestNumber { get; private set; }
         }
     }
 }

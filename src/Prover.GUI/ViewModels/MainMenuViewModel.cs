@@ -1,8 +1,10 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Practices.Unity;
 using Prover.GUI.Events;
 using Prover.GUI.Views;
+using System.Threading.Tasks;
 
 namespace Prover.GUI.ViewModels
 {

@@ -21,9 +21,9 @@ namespace Prover.Core.Models.Instruments
 
         public enum PressureLevel
         {
-            Low,
+            High,
             Medium,
-            High
+            Low
         }
         
         public PressureTest(Pressure pressure, PressureLevel level) : 
@@ -106,7 +106,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return Items.GetItem(UNSQR_FACTOR).GetNumericValue();
+                return Pressure.Items.GetItem(UNSQR_FACTOR).GetNumericValue();
             }
         }
 

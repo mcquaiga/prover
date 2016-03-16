@@ -179,20 +179,24 @@
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
+    <Compile Include="ViewModels\LiveReadViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
     <Compile Include="ViewModels\PressureViews\LivePressureReadViewModel.cs" />
     <Compile Include="ViewModels\PressureViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\PressureViews\PressureViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
+    <Compile Include="Events\VerificationTestEvent.cs" />
     <Compile Include="ViewModels\PTVerificationViews\PTVerificationSetViewModel.cs" />
     <Compile Include="ViewModels\PTVerificationViews\PTVerificationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\SuperFactorViews\SuperTestViewModel.cs" />
     <Compile Include="ViewModels\TemperatureViews\LiveTemperatureReadViewModel.cs" />
     <Compile Include="ViewModels\TemperatureViews\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\TemperatureViews\TemperatureViewModel.cs" />
+    <Compile Include="ViewModels\ToastNotificationViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
     <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
@@ -200,6 +204,9 @@
     <Compile Include="Views\CreateCertificateView.xaml.cs">
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\InstrumentConnectView.xaml.cs">
+      <DependentUpon>InstrumentConnectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentReport\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -216,6 +223,9 @@
     </Compile>
     <Compile Include="Views\InstrumentsList\InstrumentView.xaml.cs">
       <DependentUpon>InstrumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LiveReadView.xaml.cs">
+      <DependentUpon>LiveReadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -260,6 +270,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\SuperFactorViews\SuperTestView.xaml.cs">
+      <DependentUpon>SuperTestView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TemperatureViews\LiveTemperatureReadView.xaml.cs">
       <DependentUpon>LiveTemperatureReadView.xaml</DependentUpon>
     </Compile>
@@ -271,6 +284,9 @@
     </Compile>
     <Compile Include="Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml.cs">
       <DependentUpon>TemperatureHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToastNotificationView.xaml.cs">
+      <DependentUpon>ToastNotificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VolumeView.xaml.cs">
       <DependentUpon>VolumeView.xaml</DependentUpon>
@@ -296,6 +312,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\InstrumentConnectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\InstrumentReport\InstrumentReportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -313,6 +333,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentsList\InstrumentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LiveReadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -356,6 +380,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SuperFactorViews\SuperTestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TemperatureViews\LiveTemperatureReadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -372,34 +400,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Themes\Button.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\CheckboxStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\CheckboxTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\Colours.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\RadioButtonStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\ScrollViewerStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Themes\SimpleStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -409,6 +409,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToastNotificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -431,6 +435,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\download_white.png" />
     <Resource Include="Resources\download.png" />
     <Resource Include="Resources\cloud-upload.png" />
     <Resource Include="Resources\clipboard-check.png" />

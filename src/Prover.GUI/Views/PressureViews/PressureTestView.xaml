@@ -14,64 +14,74 @@
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="365" Height="370">
+             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="250">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <materialDesign:Card>
-        <StackPanel Orientation="Vertical" Height="360">
-            <materialDesign:ColorZone Padding="12" Content="{Binding TestLevel}" Margin="3,3,3,10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent" />
+    <!--**** START PRESSURE **** -->
+    <materialDesign:Card Margin="5">
+        <StackPanel Orientation="Vertical">
+
+            <materialDesign:ColorZone Padding="3" Content="Pressure" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+
             <!-- Instrument Report, textblock instead of displaying the button-->
-            <StackPanel Orientation="Horizontal">
+            <UniformGrid Columns="2" Margin="3">
+                <!--INstrument Report , Text display instead of the decimal control -->
+                    <controls:ValueDescriptionControl
+                                                Label="Gauge"
+                                                Value="{Binding Test.GasGauge}"/>
+                    <controls:ValueDescriptionControl
+                                                Label="EVC Reading"
+                                                Value="{Binding Test.EvcGasPressure}"/>
+            </UniformGrid>
+            <UniformGrid Columns="2" Margin="3">
                 <!--INstrument Report , Text display instead of the decimal control -->
                 <controls:ValueDescriptionControl
-                                               Visibility="{Binding ShowGaugeText, Converter={StaticResource BoolToHiddenConverter}}"
-                                               Label="Gauge"
-                                               Value="{Binding Test.GasGauge}"/>
-
+                                                   Label="ATM Gauge"
+                                                   Value="{Binding Test.GasGauge}"/>
                 <controls:ValueDescriptionControl
-                                               Label="EVC Reading"
-                                               Value="{Binding Test.EvcGasPressure}"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <controls:ValueDescriptionControl
-                                               Label="Actual Factor"
-                                               Value="{Binding Test.ActualFactor}"/>
-                <controls:ValueDescriptionControl
-                                               Label="EVC Factor"
-                                               Value="{Binding Test.EvcFactor}"/>
-            </StackPanel>
-
-
-            <controls:ValueDescriptionControl
-                                               Label="Percent Error"
-                                               Foreground="{Binding PercentColour}"
-                                               Value="{Binding Test.PercentError}"/>
-            <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" Margin="5">
-                <xctk:DecimalUpDown Width="150" Height="35" VerticalAlignment="Center"
-                                    FontSize="20"                           
-                                        Watermark="ATM Gauge"
-							            Value="{Binding AtmosphericGauge}"
-                                Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
-                <xctk:DecimalUpDown Width="150" Height="35" VerticalAlignment="Center"
-                                    FontSize="20"                           
-                                        Watermark="Gauge"
-							            Value="{Binding Gauge}"
-                                Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
-                <Button Width="150" Margin="10"
-                        Content="Download Items"					
-                        Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">
+                                                   Label="EVC ATM Reading"
+                                                   Value="{Binding Test.EvcGasPressure}"/>
+            </UniformGrid>
+            <UniformGrid Columns="3" Margin="3">
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                   Label="Actual Factor"
+                                                   Value="{Binding Test.ActualFactor}"/>
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                   Label="EVC Factor"
+                                                   Value="{Binding Test.EvcFactor}"/>
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                   Label="Percent Error"
+                                                   Foreground="{Binding PercentColour}"
+                                                   Value="{Binding Test.PercentError}"/>
+            </UniformGrid>
+            <UniformGrid Columns="3">
+                <Button Content="Live Read" HorizontalAlignment="Left" Margin="5"
+                            Style="{StaticResource MaterialDesignFlatButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="FetchTestItems" />
+                            <cal:ActionMessage MethodName="LiveReadCommand" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-            </StackPanel>
+
+                <TextBox materialDesign:TextFieldAssist.Hint="ATM"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         Margin="3"
+                         FontSize="16" 
+                         Text="{Binding AtmosphericGauge}"
+                         Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}" />
+                <TextBox materialDesign:TextFieldAssist.Hint="Gauge"
+                         Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         Margin="3"
+                         FontSize="16" 
+                         Text="{Binding GasGauge}" />
+            </UniformGrid>
         </StackPanel>
     </materialDesign:Card>
+
+    <!--**** END PRESSURE **** -->
 </UserControl>

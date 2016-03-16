@@ -14,59 +14,59 @@
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="365" Height="310">
+             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="250">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <materialDesign:Card>
-        <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="12" Content="{Binding TestLevel}" Margin="3,3,3,10" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent" />
+    <!--**** START TEMPERATURE **** -->
+    <materialDesign:Card Margin="5">
+        <StackPanel Orientation="Vertical" Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}">
+            <materialDesign:ColorZone Padding="3" Content="Temperature" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
             <!-- Instrument Report, textblock instead of displaying the button-->
-            <StackPanel Orientation="Horizontal">
+            <UniformGrid Columns="2">
                 <!--INstrument Report , Text display instead of the decimal control -->
                 <controls:ValueDescriptionControl
-                                               Visibility="{Binding ShowGaugeText, Converter={StaticResource BoolToHiddenConverter}}"
-                                               Label="Gauge"
-                                               Value="{Binding Test.Gauge}"/>
+                                                    Label="Gauge"
+                                                    Value="{Binding Test.Gauge}"/>
 
                 <controls:ValueDescriptionControl
-                                               Label="EVC Reading"
-                                               Value="{Binding Test.EvcReading}"/>
-            </StackPanel>
+                                                       Label="EVC Reading"
+                                                       Value="{Binding Test.EvcReading}" />
+            </UniformGrid>
 
-            <StackPanel Orientation="Horizontal">
-                <controls:ValueDescriptionControl
-                                               Label="Actual Factor"
-                                               Value="{Binding Test.ActualFactor}"/>
-                <controls:ValueDescriptionControl
-                                               Label="EVC Factor"
-                                               Value="{Binding Test.EvcFactor}"/>
-            </StackPanel>
+            <UniformGrid Columns="3" Margin="3">
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                       Label="Actual Factor"
+                                                       Value="{Binding Test.ActualFactor}"/>
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                       Label="EVC Factor"
+                                                       Value="{Binding Test.EvcFactor}"/>
+                <controls:ValueDescriptionControl ScaleFactor="0.5"
+                                                       Label="Percent Error"
+                                                       Foreground="{Binding PercentColour}"
+                                                       Value="{Binding Test.PercentError}"/>
+            </UniformGrid>
 
-
-            <controls:ValueDescriptionControl
-                                               Label="Percent Error"
-                                               Foreground="{Binding PercentColour}"
-                                               Value="{Binding Test.PercentError}"/>
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                <xctk:DecimalUpDown Width="150" Height="35" VerticalAlignment="Center"
-                                    FontSize="20"                           
-                                        Watermark="Gauge"
-							            Value="{Binding Gauge}"
-                                Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
-                <Button Width="150" Margin="10"
-                        Content="Download Items"					
-                        Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">
+            <UniformGrid Columns="2" Margin="3">
+                <Button Content="Live Read" HorizontalAlignment="Left" Margin="5 0 0 5"
+                                Style="{StaticResource MaterialDesignFlatButton}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="FetchTestItems" />
+                            <cal:ActionMessage MethodName="StartLiveReadCommand" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-            </StackPanel>  
+                <xctk:DecimalUpDown Width="125" Height="35" 
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            FontSize="20"                           
+                                                Watermark="Gauge"
+							                    Value="{Binding Test.Gauge}"
+                                        Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>
+            </UniformGrid>
         </StackPanel>
     </materialDesign:Card>
+    <!--**** END TEMPERATURE ****-->
 </UserControl>

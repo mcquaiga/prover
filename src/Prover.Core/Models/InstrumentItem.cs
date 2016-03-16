@@ -11,6 +11,11 @@ namespace Prover.Core.Models
 {
     public class InstrumentItems
     {
+        public InstrumentItems()
+        {
+            Items = new List<ItemDetail>();
+        }
+
         public InstrumentItems(InstrumentType instrumentType)
         {
             Items = ItemHelpers.LoadItems(instrumentType);
@@ -21,7 +26,7 @@ namespace Prover.Core.Models
             Items = items;
         }
 
-        public IEnumerable<ItemDetail> Items { get; }        
+        public IEnumerable<ItemDetail> Items { get; private set; }        
 
         public ItemDetail GetItem(int itemNumber)
         {

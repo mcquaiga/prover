@@ -21,26 +21,21 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="0" Grid.Column="0" Margin="20,0,20,0" VerticalAlignment="Center">
-            <TextBlock Style="{DynamicResource ItemDescriptions}" 
-								   Text="Item Number" Foreground="{DynamicResource HeaderFontColour}" />
+            <TextBlock							   
+                Text="Item Number" />
             <TextBox x:Name="ItemNumber" 
-                     Width="150"
-                     Style="{DynamicResource SimpleTextBox}"/>
+                     Width="150" />
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="20,0,20,0" VerticalAlignment="Center">
-            <TextBlock
-								   Style="{DynamicResource ItemDescriptions}"
-								   Text="Value" Foreground="{DynamicResource HeaderFontColour}" />
-            <TextBox x:Name="ItemValue" Width="150"
-                     Style="{DynamicResource SimpleTextBox}"/>
+            <TextBlock Text="Value" />
+            <TextBox x:Name="ItemValue" Width="150"             />
         </StackPanel>
         <Button Grid.Row="1"
 							Grid.Column="0"
 							Width="150"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Read"
-							Style="{StaticResource SimpleButton}">
+							Content="Read"	>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="ReadInstrumentValue" />
@@ -52,8 +47,7 @@
 							Width="150"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Write"
-							Style="{StaticResource SimpleButton}">
+							Content="Write">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="WriteInstrumentValue" />

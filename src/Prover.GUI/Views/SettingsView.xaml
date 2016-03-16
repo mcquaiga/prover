@@ -4,53 +4,53 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-			 xmlns:cal="http://www.caliburnproject.org"
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-    
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+			 xmlns:cal="http://www.caliburnproject.org"    
              mc:Ignorable="d"
-             d:DesignHeight="250" d:DesignWidth="500">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
+             d:DesignHeight="275" d:DesignWidth="500">
+    <StackPanel>
         <!--  Ports  -->
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <TextBlock Margin="0,0,0,0" Style="{DynamicResource ItemDescriptions}"
-								   Text="Instrument" Foreground="{DynamicResource HeaderFontColour}" />
-            <ComboBox x:Name="CommPort" />
-            <ComboBox x:Name="BaudRate" />
-        </StackPanel>
-        <StackPanel Grid.Row="0"
-								Grid.Column="1">
-        </StackPanel>
-
+        <materialDesign:Card Margin="5">
+            <StackPanel Orientation="Vertical">
+                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                    Instrument
+                </materialDesign:ColorZone>
+                <StackPanel Margin="5">
+                    <ComboBox x:Name="CommPort" materialDesign:TextFieldAssist.Hint="Port"/>
+                    <ComboBox x:Name="BaudRate" materialDesign:TextFieldAssist.Hint="Baud Rate" />
+                </StackPanel>
+            </StackPanel>            
+        </materialDesign:Card>
+     
         <!--Tachometer-->
         <!--  Ports  -->
-        <StackPanel Grid.Row="0" Grid.Column="1">
-            <TextBlock Margin="20,0,0,0"
-								   Style="{DynamicResource ItemDescriptions}"
-								   Text="Tachometer" Foreground="{DynamicResource HeaderFontColour}" />
-            <ComboBox x:Name="TachCommPort"/>
-        </StackPanel>
-        <Button Grid.Row="1" Grid.ColumnSpan="2"
-							Grid.Column="0"
-							Width="150"
-							HorizontalContentAlignment="Center"
+        <materialDesign:Card Margin="5">
+            <StackPanel>
+                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                    Tachometer
+                </materialDesign:ColorZone>
+                <StackPanel Margin="5">
+                    <ComboBox x:Name="TachCommPort" materialDesign:TextFieldAssist.Hint="Port"/>
+                </StackPanel>              
+            </StackPanel>
+        </materialDesign:Card>
+        
+        <Button Width="150" Margin="5" HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Refresh Comm Ports"
-							Style="{StaticResource SimpleButton}">
+							Content="Refresh Ports">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="RefreshCommSettingsCommand" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-    </Grid>
+    </StackPanel>
 </UserControl>

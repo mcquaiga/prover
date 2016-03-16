@@ -68,6 +68,19 @@ namespace Prover.Core.Communication
             Instrument = new Instrument(instrumentType, items);
         }
 
+        public async Task DownloadVerificationTestItems(int level)
+        {
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            {
+                await DownloadTemperatureTestItems((TemperatureTest.Level)level);
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.PressureOnly)
+            {
+                await DownloadPressureTestItems((PressureTest.PressureLevel)level);
+            }
+        }
+
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
             if (_isLiveReading) await StopLiveRead();
@@ -81,7 +94,7 @@ namespace Prover.Core.Communication
 
         public async Task DownloadPressureTestItems(PressureTest.PressureLevel level)
         {
-            //if (_isLiveReading) await StopLiveRead();
+            if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.Pressure.Tests.FirstOrDefault(x => x.TestLevel == level);
             if (test != null)

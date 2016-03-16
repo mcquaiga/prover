@@ -40,12 +40,12 @@ namespace Prover.GUI.Controls
 
         public decimal ScaleFactor
         {
-            get { return (int)GetValue(SizeProperty); }
-            set { SetValue(SizeProperty, value); }
+            get { return (decimal)GetValue(ScaleProperty); }
+            set { SetValue(ScaleProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Size.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SizeProperty =
+        public static readonly DependencyProperty ScaleProperty =
             DependencyProperty.Register("ScaleFactor", typeof(decimal), typeof(ValueDescriptionControl), new UIPropertyMetadata(1.0m));
 
         public decimal ValueSize => ScaleFactor * 24;

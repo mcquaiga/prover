@@ -9,18 +9,18 @@
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             Background="{DynamicResource MaterialDesignPaper}">
-    <Grid DataContext="{Binding ElementName=parent}">
+    <Grid DataContext="{Binding ElementName=parent}" Margin="0 0 0 2">
         <StackPanel>
-            <TextBlock Margin="3 0 0 0" 
+            <TextBlock Margin="6 3 0 0" 
                        Text="{Binding Path=Label}" 
                        HorizontalAlignment="Left" 
-                       FontSize="{Binding Path=LabelSize, FallbackValue=16}" 
+                       FontSize="12"
                        Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
             <Border Margin="5 0" BorderBrush="{DynamicResource SecondaryAccentBrush}" BorderThickness="0 0 0 1">
                 <TextBlock Text="{Binding Path=Value}" 
-                           FontSize="{Binding Path=ValueSize, FallbackValue=24}" 
+                           FontSize="18"
                            HorizontalAlignment="Left"
-                           Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
+                           Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
             </Border>
         </StackPanel>
     </Grid>
