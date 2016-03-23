@@ -1,0 +1,69 @@
+# Notes:
+#   - Minimal appveyor.yml file is an empty file. All sections are optional.
+#   - Indent each level of configuration with 2 spaces. Do not use tabs!
+#   - All section names are case-sensitive.
+#   - Section names should be unique on each level.
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Release
+
+# build platform, i.e. x86, x64, Any CPU. This setting is optional.
+platform: Any CPU
+
+# version format
+version: 2.2.{build}
+
+# you can use {branch} name in version format too
+# version: 1.0.{build}-{branch}
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - prod
+
+  # blacklist
+  except:
+    - gh-pages
+
+artifacts:
+  # pushing a single file with environment variable in path and "Deployment name" specified
+  - path: build
+    name: prover-v$(appveyor_build_version)
+
+# fetch repository as zip archive
+shallow_clone: true                 # default is "false"
+
+# set clone depth
+clone_depth: 5                      # clone entire repository history if not defined
+
+# enable service required for build/tests
+services:
+  - mssql2014           # start SQL Server 2014 Express
+
+build:
+# MSBuild verbosity level
+  verbosity: quiet|minimal|normal|detailed
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+# providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment
+# provider names are case-sensitive!
+deploy:
+# Deploy to GitHub Releases
+  provider: GitHub
+  release: v$(appveyor_build_version)
+  description: 'Prover release - v$(appveyor_build_version)'
+  auth_token:
+    secure: <your encrypted token> # your encrypted token from GitHub
+  artifact: /.*\.zip/            # upload all NuGet packages to release assets
+  on:
+    branch: master                # release from master branch only
+    appveyor_repo_tag: true       # deploy on tag push only
