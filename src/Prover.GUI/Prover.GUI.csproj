@@ -174,6 +174,7 @@
     <Compile Include="Reporting\InstrumentGenerator.cs" />
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentConnectViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />

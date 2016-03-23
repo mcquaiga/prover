@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 using MccDaq;
 using NLog;
 
-namespace Prover.Core.Communication
+namespace Prover.Core.ExternalDevices.DInOutBoards
 {
-    public enum MotorValues
+    public class DataAcqBoard : IDisposable, IDInOutBoard
     {
-        Start = 1023,
-        Stop = 0
-    }
+        private enum MotorValues
+        {
+            Start = 1023,
+            Stop = 0
+        }
 
-    public enum OutputPorts
-    {
-        DaOut0 = 0,
-        DaOut1 = 1
-    }
+        private enum OutputPorts
+        {
+            DaOut0 = 0,
+            DaOut1 = 1
+        }
 
-    public class DataAcqBoard : IDisposable
-    {
         private MccBoard _board;
         private readonly DigitalPortType _channelType;
         private readonly int _channelNum;

@@ -12,7 +12,6 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 {
     public class PTVerificationViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
-
         public PTVerificationViewModel(IUnityContainer container, bool showLiveRead = true, bool showCommButtons = true)
         {
             _container = container;
@@ -21,14 +20,24 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
             TestViews = new ObservableCollection<PTVerificationSetViewModel>();
         }
 
-        public PTVerificationViewModel(IUnityContainer container, Instrument instrument, bool showLiveRead = true, bool showCommButtons = true) : this(container, showLiveRead, showCommButtons)
+        public PTVerificationViewModel(IUnityContainer container, Instrument instrument, bool showLiveRead = false, bool showCommButtons = false) : this(container, showLiveRead, showCommButtons)
         {
             Instrument = instrument;
 
             TestViews = new ObservableCollection<PTVerificationSetViewModel>();
 
             instrument.VerificationTests.ForEach(x =>
-                TestViews.Add(new PTVerificationSetViewModel(_container, InstrumentManager, x)));
+                TestViews.Add(new PTVerificationSetViewModel(_container, instrument, x)));
+        }
+
+        public PTVerificationViewModel(IUnityContainer container, TestManager instrumentTestManager, bool showLiveRead = true, bool showCommButtons = true) : this(container, showLiveRead, showCommButtons)
+        {
+            InstrumentManager = instrumentTestManager;
+            Instrument = InstrumentManager.Instrument;
+
+            InstrumentManager.Instrument.VerificationTests.ForEach(x =>
+                TestViews.Add(new PTVerificationSetViewModel(_container, InstrumentManager, x))
+            );
         }
 
         public bool ShowLiveRead
@@ -37,6 +46,7 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
         }
 
         private IUnityContainer _container;
+
         public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
 

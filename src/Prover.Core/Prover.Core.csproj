@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Communications.cs" />
-    <Compile Include="Communication\DataAcqBoard.cs" />
+    <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="Communication\TestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
@@ -106,6 +106,8 @@
     <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ExternalDevices\DInOutBoards\EmptyDInOutBoard.cs" />
+    <Compile Include="ExternalDevices\DInOutBoards\IDInOutBoard.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="Migrations\201510030033541_InitialCreate.cs" />
     <Compile Include="Migrations\201510030033541_InitialCreate.Designer.cs">

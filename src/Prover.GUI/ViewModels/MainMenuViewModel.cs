@@ -19,7 +19,7 @@ namespace Prover.GUI.ViewModels
 
         public void NewTestButton()
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container)));
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new InstrumentConnectViewModel(_container)));
         }
 
         public void CreateCertificateButton()

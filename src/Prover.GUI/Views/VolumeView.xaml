@@ -41,11 +41,11 @@
                                  Margin="0 8 0 8"/>
 
                     </Grid>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Width="150" Margin="10"
-                            	        Content="Begin Test"
-                            	        HorizontalAlignment="Left"
-                            	        Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                    <Grid>
+                        <Button Width="200" Margin="10"
+                            	        Content="BEGIN"
+                            	        HorizontalAlignment="Center"
+                            	        Visibility="{Binding ShowBeginTestButton, Converter={StaticResource BoolToHiddenConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <cal:ActionMessage MethodName="StartTestCommand" />
@@ -53,16 +53,17 @@
                             </i:Interaction.Triggers>
                         </Button>
 
-                        <Button Width="150" Margin="10"
-                    		    Content="Stop Test"
-                    		    Visibility="{Binding ShowButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                        <Button Width="200" Margin="10"
+                    		    Content="STOP"
+                    		    Visibility="{Binding ShowStopTestButton, Converter={StaticResource BoolToHiddenConverter}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <cal:ActionMessage MethodName="StopTestCommand" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                    </StackPanel>
+                    </Grid>
+                    
                 </StackPanel>
             </StackPanel>
 

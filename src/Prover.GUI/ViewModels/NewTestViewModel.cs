@@ -26,14 +26,18 @@ using MaterialDesignThemes.Wpf;
 
 namespace Prover.GUI.ViewModels
 {
-    public class NewTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
+    public class NewTestViewModel : ReactiveScreen,  IHandle<InstrumentUpdateEvent>
     {
         readonly IUnityContainer _container;
 
-        public NewTestViewModel(IUnityContainer container)
+        public NewTestViewModel(IUnityContainer container, TestManager testManager)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
+
+            if (testManager == null)
+                throw new ArgumentNullException(nameof(testManager));   
+            InstrumentTestManager = testManager;
         }
 
         public TestManager InstrumentTestManager { get; set; }        
@@ -45,94 +49,14 @@ namespace Prover.GUI.ViewModels
         public Instrument Instrument => InstrumentTestManager.Instrument;
 
         #region Views
-        public SiteInformationViewModel SiteInformationItem => new SiteInformationViewModel(_container);
-        public PTVerificationViewModel PressureTemperatureVerificationSection { get; set; }
+        public SiteInformationViewModel SiteInformationItem => new SiteInformationViewModel(_container, InstrumentTestManager);
+        public PTVerificationViewModel PressureTemperatureVerificationSection => new PTVerificationViewModel(_container, InstrumentTestManager);
         public TemperatureViewModel TemperatureInformationItem { get; private set; }
         public PressureViewModel PressureInformationItem { get; private set; }
-        public VolumeViewModel VolumeInformationItem => new VolumeViewModel(_container);
+        public VolumeViewModel VolumeInformationItem => new VolumeViewModel(_container, InstrumentTestManager);
         #endregion
 
         #region Methods
-        private void SetupTestManager()
-        {
-            VerifySettings();
-
-            if (InstrumentTestManager == null)
-            {
-                var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
-                InstrumentTestManager = new TestManager(_container, commPort, TachCommPortName);
-            }
-        }
-
-        protected override void OnViewReady(object view)
-        {
-            base.OnViewReady(view);
-            VerifySettings();
-        }
-
-        private void VerifySettings()
-        {
-            InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
-            BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
-            TachCommPortName = SettingsManager.SettingsInstance.TachCommPort;
-
-            base.NotifyOfPropertyChange(() => InstrumentCommPortName);
-            base.NotifyOfPropertyChange(() => BaudRate);
-            base.NotifyOfPropertyChange(() => TachCommPortName);
-
-            if (string.IsNullOrEmpty(InstrumentCommPortName))
-            {
-                _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
-            }
-        }
-
-        public async void InitializeTest()
-        {
-            await Task.Run((Func<Task>)(async () =>
-            {
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-
-                try
-                {
-                    SetupTestManager();
-                    await InstrumentTestManager.InitializeInstrument(InstrumentType.MiniMax);
-
-                    base.NotifyOfPropertyChange(() => Instrument);
-
-                    BuildViews();
-
-                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed Download from Instrument!"));
-                    _container.Resolve<IEventAggregator>().PublishOnUIThread(new InstrumentUpdateEvent(InstrumentTestManager));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error occured communicating with the instrument." + Environment.NewLine
-                        + ex.Message,
-                        "Error",
-                        MessageBoxButton.OK);
-                }
-            }));          
-        }
-
-        private void BuildViews()
-        {
-            PressureTemperatureVerificationSection = new PTVerificationViewModel(_container);
-            base.NotifyOfPropertyChange(() => PressureTemperatureVerificationSection);
-
-            if (Instrument.Temperature != null)
-            {
-                TemperatureInformationItem = new TemperatureViewModel(_container);
-                base.NotifyOfPropertyChange(() => TemperatureInformationItem);
-            }
-
-            if (Instrument.Pressure != null)
-            {
-                PressureInformationItem = new PressureViewModel(_container);
-                base.NotifyOfPropertyChange(() => PressureInformationItem);
-            }
-               
-        }
-
         public async void SaveInstrument()
         {
             if (InstrumentTestManager == null) return;
@@ -150,9 +74,9 @@ namespace Prover.GUI.ViewModels
             instrumentReport.Generate();
         }
 
-        public void Handle(SettingsChangeEvent message)
+        public void Handle(InstrumentUpdateEvent message)
         {
-            SetupTestManager();
+            throw new NotImplementedException();
         }
         #endregion
     }

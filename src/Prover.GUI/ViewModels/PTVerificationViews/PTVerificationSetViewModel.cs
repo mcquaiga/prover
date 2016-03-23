@@ -19,6 +19,8 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
     {
         private bool showCommButtons;
         private IUnityContainer _container;
+        private Instrument instrument;
+        private Instrument.VerificationTest x;
 
         public PTVerificationSetViewModel(IUnityContainer container, TestManager instrumentManager, Instrument.VerificationTest verificationTest)
         {
@@ -30,6 +32,13 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
             SuperFactorTestViewModel = new SuperTestViewModel(container, instrumentManager, verificationTest.SuperTest);
 
             _container.Resolve<IEventAggregator>().Subscribe(this);
+        }
+
+        public PTVerificationSetViewModel(IUnityContainer _container, Instrument instrument, Instrument.VerificationTest x)
+        {
+            this._container = _container;
+            this.instrument = instrument;
+            this.x = x;
         }
 
         public string Level

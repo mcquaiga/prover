@@ -18,38 +18,44 @@ namespace Prover.GUI.ViewModels
 {
     public class VolumeViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
-
-        private readonly IUnityContainer _container;
-        
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IUnityContainer _container;        
         private bool _userHasRequestedStop;
-        private bool _isFirstVolumeTest = true;
 
         public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
-        public bool ShowButtons { get; }
+        public bool ShowBeginTestButton { get; private set; } = true;
+        public bool ShowStopTestButton { get; private set; } = false;
 
         public VolumeViewModel(IUnityContainer container, bool showButtons = true)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-            ShowButtons = showButtons;
+            
             _userHasRequestedStop = false;
+
+            if (!showButtons)
+            {
+                ShowBeginTestButton = false;
+                ShowStopTestButton = false;
+            }
         }
 
-        public VolumeViewModel(IUnityContainer container, Instrument instrument, bool showButtons = true) : this(container, showButtons)
+        public VolumeViewModel(IUnityContainer container, Instrument instrument) : this(container, false)
         {
             Instrument = instrument;
+        }
+
+        public VolumeViewModel(IUnityContainer container, TestManager instrumentTestManager) : this(container, true)
+        {
+            InstrumentManager = instrumentTestManager;
+            Instrument = InstrumentManager.Instrument;
         }
 
         public Volume Volume
         {
             get
             {
-                if (InstrumentManager != null)
-                {
-                    return InstrumentManager.Instrument.Volume;
-                }
                 return Instrument?.Volume;
             }
         }
@@ -58,19 +64,11 @@ namespace Prover.GUI.ViewModels
         {
             get
             {
-                if (InstrumentManager != null)
-                {
-                    return InstrumentManager.Instrument.Volume.AppliedInput;
-                }
-                else if (Instrument != null)
-                {
-                    return Instrument?.Volume?.AppliedInput ?? 0.00;
-                }
-                return 0.00;
+                return Instrument?.Volume?.AppliedInput ?? 0.00;
             }
             set
             {
-                InstrumentManager.Instrument.Volume.AppliedInput = value;
+                Instrument.Volume.AppliedInput = value;
                 RaisePropertyChanges();
             }
         }
@@ -79,11 +77,12 @@ namespace Prover.GUI.ViewModels
         {
             try
             {
+                ToggleTestButtons();
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
 
- 
-
                 await InstrumentManager.StartVolumeTest();
+
+                //TODO: Move this into the above function .StartVolumeTest()
                 await Task.Run(() =>
                 {
                     do
@@ -108,6 +107,7 @@ namespace Prover.GUI.ViewModels
 
         public async void StopTestCommand()
         {
+            ToggleTestButtons();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Finishing volume test..."));
             _userHasRequestedStop = true;
             if (InstrumentManager != null)
@@ -121,12 +121,21 @@ namespace Prover.GUI.ViewModels
         public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
         public Brush MeterDisplacementPercentColour => Volume?.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
 
+        private void ToggleTestButtons()
+        {
+            ShowBeginTestButton = !ShowBeginTestButton;
+            ShowStopTestButton = !ShowStopTestButton;
+            RaisePropertyChanges();
+        }
+
         private void RaisePropertyChanges()
         {
             NotifyOfPropertyChange(() => AppliedInput);
             NotifyOfPropertyChange(() => Volume);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
+            NotifyOfPropertyChange(() => ShowStopTestButton);
+            NotifyOfPropertyChange(() => ShowBeginTestButton);
         }
 
         public void Handle(InstrumentUpdateEvent message)

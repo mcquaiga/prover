@@ -13,6 +13,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.SerialProtocol;
 using Prover.Core.Models;
+using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.Communication
 {
@@ -44,7 +45,6 @@ namespace Prover.Core.Communication
         public TestManager(IUnityContainer container, InstrumentCommunicator instrumentCommunicator, TachometerCommunicator tachCommunicator) 
             : this(container)
         {
-
             InstrumentCommunicator = instrumentCommunicator;
             TachometerCommunicator = tachCommunicator;
         }
