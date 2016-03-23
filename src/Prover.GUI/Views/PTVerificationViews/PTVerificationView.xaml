@@ -4,6 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
+                                       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            Background="{DynamicResource MaterialDesignPaper}"
+            TextElement.FontWeight="Medium"
+            TextElement.FontSize="14"
+            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -12,25 +18,22 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid HorizontalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Vertical">
-            <ContentControl  x:Name="PTVerificationHeaderView" cal:View.Model="{Binding}" cal:View.Context="PTVerificationHeaderView"/>
+    <materialDesign:Card Margin="5">
+        <StackPanel Orientation="Vertical">
+            <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                Pressure &amp; Temperature Verification
+            </materialDesign:ColorZone>
+
+            <ItemsControl HorizontalAlignment="Center"
+                        ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                        ItemsSource="{Binding TestViews}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </StackPanel>
-
-        <ItemsControl Grid.Row="1" HorizontalAlignment="Center"
-                    ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                    ItemsSource="{Binding TestViews}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-
-
-    </Grid>
+    </materialDesign:Card>
 </UserControl>

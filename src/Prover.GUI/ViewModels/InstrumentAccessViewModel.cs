@@ -82,7 +82,7 @@ namespace Prover.GUI.ViewModels
 
         public void Handle(ScreenChangeEvent message)
         {
-            DisconnectFromInstrument().Wait();
+            DisconnectFromInstrument();
         }
 
         public void Dispose()

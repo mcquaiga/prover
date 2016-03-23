@@ -52,38 +52,17 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        private void SetupTestManager()
-        {
-            VerifySettings();
-
-            if (InstrumentTestManager == null)
-            {
-                var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
-                InstrumentTestManager = new TestManager(_container, commPort, TachCommPortName);
-            }
-        }
-
         public async void InitializeTest()
         {
-            await Task.Run(async () =>
-            {
-                if (InstrumentTestManager == null)
-                {
-                    var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
-                    InstrumentTestManager = new TestManager(_container, commPort, TachCommPortName);
-                }
-
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting download from instrument..."));
-
-                await InstrumentTestManager.InitializeInstrument(InstrumentType.MiniMax);
-
-                _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container, InstrumentTestManager)));                
-            });
+            var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
+            InstrumentTestManager = await TestManager.Create(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
+                
+            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container, InstrumentTestManager)));                
         }
 
         public void Handle(SettingsChangeEvent message)
         {
-            SetupTestManager();
+            VerifySettings();
         }
 
     }

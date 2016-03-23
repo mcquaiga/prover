@@ -27,8 +27,13 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
             TestViews = new ObservableCollection<TemperatureTestViewModel>();
 
-            Temperature.Tests.ForEach(x =>
-                TestViews.Add(new TemperatureTestViewModel(_container, InstrumentManager, x, showCommButtons)));
+            Instrument.Temperature.Tests.ForEach(x =>
+                TestViews.Add(new TemperatureTestViewModel(_container, x, showCommButtons)));
+        }
+
+        public TemperatureViewModel(IUnityContainer container, TestManager instrumentManager) : this(container, instrumentManager.Instrument, true, true)
+        {
+
         }
 
         public bool ShowLiveRead
@@ -47,11 +52,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         {
             get
             {
-                if (InstrumentManager != null)
-                {
-                    return InstrumentManager.Instrument.Temperature;
-                }
-                
                 return Instrument?.Temperature;
             }
         }
@@ -61,7 +61,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
             InstrumentManager = message.InstrumentManager;
 
             InstrumentManager.Instrument.Temperature.Tests.ForEach(x =>
-                TestViews.Add(new TemperatureTestViewModel(_container, InstrumentManager, x))
+                TestViews.Add(new TemperatureTestViewModel(_container, x))
             );
 
             NotifyOfPropertyChange(() => InstrumentManager);

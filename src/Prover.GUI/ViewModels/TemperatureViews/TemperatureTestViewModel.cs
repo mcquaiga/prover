@@ -11,11 +11,10 @@ using NLog;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {
-    public class TemperatureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>, IHandle<VerificationTestEvent>
+    public class TemperatureTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public TestManager InstrumentManager { get; set; }
         public bool ShowCommButton { get; }
         public TemperatureTest Test { get; set; }
 
@@ -24,11 +23,10 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public TemperatureTest.Level TestLevel => Test.TestLevel;
 
-        public TemperatureTestViewModel(IUnityContainer container, TestManager instrumentManager, TemperatureTest test, bool showCommButton = true)
+        public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test, bool showCommButton = true)
         {
             _container = container;
             Test = test;
-            InstrumentManager = instrumentManager;
             ShowCommButton = showCommButton;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
@@ -45,11 +43,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
-
-        public void Handle(InstrumentUpdateEvent message)
-        {
-            InstrumentManager = message.InstrumentManager;
-        }
 
         public void Handle(VerificationTestEvent @event)
         {

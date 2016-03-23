@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Xps.Packaging;
-using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.GUI.ViewModels.CertificateReport;
-using Prover.GUI.ViewModels.InstrumentsList;
-using Prover.GUI.Views.CertificateReport;
-using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
 using Prover.GUI.Reporting;
+using Prover.GUI.ViewModels.InstrumentsList;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 
 namespace Prover.GUI.ViewModels
 {

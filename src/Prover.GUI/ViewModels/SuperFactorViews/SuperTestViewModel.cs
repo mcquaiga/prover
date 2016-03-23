@@ -14,26 +14,25 @@ using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.SuperFactorViews
 {
-    public class SuperTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
+    public class SuperTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public TestManager InstrumentManager { get; set; }
         public SuperFactor Test { get; set; }
 
-        public SuperTestViewModel(IUnityContainer container, TestManager instrumentManager, SuperFactor test)
+        public SuperTestViewModel(IUnityContainer container, SuperFactor test)
         {
             _container = container;
             Test = test;
-            InstrumentManager = instrumentManager;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
 
-        public void Handle(InstrumentUpdateEvent message)
+        public void Handle(VerificationTestEvent message)
         {
-            InstrumentManager = message.InstrumentManager;
+            NotifyOfPropertyChange(() => Test);
         }
     }
 }

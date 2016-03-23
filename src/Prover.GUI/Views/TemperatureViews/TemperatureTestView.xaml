@@ -9,12 +9,12 @@
              xmlns:converters="clr-namespace:Prover.GUI.Converters"
              xmlns:controls="clr-namespace:Prover.GUI.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            Background="{DynamicResource MaterialDesignPaper}"
-            TextElement.FontWeight="Medium"
-            TextElement.FontSize="14"
-            FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="250">
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="250">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"

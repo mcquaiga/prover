@@ -16,11 +16,10 @@ using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.PressureViews
 {
-    public class PressureTestViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>, IHandle<VerificationTestEvent>
+    public class PressureTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public TestManager InstrumentManager { get; set; }
         public bool ShowCommButton { get; }
         public PressureTest Test { get; set; }
 
@@ -29,33 +28,12 @@ namespace Prover.GUI.ViewModels.PressureViews
 
         public PressureTest.PressureLevel TestLevel => Test.TestLevel;
 
-        public PressureTestViewModel(IUnityContainer container, TestManager instrumentManager, PressureTest test, bool showCommButton = true)
+        public PressureTestViewModel(IUnityContainer container, PressureTest test, bool showCommButton = true)
         {
             _container = container;
             Test = test;
-            InstrumentManager = instrumentManager;
             ShowCommButton = showCommButton;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-        }
-
-        public async Task LiveReadCommand()
-        {
-            var liveReadView = new LiveReadView
-            {
-                DataContext = new LiveReadViewModel(_container)
-            };
-
-            var reading = InstrumentManager.StartLiveRead(8);
-            //show the dialog
-            var result = await DialogHost.Show(liveReadView, "LiveReadDialog", ClosingEventHandler);
-
-            //check the result...
-            Console.WriteLine("Dialog was closed, the CommandParameter used to close it was: " + (result ?? "NULL"));
-        }
-
-        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
-        {
-            InstrumentManager.InstrumentCommunicator.Disconnect().Wait();
         }
 
         public decimal Gauge
@@ -81,11 +59,6 @@ namespace Prover.GUI.ViewModels.PressureViews
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
-
-        public void Handle(InstrumentUpdateEvent message)
-        {
-            InstrumentManager = message.InstrumentManager;
-        }
 
         public void Handle(VerificationTestEvent @event)
         {

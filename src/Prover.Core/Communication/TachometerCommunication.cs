@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using NLog;
+using Prover.Core.ExternalDevices.DInOutBoards;
+using Prover.SerialProtocol;
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NLog;
-using NLog.Targets;
-using Prover.SerialProtocol;
-using Prover.Core.Extensions;
 
 namespace Prover.Core.Communication
 {
     public class TachometerCommunicator : IDisposable
     {
         private readonly SerialPort _serialPort;
-        private DataAcqBoard _outputBoard;
+        private IDInOutBoard _outputBoard;
         private Logger _log = LogManager.GetCurrentClassLogger();
 
         public TachometerCommunicator(string portName)
         {
             _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
-            _outputBoard = new DataAcqBoard(0, 0, 1);
+            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 1);
         }
 
         public async Task ResetTach()

@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.ViewModels.PTVerificationViews;
 using Prover.GUI.ViewModels.TemperatureViews;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Prover.GUI.ViewModels.InstrumentReport
         
         public Instrument Instrument { get; private set; }
         public SiteInformationViewModel SiteInformation { get; private set; }
-        public TemperatureViewModel Temperature { get; private set; }
+        public PTVerificationViewModel PTVerification { get; private set; }
         public VolumeViewModel Volume { get; private set; }
 
         public InstrumentReportViewModel(IUnityContainer container, Instrument instrument)
@@ -29,7 +30,7 @@ namespace Prover.GUI.ViewModels.InstrumentReport
         private void SetupView()
         {
             SiteInformation = new SiteInformationViewModel(_container, Instrument);
-            Temperature = new TemperatureViewModel(_container, Instrument, false, false);
+            PTVerification = new PTVerificationViewModel(_container, Instrument, false, false);
             Volume = new VolumeViewModel(_container, Instrument);
         }
         

@@ -67,8 +67,8 @@
                 </StackPanel>
             </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <materialDesign:Card Margin="5" Width="250">
+            <UniformGrid Columns="3" HorizontalAlignment="Center">
+                <materialDesign:Card Margin="2" Width="250">
                     <StackPanel>
                         <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent">
@@ -84,7 +84,7 @@
                         </UniformGrid>
                     </StackPanel>
                 </materialDesign:Card>
-                <materialDesign:Card Margin="5" Width="250">
+                <materialDesign:Card Margin="2" Width="250">
                     <StackPanel>
                         <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent">
@@ -100,7 +100,7 @@
   
                     </StackPanel>
                 </materialDesign:Card>
-            <materialDesign:Card Margin="5" Width="250">
+            <materialDesign:Card Margin="2" Width="250">
                     <StackPanel>
                         <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                       Mode="Accent">
@@ -117,7 +117,7 @@
 
                     </StackPanel>
                 </materialDesign:Card>
-            </StackPanel>
+            </UniformGrid>
         </StackPanel>
     </materialDesign:Card>
 </UserControl>

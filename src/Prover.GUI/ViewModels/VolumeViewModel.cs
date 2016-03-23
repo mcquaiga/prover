@@ -79,25 +79,8 @@ namespace Prover.GUI.ViewModels
             {
                 ToggleTestButtons();
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
-
                 await InstrumentManager.StartVolumeTest();
-
-                //TODO: Move this into the above function .StartVolumeTest()
-                await Task.Run(() =>
-                {
-                    do
-                    {
-                        InstrumentManager.Instrument.Volume.PulseACount += InstrumentManager.AInputBoard.ReadInput();
-                        InstrumentManager.Instrument.Volume.PulseBCount += InstrumentManager.BInputBoard.ReadInput();
-                        NotifyOfPropertyChange(() => Volume);
-                    } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected() || _userHasRequestedStop);
-                });
-                _userHasRequestedStop = false;
-                await InstrumentManager.StopVolumeTest();
-
                 RaisePropertyChanges();
-
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
             }
             catch (Exception ex)
             {
@@ -105,16 +88,11 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        public async void StopTestCommand()
+        public void StopTestCommand()
         {
             ToggleTestButtons();
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Finishing volume test..."));
-            _userHasRequestedStop = true;
-            if (InstrumentManager != null)
-            {
-                await InstrumentManager.StopVolumeTest();
-                RaisePropertyChanges();
-            }    
+            InstrumentManager.StopVolumeTest();
+            RaisePropertyChanges();  
         }
 
         public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.Green : Brushes.Red;

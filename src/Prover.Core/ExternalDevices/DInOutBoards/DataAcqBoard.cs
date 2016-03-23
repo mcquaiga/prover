@@ -31,10 +31,12 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public DataAcqBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
         {
+            _ulStatErrorInfo = MccService.ErrHandling(ErrorReporting.PrintAll, ErrorHandling.DontStop);
+
             _board = new MccBoard(boardNumber);
             _channelType = channelType;
             _channelNum = channelNumber;
-            _ulStatErrorInfo = MccService.ErrHandling(ErrorReporting.PrintAll, ErrorHandling.StopAll);
+
             _pulseIsCleared = true;
             _log.Info("Initialized DataAcqBoard: {0}, channel type {1}, channel number {2}", boardNumber, channelType, channelNumber);
         }
@@ -68,13 +70,13 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
                 else
                 {
                     _pulseIsCleared = true;
-                } 
+                }
             }
             else
             {
                 _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
             }
-            return 0;
+            return 0;           
         }
 
         private void Out(MotorValues outputValue)

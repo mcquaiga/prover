@@ -15,7 +15,7 @@
              d:DataContext="{d:DesignInstance Type=vm:SiteInformationViewModel, IsDesignTimeCreatable=True}"
              cal:Bind.AtDesignTime="True"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="882">
+             d:DesignHeight="200" d:DesignWidth="355">
     <materialDesign:Card Margin="5">
         <StackPanel Orientation="Vertical">
             <!--  Basic Details Info  -->

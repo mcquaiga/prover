@@ -14,7 +14,7 @@
                 TextElement.FontWeight="Medium"
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="700">
+                mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="700">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
@@ -37,7 +37,7 @@
                             Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="..\..\Resources\download_white.png" VerticalAlignment="Center" Height="20" Width="20" HorizontalAlignment="Left"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5 0" HorizontalAlignment="Right">Download Readings</TextBlock>
+                    <!--<TextBlock VerticalAlignment="Center" Margin="5 0" HorizontalAlignment="Right"></TextBlock>-->
                 </StackPanel>
                     <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

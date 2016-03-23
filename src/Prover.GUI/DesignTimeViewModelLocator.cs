@@ -39,7 +39,7 @@ namespace Prover.GUI
         {
             // Blend creates types from a runtime/dynamic assembly, so match on name/namespace
             var viewModelType = typeof(DesignTimeViewModelLocator).Assembly.DefinedTypes
-                .First(t => t.Name == value.GetType().Name && value.GetType().Namespace.EndsWith(t.Namespace)).AsType();
+                .First(t => t.Name == value.GetType().Name && value.GetType().Namespace.EndsWith(t.Namespace, StringComparison.Ordinal)).AsType();
 
             return container.GetInstance(viewModelType, null);
         }

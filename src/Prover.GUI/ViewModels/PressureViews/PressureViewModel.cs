@@ -30,14 +30,18 @@ namespace Prover.GUI.ViewModels.PressureViews
         {
             Instrument = instrument;
 
-            Pressure.Tests.ForEach(x =>
-                TestViews.Add(new PressureTestViewModel(_container, TestManager, x, showCommButtons)));
+            Instrument.Pressure.Tests.ForEach(x =>
+                TestViews.Add(new PressureTestViewModel(_container, x, showCommButtons)));
         }
 
         public PressureViewModel(IUnityContainer container, TestManager testManager, bool showLiveRead = true, bool showCommButtons = true) 
             : this(container, testManager.Instrument, showLiveRead, showCommButtons)
         {
             TestManager = testManager;
+
+            TestManager.Instrument.Pressure.Tests.ForEach(x =>
+                TestViews.Add(new PressureTestViewModel(_container, x))
+            );
         }
 
         public Instrument Instrument { get; set; }
@@ -56,13 +60,6 @@ namespace Prover.GUI.ViewModels.PressureViews
 
         public void Handle(InstrumentUpdateEvent message)
         {
-            TestManager = message.InstrumentManager;
-
-            TestManager.Instrument.Pressure.Tests.ForEach(x =>
-                TestViews.Add(new PressureTestViewModel(_container, TestManager, x))
-            );
-
-            NotifyOfPropertyChange(() => TestManager);
             NotifyOfPropertyChange(() => Pressure);
             NotifyOfPropertyChange(() => TestViews);
         }

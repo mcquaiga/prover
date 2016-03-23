@@ -17,28 +17,44 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 {
     public class PTVerificationSetViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
-        private bool showCommButtons;
         private IUnityContainer _container;
-        private Instrument instrument;
-        private Instrument.VerificationTest x;
+        private Instrument _instrument;
+        private Instrument.VerificationTest _verificationTest;
 
-        public PTVerificationSetViewModel(IUnityContainer container, TestManager instrumentManager, Instrument.VerificationTest verificationTest)
+        public PTVerificationSetViewModel(IUnityContainer container, Instrument instrument, Instrument.VerificationTest verificationTest)
         {
             _container = container;
-            InstrumentManager = instrumentManager;
             VerificationTest = verificationTest;
-            TemperatureTestViewModel = new TemperatureTestViewModel(container, instrumentManager, verificationTest.TemperatureTest);
-            PressureTestViewModel = new PressureTestViewModel(container, instrumentManager, verificationTest.PressureTest);
-            SuperFactorTestViewModel = new SuperTestViewModel(container, instrumentManager, verificationTest.SuperTest);
+            _instrument = instrument;
+
+            CreateViews();
 
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public PTVerificationSetViewModel(IUnityContainer _container, Instrument instrument, Instrument.VerificationTest x)
+        public PTVerificationSetViewModel(IUnityContainer container, TestManager instrumentManager, Instrument.VerificationTest verificationTest)
+            :this(container, instrumentManager.Instrument, verificationTest)
         {
-            this._container = _container;
-            this.instrument = instrument;
-            this.x = x;
+        }
+
+        private void CreateViews()
+        {
+            if (_instrument.CorrectorType == CorrectorType.PressureTemperature)
+            {
+                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
+                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
+                SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperTest);
+            }                
+
+            if (_instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            {
+                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
+            }
+
+            if (_instrument.CorrectorType == CorrectorType.PressureOnly)
+            {
+                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
+            }
         }
 
         public string Level

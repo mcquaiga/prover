@@ -106,6 +106,7 @@
     <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ExternalDevices\DInOutBoards\DInOutBoardFactory.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\EmptyDInOutBoard.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\IDInOutBoard.cs" />
     <Compile Include="IO\FileSystem.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
+    <Compile Include="VerificationTests\VolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
@@ -150,9 +152,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.SerialProtocol.vbproj">
+    <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
-      <Name>Prover.SerialProtocol</Name>
+      <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
