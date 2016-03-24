@@ -25,14 +25,13 @@ namespace Prover.GUI.ViewModels
         private string _applicationEventMessage;
         private MainMenuViewModel _mainMenu;
         private object _currentView;
-        private ToastNotificationViewModel _toasts;
 
         public ShellViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
             _mainMenu = new MainMenuViewModel(_container);
-            _toasts = new ToastNotificationViewModel(_container);
+            Notifications = new ToastNotificationViewModel(_container);
 
             ShowMainMenu();
         }
@@ -58,6 +57,8 @@ namespace Prover.GUI.ViewModels
             //show the dialog
             _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
         }
+
+        public ToastNotificationViewModel Notifications { get; set; }
 
         public string ApplicationEventMessage
         {

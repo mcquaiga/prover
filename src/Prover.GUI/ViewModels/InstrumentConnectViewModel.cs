@@ -54,9 +54,11 @@ namespace Prover.GUI.ViewModels
 
         public async void InitializeTest()
         {
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Connecting..."));
+
             var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
             InstrumentTestManager = await TestManager.Create(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
-                
+                        
             _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container, InstrumentTestManager)));                
         }
 
