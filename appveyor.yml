@@ -34,6 +34,11 @@ deploy:
   release: v$(APPVEYOR_BUILD_VERSION)
   description: 'Prover release - v$(APPVEYOR_BUILD_VERSION)'
   auth_token:
-    secure: GUR7LqjBnoRB5BGTUhRrE4Wc+ZyV3eAkDXe2S7gMbmeGN0t2gpAR0x+3jA1LWvKlXAsB8jyPil0HBD1SYFnDXkq9cIFnxTGxax47RUzbNxk=
+    secure: $(git_api_key)
   on:
     branch: master
+
+
+environment:
+  git_api_key:
+    secure: GUR7LqjBnoRB5BGTUhRrE4Wc+ZyV3eAkDXe2S7gMbmeGN0t2gpAR0x+3jA1LWvKlXAsB8jyPil0HBD1SYFnDXkq9cIFnxTGxax47RUzbNxk=
