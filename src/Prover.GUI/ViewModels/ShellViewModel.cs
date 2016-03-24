@@ -71,7 +71,7 @@ namespace Prover.GUI.ViewModels
 
         public string Title
         {
-            get { return "Prover"; }
+            get { return "EVC Prover"; }
         }
 
         public void Handle(ScreenChangeEvent message)

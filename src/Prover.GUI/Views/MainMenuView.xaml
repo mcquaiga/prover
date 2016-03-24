@@ -10,7 +10,7 @@
             <Button x:Name="NewTestButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\Resources\clipboard-check.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Test Instrument</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Verify Instrument</TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="CreateCertificateButton" Width="128" Height="150">
@@ -22,7 +22,7 @@
             <Button x:Name="RawInstrumentAccessButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\Resources\cloud-upload.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Instrument 
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Raw Item
                         Access</TextBlock>
                 </StackPanel>
             </Button>
