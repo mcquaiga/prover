@@ -23,12 +23,13 @@ namespace Prover.Core.Models.Instruments
             FixedFactor = 111
         }
 
-        public TemperatureTest(Temperature temp, bool isVolumeTest = false) : 
+        public TemperatureTest(Temperature temp, bool isVolumeTest = false, double defaultGauge = 0) : 
             base(temp.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
         {
             Temperature = temp;
             TemperatureId = temp.Id;
             IsVolumeTestTemperature = isVolumeTest;
+            Gauge = defaultGauge;
         }
 
         public Guid TemperatureId { get; set; }

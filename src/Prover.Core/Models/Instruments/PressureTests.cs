@@ -15,12 +15,14 @@ namespace Prover.Core.Models.Instruments
         private int PRESSURE_FACTOR = 44;
         private int UNSQR_FACTOR = 47;
         
-        public PressureTest(Pressure pressure, bool isVolumeTest) : 
+        public PressureTest(Pressure pressure, bool isVolumeTest = false, decimal defaultGauge = 0) : 
             base(pressure.Instrument.Items.CopyItemsByFilter(x => x.IsPressureTest == true))
         {
             Pressure = pressure;
             PressureId = pressure.Id;
             IsVolumeTestPressure = isVolumeTest;
+            GasGauge = defaultGauge;
+            AtmosphericGauge = 0;
         }
 
         public Guid PressureId { get; set; }
@@ -61,7 +63,7 @@ namespace Prover.Core.Models.Instruments
                         break;
                 }
 
-                return decimal.Round(result.Value, 4);
+                return result.HasValue ? decimal.Round(result.Value, 4) : result;
             }
         }
 
