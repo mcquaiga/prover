@@ -20,7 +20,7 @@
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
-    <materialDesign:Card Margin="5">
+    <materialDesign:Card Margin="2">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="12" Content="{Binding Level}" Margin="3,3,3,3" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent" />
@@ -31,7 +31,7 @@
 
             <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"/>
 
-            <Button Margin="5"
+            <Button Margin="2"
                             HorizontalAlignment="Left"
                             materialDesign:RippleAssist.IsCentered="True"
                             Visibility="{Binding ShowCommButton, Converter={StaticResource BoolToHiddenConverter}}">

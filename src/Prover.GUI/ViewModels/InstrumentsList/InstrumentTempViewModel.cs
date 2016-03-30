@@ -23,7 +23,7 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             get
             {
                 return (from t in _testViewModels
-                        orderby t.Test.TestLevel
+                        orderby t.Test.Gauge descending
                         select t).ToList();
 
             }

@@ -14,32 +14,17 @@ namespace Prover.Core.Models.Instruments
         private int GAS_PRESSURE = 8;
         private int PRESSURE_FACTOR = 44;
         private int UNSQR_FACTOR = 47;
-
-        //const decimal LOW_PERCENT = 20;
-        //const decimal MID_PERCENT = 50;
-        //const decimal HIGH_PERCENT = 80;
-
-        public enum PressureLevel
-        {
-            High,
-            Medium,
-            Low
-        }
         
-        public PressureTest(Pressure pressure, PressureLevel level) : 
+        public PressureTest(Pressure pressure, bool isVolumeTest) : 
             base(pressure.Instrument.Items.CopyItemsByFilter(x => x.IsPressureTest == true))
         {
             Pressure = pressure;
             PressureId = pressure.Id;
-            TestLevel = level;
-            IsVolumeTestPressure = TestLevel == PressureLevel.High;
-            SetDefaultGauge(TestLevel);
+            IsVolumeTestPressure = isVolumeTest;
         }
 
         public Guid PressureId { get; set; }
         public Pressure Pressure { get; set; }
-
-        public PressureLevel TestLevel { get; set; }
         public bool IsVolumeTestPressure { get; private set; }
 
         public decimal? GasGauge { get; set; }
@@ -116,27 +101,27 @@ namespace Prover.Core.Models.Instruments
             get { return (PercentError < 1 && PercentError > -1); }
         }
 
-        public void SetDefaultGauge(PressureLevel level)
-        {
-            int percent;
+        //public void SetDefaultGauge(PressureLevel level)
+        //{
+        //    int percent;
 
-            switch (level)
-            {
-                case PressureLevel.Low:
-                    percent = 20;
-                    break;
-                case PressureLevel.Medium:
-                    percent = 50;
-                    break;
-                case PressureLevel.High:
-                    percent = 80;
-                    break;
-                default:
-                    percent = 0;
-                    break;
-            }
+        //    switch (level)
+        //    {
+        //        case PressureLevel.Low:
+        //            percent = 20;
+        //            break;
+        //        case PressureLevel.Medium:
+        //            percent = 50;
+        //            break;
+        //        case PressureLevel.High:
+        //            percent = 80;
+        //            break;
+        //        default:
+        //            percent = 0;
+        //            break;
+        //    }
 
-            GasGauge = ((decimal)percent / 100) * Pressure.EvcPressureRange;
-        }
+        //    GasGauge = ((decimal)percent / 100) * Pressure.EvcPressureRange;
+        //}
     }
 }

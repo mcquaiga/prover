@@ -4,6 +4,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using System;
 using System.Collections.Generic;

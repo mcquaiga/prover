@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.Events
 {

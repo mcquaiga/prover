@@ -26,8 +26,6 @@ namespace Prover.GUI.ViewModels.PressureViews
         public bool ShowGaugeDecimalControl => ShowCommButton;
         public bool ShowGaugeText => !ShowCommButton;
 
-        public PressureTest.PressureLevel TestLevel => Test.TestLevel;
-
         public PressureTestViewModel(IUnityContainer container, PressureTest test, bool showCommButton = true)
         {
             _container = container;

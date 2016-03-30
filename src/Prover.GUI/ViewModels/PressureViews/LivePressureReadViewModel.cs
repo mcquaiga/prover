@@ -3,6 +3,7 @@ using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Events;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using System;
 using System.Collections.Generic;

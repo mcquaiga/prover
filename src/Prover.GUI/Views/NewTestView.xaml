@@ -18,34 +18,16 @@
 		<BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
     </UserControl.Resources>
 
-	<ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical">
+            <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}"/>
+            <ContentControl Margin="2" cal:View.Model="{Binding PressureTemperatureVerificationSection}"/>
+            <ContentControl Margin="2" cal:View.Model="{Binding VolumeInformationItem}"/>
 
-        <StackPanel Margin="0,0,0,25">
-            <Grid Margin="0,10,0,10">
-				<ContentControl cal:View.Model="{Binding SiteInformationItem}"/>
-			</Grid>
-
-            <Grid Margin="0,10,0,10">
-                <ContentControl cal:View.Model="{Binding PressureTemperatureVerificationSection}"/>
-            </Grid>
-            
-            <!--<Grid Margin="0,10,0,10">
-				<ContentControl cal:View.Model="{Binding TemperatureInformationItem}"/>
-			</Grid>
-
-            <Grid Margin="0,10,0,10">
-                <ContentControl cal:View.Model="{Binding PressureInformationItem}"/>
-            </Grid>-->
-
-            <Grid Margin="0,10,0,10">
-				<ContentControl cal:View.Model="{Binding VolumeInformationItem}"/>
-			</Grid>
-
-
-			<Border Margin="15,0,15,5"
+            <Border Margin="15,0,15,5"
 					BorderBrush="{DynamicResource HeaderColour}"
 					BorderThickness="0,0,0,1" />
-            
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="150"
 						Margin="10"
@@ -61,16 +43,13 @@
 						Margin="10"
 						Content="Save"
 						>
-					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Click">
-							<cal:ActionMessage MethodName="SaveInstrument" />
-						</i:EventTrigger>
-					</i:Interaction.Triggers>
-				</Button>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="SaveInstrument" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
             </StackPanel>
-
-			<WrapPanel Width="5" Height="16" />
-			<WrapPanel Width="144" Height="14.5" />
-		</StackPanel>
+        </StackPanel>
 	</ScrollViewer>
 </UserControl>

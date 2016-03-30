@@ -21,8 +21,6 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         public bool ShowGaugeDecimalControl => ShowCommButton;
         public bool ShowGaugeText => !ShowCommButton;
 
-        public TemperatureTest.Level TestLevel => Test.TestLevel;
-
         public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test, bool showCommButton = true)
         {
             _container = container;
@@ -40,6 +38,11 @@ namespace Prover.GUI.ViewModels.TemperatureViews
                 NotifyOfPropertyChange(() => Test);
                 NotifyOfPropertyChange(() => PercentColour);
             }
+        }
+
+        public void StartLiveReadCommand()
+        {
+
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;

@@ -7,6 +7,8 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using Prover.Core.VerificationTests;
+using System.Linq;
 
 namespace Prover.GUI.ViewModels.PTVerificationViews
 {
@@ -26,7 +28,7 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 
             TestViews = new ObservableCollection<PTVerificationSetViewModel>();
 
-            instrument.VerificationTests.ForEach(x =>
+            instrument.VerificationTests.OrderBy(v => v.TestNumber).ForEach(x =>
                 TestViews.Add(new PTVerificationSetViewModel(_container, instrument, x)));
         }
 

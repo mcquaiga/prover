@@ -13,6 +13,7 @@ using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using System.Windows.Media;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.ViewModels
 {

@@ -21,11 +21,11 @@
          TrueValue="Visible" FalseValue="Hidden" />
     </UserControl.Resources>
     <!--**** START TEMPERATURE **** -->
-    <materialDesign:Card Margin="5">
+    <materialDesign:Card Margin="2">
         <StackPanel Orientation="Vertical" Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}">
-            <materialDesign:ColorZone Padding="3" Content="Temperature" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+            <materialDesign:ColorZone Padding="2" Content="Temperature" Mode="PrimaryDark" Margin="3" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
             <!-- Instrument Report, textblock instead of displaying the button-->
-            <UniformGrid Columns="2">
+            <UniformGrid Columns="2" Margin="2">
                 <!--INstrument Report , Text display instead of the decimal control -->
                 <controls:ValueDescriptionControl
                                                     Label="Gauge"
@@ -36,7 +36,7 @@
                                                        Value="{Binding Test.EvcReading}" />
             </UniformGrid>
 
-            <UniformGrid Columns="3" Margin="3">
+            <UniformGrid Columns="3" Margin="2">
                 <controls:ValueDescriptionControl ScaleFactor="0.5"
                                                        Label="Actual Factor"
                                                        Value="{Binding Test.ActualFactor}"/>
@@ -49,7 +49,7 @@
                                                        Value="{Binding Test.PercentError}"/>
             </UniformGrid>
 
-            <UniformGrid Columns="2" Margin="3">
+            <UniformGrid Columns="2" Margin="2">
                 <Button Content="Live Read" HorizontalAlignment="Left" Margin="5 0 0 5"
                                 Style="{StaticResource MaterialDesignFlatButton}">
                     <i:Interaction.Triggers>
@@ -58,10 +58,10 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <xctk:DecimalUpDown Width="125" Height="35" 
+                <xctk:DecimalUpDown Width="110" Height="35" 
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Right"
-                                            FontSize="20"                           
+                                            FontSize="18"                           
                                                 Watermark="Gauge"
 							                    Value="{Binding Test.Gauge}"
                                         Visibility="{Binding ShowGaugeDecimalControl, Converter={StaticResource BoolToHiddenConverter}}"/>

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.VerificationTests
 {
-    sealed class RotaryVolumeVerification
+    sealed class RotaryVolumeVerification : VerificationBase
     {
         private Logger _log = LogManager.GetCurrentClassLogger();
         private bool _isFirstVolumeTest = true;
@@ -20,15 +20,12 @@ namespace Prover.Core.VerificationTests
         private IDInOutBoard _outputBoard;
         private IDInOutBoard _firstPortAInputBoard;
         private IDInOutBoard _firstPortBInputBoard;
-        private InstrumentCommunicator _instrumentCommunicator;
         private TachometerCommunicator _tachometerCommunicator;
-        private Instrument _instrument;
         private bool _stopTest;
 
         public RotaryVolumeVerification(Instrument instrument, InstrumentCommunicator instrumentComm, TachometerCommunicator tachComm)
+            :base(instrument, instrumentComm)
         {
-            _instrument = instrument;
-            _instrumentCommunicator = instrumentComm;
             _tachometerCommunicator = tachComm;
 
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);

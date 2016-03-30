@@ -13,14 +13,14 @@ using System.Windows;
 
 namespace Prover.GUI.ViewModels
 {
-    public class SettingsViewModel : ReactiveScreen
+    public class SettingsViewModel : ReactiveScreen, IWindowSettings
     {
         IUnityContainer _container;
         string          _selectedCommPort;
         BaudRateEnum    _selectedBaudRate;
         string          _selectedTachCommPort;
 
-        public static dynamic WindowSettings
+        public dynamic WindowSettings
         {
             get
             {

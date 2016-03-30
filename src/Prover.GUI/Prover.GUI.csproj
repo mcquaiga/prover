@@ -213,6 +213,7 @@
     <Compile Include="Reporting\CertificateGenerator.cs" />
     <Compile Include="Reporting\InstrumentGenerator.cs" />
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
+    <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
     <Compile Include="ViewModels\InstrumentConnectViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
+    <Compile Include="ViewModels\IWindowSettings.cs" />
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\NewTestViewModel.cs" />
@@ -230,6 +232,7 @@
     <Compile Include="Events\VerificationTestEvent.cs" />
     <Compile Include="ViewModels\PTVerificationViews\PTVerificationSetViewModel.cs" />
     <Compile Include="ViewModels\PTVerificationViews\PTVerificationViewModel.cs" />
+    <Compile Include="ViewModels\ScreenManager.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteInformationViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -241,6 +244,9 @@
     <Compile Include="ViewModels\VolumeViewModel.cs" />
     <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CommunicationStatusView.xaml.cs">
+      <DependentUpon>CommunicationStatusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateCertificateView.xaml.cs">
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
@@ -346,6 +352,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CertificateReport\CertificateReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CommunicationStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

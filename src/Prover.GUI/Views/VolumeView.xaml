@@ -23,7 +23,7 @@
     <materialDesign:Card Margin="5">
         <StackPanel>
             <StackPanel>
-                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                               Mode="PrimaryDark" DockPanel.Dock="Top">
                     Volume Verification
                 </materialDesign:ColorZone>
@@ -35,7 +35,7 @@
                     <Grid>
                         <TextBox materialDesign:TextFieldAssist.Hint="Applied Input" 
                                  HorizontalAlignment="Center"
-                                 FontSize="28"
+                                 FontSize="16"
                                  Text="{Binding AppliedInput}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  Margin="0 8 0 8"/>
@@ -68,9 +68,9 @@
             </StackPanel>
 
             <UniformGrid Columns="3" HorizontalAlignment="Center">
-                <materialDesign:Card Margin="2" Width="250">
+                <materialDesign:Card Margin="2">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        <materialDesign:ColorZone Padding="3" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent">
                             Meter Displacement
                         </materialDesign:ColorZone>
@@ -86,7 +86,7 @@
                 </materialDesign:Card>
                 <materialDesign:Card Margin="2" Width="250">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        <materialDesign:ColorZone Padding="3" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent">
                             Uncorrected
                         </materialDesign:ColorZone>
@@ -100,9 +100,9 @@
   
                     </StackPanel>
                 </materialDesign:Card>
-            <materialDesign:Card Margin="2" Width="250">
+            <materialDesign:Card Margin="2">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="8" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        <materialDesign:ColorZone Padding="3" Margin="5 5 5 0" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                       Mode="Accent">
                             Corrected
                         </materialDesign:ColorZone>

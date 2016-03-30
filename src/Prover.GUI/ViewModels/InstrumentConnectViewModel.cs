@@ -1,11 +1,14 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
+using Prover.GUI.Views;
 using Prover.SerialProtocol;
 using System;
 using System.Collections.Generic;
@@ -48,18 +51,22 @@ namespace Prover.GUI.ViewModels
 
             if (string.IsNullOrEmpty(InstrumentCommPortName))
             {
-                _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
+                ScreenManager.ShowDialog(_container, new SettingsViewModel(_container));
             }
         }
 
-        public async void InitializeTest()
+        public async Task CancelCommand()
         {
-            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Connecting..."));
+            await ScreenManager.Change(_container, new MainMenuViewModel(_container));
+        }
 
+
+        public async Task InitializeTest()
+        {
             var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
             InstrumentTestManager = await TestManager.Create(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
-                        
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new NewTestViewModel(_container, InstrumentTestManager)));                
+
+            await ScreenManager.Change(_container, new NewTestViewModel(_container, InstrumentTestManager));        
         }
 
         public void Handle(SettingsChangeEvent message)

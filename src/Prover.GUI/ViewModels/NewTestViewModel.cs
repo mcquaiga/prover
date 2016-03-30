@@ -23,6 +23,7 @@ using Prover.GUI.Reporting;
 using Prover.GUI.ViewModels.PressureViews;
 using Prover.GUI.ViewModels.PTVerificationViews;
 using MaterialDesignThemes.Wpf;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.ViewModels
 {

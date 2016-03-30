@@ -23,28 +23,12 @@ namespace Prover.Core.Models.Instruments
             FixedFactor = 111
         }
 
-        public enum Level
-        {
-            Low,
-            Medium,
-            High
-        }
-
-        public enum SuggestedGauges
-        {
-            Low = 32,
-            Medium = 60,
-            High = 90
-        }
-
-        public TemperatureTest(Temperature temp, Level level) : 
+        public TemperatureTest(Temperature temp, bool isVolumeTest = false) : 
             base(temp.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
         {
             Temperature = temp;
             TemperatureId = temp.Id;
-            TestLevel = level;
-            IsVolumeTestTemperature = TestLevel == Level.Low;
-            SetDefaultGauge(level);
+            IsVolumeTestTemperature = isVolumeTest;
         }
 
         public Guid TemperatureId { get; set; }
@@ -52,7 +36,6 @@ namespace Prover.Core.Models.Instruments
 
         public bool IsVolumeTestTemperature { get; set; }
 
-        public Level TestLevel { get; set; }
         public double Gauge { get; set; }
         public decimal? PercentError
         {
@@ -90,22 +73,6 @@ namespace Prover.Core.Models.Instruments
                 }
 
                 return 0;
-            }
-        }
-        
-        public void SetDefaultGauge(Level templevel)
-        {
-            switch (templevel)
-            {
-                case Level.Low:
-                    Gauge = 32;
-                    break;
-                case Level.Medium:
-                    Gauge = 60;
-                    break;
-                case Level.High:
-                    Gauge = 90;
-                    break;
             }
         }
 

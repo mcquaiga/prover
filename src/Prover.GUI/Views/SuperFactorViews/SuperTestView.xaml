@@ -15,7 +15,7 @@
     <!--**** START SUPER **** -->
     <materialDesign:Card Margin="5">
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="3" Content="Supercompressibility" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+            <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
             <!-- Instrument Report, textblock instead of displaying the button-->
             <StackPanel Orientation="Horizontal">
                 <Grid>
@@ -23,7 +23,7 @@
                 </Grid>
             </StackPanel>
 
-            <UniformGrid Columns="3" Margin="3">
+            <UniformGrid Columns="3" Margin="2">
                 <controls:ValueDescriptionControl
                                                    Label="Actual Factor"
                                                    Value="{Binding Test.ActualFactor}"/>

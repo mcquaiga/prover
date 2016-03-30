@@ -111,9 +111,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Communications.cs" />
+    <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
-    <Compile Include="Communication\TestManager.cs" />
+    <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
+    <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
+      <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VerificationTests\PressureTemperatureVerification.cs" />
+    <Compile Include="VerificationTests\TestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -153,6 +159,7 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
+    <Compile Include="VerificationTests\VerificationTest.cs" />
     <Compile Include="VerificationTests\VolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603070654013_PressureMigration.resx">
       <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603300541401_refactor-pt.resx">
+      <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

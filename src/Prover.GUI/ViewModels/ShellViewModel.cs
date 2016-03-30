@@ -44,7 +44,7 @@ namespace Prover.GUI.ViewModels
 
         public async Task HomeButton()
         {
-            await _container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new ScreenChangeEvent(_mainMenu));
+            await ScreenManager.Change(_container, _mainMenu);
         }
 
         public void SettingsButton()
@@ -54,8 +54,7 @@ namespace Prover.GUI.ViewModels
 
         private void ShowSettingsWindow()
         {
-            //show the dialog
-            _container.Resolve<IWindowManager>().ShowDialog(new SettingsViewModel(_container), null, SettingsViewModel.WindowSettings);
+            ScreenManager.ShowDialog(_container, new SettingsViewModel(_container));
         }
 
         public ToastNotificationViewModel Notifications { get; set; }

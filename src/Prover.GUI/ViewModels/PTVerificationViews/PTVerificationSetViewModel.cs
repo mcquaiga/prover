@@ -12,6 +12,7 @@ using Prover.GUI.Events;
 using Prover.GUI.ViewModels.TemperatureViews;
 using Prover.GUI.ViewModels.PressureViews;
 using Prover.GUI.ViewModels.SuperFactorViews;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.ViewModels.PTVerificationViews
 {

@@ -1,4 +1,5 @@
 ﻿using Prover.Core.Communication;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.Events
 {

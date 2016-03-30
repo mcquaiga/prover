@@ -17,19 +17,19 @@ namespace Prover.GUI.ViewModels
             _container = container;
         }
 
-        public void NewTestButton()
+        public async Task NewTestButton()
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new InstrumentConnectViewModel(_container)));
+            await ScreenManager.Change(_container, new InstrumentConnectViewModel(_container));
         }
 
-        public void CreateCertificateButton()
+        public async Task CreateCertificateButton()
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new CreateCertificateViewModel(_container)));
+            await ScreenManager.Change(_container, new CreateCertificateViewModel(_container));
         }
 
-        public void RawInstrumentAccessButton()
+        public async Task RawInstrumentAccessButton()
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(new ScreenChangeEvent(new InstrumentAccessViewModel(_container)));
+            await ScreenManager.Change(_container, new InstrumentAccessViewModel(_container));
         }
     }
 }

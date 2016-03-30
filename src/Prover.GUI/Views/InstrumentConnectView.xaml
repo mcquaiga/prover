@@ -72,7 +72,7 @@
             <Button Margin="25 0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="InitializeTest" />
+                        <cal:ActionMessage MethodName="CancelCommand" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 CANCEL

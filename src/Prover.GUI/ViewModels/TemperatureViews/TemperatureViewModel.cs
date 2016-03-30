@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.ViewModels.TemperatureViews
 {

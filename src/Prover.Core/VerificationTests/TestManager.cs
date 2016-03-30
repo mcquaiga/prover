@@ -5,13 +5,13 @@ using Prover.Core.Events;
 using Prover.Core.Models;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Prover.Core.VerificationTests;
+using Prover.Core.Communication;
 using Prover.SerialProtocol;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Prover.Core.Communication
+namespace Prover.Core.VerificationTests
 {
     public class TestManager
     {
@@ -52,31 +52,31 @@ namespace Prover.Core.Communication
         {
             if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.TemperatureOnly)
             {
-                await DownloadTemperatureTestItems((TemperatureTest.Level)level);
+                await DownloadTemperatureTestItems(level);
             }
 
             if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.PressureOnly)
             {
-                await DownloadPressureTestItems((PressureTest.PressureLevel)level);
+                await DownloadPressureTestItems(level);
             }
         }
 
-        public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
+        public async Task DownloadTemperatureTestItems(int levelNumber)
         {
             if (_isLiveReading) await StopLiveRead();
 
-            var test = Instrument.Temperature.Tests.FirstOrDefault(x => x.TestLevel == level);
+            var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
             if (test != null)
                 test.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(test.Items.Items);
   
             _isBusy = false;
         }
 
-        public async Task DownloadPressureTestItems(PressureTest.PressureLevel level)
+        public async Task DownloadPressureTestItems(int level)
         {
             if (_isLiveReading) await StopLiveRead();
 
-            var test = Instrument.Pressure.Tests.FirstOrDefault(x => x.TestLevel == level);
+            var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
             if (test != null)
                 test.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(test.Items.Items);
 
