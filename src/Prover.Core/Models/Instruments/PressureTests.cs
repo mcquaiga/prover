@@ -14,7 +14,8 @@ namespace Prover.Core.Models.Instruments
         private int GAS_PRESSURE = 8;
         private int PRESSURE_FACTOR = 44;
         private int UNSQR_FACTOR = 47;
-        
+        private decimal? _atmGauge;
+
         public PressureTest(Pressure pressure, bool isVolumeTest = false, decimal defaultGauge = 0) : 
             base(pressure.Instrument.Items.CopyItemsByFilter(x => x.IsPressureTest == true))
         {
@@ -30,7 +31,26 @@ namespace Prover.Core.Models.Instruments
         public bool IsVolumeTestPressure { get; private set; }
 
         public decimal? GasGauge { get; set; }
-        public decimal? AtmosphericGauge { get; set; }
+        public decimal? AtmosphericGauge
+        {
+            get
+            {
+                switch (Pressure.TransducerType)
+                {
+                    case TransducerType.Gauge:
+                        return Pressure.EvcAtmospheric;
+                    case TransducerType.Absolute:
+                        return _atmGauge;
+                    default:
+                        return Pressure.EvcAtmospheric;
+                }
+            }
+            set
+            {
+                _atmGauge = value;
+            }
+        }
+
         public decimal? PercentError
         {
             get
@@ -46,23 +66,7 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (Pressure.EvcBase == 0) return 0;
-
-                decimal? result;
-
-                switch (Pressure.TransducerType)
-                {
-                    case TransducerType.Gauge:
-                        result = (GasGauge + Pressure.EvcAtmospheric) / Pressure.EvcBase;
-                        break;
-
-                    case TransducerType.Absolute:
-                        result = (GasGauge + AtmosphericGauge) / Pressure.EvcBase;
-                        break;
-                    default:
-                        result = 0;
-                        break;
-                }
-
+                var result = (GasGauge + AtmosphericGauge) / Pressure.EvcBase;
                 return result.HasValue ? decimal.Round(result.Value, 4) : result;
             }
         }
@@ -76,6 +80,15 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 return Items.GetItem(GAS_PRESSURE).GetNumericValue();
+            }
+        }
+
+        [NotMapped]
+        public decimal? EvcATMPressure
+        {
+            get
+            {
+                return Pressure.EvcAtmospheric;
             }
         }
 

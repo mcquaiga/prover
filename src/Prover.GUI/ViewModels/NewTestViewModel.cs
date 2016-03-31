@@ -34,6 +34,7 @@ namespace Prover.GUI.ViewModels
         public NewTestViewModel(IUnityContainer container, TestManager testManager)
         {
             _container = container;
+            _container.RegisterInstance(testManager);
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
             if (testManager == null)

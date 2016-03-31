@@ -15,19 +15,18 @@
              mc:Ignorable="d" Width="200">
     <StackPanel Margin="10">
         <TextBlock HorizontalAlignment="Center" 
+                   Text="{Binding Title}"
                    Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-            Live Read
         </TextBlock>
         <TextBlock FontSize="45"
                    Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                    HorizontalAlignment="Center" 
                    x:Name="LiveReadValue">0</TextBlock>
         <Button Content="DONE" 
-                HorizontalAlignment="Right" 
-                Style="{StaticResource MaterialDesignFlatButton}">
+                HorizontalAlignment="Right"                >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
-                    <cal:ActionMessage MethodName="StartLiveReadCommand" />
+                    <cal:ActionMessage MethodName="CloseCommand" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>

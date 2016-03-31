@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <local:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
-         TrueValue="Visible" FalseValue="Hidden" />
+         TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
     <materialDesign:Card Margin="5">
         <StackPanel>
@@ -36,14 +36,19 @@
                         <TextBox materialDesign:TextFieldAssist.Hint="Applied Input" 
                                  HorizontalAlignment="Center"
                                  FontSize="16"
+                                 Visibility="{Binding ShowAppliedInputTextBox, Converter={StaticResource BoolToHiddenConverter}}"
                                  Text="{Binding AppliedInput}"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  Margin="0 8 0 8"/>
+                        <controls:ValueDescriptionControl Label="Applied Input" 
+                                                          Visibility="{Binding ShowAppliedInputDisplay, Converter={StaticResource BoolToHiddenConverter}}"
+                                                          HorizontalAlignment="Center"
+                                                          Value="{Binding Volume.AppliedInput}"/>
 
                     </Grid>
-                    <Grid>
+                    <Grid Visibility="{Binding ShowTestButtons, Converter={StaticResource BoolToHiddenConverter}}">
                         <Button Width="200" Margin="10"
-                            	        Content="BEGIN"
+                            	        Content="START"
                             	        HorizontalAlignment="Center"
                             	        Visibility="{Binding ShowBeginTestButton, Converter={StaticResource BoolToHiddenConverter}}">
                             <i:Interaction.Triggers>

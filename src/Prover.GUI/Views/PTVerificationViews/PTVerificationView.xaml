@@ -14,7 +14,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate x:Key="TestTemplate">
-            <ContentControl Margin="5 0 0 0" cal:View.Model="{Binding .}"></ContentControl>
+            <ContentControl Margin="5" cal:View.Model="{Binding .}"></ContentControl>
         </DataTemplate>
     </UserControl.Resources>
 

@@ -15,17 +15,17 @@ namespace Prover.GUI.ViewModels.TemperatureViews
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public bool ShowCommButton { get; }
+        private bool _isReportView;
+
         public TemperatureTest Test { get; set; }
 
-        public bool ShowGaugeDecimalControl => ShowCommButton;
-        public bool ShowGaugeText => !ShowCommButton;
+        public bool ShowGaugeInputTextBox => !_isReportView;
 
-        public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test, bool showCommButton = true)
+        public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test, bool isReportView = false)
         {
             _container = container;
             Test = test;
-            ShowCommButton = showCommButton;
+            _isReportView = isReportView;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
@@ -42,7 +42,8 @@ namespace Prover.GUI.ViewModels.TemperatureViews
 
         public void StartLiveReadCommand()
         {
-
+            var viewmodel = new LiveReadViewModel(_container, 26);
+            ScreenManager.ShowDialog(_container, viewmodel);
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;

@@ -30,7 +30,7 @@ namespace Prover.GUI.ViewModels.InstrumentReport
         private void SetupView()
         {
             SiteInformation = new SiteInformationViewModel(_container, Instrument);
-            PTVerification = new PTVerificationViewModel(_container, Instrument, false, false);
+            PTVerification = new PTVerificationViewModel(_container, Instrument, true);
             Volume = new VolumeViewModel(_container, Instrument);
         }
         

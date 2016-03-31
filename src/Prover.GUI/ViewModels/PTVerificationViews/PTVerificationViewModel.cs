@@ -14,25 +14,22 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 {
     public class PTVerificationViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
-        public PTVerificationViewModel(IUnityContainer container, bool showLiveRead = true, bool showCommButtons = true)
+        public PTVerificationViewModel(IUnityContainer container, bool isReportView = false)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-            ShowLiveRead = showLiveRead;
+            IsReportView = isReportView;
             TestViews = new ObservableCollection<PTVerificationSetViewModel>();
         }
 
-        public PTVerificationViewModel(IUnityContainer container, Instrument instrument, bool showLiveRead = false, bool showCommButtons = false) : this(container, showLiveRead, showCommButtons)
+        public PTVerificationViewModel(IUnityContainer container, Instrument instrument, bool isReportView = false) : this(container, isReportView)
         {
             Instrument = instrument;
-
-            TestViews = new ObservableCollection<PTVerificationSetViewModel>();
-
             instrument.VerificationTests.OrderBy(v => v.TestNumber).ForEach(x =>
-                TestViews.Add(new PTVerificationSetViewModel(_container, instrument, x)));
+                TestViews.Add(new PTVerificationSetViewModel(_container, instrument, x, isReportView)));
         }
 
-        public PTVerificationViewModel(IUnityContainer container, TestManager instrumentTestManager, bool showLiveRead = true, bool showCommButtons = true) : this(container, showLiveRead, showCommButtons)
+        public PTVerificationViewModel(IUnityContainer container, TestManager instrumentTestManager, bool isReportView = false) : this(container, isReportView)
         {
             InstrumentManager = instrumentTestManager;
             Instrument = InstrumentManager.Instrument;
@@ -42,7 +39,7 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
             );
         }
 
-        public bool ShowLiveRead
+        public bool IsReportView
         {
             get; private set;
         }

@@ -28,7 +28,7 @@ namespace Prover.GUI.ViewModels
                 settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 settings.ResizeMode = ResizeMode.NoResize;
                 settings.MinWidth = 450;
-                settings.Title = @"Settings";
+                settings.Title = "Settings";
                 return settings;
             }
         }
@@ -44,8 +44,6 @@ namespace Prover.GUI.ViewModels
         public List<BaudRateEnum> BaudRate => Enum.GetValues(typeof(BaudRateEnum)).Cast<BaudRateEnum>().ToList();
         public List<string> CommPort => Communications.GetCommPortList();
         public List<string> TachCommPort => Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList();
-
-    
 
         public string SelectedCommPort
         {
@@ -94,21 +92,6 @@ namespace Prover.GUI.ViewModels
             _container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
         }
-
-        //public static void SetCommPort(string comm)
-        //{
-        //    Instrument.CommPortName = comm;
-        //}
-
-        //public static void SetTachCommPort(string comm)
-        //{
-        //    Tachometer.CommPortName = comm;
-        //}
-
-        //public static void SetBaudRate(string baudRate)
-        //{
-        //    Instrument.BaudRate = (BaudRateEnum)Enum.Parse(typeof(BaudRateEnum), baudRate);
-        //}
 
         public void RefreshCommSettingsCommand()
         {

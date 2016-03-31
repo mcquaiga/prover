@@ -21,33 +21,31 @@ namespace Prover.GUI.ViewModels
     {
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private readonly IUnityContainer _container;        
-        private bool _userHasRequestedStop;
+        private bool _isReportView;
 
         public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
         public bool ShowBeginTestButton { get; private set; } = true;
         public bool ShowStopTestButton { get; private set; } = false;
 
-        public VolumeViewModel(IUnityContainer container, bool showButtons = true)
+        public bool ShowAppliedInputTextBox => !_isReportView;
+        public bool ShowAppliedInputDisplay => _isReportView;
+        public bool ShowTestButtons => !_isReportView;
+
+        public VolumeViewModel(IUnityContainer container, bool isReportView = false)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-            
-            _userHasRequestedStop = false;
-
-            if (!showButtons)
-            {
-                ShowBeginTestButton = false;
-                ShowStopTestButton = false;
-            }
+           
+            _isReportView = isReportView;
         }
 
-        public VolumeViewModel(IUnityContainer container, Instrument instrument) : this(container, false)
+        public VolumeViewModel(IUnityContainer container, Instrument instrument) : this(container, true)
         {
             Instrument = instrument;
         }
 
-        public VolumeViewModel(IUnityContainer container, TestManager instrumentTestManager) : this(container, true)
+        public VolumeViewModel(IUnityContainer container, TestManager instrumentTestManager) : this(container, false)
         {
             InstrumentManager = instrumentTestManager;
             Instrument = InstrumentManager.Instrument;
@@ -76,17 +74,10 @@ namespace Prover.GUI.ViewModels
 
         public async void StartTestCommand()
         {
-            try
-            {
-                ToggleTestButtons();
-                _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
-                await InstrumentManager.StartVolumeTest();
-                RaisePropertyChanges();
-            }
-            catch (Exception ex)
-            {
-                _log.Error(string.Format("An error occured: {0}", ex.Message), ex);
-            }
+            ToggleTestButtons();
+            _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
+            await InstrumentManager.StartVolumeTest();
+            RaisePropertyChanges();
         }
 
         public void StopTestCommand()

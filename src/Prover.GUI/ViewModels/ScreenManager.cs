@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Events;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Prover.GUI.ViewModels
 {
@@ -14,9 +15,14 @@ namespace Prover.GUI.ViewModels
             await container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new ScreenChangeEvent(viewModel));
         }
 
-        internal static void ShowDialog(IUnityContainer container, SettingsViewModel dialogViewModel)
+        internal static void ShowDialog(IUnityContainer container, ReactiveScreen dialogViewModel)
         {
-            container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null, dialogViewModel.WindowSettings);
+            var windowsSettings = dialogViewModel as IWindowSettings;
+
+            if (windowsSettings != null)
+                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
+            else
+                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null);
         }
     }
 }

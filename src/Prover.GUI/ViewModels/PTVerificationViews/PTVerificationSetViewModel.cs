@@ -21,13 +21,14 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
         private IUnityContainer _container;
         private Instrument _instrument;
         private Instrument.VerificationTest _verificationTest;
+        private bool _isReportView;
 
-        public PTVerificationSetViewModel(IUnityContainer container, Instrument instrument, Instrument.VerificationTest verificationTest)
+        public PTVerificationSetViewModel(IUnityContainer container, Instrument instrument, Instrument.VerificationTest verificationTest, bool isReportView = false)
         {
             _container = container;
             VerificationTest = verificationTest;
             _instrument = instrument;
-
+            _isReportView = isReportView;
             CreateViews();
 
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -38,12 +39,13 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
         {
         }
 
+        public bool ShowDownloadButton => !_isReportView;
         private void CreateViews()
         {
             if (_instrument.CorrectorType == CorrectorType.PressureTemperature)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
-                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
+                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest, _isReportView);
+                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest, _isReportView);
                 SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperTest);
             }                
 
@@ -75,7 +77,7 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 
         public async Task DownloadItems()
         {
-            await InstrumentManager.DownloadVerificationTestItems(VerificationTest.TestNumber);
+            await _container.Resolve<TestManager>().DownloadVerificationTestItems(VerificationTest.TestNumber);
             _container.Resolve<IEventAggregator>().PublishOnUIThread(new VerificationTestEvent(InstrumentManager));
         }
 

@@ -8,12 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="816" d:DesignWidth="1056">
     <Viewbox Width="795" Height="1040" Stretch="UniformToFill">
-        <DockPanel>
-        <StackPanel Orientation="Vertical" Width="795" >
-            <ContentControl cal:View.Model="{Binding SiteInformation}"></ContentControl>
-            <ContentControl cal:View.Model="{Binding PTVerification}" ></ContentControl>
-            <ContentControl cal:View.Model="{Binding Volume}"></ContentControl>
+        <StackPanel Width="795" Height="1040" HorizontalAlignment="Center">
+            <ContentControl cal:View.Model="{Binding SiteInformation}"
+                            HorizontalAlignment="Center"
+                            Margin="5" />
+            <ContentControl cal:View.Model="{Binding PTVerification}"
+                            HorizontalAlignment="Center"
+                            Margin="5" />
+            <ContentControl cal:View.Model="{Binding Volume}"
+                            HorizontalAlignment="Center"
+                            Margin="5" />
         </StackPanel>
-        </DockPanel>
     </Viewbox>
 </UserControl>

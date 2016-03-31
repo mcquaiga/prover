@@ -204,6 +204,7 @@
     </Compile>
     <Compile Include="Converters\BooleanToPassConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="DesignTimeViewModelLocator.cs" />
     <Compile Include="Events\InstrumentUpdateEvent.cs" />
     <Compile Include="Events\NotificationEvent.cs" />

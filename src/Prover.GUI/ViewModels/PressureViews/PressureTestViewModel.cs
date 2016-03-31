@@ -20,17 +20,17 @@ namespace Prover.GUI.ViewModels.PressureViews
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public bool ShowCommButton { get; }
+        private bool _isReportView;
         public PressureTest Test { get; set; }
 
-        public bool ShowGaugeDecimalControl => ShowCommButton;
-        public bool ShowGaugeText => !ShowCommButton;
+        public bool ShowGaugeControl => !_isReportView;
+        public bool ShowATMGaugeControl => Test.Pressure.TransducerType == TransducerType.Absolute;
 
-        public PressureTestViewModel(IUnityContainer container, PressureTest test, bool showCommButton = true)
+        public PressureTestViewModel(IUnityContainer container, PressureTest test, bool isReportView = false)
         {
             _container = container;
             Test = test;
-            ShowCommButton = showCommButton;
+            _isReportView = isReportView;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
@@ -54,6 +54,12 @@ namespace Prover.GUI.ViewModels.PressureViews
                 NotifyOfPropertyChange(() => Test);
                 NotifyOfPropertyChange(() => PercentColour);
             }
+        }
+
+        public void LiveReadCommand()
+        {
+            var viewmodel = new LiveReadViewModel(_container, 8);
+            ScreenManager.ShowDialog(_container, viewmodel);
         }
 
         public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;

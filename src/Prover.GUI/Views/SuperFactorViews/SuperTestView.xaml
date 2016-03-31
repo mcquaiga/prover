@@ -13,16 +13,9 @@
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                 mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="700">
     <!--**** START SUPER **** -->
-    <materialDesign:Card Margin="5">
+    <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="8,5,8,5" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
-            <!-- Instrument Report, textblock instead of displaying the button-->
-            <StackPanel Orientation="Horizontal">
-                <Grid>
-                    <!--INstrument Report , Text display instead of the decimal control -->
-                </Grid>
-            </StackPanel>
-
+            <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
             <UniformGrid Columns="3" Margin="2">
                 <controls:ValueDescriptionControl
                                                    Label="Actual Factor"
@@ -31,7 +24,7 @@
                                                    Label="EVC Factor"
                                                    Value="{Binding Test.EVCUnsqrFactor}"/>
                 <controls:ValueDescriptionControl
-                                                   Label="Percent Error"
+                                                   Label="% Error"
                                                    Foreground="{Binding PercentColour}"
                                                    Value="{Binding Test.PercentError}"/>
             </UniformGrid>
