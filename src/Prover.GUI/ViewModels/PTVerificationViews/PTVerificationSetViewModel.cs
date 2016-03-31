@@ -51,12 +51,12 @@ namespace Prover.GUI.ViewModels.PTVerificationViews
 
             if (_instrument.CorrectorType == CorrectorType.TemperatureOnly)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
+                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest, _isReportView);
             }
 
             if (_instrument.CorrectorType == CorrectorType.PressureOnly)
             {
-                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
+                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest, _isReportView);
             }
         }
 

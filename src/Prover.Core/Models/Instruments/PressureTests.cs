@@ -56,6 +56,7 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (EvcFactor == null) return null;
+                if (ActualFactor == 0) return null;
                 return Math.Round((decimal)((EvcFactor - ActualFactor) / ActualFactor) * 100, 2);
             }
         }

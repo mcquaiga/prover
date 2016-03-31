@@ -30,13 +30,7 @@
             </materialDesign:ColorZone>
 
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="0.15*"/>
-                </Grid.RowDefinitions>
-
                 <ContentControl Grid.Row="0" x:Name="ActiveItem"  />
-                <ContentControl Grid.Row="1" x:Name="Notifications"  />
             </Grid>
         </DockPanel>
     </materialDesign:DialogHost>

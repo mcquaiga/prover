@@ -17,7 +17,7 @@ namespace Prover.GUI.ViewModels.TemperatureViews
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private bool _isReportView;
 
-        public TemperatureTest Test { get; set; }
+        public TemperatureTest Test { get; private set; }
 
         public bool ShowGaugeInputTextBox => !_isReportView;
 

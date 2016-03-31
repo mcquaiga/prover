@@ -72,7 +72,7 @@
                                                    Value="{Binding Test.AtmosphericGauge}"/>
                 <controls:ValueDescriptionControl
                                                    Label="EVC ATM Reading"
-                                                   Value="{Binding Test.EvcGasPressure}"/>
+                                                   Value="{Binding Test.EvcATMPressure}"/>
             </UniformGrid>
             <UniformGrid Columns="3" Margin="0">
                 <controls:ValueDescriptionControl ScaleFactor="0.5"

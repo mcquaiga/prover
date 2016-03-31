@@ -61,8 +61,30 @@ namespace Prover.Core.Models
 
         public InstrumentItems CopyItemsByFilter(Func<ItemDetail, bool> predicate)
         {
-            var toCopy = this.Items.Where(predicate);
-            return new InstrumentItems(toCopy);
+            var toCopy = this.Items.Where(predicate).ToList();
+            var results = toCopy.ConvertAll(item =>
+            {
+                var newItem = new ItemDetail
+                {
+                    Code = item.Code,
+                    IsAlarm = item.IsAlarm,
+                    IsPressure = item.IsPressure,
+                    IsPressureTest = item.IsPressureTest,
+                    IsSuperFactor = item.IsSuperFactor,
+                    IsTemperature = item.IsTemperature,
+                    IsTemperatureTest = item.IsTemperatureTest,
+                    IsVolume = item.IsVolume,
+                    IsVolumeTest = item.IsVolumeTest,
+                    ItemDescriptions = item.ItemDescriptions,
+                    LongDescription = item.LongDescription,
+                    Number = item.Number,
+                    RawValue = item.RawValue,
+                    ShortDescription = item.ShortDescription
+                };
+                return newItem;
+            });
+
+            return new InstrumentItems(results);
         }
     }
 
