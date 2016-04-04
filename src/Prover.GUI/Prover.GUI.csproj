@@ -222,6 +222,8 @@
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\PTZVerification\PTZVerificationSetViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\PTZVerification\PTZVerificationViewModel.cs" />
     <Compile Include="ViewModels\IWindowSettings.cs" />
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -271,6 +273,12 @@
     </Compile>
     <Compile Include="Views\InstrumentsList\InstrumentView.xaml.cs">
       <DependentUpon>InstrumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentsList\PTZVerification\PTZVerificationSetView.xaml.cs">
+      <DependentUpon>PTZVerificationSetView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentsList\PTZVerification\PTZVerificationView.xaml.cs">
+      <DependentUpon>PTZVerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
@@ -385,6 +393,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentsList\InstrumentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsList\PTZVerification\PTZVerificationSetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentsList\PTZVerification\PTZVerificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

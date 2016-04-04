@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.ViewModels.InstrumentsList.PTZVerification;
 
 namespace Prover.GUI.ViewModels.InstrumentsList
 {
@@ -23,9 +24,9 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             RowNumber = rowNumber;
         }
 
-        public InstrumentTempViewModel TemperatureItem
+        public PTZVerificationViewModel PTZVerificationContent
         {
-            get { return new InstrumentTempViewModel(Instrument.Temperature); }
+            get { return new PTZVerificationViewModel(Instrument); }
         }
 
         public string HasPassed
