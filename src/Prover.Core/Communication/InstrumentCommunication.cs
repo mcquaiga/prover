@@ -9,6 +9,8 @@ using Prover.SerialProtocol;
 using Prover.Core.Models.Instruments;
 using System.Windows;
 using Prover.Core.Models;
+using Caliburn.Micro;
+using Prover.Core.Events;
 
 namespace Prover.Core.Communication
 {
@@ -17,11 +19,14 @@ namespace Prover.Core.Communication
         private readonly ICommPort _commPort;
         private miSerialProtocolClass _miSerial;
         private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private IEventAggregator _eventAggregator;
+        private int maxConnectAttempts = 10;
 
-        public InstrumentCommunicator(ICommPort commPort, InstrumentType instrumentType)
+        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, InstrumentType instrumentType)
         {
             _commPort = commPort;
-
+            _eventAggregator = eventAggregator;
+            
             switch (instrumentType)
             {
                 case InstrumentType.Ec300:
@@ -35,7 +40,7 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public InstrumentCommunicator(ICommPort commPort, Instrument instrument) : this(commPort, instrument.Type) { }
+        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, Instrument instrument) : this(eventAggregator, commPort, instrument.Type) { }
 
         public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetail> itemsToDownload, bool disconnectAfter = true)
         {
@@ -86,12 +91,15 @@ namespace Prover.Core.Communication
 
         public async Task Connect()
         {
-            int tryCount = 0;
+            var tryCount = 0;
+
             do
             {
                 try
                 {
                     if (!IsConnected)
+                    {
+                        //await _eventAggregator.PublishOnUIThreadAsync(new InstrumentConnectionEvent(InstrumentConnectionEvent.Status.Connecting, tryCount + 1, maxConnectAttempts));
                         await Task.Run(() => _miSerial.Connect()).ContinueWith(taskResult =>
                         {
                             if (!taskResult.IsFaulted)
@@ -99,7 +107,7 @@ namespace Prover.Core.Communication
                             else
                                 IsConnected = false;
                         });
-                                   
+                    }                                   
                 }
                 catch (AggregateException ae)
                 {
@@ -116,9 +124,9 @@ namespace Prover.Core.Communication
                     tryCount++;
                     IsConnected = false;
                 }
-            } while (!IsConnected && tryCount < 10);
+            } while (!IsConnected && tryCount < maxConnectAttempts);
 
-            if (tryCount >= 10)
+            if (tryCount >= maxConnectAttempts)
             {
                 _log.Error("Could not connect to instrument.");
                 throw new InstrumentCommunicationException(InstrumentErrorsEnum.TooManyRetransmissionsError);

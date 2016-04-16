@@ -78,8 +78,6 @@ namespace Prover.Core.Models.Instruments
         public virtual Pressure Pressure { get; set; }
         public virtual Temperature Temperature { get; set; }
         [NotMapped]
-        public virtual List<SuperFactor> SuperFactorTests { get; set; }
-        [NotMapped]
         public List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
         public virtual Volume Volume { get; set; }
 
@@ -181,52 +179,6 @@ namespace Prover.Core.Models.Instruments
             }
         }
         #endregion      
-
-        private void BuildCorrectorTypes()
-        {
-            if (CorrectorType == CorrectorType.PressureOnly)
-            {
-                Pressure = new Pressure(this);
-                Pressure.AddTest();
-                Pressure.AddTest();
-                Pressure.AddTest();
-
-                VerificationTests.Add(new VerificationTest(0, this, null, Pressure.Tests[0]));
-                VerificationTests.Add(new VerificationTest(1, this, null, Pressure.Tests[1]));
-                VerificationTests.Add(new VerificationTest(2, this, null, Pressure.Tests[2]));
-            }
-
-            if (CorrectorType == CorrectorType.TemperatureOnly)
-            {
-                Temperature = new Temperature(this);
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-
-                VerificationTests.Add(new VerificationTest(0, this, Temperature.Tests[0], null));
-                VerificationTests.Add(new VerificationTest(1, this, Temperature.Tests[1], null));
-                VerificationTests.Add(new VerificationTest(2, this, Temperature.Tests[2], null));
-            }
-
-            if (CorrectorType == CorrectorType.PressureTemperature)
-            {
-                Temperature = new Temperature(this);
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-
-                Pressure = new Pressure(this);
-                Pressure.AddTest();
-                Pressure.AddTest();
-                Pressure.AddTest();
-
-                VerificationTests.Add(new VerificationTest(0, this, Temperature.Tests[0], Pressure.Tests[0]));
-                VerificationTests.Add(new VerificationTest(1, this, Temperature.Tests[1], Pressure.Tests[1]));
-                VerificationTests.Add(new VerificationTest(2, this, Temperature.Tests[2], Pressure.Tests[2]));              
-            }
-            
-            Volume = new Volume(this);
-        }
 
         public class VerificationTest
         {

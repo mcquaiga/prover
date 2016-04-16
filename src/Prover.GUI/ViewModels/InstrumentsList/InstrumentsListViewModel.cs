@@ -18,24 +18,25 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             GetInstrumentsByCertificateId(null);
            
         }
-        public ObservableCollection<InstrumentViewModel> InstrumentItems { get; set; }
+        public ObservableCollection<InstrumentTestGridViewModel> InstrumentItems { get; set; } = new ObservableCollection<InstrumentTestGridViewModel>();
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)
         {
+            GetInstrumentVerificationTests(x => x.CertificateId == certificateGuid);
+        }
 
+        private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)
+        {
+            InstrumentItems.Clear();
             using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
-                int count = 1;
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
                 var instruments = store.Query()
-                                    .Where(x => x.CertificateId == certificateGuid)
+                                    .Where(whereFunc)
                                     .OrderBy(i => i.TestDateTime)
                                     .ToList();
-                instruments.ForEach(i =>
-                {
-                    InstrumentItems.Add(new InstrumentViewModel(i, count));
-                    count++;
-                });
+
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentTestGridViewModel(_container, i)));
+
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);
@@ -45,13 +46,13 @@ namespace Prover.GUI.ViewModels.InstrumentsList
         {
             using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
+                InstrumentItems = new ObservableCollection<InstrumentTestGridViewModel>();
                 var dateFilter = DateTime.Now.AddDays(-7);
                 var instruments = store.Query()
                                     .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
                                     .OrderBy(i => i.TestDateTime)
                                     .ToList();
-                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentTestGridViewModel(_container, i)));
             }
            
             NotifyOfPropertyChange(() => InstrumentItems);
@@ -61,13 +62,13 @@ namespace Prover.GUI.ViewModels.InstrumentsList
         {
             using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
+                InstrumentItems = new ObservableCollection<InstrumentTestGridViewModel>();
                 var dateFilter = DateTime.Now.AddDays(-30);
                 var instruments = store.Query()
                                     .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
                                     .OrderBy(i => i.TestDateTime)
                                     .ToList();
-                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentTestGridViewModel(_container, i)));
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);

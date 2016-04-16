@@ -18,15 +18,15 @@ namespace Prover.GUI.ViewModels
     class LiveReadViewModel : ReactiveScreen, IWindowSettings, IHandle<LiveReadEvent>, IHandle<InstrumentUpdateEvent>
     {
         private readonly IUnityContainer _container;
-        private TestManager _instrumentManager;
-        private TestManager _testManager;
+        private RotaryTestManager _instrumentManager;
+        private RotaryTestManager _testManager;
 
         public LiveReadViewModel(IUnityContainer container, int itemNumber)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            _testManager = _container.Resolve<TestManager>();
+            _testManager = _container.Resolve<RotaryTestManager>();
             ItemNumber = itemNumber;
 
             Task.Run(() => DoLiveRead());

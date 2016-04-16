@@ -5,11 +5,10 @@ namespace Prover.GUI.Events
 {
     public class VerificationTestEvent
     {
-        public VerificationTestEvent(TestManager testManager)
+        public static VerificationTestEvent Raise()
         {
-            this.TestManager = testManager;
+            return new VerificationTestEvent();
         }
-
-        public TestManager TestManager { get; private set; }
+        private VerificationTestEvent() { }
     }
 }

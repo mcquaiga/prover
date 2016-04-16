@@ -75,7 +75,7 @@ namespace Prover.GUI.ViewModels
                 if (InstrumentCommunicator == null)
                 {
                     var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
-                    InstrumentCommunicator = new InstrumentCommunicator(commPort, InstrumentType.MiniMax);
+                    InstrumentCommunicator = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
                 }
             });            
         }

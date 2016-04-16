@@ -112,12 +112,14 @@
   <ItemGroup>
     <Compile Include="Communication\Communications.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
+    <Compile Include="Events\InstrumentConnectionEvent.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
     </Compile>
+    <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\PressureTemperatureVerification.cs" />
     <Compile Include="VerificationTests\TestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />

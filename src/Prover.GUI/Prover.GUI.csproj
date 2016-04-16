@@ -216,35 +216,28 @@
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentConnectViewModel.cs" />
+    <Compile Include="ViewModels\Dialogues\ConnectionViewModel.cs" />
+    <Compile Include="ViewModels\TestViews\StartTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\InstrumentTempTestViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\InstrumentTempViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\InstrumentViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\PTZVerification\PTZVerificationSetViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\PTZVerification\PTZVerificationViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentsList\InstrumentTestGridViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentViews\InstrumentTestViewModel.cs" />
     <Compile Include="ViewModels\IWindowSettings.cs" />
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
-    <Compile Include="ViewModels\MainMenuViewModel.cs" />
-    <Compile Include="ViewModels\NewTestViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\LivePressureReadViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\PressureTestViewModel.cs" />
-    <Compile Include="ViewModels\PressureViews\PressureViewModel.cs" />
+    <Compile Include="ViewModels\Shell\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\VerificationTestViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
     <Compile Include="Events\VerificationTestEvent.cs" />
-    <Compile Include="ViewModels\PTVerificationViews\PTVerificationSetViewModel.cs" />
-    <Compile Include="ViewModels\PTVerificationViews\PTVerificationViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
     <Compile Include="ViewModels\ScreenManager.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\SiteInformationViewModel.cs" />
-    <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\SuperFactorViews\SuperTestViewModel.cs" />
-    <Compile Include="ViewModels\TemperatureViews\LiveTemperatureReadViewModel.cs" />
-    <Compile Include="ViewModels\TemperatureViews\TemperatureTestViewModel.cs" />
-    <Compile Include="ViewModels\TemperatureViews\TemperatureViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViews\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentViews\InstrumentInfoViewModel.cs" />
+    <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\ToastNotificationViewModel.cs" />
-    <Compile Include="ViewModels\VolumeViewModel.cs" />
+    <Compile Include="ViewModels\InstrumentViews\VolumeVerificationViewModel.cs" />
     <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
     </Compile>
@@ -255,8 +248,11 @@
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\InstrumentConnectView.xaml.cs">
-      <DependentUpon>InstrumentConnectView.xaml</DependentUpon>
+    <Compile Include="Views\Dialogues\ConnectionView.xaml.cs">
+      <DependentUpon>ConnectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestViews\StartTestView.xaml.cs">
+      <DependentUpon>StartTestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentReport\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -271,8 +267,8 @@
     <Compile Include="Views\InstrumentsList\InstrumentTempTestView.xaml.cs">
       <DependentUpon>InstrumentTempTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentsList\InstrumentView.xaml.cs">
-      <DependentUpon>InstrumentView.xaml</DependentUpon>
+    <Compile Include="Views\InstrumentsList\InstrumentTestGridView.xaml.cs">
+      <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentsList\PTZVerification\PTZVerificationSetView.xaml.cs">
       <DependentUpon>PTZVerificationSetView.xaml</DependentUpon>
@@ -283,69 +279,81 @@
     <Compile Include="Views\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainMenuView.xaml.cs">
+    <Compile Include="Views\Shell\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewTestView.xaml.cs">
-      <DependentUpon>NewTestView.xaml</DependentUpon>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
+      <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PressureViews\LivePressureReadView.xaml.cs">
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml.cs">
+      <DependentUpon>PTSet.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml.cs">
+      <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
+      <DependentUpon>TempTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\VerificationTestView.xaml.cs">
+      <DependentUpon>VerificationTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentViews\PressureViews\LivePressureReadView.xaml.cs">
       <DependentUpon>LivePressureReadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PressureViews\PressureTestView.xaml.cs">
-      <DependentUpon>PressureTestView.xaml</DependentUpon>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
+      <DependentUpon>PressureTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PressureViews\PressureView.xaml.cs">
+    <Compile Include="Views\InstrumentViews\PressureViews\PressureView.xaml.cs">
       <DependentUpon>PressureView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PressureViews\Pressure\PressureHeaderView.xaml.cs">
+    <Compile Include="Views\InstrumentViews\PressureViews\Pressure\PressureHeaderView.xaml.cs">
       <DependentUpon>PressureHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentAccessView.xaml.cs">
       <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PTVerificationViews\PTVerificationSetView.xaml.cs">
-      <DependentUpon>PTVerificationSetView.xaml</DependentUpon>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml.cs">
+      <DependentUpon>PTSet.Card.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PTVerificationViews\PTVerificationView.xaml.cs">
       <DependentUpon>PTVerificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PTVerificationViews\PTVerification\PTVerificationHeaderView.xaml.cs">
-      <DependentUpon>PTVerificationHeaderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SettingsView.xaml.cs">
+    <Compile Include="Views\SettingsViews\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SiteInformationView.xaml.cs">
-      <DependentUpon>SiteInformationView.xaml</DependentUpon>
+    <Compile Include="Views\InstrumentViews\InstrumentInfo\SiteInformation.Card.xaml.cs">
+      <DependentUpon>SiteInformation.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShellView.xaml.cs">
+    <Compile Include="Views\Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\SuperFactorViews\SuperTestView.xaml.cs">
-      <DependentUpon>SuperTestView.xaml</DependentUpon>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml.cs">
+      <DependentUpon>SuperTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureViews\LiveTemperatureReadView.xaml.cs">
+    <Compile Include="Views\InstrumentViews\TemperatureViews\LiveTemperatureReadView.xaml.cs">
       <DependentUpon>LiveTemperatureReadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureViews\TemperatureView.xaml.cs">
+    <Compile Include="Views\InstrumentViews\TemperatureViews\TemperatureView.xaml.cs">
       <DependentUpon>TemperatureView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureViews\TemperatureTestView.xaml.cs">
-      <DependentUpon>TemperatureTestView.xaml</DependentUpon>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
+      <DependentUpon>TempTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml.cs">
-      <DependentUpon>TemperatureHeaderView.xaml</DependentUpon>
+    <Compile Include="Views\InstrumentViews\TemperatureViews\TemperatureInfo.Card.xaml.cs">
+      <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentViews\TemperatureViews\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToastNotificationView.xaml.cs">
       <DependentUpon>ToastNotificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VolumeView.xaml.cs">
-      <DependentUpon>VolumeView.xaml</DependentUpon>
+    <Compile Include="Views\InstrumentViews\VolumeVerification\Volume.Card.xaml.cs">
+      <DependentUpon>Volume.Card.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ValueDescriptionControl.xaml">
       <SubType>Designer</SubType>
@@ -372,7 +380,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentConnectView.xaml">
+    <Page Include="Views\Dialogues\ConnectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestViews\StartTestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -392,7 +404,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentsList\InstrumentView.xaml">
+    <Page Include="Views\InstrumentsList\InstrumentTestGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -408,19 +420,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PressureViews\LivePressureReadView.xaml">
+    <Page Include="Views\InstrumentViews\PressureViews\LivePressureReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PressureViews\PressureTestView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PressureViews\PressureView.xaml">
+    <Page Include="Views\InstrumentViews\PressureViews\PressureView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PressureViews\Pressure\PressureHeaderView.xaml">
+    <Page Include="Views\InstrumentViews\PressureViews\Pressure\PressureHeaderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -428,7 +440,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PTVerificationViews\PTVerificationSetView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -436,47 +452,59 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PTVerificationViews\PTVerification\PTVerificationHeaderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\SettingsView.xaml">
+    <Page Include="Views\SettingsViews\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SiteInformationView.xaml">
+    <Page Include="Views\InstrumentViews\InstrumentInfo\SiteInformation.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SuperFactorViews\SuperTestView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureViews\LiveTemperatureReadView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureViews\TemperatureView.xaml">
+    <Page Include="Views\InstrumentViews\TemperatureViews\LiveTemperatureReadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureViews\TemperatureTestView.xaml">
+    <Page Include="Views\InstrumentViews\TemperatureViews\TemperatureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureViews\Temperature\TemperatureHeaderView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainMenuView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewTestView.xaml">
+    <Page Include="Views\InstrumentViews\TemperatureViews\TemperatureInfo.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShellView.xaml">
+    <Page Include="Views\Shell\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\VerificationTestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Shell\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentViews\TemperatureViews\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -484,7 +512,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VolumeView.xaml">
+    <Page Include="Views\InstrumentViews\VolumeVerification\Volume.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -555,7 +583,10 @@
   <ItemGroup>
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Screens\" />
+    <Folder Include="Views\SiteInformation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

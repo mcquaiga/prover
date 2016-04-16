@@ -15,7 +15,9 @@
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                 mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300">
-    <Grid>
-            
-    </Grid>
+    <UniformGrid>
+        <ContentControl Name="TempInformation"></ContentControl>
+        <ContentControl Name="PressureInformation"></ContentControl>
+        <ContentControl Name="SuperInformation"></ContentControl>
+    </UniformGrid>
 </UserControl>
