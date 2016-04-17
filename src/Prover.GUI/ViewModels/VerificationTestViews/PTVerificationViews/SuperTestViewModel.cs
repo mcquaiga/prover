@@ -20,9 +20,9 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public RotaryTestManager InstrumentManager { get; set; }
-        public SuperFactor Test { get; set; }
+        public SuperFactorTest Test { get; set; }
 
-        public SuperTestViewModel(IUnityContainer container, SuperFactor test)
+        public SuperTestViewModel(IUnityContainer container, SuperFactorTest test)
         {
             _container = container;
             Test = test;

@@ -111,14 +111,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Communications.cs" />
+    <Compile Include="EVCTypes\IEVCDriveType.cs" />
+    <Compile Include="EVCTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\InstrumentConnectionEvent.cs" />
+    <Compile Include="Extensions\PressureHelpers.cs" />
+    <Compile Include="Extensions\TemperatureHelpers.cs" />
+    <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="ItemDetails.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604171833287_verification.cs" />
+    <Compile Include="Migrations\201604171833287_verification.Designer.cs">
+      <DependentUpon>201604171833287_verification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\PressureTemperatureVerification.cs" />
     <Compile Include="VerificationTests\TestManager.cs" />
@@ -144,10 +156,8 @@
     <Compile Include="Models\Instruments\InstrumentTable.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\MeterIndexes.cs" />
-    <Compile Include="Models\Instruments\Pressure.cs" />
     <Compile Include="Models\Instruments\PressureTests.cs" />
-    <Compile Include="Models\Instruments\SuperFactor.cs" />
-    <Compile Include="Models\Instruments\Temperature.cs" />
+    <Compile Include="Models\Instruments\SuperFactorTest.cs" />
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
     <Compile Include="Models\Instruments\Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -197,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603300541401_refactor-pt.resx">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604171833287_verification.resx">
+      <DependentUpon>201604171833287_verification.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

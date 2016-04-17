@@ -13,7 +13,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private IUnityContainer _container;
         private RotaryTestManager _testManager;
 
-        public PTVerificationSetViewModel(IUnityContainer container, Instrument.VerificationTest verificationTest)
+        public PTVerificationSetViewModel(IUnityContainer container, VerificationTest verificationTest)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -28,7 +28,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
-                SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperTest);
+                SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperFactorTest);
             }                
 
             if (_testManager.Instrument.CorrectorType == CorrectorType.TemperatureOnly)
@@ -47,7 +47,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
         public PressureTestViewModel PressureTestViewModel { get; private set; }
         public SuperTestViewModel SuperFactorTestViewModel { get; private set; }
-        public Instrument.VerificationTest VerificationTest { get; private set; }
+        public VerificationTest VerificationTest { get; private set; }
 
         public async Task DownloadItems()
         {

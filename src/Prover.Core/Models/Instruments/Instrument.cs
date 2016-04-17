@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Prover.Core.Communication;
 using Prover.Core.Models.Certificates;
 using Prover.SerialProtocol;
+using System.Collections.ObjectModel;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -42,18 +43,12 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType type)
-        {
-            Items = new InstrumentItems(type);
-            Type = type;
-        }
-
         public Instrument(InstrumentType type, InstrumentItems items) : base(items)
         {
             TestDateTime = DateTime.Now;
             Type = type;
             CertificateId = null;
-            BuildCorrectorTypes();
+
         }
 
         public DateTime TestDateTime { get; set; }
@@ -74,12 +69,7 @@ namespace Prover.Core.Models.Instruments
         }
         public Guid? CertificateId { get; set; }
         public Certificate Certificate { get; set; }
-
-        public virtual Pressure Pressure { get; set; }
-        public virtual Temperature Temperature { get; set; }
-        [NotMapped]
-        public List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
-        public virtual Volume Volume { get; set; }
+        public virtual ICollection<VerificationTest> VerificationTests { get; set; } = new Collection<VerificationTest>();
 
         #region NotMapped Properties
         [NotMapped]
@@ -157,43 +147,6 @@ namespace Prover.Core.Models.Instruments
         {
             get { return Items.GetItem(201).GetNumericValue(); }
         }
-
-        [NotMapped]
-        public bool HasPassed
-        {
-            get
-            {
-                if (Volume != null)
-                {
-                    if (CorrectorType == CorrectorType.TemperatureOnly && Temperature != null)
-                        return Temperature.HasPassed && Volume.HasPassed;
-
-                    if (CorrectorType == CorrectorType.PressureOnly && Pressure != null)
-                        return Pressure.HasPassed && Volume.HasPassed;
-
-                    if (CorrectorType == CorrectorType.PressureTemperature && Pressure != null && Temperature != null)
-                        return Temperature.HasPassed && Volume.HasPassed && Pressure.HasPassed;
-                }             
-
-                return false;
-            }
-        }
         #endregion      
-
-        public class VerificationTest
-        {
-            public VerificationTest(int level, Instrument instrument, TemperatureTest temperature, PressureTest pressure)
-            {
-                TestNumber = level;
-                TemperatureTest = temperature;
-                PressureTest = pressure;
-                SuperTest = new SuperFactor(instrument, TemperatureTest, PressureTest);
-            }
-
-            public PressureTest PressureTest { get; private set; }
-            public SuperFactor SuperTest { get; private set; }
-            public TemperatureTest TemperatureTest { get; private set; }
-            public int TestNumber { get; private set; }
-        }
     }
 }

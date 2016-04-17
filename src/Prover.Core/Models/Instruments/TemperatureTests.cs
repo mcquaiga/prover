@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -13,80 +14,50 @@ namespace Prover.Core.Models.Instruments
     {
         private const decimal TempCorrection = 459.67m;
         private const decimal MetericTempCorrection = 273.15m;
+        private Instrument _instrument;
 
-        private enum TempItems
+        public TemperatureTest(VerificationTest verificationTest) : 
+            base(verificationTest.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
         {
-            Gas = 26,
-            Base = 34,
-            Factor = 45,
-            Units = 89,
-            FixedFactor = 111
+            VerificationTest = verificationTest;
+            _instrument = VerificationTest.Instrument;
         }
 
-        public TemperatureTest(Temperature temp, bool isVolumeTest = false, double defaultGauge = 0) : 
-            base(temp.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
-        {
-            Temperature = temp;
-            TemperatureId = temp.Id;
-            IsVolumeTestTemperature = isVolumeTest;
-            Gauge = defaultGauge;
-        }
-
-        public Guid TemperatureId { get; set; }
-        public Temperature Temperature { get; set; }
-
-        public bool IsVolumeTestTemperature { get; set; }
+        [NotMapped]
+        public VerificationTest VerificationTest { get; set; }
 
         public double Gauge { get; set; }
         public decimal? PercentError
         {
             get
             {
-                if (EvcFactor == null) return null;
-                return Math.Round((decimal) ((EvcFactor - ActualFactor)/ActualFactor)*100, 2);
+                if (Items.EvcTemperatureFactor() == null) return null;
+                return Math.Round((decimal) ((Items.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
             }
-        }
-
-        [NotMapped]
-        public bool HasPassed
-        {
-            get { return (PercentError < 1 && PercentError > -1); }
         }
 
         public decimal? ActualFactor
         {
             get
             {
-                switch (Temperature.Units)
+                switch (_instrument.TemperatureUnits())
                 {
                     case "K":
                     case "C":
                         return
                             Math.Round(
                                 (decimal)
-                                    ((MetericTempCorrection + Temperature.EvcBase)/
+                                    ((MetericTempCorrection + _instrument.EvcBaseTemperature()) /
                                      ((decimal)Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (decimal) ((TempCorrection + Temperature.EvcBase)/((decimal)Gauge + TempCorrection)), 4);
+                                (decimal) ((TempCorrection + _instrument.EvcBaseTemperature())/((decimal)Gauge + TempCorrection)), 4);
                 }
 
                 return 0;
             }
-        }
-
-        [NotMapped]
-        public decimal? EvcReading
-        {
-            get { return Items.GetItem((int)TempItems.Gas).GetNumericValue(); }
-        }
-
-        [NotMapped]
-        public decimal? EvcFactor
-        {
-            get { return Items.GetItem((int) TempItems.Factor).GetNumericValue(); }
         }
     }
 }

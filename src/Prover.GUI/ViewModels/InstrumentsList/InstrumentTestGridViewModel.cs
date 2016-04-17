@@ -10,10 +10,7 @@ namespace Prover.GUI.ViewModels.InstrumentsList
 {
     public class InstrumentTestGridViewModel : InstrumentTestViewModel
     {
-        public string HasPassed
-        {
-            get { return Instrument.HasPassed ? "PASS" : "FAIL"; }
-        }
+        public string HasPassed => true ? "PASS" : "FAIL";
 
         public bool IsSelected { get; set; }
 

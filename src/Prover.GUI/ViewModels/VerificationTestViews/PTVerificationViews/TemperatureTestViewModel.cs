@@ -41,7 +41,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             ScreenManager.ShowDialog(_container, viewmodel);
         }
 
-        public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
+        public Brush PercentColour => Brushes.Green;
 
         public void Handle(VerificationTestEvent @event)
         {

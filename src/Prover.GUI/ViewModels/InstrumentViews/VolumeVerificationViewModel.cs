@@ -5,6 +5,7 @@ using NLog;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.InstrumentViews
@@ -43,23 +44,23 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             Instrument = InstrumentManager.Instrument;
         }
 
-        public Volume Volume
+        public VolumeTest Volume
         {
             get
             {
-                return Instrument?.Volume;
+                return Instrument.VerificationTests.FirstOrDefault(x => x.VolumeTest != null).VolumeTest;
             }
         }
        
-        public double AppliedInput
+        public decimal AppliedInput
         {
             get
             {
-                return Instrument?.Volume?.AppliedInput ?? 0.00;
+                return Volume.AppliedInput;
             }
             set
             {
-                Instrument.Volume.AppliedInput = value;
+                Volume.AppliedInput = value;
                 RaisePropertyChanges();
             }
         }
@@ -81,7 +82,7 @@ namespace Prover.GUI.ViewModels.InstrumentViews
 
         public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
         public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
-        public Brush MeterDisplacementPercentColour => Volume?.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush MeterDisplacementPercentColour => Brushes.Green; // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
 
         private void ToggleTestButtons()
         {

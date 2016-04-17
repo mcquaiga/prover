@@ -34,10 +34,9 @@ namespace Prover.Core.Storage
 
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
-        public DbSet<Volume> Volume { get; set; }
-        public DbSet<Temperature> Temperatures { get; set; }
+        public DbSet<VerificationTest> VerificationTests { get; set; }
+        public DbSet<VolumeTest> VolumeTests { get; set; }
         public DbSet<TemperatureTest> TemperatureTests { get; set; }
-        public DbSet<Pressure> Pressures { get; set; }
         public DbSet<PressureTest> PressureTests { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace Prover.Core.VerificationTests
             var items = new InstrumentItems(instrumentType);
             await instrumentComm.DownloadItemsAsync(items);
             var instrument = new Instrument(instrumentType, items);
-            BuildCorrectorTypes
+
             var manager = new RotaryTestManager(container, instrument, instrumentComm, tachComm);
             container.RegisterInstance(manager);
 
@@ -48,53 +48,10 @@ namespace Prover.Core.VerificationTests
             InstrumentCommunicator = instrumentCommunicator;
             TachometerCommunicator = tachCommunicator;
 
-            VolumeTest = new RotaryVolumeVerification(instrument, instrumentCommunicator, tachCommunicator);
+            instrument.VerificationTests.Add(new VerificationTest(0, instrument));
+            instrument.VerificationTests.Add(new VerificationTest(1, instrument));
+            instrument.VerificationTests.Add(new VerificationTest(2, instrument, true));
         }
-
-        private static void BuildCorrectorTypes(Instrument instrument)
-        {
-            if (instrument.CorrectorType == CorrectorType.PressureOnly)
-            {
-                instrument.Pressure = new Pressure(instrument);
-                instrument.Pressure.AddTest();
-                instrument.Pressure.AddTest();
-                instrument.Pressure.AddTest();
-
-                instrument.VerificationTests.Add(new VerificationTest(0, this, null, Pressure.Tests[0]));
-                instrument.VerificationTests.Add(new VerificationTest(1, this, null, Pressure.Tests[1]));
-                instrument.VerificationTests.Add(new VerificationTest(2, this, null, Pressure.Tests[2]));
-            }
-
-            if (CorrectorType == CorrectorType.TemperatureOnly)
-            {
-                instrument.Temperature = new Temperature(this);
-                instrument.Temperature.AddTemperatureTest();
-                instrument.Temperature.AddTemperatureTest();
-                instrument.Temperature.AddTemperatureTest();
-
-                instrument.VerificationTests.Add(new VerificationTest(0, this, Temperature.Tests[0], null));
-                instrument.VerificationTests.Add(new VerificationTest(1, this, Temperature.Tests[1], null));
-                instrument.VerificationTests.Add(new VerificationTest(2, this, Temperature.Tests[2], null));
-            }
-
-            if (CorrectorType == CorrectorType.PressureTemperature)
-            {
-                Temperature = new Temperature(this);
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-                Temperature.AddTemperatureTest();
-
-                Pressure = new Pressure(this);
-                Pressure.AddTest();
-                Pressure.AddTest();
-                Pressure.AddTest();
-
-                VerificationTests.Add(new VerificationTest(0, this, Temperature.Tests[0], Pressure.Tests[0]));
-                VerificationTests.Add(new VerificationTest(1, this, Temperature.Tests[1], Pressure.Tests[1]));
-                VerificationTests.Add(new VerificationTest(2, this, Temperature.Tests[2], Pressure.Tests[2]));
-            }
-
-            Volume = new Volume(this);
 
         public async Task DownloadVerificationTestItems(int level)
         {

@@ -22,12 +22,14 @@ namespace Prover.Core.VerificationTests
         private IDInOutBoard _firstPortBInputBoard;
         private TachometerCommunicator _tachometerCommunicator;
         private bool _stopTest;
+        private VerificationTest _verificationTest;
 
-        public RotaryVolumeVerification(Instrument instrument, InstrumentCommunicator instrumentComm, TachometerCommunicator tachComm)
-            :base(instrument, instrumentComm)
+        public RotaryVolumeVerification(VerificationTest verificationTest, InstrumentCommunicator instrumentComm, TachometerCommunicator tachComm)
+            :base(verificationTest.Instrument, instrumentComm)
         {
             _tachometerCommunicator = tachComm;
-
+            _verificationTest = verificationTest;
+            _verificationTest.VolumeTest = new VolumeTest(_verificationTest);
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
             _firstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             _firstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
@@ -41,7 +43,7 @@ namespace Prover.Core.VerificationTests
 
                 if (!_isFirstVolumeTest)
                 {
-                    await _instrumentCommunicator.DownloadItemsAsync(_instrument.Volume.Items);
+                    await _instrumentCommunicator.DownloadItemsAsync(_verificationTest.VolumeTest.Items);
                     _isFirstVolumeTest = false;
                 }                   
 
@@ -50,8 +52,8 @@ namespace Prover.Core.VerificationTests
                 //Reset Tach setting
                 await _tachometerCommunicator?.ResetTach();
 
-                _instrument.Volume.PulseACount = 0;
-                _instrument.Volume.PulseBCount = 0;
+                _verificationTest.VolumeTest.PulseACount = 0;
+                _verificationTest.VolumeTest.PulseBCount = 0;
 
                 _outputBoard.StartMotor();
                 _runningTest = true;
@@ -72,9 +74,9 @@ namespace Prover.Core.VerificationTests
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    _instrument.Volume.PulseACount += _firstPortAInputBoard.ReadInput();
-                    _instrument.Volume.PulseBCount += _firstPortBInputBoard.ReadInput();
-                } while (_instrument.Volume.UncPulseCount < _instrument.Volume.MaxUnCorrected() || _stopTest);
+                    _verificationTest.VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
+                    _verificationTest.VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                } while (_verificationTest.VolumeTest.UncPulseCount < _verificationTest.VolumeTest.DriveType.MaxUnCorrected() || _stopTest);
 
                 _outputBoard?.StopMotor();
                 await FinishVerificationTest();
@@ -89,12 +91,12 @@ namespace Prover.Core.VerificationTests
                 {
                     System.Threading.Thread.Sleep(250);
 
-                    await _instrumentCommunicator.DownloadItemsAsync(_instrument.Volume.AfterTestItems);
+                    await _instrumentCommunicator.DownloadItemsAsync(_verificationTest.VolumeTest.AfterTestItems);
 
                     try
                     {
-                        _instrument.Volume.AppliedInput = await _tachometerCommunicator?.ReadTach();
-                        _log.Info(string.Format("Tachometer reading: {0}", _instrument.Volume?.AppliedInput));
+                        _verificationTest.VolumeTest.AppliedInput = await _tachometerCommunicator?.ReadTach();
+                        _log.Info(string.Format("Tachometer reading: {0}", _verificationTest.VolumeTest.AppliedInput));
                     }
                     catch (Exception ex)
                     {

@@ -3,7 +3,9 @@ using Caliburn.Micro.ReactiveUI;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Practices.Unity;
 using NLog;
+using Prover.Core;
 using Prover.Core.Communication;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using Prover.GUI.Views;
@@ -24,7 +26,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public PressureTest Test { get; set; }
 
         public bool ShowGaugeControl => !_isReportView;
-        public bool ShowATMGaugeControl => Test.Pressure.TransducerType == TransducerType.Absolute;
+        public bool ShowATMGaugeControl => Test.VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
 
         public PressureTestViewModel(IUnityContainer container, PressureTest test, bool isReportView = false)
         {

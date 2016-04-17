@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prover.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,34 +8,36 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class SuperFactor
+    public class SuperFactorTest
     {
         private int SPEC_GR_NUMBER = 53;
         private int N2_NUMBER = 54;
         private int CO2_NUMBER = 55;
         private int SUPER_TABLE_NUMBER = 147;
-
+        private Instrument _instrument;
+        private TemperatureTest _temperatureTest;
+        private PressureTest _pressureTest { get; }
         public enum SuperFactorTable
         {
             NX19 = 0,
             AGA8 = 1
         }
 
-        public SuperFactor(Instrument instrument, TemperatureTest temperature, PressureTest pressure)
+        public SuperFactorTest()
         {
-            Instrument = instrument;
-            TemperatureTest = temperature;
-            PressureTest = pressure;
         }
 
-        public Instrument Instrument { get; }
-        public TemperatureTest TemperatureTest { get; }
-        public PressureTest PressureTest { get; }
-
-        public decimal? SpecGr => Instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue();
-        public decimal? CO2 => Instrument.Items.GetItem(CO2_NUMBER).GetNumericValue();
-        public decimal? N2 => Instrument.Items.GetItem(N2_NUMBER).GetNumericValue();
-        public SuperFactorTable SuperTable => (SuperFactorTable)Instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue();
+        public SuperFactorTest(VerificationTest verificationTest)
+        {
+            _instrument = verificationTest.Instrument;
+            _temperatureTest = verificationTest.TemperatureTest;
+            _pressureTest = verificationTest.PressureTest;
+        }
+        
+        public decimal? SpecGr => _instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue();
+        public decimal? CO2 => _instrument.Items.GetItem(CO2_NUMBER).GetNumericValue();
+        public decimal? N2 => _instrument.Items.GetItem(N2_NUMBER).GetNumericValue();
+        public SuperFactorTable SuperTable => (SuperFactorTable)_instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue();
 
         //TODO: This will always have to be in Fahrenheit
         [NotMapped]
@@ -42,7 +45,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return (decimal)TemperatureTest.Gauge;
+                return (decimal)_temperatureTest.Gauge;
             }
         }
 
@@ -52,7 +55,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return PressureTest.GasGauge;
+                return _pressureTest.GasGauge;
             }
         }
 
@@ -61,7 +64,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return PressureTest.EvcUnsqrFactor;
+                return _instrument.EvcUnsqrFactor();
             }
         }
         
