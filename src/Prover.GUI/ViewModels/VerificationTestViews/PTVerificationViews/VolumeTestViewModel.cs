@@ -2,15 +2,18 @@
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using NLog;
+using Prover.Core.EVCTypes;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Prover.GUI.ViewModels.InstrumentViews
+namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
-    public class VolumeVerificationViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
+    public class VolumeTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private readonly IUnityContainer _container;        
@@ -25,7 +28,7 @@ namespace Prover.GUI.ViewModels.InstrumentViews
         public bool ShowAppliedInputDisplay => _isReportView;
         public bool ShowTestButtons => !_isReportView;
 
-        public VolumeVerificationViewModel(IUnityContainer container, bool isReportView = false)
+        public VolumeTestViewModel(IUnityContainer container, bool isReportView = false)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -33,18 +36,18 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             _isReportView = isReportView;
         }
 
-        public VolumeVerificationViewModel(IUnityContainer container, Instrument instrument) : this(container, true)
+        public VolumeTestViewModel(IUnityContainer container, Instrument instrument) : this(container, true)
         {
             Instrument = instrument;
         }
 
-        public VolumeVerificationViewModel(IUnityContainer container, RotaryTestManager instrumentTestManager) : this(container, false)
+        public VolumeTestViewModel(IUnityContainer container, RotaryTestManager instrumentTestManager) : this(container, false)
         {
             InstrumentManager = instrumentTestManager;
             Instrument = InstrumentManager.Instrument;
         }
 
-        public VolumeTest Volume
+        public Prover.Core.Models.Instruments.VolumeTest Volume
         {
             get
             {
@@ -65,7 +68,26 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             }
         }
 
-        public async void StartTestCommand()
+        public string DriveRateDescription => Instrument.DriveRateDescription();
+        public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
+        public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
+        public decimal? StartUncorrected => Volume.ItemValues.Uncorrected();
+        public decimal? EndUncorrected => Volume.AfterTestItemValues.Uncorrected();
+        public decimal? StartCorrected => Volume.ItemValues.Corrected();
+        public decimal? EndCorrected => Volume.AfterTestItemValues.Corrected();
+        public decimal? EvcUncorrected => Instrument.EvcUncorrected(Volume.ItemValues, Volume.AfterTestItemValues);
+        public decimal? EvcCorrected => Instrument.EvcCorrected(Volume.ItemValues, Volume.AfterTestItemValues);
+
+        public int UncorrectedPulseCount => Volume.UncPulseCount;
+        public int CorrectedPulseCount => Volume.CorPulseCount;
+
+        //Meter properties
+        public string MeterTypeDescription => (Volume.DriveType as RotaryDrive).Meter.MeterTypeDescription;
+        public decimal? MeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacement;
+        public decimal? EvcMeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.EvcMeterDisplacement;
+        public decimal? MeterDisplacementPercentError => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacementPercentError;
+
+        public async Task StartTestCommand()
         {
             ToggleTestButtons();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
@@ -95,15 +117,25 @@ namespace Prover.GUI.ViewModels.InstrumentViews
         {
             NotifyOfPropertyChange(() => AppliedInput);
             NotifyOfPropertyChange(() => Volume);
+            NotifyOfPropertyChange(() => StartUncorrected);
+            NotifyOfPropertyChange(() => EndUncorrected);
+            NotifyOfPropertyChange(() => StartCorrected);
+            NotifyOfPropertyChange(() => EndCorrected);
+            NotifyOfPropertyChange(() => EvcUncorrected);
+            NotifyOfPropertyChange(() => EvcCorrected);
+            NotifyOfPropertyChange(() => StartCorrected);
+            NotifyOfPropertyChange(() => MeterDisplacement);
+            NotifyOfPropertyChange(() => EvcMeterDisplacement);
+            NotifyOfPropertyChange(() => MeterDisplacementPercentError);
+            
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => ShowStopTestButton);
             NotifyOfPropertyChange(() => ShowBeginTestButton);
         }
 
-        public void Handle(InstrumentUpdateEvent message)
+        public void Handle(VerificationTestEvent message)
         {
-            InstrumentManager = message.InstrumentManager;
             RaisePropertyChanges();
         }
     }

@@ -237,7 +237,7 @@
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\ToastNotificationViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentViews\VolumeVerificationViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\VolumeTestViewModel.cs" />
     <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
     </Compile>
@@ -282,8 +282,14 @@
     <Compile Include="Views\Shell\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
+      <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
       <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml.cs">
+      <DependentUpon>PTSet.CardReadOnly.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml.cs">
       <DependentUpon>PTSet.Grid.xaml</DependentUpon>
@@ -291,8 +297,14 @@
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml.cs">
       <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.CardReadOnly.xaml.cs">
+      <DependentUpon>TempTest.CardReadOnly.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
       <DependentUpon>TempTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.CardReadOnly.xaml.cs">
+      <DependentUpon>Volume.CardReadOnly.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerificationTestViews\VerificationTestView.xaml.cs">
       <DependentUpon>VerificationTestView.xaml</DependentUpon>
@@ -314,9 +326,6 @@
     </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml.cs">
       <DependentUpon>PTSet.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PTVerificationViews\PTVerificationView.xaml.cs">
-      <DependentUpon>PTVerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsViews\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -352,7 +361,7 @@
     <Compile Include="Views\ToastNotificationView.xaml.cs">
       <DependentUpon>ToastNotificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentViews\VolumeVerification\Volume.Card.xaml.cs">
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
       <DependentUpon>Volume.Card.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ValueDescriptionControl.xaml">
@@ -424,6 +433,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -444,11 +457,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PTVerificationViews\PTVerificationView.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -480,6 +493,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.CardReadOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -495,6 +512,10 @@
     <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.CardReadOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\VerificationTestViews\VerificationTestView.xaml">
       <SubType>Designer</SubType>
@@ -512,7 +533,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentViews\VolumeVerification\Volume.Card.xaml">
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -584,7 +605,9 @@
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Commands\" />
     <Folder Include="Screens\" />
+    <Folder Include="Views\InstrumentViews\VolumeVerification\" />
     <Folder Include="Views\SiteInformation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

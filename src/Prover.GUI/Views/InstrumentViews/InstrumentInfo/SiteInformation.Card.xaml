@@ -24,7 +24,7 @@
                 Site Information
             </materialDesign:ColorZone>
 
-            <UniformGrid Columns="4">
+            <UniformGrid Rows="2">
                 <controls:ValueDescriptionControl Label="Instrument Type" Value="{Binding Instrument.TypeString}"/>
                 <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
                 <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>

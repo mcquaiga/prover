@@ -7,13 +7,13 @@ namespace Prover.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class verification : IMigrationMetadata
+    public sealed partial class verifications : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(verification));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(verifications));
         
         string IMigrationMetadata.Id
         {
-            get { return "201604171833287_verification"; }
+            get { return "201604200029287_verifications"; }
         }
         
         string IMigrationMetadata.Source

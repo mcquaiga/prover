@@ -11,12 +11,12 @@ namespace Prover.Core.EVCTypes
     public class RotaryDrive : IDriveType
     {
         private Instrument _instrument;
-        private MeterTest _meter;
+        public MeterTest Meter { get; set; }
 
         public RotaryDrive(Instrument instrument)
         {
             _instrument = instrument;
-            _meter = new MeterTest(_instrument);
+            Meter = new MeterTest(_instrument);
         }
 
         public string Discriminator
@@ -29,16 +29,16 @@ namespace Prover.Core.EVCTypes
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            return (_meter.MeterDisplacement * appliedInput);
+            return (Meter.MeterDisplacement * appliedInput);
         }
 
         public int MaxUnCorrected()
         {
             if (_instrument.UnCorrectedMultiplier() == 10)
-                return _meter.MeterIndex.UnCorPulsesX10;
+                return Meter.MeterIndex.UnCorPulsesX10;
 
             if (_instrument.UnCorrectedMultiplier() == 100)
-                return _meter.MeterIndex.UnCorPulsesX100;
+                return Meter.MeterIndex.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything
         }
@@ -51,7 +51,7 @@ namespace Prover.Core.EVCTypes
         public MeterTest(Instrument instrument)
         {
             _instrument = instrument;
-            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).GetNumericValue());
+            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues));
         }
 
         public bool MeterDisplacementHasPassed
@@ -74,7 +74,7 @@ namespace Prover.Core.EVCTypes
         {
             get
             {
-                return _instrument.Items.GetItem(439).GetNumericValue();
+                return _instrument.Items.GetItem(439).GetNumericValue(_instrument.ItemValues);
             }
         }
 
@@ -99,13 +99,13 @@ namespace Prover.Core.EVCTypes
 
         public string MeterType
         {
-            get { return _instrument.Items.GetItem(432).GetDescriptionValue(); }
+            get { return _instrument.Items.GetItem(432).GetDescriptionValue(_instrument.ItemValues); }
         }
 
 
         public int MeterTypeId
         {
-            get { return (int)_instrument.Items.GetItem(432).GetNumericValue(); }
+            get { return (int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues); }
         }
     }
 }

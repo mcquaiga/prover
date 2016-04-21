@@ -42,56 +42,11 @@ namespace Prover.Core.Models
         {
             return this.Items.FirstOrDefault(i => i.Code == itemCode).Number;
         }
-
-        [NotMapped]
-        public Dictionary<int, string> InstrumentValues
-        {
-            get
-            {
-                return Items.ToDictionary(i => i.Number, v => v.RawValue);
-            }
-            set
-            {
-                foreach (var item in value)
-                {
-                    Items.FirstOrDefault(i => i.Number == item.Key).RawValue = item.Value;
-                }
-            }
-        }
-
-        public InstrumentItems CopyItemsByFilter(Func<ItemDetail, bool> predicate)
-        {
-            var toCopy = this.Items.Where(predicate).ToList();
-            var results = toCopy.ConvertAll(item =>
-            {
-                var newItem = new ItemDetail
-                {
-                    Code = item.Code,
-                    IsAlarm = item.IsAlarm,
-                    IsPressure = item.IsPressure,
-                    IsPressureTest = item.IsPressureTest,
-                    IsSuperFactor = item.IsSuperFactor,
-                    IsTemperature = item.IsTemperature,
-                    IsTemperatureTest = item.IsTemperatureTest,
-                    IsVolume = item.IsVolume,
-                    IsVolumeTest = item.IsVolumeTest,
-                    ItemDescriptions = item.ItemDescriptions,
-                    LongDescription = item.LongDescription,
-                    Number = item.Number,
-                    RawValue = item.RawValue,
-                    ShortDescription = item.ShortDescription
-                };
-                return newItem;
-            });
-
-            return new InstrumentItems(results);
-        }
     }
 
     public class ItemDetail
     {
         public int Number { get; set; }
-        public string RawValue { get; set; }
         public string Code { get; set; }
         public string ShortDescription { get; set; }
         public string LongDescription { get; set; }
@@ -105,17 +60,18 @@ namespace Prover.Core.Models
         public bool? IsVolumeTest { get; set; }
         public bool? IsSuperFactor { get; set; }
 
-        public bool HasValue()
+        public decimal GetNumericValue(Dictionary<int, string> itemValues)
         {
-            return !string.IsNullOrEmpty(RawValue);
+            var value = itemValues.FirstOrDefault(i => i.Key == Number).Value;
+            return GetNumericValue(value);
         }
 
-        public decimal GetNumericValue()
+        public decimal GetNumericValue(string value)
         {
-            if (string.IsNullOrEmpty(RawValue))
+            if (string.IsNullOrEmpty(value))
                 throw new NullReferenceException(string.Format("No value was found for Item Number #{0}.", Number));
 
-            var decValue = Convert.ToDecimal(RawValue);
+            var decValue = Convert.ToDecimal(value);
             if (ItemDescriptions.Any())
             {
                 var intValue = Convert.ToInt32(decValue);
@@ -125,9 +81,15 @@ namespace Prover.Core.Models
             return decValue;
         }
 
-        public string GetDescriptionValue()
+        public string GetDescriptionValue(Dictionary<int, string> itemValues)
         {
-            var intValue = Convert.ToInt32(RawValue);
+            var value = itemValues.FirstOrDefault(i => i.Key == Number).Value;
+            return GetDescriptionValue(value);
+        }
+
+        public string GetDescriptionValue(string value)
+        {
+            var intValue = Convert.ToInt32(value);
             if (ItemDescriptions != null)
             {
                 return GetItemDescription(intValue)?.Description;

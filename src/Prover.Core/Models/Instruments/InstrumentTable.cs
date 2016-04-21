@@ -11,32 +11,34 @@ using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class InstrumentTable
+    public abstract class BaseEntity
     {
-        protected InstrumentTable()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        protected InstrumentTable(InstrumentItems items) : this()
-        {
-            Items = items;
-        }
-
         [Key]
         public Guid Id { get; set; }
 
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        protected BaseEntity()
+        {
+            Id = Guid.NewGuid();
+        }
+    }
+
+    public abstract class InstrumentTable : BaseEntity
+    {
+        protected InstrumentTable() : base()
+        {
+        
+        }
+
         public string InstrumentData
         {
-            get { return JsonConvert.SerializeObject(Items.InstrumentValues); }
+            get { return JsonConvert.SerializeObject(ItemValues); }
             set
             {
-                Items.InstrumentValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
+                ItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
             }
         }
 
         [NotMapped]
-        public InstrumentItems Items { get; set; }
+        public Dictionary<int, string> ItemValues { get; set; }
     }
 }

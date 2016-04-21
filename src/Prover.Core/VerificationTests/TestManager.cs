@@ -32,8 +32,8 @@ namespace Prover.Core.VerificationTests
             var tachComm = new TachometerCommunicator(tachometerPortName);
 
             var items = new InstrumentItems(instrumentType);
-            await instrumentComm.DownloadItemsAsync(items);
-            var instrument = new Instrument(instrumentType, items);
+            var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
+            var instrument = new Instrument(instrumentType, items, itemValues);
 
             var manager = new RotaryTestManager(container, instrument, instrumentComm, tachComm);
             container.RegisterInstance(manager);
@@ -47,43 +47,54 @@ namespace Prover.Core.VerificationTests
             Instrument = instrument;
             InstrumentCommunicator = instrumentCommunicator;
             TachometerCommunicator = tachCommunicator;
-
+            
             instrument.VerificationTests.Add(new VerificationTest(0, instrument));
             instrument.VerificationTests.Add(new VerificationTest(1, instrument));
-            instrument.VerificationTests.Add(new VerificationTest(2, instrument, true));
+
+            var volumeVerification = new VerificationTest(2, instrument, true);
+            instrument.VerificationTests.Add(volumeVerification);
+            VolumeTest = new RotaryVolumeVerification(_container.Resolve<IEventAggregator>(), volumeVerification, InstrumentCommunicator, tachCommunicator);
         }
 
         public async Task DownloadVerificationTestItems(int level)
         {
-            if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            {
+                await DownloadTemperatureTestItems(level, false);
+                await DownloadPressureTestItems(level);
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
             {
                 await DownloadTemperatureTestItems(level);
             }
 
-            if (Instrument.CorrectorType == CorrectorType.PressureTemperature || Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
             {
                 await DownloadPressureTestItems(level);
             }
         }
 
-        public async Task DownloadTemperatureTestItems(int levelNumber)
+        public async Task DownloadTemperatureTestItems(int levelNumber, bool disconnectAfter = true)
         {
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
+            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsTemperatureTest == true).ToList();
             if (test != null)
-                test.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(test.Items.Items);
+                test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
   
             _isBusy = false;
         }
 
-        public async Task DownloadPressureTestItems(int level)
+        public async Task DownloadPressureTestItems(int level, bool disconnectAfter = true)
         {
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
+            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsPressureTest == true).ToList();
             if (test != null)
-                test.Items.InstrumentValues = await InstrumentCommunicator.DownloadItemsAsync(test.Items.Items);
+                test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
 
             _isBusy = false;
         }
@@ -120,8 +131,10 @@ namespace Prover.Core.VerificationTests
 
         public async Task SaveAsync()
         {
-            var store = new InstrumentStore(_container);
-            await store.UpsertAsync(Instrument);
+            using (var store = new InstrumentStore(_container))
+            {
+                await store.UpsertAsync(Instrument);
+            }
         }
 
         public async Task StartVolumeTest()

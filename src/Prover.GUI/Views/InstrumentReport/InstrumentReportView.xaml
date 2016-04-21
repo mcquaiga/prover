@@ -17,7 +17,7 @@
         <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
         <DataTemplate x:Key="TestTemplate">
-            <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="Card" />
+            <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="CardReadOnly" />
         </DataTemplate>
     </UserControl.Resources>
     <Viewbox Width="795" Height="1040" Stretch="UniformToFill">
@@ -35,8 +35,8 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            
-            <ContentControl cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="Card"
+
+            <ContentControl cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="CardReadOnly"
                             HorizontalAlignment="Center"
                             Margin="5" />
         </StackPanel>

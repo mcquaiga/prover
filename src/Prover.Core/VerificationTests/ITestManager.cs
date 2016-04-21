@@ -9,8 +9,8 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
         InstrumentCommunicator InstrumentCommunicator { get; }
 
-        Task DownloadPressureTestItems(int level);
-        Task DownloadTemperatureTestItems(int levelNumber);
+        Task DownloadPressureTestItems(int level, bool disconnectAfter = true);
+        Task DownloadTemperatureTestItems(int levelNumber, bool disconnectAfter = true);
         Task DownloadVerificationTestItems(int level);
         Task SaveAsync();
         Task StartLiveRead(int itemNumber);

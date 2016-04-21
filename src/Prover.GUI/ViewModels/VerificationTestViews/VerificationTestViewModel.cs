@@ -5,6 +5,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using Prover.GUI.Reporting;
 using Prover.GUI.ViewModels.InstrumentViews;
+using Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews;
 using Prover.SerialProtocol;
 using System;
 using System.Windows;
@@ -23,7 +24,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
             InstrumentTestManager = testManager;
 
             SiteInformationItem = new InstrumentInfoViewModel(_container, InstrumentTestManager.Instrument);
-            VolumeInformationItem = new VolumeVerificationViewModel(_container, InstrumentTestManager);
+            VolumeInformationItem = new VolumeTestViewModel(_container, InstrumentTestManager);
         }
 
         public RotaryTestManager InstrumentTestManager { get; set; }    

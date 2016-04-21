@@ -1,6 +1,7 @@
 ﻿using Prover.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -11,35 +12,36 @@ namespace Prover.Core.Models.Instruments
     public class PressureTest : InstrumentTable
     {
         private decimal? _atmGauge;
-        private Instrument _instrument;
-
+      
         public PressureTest() { }
 
-        public PressureTest(VerificationTest verificationTest) : 
-            base(verificationTest.Instrument.Items.CopyItemsByFilter(x => x.IsPressureTest == true))
+        public PressureTest(VerificationTest verificationTest)
         {
             VerificationTest = verificationTest;
-            _instrument = VerificationTest.Instrument;
+            VerificationTestId = VerificationTest.Id;
             GasGauge = 0;
             AtmosphericGauge = 0;
         }
+          
 
-        [NotMapped]
-        public VerificationTest VerificationTest { get; set; }
+        public Guid VerificationTestId { get; set; }
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
 
         public decimal? GasGauge { get; set; }
         public decimal? AtmosphericGauge
         {
             get
             {
+                if (VerificationTest == null) return null;
                 switch (VerificationTest.Instrument.GetTransducerType())
                 {
                     case TransducerType.Gauge:
-                        return _instrument.EvcAtmosphericPressure();
+                        return VerificationTest.Instrument.EvcAtmosphericPressure();
                     case TransducerType.Absolute:
                         return _atmGauge;
                     default:
-                        return _instrument.EvcAtmosphericPressure();
+                        return VerificationTest.Instrument.EvcAtmosphericPressure();
                 }
             }
             set
@@ -51,9 +53,9 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.EvcPressureFactor() == null) return null;
-                if (ActualFactor == 0) return null;
-                return Math.Round((decimal)((Items.EvcPressureFactor() - ActualFactor) / ActualFactor) * 100, 2);
+                if (ItemValues.EvcPressureFactor() == null) return null;
+                if (ActualFactor == 0 || ActualFactor == null) return null;
+                return Math.Round((decimal)((ItemValues.EvcPressureFactor() - ActualFactor) / ActualFactor) * 100, 2);
             }
         }
 
@@ -62,8 +64,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (_instrument.EvcBasePressure() == 0) return 0;
-                var result = (GasGauge + AtmosphericGauge) / _instrument.EvcBasePressure();
+                if (VerificationTest.Instrument.EvcBasePressure() == 0) return 0;
+                var result = (GasGauge + AtmosphericGauge) / VerificationTest.Instrument.EvcBasePressure();
                 return result.HasValue ? decimal.Round(result.Value, 4) : result;
             }
         }       

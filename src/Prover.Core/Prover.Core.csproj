@@ -126,13 +126,12 @@
     <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201604171833287_verification.cs" />
-    <Compile Include="Migrations\201604171833287_verification.Designer.cs">
-      <DependentUpon>201604171833287_verification.cs</DependentUpon>
+    <Compile Include="Migrations\201604200029287_verifications.cs" />
+    <Compile Include="Migrations\201604200029287_verifications.Designer.cs">
+      <DependentUpon>201604200029287_verifications.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\PressureTemperatureVerification.cs" />
     <Compile Include="VerificationTests\TestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
@@ -208,8 +207,8 @@
     <EmbeddedResource Include="Migrations\201603300541401_refactor-pt.resx">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604171833287_verification.resx">
-      <DependentUpon>201604171833287_verification.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201604200029287_verifications.resx">
+      <DependentUpon>201604200029287_verifications.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

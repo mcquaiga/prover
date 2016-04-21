@@ -20,70 +20,82 @@ namespace Prover.Core.Extensions
         
         public static string PulseASelect(this Instrument instrument)
         {
-            return instrument.Items.GetItem(PULSER_A).GetDescriptionValue();
+            return instrument.Items.GetItem(PULSER_A).GetDescriptionValue(instrument.ItemValues);
         }
         
         public static string PulseBSelect(this Instrument instrument)
         {
-            return instrument.Items.GetItem(PULSER_B).GetDescriptionValue();
+            return instrument.Items.GetItem(PULSER_B).GetDescriptionValue(instrument.ItemValues);
         }
 
-        public static decimal? EvcCorrected(this Instrument instrument, InstrumentItems beforeItems, InstrumentItems afterItems)
+        public static decimal? EvcCorrected(this Instrument instrument, Dictionary<int, string> beforeItems, Dictionary<int, string> afterItems)
         {
+            if (afterItems == null || beforeItems == null) return null;
+
             return Math.Round((decimal)((afterItems.Corrected() - beforeItems.Corrected()) * instrument.CorrectedMultiplier()), 4);
         }
 
         
-        public static decimal? EvcUncorrected(this Instrument instrument, InstrumentItems beforeItems, InstrumentItems afterItems)
+        public static decimal? EvcUncorrected(this Instrument instrument, Dictionary<int, string> beforeItems, Dictionary<int, string> afterItems)
         {
+            if (afterItems == null || beforeItems == null) return null;
+
             return Math.Round((decimal)((afterItems.Uncorrected() - beforeItems.Uncorrected()) * instrument.UnCorrectedMultiplier()), 4);
         }
 
         
-        public static decimal? Corrected(this InstrumentItems items)
+        public static decimal? Corrected(this Dictionary<int, string> itemValues)
         {
-            return GetHighResolutionValue(items, COR_VOLUME, COR_VOLUME_HIGH_RES);
+            return GetHighResolutionValue(itemValues, COR_VOLUME, COR_VOLUME_HIGH_RES);
         }
 
         
-        public static decimal? Uncorrected(this InstrumentItems items)
+        public static decimal? Uncorrected(this Dictionary<int, string> itemValues)
         {
-            return GetHighResolutionValue(items, UNCOR_VOL, UNCOR_VOL_HIGHRES);
+            return GetHighResolutionValue(itemValues, UNCOR_VOL, UNCOR_VOL_HIGHRES);
         }
 
         public static string DriveRateDescription(this Instrument instrument)
         {
-            return instrument.Items.GetItem(98).GetDescriptionValue();
+            return instrument.Items.GetItem(98).GetDescriptionValue(instrument.ItemValues);
         }
 
         
         public static decimal? CorrectedMultiplier(this Instrument instrument)
         {
-            return instrument.Items.GetItem(90).GetNumericValue();
+            return instrument.Items.GetItem(90).GetNumericValue(instrument.ItemValues);
         }
 
         
         public static string CorrectedMultiplierDescription(this Instrument instrument)
         {
-            return instrument.Items.GetItem(90).GetDescriptionValue();
+            return instrument.Items.GetItem(90).GetDescriptionValue(instrument.ItemValues);
         }
 
         
         public static decimal? UnCorrectedMultiplier(this Instrument instrument)
         {
-            return instrument.Items.GetItem(92).GetNumericValue();
+            return instrument.Items.GetItem(92).GetNumericValue(instrument.ItemValues);
         }
 
         
         public static string UnCorrectedMultiplierDescription(this Instrument instrument)
         {
-            return instrument.Items.GetItem(92).GetDescriptionValue();
+            return instrument.Items.GetItem(92).GetDescriptionValue(instrument.ItemValues);
         }
                 
       
-        public static decimal GetHighResolutionValue(InstrumentItems items, int lowResItemNumber, int highResItemNumber)
+        public static decimal? GetHighResolutionValue(this Dictionary<int, string> itemValues, int lowResItemNumber, int highResItemNumber)
         {
-            return JoinLowResHighResReading(items.GetItem(lowResItemNumber).GetNumericValue(), items.GetItem(highResItemNumber).GetNumericValue());
+            if (itemValues == null || itemValues.Count() == 0) return null;
+
+            var lowResValue = itemValues.FirstOrDefault(x => x.Key == lowResItemNumber).Value;
+            if (lowResValue == null) return null;
+
+            var highResValue = itemValues.FirstOrDefault(x => x.Key == highResItemNumber).Value;
+            if (highResValue == null) return null;
+
+            return JoinLowResHighResReading(decimal.Parse(lowResValue), decimal.Parse(highResValue));
         }
 
 

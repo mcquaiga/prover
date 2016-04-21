@@ -18,9 +18,9 @@ namespace Prover.GUI.Views.VerificationTestViews.PTVerificationViews.PTVerificat
     /// <summary>
     /// Interaction logic for PTSet.xaml
     /// </summary>
-    public partial class PTSet : UserControl
+    public partial class Grid : UserControl
     {
-        public PTSet()
+        public Grid()
         {
             InitializeComponent();
         }

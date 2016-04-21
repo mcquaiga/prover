@@ -76,11 +76,6 @@ namespace Prover.Core.Communication
                 await Disconnect();
         }
 
-        public async Task DownloadItemsAsync(InstrumentItems itemsToDownload, bool disconnectAfter = true)
-        {
-            itemsToDownload.InstrumentValues = await DownloadItemsAsync(itemsToDownload.Items, disconnectAfter);
-        }
-
         private Dictionary<int, string> DownloadItems(IEnumerable<ItemDetail> itemsToDownload)
         {
             var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());

@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Views.InstrumentViews.VolumeVerification
+namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews.VolumeTest
 {
     /// <summary>
     /// Interaction logic for VolumeView.xaml
     /// </summary>
-    public partial class Card : UserControl
+    public partial class CardReadOnly : UserControl
     {
-        public Card()
+        public CardReadOnly()
         {
             InitializeComponent();
         }

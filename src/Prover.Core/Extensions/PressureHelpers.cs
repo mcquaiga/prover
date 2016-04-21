@@ -19,44 +19,29 @@ namespace Prover.Core.Extensions
         private const int PRESSURE_FACTOR = 44;
         private const int UNSQR_FACTOR = 47;
 
-        public static TransducerType GetTransducerType(this Instrument instrument)
+        public static TransducerType GetTransducerType(this Instrument instrument) => (TransducerType)instrument.Items.GetItem(TRANSDUCER_TYPE).GetNumericValue(instrument.ItemValues);
+
+        public static string Units(this Instrument instrument) => instrument.Items.GetItem(PRESS_UNITS).GetDescriptionValue(instrument.ItemValues);
+
+        public static decimal? EvcBasePressure(this Instrument instrument) => instrument.Items.GetItem(BASE_PRESS).GetNumericValue(instrument.ItemValues);
+
+        public static decimal? EvcAtmosphericPressure(this Instrument instrument) => instrument.Items.GetItem(ATM_PRESS).GetNumericValue(instrument.ItemValues);
+
+        public static decimal? EvcPressureRange(this Instrument instrument) => instrument.Items.GetItem(PRESS_RANGE).GetNumericValue(instrument.ItemValues);
+
+        public static decimal? EvcGasPressure(this Dictionary<int, string> itemValues)
         {
-            return (TransducerType)instrument.Items.GetItem(TRANSDUCER_TYPE).GetNumericValue();
+            return itemValues.GetItemValue(GAS_PRESSURE);
         }
 
-        public static string Units(this Instrument instrument)
+        public static decimal? EvcPressureFactor(this Dictionary<int, string> itemValues)
         {
-            return instrument.Items.GetItem(PRESS_UNITS).GetDescriptionValue();
+            return itemValues.GetItemValue(PRESSURE_FACTOR);
         }
 
-        public static decimal? EvcBasePressure(this Instrument instrument)
+        public static decimal? EvcUnsqrFactor(this Dictionary<int, string> itemValues)
         {
-            return instrument.Items.GetItem(BASE_PRESS).GetNumericValue();
-        }
-
-        public static decimal? EvcAtmosphericPressure(this Instrument instrument)
-        {
-            return instrument.Items.GetItem(ATM_PRESS).GetNumericValue();
-        }
-
-        public static decimal? EvcPressureRange(this Instrument instrument)
-        {
-            return instrument.Items.GetItem(PRESS_RANGE).GetNumericValue();
-        }
-
-        public static decimal? EvcGasPressure(this InstrumentItems items)
-        {
-            return items.GetItem(GAS_PRESSURE).GetNumericValue();
-        }
-
-        public static decimal? EvcPressureFactor(this InstrumentItems items)
-        {
-            return items.GetItem(PRESSURE_FACTOR).GetNumericValue();
-        }
-
-        public static decimal? EvcUnsqrFactor(this Instrument instrument)
-        {
-            return instrument.Items.GetItem(UNSQR_FACTOR).GetNumericValue();
+            return itemValues.GetItemValue(UNSQR_FACTOR);
         }
     }
 }

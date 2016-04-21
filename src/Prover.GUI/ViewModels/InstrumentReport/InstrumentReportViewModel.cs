@@ -2,6 +2,7 @@
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.ViewModels.InstrumentViews;
+using Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews;
 
 namespace Prover.GUI.ViewModels.InstrumentReport
 {
@@ -10,7 +11,7 @@ namespace Prover.GUI.ViewModels.InstrumentReport
         public InstrumentReportViewModel(IUnityContainer container, Instrument instrument) : base(container, instrument)
         {
             SiteInformationItem = new InstrumentInfoViewModel(container, instrument);
-            VolumeInformationItem = new VolumeVerificationViewModel(container, instrument);
+            VolumeInformationItem = new VolumeTestViewModel(container, instrument);
         }
     }
 }

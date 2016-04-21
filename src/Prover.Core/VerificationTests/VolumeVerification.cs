@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.Core.Models;
+using Caliburn.Micro;
 
 namespace Prover.Core.VerificationTests
 {
     sealed class RotaryVolumeVerification : VerificationBase
     {
-        private Logger _log = LogManager.GetCurrentClassLogger();
+        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private IEventAggregator _eventAggreator;
         private bool _isFirstVolumeTest = true;
         private bool _runningTest = false;
 
@@ -23,16 +26,20 @@ namespace Prover.Core.VerificationTests
         private TachometerCommunicator _tachometerCommunicator;
         private bool _stopTest;
         private VerificationTest _verificationTest;
+        private List<ItemDetail> _volumeItems;
 
-        public RotaryVolumeVerification(VerificationTest verificationTest, InstrumentCommunicator instrumentComm, TachometerCommunicator tachComm)
+        public RotaryVolumeVerification(IEventAggregator eventAggregator, VerificationTest verificationTest, InstrumentCommunicator instrumentComm, TachometerCommunicator tachComm)
             :base(verificationTest.Instrument, instrumentComm)
         {
+            _eventAggreator = eventAggregator;
             _tachometerCommunicator = tachComm;
             _verificationTest = verificationTest;
             _verificationTest.VolumeTest = new VolumeTest(_verificationTest);
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
             _firstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             _firstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
+
+            _volumeItems = _verificationTest.Instrument.Items.Items.Where(i => i.IsVolumeTest == true).ToList();
         }
 
         public async Task BeginVerificationTest()
@@ -40,13 +47,9 @@ namespace Prover.Core.VerificationTests
             if (!_runningTest)
             {
                 _log.Info("Starting volume test...");
-
-                if (!_isFirstVolumeTest)
-                {
-                    await _instrumentCommunicator.DownloadItemsAsync(_verificationTest.VolumeTest.Items);
-                    _isFirstVolumeTest = false;
-                }                   
-
+                                
+                _verificationTest.VolumeTest.ItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
+                
                 await _instrumentCommunicator.Disconnect();
 
                 //Reset Tach setting
@@ -76,7 +79,7 @@ namespace Prover.Core.VerificationTests
                     //TODO: Raise events so the UI can respond
                     _verificationTest.VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
                     _verificationTest.VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
-                } while (_verificationTest.VolumeTest.UncPulseCount < _verificationTest.VolumeTest.DriveType.MaxUnCorrected() || _stopTest);
+                } while (_verificationTest.VolumeTest.UncPulseCount < _verificationTest.VolumeTest.DriveType.MaxUnCorrected() && !_stopTest);
 
                 _outputBoard?.StopMotor();
                 await FinishVerificationTest();
@@ -91,7 +94,7 @@ namespace Prover.Core.VerificationTests
                 {
                     System.Threading.Thread.Sleep(250);
 
-                    await _instrumentCommunicator.DownloadItemsAsync(_verificationTest.VolumeTest.AfterTestItems);
+                    _verificationTest.VolumeTest.AfterTestItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
 
                     try
                     {

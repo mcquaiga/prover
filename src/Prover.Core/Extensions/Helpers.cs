@@ -30,4 +30,19 @@ namespace Prover.Core.Extensions
             return (double)Math.Abs(value - (int)value) < double.Epsilon;
         }
     }
+
+    public static class ItemHelpers
+    {
+        public static decimal? GetItemValue(this Dictionary<int, string> itemValues, int itemNumber)
+        {
+            if (itemValues == null || itemValues.Count() == 0) return null;
+
+            return decimal.Parse(itemValues.FirstOrDefault(x => x.Key == itemNumber).Value);
+        }
+
+        public static string GetItem(this Dictionary<int, string> itemValues, int itemNumber)
+        {
+            return itemValues.FirstOrDefault(i => i.Key == itemNumber).Value;
+        }
+    }
 }

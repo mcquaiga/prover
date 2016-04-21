@@ -23,20 +23,23 @@ namespace Prover.Core.Storage
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
+
+            Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-          
+
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<Instrument> Instruments { get; set; }
         public DbSet<VerificationTest> VerificationTests { get; set; }
         public DbSet<VolumeTest> VolumeTests { get; set; }
         public DbSet<TemperatureTest> TemperatureTests { get; set; }
         public DbSet<PressureTest> PressureTests { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<Instrument> Instruments { get; set; }
+
     }
 }

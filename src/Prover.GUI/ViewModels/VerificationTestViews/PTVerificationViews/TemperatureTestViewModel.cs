@@ -8,6 +8,7 @@ using Prover.GUI.Events;
 using System.Windows.Media;
 using System;
 using NLog;
+using Prover.Core.Extensions;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
@@ -35,6 +36,9 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             }
         }
 
+        public decimal? EvcReading => Test.ItemValues.EvcTemperatureReading();
+        public decimal? EvcFactor => Test.ItemValues.EvcTemperatureFactor();
+
         public void StartLiveReadCommand()
         {
             var viewmodel = new LiveReadViewModel(_container, 26);
@@ -46,6 +50,9 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public void Handle(VerificationTestEvent @event)
         {
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => Gauge);
+            NotifyOfPropertyChange(() => EvcReading);
+            NotifyOfPropertyChange(() => EvcFactor);
             NotifyOfPropertyChange(() => PercentColour);
         }
     }

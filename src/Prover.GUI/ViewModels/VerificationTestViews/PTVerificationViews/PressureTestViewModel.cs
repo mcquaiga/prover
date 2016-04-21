@@ -56,6 +56,10 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             }
         }
 
+        public decimal? EvcGasPressure => Test.ItemValues.EvcGasPressure();
+        public decimal? EvcFactor => Test.ItemValues.EvcPressureFactor();
+        public decimal? EvcATMPressure => Test.VerificationTest.Instrument.EvcAtmosphericPressure();
+
         public void LiveReadCommand()
         {
             var viewmodel = new LiveReadViewModel(_container, 8);
@@ -67,6 +71,11 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public void Handle(VerificationTestEvent @event)
         {
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => EvcGasPressure);
+            NotifyOfPropertyChange(() => EvcFactor);
+            NotifyOfPropertyChange(() => EvcATMPressure);
+            NotifyOfPropertyChange(() => Gauge);
+            NotifyOfPropertyChange(() => AtmosphericGauge);
             NotifyOfPropertyChange(() => PercentColour);
         }
     }

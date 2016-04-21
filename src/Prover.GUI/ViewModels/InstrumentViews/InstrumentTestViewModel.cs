@@ -26,7 +26,7 @@ namespace Prover.GUI.ViewModels.InstrumentViews
         #region Views
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
         public ObservableCollection<PTVerificationSetViewModel> TestViews { get; set; } = new ObservableCollection<PTVerificationSetViewModel>();
-        public VolumeVerificationViewModel VolumeInformationItem { get; set; }
+        public VolumeTestViewModel VolumeInformationItem { get; set; }
         #endregion
     }
 }

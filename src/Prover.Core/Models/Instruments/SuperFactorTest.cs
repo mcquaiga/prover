@@ -14,7 +14,6 @@ namespace Prover.Core.Models.Instruments
         private int N2_NUMBER = 54;
         private int CO2_NUMBER = 55;
         private int SUPER_TABLE_NUMBER = 147;
-        private Instrument _instrument;
         private TemperatureTest _temperatureTest;
         private PressureTest _pressureTest { get; }
         public enum SuperFactorTable
@@ -29,15 +28,15 @@ namespace Prover.Core.Models.Instruments
 
         public SuperFactorTest(VerificationTest verificationTest)
         {
-            _instrument = verificationTest.Instrument;
+            VerificationTest = verificationTest;
             _temperatureTest = verificationTest.TemperatureTest;
             _pressureTest = verificationTest.PressureTest;
         }
         
-        public decimal? SpecGr => _instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue();
-        public decimal? CO2 => _instrument.Items.GetItem(CO2_NUMBER).GetNumericValue();
-        public decimal? N2 => _instrument.Items.GetItem(N2_NUMBER).GetNumericValue();
-        public SuperFactorTable SuperTable => (SuperFactorTable)_instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue();
+        public decimal? SpecGr => VerificationTest.Instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue(VerificationTest.Instrument.ItemValues);
+        public decimal? CO2 => VerificationTest.Instrument.Items.GetItem(CO2_NUMBER).GetNumericValue(VerificationTest.Instrument.ItemValues);
+        public decimal? N2 => VerificationTest.Instrument.Items.GetItem(N2_NUMBER).GetNumericValue(VerificationTest.Instrument.ItemValues);
+        public SuperFactorTable SuperTable => (SuperFactorTable)VerificationTest.Instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue(VerificationTest.Instrument.ItemValues);
 
         //TODO: This will always have to be in Fahrenheit
         [NotMapped]
@@ -64,7 +63,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return _instrument.EvcUnsqrFactor();
+                return _pressureTest.ItemValues.EvcUnsqrFactor();
             }
         }
         
@@ -94,10 +93,11 @@ namespace Prover.Core.Models.Instruments
             get { return (decimal)Math.Pow((double)ActualFactor, 2); }
         }
 
-        public decimal PercentError
+        public decimal? PercentError
         {
             get
             {
+                if (EVCUnsqrFactor == null || ActualFactor == 0) return null;
                 return decimal.Round((decimal)(((EVCUnsqrFactor - ActualFactor) / ActualFactor) * 100), 2);
             }
         }
@@ -106,6 +106,8 @@ namespace Prover.Core.Models.Instruments
         {
             get { return (PercentError < 1 && PercentError > -1); }
         }
+
+        public VerificationTest VerificationTest { get; private set; }
 
         private double CalculateFactorNX19()
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class VerificationTest : InstrumentTable
+    public class VerificationTest : BaseEntity
     {
         public VerificationTest() { }
 
@@ -22,22 +22,16 @@ namespace Prover.Core.Models.Instruments
         }
 
         public int TestNumber { get; set; }
+
         public Guid InstrumentId { get; set; }
         [Required]
         public virtual Instrument Instrument { get; set; }
-
-        public Guid? PressureTestId { get; set; }
         public virtual PressureTest PressureTest { get; set; }
-
-        public Guid? TemperatureTestId { get; set; }
         public virtual TemperatureTest TemperatureTest { get; set; }
+        public virtual VolumeTest VolumeTest { get; set; }
 
         [NotMapped]
         public virtual SuperFactorTest SuperFactorTest { get; set; }
-
-        public Guid? VolumeTestId { get; set; }
-        public virtual VolumeTest VolumeTest { get; set; }
-
         [NotMapped]
         public bool HasPassed
         {

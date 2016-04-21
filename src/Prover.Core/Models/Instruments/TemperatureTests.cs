@@ -14,25 +14,27 @@ namespace Prover.Core.Models.Instruments
     {
         private const decimal TempCorrection = 459.67m;
         private const decimal MetericTempCorrection = 273.15m;
-        private Instrument _instrument;
+
+        public TemperatureTest() { }
 
         public TemperatureTest(VerificationTest verificationTest) : 
-            base(verificationTest.Instrument.Items.CopyItemsByFilter(x => x.IsTemperatureTest == true))
+            base()
         {
             VerificationTest = verificationTest;
-            _instrument = VerificationTest.Instrument;
+            VerificationTestId = VerificationTest.Id;
         }
 
-        [NotMapped]
-        public VerificationTest VerificationTest { get; set; }
+        public Guid VerificationTestId { get; set; }
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
 
         public double Gauge { get; set; }
         public decimal? PercentError
         {
             get
             {
-                if (Items.EvcTemperatureFactor() == null) return null;
-                return Math.Round((decimal) ((Items.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
+                if (ItemValues.EvcTemperatureFactor() == null) return null;
+                return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
             }
         }
 
@@ -40,20 +42,21 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                switch (_instrument.TemperatureUnits())
+
+                switch (VerificationTest.Instrument.TemperatureUnits())
                 {
                     case "K":
                     case "C":
                         return
                             Math.Round(
                                 (decimal)
-                                    ((MetericTempCorrection + _instrument.EvcBaseTemperature()) /
+                                    ((MetericTempCorrection + VerificationTest.Instrument.EvcBaseTemperature()) /
                                      ((decimal)Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (decimal) ((TempCorrection + _instrument.EvcBaseTemperature())/((decimal)Gauge + TempCorrection)), 4);
+                                (decimal) ((TempCorrection + VerificationTest.Instrument.EvcBaseTemperature())/((decimal)Gauge + TempCorrection)), 4);
                 }
 
                 return 0;

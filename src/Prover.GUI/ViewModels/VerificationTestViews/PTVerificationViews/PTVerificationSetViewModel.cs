@@ -17,26 +17,29 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
-            _testManager = _container.Resolve<RotaryTestManager>();
+
+            if (_container.IsRegistered<RotaryTestManager>())
+                _testManager = _container.Resolve<RotaryTestManager>();
+             
             VerificationTest = verificationTest;
             CreateViews();
         }
 
         private void CreateViews()
         {
-            if (_testManager.Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            if (VerificationTest.Instrument.CorrectorType == CorrectorType.PressureTemperature)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
                 SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperFactorTest);
             }                
 
-            if (_testManager.Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (VerificationTest.Instrument.CorrectorType == CorrectorType.TemperatureOnly)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
             }
 
-            if (_testManager.Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (VerificationTest.Instrument.CorrectorType == CorrectorType.PressureOnly)
             {
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
             }

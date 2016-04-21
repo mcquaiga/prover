@@ -1,5 +1,5 @@
-﻿<UserControl x:Class="Prover.GUI.Views.VerificationTestViews.PTVerificationViews.PTVerificationSet.Grid"
-                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="Prover.GUI.Views.VerificationTestViews.PTVerificationViews.PTVerificationSet.CardReadOnly"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,16 +20,22 @@
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
-    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+    <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="1" Content="{Binding Level}" Margin="2" FontSize="10" materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                                  Mode="Standard" />        
-            <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Grid" />
+            <materialDesign:ColorZone Padding="6" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="Accent" />
 
-            <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Grid" />
+            <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="CardReadOnly"
+                            Margin="2"/>
+                            
+            <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="CardReadOnly"
+                            Margin="2"/>
 
-            <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Grid"/>
+            <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
+                            Margin="2"/>
+
+           
         </StackPanel>
-
+        
     </materialDesign:Card>
 </UserControl>

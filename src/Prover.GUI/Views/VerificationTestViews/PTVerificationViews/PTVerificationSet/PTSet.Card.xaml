@@ -22,7 +22,7 @@
     </UserControl.Resources>
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="12" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+            <materialDesign:ColorZone Padding="6" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent" />
 
             <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"

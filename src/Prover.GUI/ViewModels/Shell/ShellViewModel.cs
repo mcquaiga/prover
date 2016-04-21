@@ -29,7 +29,6 @@ namespace Prover.GUI.ViewModels.Shell
             _container.Resolve<IEventAggregator>().Subscribe(this);
             _mainMenu = new MainMenuViewModel(_container);
             Notifications = new ToastNotificationViewModel(_container);
-            ConnectionDialogue = new ConnectionViewModel(_container.Resolve<IEventAggregator>());
             ShowMainMenu();
         }
 

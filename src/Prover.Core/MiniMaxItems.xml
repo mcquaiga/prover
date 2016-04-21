@@ -16,7 +16,7 @@
 	<item number="35" shortDescription="Temperature" description="EVC Temperature" isTemperatureTest="true"/>
 	<item number="44" code="PRESS_FACTOR" shortDescription="Press Factor" description="Pressure Factor" isPressureTest="true"/>
 	<item number="45" code="TEMP_FACTOR" shortDescription="Temperature Factor" description="Temperature Factor" isTemperatureTest="true"/>
-	<item number="47" code="UNSQRD_SUPER_FACTOR" shortDescription="Unsqrd. Super Factor" description="Unsquared Supercompresibility Factor" isPressure="true"/>
+	<item number="47" code="UNSQRD_SUPER_FACTOR" shortDescription="Unsqrd. Super Factor" description="Unsquared Supercompresibility Factor" isPressureTest="true"/>
 	<item number="53" code="SPEC_GR" shortDescription="Specific Gravity" description="Specific Gravity" isSuper="true" />
 	<item number="54" code="N2" shortDescription="% N2" description="% N2" isSuper="true" />
 	<item number="55" code="CO2" shortDescription="% CO2" description="% CO2" isSuper="true" />

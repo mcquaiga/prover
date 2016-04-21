@@ -3,7 +3,7 @@ namespace Prover.Core.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class verification : DbMigration
+    public partial class verifications : DbMigration
     {
         public override void Up()
         {
@@ -24,20 +24,10 @@ namespace Prover.Core.Migrations
                         Id = c.Guid(nullable: false),
                         TestNumber = c.Int(nullable: false),
                         InstrumentId = c.Guid(nullable: false),
-                        PressureTestId = c.Guid(nullable: true),
-                        TemperatureTestId = c.Guid(nullable: true),
-                        VolumeTestId = c.Guid(nullable: true),
-                        InstrumentData = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Instruments", t => t.InstrumentId)
-                .ForeignKey("dbo.PressureTests", t => t.PressureTestId)
-                .ForeignKey("dbo.TemperatureTests", t => t.TemperatureTestId)
-                .ForeignKey("dbo.VolumeTests", t => t.VolumeTestId)
-                .Index(t => t.InstrumentId)
-                .Index(t => t.PressureTestId)
-                .Index(t => t.TemperatureTestId)
-                .Index(t => t.VolumeTestId);
+                .Index(t => t.InstrumentId);
             
             CreateTable(
                 "dbo.VolumeTests",
@@ -49,10 +39,19 @@ namespace Prover.Core.Migrations
                         AppliedInput = c.Decimal(nullable: false, precision: 18, scale: 2),
                         DriveTypeDiscriminator = c.String(),
                         TestInstrumentData = c.String(),
+                        VerificationTestId = c.Guid(nullable: false),
                         InstrumentData = c.String(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.VerificationTests", t => t.VerificationTestId)
+                .Index(t => t.Id);
             
+            AddColumn("dbo.PressureTests", "VerificationTestId", c => c.Guid(nullable: false));
+            AddColumn("dbo.TemperatureTests", "VerificationTestId", c => c.Guid(nullable: false));
+            CreateIndex("dbo.PressureTests", "Id");
+            CreateIndex("dbo.TemperatureTests", "Id");
+            AddForeignKey("dbo.PressureTests", "VerificationTestId", "dbo.VerificationTests", "Id");
+            AddForeignKey("dbo.TemperatureTests", "VerificationTestId", "dbo.VerificationTests", "Id");
             DropColumn("dbo.PressureTests", "PressureId");
             DropColumn("dbo.PressureTests", "IsVolumeTestPressure");
             DropColumn("dbo.TemperatureTests", "TemperatureId");
@@ -102,14 +101,16 @@ namespace Prover.Core.Migrations
             AddColumn("dbo.TemperatureTests", "TemperatureId", c => c.Guid(nullable: false));
             AddColumn("dbo.PressureTests", "IsVolumeTestPressure", c => c.Boolean(nullable: false));
             AddColumn("dbo.PressureTests", "PressureId", c => c.Guid(nullable: false));
-            DropForeignKey("dbo.VerificationTests", "VolumeTestId", "dbo.VolumeTests");
-            DropForeignKey("dbo.VerificationTests", "TemperatureTestId", "dbo.TemperatureTests");
-            DropForeignKey("dbo.VerificationTests", "PressureTestId", "dbo.PressureTests");
+            DropForeignKey("dbo.VolumeTests", "Id", "dbo.VerificationTests");
+            DropForeignKey("dbo.TemperatureTests", "Id", "dbo.VerificationTests");
+            DropForeignKey("dbo.PressureTests", "Id", "dbo.VerificationTests");
             DropForeignKey("dbo.VerificationTests", "InstrumentId", "dbo.Instruments");
-            DropIndex("dbo.VerificationTests", new[] { "VolumeTestId" });
-            DropIndex("dbo.VerificationTests", new[] { "TemperatureTestId" });
-            DropIndex("dbo.VerificationTests", new[] { "PressureTestId" });
+            DropIndex("dbo.VolumeTests", new[] { "Id" });
+            DropIndex("dbo.TemperatureTests", new[] { "Id" });
+            DropIndex("dbo.PressureTests", new[] { "Id" });
             DropIndex("dbo.VerificationTests", new[] { "InstrumentId" });
+            DropColumn("dbo.TemperatureTests", "VerificationTestId");
+            DropColumn("dbo.PressureTests", "VerificationTestId");
             DropTable("dbo.VolumeTests");
             DropTable("dbo.VerificationTests");
             CreateIndex("dbo.Volumes", "Id");
