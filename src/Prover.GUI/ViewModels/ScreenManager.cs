@@ -22,7 +22,7 @@ namespace Prover.GUI.ViewModels
             if (windowsSettings != null)
                 container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
             else
-                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null);
+                container.Resolve<IWindowManager>().ShowPopup(dialogViewModel, null);
         }
     }
 }

@@ -26,6 +26,8 @@
                         Access</TextBlock>
                 </StackPanel>
             </Button>
+
+            <Button x:Name="ConnectToInstrument">Connect to Instrument</Button>
         </UniformGrid>
     </Grid>
 </UserControl>

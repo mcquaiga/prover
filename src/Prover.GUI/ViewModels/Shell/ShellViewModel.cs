@@ -99,7 +99,7 @@ namespace Prover.GUI.ViewModels.Shell
 
         public void Handle(InstrumentConnectionEvent message)
         {
-            //ScreenManager.ShowDialog(_container, ConnectionDialogue);
+            
         }
     }
 }

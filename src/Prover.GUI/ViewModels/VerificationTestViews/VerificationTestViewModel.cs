@@ -8,6 +8,7 @@ using Prover.GUI.ViewModels.InstrumentViews;
 using Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews;
 using Prover.SerialProtocol;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews
@@ -30,7 +31,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
         public RotaryTestManager InstrumentTestManager { get; set; }    
 
         #region Methods
-        public async void SaveInstrument()
+        public async Task SaveInstrument()
         {
             if (InstrumentTestManager == null) return;
 

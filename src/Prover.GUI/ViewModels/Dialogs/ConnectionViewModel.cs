@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,12 @@ namespace Prover.GUI.ViewModels.Dialogues
         private readonly Action<object> _execute;
 
         public event EventHandler CanExecuteChanged;
+
+        public static void InstrumentCommand(IUnityContainer container, Action<object> execute)
+        {
+            var dialog = new ConnectionViewModel(container.Resolve<IEventAggregator>(), execute);
+            ScreenManager.ShowDialog(container, dialog);
+        }
 
         public CommuncationCommand(Action<object> execute)
         {

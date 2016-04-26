@@ -202,6 +202,7 @@
     <Compile Include="Controls\ValueDescriptionControl.xaml.cs">
       <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WindowSettings.cs" />
     <Compile Include="Converters\BooleanToPassConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
@@ -216,7 +217,8 @@
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
-    <Compile Include="ViewModels\Dialogues\ConnectionViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ConnectionViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ProgressDialogViewModel.cs" />
     <Compile Include="ViewModels\TestViews\StartTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
@@ -248,8 +250,11 @@
       <DependentUpon>CreateCertificateView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Dialogues\ConnectionView.xaml.cs">
+    <Compile Include="Views\Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ProgressDialogView.xaml.cs">
+      <DependentUpon>ProgressDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestViews\StartTestView.xaml.cs">
       <DependentUpon>StartTestView.xaml</DependentUpon>
@@ -389,7 +394,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogues\ConnectionView.xaml">
+    <Page Include="Views\Dialogs\ConnectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ProgressDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
