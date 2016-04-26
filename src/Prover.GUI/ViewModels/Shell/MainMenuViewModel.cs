@@ -6,6 +6,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.GUI.ViewModels.Dialogs;
 using Prover.GUI.ViewModels.TestViews;
+using Prover.GUI.Views.Dialogs;
 using System.Threading.Tasks;
 
 namespace Prover.GUI.ViewModels.Shell
@@ -34,16 +35,15 @@ namespace Prover.GUI.ViewModels.Shell
             await ScreenManager.Change(_container, new InstrumentAccessViewModel(_container));
         }
 
-        public void ConnectToInstrument()
-        {
-            var result = ProgressDialogViewModel.Execute(_container, "Connecting to Instrument...",
-            async (bw, we) =>
-            {
-                var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
-                var instrComm = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
-                await instrComm.Connect();
-
-            });
-        }
+        //public void ConnectToInstrument()
+        //{
+        //    ProgressDialogView.Execute(_container, "Connecting to Instrument...",
+        //    (bw) =>
+        //    {
+        //        var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
+        //        var instrComm = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
+        //        Task.Run(() => instrComm.Connect());
+        //    });
+        //}
     }
 }

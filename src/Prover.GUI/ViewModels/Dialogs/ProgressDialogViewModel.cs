@@ -104,7 +104,7 @@ namespace Prover.GUI.ViewModels.Dialogs
 
             _worker.RunWorkerAsync();
 
-            ShowDialog();
+            //ShowDialog();
 
             return result;
         }

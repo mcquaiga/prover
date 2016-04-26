@@ -19,10 +19,7 @@
     <StackPanel Orientation="Vertical" Margin="15 10">
         <StackPanel>
             <TextBlock Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-                Start a new prover test?
-            </TextBlock>
-            <TextBlock Margin="10" TextWrapping="Wrap">
-                Make sure instrument is connected to the communication port.
+                Start a new EVC verification test?
             </TextBlock>
         </StackPanel>
         <Grid>
