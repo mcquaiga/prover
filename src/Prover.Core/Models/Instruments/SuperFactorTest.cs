@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class SuperFactorTest
+    public class SuperFactorTest : BaseVerificationTest
     {
         private int SPEC_GR_NUMBER = 53;
         private int N2_NUMBER = 54;
@@ -50,13 +50,7 @@ namespace Prover.Core.Models.Instruments
 
         //TODO: This will always have to be in PSI
         [NotMapped]
-        public decimal? GaugePressure
-        {
-            get
-            {
-                return _pressureTest.GasGauge;
-            }
-        }
+        public decimal? GaugePressure => _pressureTest.GasGauge;
 
         [NotMapped]
         public decimal? EVCUnsqrFactor
@@ -68,7 +62,7 @@ namespace Prover.Core.Models.Instruments
         }
         
         [NotMapped]
-        public decimal ActualFactor
+        public override decimal? ActualFactor
         {
             get { return decimal.Round((decimal)CalculateFPV(), 4); }
         }
@@ -93,18 +87,13 @@ namespace Prover.Core.Models.Instruments
             get { return (decimal)Math.Pow((double)ActualFactor, 2); }
         }
 
-        public decimal? PercentError
+        public override decimal? PercentError
         {
             get
             {
                 if (EVCUnsqrFactor == null || ActualFactor == 0) return null;
                 return decimal.Round((decimal)(((EVCUnsqrFactor - ActualFactor) / ActualFactor) * 100), 2);
             }
-        }
-
-        public bool HasPassed
-        {
-            get { return (PercentError < 1 && PercentError > -1); }
         }
 
         public VerificationTest VerificationTest { get; private set; }

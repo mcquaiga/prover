@@ -4,6 +4,7 @@ using Microsoft.Practices.Unity;
 using Prover.Core.VerificationTests;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
+using Prover.Core.Extensions;
 
 namespace Prover.GUI.ViewModels.InstrumentViews
 {
@@ -22,7 +23,17 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             Instrument = instrument;
         }
 
-        public Instrument Instrument { get; set; }
+        public Instrument Instrument { get; set; }       
+
+        public string BasePressure
+        {
+            get
+            {
+                return string.Format("{0} {1}", Instrument.EvcBasePressure(), Instrument.PressureUnits());
+            }
+        }
+
+
         public void Handle(InstrumentUpdateEvent message)
         {
             Instrument = message.InstrumentManager.Instrument;

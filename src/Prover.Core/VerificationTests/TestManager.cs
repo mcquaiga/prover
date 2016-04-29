@@ -10,6 +10,7 @@ using Prover.SerialProtocol;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Prover.Core.VerificationTests
 {
@@ -99,7 +100,29 @@ namespace Prover.Core.VerificationTests
             _isBusy = false;
         }
 
-        public async Task StartLiveRead(int itemNumber)
+        public async Task StartLiveRead()
+        {
+            var liveReadItems = new List<int>();
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            {
+                liveReadItems.Add(8);
+                liveReadItems.Add(26);
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            {
+                liveReadItems.Add(26);
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
+            {
+                liveReadItems.Add(8);
+            }
+
+            await StartLiveRead(liveReadItems);
+        }
+
+        public async Task StartLiveRead(IEnumerable<int> itemNumbers)
         {
             if (!_isBusy)
             {
@@ -109,8 +132,12 @@ namespace Prover.Core.VerificationTests
                 _isLiveReading = true;
                 do
                 {
-                    var liveValue = await InstrumentCommunicator.LiveReadItem(itemNumber);
-                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(liveValue));
+                    foreach (var i in itemNumbers)
+                    {
+                        var liveValue = await InstrumentCommunicator.LiveReadItem(i);
+                        _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
+                    }
+                    
                 } while (!_stopLiveReading);
 
                 await InstrumentCommunicator.Disconnect();

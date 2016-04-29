@@ -12,12 +12,10 @@ using Prover.Core.Extensions;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
-    public class TemperatureTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
+    public class TemperatureTestViewModel : BaseTestViewModel
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-
-        public TemperatureTest Test { get; private set; }
 
         public TemperatureTestViewModel(IUnityContainer container, TemperatureTest test)
         {
@@ -28,28 +26,27 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 
         public double Gauge
         {
-            get { return Test.Gauge; }
+            get { return (Test as TemperatureTest).Gauge; }
             set
             {
-                Test.Gauge = value;
+                (Test as TemperatureTest).Gauge = value;
                 _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
-        public decimal? EvcReading => Test.ItemValues.EvcTemperatureReading();
-        public decimal? EvcFactor => Test.ItemValues.EvcTemperatureFactor();
+        public decimal? EvcReading => (Test as TemperatureTest).ItemValues.EvcTemperatureReading();
+        public decimal? EvcFactor => (Test as TemperatureTest).ItemValues.EvcTemperatureFactor();
 
-        public void StartLiveReadCommand()
-        {
-            var viewmodel = new LiveReadViewModel(_container, 26);
-            ScreenManager.ShowDialog(_container, viewmodel);
-        }
+        //public void StartLiveReadCommand()
+        //{
+        //    var viewmodel = new LiveReadViewModel(_container, 26);
+        //    ScreenManager.ShowDialog(_container, viewmodel);
+        //}
 
-        public Brush PercentColour => Brushes.Green;
-
-        public void Handle(VerificationTestEvent @event)
+        public override void Handle(VerificationTestEvent @event)
         {
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => PercentError);
             NotifyOfPropertyChange(() => Gauge);
             NotifyOfPropertyChange(() => EvcReading);
             NotifyOfPropertyChange(() => EvcFactor);

@@ -71,6 +71,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
+        public decimal? TrueCorrected => decimal.Round(Volume.TrueCorrected.Value, 4);
         public decimal? StartUncorrected => Volume.ItemValues.Uncorrected();
         public decimal? EndUncorrected => Volume.AfterTestItemValues.Uncorrected();
         public decimal? StartCorrected => Volume.ItemValues.Corrected();
@@ -86,6 +87,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public decimal? MeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacement;
         public decimal? EvcMeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.EvcMeterDisplacement;
         public decimal? MeterDisplacementPercentError => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacementPercentError;
+        public bool MeterDisplacementHasPassed => (Volume.DriveType as IDriveType).HasPassed;
 
         public async Task StartTestCommand()
         {
@@ -102,8 +104,8 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             RaisePropertyChanges();  
         }
 
-        public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
-        public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.White : (SolidColorBrush)(new BrushConverter().ConvertFrom("#DC6156"));
+        public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.White : (SolidColorBrush)(new BrushConverter().ConvertFrom("#DC6156"));
         public Brush MeterDisplacementPercentColour => Brushes.Green; // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
 
         private void ToggleTestButtons()
@@ -116,6 +118,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private void RaisePropertyChanges()
         {
             NotifyOfPropertyChange(() => AppliedInput);
+            NotifyOfPropertyChange(() => TrueCorrected);
             NotifyOfPropertyChange(() => Volume);
             NotifyOfPropertyChange(() => StartUncorrected);
             NotifyOfPropertyChange(() => EndUncorrected);

@@ -22,9 +22,9 @@ namespace Prover.Core.Models.Instruments
         }
     }
 
-    public abstract class InstrumentTable : BaseEntity
+    public abstract class ProverTable : BaseEntity
     {
-        protected InstrumentTable() : base()
+        protected ProverTable() : base()
         {
         
         }

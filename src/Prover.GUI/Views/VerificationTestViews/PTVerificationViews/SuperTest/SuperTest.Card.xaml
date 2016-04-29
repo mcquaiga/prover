@@ -16,17 +16,17 @@
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
-            <UniformGrid Columns="3" Margin="2">
+            <controls:PercentageControl 
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding PercentError}" 
+                Passed="{Binding Test.HasPassed}"/>
+            <UniformGrid Columns="2" Margin="2">
                 <controls:ValueDescriptionControl
                                                    Label="Actual Factor"
                                                    Value="{Binding Test.ActualFactor}"/>
                 <controls:ValueDescriptionControl
                                                    Label="EVC Factor"
-                                                   Value="{Binding Test.EVCUnsqrFactor}"/>
-                <controls:ValueDescriptionControl
-                                                   Label="% Error"
-                                                   Foreground="{Binding PercentColour}"
-                                                   Value="{Binding Test.PercentError}"/>
+                                                   Value="{Binding EVCUnsqrFactor}"/>
             </UniformGrid>
         </StackPanel>
     </materialDesign:Card>

@@ -37,6 +37,7 @@
                                       Mode="PrimaryDark" 
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
 
+            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}" HorizontalAlignment="Center" Margin="2 2"/>
             <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center" Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
                 <TextBlock FontSize="12">Gauge</TextBlock>
                 <xctk:DecimalUpDown Width="110" Height="35" 
@@ -49,30 +50,26 @@
             </StackPanel>
 
             <!-- Instrument Report, textblock instead of displaying the button-->
-            <UniformGrid Columns="2" Margin="0">
+            <UniformGrid Columns="2" Rows="2" Margin="0">
                 <!--INstrument Report , Text display instead of the decimal control -->
-                <controls:ValueDescriptionControl   Label="Gauge"
-                                                    Value="{Binding Test.Gauge}"/>
+                <controls:ValueDescriptionControl   
+                     Label="Gauge"
+                                                    Value="{Binding Gauge}"/>
 
-                <controls:ValueDescriptionControl
+                <controls:ValueDescriptionControl 
                                                        Label="EVC Reading"
                                                        Value="{Binding EvcReading}" />
+                
+                <controls:ValueDescriptionControl Label="Actual Factor"
+                                                  Value="{Binding Test.ActualFactor}"
+                                                 />
+
+                <controls:ValueDescriptionControl 
+                                                    Label="EVC Factor"
+                                                    Value="{Binding EvcFactor}"/>
             </UniformGrid>
 
-            <UniformGrid Columns="3" Margin="0">
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="Actual Factor"
-                                                       Value="{Binding Test.ActualFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="EVC Factor"
-                                                       Value="{Binding EvcFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="% Error"
-                                                       Foreground="{Binding PercentColour}"
-                                                       Value="{Binding Test.PercentError}"/>
-            </UniformGrid>
-
-            <UniformGrid Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
+            <!--<UniformGrid Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
                 <Button Content="Live Read" HorizontalAlignment="Right" Margin="5" >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -80,7 +77,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-            </UniformGrid>
+            </UniformGrid>-->
         </StackPanel>
     </materialDesign:Card>
     <!--**** END TEMPERATURE ****-->

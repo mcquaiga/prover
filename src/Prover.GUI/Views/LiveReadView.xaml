@@ -12,17 +12,40 @@
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" Width="200">
-    <StackPanel Margin="10">
-        <TextBlock HorizontalAlignment="Center" 
+             mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+        <DataTemplate x:Key="LiveReadTemplate">
+            <StackPanel Margin="10">
+                <TextBlock HorizontalAlignment="Center" 
                    Text="{Binding Title}"
                    Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-        </TextBlock>
-        <TextBlock FontSize="45"
+                </TextBlock>
+                <TextBlock FontSize="45"
                    Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                   HorizontalAlignment="Center" 
-                   x:Name="LiveReadValue">0</TextBlock>
-        <Button Content="DONE" 
+                   HorizontalAlignment="Center"               
+                   Text="{Binding LiveReadValue}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ItemsControl Grid.Row="0" HorizontalAlignment="Center"
+                        ItemTemplate="{StaticResource ResourceKey=LiveReadTemplate}"
+                        ItemsSource="{Binding LiveReadItems}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <Button Content="Done" Grid.Row="1"
                 HorizontalAlignment="Right"                >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
@@ -30,5 +53,23 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-    </StackPanel>
+        <!--<ListView ItemsSource="{Binding LiveReadItems}" HorizontalContentAlignment="Stretch" >
+            <ListView.ItemTemplate >
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Path=ItemNumber}"/>
+                        <TextBlock Text="{Binding Path=LiveReadValue}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+
+
+    </Grid>
+   
+
 </UserControl>

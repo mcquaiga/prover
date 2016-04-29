@@ -24,12 +24,15 @@
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="3" Content="Pressure" Mode="PrimaryDark" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+            <controls:PercentageControl HorizontalAlignment="Center" Margin="2"
+                DisplayValue="{Binding Test.PercentError}" 
+                Passed="{Binding Test.HasPassed}"/>
 
             <UniformGrid Columns="2" Margin="0">
-                    <controls:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                                                 Label="Gauge"
                                                 Value="{Binding Gauge}"/>
-                    <controls:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                                                 Label="EVC Reading"
                                                 Value="{Binding EvcGasPressure}"/>
             </UniformGrid>
@@ -41,19 +44,19 @@
                                                    Label="EVC ATM Reading"
                                                    Value="{Binding EvcATMPressure}"/>
             </UniformGrid>
-            <UniformGrid Columns="3" Margin="0">
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
+            <UniformGrid Columns="2" Margin="0">
+                <controls:ValueDescriptionControl  LabelFontSize="10"
+                                                   ValueFontSize="20"
                                                    Label="Actual Factor"
                                                    Value="{Binding Test.ActualFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
+
+                <controls:ValueDescriptionControl  LabelFontSize="10"
+                                                   ValueFontSize="20"
                                                    Label="EVC Factor"
                                                    Value="{Binding EvcFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                   Label="% Error"
-                                                   Foreground="{Binding PercentColour}"
-                                                   Value="{Binding Test.PercentError}"/>
+
             </UniformGrid>
-            <UniformGrid Visibility="{Binding ShowGaugeControl, Converter={StaticResource BoolToHiddenConverter}}"/>
+
         </StackPanel>
     </materialDesign:Card>
 

@@ -16,6 +16,6 @@
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="350">
     <Grid>
-        <TextBlock Text="{Binding Test.PercentError}"></TextBlock>
+        <TextBlock Text="{Binding PressureTest.PercentError}"></TextBlock>
     </Grid>
 </UserControl>

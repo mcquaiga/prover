@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using System.Collections.Generic;
 
 namespace Prover.Core.VerificationTests
 {
@@ -13,7 +14,8 @@ namespace Prover.Core.VerificationTests
         Task DownloadTemperatureTestItems(int levelNumber, bool disconnectAfter = true);
         Task DownloadVerificationTestItems(int level);
         Task SaveAsync();
-        Task StartLiveRead(int itemNumber);
+        Task StartLiveRead();
+        Task StartLiveRead(IEnumerable<int> itemNumbers);
         Task StartVolumeTest();
         Task StopLiveRead();
         void StopVolumeTest();

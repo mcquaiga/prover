@@ -15,7 +15,7 @@ using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class VolumeTest : InstrumentTable
+    public class VolumeTest : ProverTable
     {
         private Instrument _instrument;
         private string _driveTypeDiscriminator;
@@ -136,7 +136,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return CorrectedHasPassed && UnCorrectedHasPassed; //TODO: && MeterDisplacementHasPassed;
+                return CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
             }
         }
 

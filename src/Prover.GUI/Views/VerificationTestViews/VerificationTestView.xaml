@@ -38,10 +38,6 @@
 
             <ContentControl Margin="2" cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="Card" />
 
-            <Border Margin="15,0,15,5"
-					BorderBrush="{DynamicResource HeaderColour}"
-					BorderThickness="0,0,0,1" />
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="150"
 						Margin="10"

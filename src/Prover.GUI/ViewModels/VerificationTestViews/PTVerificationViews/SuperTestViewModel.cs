@@ -15,12 +15,11 @@ using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
-    public class SuperTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
+    public class SuperTestViewModel : BaseTestViewModel
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         public RotaryTestManager InstrumentManager { get; set; }
-        public SuperFactorTest Test { get; set; }
 
         public SuperTestViewModel(IUnityContainer container, SuperFactorTest test)
         {
@@ -29,11 +28,13 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
+        public decimal? EVCUnsqrFactor => (Test as SuperFactorTest).EVCUnsqrFactor;
 
-        public void Handle(VerificationTestEvent message)
+        public override void Handle(VerificationTestEvent message)
         {
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => PercentError);
+            NotifyOfPropertyChange(() => EVCUnsqrFactor);
         }
     }
 }

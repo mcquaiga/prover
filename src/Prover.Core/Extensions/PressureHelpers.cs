@@ -21,7 +21,7 @@ namespace Prover.Core.Extensions
 
         public static TransducerType GetTransducerType(this Instrument instrument) => (TransducerType)instrument.Items.GetItem(TRANSDUCER_TYPE).GetNumericValue(instrument.ItemValues);
 
-        public static string Units(this Instrument instrument) => instrument.Items.GetItem(PRESS_UNITS).GetDescriptionValue(instrument.ItemValues);
+        public static string PressureUnits(this Instrument instrument) => instrument.Items.GetItem(PRESS_UNITS).GetDescriptionValue(instrument.ItemValues);
 
         public static decimal? EvcBasePressure(this Instrument instrument) => instrument.Items.GetItem(BASE_PRESS).GetNumericValue(instrument.ItemValues);
 

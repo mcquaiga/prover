@@ -199,6 +199,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DesignViewModel.cs" />
+    <Compile Include="Controls\PercentageControl.xaml.cs">
+      <DependentUpon>PercentageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LabelValueControl.xaml.cs">
+      <DependentUpon>LabelValueControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ValueDescriptionControl.xaml.cs">
       <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
     </Compile>
@@ -227,6 +234,7 @@
     <Compile Include="ViewModels\IWindowSettings.cs" />
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
     <Compile Include="ViewModels\Shell\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\VerificationTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
@@ -255,6 +263,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ProgressDialogView.xaml.cs">
       <DependentUpon>ProgressDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml.cs">
+      <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestViews\StartTestView.xaml.cs">
       <DependentUpon>StartTestView.xaml</DependentUpon>
@@ -314,17 +325,8 @@
     <Compile Include="Views\VerificationTestViews\VerificationTestView.xaml.cs">
       <DependentUpon>VerificationTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentViews\PressureViews\LivePressureReadView.xaml.cs">
-      <DependentUpon>LivePressureReadView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
       <DependentUpon>PressureTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\PressureViews\PressureView.xaml.cs">
-      <DependentUpon>PressureView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\PressureViews\Pressure\PressureHeaderView.xaml.cs">
-      <DependentUpon>PressureHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentAccessView.xaml.cs">
       <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
@@ -348,20 +350,11 @@
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml.cs">
       <DependentUpon>SuperTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentViews\TemperatureViews\LiveTemperatureReadView.xaml.cs">
-      <DependentUpon>LiveTemperatureReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\TemperatureViews\TemperatureView.xaml.cs">
-      <DependentUpon>TemperatureView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
       <DependentUpon>TempTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentViews\TemperatureViews\TemperatureInfo.Card.xaml.cs">
+    <Compile Include="Views\InstrumentViews\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
       <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\TemperatureViews\TestView.xaml.cs">
-      <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToastNotificationView.xaml.cs">
       <DependentUpon>ToastNotificationView.xaml</DependentUpon>
@@ -369,6 +362,14 @@
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
       <DependentUpon>Volume.Card.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\PercentageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LabelValueControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ValueDescriptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -377,6 +378,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="Resources\ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -401,6 +406,10 @@
     <Page Include="Views\Dialogs\ProgressDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TestViews\StartTestView.xaml">
       <SubType>Designer</SubType>
@@ -438,23 +447,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentViews\PressureViews\LivePressureReadView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\InstrumentViews\PressureViews\PressureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\InstrumentViews\PressureViews\Pressure\PressureHeaderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -490,14 +487,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentViews\TemperatureViews\LiveTemperatureReadView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentViews\TemperatureViews\TemperatureView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -510,7 +499,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InstrumentViews\TemperatureViews\TemperatureInfo.Card.xaml">
+    <Page Include="Views\InstrumentViews\InstrumentInfo\TemperatureInfo.Card.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -531,10 +520,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Shell\ShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentViews\TemperatureViews\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -561,6 +546,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\error_36.png" />
+    <Resource Include="Resources\success.png" />
+    <Resource Include="Resources\error.png" />
     <Resource Include="Resources\download_white.png" />
     <Resource Include="Resources\download.png" />
     <Resource Include="Resources\cloud-upload.png" />
@@ -616,8 +604,6 @@
   <ItemGroup>
     <Folder Include="Commands\" />
     <Folder Include="Screens\" />
-    <Folder Include="Views\InstrumentViews\VolumeVerification\" />
-    <Folder Include="Views\SiteInformation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

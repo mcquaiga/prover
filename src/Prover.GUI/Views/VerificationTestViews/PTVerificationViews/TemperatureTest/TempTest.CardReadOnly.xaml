@@ -15,7 +15,7 @@
              TextElement.FontWeight="Medium"
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="110">
+             mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="250">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,29 +37,37 @@
                                       Mode="PrimaryDark" 
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
 
+            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}" HorizontalAlignment="Center" Margin="2 2"/>
+          
             <!-- Instrument Report, textblock instead of displaying the button-->
-            <UniformGrid Columns="2" Margin="0">
+            <UniformGrid Columns="2" Rows="2" Margin="0">
                 <!--INstrument Report , Text display instead of the decimal control -->
-                <controls:ValueDescriptionControl   Label="Gauge"
-                                                    Value="{Binding Test.Gauge}"/>
+                <controls:ValueDescriptionControl   
+                     Label="Gauge"
+                                                    Value="{Binding Gauge}"/>
 
-                <controls:ValueDescriptionControl
+                <controls:ValueDescriptionControl 
                                                        Label="EVC Reading"
                                                        Value="{Binding EvcReading}" />
+
+                <controls:ValueDescriptionControl Label="Actual Factor"
+                                                  Value="{Binding Test.ActualFactor}"
+                                                 />
+
+                <controls:ValueDescriptionControl 
+                                                    Label="EVC Factor"
+                                                    Value="{Binding EvcFactor}"/>
             </UniformGrid>
 
-            <UniformGrid Columns="3" Margin="0">
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="Actual Factor"
-                                                       Value="{Binding Test.ActualFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="EVC Factor"
-                                                       Value="{Binding EvcFactor}"/>
-                <controls:ValueDescriptionControl ScaleFactor="0.5"
-                                                       Label="% Error"
-                                                       Foreground="{Binding PercentColour}"
-                                                       Value="{Binding Test.PercentError}"/>
-            </UniformGrid>
+            <!--<UniformGrid Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
+                <Button Content="Live Read" HorizontalAlignment="Right" Margin="5" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="StartLiveReadCommand" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </UniformGrid>-->
         </StackPanel>
     </materialDesign:Card>
     <!--**** END TEMPERATURE ****-->

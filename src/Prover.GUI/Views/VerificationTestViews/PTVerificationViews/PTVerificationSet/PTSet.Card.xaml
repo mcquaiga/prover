@@ -14,13 +14,13 @@
                 TextElement.FontWeight="Medium"
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="700">
+                mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
-    <materialDesign:Card>
+    <materialDesign:Card BorderBrush="Red" BorderThickness="5">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="6" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent" />
@@ -34,21 +34,30 @@
             <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
 
-            <Button Margin="5"
+            <Grid>
+                <Button Content="Live Read" HorizontalAlignment="Left" Margin="5" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="LiveReadItemsCommand" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Margin="5"
                             HorizontalAlignment="Right"
                             materialDesign:RippleAssist.IsCentered="True"
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0"/>
-                    <TextBlock Margin="5" VerticalAlignment="Center">Download</TextBlock>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center">Download</TextBlock>
+                    </StackPanel>
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="DownloadItems" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="DownloadItems" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>  
         </StackPanel>
         
     </materialDesign:Card>

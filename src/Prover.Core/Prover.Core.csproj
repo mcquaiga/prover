@@ -130,6 +130,7 @@
     <Compile Include="Migrations\201604200029287_verifications.Designer.cs">
       <DependentUpon>201604200029287_verifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Instruments\IVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\TestManager.cs" />

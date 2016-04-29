@@ -27,6 +27,14 @@ namespace Prover.Core.EVCTypes
             }
         }
 
+        public bool HasPassed
+        {
+            get
+            {
+                return Meter.MeterDisplacementHasPassed;
+            }
+        }
+
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
             return (Meter.MeterDisplacement * appliedInput);

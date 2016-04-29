@@ -18,59 +18,49 @@ using System.Windows.Media;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
-    public class PressureTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
+    public class PressureTestViewModel : BaseTestViewModel
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private bool _isReportView;
-        public PressureTest Test { get; set; }
 
-        public bool ShowGaugeControl => !_isReportView;
-        public bool ShowATMGaugeControl => Test.VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
+        public bool ShowATMGaugeControl => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
 
-        public PressureTestViewModel(IUnityContainer container, PressureTest test, bool isReportView = false)
+        public PressureTestViewModel(IUnityContainer container, PressureTest test)
         {
             _container = container;
             Test = test;
-            _isReportView = isReportView;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public decimal Gauge
         {
-            get { return Test.GasGauge.Value ; }
+            get { return (Test as PressureTest).GasGauge.Value ; }
             set
             {
-                Test.GasGauge = value;
+                (Test as PressureTest).GasGauge = value;
                 _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
         public decimal? AtmosphericGauge
         {
-            get { return Test.AtmosphericGauge; }
+            get { return (Test as PressureTest).AtmosphericGauge; }
             set
             {
-                Test.AtmosphericGauge = value;
+                (Test as PressureTest).AtmosphericGauge = value;
                 _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
-        public decimal? EvcGasPressure => Test.ItemValues.EvcGasPressure();
-        public decimal? EvcFactor => Test.ItemValues.EvcPressureFactor();
-        public decimal? EvcATMPressure => Test.VerificationTest.Instrument.EvcAtmosphericPressure();
+        public decimal? EvcGasPressure => (Test as PressureTest).ItemValues.EvcGasPressure();
+        public decimal? EvcFactor => (Test as PressureTest).ItemValues.EvcPressureFactor();
+        public decimal? EvcATMPressure => (Test as PressureTest).VerificationTest.Instrument.EvcAtmosphericPressure();
 
-        public void LiveReadCommand()
-        {
-            var viewmodel = new LiveReadViewModel(_container, 8);
-            ScreenManager.ShowDialog(_container, viewmodel);
-        }
-
-        public Brush PercentColour => Test.HasPassed ? Brushes.Green : Brushes.Red;
-
-        public void Handle(VerificationTestEvent @event)
+        public override void Handle(VerificationTestEvent message)
         {
             NotifyOfPropertyChange(() => Test);
+            NotifyOfPropertyChange(() => Test.PercentError);
+            NotifyOfPropertyChange(() => Test.HasPassed);
             NotifyOfPropertyChange(() => EvcGasPressure);
             NotifyOfPropertyChange(() => EvcFactor);
             NotifyOfPropertyChange(() => EvcATMPressure);

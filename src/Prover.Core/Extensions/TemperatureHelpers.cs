@@ -30,10 +30,5 @@ namespace Prover.Core.Extensions
         {
             return itemValues.GetItemValue(TEMP_FACTOR);
         }
-
-        public static bool HasPassed(this TemperatureTest test)
-        {
-            return (test.PercentError < 1 && test.PercentError > -1);
-        }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 { 
-    public class PressureTest : InstrumentTable
+    public class PressureTest : BaseVerificationTest
     {
         private decimal? _atmGauge;
       
@@ -49,7 +49,8 @@ namespace Prover.Core.Models.Instruments
                 _atmGauge = value;
             }
         }
-        public decimal? PercentError
+
+        public override decimal? PercentError
         {
             get
             {
@@ -60,7 +61,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? ActualFactor
+        public override decimal? ActualFactor
         {
             get
             {
@@ -68,11 +69,8 @@ namespace Prover.Core.Models.Instruments
                 var result = (GasGauge + AtmosphericGauge) / VerificationTest.Instrument.EvcBasePressure();
                 return result.HasValue ? decimal.Round(result.Value, 4) : result;
             }
-        }       
-        [NotMapped]
-        public bool HasPassed
-        {
-            get { return (PercentError < 1 && PercentError > -1); }
         }
+
+       
     }
 }

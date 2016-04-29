@@ -7,6 +7,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
@@ -20,32 +21,23 @@ namespace Prover.GUI.ViewModels
         private readonly IUnityContainer _container;
         private RotaryTestManager _instrumentManager;
         private RotaryTestManager _testManager;
-
-        public LiveReadViewModel(IUnityContainer container, int itemNumber)
+        
+        public LiveReadViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
             _testManager = _container.Resolve<RotaryTestManager>();
-            ItemNumber = itemNumber;
 
             Task.Run(() => DoLiveRead());
         }
 
+        public ObservableCollection<LiveReadDisplay> LiveReadItems { get; set; } = new ObservableCollection<LiveReadDisplay>();
+
         private async Task DoLiveRead()
         {
-            await _testManager.StartLiveRead(ItemNumber);
+            await _testManager.StartLiveRead();
         }
-
-        public string Title
-        {
-            get
-            {
-                return string.Format("Live Item #{0}", ItemNumber);
-            }
-        }
-        public int ItemNumber { get; }
-        public decimal LiveReadValue { get; set; }
 
         public dynamic WindowSettings
         {
@@ -73,13 +65,55 @@ namespace Prover.GUI.ViewModels
 
         public void Handle(LiveReadEvent message)
         {
-            LiveReadValue = message.LiveReadValue;
-            NotifyOfPropertyChange(() => LiveReadValue);
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                var item = LiveReadItems.FirstOrDefault(x => x.ItemNumber == message.ItemNumber);
+
+                if (item == null)
+                {
+                    LiveReadItems.Add(new LiveReadDisplay { ItemNumber = message.ItemNumber, LiveReadValue = message.LiveReadValue });
+                }
+                else
+                {
+                    item.LiveReadValue = message.LiveReadValue;
+                }
+
+                NotifyOfPropertyChange(() => LiveReadItems);
+            });
+
         }
 
         public void Handle(InstrumentUpdateEvent message)
         {
             _instrumentManager = message.InstrumentManager;
+        }
+
+        public class LiveReadDisplay : ReactiveScreen
+        {
+            private decimal _readValue;
+
+            public string Title
+            {
+                get
+                {
+                    return string.Format("Live Item #{0}", ItemNumber);
+                }
+            }
+
+            public int ItemNumber { get; set; }
+
+            public decimal LiveReadValue
+            {
+                get
+                {
+                    return _readValue;
+                }
+                set
+                {
+                    _readValue = value;
+                    NotifyOfPropertyChange(() => LiveReadValue);
+                }
+            }
         }
     }
 }

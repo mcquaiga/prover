@@ -31,7 +31,7 @@ namespace Prover.Core.Models.Instruments
         PressureTemperature
     }
 
-    public class Instrument : InstrumentTable
+    public class Instrument : ProverTable
     {
         private int FIXED_PRESSURE_FACTOR = 109;
         private int FIXED_SUPER_FACTOR = 110;
@@ -105,6 +105,15 @@ namespace Prover.Core.Models.Instruments
                     return CorrectorType.TemperatureOnly;
 
                 return CorrectorType.TemperatureOnly;
+            }
+        }
+
+        [NotMapped]
+        public bool HasPassed
+        {
+            get
+            {
+                return VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
             }
         }
 

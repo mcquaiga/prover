@@ -35,7 +35,6 @@
                 <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
                 <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
             </UniformGrid>
-
         </StackPanel>
     </materialDesign:Card>
 </UserControl>

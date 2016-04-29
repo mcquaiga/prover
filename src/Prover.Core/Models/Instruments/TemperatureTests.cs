@@ -10,7 +10,7 @@ using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class TemperatureTest : InstrumentTable
+    public class TemperatureTest : BaseVerificationTest
     {
         private const decimal TempCorrection = 459.67m;
         private const decimal MetericTempCorrection = 273.15m;
@@ -29,16 +29,18 @@ namespace Prover.Core.Models.Instruments
         public virtual VerificationTest VerificationTest { get; set; }
 
         public double Gauge { get; set; }
-        public decimal? PercentError
+
+        public override decimal? PercentError
         {
             get
             {
                 if (ItemValues.EvcTemperatureFactor() == null) return null;
+                if (ActualFactor == null) return null;
                 return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
             }
         }
 
-        public decimal? ActualFactor
+        public override decimal? ActualFactor
         {
             get
             {
