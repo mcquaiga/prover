@@ -45,6 +45,10 @@ namespace Prover.Core.Communication
             _instrument.Temperature = new Temperature(_instrument);
             _instrument.Volume = new Volume(_instrument);
             _runningTest = false;
+
+            OutputBoard = new DataAcqBoard(0, 0, 0);
+            AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
+            BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
         public InstrumentManager(IUnityContainer container, string commName, BaudRateEnum baudRate, string tachCommName) : this(container)
@@ -179,6 +183,32 @@ namespace Prover.Core.Communication
             await store.UpsertAsync(_instrument);
         }
 
+        private async Task RunSyncTest()
+        {
+            if (!_isBusy && !_runningTest)
+            {
+                _log.Info("Syncing volume...");
+                _isBusy = true;
+                await _instrumentCommunication.Disconnect();
+                OutputBoard.StartMotor();
+
+                Instrument.Volume.PulseACount = 0;
+                Instrument.Volume.PulseBCount = 0;
+
+                do
+                {
+                    Instrument.Volume.PulseACount += AInputBoard.ReadInput();
+                    Instrument.Volume.PulseBCount += BInputBoard.ReadInput();
+                } while (Instrument.Volume.UncPulseCount < 1);
+
+                OutputBoard.StopMotor();
+                System.Threading.Thread.Sleep(500);
+                _isBusy = false;
+                await DownloadVolumeItems();
+                await _instrumentCommunication.Disconnect();
+            }
+        }
+
         public async Task StartVolumeTest()
         {
             if (!_isBusy && !_runningTest)
@@ -186,13 +216,8 @@ namespace Prover.Core.Communication
                 await Task.Run(async () =>
                 {
                     _log.Info("Starting volume test...");
-                    _isBusy = true;
-                    await _instrumentCommunication.Disconnect();
 
-                    OutputBoard = new DataAcqBoard(0, 0, 0);
-                    AInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortA, 0);
-                    BInputBoard = new DataAcqBoard(0, DigitalPortType.FirstPortB, 1);
-                
+                    await RunSyncTest();
 
                     //Reset Tach setting
                     if (!string.IsNullOrEmpty(_tachCommPort))
@@ -218,7 +243,7 @@ namespace Prover.Core.Communication
 
         public async Task StopVolumeTest()
         {
-            if (!_isBusy)
+            if (_runningTest)
             {
                 await Task.Run(async () =>
                 {

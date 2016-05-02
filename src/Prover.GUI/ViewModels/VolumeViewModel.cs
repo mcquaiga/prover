@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 using NLog;
 using Prover.Core.Communication;
@@ -18,9 +13,7 @@ namespace Prover.GUI.ViewModels
 {
     public class VolumeViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
     {
-
-        private readonly IUnityContainer _container;
-        
+        private readonly IUnityContainer _container;   
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private bool _userHasRequestedStop;
         private bool _isFirstVolumeTest = true;
@@ -75,7 +68,7 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        public async void StartTestCommand()
+        public async Task StartTestCommand()
         {
             try
             {
@@ -85,6 +78,7 @@ namespace Prover.GUI.ViewModels
                 _isFirstVolumeTest = false;
 
                 await InstrumentManager.StartVolumeTest();
+                RaisePropertyChanges();
                 await Task.Run(() =>
                 {
                     do
@@ -95,8 +89,8 @@ namespace Prover.GUI.ViewModels
                     } while (InstrumentManager.Instrument.Volume.UncPulseCount < InstrumentManager.Instrument.Volume.MaxUnCorrected() || _userHasRequestedStop);
                 });
                 _userHasRequestedStop = false;
-                await InstrumentManager.StopVolumeTest();
 
+                await InstrumentManager.StopVolumeTest();
                 RaisePropertyChanges();
 
                 _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Completed volume test!"));
@@ -107,7 +101,7 @@ namespace Prover.GUI.ViewModels
             }
         }
 
-        public async void StopTestCommand()
+        public async Task StopTestCommand()
         {
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Finishing volume test..."));
             _userHasRequestedStop = true;

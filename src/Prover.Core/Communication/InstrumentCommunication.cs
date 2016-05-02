@@ -17,6 +17,7 @@ namespace Prover.Core.Communication
         private readonly ICommPort _commPort;
         private miSerialProtocolClass _miSerial;
         private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private int maxConnectAttempts = 10;
 
         public InstrumentCommunication(ICommPort commPort, Instrument instrument)
         {
@@ -46,14 +47,22 @@ namespace Prover.Core.Communication
 
         public async Task Connect()
         {
-            int tryCount = 0;
+            var tryCount = 0;
+
             do
             {
                 try
                 {
                     if (!IsConnected)
-                        await Task.Run(() => _miSerial.Connect());
-                    IsConnected = true;
+                    {
+                        await Task.Run(() => _miSerial.Connect()).ContinueWith(taskResult =>
+                        {
+                            if (!taskResult.IsFaulted)
+                                IsConnected = true;
+                            else
+                                IsConnected = false;
+                        });
+                    }
                 }
                 catch (AggregateException ae)
                 {
@@ -65,14 +74,14 @@ namespace Prover.Core.Communication
                             return true;
                         }
 
-                        return false;                        
+                        return false;
                     });
                     tryCount++;
                     IsConnected = false;
                 }
-            } while (!IsConnected && tryCount < 10);
+            } while (!IsConnected && tryCount < maxConnectAttempts);
 
-            if (tryCount >= 10)
+            if (tryCount >= maxConnectAttempts)
             {
                 _log.Error("Could not connect to instrument.");
                 throw new InstrumentCommunicationException(InstrumentErrorsEnum.TooManyRetransmissionsError);
