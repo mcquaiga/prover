@@ -174,4 +174,12 @@ namespace Prover.Core.VerificationTests
             VolumeTest.StopRunningTest();
         }
     }
+
+    public class PTVerifier
+    {
+        public PTVerifier(int itemNumber)
+        {
+
+        }
+    }
 }

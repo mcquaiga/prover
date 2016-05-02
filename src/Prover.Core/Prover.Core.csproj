@@ -171,7 +171,6 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\VerificationTest.cs" />
     <Compile Include="VerificationTests\VolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>

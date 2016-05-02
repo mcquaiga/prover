@@ -37,12 +37,6 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public decimal? EvcReading => (Test as TemperatureTest).ItemValues.EvcTemperatureReading();
         public decimal? EvcFactor => (Test as TemperatureTest).ItemValues.EvcTemperatureFactor();
 
-        //public void StartLiveReadCommand()
-        //{
-        //    var viewmodel = new LiveReadViewModel(_container, 26);
-        //    ScreenManager.ShowDialog(_container, viewmodel);
-        //}
-
         public override void Handle(VerificationTestEvent @event)
         {
             NotifyOfPropertyChange(() => Test);

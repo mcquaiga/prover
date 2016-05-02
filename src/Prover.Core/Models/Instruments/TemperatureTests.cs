@@ -17,11 +17,13 @@ namespace Prover.Core.Models.Instruments
 
         public TemperatureTest() { }
 
-        public TemperatureTest(VerificationTest verificationTest) : 
+        public TemperatureTest(VerificationTest verificationTest, decimal gauge) : 
             base()
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
+
+            Gauge = (double)gauge;
         }
 
         public Guid VerificationTestId { get; set; }

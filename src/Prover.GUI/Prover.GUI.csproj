@@ -235,6 +235,7 @@
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
     <Compile Include="ViewModels\Shell\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\DesignData.cs" />
     <Compile Include="ViewModels\VerificationTestViews\VerificationTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />

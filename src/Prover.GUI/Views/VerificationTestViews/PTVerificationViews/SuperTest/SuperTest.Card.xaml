@@ -11,13 +11,13 @@
                 TextElement.FontWeight="Medium"
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="700">
+                mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="157">
     <!--**** START SUPER **** -->
-    <materialDesign:Card>
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
             <controls:PercentageControl 
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 DisplayValue="{Binding PercentError}" 
                 Passed="{Binding Test.HasPassed}"/>
             <UniformGrid Columns="2" Margin="2">

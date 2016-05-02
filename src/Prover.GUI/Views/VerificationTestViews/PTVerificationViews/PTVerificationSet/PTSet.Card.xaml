@@ -20,14 +20,14 @@
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
-    <materialDesign:Card BorderBrush="Red" BorderThickness="5">
+    <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="6" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent" />
 
             <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
-                            
+
             <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
 
@@ -48,7 +48,7 @@
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0"/>
-                        <TextBlock Margin="5" VerticalAlignment="Center">Download</TextBlock>
+                        <TextBlock Margin="5" VerticalAlignment="Center">Verify</TextBlock>
                     </StackPanel>
 
                     <i:Interaction.Triggers>
@@ -57,8 +57,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-            </Grid>  
+            </Grid>
         </StackPanel>
-        
     </materialDesign:Card>
 </UserControl>

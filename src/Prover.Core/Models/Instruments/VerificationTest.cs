@@ -59,18 +59,31 @@ namespace Prover.Core.Models.Instruments
 
             if (instrument.CorrectorType == CorrectorType.TemperatureOnly)
             {
-                TemperatureTest = new TemperatureTest(this);
+                TemperatureTest = new TemperatureTest(this, GetGaugeTemp(TestNumber));
             }
 
             if (instrument.CorrectorType == CorrectorType.PressureTemperature)
             {
                 PressureTest = new PressureTest(this);
-                TemperatureTest = new TemperatureTest(this);
+                TemperatureTest = new TemperatureTest(this, GetGaugeTemp(TestNumber));
                 SuperFactorTest = new SuperFactorTest(this);
             }
 
             if (hasVolumeTest)
                 VolumeTest = new VolumeTest(this);
+        }
+
+        private static decimal GetGaugeTemp(int testNumber)
+        {
+            switch (testNumber)
+            {
+                case 0:
+                    return 90m;
+                case 1:
+                    return 60m;
+                default:
+                    return 32m;
+            }
         }
     }
 }

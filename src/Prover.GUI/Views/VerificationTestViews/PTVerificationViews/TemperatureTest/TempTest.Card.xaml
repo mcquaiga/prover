@@ -16,6 +16,8 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="250">
+    <!--xmlns:dvm="clr-namespace:Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews"
+             d:DataContext ="{d:DesignInstance {x:Type dvm:TemperatureTestDesignData}, IsDesignTimeCreatable=True}"-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,15 +32,15 @@
     </UserControl.Resources>
 
     <!--**** START TEMPERATURE **** -->
-    <materialDesign:Card>
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="2" 
                                       Content="Temperature" 
                                       Mode="PrimaryDark" 
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
 
-            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}" HorizontalAlignment="Center" Margin="2 2"/>
-            <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center" Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
+            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}" HorizontalAlignment="Left" Margin="2 2"/>
+            <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock FontSize="12">Gauge</TextBlock>
                 <xctk:DecimalUpDown Width="110" Height="35" 
                                     VerticalAlignment="Center"
@@ -59,7 +61,7 @@
                 <controls:ValueDescriptionControl 
                                                        Label="EVC Reading"
                                                        Value="{Binding EvcReading}" />
-                
+
                 <controls:ValueDescriptionControl Label="Actual Factor"
                                                   Value="{Binding Test.ActualFactor}"
                                                  />
@@ -68,16 +70,6 @@
                                                     Label="EVC Factor"
                                                     Value="{Binding EvcFactor}"/>
             </UniformGrid>
-
-            <!--<UniformGrid Visibility="{Binding ShowGaugeInputTextBox, Converter={StaticResource BoolToHiddenConverter}}">
-                <Button Content="Live Read" HorizontalAlignment="Right" Margin="5" >
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="StartLiveReadCommand" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </UniformGrid>-->
         </StackPanel>
     </materialDesign:Card>
     <!--**** END TEMPERATURE ****-->
