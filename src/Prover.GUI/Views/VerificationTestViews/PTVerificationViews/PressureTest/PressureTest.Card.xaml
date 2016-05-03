@@ -14,7 +14,7 @@
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="350">
+             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="249">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
@@ -49,6 +49,7 @@
                 <StackPanel Orientation="Vertical" 
                             HorizontalAlignment="Center" 
                             Margin="5"
+                            Visibility="{Binding ShowATMGaugeInput, Converter={StaticResource BoolToHiddenConverter}}"
                          >
                     <TextBlock>ATM Gauge</TextBlock>
                     <xctk:DecimalUpDown Width="110" Height="35" 
@@ -64,12 +65,12 @@
             <UniformGrid Columns="2" Margin="0">
                     <controls:ValueDescriptionControl
                                                 Label="Gauge"
-                                                Value="{Binding Gauge}"/>
+                                                Value="{Binding GasPressure}"/>
                     <controls:ValueDescriptionControl
                                                 Label="EVC Reading"
                                                 Value="{Binding EvcGasPressure}"/>
             </UniformGrid>
-            <UniformGrid Columns="2" Margin="0">
+            <UniformGrid Columns="2" Margin="0" Visibility="{Binding ShowATMValues, Converter={StaticResource BoolToHiddenConverter}}">
                 <controls:ValueDescriptionControl
                                                    Label="ATM Gauge"
                                                    Value="{Binding AtmosphericGauge}"/>

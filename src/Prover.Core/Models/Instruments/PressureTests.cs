@@ -28,27 +28,25 @@ namespace Prover.Core.Models.Instruments
         [Required]
         public virtual VerificationTest VerificationTest { get; set; }
 
-        public decimal? GasGauge { get; set; }
-        public decimal? AtmosphericGauge
+        public decimal? GasPressure
         {
             get
             {
                 if (VerificationTest == null) return null;
+
                 switch (VerificationTest.Instrument.GetTransducerType())
                 {
                     case TransducerType.Gauge:
-                        return VerificationTest.Instrument.EvcAtmosphericPressure();
-                    case TransducerType.Absolute:
-                        return _atmGauge;
+                        return GasGauge;
                     default:
-                        return VerificationTest.Instrument.EvcAtmosphericPressure();
+                        return GasGauge + AtmosphericGauge;
                 }
-            }
-            set
-            {
-                _atmGauge = value;
-            }
+            } 
         }
+
+        public decimal? GasGauge { get; set; }
+
+        public decimal? AtmosphericGauge { get; set; }
 
         public override decimal? PercentError
         {
@@ -66,7 +64,7 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (VerificationTest.Instrument.EvcBasePressure() == 0) return 0;
-                var result = (GasGauge + AtmosphericGauge) / VerificationTest.Instrument.EvcBasePressure();
+                var result = GasPressure / VerificationTest.Instrument.EvcBasePressure();
                 return result.HasValue ? decimal.Round(result.Value, 4) : result;
             }
         }

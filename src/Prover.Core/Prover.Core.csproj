@@ -171,6 +171,7 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
+    <Compile Include="VerificationTests\VerificationTest.cs" />
     <Compile Include="VerificationTests\VolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
+      <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
+      <Name>Prover.SuperFactorCalculations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>

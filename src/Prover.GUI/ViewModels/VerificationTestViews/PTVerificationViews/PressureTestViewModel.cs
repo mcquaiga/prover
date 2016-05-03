@@ -23,14 +23,15 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
-        public bool ShowATMGaugeControl => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
-
         public PressureTestViewModel(IUnityContainer container, PressureTest test)
         {
             _container = container;
             Test = test;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
+
+        public bool ShowATMValues => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() != TransducerType.Absolute;
+        public bool ShowATMGaugeInput => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
 
         public decimal Gauge
         {
@@ -41,6 +42,8 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
                 _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
+
+        public decimal GasPressure => (Test as PressureTest).GasPressure.Value;
 
         public decimal? AtmosphericGauge
         {
@@ -62,6 +65,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => Test.PercentError);
             NotifyOfPropertyChange(() => Test.HasPassed);
             NotifyOfPropertyChange(() => EvcGasPressure);
+            NotifyOfPropertyChange(() => GasPressure);
             NotifyOfPropertyChange(() => EvcFactor);
             NotifyOfPropertyChange(() => EvcATMPressure);
             NotifyOfPropertyChange(() => Gauge);

@@ -1,10 +1,7 @@
 ﻿using Prover.Core.Extensions;
+using SuperFactorCalculations;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -16,6 +13,9 @@ namespace Prover.Core.Models.Instruments
         private int SUPER_TABLE_NUMBER = 147;
         private TemperatureTest _temperatureTest;
         private PressureTest _pressureTest { get; }
+
+        public FactorCalculations SuperFactorCaculations { get; set; }
+
         public enum SuperFactorTable
         {
             NX19 = 0,
@@ -40,7 +40,7 @@ namespace Prover.Core.Models.Instruments
 
         //TODO: This will always have to be in Fahrenheit
         [NotMapped]
-        public decimal? GaugeTemp
+        public decimal GaugeTemp
         {
             get
             {
@@ -69,7 +69,8 @@ namespace Prover.Core.Models.Instruments
 
         private double CalculateFPV()
         {
-            return CalculateFactorNX19();
+            var super = new FactorCalculations((double)SpecGr, (double)CO2, (double)N2, (double)GaugeTemp, (double)GaugePressure);
+            return super.SuperFactor;
         }
 
         private double Fp
