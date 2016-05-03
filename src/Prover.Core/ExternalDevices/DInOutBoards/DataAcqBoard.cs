@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MccDaq;
 using NLog;
 
@@ -74,15 +70,21 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             }
             else
             {
-                _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
+                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
+                {
+                    _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
+                }
             }
             return 0;           
         }
 
         private void Out(MotorValues outputValue)
         {
-            _board.AOut(_channelNum, Range.UniPt05Volts, (short)outputValue);
-            
+            _ulStatErrorInfo = _board.AOut(_channelNum, Range.UniPt05Volts, (short)outputValue);
+            if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
+            {
+                _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
+            }
         }
 
         public void Dispose()

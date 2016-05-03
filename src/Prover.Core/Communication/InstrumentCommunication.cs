@@ -8,29 +8,26 @@ using Prover.Core.Storage;
 using Prover.SerialProtocol;
 using Prover.Core.Models.Instruments;
 using System.Windows;
-using Prover.Core.Models;
-using Caliburn.Micro;
-using Prover.Core.Events;
 
 namespace Prover.Core.Communication
 {
-    public class InstrumentCommunicator
+    public class InstrumentCommunication
     {
+        private readonly Instrument _instrument;
         private readonly ICommPort _commPort;
         private miSerialProtocolClass _miSerial;
         private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private IEventAggregator _eventAggregator;
         private int maxConnectAttempts = 10;
 
-        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, InstrumentType instrumentType)
+        public InstrumentCommunication(ICommPort commPort, Instrument instrument)
         {
             _commPort = commPort;
-            _eventAggregator = eventAggregator;
-            
-            switch (instrumentType)
+            _instrument = instrument;
+         
+            switch (_instrument.Type)
             {
                 case InstrumentType.Ec300:
-                    _miSerial = new EC300Class(commPort);
+                   _miSerial = new EC300Class(commPort);
                     break;
                 default:
                     _miSerial = new MiniMaxClass(commPort);
@@ -40,49 +37,13 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, Instrument instrument) : this(eventAggregator, commPort, instrument.Type) { }
-
-        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetail> itemsToDownload, bool disconnectAfter = true)
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemsBase.Item> itemsToDownload )
         {
             await Connect();
-
-            var result = await Task.Run(()=> DownloadItems(itemsToDownload));
-
-            if (disconnectAfter)
-                await Disconnect();
-
-            return result;
+            return await Task.Run(()=> DownloadItems(itemsToDownload));
         }
 
-        public async Task<string> DownloadItem(int itemNumber, bool disconnectAfter = true)
-        {
-            await Connect();
-
-            var result = await Task.Run(() => _miSerial.RD(itemNumber));
-
-            if (disconnectAfter)
-                await Disconnect();
-
-            return Convert.ToString(result);
-        }
-
-        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = true)
-        {
-            await Connect();
-
-            await Task.Run(() => _miSerial.WD(itemNumber, value));
-
-            if (disconnectAfter)
-                await Disconnect();
-        }
-
-        private Dictionary<int, string> DownloadItems(IEnumerable<ItemDetail> itemsToDownload)
-        {
-            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
-            return myItems;
-        }
-
-        public bool IsConnected { get; private set; }
+        public bool IsConnected { get; set; }
 
         public async Task Connect()
         {
@@ -94,7 +55,6 @@ namespace Prover.Core.Communication
                 {
                     if (!IsConnected)
                     {
-                        //await _eventAggregator.PublishOnUIThreadAsync(new InstrumentConnectionEvent(InstrumentConnectionEvent.Status.Connecting, tryCount + 1, maxConnectAttempts));
                         await Task.Run(() => _miSerial.Connect()).ContinueWith(taskResult =>
                         {
                             if (!taskResult.IsFaulted)
@@ -102,7 +62,7 @@ namespace Prover.Core.Communication
                             else
                                 IsConnected = false;
                         });
-                    }                                   
+                    }
                 }
                 catch (AggregateException ae)
                 {
@@ -114,7 +74,7 @@ namespace Prover.Core.Communication
                             return true;
                         }
 
-                        return false;                        
+                        return false;
                     });
                     tryCount++;
                     IsConnected = false;
@@ -130,18 +90,23 @@ namespace Prover.Core.Communication
 
         public async Task Disconnect()
         {
-            if (IsConnected)
-                await Task.Run(()=> _miSerial.Disconnect());
-
+            await Task.Run(()=> _miSerial.Disconnect());
             IsConnected = false;
         }
 
-        public async Task<decimal> LiveReadItem(int itemNumber)
+        public async Task<Dictionary<int, string>> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
+        {
+            if (!IsConnected) await Connect();
+            var myItems = _miSerial.RG((from i in itemsToDownload select i.Number).ToList());
+            return myItems;
+        }
+
+        public async Task<double> LiveReadItem(int itemNumber)
         {
             return await Task.Run(async () =>
             {
-                await Connect();
-                return Convert.ToDecimal(_miSerial.LR(itemNumber));
+                if (!IsConnected) await Connect();
+                return Convert.ToDouble(_miSerial.LR(itemNumber));
             });
         }
         

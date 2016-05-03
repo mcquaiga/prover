@@ -34,17 +34,25 @@ namespace Prover.Core.Communication
         {
             return await Task.Run(() =>
             {
-                if (!_serialPort.IsOpen()) _serialPort.OpenPort();
+                try
+                {
+                    if (!_serialPort.IsOpen()) _serialPort.OpenPort();
 
-                _serialPort.DiscardInBuffer();
-                _serialPort.SendDataToPort("@D0");
-                _serialPort.SendDataToPort(((char)13).ToString());
-                _serialPort.DiscardInBuffer();
-                System.Threading.Thread.Sleep(500);
+                    _serialPort.DiscardInBuffer();
+                    _serialPort.SendDataToPort("@D0");
+                    _serialPort.SendDataToPort(((char)13).ToString());
+                    _serialPort.DiscardInBuffer();
+                    System.Threading.Thread.Sleep(500);
 
-                var tachString = _serialPort.ReceiveDataFromPort();
-                _log.Info(string.Format("Read data from Tach: {0}", tachString));
-                return ParseTachValue(tachString);
+                    var tachString = _serialPort.ReceiveDataFromPort();
+                    _log.Info(string.Format("Read data from Tach: {0}", tachString));
+                    return ParseTachValue(tachString);
+                }
+                catch (Exception ex)
+                {
+                    _log.Warn("An error occured connecting to the tachometer.", ex);
+                }
+                return 0;
             });
         }
 

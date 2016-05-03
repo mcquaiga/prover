@@ -208,7 +208,6 @@ Public MustInherit Class miSerialProtocolClass
             If Not comm Is Nothing Then
                 logger.Debug("Disposing Serial Port Resources.")
                 _commPort.ClosePort()
-                comm = Nothing
             End If
         End If
     End Sub

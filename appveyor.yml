@@ -13,7 +13,7 @@ platform: Any CPU
 
 build:
   project: src\prover.sln
-  verbosity: quiet|minimal|normal|detailed
+  verbosity: normal
 pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2015
@@ -34,6 +34,10 @@ deploy:
   release: v$(APPVEYOR_BUILD_VERSION)
   description: 'Prover release - v$(APPVEYOR_BUILD_VERSION)'
   auth_token:
-    secure: GUR7LqjBnoRB5BGTUhRrE4Wc+ZyV3eAkDXe2S7gMbmeGN0t2gpAR0x+3jA1LWvKlXAsB8jyPil0HBD1SYFnDXkq9cIFnxTGxax47RUzbNxk=
+    secure: $(git_api_token)
   on:
     branch: master
+
+environment:
+  git_api_token:
+    secure: iwzifaNjQtJhorOlGx8EkqxqAS6O8VPmb0JAm0gRanicZjaVWd8G4GFmIN2TxcuB
