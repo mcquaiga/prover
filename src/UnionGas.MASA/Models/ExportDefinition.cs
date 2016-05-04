@@ -13,35 +13,47 @@ namespace UnionGas.MASA.Models
         public List<VerificationTest> VerificationTests { get; set; }
 
         //Pressure Info
-        public string TransducerType { get; set; }
-        public string PressureUnits { get; set; }
-        public decimal EvcBasePressure { get; set; }
-        public decimal EvcPressureRange { get; set; }
+        public class PressureHeader
+        {
+            public string TransducerType { get; set; }
+            public string PressureUnits { get; set; }
+            public decimal EvcBasePressure { get; set; }
+            public decimal EvcPressureRange { get; set; }
+        }
 
         //Temperature Info
-        public string Range { get; set; }
-        public string TemperatureUnits { get; set; }
-        public decimal EvcBaseTemperature { get; set; }
+        public class TemperatureHeader
+        {
+            public string Range { get; set; }
+            public string TemperatureUnits { get; set; }
+            public decimal EvcBaseTemperature { get; set; }
+        }
 
         //Supercompress. Info
-        public decimal SpecGr { get; set; }
-        public decimal CO2 { get; set; }
-        public decimal N2 { get; set; }
-        public string SuperTable { get; set; }
+        public class SuperFactorHeader
+        {
+            public decimal SpecGr { get; set; }
+            public decimal CO2 { get; set; }
+            public decimal N2 { get; set; }
+            public string SuperTable { get; set; }
+        }
 
         //Volume Info
-        public string PulseASelect { get; set; }
-        public string PulseBSelect { get; set; }
-        public string DriveTypeDiscriminator { get; set; }
+        public class VolumeHeader
+        {
+            public string PulseASelect { get; set; }
+            public string PulseBSelect { get; set; }
+            public string DriveTypeDiscriminator { get; set; }
+        }
 
         public class VerificationTest
         {
-            public virtual PressureDetail Pressure { get; set; }
-            public virtual TemperatureDetail Temperature { get; set; }
-            public virtual VolumeDetail VolumeTest { get; set; }
-            public virtual SuperFactorDetail SuperFactorTest { get; set; }
+            public virtual PressureTest Pressure { get; set; }
+            public virtual TemperatureTest Temperature { get; set; }
+            public virtual VolumeTest Volume { get; set; }
+            public virtual SuperFactorTest SuperFactor { get; set; }
 
-            public class PressureDetail
+            public class PressureTest
             {
                 public decimal GasPressure { get; set; }
                 public decimal GaugePressure { get; set; }
@@ -53,7 +65,7 @@ namespace UnionGas.MASA.Models
                 public decimal PercentError { get; set; }
             }
 
-            public class TemperatureDetail
+            public class TemperatureTest
             {
                 public decimal GaugeTemperature { get; set; }
                 public decimal EvcTemperature { get; set; }
@@ -62,7 +74,7 @@ namespace UnionGas.MASA.Models
                 public decimal PercentError { get; set; }
             }
 
-            public class VolumeDetail
+            public class VolumeTest
             {
                 public int PulseACount { get; set; }
                 public int PulseBCount { get; set; }
@@ -83,7 +95,7 @@ namespace UnionGas.MASA.Models
                 public string UnCorrectedMultiplierDescription { get; set; }
             }
 
-            public class SuperFactorDetail
+            public class SuperFactorTest
             {
                 public decimal GaugeTemp { get; set; }
                 public decimal GaugePressure { get; set; }
