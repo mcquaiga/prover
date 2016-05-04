@@ -315,9 +315,6 @@
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
       <DependentUpon>TempTest.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.CardReadOnly.xaml.cs">
-      <DependentUpon>Volume.CardReadOnly.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\VerificationTestViews\VerificationTestView.xaml.cs">
       <DependentUpon>VerificationTestView.xaml</DependentUpon>
     </Compile>
@@ -498,10 +495,6 @@
     <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.CardReadOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\VerificationTestViews\VerificationTestView.xaml">
       <SubType>Designer</SubType>

@@ -172,7 +172,7 @@
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\VerificationTest.cs" />
-    <Compile Include="VerificationTests\VolumeVerification.cs" />
+    <Compile Include="VerificationTests\RotaryVolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">

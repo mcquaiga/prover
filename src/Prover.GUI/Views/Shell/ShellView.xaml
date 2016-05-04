@@ -15,7 +15,7 @@
     >
     <materialDesign:DialogHost Identifier="RootDialog">
         <DockPanel>
-            <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+            <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                               Mode="PrimaryDark" DockPanel.Dock="Top">
                 <DockPanel>
                     <Button x:Name="HomeButton" Width="64" Height="64" DockPanel.Dock="Left">

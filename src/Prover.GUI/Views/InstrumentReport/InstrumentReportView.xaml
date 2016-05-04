@@ -36,7 +36,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <ContentControl cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="CardReadOnly"
+            <ContentControl cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="Card"
                             HorizontalAlignment="Center"
                             Margin="5" />
         </StackPanel>

@@ -47,7 +47,10 @@ namespace Prover.Core.VerificationTests
             if (!_runningTest)
             {
                 _log.Info("Starting volume test...");
-                                
+
+                await _instrumentCommunicator.WriteItem(264, "20140867", false);
+                await _instrumentCommunicator.WriteItem(434, "0", false);
+
                 _verificationTest.VolumeTest.ItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
                 
                 await _instrumentCommunicator.Disconnect();

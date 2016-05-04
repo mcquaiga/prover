@@ -21,11 +21,10 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 
         public RotaryTestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
+
         public bool ShowBeginTestButton { get; private set; } = true;
         public bool ShowStopTestButton { get; private set; } = false;
 
-        public bool ShowAppliedInputTextBox => !_isReportView;
-        public bool ShowAppliedInputDisplay => _isReportView;
         public bool ShowTestButtons => !_isReportView;
 
         public VolumeTestViewModel(IUnityContainer container, bool isReportView = false)

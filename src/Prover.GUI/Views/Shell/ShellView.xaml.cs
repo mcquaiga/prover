@@ -22,6 +22,7 @@ namespace Prover.GUI.Views.Shell
         public ShellView()
         {
             InitializeComponent();
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
         }
     }
 }
