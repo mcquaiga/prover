@@ -40,7 +40,7 @@
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
 
             <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}" HorizontalAlignment="Left" Margin="2 2"/>
-            <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
+            <!--<StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock FontSize="12">Gauge</TextBlock>
                 <xctk:DecimalUpDown Width="110" Height="35" 
                                     VerticalAlignment="Center"
@@ -49,7 +49,7 @@
                                             Watermark="Gauge"                         
 							                Value="{Binding Gauge}"
                                            />
-            </StackPanel>
+            </StackPanel>-->
 
             <!-- Instrument Report, textblock instead of displaying the button-->
             <UniformGrid Columns="2" Rows="2" Margin="0">

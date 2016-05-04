@@ -16,7 +16,7 @@ namespace Prover.Core.VerificationTests
 {
     public class RotaryTestManager : ITestManager
     {
-        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private readonly IUnityContainer _container;
         private bool _isLiveReading = false;
         private bool _stopLiveReading;
@@ -30,7 +30,12 @@ namespace Prover.Core.VerificationTests
         public static async Task<RotaryTestManager> Create(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
         {
             var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
-            var tachComm = new TachometerCommunicator(tachometerPortName);
+
+            TachometerCommunicator tachComm = null;
+            if (!string.IsNullOrEmpty(tachometerPortName))
+            {
+                tachComm = new TachometerCommunicator(tachometerPortName);
+            }
 
             var items = new InstrumentItems(instrumentType);
             var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
@@ -39,7 +44,7 @@ namespace Prover.Core.VerificationTests
             var manager = new RotaryTestManager(container, instrument, instrumentComm, tachComm);
             container.RegisterInstance(manager);
 
-            return manager;
+            return manager;          
         }
 
         private RotaryTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentCommunicator, TachometerCommunicator tachCommunicator) 

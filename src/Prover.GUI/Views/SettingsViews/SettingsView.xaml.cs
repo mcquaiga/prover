@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views
+namespace Prover.GUI.Views.SettingsViews
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml

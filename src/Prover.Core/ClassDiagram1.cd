@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Prover.Core.Models.Instruments.Instrument">
+    <Position X="3.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AwAQAEAAAAIBCAAAAAAAAECAAAEAxACAAQAEgMBAAAg=</HashCode>
+      <FileName>Models\Instruments\Instrument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.BaseEntity" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\InstrumentTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.ProverTable" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\InstrumentTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.BaseVerificationTest" Collapsed="true">
+    <Position X="8.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\IVerificationTest.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.MeterIndexInfo" Collapsed="true">
+    <Position X="14.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAABAAAAAAAEAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Models\Instruments\MeterIndexes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.PressureTest">
+    <Position X="5.75" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgQAAAAAAAAQACAAAAIAAEAAABIAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\PressureTests.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.SuperFactorTest">
+    <Position X="8" Y="4.5" Width="2.75" />
+    <NestedTypes>
+      <Enum Name="Prover.Core.Models.Instruments.SuperFactorTest.SuperFactorTable" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Instruments\SuperFactorTest.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAMggAkAAEAAAQCgAASAAAAAAWEACAAAEAEQABA=</HashCode>
+      <FileName>Models\Instruments\SuperFactorTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.TemperatureTest">
+    <Position X="11.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgQBAAAAAEAAACAAAAAAEEAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\TemperatureTests.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.VerificationTest" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAhAAAAAAAAAAAAAARAAAAAGAAAAAAAQAEEAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\VerificationTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prover.Core.Models.Instruments.VolumeTest">
+    <Position X="0.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQALAIAQQBAAAAgCABCAABAAAAAAAABEGAAAAAA=</HashCode>
+      <FileName>Models\Instruments\Volume.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Prover.Core.Models.Instruments.IVerificationTest" Collapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\IVerificationTest.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Prover.Core.Models.Instruments.InstrumentType" Collapsed="true">
+    <Position X="16" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAABABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Instruments\Instrument.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Prover.Core.Models.Instruments.CorrectorType" Collapsed="true">
+    <Position X="14.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Models\Instruments\Instrument.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

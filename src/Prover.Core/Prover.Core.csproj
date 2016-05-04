@@ -178,6 +178,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="..\..\..\..\Desktop\EvcProver.cd" />
     <None Include="App.config" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
