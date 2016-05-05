@@ -94,8 +94,8 @@
             <Grid Grid.Column="1">
                 <StackPanel>
 
-                    <TextBlock>Created By:</TextBlock>
-                    <TextBox x:Name="TestedBy" />
+                    <!--<TextBlock>Created By:</TextBlock>
+                    <TextBox x:Name="TestedBy" />-->
                     <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}" SelectedValue="{Binding VerificationType}"  SelectedIndex="0">
                     </ComboBox>
                     

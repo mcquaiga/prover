@@ -25,7 +25,7 @@ namespace Prover.GUI.ViewModels.Shell
             await ScreenManager.Change(_container, new StartTestViewModel(_container));
         }
 
-        public async Task CreateCertificateButton()
+        public async Task ExportRunButton()
         {
             await ScreenManager.Change(_container, new CreateCertificateViewModel(_container));
         }

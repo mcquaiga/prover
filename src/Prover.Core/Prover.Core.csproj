@@ -130,6 +130,10 @@
     <Compile Include="Migrations\201604200029287_verifications.Designer.cs">
       <DependentUpon>201604200029287_verifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605051843555_export-date-time.cs" />
+    <Compile Include="Migrations\201605051843555_export-date-time.Designer.cs">
+      <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\IVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
@@ -215,6 +219,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604200029287_verifications.resx">
       <DependentUpon>201604200029287_verifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605051843555_export-date-time.resx">
+      <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
