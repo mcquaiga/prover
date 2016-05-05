@@ -179,35 +179,22 @@ namespace Prover.Core.Communication
 
         public async Task SaveAsync()
         {
-            var store = new InstrumentStore(_container);
-            await store.UpsertAsync(_instrument);
-        }
-
-        private async Task RunSyncTest()
-        {
-            if (!_isBusy && !_runningTest)
+            using (var store = new InstrumentStore(_container))
             {
-                _log.Info("Syncing volume...");
-                _isBusy = true;
-                await _instrumentCommunication.Disconnect();
-                OutputBoard.StartMotor();
-
-                Instrument.Volume.PulseACount = 0;
-                Instrument.Volume.PulseBCount = 0;
-
-                do
-                {
-                    Instrument.Volume.PulseACount += AInputBoard.ReadInput();
-                    Instrument.Volume.PulseBCount += BInputBoard.ReadInput();
-                } while (Instrument.Volume.UncPulseCount < 1);
-
-                OutputBoard.StopMotor();
-                System.Threading.Thread.Sleep(500);
-                _isBusy = false;
-                await DownloadVolumeItems();
-                await _instrumentCommunication.Disconnect();
+                await store.UpsertAsync(_instrument);
             }
         }
+
+        private async Task ClearInstrumentValues()
+        {
+            await _instrumentCommunication.WriteItem(264, "20140867", false);
+            await _instrumentCommunication.WriteItem(434, "0", false);
+            await _instrumentCommunication.WriteItem(892, "0", false);
+            await _instrumentCommunication.WriteItem(0, "0", false);
+            await _instrumentCommunication.WriteItem(2, "0", false);
+            await _instrumentCommunication.WriteItem(113, "0", false);
+        }
+
 
         public async Task StartVolumeTest()
         {
@@ -217,7 +204,7 @@ namespace Prover.Core.Communication
                 {
                     _log.Info("Starting volume test...");
 
-                    await RunSyncTest();
+                    await ClearInstrumentValues();
 
                     //Reset Tach setting
                     if (!string.IsNullOrEmpty(_tachCommPort))
