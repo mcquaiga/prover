@@ -102,10 +102,10 @@
                     <!--<TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
                     <TextBlock x:Name="SealExpirationDate" />-->
 
-                    <Button Margin="0,20,0,0" Content="Create New">
+                    <Button Margin="0,20,0,0" Content="Export to MASA">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
-                                <cal:ActionMessage MethodName="CreateCertificate" />
+                                <cal:ActionMessage MethodName="ExportQARuns" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>

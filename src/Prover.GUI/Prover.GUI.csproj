@@ -279,12 +279,6 @@
       <DependentUpon>InstrumentsListView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\InstrumentsList\InstrumentTempView.xaml.cs">
-      <DependentUpon>InstrumentTempView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentsList\InstrumentTempTestView.xaml.cs">
-      <DependentUpon>InstrumentTempTestView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\InstrumentsList\InstrumentTestGridView.xaml.cs">
       <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
     </Compile>
@@ -413,14 +407,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentsList\InstrumentsListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\InstrumentTempView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\InstrumentTempTestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

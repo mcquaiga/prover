@@ -10,15 +10,15 @@
             <Button x:Name="NewTestButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\..\Resources\clipboard-check.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Verify Instrument</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Prove Instrument</TextBlock>
                 </StackPanel>
             </Button>
-            <!--<Button x:Name="CreateCertificateButton" Width="128" Height="150">
+            <Button x:Name="ExportRunButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\..\Resources\clipboard-text.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Create Certificates</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Export to MASA</TextBlock>
                 </StackPanel>
-            </Button>-->
+            </Button>
             <Button x:Name="RawInstrumentAccessButton" Width="128" Height="150">
                 <StackPanel>
                     <Image Source="..\..\Resources\cloud-upload.png" Width="48" Height="48" />
