@@ -44,14 +44,17 @@ namespace UnionGas.MASA.Models
             public string PulseASelect { get; set; }
             public string PulseBSelect { get; set; }
             public string DriveTypeDiscriminator { get; set; }
+            public string DriveRateDescription { get; set; }
+            public string CorrectedMultiplierDescription { get; set; }
+            public string UnCorrectedMultiplierDescription { get; set; }
         }
 
         public class VerificationTest
         {
-            public virtual PressureTest Pressure { get; set; }
-            public virtual TemperatureTest Temperature { get; set; }
-            public virtual VolumeTest Volume { get; set; }
-            public virtual SuperFactorTest SuperFactor { get; set; }
+            public PressureTest Pressure { get; set; }
+            public TemperatureTest Temperature { get; set; }
+            public VolumeTest Volume { get; set; }
+            public SuperFactorTest SuperFactor { get; set; }
 
             public class PressureTest
             {
@@ -89,10 +92,6 @@ namespace UnionGas.MASA.Models
 
                 public decimal Corrected { get; set; }
                 public decimal Uncorrected { get; set; }
-
-                public string DriveRateDescription { get; set; }
-                public string CorrectedMultiplierDescription { get; set; }
-                public string UnCorrectedMultiplierDescription { get; set; }
             }
 
             public class SuperFactorTest
