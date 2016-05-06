@@ -88,7 +88,7 @@ namespace Prover.Core.Communication
             }
         }
 
-        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = true)
+        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = false)
         {
             await Connect();
 

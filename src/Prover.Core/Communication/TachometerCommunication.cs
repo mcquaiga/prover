@@ -17,7 +17,29 @@ namespace Prover.Core.Communication
     {
         private readonly SerialPort _serialPort;
         private DataAcqBoard _outputBoard;
-        private Logger _log = LogManager.GetCurrentClassLogger();
+        private static Logger _log = LogManager.GetCurrentClassLogger();
+
+        public async static Task<int> ReadTachometer(string tachCommPort)
+        {
+            if (!string.IsNullOrEmpty(tachCommPort))
+            {
+                using (var tach = new TachometerCommunication(tachCommPort))
+                {
+                    try
+                    {
+                        var value = await tach?.ReadTach();
+                        _log.Info(string.Format("Tachometer reading: {0}", value));
+                        return value;
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error(string.Format("An error occured: {0}", ex));
+                    }
+                }
+            }
+            return 0;
+        }
 
         public TachometerCommunication(string portName)
         {
