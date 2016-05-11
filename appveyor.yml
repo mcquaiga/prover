@@ -40,4 +40,4 @@ deploy:
 
 environment:
   git_api_token:
-    secure: iwzifaNjQtJhorOlGx8EkqxqAS6O8VPmb0JAm0gRanicZjaVWd8G4GFmIN2TxcuB
+    secure: IQ+1EPF22vKeG0SjN+x07AhkmDO9g6GXUcm8OIXeu0gKbqnGZ2GJ9e0aUob/pfAc
