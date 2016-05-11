@@ -88,7 +88,13 @@ namespace Prover.Core.Communication
             }
         }
 
-        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = false)
+        public async Task Disconnect()
+        {
+            await Task.Run(()=> _miSerial.Disconnect());
+            IsConnected = false;
+        }
+
+        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = true)
         {
             await Connect();
 
@@ -96,12 +102,6 @@ namespace Prover.Core.Communication
 
             if (disconnectAfter)
                 await Disconnect();
-        }
-
-        public async Task Disconnect()
-        {
-            await Task.Run(()=> _miSerial.Disconnect());
-            IsConnected = false;
         }
 
         public async Task<Dictionary<int, string>> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)

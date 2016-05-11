@@ -108,6 +108,58 @@ namespace Prover.Core.Communication
             }
             
         }
+        
+        public async Task StartVolumeTest()
+        {
+            if (!_isBusy && !_runningTest)
+            {
+                await Task.Run(async () =>
+                {
+                    _log.Info("Starting volume test...");
+
+                    await TachometerCommunication.ResetTach(_tachCommPort);
+
+                    await DownloadVolumeItems();
+                    await _instrumentCommunication.Disconnect();
+
+                    Instrument.Volume.PulseACount = 0;
+                    Instrument.Volume.PulseBCount = 0;
+
+                    OutputBoard.StartMotor();
+
+                    _isBusy = false;
+                    _runningTest = true;
+                });
+            }
+        }
+
+        public async Task StopVolumeTest()
+        {
+            if (_runningTest)
+            {
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        _log.Info("Stopping volume test...");
+                        OutputBoard?.StopMotor();
+                        System.Threading.Thread.Sleep(250);
+
+                        await DownloadVolumeAfterTestItems();
+                        await ClearVolumeValues();
+                        await _instrumentCommunication.Disconnect();
+
+                        Instrument.Volume.AppliedInput = await TachometerCommunication.ReadTachometer(_tachCommPort);
+                        _log.Info("Volume test finished!");
+                    }
+                    finally
+                    {
+                        _isBusy = false;
+                        _runningTest = false;
+                    }
+                });
+            }
+        }
 
         public async Task DownloadTemperatureTestItems(TemperatureTest.Level level)
         {
@@ -177,6 +229,16 @@ namespace Prover.Core.Communication
             }
         }
 
+        private async Task ClearVolumeValues()
+        {
+            await _instrumentCommunication.WriteItem(264, "20140867", false);
+            await _instrumentCommunication.WriteItem(434, "0", false);
+            await _instrumentCommunication.WriteItem(892, "0", false);
+            await _instrumentCommunication.WriteItem(0, "0", false);
+            await _instrumentCommunication.WriteItem(2, "0", false);
+            await _instrumentCommunication.WriteItem(113, "0", false);
+        }
+
         public async Task SaveAsync()
         {
             using (var store = new InstrumentStore(_container))
@@ -195,71 +257,9 @@ namespace Prover.Core.Communication
             await _instrumentCommunication.WriteItem(892, "0", false);
         }
 
-
-        public async Task StartVolumeTest()
-        {
-            if (!_isBusy && !_runningTest)
-            {
-                await Task.Run(async () =>
-                {
-                    _log.Info("Starting volume test...");
-
-                    //Reset Tach setting
-                    if (!string.IsNullOrEmpty(_tachCommPort))
-                    {
-                        using (var tach = new TachometerCommunication(_tachCommPort))
-                        {
-                            await tach.ResetTach();
-                        }
-                    }
-
-                    await ClearInstrumentValues();
-                    await DownloadVolumeItems();
-                    await SetProvingMode();
-                    await _instrumentCommunication.Disconnect();
-
-                    Instrument.Volume.PulseACount = 0;
-                    Instrument.Volume.PulseBCount = 0;
-
-                    OutputBoard.StartMotor();
-
-                    _isBusy = false;
-                    _runningTest = true;
-                });
-            }
-        }
-
         private async Task SetProvingMode()
         {
             await _instrumentCommunication.WriteItem(433, "3");
-        }
-
-        public async Task StopVolumeTest()
-        {
-            if (_runningTest)
-            {
-                await Task.Run(async () =>
-                {
-                    try
-                    {
-                        _log.Info("Stopping volume test...");
-                        OutputBoard?.StopMotor();
-                        System.Threading.Thread.Sleep(500);
-
-                        await DownloadVolumeAfterTestItems();
-                        await ResetProvingMode();
-
-                        await _instrumentCommunication.Disconnect();
-                        Instrument.Volume.AppliedInput = await TachometerCommunication.ReadTachometer(_tachCommPort);
-                        _log.Info("Volume test finished!");
-                    }
-                    finally
-                    {
-                        _isBusy = false;
-                        _runningTest = false;
-                    }
-                });
-            } 
         }
 
         private async Task ResetProvingMode()

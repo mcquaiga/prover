@@ -41,6 +41,18 @@ namespace Prover.Core.Communication
             return 0;
         }
 
+        public static async Task ResetTach(string tachCommPort)
+        {
+            //Reset Tach setting
+            if (!string.IsNullOrEmpty(tachCommPort))
+            {
+                using (var tach = new TachometerCommunication(tachCommPort))
+                {
+                    await tach.ResetTach();
+                }
+            }
+        }
+
         public TachometerCommunication(string portName)
         {
             _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
