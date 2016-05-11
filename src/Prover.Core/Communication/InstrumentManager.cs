@@ -177,6 +177,16 @@ namespace Prover.Core.Communication
             }
         }
 
+        private async Task ClearVolumeValues()
+        {
+            await _instrumentCommunication.WriteItem(264, "20140867", false);
+            await _instrumentCommunication.WriteItem(434, "0", false);
+            await _instrumentCommunication.WriteItem(892, "0", false);
+            await _instrumentCommunication.WriteItem(0, "0", false);
+            await _instrumentCommunication.WriteItem(2, "0", false);
+            await _instrumentCommunication.WriteItem(113, "0", false);
+        }
+
         public async Task SaveAsync()
         {
             var store = new InstrumentStore(_container);
@@ -225,6 +235,7 @@ namespace Prover.Core.Communication
                         using (var tach = new TachometerCommunication(_tachCommPort))
                         {
                             await tach.ResetTach();
+                            System.Threading.Thread.Sleep(500);
                         }
                     }
 
@@ -233,7 +244,6 @@ namespace Prover.Core.Communication
 
                     OutputBoard.StartMotor();
                
-                    System.Threading.Thread.Sleep(250);
                     _isBusy = false;
                     _runningTest = true;
                 });
@@ -252,9 +262,10 @@ namespace Prover.Core.Communication
                         _log.Info("Stopping volume test...");
                         OutputBoard?.StopMotor();
 
-                        System.Threading.Thread.Sleep(500);
+                        System.Threading.Thread.Sleep(250);
 
                         await DownloadVolumeAfterTestItems();
+                        await ClearVolumeValues();
                         await _instrumentCommunication.Disconnect();
 
                         if (!string.IsNullOrEmpty(_tachCommPort))

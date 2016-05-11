@@ -94,6 +94,16 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
+        public async Task WriteItem(int itemNumber, string value, bool disconnectAfter = true)
+        {
+            await Connect();
+
+            await Task.Run(() => _miSerial.WD(itemNumber, value));
+
+            if (disconnectAfter)
+                await Disconnect();
+        }
+
         public async Task<Dictionary<int, string>> DownloadItems(IEnumerable<ItemsBase.Item> itemsToDownload)
         {
             if (!IsConnected) await Connect();
