@@ -143,7 +143,6 @@ namespace Prover.Core.Communication
                     {
                         _log.Info("Stopping volume test...");
                         OutputBoard?.StopMotor();
-                        System.Threading.Thread.Sleep(250);
 
                         await DownloadVolumeAfterTestItems();
                         await ClearVolumeValues();
