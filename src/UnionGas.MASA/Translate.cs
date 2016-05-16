@@ -58,9 +58,9 @@ namespace UnionGas.MASA
 
                 SuperFactorInfo = new EvcQARun.SuperFactorHeader
                 {
-                    CO2 = null,
-                    SpecGr = null,
-                    N2 = null,
+                    CO2 = Instrument.CO2().Value,
+                    SpecGr = Instrument.SpecGr().Value,
+                    N2 = Instrument.N2().Value,
                     FPVTable = "NX19"
                 },
 
@@ -77,7 +77,8 @@ namespace UnionGas.MASA
                     PulseASelect = Instrument.PulseASelect(),
                     PulseBSelect = Instrument.PulseBSelect()                                       
                 },
-                                
+                
+                VerificationTests = verificationTests              
             };
 
             return qaRun;
@@ -101,15 +102,31 @@ namespace UnionGas.MASA
             return new EvcQARun.VerificationTest.VolumeTest
             {
                 AppliedInput = vt.VolumeTest.AppliedInput,
-                EvcCorrected = vt.VolumeTest.ItemValues.Corrected().Value,
-                EvcUncorrected = vt.VolumeTest.ItemValues.Uncorrected().Value,
-                
-            }
+                EvcCorrected = vt.VolumeTest.EvcCorrected,
+                EvcUncorrected = vt.VolumeTest.EvcUncorrected,
+                CorPulseCount = vt.VolumeTest.CorPulseCount,
+                UncPulseCount = vt.VolumeTest.UncPulseCount,
+                PulseACount = vt.VolumeTest.PulseACount,
+                PulseBCount = vt.VolumeTest.PulseBCount,
+                TrueCorrected = vt.VolumeTest.TrueCorrected.Value,
+                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError.Value,
+                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError.Value
+            };
         }
 
         private static EvcQARun.VerificationTest.SuperFactorTest TranslateSuperFactorTest(VerificationTest vt)
         {
-            throw new NotImplementedException();
+            if (vt.SuperFactorTest == null) return null;
+
+            return new EvcQARun.VerificationTest.SuperFactorTest
+            {
+                ActualFactor = vt.SuperFactorTest.ActualFactor.Value,
+                EvcFactor = vt.SuperFactorTest.ItemValues.EvcUnsqrFactor().Value,
+                EVCUnsqrFactor = vt.SuperFactorTest.EVCUnsqrFactor.Value,
+                GaugePressure = vt.SuperFactorTest.GaugePressure.Value,
+                GaugeTemp = vt.SuperFactorTest.GaugeTemp,
+                PercentError = vt.SuperFactorTest.PercentError.Value
+            };
         }
 
         private static EvcQARun.VerificationTest.TemperatureTest TranslateTemperatureTest(VerificationTest vt)

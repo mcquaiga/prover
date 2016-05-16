@@ -1,4 +1,6 @@
-﻿using Prover.SerialProtocol;
+﻿using Prover.Core.Models;
+using Prover.Core.Models.Instruments;
+using Prover.SerialProtocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;

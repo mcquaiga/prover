@@ -91,7 +91,7 @@ namespace Prover.Core.Models.Instruments
 
                 if (DriveType.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType.UnCorrectedInputVolume(AppliedInput) != null)
                 {
-                    return Math.Round((decimal)(((VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues) - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
+                    return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
                 }
                 else
                 {
@@ -110,12 +110,30 @@ namespace Prover.Core.Models.Instruments
 
                 if (TrueCorrected != 0 && TrueCorrected != null)
                 {
-                    return Math.Round((decimal)(((VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues) - TrueCorrected) / TrueCorrected) * 100), 2);
+                    return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);
                 }
                 else
                 {
                     return 0;
                 }
+            }
+        }
+
+        [NotMapped]
+        public decimal EvcCorrected
+        {
+            get
+            {
+                return VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues).Value;
+            }
+        }
+
+        [NotMapped]
+        public decimal EvcUncorrected
+        {
+            get
+            {
+                return VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues).Value;
             }
         }
 
