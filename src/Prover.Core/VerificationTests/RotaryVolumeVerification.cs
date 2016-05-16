@@ -47,7 +47,7 @@ namespace Prover.Core.VerificationTests
             if (!_runningTest)
             {
                 _log.Info("Starting volume test...");
-                await ClearInstrumentValues();
+                await RunSyncTest();
 
                 _verificationTest.VolumeTest.ItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
 
@@ -63,6 +63,29 @@ namespace Prover.Core.VerificationTests
                 _runningTest = true;
 
                 await RunningTest();
+            }
+        }
+
+        private async Task RunSyncTest()
+        {
+            if (!_runningTest)
+            {
+                _log.Info("Syncing volume...");
+
+                await _instrumentCommunicator.Disconnect();
+                _outputBoard.StartMotor();
+
+                _verificationTest.VolumeTest.PulseACount = 0;
+                _verificationTest.VolumeTest.PulseBCount = 0;
+
+                do
+                {
+                    _verificationTest.VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
+                    _verificationTest.VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                } while (_verificationTest.VolumeTest.UncPulseCount < 1);
+
+                _outputBoard.StopMotor();
+                System.Threading.Thread.Sleep(500);
             }
         }
 
@@ -106,6 +129,8 @@ namespace Prover.Core.VerificationTests
                     System.Threading.Thread.Sleep(250);
 
                     _verificationTest.VolumeTest.AfterTestItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
+
+                    await ClearInstrumentValues();
 
                     try
                     {
