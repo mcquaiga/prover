@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 //using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Migrations;
+using System.Data.Entity.Migrations;
 
 namespace Prover.Core.Storage
 {
@@ -19,26 +21,25 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
-            //Configuration.LazyLoadingEnabled = false;
+
+            Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-            //modelBuilder.Entity<Temperature>().HasRequired(a => a.Instrument).WithRequiredDependent();
-            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithRequiredDependent();
-            ////modelBuilder.Entity<TemperatureTest>().HasRequired(a => a.Temperature).WithMany().HasForeignKey(a => a.TemperatureId);
-            //modelBuilder.Entity<Volume>().HasRequired(a => a.Instrument).WithMany().HasForeignKey(a => a.InstrumentId);
-          
+
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<VerificationTest> VerificationTests { get; set; }
+        public DbSet<VolumeTest> VolumeTests { get; set; }
+        public DbSet<TemperatureTest> TemperatureTests { get; set; }
+        public DbSet<PressureTest> PressureTests { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
-        public DbSet<Volume> Volume { get; set; }
-        public DbSet<Temperature> Temperatures { get; set; }
-        public DbSet<TemperatureTest> TemperatureTests { get; set; }
+
     }
 }

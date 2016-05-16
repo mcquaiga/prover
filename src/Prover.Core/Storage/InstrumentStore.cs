@@ -21,7 +21,9 @@ namespace Prover.Core.Storage
 
         public IQueryable<Instrument> Query()
         {
-            return _proverContext.Instruments.AsQueryable();
+            return _proverContext.Instruments
+                        .Include(v => v.VerificationTests)
+                        .AsQueryable();
         }
 
         public Instrument Get(Guid id)

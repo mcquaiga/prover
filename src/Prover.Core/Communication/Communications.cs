@@ -11,17 +11,19 @@ namespace Prover.Core.Communication
     {
         public static ICommPort CreateCommPortObject(string commName, BaudRateEnum baudRate)
         {
-            if (!GetCommPortList().Contains(commName)) return null;
-
             ICommPort commPort;
+
             if (commName == "IrDA")
             {
                 commPort = new IrDAPort();
             }
             else
             {
+                if (!GetCommPortList().Contains(commName)) throw new PortNotFoundException(commName);
+
                 commPort = new SerialPort(commName, baudRate);
             }
+
             return commPort;
         }
 
@@ -30,6 +32,14 @@ namespace Prover.Core.Communication
             var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
             return ports;
         }
-
     }
+
+    public class PortNotFoundException : Exception
+    {
+        public PortNotFoundException(string commName) : base(string.Format("A port with the name {0} couldn't be found.", commName))
+        {
+
+        }
+    }
+
 }

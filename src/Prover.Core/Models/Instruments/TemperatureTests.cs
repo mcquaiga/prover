@@ -6,122 +6,65 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class TemperatureTest : ItemsBase
+    public class TemperatureTest : BaseVerificationTest
     {
-        private const double TempCorrection = 459.67;
-        private const double MetericTempCorrection = 273.15;
+        private const decimal TempCorrection = 459.67m;
+        private const decimal MetericTempCorrection = 273.15m;
 
-        private enum TempItems
+        public TemperatureTest() { }
+
+        public TemperatureTest(VerificationTest verificationTest, decimal gauge) : 
+            base()
         {
-            Gas = 26,
-            Base = 34,
-            Factor = 45,
-            Units = 89,
-            FixedFactor = 111
+            VerificationTest = verificationTest;
+            VerificationTestId = VerificationTest.Id;
+
+            Gauge = (double)gauge;
         }
 
-        public enum Level
-        {
-            Low,
-            Medium,
-            High
-        }
+        public Guid VerificationTestId { get; set; }
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
 
-        public enum SuggestedGauges
-        {
-            Low = 32,
-            Medium = 60,
-            High = 90
-        }
-
-        public TemperatureTest()
-        {
-            Items = Item.LoadItems(InstrumentType.MiniMax).Where(x => x.IsTemperatureTest == true).ToList();
-        }
-        public TemperatureTest(Temperature temp, InstrumentType type, Level level)
-        {
-            Temperature = temp;
-            TemperatureId = temp.Id;
-            Items = Item.LoadItems(type).Where(x => x.IsTemperatureTest == true).ToList();
-            TestLevel = level;
-            IsVolumeTestTemperature = TestLevel == Level.Low;
-            SetDefaultGauge(level);
-        }
-
-        public Guid TemperatureId { get; set; }
-        public Temperature Temperature { get; set; }
-
-        public bool IsVolumeTestTemperature { get; set; }
-
-        public Level TestLevel { get; set; }
         public double Gauge { get; set; }
-        public double? PercentError
+
+        public override decimal? PercentError
         {
             get
             {
-                if (EvcFactor == null) return null;
-                return Math.Round((double) ((EvcFactor - ActualFactor)/ActualFactor)*100, 2);
+                if (ItemValues.EvcTemperatureFactor() == null) return null;
+                if (ActualFactor == null) return null;
+                return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
             }
         }
 
-        [NotMapped]
-        public bool HasPassed
-        {
-            get { return (PercentError < 1 && PercentError > -1); }
-        }
-        public double? ActualFactor
+        public override decimal? ActualFactor
         {
             get
             {
-                switch (Temperature.Units)
+
+                switch (VerificationTest.Instrument.TemperatureUnits())
                 {
                     case "K":
                     case "C":
                         return
                             Math.Round(
-                                (double)
-                                    ((MetericTempCorrection + Temperature.EvcBase)/
-                                     (Gauge + MetericTempCorrection)), 4);
+                                (decimal)
+                                    ((MetericTempCorrection + VerificationTest.Instrument.EvcBaseTemperature()) /
+                                     ((decimal)Gauge + MetericTempCorrection)), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (double) ((TempCorrection + Temperature.EvcBase)/(Gauge + TempCorrection)), 4);
+                                (decimal) ((TempCorrection + VerificationTest.Instrument.EvcBaseTemperature())/((decimal)Gauge + TempCorrection)), 4);
                 }
 
-                return 0.00;
+                return 0;
             }
-        }
-        
-        public void SetDefaultGauge(Level templevel)
-        {
-            switch (templevel)
-            {
-                case Level.Low:
-                    Gauge = 32;
-                    break;
-                case Level.Medium:
-                    Gauge = 60;
-                    break;
-                case Level.High:
-                    Gauge = 90;
-                    break;
-            }
-        }
-
-        [NotMapped]
-        public double? EvcReading
-        {
-            get { return NumericValue((int) TempItems.Gas); }
-        }
-
-        [NotMapped]
-        public double? EvcFactor
-        {
-            get { return NumericValue((int) TempItems.Factor); }
         }
     }
 }

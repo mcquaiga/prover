@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Prover.GUI.Views.SettingsViews.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+			 xmlns:cal="http://www.caliburnproject.org"    
+             mc:Ignorable="d"
+             d:DesignHeight="275" d:DesignWidth="500">
+    <StackPanel>
+        <!--  Ports  -->
+        <materialDesign:Card Margin="5">
+            <StackPanel Orientation="Vertical">
+                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                    Instrument
+                </materialDesign:ColorZone>
+                <StackPanel Margin="5">
+                    <ComboBox x:Name="CommPort" materialDesign:TextFieldAssist.Hint="Port"/>
+                    <ComboBox x:Name="BaudRate" materialDesign:TextFieldAssist.Hint="Baud Rate" />
+                </StackPanel>
+            </StackPanel>            
+        </materialDesign:Card>
+     
+        <!--Tachometer-->
+        <!--  Ports  -->
+        <materialDesign:Card Margin="5">
+            <StackPanel>
+                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+                    Tachometer
+                </materialDesign:ColorZone>
+                <StackPanel Margin="5">
+                    <ComboBox x:Name="TachCommPort" materialDesign:TextFieldAssist.Hint="Port"/>
+                </StackPanel>              
+            </StackPanel>
+        </materialDesign:Card>
+        
+        <Button Width="150" Margin="5" HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Refresh Ports">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="RefreshCommSettingsCommand" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+    </StackPanel>
+</UserControl>

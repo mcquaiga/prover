@@ -20,10 +20,10 @@ namespace Prover.DebugTools
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var store = Unity.Resolve<IInstrumentStore<Instrument>>();
-            var instr = new Instrument();
-            //instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
-            store.UpsertAsync(instr);
+            //var store = Unity.Resolve<IInstrumentStore<Instrument>>();
+            ////var instr = new Instrument();
+            ////instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
+            //store.UpsertAsync(instr);
         }
     }
 }

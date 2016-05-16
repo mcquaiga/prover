@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.ViewModels;
+using Prover.GUI.ViewModels.Shell;
 
 namespace Prover.GUI
 {

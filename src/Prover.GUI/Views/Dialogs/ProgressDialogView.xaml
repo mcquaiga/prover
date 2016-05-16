@@ -1,0 +1,35 @@
+﻿<Window x:Class="Prover.GUI.Views.Dialogs.ProgressDialogView" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:ui="clr-namespace:Prover.GUI.Controls" 
+        xmlns:local="clr-namespace:Prover.GUI.Views"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        Height="130" Width="300" Title="{Binding Title}" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="10">
+        <TextBlock x:Name="TextLabel" 
+                   HorizontalAlignment="Center" 
+                   TextTrimming="CharacterEllipsis" 
+                   Text="Connecting to Instrument..."/>
+
+        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"                     
+                     Value="0"
+                     Margin="10"
+                     IsIndeterminate="True"
+                     VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+        <TextBlock x:Name="SubTextLabel" 
+                   Text="Attempt 1 of 10..." 
+                   FontStyle="Italic" 
+                   HorizontalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" />
+
+        <Button x:Name="CancelButton" Margin="0 38 0 0" Width="70" Content="Cancel" Visibility="Collapsed" HorizontalAlignment="Right"/>
+     </StackPanel>
+</Window>

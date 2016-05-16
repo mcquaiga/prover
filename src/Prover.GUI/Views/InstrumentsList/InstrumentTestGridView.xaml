@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="Prover.GUI.Views.InstrumentsList.InstrumentTestGridView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                xmlns:cal="http://www.caliburnproject.org"
+                xmlns:converters="clr-namespace:Prover.GUI.Converters"
+                xmlns:controls="clr-namespace:Prover.GUI.Controls"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                Background="{DynamicResource MaterialDesignPaper}"
+                TextElement.FontWeight="Medium"
+                TextElement.FontSize="14"
+                FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                mc:Ignorable="d" Width="816" Height="75">
+    <UserControl.Resources>
+        <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
+        <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+        <DataTemplate x:Key="TestTemplate">
+            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="Grid" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Height="73">
+        <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Grid.Column="0" 
+                           x:Name="RowNumber" 
+                           Foreground="LightGray"
+                           FontSize="18" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock Grid.Column="1"
+                               x:Name="HasPassed" FontSize="20"/>
+                    <TextBlock Foreground="Gray" FontSize="12" Text="{Binding Instrument.TestDateTime}" />
+                </StackPanel>
+
+
+                <StackPanel Orientation="Vertical" Grid.Column="2">
+                    <TextBlock Text="{Binding Instrument.SiteNumber2}" FontSize="32"/>
+                    <TextBlock Text="{Binding Instrument.TypeString}" FontSize="18"/>
+                </StackPanel>
+
+                <UniformGrid Margin="2" Grid.Column="3" Rows="2" >
+                    <controls:LabelValueControl
+                                                Label="Serial Number" LabelFontSize="6"                                                 
+                                                Value="{Binding Instrument.SerialNumber}" ValueFontSize="{StaticResource ValueFontSize}"/>
+
+                    <controls:LabelValueControl LabelFontSize="8"
+                                                Label="Meter Type"
+                                                ValueFontSize="{StaticResource ValueFontSize}"
+                                                Value="{Binding Instrument.Volume.MeterType}"/>
+                </UniformGrid>
+
+                <UniformGrid Grid.Column="4">
+                    <controls:LabelValueControl LabelFontSize="8"
+                                                   Label="Frm. Ver."
+                                                   ValueFontSize="{StaticResource ValueFontSize}"
+                                                   Value="{Binding Instrument.FirmwareVersion}"/>
+
+                    <controls:LabelValueControl LabelFontSize="8"
+                                                Label="Displacement"
+                                                ValueFontSize="{StaticResource ValueFontSize}"
+                                                Value="{Binding Instrument.Volume.MeterDisplacement}"/>
+                </UniformGrid>
+
+                <!--<Grid Grid.Column="5" Margin="5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl cal:View.Model="TemperatureInfo" cal:View.Context="Grid"/>
+                        <ContentControl cal:View.Model="PressureInfo" cal:View.Context="Grid"/>
+                        <ContentControl cal:View.Model="SuperInfo" cal:View.Context="Grid"/>
+                    </StackPanel>                    
+                </Grid>-->
+
+                <Grid Grid.Column="6" Margin="2 0">
+                    <ItemsControl HorizontalAlignment="Center"
+                        ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                        ItemsSource="{Binding TestViews}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+                <materialDesign:Card  Grid.Column="7">
+                    <StackPanel Orientation="Vertical">
+                        <materialDesign:ColorZone Padding="0" 
+                                    Content="Uncorrected" 
+                                    Mode="Light" 
+                                    materialDesign:ShadowAssist.ShadowDepth="Depth0"/>
+                        <UniformGrid>
+                            <controls:LabelValueControl LabelFontSize="8"
+                                            Label="% Error"
+                                            ValueFontSize="{StaticResource ValueFontSize}"
+                                            Value="{Binding Instrument.Volume.UnCorrectedPercentError}"/>
+                            <controls:LabelValueControl LabelFontSize="8"
+                                            Label="Multiplier"
+                                            ValueFontSize="{StaticResource ValueFontSize}"
+                                            Value="{Binding Instrument.Volume.UnCorrectedMultiplierDescription}"/>
+                        </UniformGrid>
+
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <materialDesign:Card Grid.Column="8">
+                    <StackPanel Orientation="Vertical">
+                        <materialDesign:ColorZone Padding="0" 
+                                      Content="Corrected" 
+                                      Mode="Light" 
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth0"/>
+                        <UniformGrid>
+                            <controls:LabelValueControl LabelFontSize="8"
+                                                Label="% Error"
+                                                ValueFontSize="{StaticResource ValueFontSize}"
+                                                Value="{Binding Instrument.Volume.CorrectedPercentError}"/>
+                            <controls:LabelValueControl LabelFontSize="8"
+                                                Label="Multiplier"
+                                                ValueFontSize="{StaticResource ValueFontSize}"
+                                                Value="{Binding Instrument.Volume.CorrectedMultiplierDescription}"/>
+                        </UniformGrid>
+                        
+                    </StackPanel>
+                </materialDesign:Card>
+
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</UserControl>

@@ -1,6 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <Color x:Key="CheckedColor2Key">Blue</Color>
-    <Color x:Key="UncheckedColor2Key">Black</Color>
-
-</ResourceDictionary>

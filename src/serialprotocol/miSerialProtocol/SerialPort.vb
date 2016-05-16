@@ -21,6 +21,8 @@ Public Class SerialPort
             .NewLine = "\\"
             .ReadTimeout = 200
             .WriteTimeout = 150
+            .DtrEnable = True
+            .RtsEnable = True
         End With
     End Sub
 

@@ -8,11 +8,13 @@ namespace Prover.Core.Events
 {
     public class LiveReadEvent
     {
-        public double LiveReadValue { get; set; }
+        public decimal LiveReadValue { get; set; }
+        public int ItemNumber { get; set; }
 
-        public LiveReadEvent(double liveReadValue)
+        public LiveReadEvent(int itemNumber, decimal liveReadValue)
         {
             LiveReadValue = liveReadValue;
+            ItemNumber = itemNumber;
         }
     }
 }

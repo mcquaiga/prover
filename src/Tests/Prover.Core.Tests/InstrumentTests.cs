@@ -14,12 +14,12 @@ namespace Prover.Core.Tests
         [TestMethod]
         public void LoadItems()
         {
-            var mylist = ItemsBase.Item.LoadItems(InstrumentType.MiniMax);
+            //var mylist = ItemLoader.LoadItems(InstrumentType.MiniMax);
 
-            foreach (var i in mylist)
-            {
-                Console.WriteLine(i.ShortDescription);
-            }
+            //foreach (var i in mylist)
+            //{
+            //    Console.WriteLine(i.ShortDescription);
+            //}
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace Prover.Core.Tests
         [TestMethod]
         public void DownloadItems()
         {
-            var instr = new Instrument();
+            //var instr = new Instrument();
             //instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
         }
 

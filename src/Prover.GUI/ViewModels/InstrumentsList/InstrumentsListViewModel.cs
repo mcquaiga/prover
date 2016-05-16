@@ -18,56 +18,37 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             GetInstrumentsByCertificateId(null);
            
         }
-        public ObservableCollection<InstrumentViewModel> InstrumentItems { get; set; }
+        public ObservableCollection<InstrumentTestGridViewModel> InstrumentItems { get; set; } = new ObservableCollection<InstrumentTestGridViewModel>();
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)
         {
-
-            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
-            {
-                int count = 1;
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
-                var instruments = store.Query()
-                                    .Where(x => x.CertificateId == certificateGuid)
-                                    .OrderBy(i => i.TestDateTime)
-                                    .ToList();
-                instruments.ForEach(i =>
-                {
-                    InstrumentItems.Add(new InstrumentViewModel(i, count));
-                    count++;
-                });
-            }
-
-            NotifyOfPropertyChange(() => InstrumentItems);
-        }
-
-        public void GetInstrumentsWithNoCertificateLastWeek()
-        {
-            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
-            {
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
-                var dateFilter = DateTime.Now.AddDays(-7);
-                var instruments = store.Query()
-                                    .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
-                                    .OrderBy(i => i.TestDateTime)
-                                    .ToList();
-                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
-            }
-           
-            NotifyOfPropertyChange(() => InstrumentItems);
+            GetInstrumentVerificationTests(x => x.CertificateId == certificateGuid);
         }
 
         public void GetInstrumentsWithNoCertificateLastMonth()
         {
+            var dateFilter = DateTime.Now.AddDays(-30);
+            GetInstrumentVerificationTests(x => x.CertificateId == null && x.TestDateTime >= dateFilter);
+        }
+
+        public void GetInstrumentsWithNoCertificateLastWeek()
+        {
+            var dateFilter = DateTime.Now.AddDays(-7);
+            GetInstrumentVerificationTests(x => x.CertificateId == null && x.TestDateTime >= dateFilter);
+        }
+
+        private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)
+        {
+            InstrumentItems.Clear();
+            
             using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
-                InstrumentItems = new ObservableCollection<InstrumentViewModel>();
-                var dateFilter = DateTime.Now.AddDays(-30);
                 var instruments = store.Query()
-                                    .Where(x => x.CertificateId == null && x.TestDateTime >= dateFilter)
+                                    .Where(whereFunc)
                                     .OrderBy(i => i.TestDateTime)
                                     .ToList();
-                instruments.ForEach(i => InstrumentItems.Add(new InstrumentViewModel(i)));
+
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentTestGridViewModel(_container, i)));
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);
