@@ -27,18 +27,7 @@
     </UserControl.Resources>
     <Grid Height="73">
         <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="75" />
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Grid.Column="0" 
                            x:Name="RowNumber" 
                            Foreground="LightGray"
@@ -46,40 +35,33 @@
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
                 <StackPanel>
-                    <TextBlock Margin="15"  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                    <TextBlock Grid.Column="1"
                                x:Name="HasPassed" FontSize="20"/>
                     <TextBlock Foreground="Gray" FontSize="12" Text="{Binding Instrument.TestDateTime}" />
                 </StackPanel>
 
 
                 <StackPanel Orientation="Vertical" Grid.Column="2">
-                    <TextBlock Text="{Binding Instrument.TypeString}" FontSize="24"/>
-                    <controls:LabelValueControl
-                                                    Label="Serial Number" LabelFontSize="8"                                                 
-                                                    Value="{Binding Instrument.SerialNumber}" ValueFontSize="{StaticResource ValueFontSize}"/>
+                    <TextBlock Text="{Binding Instrument.SiteNumber2}" FontSize="32"/>
+                    <TextBlock Text="{Binding Instrument.TypeString}" FontSize="18"/>
                 </StackPanel>
 
-                <UniformGrid Margin="2" Grid.Column="3">
-                    <controls:LabelValueControl LabelFontSize="8"
-                                                   Label="Mfg. Number"
-                                                      ValueFontSize="{StaticResource ValueFontSize}"
-                                                   Value="{Binding Instrument.SiteNumber1}"/>
-                    <controls:LabelValueControl LabelFontSize="8"
-                                                   Label="Co. Number"
-                                                      ValueFontSize="{StaticResource ValueFontSize}"
-                                                   Value="{Binding Instrument.SiteNumber2}"/>
-                    <controls:LabelValueControl LabelFontSize="8"
-                                                   Label="Frm. Ver."
-                                                      ValueFontSize="{StaticResource ValueFontSize}"
-                                                   Value="{Binding Instrument.FirmwareVersion}"/>
-                </UniformGrid>
-
-                <UniformGrid Grid.Column="4" Rows="4">
+                <UniformGrid Margin="2" Grid.Column="3" Rows="2" >
+                    <controls:LabelValueControl
+                                                Label="Serial Number" LabelFontSize="6"                                                 
+                                                Value="{Binding Instrument.SerialNumber}" ValueFontSize="{StaticResource ValueFontSize}"/>
 
                     <controls:LabelValueControl LabelFontSize="8"
                                                 Label="Meter Type"
                                                 ValueFontSize="{StaticResource ValueFontSize}"
                                                 Value="{Binding Instrument.Volume.MeterType}"/>
+                </UniformGrid>
+
+                <UniformGrid Grid.Column="4">
+                    <controls:LabelValueControl LabelFontSize="8"
+                                                   Label="Frm. Ver."
+                                                   ValueFontSize="{StaticResource ValueFontSize}"
+                                                   Value="{Binding Instrument.FirmwareVersion}"/>
 
                     <controls:LabelValueControl LabelFontSize="8"
                                                 Label="Displacement"
@@ -146,7 +128,8 @@
                         
                     </StackPanel>
                 </materialDesign:Card>
-            </Grid>
+
+            </StackPanel>
         </Border>
 
     </Grid>

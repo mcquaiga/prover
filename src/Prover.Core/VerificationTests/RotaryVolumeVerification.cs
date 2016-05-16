@@ -47,12 +47,10 @@ namespace Prover.Core.VerificationTests
             if (!_runningTest)
             {
                 _log.Info("Starting volume test...");
-
-                await _instrumentCommunicator.WriteItem(264, "20140867", false);
-                await _instrumentCommunicator.WriteItem(434, "0", false);
+                await ClearInstrumentValues();
 
                 _verificationTest.VolumeTest.ItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
-                
+
                 await _instrumentCommunicator.Disconnect();
 
                 //Reset Tach setting
@@ -66,6 +64,16 @@ namespace Prover.Core.VerificationTests
 
                 await RunningTest();
             }
+        }
+
+        private async Task ClearInstrumentValues()
+        {
+            await _instrumentCommunicator.WriteItem(264, "20140867", false);
+            await _instrumentCommunicator.WriteItem(434, "0", false);
+            await _instrumentCommunicator.WriteItem(892, "0", false);
+            await _instrumentCommunicator.WriteItem(0, "0", false);
+            await _instrumentCommunicator.WriteItem(2, "0", false);
+            await _instrumentCommunicator.WriteItem(113, "0", false);
         }
 
         public void StopRunningTest()

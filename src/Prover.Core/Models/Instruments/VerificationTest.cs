@@ -78,11 +78,11 @@ namespace Prover.Core.Models.Instruments
             switch (testNumber)
             {
                 case 0:
-                    return 90m;
+                    return 32m;
                 case 1:
                     return 60m;
                 default:
-                    return 32m;
+                    return 90m;
             }
         }
     }

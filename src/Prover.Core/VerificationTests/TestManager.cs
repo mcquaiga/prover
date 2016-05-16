@@ -54,12 +54,13 @@ namespace Prover.Core.VerificationTests
             InstrumentCommunicator = instrumentCommunicator;
             TachometerCommunicator = tachCommunicator;
             
-            instrument.VerificationTests.Add(new VerificationTest(0, instrument));
-            instrument.VerificationTests.Add(new VerificationTest(1, instrument));
-
-            var volumeVerification = new VerificationTest(2, instrument, true);
+            //TODO: Build volume verification test first and pass it to the VerificationTest constructor
+            var volumeVerification = new VerificationTest(0, instrument, true);
             instrument.VerificationTests.Add(volumeVerification);
             VolumeTest = new RotaryVolumeVerification(_container.Resolve<IEventAggregator>(), volumeVerification, InstrumentCommunicator, tachCommunicator);
+
+            instrument.VerificationTests.Add(new VerificationTest(1, instrument));
+            instrument.VerificationTests.Add(new VerificationTest(2, instrument));
         }
 
         public async Task DownloadVerificationTestItems(int level)

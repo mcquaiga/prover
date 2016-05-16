@@ -6,6 +6,7 @@ using Prover.GUI.ViewModels.InstrumentsList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Prover.GUI.ViewModels
@@ -70,36 +71,46 @@ namespace Prover.GUI.ViewModels
             get { return InstrumentsListViewModel.InstrumentItems.Count(x => x.IsSelected);  }
         }
 
-        public void CreateCertificate()
+        public async Task ExportQARuns()
         {
             var instruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
 
-            if (instruments.Count() > 8)
+            foreach(var i in instruments)
             {
-                MessageBox.Show("Maximum 8 instruments allowed per certificate.");
-                return;
+
             }
-
-            if (!instruments.Any())
-            {
-                MessageBox.Show("Please select at least one instrument.");
-                return;
-            }
-
-            if (VerificationType == null || TestedBy == null)
-            {
-                MessageBox.Show("Please enter a tested by and verificate type.");
-                return;
-            }
-
-            
-
-            var cert = Certificate.CreateCertificate(_container, TestedBy, VerificationType, instruments);
-
-            var generator = new CertificateGenerator(cert, _container);
-            generator.Generate();
-
-            InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
         }
+
+        //public void CreateCertificate()
+        //{
+        //    var instruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
+
+        //    if (instruments.Count() > 8)
+        //    {
+        //        MessageBox.Show("Maximum 8 instruments allowed per certificate.");
+        //        return;
+        //    }
+
+        //    if (!instruments.Any())
+        //    {
+        //        MessageBox.Show("Please select at least one instrument.");
+        //        return;
+        //    }
+
+        //    if (VerificationType == null || TestedBy == null)
+        //    {
+        //        MessageBox.Show("Please enter a tested by and verificate type.");
+        //        return;
+        //    }
+
+
+
+        //    var cert = Certificate.CreateCertificate(_container, TestedBy, VerificationType, instruments);
+
+        //    var generator = new CertificateGenerator(cert, _container);
+        //    generator.Generate();
+
+        //    InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
+        //}
     }
 }
