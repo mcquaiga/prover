@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ExportDefinition.cs" />
+    <Compile Include="Translate.cs" />
     <Compile Include="Verifiers\CompanyNumberVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

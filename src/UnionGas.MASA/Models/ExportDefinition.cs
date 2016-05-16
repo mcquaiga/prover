@@ -26,6 +26,7 @@ namespace UnionGas.MASA.Models
         public string ConfirmedStatus { get; set; } //CONFIRMED STATUS - Pass/Fail
 
         //Pressure Info
+        public PressureHeader PressureInfo { get; set; }
         public class PressureHeader
         {
             public string TransducerType { get; set; } // A or G
@@ -36,6 +37,7 @@ namespace UnionGas.MASA.Models
         }
 
         //Temperature Info
+        public TemperatureHeader TemperatureInfo { get; set; }
         public class TemperatureHeader
         {
             public string TemperatureRange { get; set; } // -40 to 170
@@ -44,15 +46,17 @@ namespace UnionGas.MASA.Models
         }
 
         //Supercompress. Info - Gas Composition
+        public SuperFactorHeader SuperFactorInfo { get; set; }
         public class SuperFactorHeader
         {
-            public decimal SpecGr { get; set; } // SG
+            public decimal SpecGr { get; set; } // SG - 18,4
             public decimal CO2 { get; set; }
             public decimal N2 { get; set; }
             public string FPVTable { get; set; } //FPV = NX-19
         }
 
         //Volume Info
+        public VolumeHeader VolumeInfo { get; set; }
         public class VolumeHeader
         {
             public string PulseASelect { get; set; }
@@ -67,7 +71,6 @@ namespace UnionGas.MASA.Models
         }
 
         public List<VerificationTest> VerificationTests { get; set; }
-
         public class VerificationTest
         {
             public PressureTest Pressure { get; set; }
@@ -90,41 +93,40 @@ namespace UnionGas.MASA.Models
             public class TemperatureTest
             {
                 public decimal PercentError { get; set; } //Only value displayed on Certificate
-                public decimal GaugeTemperature { get; set; }
-                public decimal EvcTemperature { get; set; }
-                public decimal EvcFactor { get; set; }
-                public decimal ActualFactor { get; set; }
+                public decimal GaugeTemperature { get; set; } // (3, 2) - 90.0, 60.0, 32.0
+                public decimal EvcTemperature { get; set; } // (3,2)
+                public decimal EvcFactor { get; set; } // (4,4)
+                public decimal ActualFactor { get; set; } // (4,4)
             }
 
             public class VolumeTest
             {
-                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate
-                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate
+                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3,2)
+                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3,2)
 
                 public int PulseACount { get; set; }
                 public int PulseBCount { get; set; }
-                public decimal AppliedInput { get; set; }         
+
+                public decimal AppliedInput { get; set; } // (18,4)
+                public decimal TrueCorrected { get; set; } // (18,4)
 
                 public int UncPulseCount { get; set; }
-                public int CorPulseCount { get; set; }
-                public decimal TrueCorrected { get; set; }
-                public decimal EvcCorrected { get; set; }
-                public decimal EvcUncorrected { get; set; }
+                public int CorPulseCount { get; set; }           
 
-                public decimal Corrected { get; set; }
-                public decimal Uncorrected { get; set; }
+                public decimal EvcCorrected { get; set; } // (18,4)
+                public decimal EvcUncorrected { get; set; } // (18,4)
             }
 
             public class SuperFactorTest
             {
                 public decimal PercentError { get; set; } //Only value displayed on Certificate
 
-                public decimal GaugeTemp { get; set; }
-                public decimal GaugePressure { get; set; }
+                public decimal GaugeTemp { get; set; } // (3, 2) - 90.0, 60.0, 32.0
+                public decimal GaugePressure { get; set; } // (3, 2)
 
-                public decimal EVCUnsqrFactor { get; set; }
-                public decimal EvcFactor { get; set; }
-                public decimal ActualFactor { get; set; }
+                public decimal EVCUnsqrFactor { get; set; } // (4, 4)
+                public decimal EvcFactor { get; set; } // (4, 4)
+                public decimal ActualFactor { get; set; } // (4, 4)
             }
         }
     }
