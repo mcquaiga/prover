@@ -16,7 +16,7 @@ namespace UnionGas.MASA.Models
 
         public string CompanyNumber { get; set; }
         public string SerialNumber { get; set; }
-        public string DriveType { get; set; }
+        public string DriveType { get; set; } // Rotary, Mechanical
         public string MeterType { get; set; } // Specific to Rotary DriveType
 
         public decimal MeterDisplacement { get; set; } //Mechanical Drive Rate/Meter Displacement
@@ -31,9 +31,9 @@ namespace UnionGas.MASA.Models
         {
             public string TransducerType { get; set; } // A or G
             public string PressureUnits { get; set; } //PSIA or PSIG
-            public decimal BasePressure { get; set; }
-            public decimal PressureRange { get; set; } //0 - PressureRange
-            public decimal ProgrammedAtmosphericPressure { get; set; } //
+            public decimal BasePressure { get; set; } // (3,2)
+            public decimal PressureRange { get; set; } //0 - PressureRange (6,2)
+            public decimal ProgrammedAtmosphericPressure { get; set; } // (3,2)
         }
 
         //Temperature Info
@@ -42,16 +42,16 @@ namespace UnionGas.MASA.Models
         {
             public string TemperatureRange { get; set; } // -40 to 170
             public string TemperatureUnits { get; set; } // F or C
-            public decimal BaseTemperature { get; set; } 
+            public decimal BaseTemperature { get; set; } // (3, 2)
         }
 
         //Supercompress. Info - Gas Composition
         public SuperFactorHeader SuperFactorInfo { get; set; }
         public class SuperFactorHeader
         {
-            public decimal SpecGr { get; set; } // SG - 18,4
-            public decimal CO2 { get; set; }
-            public decimal N2 { get; set; }
+            public decimal SpecGr { get; set; } // SG - (4,4)
+            public decimal CO2 { get; set; } // (4, 4)
+            public decimal N2 { get; set; } // (4, 4)
             public string FPVTable { get; set; } //FPV = NX-19
         }
 
@@ -82,51 +82,51 @@ namespace UnionGas.MASA.Models
             {
                 public decimal PercentError { get; set; } //Only value displayed on Certificate
 
-                public decimal GasPressure { get; set; }
-                public decimal GaugePressure { get; set; }
-                public decimal AtmosphericGauge { get; set; }
-                public decimal ActualFactor { get; set; }
-                public decimal EvcGasPressure { get; set; }
-                public decimal EvcPressureFactor { get; set; }
+                public decimal GasPressure { get; set; } // (4, 2)
+                public decimal GaugePressure { get; set; } // (4, 2)
+                public decimal AtmosphericGauge { get; set; } // (4, 2)
+                public decimal ActualFactor { get; set; } // (4, 4)
+                public decimal EvcGasPressure { get; set; } // (4, 2)
+                public decimal EvcPressureFactor { get; set; } // (4, 4)
             }
 
             public class TemperatureTest
             {
                 public decimal PercentError { get; set; } //Only value displayed on Certificate
-                public decimal GaugeTemperature { get; set; } // (3, 2) - 90.0, 60.0, 32.0
-                public decimal EvcTemperature { get; set; } // (3,2)
-                public decimal EvcFactor { get; set; } // (4,4)
-                public decimal ActualFactor { get; set; } // (4,4)
+                public decimal GaugeTemperature { get; set; } // (4, 2) - 90.0, 60.0, 32.0
+                public decimal EvcTemperature { get; set; } // (4, 2)
+                public decimal EvcFactor { get; set; } // (4, 4)
+                public decimal ActualFactor { get; set; } // (4, 4)
             }
 
             public class VolumeTest
             {
-                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3,2)
-                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3,2)
+                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
+                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
 
                 public int PulseACount { get; set; }
                 public int PulseBCount { get; set; }
 
-                public decimal AppliedInput { get; set; } // (18,4)
-                public decimal TrueCorrected { get; set; } // (18,4)
+                public decimal AppliedInput { get; set; } // (8, 4)
+                public decimal TrueCorrected { get; set; } // (8, 4)
 
-                public int UncPulseCount { get; set; }
+                public int UncPulseCount { get; set; } 
                 public int CorPulseCount { get; set; }           
 
-                public decimal EvcCorrected { get; set; } // (18,4)
-                public decimal EvcUncorrected { get; set; } // (18,4)
+                public decimal EvcCorrected { get; set; } // (8, 4)
+                public decimal EvcUncorrected { get; set; } // (8, 4)
             }
 
             public class SuperFactorTest
             {
-                public decimal PercentError { get; set; } //Only value displayed on Certificate
+                public decimal PercentError { get; set; } // (3, 2) - Only value displayed on Certificate
 
-                public decimal GaugeTemp { get; set; } // (3, 2) - 90.0, 60.0, 32.0
-                public decimal GaugePressure { get; set; } // (3, 2)
+                public decimal GaugeTemp { get; set; } // (4, 2) - Same value as TemperatureTest.GaugeTemperature value
+                public decimal GaugePressure { get; set; } // (4, 2) - Same value as PressureTest.GaugePressure value
 
                 public decimal EVCUnsqrFactor { get; set; } // (4, 4)
                 public decimal EvcFactor { get; set; } // (4, 4)
-                public decimal ActualFactor { get; set; } // (4, 4)
+                public decimal ActualFactor { get; set; } // (4, 4) 
             }
         }
     }
