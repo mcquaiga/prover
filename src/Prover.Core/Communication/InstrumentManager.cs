@@ -117,6 +117,8 @@ namespace Prover.Core.Communication
                 {
                     _log.Info("Starting volume test...");
 
+                    await RunSyncTest();
+
                     await TachometerCommunication.ResetTach(_tachCommPort);
 
                     await DownloadVolumeItems();
@@ -130,6 +132,30 @@ namespace Prover.Core.Communication
                     _isBusy = false;
                     _runningTest = true;
                 });
+            }
+        }
+
+        private async Task RunSyncTest()
+        {
+            if (!_isBusy && !_runningTest)
+            {
+                _log.Info("Syncing volume...");
+                _isBusy = true;
+                await _instrumentCommunication.Disconnect();
+                OutputBoard.StartMotor();
+
+                Instrument.Volume.PulseACount = 0;
+                Instrument.Volume.PulseBCount = 0;
+
+                do
+                {
+                    Instrument.Volume.PulseACount += AInputBoard.ReadInput();
+                    Instrument.Volume.PulseBCount += BInputBoard.ReadInput();
+                } while (Instrument.Volume.UncPulseCount < 1);
+
+                OutputBoard.StopMotor();
+                System.Threading.Thread.Sleep(500);
+                _isBusy = false;
             }
         }
 
