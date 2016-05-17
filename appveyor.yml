@@ -39,4 +39,4 @@ deploy:
   auth_token:
     secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
   on:
-    branch: master
+    branch: rc
