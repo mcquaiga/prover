@@ -164,6 +164,9 @@ namespace Prover.Core.Models.Instruments
         {
             get { return Items.GetItem(201).GetNumericValue(ItemValues); }
         }
-        #endregion      
+
+        [NotMapped]
+        public VolumeTest VolumeTest => VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null).VolumeTest;
+        #endregion
     }
 }

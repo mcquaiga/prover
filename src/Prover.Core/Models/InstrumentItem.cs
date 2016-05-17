@@ -116,6 +116,8 @@ namespace Prover.Core.Models
 
     public static class ItemHelpers
     {
+        private const string ITEM_DEFINITIONS_FOLDER = "ItemDefinitions";
+
         public static IEnumerable<ItemDetail> LoadItems(InstrumentType type)
         {
             var _path = string.Empty;
@@ -124,10 +126,15 @@ namespace Prover.Core.Models
                 case InstrumentType.MiniMax:
                     _path = "MiniMaxItems.xml";
                     break;
+                case InstrumentType.MiniAt:
+                    _path = "MiniATItems.xml";
+                    break;
                 case InstrumentType.Ec300:
                     _path = "EC300Items.xml";
                     break;
             }
+
+            _path = string.Format("{0}\\{1}", ITEM_DEFINITIONS_FOLDER, _path);
 
             var xDoc = XDocument.Load(_path);
 

@@ -14,27 +14,41 @@
                 TextElement.FontWeight="Medium"
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200">
+                mc:Ignorable="d" d:DesignWidth="245">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
+        <converters:NullToVisibilityConverter
+            x:Key="NullToHiddenConverter" />
     </UserControl.Resources>
     <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="6" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+            <materialDesign:ColorZone Padding="8" Content="{Binding Level}" Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="Accent" />
+            <StackPanel Orientation="Horizontal">
+                <!-- Column 1 - PTZ Verification -->
+                <StackPanel Orientation="Vertical">
 
-            <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
+
+                    <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
 
-            <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
+                    <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
 
-            <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
+                    <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
                             Margin="2"/>
 
-            <Grid>
+                </StackPanel>
+                
+                <!-- Column 2 - Volume Verification -->
+                <ContentControl cal:View.Model="{Binding VolumeTestViewModel}"
+                                cal:View.Context="Card"
+                                Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
+                                Margin="2"/>
+            </StackPanel>
+            <Grid Height="50">
                 <Button Content="Live Read" HorizontalAlignment="Left" Margin="5" >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -59,5 +73,6 @@
                 </Button>
             </Grid>
         </StackPanel>
+        
     </materialDesign:Card>
 </UserControl>

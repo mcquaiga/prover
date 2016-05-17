@@ -111,8 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Communications.cs" />
-    <Compile Include="EVCTypes\IEVCDriveType.cs" />
-    <Compile Include="EVCTypes\RotaryDrive.cs" />
+    <Compile Include="DriveTypes\IEVCDriveType.cs" />
+    <Compile Include="DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\InstrumentConnectionEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
@@ -136,8 +137,11 @@
     </Compile>
     <Compile Include="Models\Instruments\IVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
+    <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\TestManager.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -175,10 +179,13 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\VerificationTest.cs" />
-    <Compile Include="VerificationTests\RotaryVolumeVerification.cs" />
+    <Compile Include="VerificationTests\BaseTestManager.cs" />
+    <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ItemDefinitions\MiniATItems.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -203,7 +210,7 @@
     <Content Include="MeterIndexes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="MiniMaxItems.xml">
+    <Content Include="ItemDefinitions\MiniMaxItems.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

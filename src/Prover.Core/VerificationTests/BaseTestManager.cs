@@ -1,66 +1,41 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using NLog;
+using Prover.Core.Communication;
+using Prover.Core.EVCTypes;
 using Prover.Core.Events;
 using Prover.Core.Models;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Prover.Core.Communication;
 using Prover.SerialProtocol;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Prover.Core.VerificationTests
 {
-    public class RotaryTestManager : ITestManager
+    public class TestManager
     {
-        private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private readonly IUnityContainer _container;
-        private bool _isLiveReading = false;
-        private bool _stopLiveReading;
-        private bool _isBusy = false;
+        private const int VOLUME_TESTNUMBER = 0;
+
+        protected static Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        protected readonly IUnityContainer _container;
         
+        private bool _isLiveReading;
+        private bool _isBusy;
+        private bool _stopLiveReading;
+
         public Instrument Instrument { get; private set; }
         public InstrumentCommunicator InstrumentCommunicator { get; private set; }
-        public TachometerCommunicator TachometerCommunicator { get; private set; }
-        private RotaryVolumeVerification VolumeTest { get; }
+        public virtual BaseVolumeVerificationManager VolumeTestManager { get; set; }
 
-        public static async Task<RotaryTestManager> Create(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
-        {
-            var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
-
-            TachometerCommunicator tachComm = null;
-            if (!string.IsNullOrEmpty(tachometerPortName))
-            {
-                tachComm = new TachometerCommunicator(tachometerPortName);
-            }
-
-            var items = new InstrumentItems(instrumentType);
-            var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
-            var instrument = new Instrument(instrumentType, items, itemValues);
-
-            var manager = new RotaryTestManager(container, instrument, instrumentComm, tachComm);
-            container.RegisterInstance(manager);
-
-            return manager;          
-        }
-
-        private RotaryTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentCommunicator, TachometerCommunicator tachCommunicator) 
+        protected TestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm)
         {
             _container = container;
             Instrument = instrument;
-            InstrumentCommunicator = instrumentCommunicator;
-            TachometerCommunicator = tachCommunicator;
-            
-            //TODO: Build volume verification test first and pass it to the VerificationTest constructor
-            var volumeVerification = new VerificationTest(0, instrument, true);
-            instrument.VerificationTests.Add(volumeVerification);
-            VolumeTest = new RotaryVolumeVerification(_container.Resolve<IEventAggregator>(), volumeVerification, InstrumentCommunicator, tachCommunicator);
-
-            instrument.VerificationTests.Add(new VerificationTest(1, instrument));
-            instrument.VerificationTests.Add(new VerificationTest(2, instrument));
+            InstrumentCommunicator = instrumentComm;
         }
 
         public async Task DownloadVerificationTestItems(int level)
@@ -90,7 +65,7 @@ namespace Prover.Core.VerificationTests
             var itemsToDownload = Instrument.Items.Items.Where(i => i.IsTemperatureTest == true).ToList();
             if (test != null)
                 test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
-  
+
             _isBusy = false;
         }
 
@@ -143,14 +118,14 @@ namespace Prover.Core.VerificationTests
                         var liveValue = await InstrumentCommunicator.LiveReadItem(i);
                         _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
                     }
-                    
+
                 } while (!_stopLiveReading);
 
                 await InstrumentCommunicator.Disconnect();
                 _isLiveReading = false;
                 _isBusy = false;
                 _log.Debug("Finished live read!");
-            } 
+            }
         }
 
         public async Task StopLiveRead()
@@ -170,22 +145,49 @@ namespace Prover.Core.VerificationTests
             }
         }
 
-        public async Task StartVolumeTest()
+        protected static void CreateVerificationTests(Instrument instrument, IDriveType driveType)
         {
-            await VolumeTest.BeginVerificationTest();
+            for (int i = 0; i < 3; i++)
+            {
+                var verificationTest = new VerificationTest(i, instrument);
+
+                if (instrument.CorrectorType == CorrectorType.PressureOnly)
+                {
+                    verificationTest.PressureTest = new PressureTest(verificationTest);
+                }
+
+                if (instrument.CorrectorType == CorrectorType.TemperatureOnly)
+                {
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
+                }
+
+                if (instrument.CorrectorType == CorrectorType.PressureTemperature)
+                {
+                    verificationTest.PressureTest = new PressureTest(verificationTest);
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
+                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
+                }
+
+                if (i == VOLUME_TESTNUMBER)
+                    verificationTest.VolumeTest = new VolumeTest(verificationTest, driveType);
+
+                instrument.VerificationTests.Add(verificationTest);
+            }
         }
+    
 
-        public void StopVolumeTest()
+
+        private static decimal GetGaugeTemp(int testNumber)
         {
-            VolumeTest.StopRunningTest();
-        }
-    }
-
-    public class PTVerifier
-    {
-        public PTVerifier(int itemNumber)
-        {
-
+            switch (testNumber)
+            {
+                case 0:
+                    return 32m;
+                case 1:
+                    return 60m;
+                default:
+                    return 90m;
+            }
         }
     }
 }
