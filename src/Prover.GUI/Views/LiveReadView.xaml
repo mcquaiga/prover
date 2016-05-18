@@ -4,15 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Prover.GUI.Views"
-           xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             Background="{DynamicResource MaterialDesignPaper}"
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200">
+            mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200"
+             >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
@@ -45,7 +46,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <Button Content="Done" Grid.Row="1"
+        <Button Content="Cancel" Grid.Row="1"
                 HorizontalAlignment="Right"                >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">

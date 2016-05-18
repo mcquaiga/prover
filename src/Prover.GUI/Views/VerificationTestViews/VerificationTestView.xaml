@@ -24,19 +24,21 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical">
-            <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
-            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
+                <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
+            </StackPanel>
+
+
             <ItemsControl HorizontalAlignment="Center"
                         ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
                         ItemsSource="{Binding TestViews}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"/>
+                        <StackPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-
-            <ContentControl Margin="2" cal:View.Model="{Binding VolumeInformationItem}" cal:View.Context="Card" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="150"
@@ -49,7 +51,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <Button Width="150"
+                <!--<Button Width="150"
 						Margin="10"
 						Content="Save"
 						>
@@ -58,7 +60,7 @@
                             <cal:ActionMessage MethodName="SaveInstrument" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </Button>
+                </Button>-->
             </StackPanel>
         </StackPanel>
 	</ScrollViewer>
