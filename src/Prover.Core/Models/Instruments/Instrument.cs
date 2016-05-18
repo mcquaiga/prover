@@ -74,8 +74,8 @@ namespace Prover.Core.Models.Instruments
         }
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
-        
-        public DateTime ExportedDateTime { get; set; }
+
+        public DateTime? ExportedDateTime { get; set; } = null;
 
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 

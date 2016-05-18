@@ -110,12 +110,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\FixedSizeQueue.cs" />
     <Compile Include="Communication\Communications.cs" />
     <Compile Include="DriveTypes\IEVCDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\InstrumentConnectionEvent.cs" />
+    <Compile Include="Events\TestRunProgressEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
@@ -135,12 +137,17 @@
     <Compile Include="Migrations\201605051843555_export-date-time.Designer.cs">
       <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.cs" />
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\IVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\ReadingStabilizer.cs" />
     <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
@@ -229,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605051843555_export-date-time.resx">
       <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

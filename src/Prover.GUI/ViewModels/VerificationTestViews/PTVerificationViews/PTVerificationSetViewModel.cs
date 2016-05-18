@@ -59,16 +59,16 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 
         public VerificationTest VerificationTest { get; private set; }
 
-        public async Task DownloadItems()
+        public async Task RunTest()
         {
-            await _testManager.DownloadVerificationTestItems(VerificationTest.TestNumber);
+            await _testManager.RunTest(VerificationTest.TestNumber);
             _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
         }
         
         public void LiveReadItemsCommand()
         {
-            var viewmodel = new LiveReadViewModel(_container);
-            ScreenManager.ShowDialog(_container, viewmodel);
+            //var viewmodel = new LiveReadViewModel(_container);
+            //ScreenManager.ShowDialog(_container, viewmodel);
         }
     }
 }

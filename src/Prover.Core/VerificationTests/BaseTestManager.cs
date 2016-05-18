@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.Core.Collections;
+using Prover.Core.Extensions;
+using Prover.Core.Settings;
 
 namespace Prover.Core.VerificationTests
 {
@@ -36,6 +39,51 @@ namespace Prover.Core.VerificationTests
             _container = container;
             Instrument = instrument;
             InstrumentCommunicator = instrumentComm;
+        }
+
+        public async Task RunTest(int level)
+        {
+            await WaitForReadingsToStablize(level);
+
+            await DownloadVerificationTestItems(level);
+
+            if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+                await VolumeTestManager.StartVolumeTest();
+
+            await SaveAsync();
+        }
+
+        private async Task WaitForReadingsToStablize(int level)
+        {
+            var liveReadItems = new Dictionary<int, ReadingStabilizer>();
+            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            {
+                liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
+                liveReadItems.Add(26, new ReadingStabilizer(GetGaugeTemp(level)));
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            {
+                liveReadItems.Add(26, new ReadingStabilizer(GetGaugeTemp(level)));
+            }
+
+            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
+            {
+                liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
+            }
+
+            do
+            {
+                foreach (var item in liveReadItems)
+                {
+                    var liveValue = await InstrumentCommunicator.LiveReadItem(item.Key);
+                    item.Value.ValueQueue.Enqueue(liveValue);
+                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
+                }
+            } while (liveReadItems.Any(x => !x.Value.IsStable()));
+
+            await InstrumentCommunicator.Disconnect();
+            
         }
 
         public async Task DownloadVerificationTestItems(int level)
@@ -107,6 +155,7 @@ namespace Prover.Core.VerificationTests
         {
             if (!_isBusy)
             {
+                var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
                 _log.Debug("Starting live read...");
                 await InstrumentCommunicator.Connect();
                 _stopLiveReading = false;
@@ -115,10 +164,9 @@ namespace Prover.Core.VerificationTests
                 {
                     foreach (var i in itemNumbers)
                     {
-                        var liveValue = await InstrumentCommunicator.LiveReadItem(i);
+                         var liveValue = await InstrumentCommunicator.LiveReadItem(i);
                         _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
                     }
-
                 } while (!_stopLiveReading);
 
                 await InstrumentCommunicator.Disconnect();
@@ -153,7 +201,7 @@ namespace Prover.Core.VerificationTests
 
                 if (instrument.CorrectorType == CorrectorType.PressureOnly)
                 {
-                    verificationTest.PressureTest = new PressureTest(verificationTest);
+                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(instrument, i));
                 }
 
                 if (instrument.CorrectorType == CorrectorType.TemperatureOnly)
@@ -163,7 +211,7 @@ namespace Prover.Core.VerificationTests
 
                 if (instrument.CorrectorType == CorrectorType.PressureTemperature)
                 {
-                    verificationTest.PressureTest = new PressureTest(verificationTest);
+                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(instrument, i));
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
                     verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
                 }
@@ -175,18 +223,26 @@ namespace Prover.Core.VerificationTests
             }
         }
     
-
-
         private static decimal GetGaugeTemp(int testNumber)
         {
-            switch (testNumber)
+            return
+                SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)
+                    .Value;
+        }
+
+        private static decimal GetGaugePressure(Instrument instrument, int testNumber)
+        {
+            var value = SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
+
+            if (value > 1)
+                value = value/100;
+
+            var evcPressureRange = instrument.EvcPressureRange();
+            if (evcPressureRange != null)
+                return value * evcPressureRange.Value;
+            else
             {
-                case 0:
-                    return 32m;
-                case 1:
-                    return 60m;
-                default:
-                    return 90m;
+                return 0m;
             }
         }
     }

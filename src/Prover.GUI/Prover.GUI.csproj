@@ -228,6 +228,7 @@
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ConnectionViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ProgressDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\RunTestViewModel.cs" />
     <Compile Include="ViewModels\TestViews\StartTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
@@ -267,6 +268,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ProgressDialogView.xaml.cs">
       <DependentUpon>ProgressDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\RunTestView.xaml.cs">
+      <DependentUpon>RunTestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml.cs">
       <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
@@ -396,6 +400,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ProgressDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\RunTestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

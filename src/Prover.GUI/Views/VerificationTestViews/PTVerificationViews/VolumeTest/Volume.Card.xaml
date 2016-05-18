@@ -22,7 +22,7 @@
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
-    <materialDesign:Card>
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <StackPanel>
                 <materialDesign:ColorZone Padding="2" 
@@ -80,7 +80,7 @@
 
                     </StackPanel>
                 </materialDesign:Card>
-                <Grid VerticalAlignment="Top" Height="75" Visibility="{Binding ShowTestButtons, Converter={StaticResource BoolToHiddenConverter}}" >
+                <!--<Grid VerticalAlignment="Top" Height="75" Visibility="{Binding ShowTestButtons, Converter={StaticResource BoolToHiddenConverter}}" >
                     <Button Width="200" Margin="10"
                             	        Content="START"
                             	        HorizontalAlignment="Right"
@@ -102,7 +102,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-                </Grid>
+                </Grid>-->
             </StackPanel>
             
         </StackPanel>

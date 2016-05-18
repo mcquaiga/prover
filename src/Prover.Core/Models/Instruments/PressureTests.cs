@@ -11,16 +11,17 @@ namespace Prover.Core.Models.Instruments
 { 
     public class PressureTest : BaseVerificationTest
     {
+        private const decimal DefaultATMGauge = 14.0m;
         private decimal? _atmGauge;
       
         public PressureTest() { }
 
-        public PressureTest(VerificationTest verificationTest)
+        public PressureTest(VerificationTest verificationTest, decimal gauge)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
-            GasGauge = 0;
-            AtmosphericGauge = 0;
+            GasGauge = gauge;
+            AtmosphericGauge = DefaultATMGauge;
         }
           
 
