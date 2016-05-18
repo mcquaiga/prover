@@ -18,7 +18,15 @@ namespace Prover.Core.Models.Instruments
             TestNumber = testNumber;
             Instrument = instrument;
             InstrumentId = Instrument.Id;
-            BuildCorrectorTypes(Instrument, hasVolumeTest);
+            //BuildCorrectorTypes(Instrument, hasVolumeTest);
+        }
+
+        public VerificationTest(int testNumber, Instrument instrument, PressureTest pressureTest, TemperatureTest temperatureTest, SuperFactorTest superTest, VolumeTest volumeTest) : this(testNumber, instrument)
+        {
+            PressureTest = pressureTest;
+            TemperatureTest = temperatureTest;
+            SuperFactorTest = superTest;
+            VolumeTest = volumeTest;
         }
 
         public int TestNumber { get; set; }
@@ -47,42 +55,6 @@ namespace Prover.Core.Models.Instruments
                     return TemperatureTest.HasPassed && VolumeTest.HasPassed && PressureTest.HasPassed;
 
                 return false;
-            }
-        }
-
-        private void BuildCorrectorTypes(Instrument instrument, bool hasVolumeTest = false)
-        {
-            if (instrument.CorrectorType == CorrectorType.PressureOnly)
-            {
-                PressureTest = new PressureTest(this);
-            }
-
-            if (instrument.CorrectorType == CorrectorType.TemperatureOnly)
-            {
-                TemperatureTest = new TemperatureTest(this, GetGaugeTemp(TestNumber));
-            }
-
-            if (instrument.CorrectorType == CorrectorType.PressureTemperature)
-            {
-                PressureTest = new PressureTest(this);
-                TemperatureTest = new TemperatureTest(this, GetGaugeTemp(TestNumber));
-                SuperFactorTest = new SuperFactorTest(this);
-            }
-
-            if (hasVolumeTest)
-                VolumeTest = new VolumeTest(this);
-        }
-
-        private static decimal GetGaugeTemp(int testNumber)
-        {
-            switch (testNumber)
-            {
-                case 0:
-                    return 32m;
-                case 1:
-                    return 60m;
-                default:
-                    return 90m;
             }
         }
     }

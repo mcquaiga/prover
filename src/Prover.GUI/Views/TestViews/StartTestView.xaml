@@ -44,12 +44,15 @@
                     <TextBlock FontSize="14"
 								   Style="{StaticResource MaterialDesignHeadlineTextBlock}"
 								   Text="Instrument Type"/>
-                    <GroupBox Margin="5" BorderThickness="0">
-                        <WrapPanel Margin="5">
-                            <RadioButton Content="Mini Max" FontSize="12"
+                    <GroupBox BorderThickness="0">
+                        <StackPanel Orientation="Vertical" Margin="4">
+                            <RadioButton Content="Mini-Max Rotary" FontSize="16"
 											 Name="MiniMax"		
-											 IsChecked="True"/>
-                        </WrapPanel>
+											 IsChecked="{Binding IsMiniMaxChecked}"/>
+                            <RadioButton Content="Mini-AT" FontSize="16" VerticalAlignment="Center"
+											 Name="MiniAT"		
+											 IsChecked="{Binding IsMiniATChecked}"/>
+                        </StackPanel>
                     </GroupBox>
 
                 </StackPanel>

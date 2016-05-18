@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Action = System.Action;
 
 namespace Prover.GUI.ViewModels
 {
@@ -20,16 +21,14 @@ namespace Prover.GUI.ViewModels
     {
         private readonly IUnityContainer _container;
         private RotaryTestManager _instrumentManager;
-        private RotaryTestManager _testManager;
+        private TestManager _testManager;
         
         public LiveReadViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            _testManager = _container.Resolve<RotaryTestManager>();
-
-            Task.Run(() => DoLiveRead());
+            _testManager = _container.Resolve<TestManager>();
         }
 
         public ObservableCollection<LiveReadDisplay> LiveReadItems { get; set; } = new ObservableCollection<LiveReadDisplay>();

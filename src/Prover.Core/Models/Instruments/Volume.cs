@@ -22,18 +22,18 @@ namespace Prover.Core.Models.Instruments
 
         public VolumeTest() { }
 
-        public VolumeTest(VerificationTest verificationTest)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
             _instrument = VerificationTest.Instrument;
             
-            DriveType = new RotaryDrive(_instrument);
+            DriveType = driveType;
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
-        public VolumeTest(VerificationTest verificationTest, Dictionary<int, string> afterTestItems) : this(verificationTest)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType, Dictionary<int, string> afterTestItems) : this(verificationTest, driveType)
         {
             AfterTestItemValues = afterTestItems;
         }
@@ -59,6 +59,9 @@ namespace Prover.Core.Models.Instruments
                     {
                         case "Rotary":
                             DriveType = new RotaryDrive(this.VerificationTest.Instrument);
+                            break;
+                        case "Mechanical":
+                            DriveType = new MechanicalDrive(this.VerificationTest.Instrument);
                             break;
                         default:
                             throw new NotSupportedException(string.Format("Drive type {0} is not supported.", _driveTypeDiscriminator));
