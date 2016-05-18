@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Practices.Unity;
+using Prover.Core.EVCTypes;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
@@ -15,7 +16,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
 {
     public class VerificationTestViewModel : InstrumentTestViewModel
     {
-        public VerificationTestViewModel(IUnityContainer container, RotaryTestManager testManager) : base(container, testManager.Instrument)
+        public VerificationTestViewModel(IUnityContainer container, TestManager testManager) : base(container, testManager.Instrument)
         {
             _container.RegisterInstance(testManager);
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -25,10 +26,13 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
             InstrumentTestManager = testManager;
 
             SiteInformationItem = new InstrumentInfoViewModel(_container, InstrumentTestManager.Instrument);
-            VolumeInformationItem = new VolumeTestViewModel(_container, InstrumentTestManager);
+
+            if (InstrumentTestManager is RotaryTestManager)
+                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
         }
 
-        public RotaryTestManager InstrumentTestManager { get; set; }    
+        public TestManager InstrumentTestManager { get; set; }
+        public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
 
         #region Methods
         public async Task SaveInstrument()

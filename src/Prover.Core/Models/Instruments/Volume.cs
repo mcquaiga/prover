@@ -22,18 +22,18 @@ namespace Prover.Core.Models.Instruments
 
         public VolumeTest() { }
 
-        public VolumeTest(VerificationTest verificationTest)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
             _instrument = VerificationTest.Instrument;
             
-            DriveType = new RotaryDrive(_instrument);
+            DriveType = driveType;
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
-        public VolumeTest(VerificationTest verificationTest, Dictionary<int, string> afterTestItems) : this(verificationTest)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType, Dictionary<int, string> afterTestItems) : this(verificationTest, driveType)
         {
             AfterTestItemValues = afterTestItems;
         }
@@ -59,6 +59,9 @@ namespace Prover.Core.Models.Instruments
                     {
                         case "Rotary":
                             DriveType = new RotaryDrive(this.VerificationTest.Instrument);
+                            break;
+                        case "Mechanical":
+                            DriveType = new MechanicalDrive(this.VerificationTest.Instrument);
                             break;
                         default:
                             throw new NotSupportedException(string.Format("Drive type {0} is not supported.", _driveTypeDiscriminator));
@@ -91,7 +94,7 @@ namespace Prover.Core.Models.Instruments
 
                 if (DriveType.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType.UnCorrectedInputVolume(AppliedInput) != null)
                 {
-                    return Math.Round((decimal)(((VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues) - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
+                    return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
                 }
                 else
                 {
@@ -110,12 +113,30 @@ namespace Prover.Core.Models.Instruments
 
                 if (TrueCorrected != 0 && TrueCorrected != null)
                 {
-                    return Math.Round((decimal)(((VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues) - TrueCorrected) / TrueCorrected) * 100), 2);
+                    return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);
                 }
                 else
                 {
                     return 0;
                 }
+            }
+        }
+
+        [NotMapped]
+        public decimal EvcCorrected
+        {
+            get
+            {
+                return VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues).Value;
+            }
+        }
+
+        [NotMapped]
+        public decimal EvcUncorrected
+        {
+            get
+            {
+                return VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues).Value;
             }
         }
 

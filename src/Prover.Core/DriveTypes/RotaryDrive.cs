@@ -10,13 +10,13 @@ namespace Prover.Core.EVCTypes
 {
     public class RotaryDrive : IDriveType
     {
-        private Instrument _instrument;
+        public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
         public RotaryDrive(Instrument instrument)
         {
-            _instrument = instrument;
-            Meter = new MeterTest(_instrument);
+            Instrument = instrument;
+            Meter = new MeterTest(Instrument);
         }
 
         public string Discriminator
@@ -42,10 +42,10 @@ namespace Prover.Core.EVCTypes
 
         public int MaxUnCorrected()
         {
-            if (_instrument.UnCorrectedMultiplier() == 10)
+            if (Instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;
 
-            if (_instrument.UnCorrectedMultiplier() == 100)
+            if (Instrument.UnCorrectedMultiplier() == 100)
                 return Meter.MeterIndex.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything

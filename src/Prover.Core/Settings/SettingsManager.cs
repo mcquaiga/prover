@@ -32,7 +32,9 @@ namespace Prover.Core.Settings
             
             if (!fileSystem.FileExists(SettingsPath))
             {
-                return new Settings();
+                var settings = new Settings();
+                settings.SetDefaults();
+                return settings;
             }
             return new SettingsReader(fileSystem).Read(SettingsPath);
         }

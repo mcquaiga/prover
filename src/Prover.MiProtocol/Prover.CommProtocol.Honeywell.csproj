@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
+      <Project>{DE48160F-095D-40B1-8790-6CB560024CE5}</Project>
+      <Name>Prover.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>

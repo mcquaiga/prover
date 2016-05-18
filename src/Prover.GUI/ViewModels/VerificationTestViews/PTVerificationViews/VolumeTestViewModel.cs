@@ -19,7 +19,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private readonly IUnityContainer _container;        
         private bool _isReportView;
 
-        public RotaryTestManager InstrumentManager { get; set; }
+        public TestManager InstrumentManager { get; set; }
         public Instrument Instrument { get; set; }
 
         public bool ShowBeginTestButton { get; private set; } = true;
@@ -40,7 +40,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             Instrument = instrument;
         }
 
-        public VolumeTestViewModel(IUnityContainer container, RotaryTestManager instrumentTestManager) : this(container, false)
+        public VolumeTestViewModel(IUnityContainer container, TestManager instrumentTestManager) : this(container, false)
         {
             InstrumentManager = instrumentTestManager;
             Instrument = InstrumentManager.Instrument;
@@ -81,25 +81,19 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public int UncorrectedPulseCount => Volume.UncPulseCount;
         public int CorrectedPulseCount => Volume.CorPulseCount;
 
-        //Meter properties
-        public string MeterTypeDescription => (Volume.DriveType as RotaryDrive).Meter.MeterTypeDescription;
-        public decimal? MeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacement;
-        public decimal? EvcMeterDisplacement => (Volume.DriveType as RotaryDrive).Meter.EvcMeterDisplacement;
-        public decimal? MeterDisplacementPercentError => (Volume.DriveType as RotaryDrive).Meter.MeterDisplacementPercentError;
-        public bool MeterDisplacementHasPassed => (Volume.DriveType as IDriveType).HasPassed;
 
         public async Task StartTestCommand()
         {
             ToggleTestButtons();
             _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new NotificationEvent("Starting volume test..."));
-            await InstrumentManager.StartVolumeTest();
+            await InstrumentManager.VolumeTestManager.StartVolumeTest();
             RaisePropertyChanges();
         }
 
         public void StopTestCommand()
         {
             ToggleTestButtons();
-            InstrumentManager.StopVolumeTest();
+            InstrumentManager.VolumeTestManager.StopVolumeTest();
             RaisePropertyChanges();  
         }
 
@@ -125,11 +119,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => EndCorrected);
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected);
-            NotifyOfPropertyChange(() => MeterDisplacement);
-            NotifyOfPropertyChange(() => EvcMeterDisplacement);
-            NotifyOfPropertyChange(() => MeterDisplacementPercentError);
-            
+            NotifyOfPropertyChange(() => StartCorrected);            
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => ShowStopTestButton);

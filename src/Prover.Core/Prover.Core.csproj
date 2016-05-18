@@ -110,12 +110,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\FixedSizeQueue.cs" />
     <Compile Include="Communication\Communications.cs" />
-    <Compile Include="EVCTypes\IEVCDriveType.cs" />
-    <Compile Include="EVCTypes\RotaryDrive.cs" />
+    <Compile Include="DriveTypes\IEVCDriveType.cs" />
+    <Compile Include="DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\InstrumentConnectionEvent.cs" />
+    <Compile Include="Events\TestRunProgressEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
+    <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
@@ -134,10 +138,18 @@
     <Compile Include="Migrations\201605051843555_export-date-time.Designer.cs">
       <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.cs" />
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\IVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
+    <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\TestManager.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\ReadingStabilizer.cs" />
+    <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -175,10 +187,13 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\VerificationTest.cs" />
-    <Compile Include="VerificationTests\RotaryVolumeVerification.cs" />
+    <Compile Include="VerificationTests\BaseTestManager.cs" />
+    <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ItemDefinitions\MiniATItems.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -203,7 +218,7 @@
     <Content Include="MeterIndexes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="MiniMaxItems.xml">
+    <Content Include="ItemDefinitions\MiniMaxItems.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -222,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605051843555_export-date-time.resx">
       <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

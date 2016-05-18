@@ -11,15 +11,15 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
     public class PTVerificationSetViewModel : ReactiveScreen
     {
         private IUnityContainer _container;
-        private RotaryTestManager _testManager;
+        private TestManager _testManager;
 
         public PTVerificationSetViewModel(IUnityContainer container, VerificationTest verificationTest)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            if (_container.IsRegistered<RotaryTestManager>())
-                _testManager = _container.Resolve<RotaryTestManager>();
+            if (_container.IsRegistered<TestManager>())
+                _testManager = _container.Resolve<TestManager>();
              
             VerificationTest = verificationTest;
             CreateViews();
@@ -43,25 +43,32 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             {
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
             }
+
+            if (VerificationTest.VolumeTest != null)
+            {
+                VolumeTestViewModel = new VolumeTestViewModel(_container, _testManager);
+            }
         }
 
-        public string Level => string.Format("Level {0}", VerificationTest.TestNumber + 1);
-
+        public string Level => $"Level {VerificationTest.TestNumber + 1}";
+        public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
         public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
         public PressureTestViewModel PressureTestViewModel { get; private set; }
         public SuperTestViewModel SuperFactorTestViewModel { get; private set; }
+        public VolumeTestViewModel VolumeTestViewModel { get; private set; }
+
         public VerificationTest VerificationTest { get; private set; }
 
-        public async Task DownloadItems()
+        public async Task RunTest()
         {
-            await _testManager.DownloadVerificationTestItems(VerificationTest.TestNumber);
+            await _testManager.RunTest(VerificationTest.TestNumber);
             _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
         }
         
         public void LiveReadItemsCommand()
         {
-            var viewmodel = new LiveReadViewModel(_container);
-            ScreenManager.ShowDialog(_container, viewmodel);
+            //var viewmodel = new LiveReadViewModel(_container);
+            //ScreenManager.ShowDialog(_container, viewmodel);
         }
     }
 }
