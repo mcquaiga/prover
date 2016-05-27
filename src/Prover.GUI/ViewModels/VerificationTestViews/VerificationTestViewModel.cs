@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews
 {
-    public class VerificationTestViewModel : InstrumentTestViewModel
+    public class VerificationTestViewModel : InstrumentTestViewModel, IHandle<VerificationTestEvent>
     {
         public VerificationTestViewModel(IUnityContainer container, TestManager testManager) : base(container, testManager.Instrument)
         {
@@ -52,6 +52,11 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
             instrumentReport.Generate();
         }
         #endregion
+
+        public void Handle(VerificationTestEvent message)
+        {
+            Task.Run(async () => await SaveInstrument());
+        }
     }
 }
 

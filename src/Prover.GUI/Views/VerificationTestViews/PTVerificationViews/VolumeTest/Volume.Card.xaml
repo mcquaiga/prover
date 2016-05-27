@@ -25,22 +25,17 @@
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <StackPanel>
-                <materialDesign:ColorZone Padding="2" 
-                                      Content="Volume" 
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                    <StackPanel>
+                        <materialDesign:ColorZone 
+                                        Padding="2"
+                            Margin="2"
+                                      Content="Uncorrected Volume" 
                                       Mode="PrimaryDark" 
                                       materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
-            </StackPanel>
-
-            <StackPanel Margin="5 0">
-                <materialDesign:Card Margin="0 2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                    <StackPanel>
-                        <materialDesign:ColorZone Padding="2" materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                                  Mode="PrimaryLight">
-                            Uncorrected
-                        </materialDesign:ColorZone>
                         <controls:PercentageControl 
                             Margin="5"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Left"
                             DisplayValue="{Binding Volume.UnCorrectedPercentError}" 
                             Passed="{Binding Volume.UnCorrectedHasPassed}"/>
                        
@@ -55,15 +50,17 @@
   
                     </StackPanel>
                 </materialDesign:Card>
-                <materialDesign:Card Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="1" materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                                      Mode="PrimaryLight">
-                            Corrected
-                        </materialDesign:ColorZone>
-                        <controls:PercentageControl 
+                        <materialDesign:ColorZone Padding="2" 
+                                      Content="Corrected Volume" 
+                                      Margin="2"
+                                      Mode="PrimaryDark" 
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+                        
+                            <controls:PercentageControl 
                             Margin="5"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Left"
                             DisplayValue="{Binding Volume.CorrectedPercentError}" 
                             Passed="{Binding Volume.CorrectedHasPassed}"/>
                         

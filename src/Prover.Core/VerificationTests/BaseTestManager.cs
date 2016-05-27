@@ -49,8 +49,6 @@ namespace Prover.Core.VerificationTests
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
                 await VolumeTestManager.StartVolumeTest();
-
-            await SaveAsync();
         }
 
         private async Task WaitForReadingsToStablize(int level)

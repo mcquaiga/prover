@@ -11,17 +11,16 @@ namespace Prover.Core.Models.Instruments
 { 
     public class PressureTest : BaseVerificationTest
     {
-        private const decimal DefaultATMGauge = 14.0m;
-        private decimal? _atmGauge;
-      
+        private const decimal DefaultAtmGauge = 14.0m;
+
         public PressureTest() { }
 
         public PressureTest(VerificationTest verificationTest, decimal gauge)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
-            GasGauge = gauge;
-            AtmosphericGauge = DefaultATMGauge;
+            GasGauge = decimal.Round(gauge, 2);
+            AtmosphericGauge = decimal.Round(DefaultAtmGauge, 2);
         }
           
 
@@ -35,13 +34,17 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
+                var result = 0.0m;
                 switch (VerificationTest.Instrument.GetTransducerType())
                 {
                     case TransducerType.Gauge:
-                        return GasGauge;
+                        result = GasGauge.GetValueOrDefault(0);
+                        break;
                     default:
-                        return GasGauge + AtmosphericGauge;
+                        result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
+                        break;
                 }
+                return decimal.Round(result, 2);
             } 
         }
 
@@ -55,7 +58,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (ItemValues.EvcPressureFactor() == null) return null;
                 if (ActualFactor == 0 || ActualFactor == null) return null;
-                return Math.Round((decimal)((ItemValues.EvcPressureFactor() - ActualFactor) / ActualFactor) * 100, 2);
+                return Math.Round((decimal)((ItemValues.EvcPressureFactor().GetValueOrDefault(0) - ActualFactor) / ActualFactor) * 100, 2);
             }
         }
 
@@ -65,8 +68,8 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (VerificationTest.Instrument.EvcBasePressure() == 0) return 0;
-                var result = GasPressure / VerificationTest.Instrument.EvcBasePressure();
-                return result.HasValue ? decimal.Round(result.Value, 4) : result;
+                var result = GasPressure / VerificationTest.Instrument.EvcBasePressure().GetValueOrDefault(1);
+                return result.HasValue ? decimal.Round(result.Value, 4) : 0;
             }
         }
 
