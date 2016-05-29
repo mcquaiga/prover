@@ -152,6 +152,7 @@
     <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\TestProgressEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
+    <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11E71D60-5727-4791-9C66-A6328AA9616B}</ProjectGuid>
+    <ProjectGuid>{1C42434C-8218-44AA-B132-A5A57B9DE8B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Prover.MiProtocol</RootNamespace>
-    <AssemblyName>Prover.MiProtocol</AssemblyName>
+    <RootNamespace>UnionGas.MASA</RootNamespace>
+    <AssemblyName>UnionGas.MASA</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,21 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InstrumentCommunications.cs" />
+    <Compile Include="Models\ExportDefinition.cs" />
+    <Compile Include="Translate.cs" />
+    <Compile Include="Verifiers\CompanyNumberVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
-      <Project>{DE48160F-095D-40B1-8790-6CB560024CE5}</Project>
+      <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
-      <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
-      <Name>Prover.CommProtocol.MiSerialProtocol</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InstrumentItems\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
