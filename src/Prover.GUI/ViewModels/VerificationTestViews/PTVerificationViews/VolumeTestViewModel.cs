@@ -20,7 +20,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         private readonly IUnityContainer _container;       
 
         public TestManager InstrumentManager { get; set; }
-        public Instrument Instrument { get; set; }
+        public Instrument Instrument => Volume.Instrument;
 
         public VolumeTestViewModel(IUnityContainer container, Core.Models.Instruments.VolumeTest volumeTest)
         {

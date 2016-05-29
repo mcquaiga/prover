@@ -1,4 +1,4 @@
-﻿<Window x:Class="Prover.GUI.Views.Dialogs.ConnectionView"
+﻿<UserControl x:Class="Prover.GUI.Views.Dialogs.ConnectionView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -21,4 +21,4 @@
                      Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
         <TextBlock Text="{Binding AttemptText}" HorizontalAlignment="Center"/>
     </StackPanel>
-</Window>
+</UserControl>

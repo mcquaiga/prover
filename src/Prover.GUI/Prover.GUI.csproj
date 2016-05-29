@@ -16,6 +16,7 @@
     <ExpressionBlendVersion>12.0.50716.0</ExpressionBlendVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -290,12 +291,6 @@
     <Compile Include="Views\InstrumentsList\InstrumentTestGridView.xaml.cs">
       <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentsList\PTZVerification\PTZVerificationSetView.xaml.cs">
-      <DependentUpon>PTZVerificationSetView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentsList\PTZVerification\PTZVerificationView.xaml.cs">
-      <DependentUpon>PTZVerificationView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
     </Compile>
@@ -428,14 +423,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentsList\InstrumentTestGridView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\PTZVerification\PTZVerificationSetView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\PTZVerification\PTZVerificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -587,6 +574,10 @@
     <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
+      <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>
+      <Name>UnionGas.MASA</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

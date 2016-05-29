@@ -7,6 +7,7 @@
                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
                 xmlns:controls="clr-namespace:Prover.GUI.Controls"
                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                 TextElement.Foreground="White"
                 TextElement.FontWeight="Normal"
                 TextElement.FontSize="18"
@@ -65,15 +66,17 @@
                Style="{StaticResource PassFailIcon}"
                Margin="15"
                Width="36" Height="36" />
-        <StackPanel VerticalAlignment="Center" Width="200" Orientation="Horizontal">
+        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
             <TextBlock FontSize="24" 
                        VerticalAlignment="Center"
                        Text="{Binding Instrument.SiteNumber2}"></TextBlock>
             
-            <StackPanel Orientation="Vertical">
-                <TextBlock FontSize="18" Text="{Binding Instrument.Type}"/>
-                <TextBlock FontSize="18" Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}"/>
-                <TextBlock FontSize="18" Text="{Binding Instrument.CompositionType}"/>
+            <StackPanel Margin="0 5" Orientation="Horizontal">
+                <TextBlock Text="{Binding Instrument.Type}"/>
+                <TextBlock Text=" / "/>
+                <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}"/>
+                <TextBlock Text=" / "/>
+                <TextBlock Text="{Binding Instrument.CompositionType}"/>
             </StackPanel>
         </StackPanel>
 
@@ -81,10 +84,15 @@
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="Export">
-                <materialDesign:PackIcon Kind="Image" 
+                <materialDesign:PackIcon Kind="Printer" 
                                          Height="36"
                                          Width="48"
                                          Foreground="White"/>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="DisplayInstrumentReport" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </Button>
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"

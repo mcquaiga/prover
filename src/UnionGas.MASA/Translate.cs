@@ -9,73 +9,65 @@ using UnionGas.MASA.Models;
 
 namespace UnionGas.MASA
 {
-    public class Translate
+    public static class Translate
     {
-        public Translate(Instrument instrument)
+        public static EvcQARun RunTranslationForExport(Instrument instrument)
         {
-            this.Instrument = instrument;
-        }
-
-        public Instrument Instrument { get; private set; }
-
-        public EvcQARun RunTranslationForExport()
-        {
-
             var verificationTests = new List<EvcQARun.VerificationTest>();
             
-            foreach(var vt in Instrument.VerificationTests)
+            foreach(var vt in instrument.VerificationTests)
             {
                 verificationTests.Add(TranslateVerificationTest(vt));
             }
 
             var qaRun = new EvcQARun
             {
-                CompanyNumber = Instrument.SiteNumber2.ToString(),
-                DateTime = Instrument.TestDateTime,
+                CompanyNumber = instrument.SiteNumber2.ToString(),
+                DateTime = instrument.TestDateTime,
                 DriveType = "Rotary",
-                ConfirmedStatus = Instrument.HasPassed ? "PASS" : "FAIL",
-                FirmwareVersion = Instrument.FirmwareVersion,
-                InstrumentType = Instrument.TypeString,
-                SerialNumber = Instrument.SerialNumber.ToString(),
-                InstrumentData = Instrument.InstrumentData,
-                InstrumentComposition = Instrument.CorrectorType.ToString(),
+                ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
+                FirmwareVersion = instrument.FirmwareVersion,
+                InstrumentType = instrument.TypeString,
+                SerialNumber = instrument.SerialNumber.ToString(),
+                InstrumentData = instrument.InstrumentData,
+                InstrumentComposition = instrument.CompositionType.ToString(),
 
                 PressureInfo = new EvcQARun.PressureHeader
                 {
-                    BasePressure = Instrument.EvcBasePressure().Value,
-                    PressureRange = Instrument.EvcPressureRange().Value,
-                    PressureUnits = Instrument.PressureUnits(),
-                    TransducerType = Instrument.GetTransducerType().ToString(),
-                    ProgrammedAtmosphericPressure = Instrument.EvcAtmosphericPressure().Value
+                    BasePressure = instrument.EvcBasePressure().Value,
+                    PressureRange = instrument.EvcPressureRange().Value,
+                    PressureUnits = instrument.PressureUnits(),
+                    TransducerType = instrument.GetTransducerType().ToString(),
+                    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
                 },
                 
                 TemperatureInfo = new EvcQARun.TemperatureHeader
                 {
-                    BaseTemperature = Instrument.EvcBaseTemperature().Value,
+                    BaseTemperature = instrument.EvcBaseTemperature().Value,
                     TemperatureRange = "-40 to 170 C",
-                    TemperatureUnits = Instrument.TemperatureUnits()
+                    TemperatureUnits = instrument.TemperatureUnits()
                 },
 
                 SuperFactorInfo = new EvcQARun.SuperFactorHeader
                 {
-                    CO2 = Instrument.CO2().Value,
-                    SpecGr = Instrument.SpecGr().Value,
-                    N2 = Instrument.N2().Value,
+                    CO2 = instrument.CO2().Value,
+                    SpecGr = instrument.SpecGr().Value,
+                    N2 = instrument.N2().Value,
                     FPVTable = "NX19"
                 },
 
                 VolumeInfo = new EvcQARun.VolumeHeader
                 {
-                    CorrectedMultiplierDescription = Instrument.CorrectedMultiplierDescription(),
-                    CorrectedMultiplierValue = (int)Instrument.CorrectedMultiplier(),
+                    CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
+                    CorrectedMultiplierValue = (int)instrument.CorrectedMultiplier(),
 
-                    UncorrectedMultiplierDescription = Instrument.UnCorrectedMultiplierDescription(),
-                    UncorrectedMultiplierValue = (int)Instrument.CorrectedMultiplier(), 
+                    UncorrectedMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
+                    UncorrectedMultiplierValue = (int)instrument.CorrectedMultiplier(), 
                     
-                    DriveRateDescription = Instrument.DriveRateDescription(),
+                    DriveRateDescription = instrument.DriveRateDescription(),
                     
-                    PulseASelect = Instrument.PulseASelect(),
-                    PulseBSelect = Instrument.PulseBSelect()                                       
+                    PulseASelect = instrument.PulseASelect(),
+                    PulseBSelect = instrument.PulseBSelect()                                       
                 },
                 
                 VerificationTests = verificationTests              

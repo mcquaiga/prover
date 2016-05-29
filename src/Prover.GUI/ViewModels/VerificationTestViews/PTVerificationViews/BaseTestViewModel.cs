@@ -15,7 +15,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
     {
         public virtual BaseVerificationTest Test { get; set; }
 
-        public decimal? PercentError => Test.PercentError;
+        public decimal? PercentError => Test?.PercentError;
 
         public Brush PercentColour => Test == null || Test.HasPassed ? Brushes.White : (SolidColorBrush)(new BrushConverter().ConvertFrom("#DC6156"));
         

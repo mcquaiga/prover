@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnionGas.MASA.Models
 {
+    [Serializable]
     public class EvcQARun
     {
         public DateTimeOffset DateTime { get; set; }

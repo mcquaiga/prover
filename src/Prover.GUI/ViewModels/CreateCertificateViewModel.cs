@@ -1,14 +1,12 @@
 ﻿using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Certificates;
-using Prover.GUI.Reporting;
 using Prover.GUI.ViewModels.InstrumentsList;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 
@@ -70,10 +68,7 @@ namespace Prover.GUI.ViewModels
         {
             var instruments = InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
 
-            foreach(var i in instruments)
-            {
-
-            }
+            await UnionGas.MASA.ExportManager.Export(instruments);
         }
 
         public ObservableCollection<InstrumentTestGridViewModel> InstrumentItems { get; set; } = new ObservableCollection<InstrumentTestGridViewModel>();
