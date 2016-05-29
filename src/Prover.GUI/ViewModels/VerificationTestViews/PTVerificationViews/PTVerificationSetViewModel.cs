@@ -27,26 +27,26 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 
         private void CreateViews()
         {
-            if (VerificationTest.Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
                 SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperFactorTest);
             }                
 
-            if (VerificationTest.Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.T)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
             }
 
-            if (VerificationTest.Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.P)
             {
                 PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
             }
 
             if (VerificationTest.VolumeTest != null)
             {
-                VolumeTestViewModel = new VolumeTestViewModel(_container, _testManager);
+                VolumeTestViewModel = new VolumeTestViewModel(_container, VerificationTest.VolumeTest);
             }
         }
 

@@ -5,9 +5,12 @@ using Prover.GUI.Reporting;
 using Prover.GUI.ViewModels.InstrumentsList;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
 
 namespace Prover.GUI.ViewModels
 {
@@ -15,21 +18,13 @@ namespace Prover.GUI.ViewModels
     {
         private IUnityContainer _container;
 
-        public List<string> VerificationTypes
-        {
-            get
-            {
-                return new List<string> {"Verification", "Re-Verification"};
-            }
-        } 
+        public List<string> VerificationTypes => new List<string> {"Verification", "Re-Verification"};
 
         public CreateCertificateViewModel(IUnityContainer container)
         {
             _container = container;
-            InstrumentsListViewModel = new InstrumentsListViewModel(_container);
+            GetInstrumentsByCertificateId(null);
         }
-
-        public InstrumentsListViewModel InstrumentsListViewModel { get; private set; }
 
         public Certificate Certificate { get; set; }
 
@@ -53,32 +48,68 @@ namespace Prover.GUI.ViewModels
 
         public void OneWeekFilter()
         {
-            InstrumentsListViewModel.GetInstrumentsWithNoCertificateLastWeek();
+            GetInstrumentsWithNoCertificateLastWeek();
         }
 
         public void OneMonthFilter()
         {
-            InstrumentsListViewModel.GetInstrumentsWithNoCertificateLastMonth();
+            GetInstrumentsWithNoCertificateLastMonth();
         }
 
         public void ResetFilter()
         {
-            InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
+            GetInstrumentsByCertificateId(null);
         }
 
         public int InstrumentCount 
         {
-            get { return InstrumentsListViewModel.InstrumentItems.Count(x => x.IsSelected);  }
+            get { return InstrumentItems.Count(x => x.IsSelected);  }
         }
 
         public async Task ExportQARuns()
         {
-            var instruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
+            var instruments = InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
 
             foreach(var i in instruments)
             {
 
             }
+        }
+
+        public ObservableCollection<InstrumentTestGridViewModel> InstrumentItems { get; set; } = new ObservableCollection<InstrumentTestGridViewModel>();
+
+        public void GetInstrumentsByCertificateId(Guid? certificateGuid)
+        {
+            GetInstrumentVerificationTests(x => x.CertificateId == certificateGuid);
+        }
+
+        public void GetInstrumentsWithNoCertificateLastMonth()
+        {
+            var dateFilter = DateTime.Now.AddDays(-30);
+            GetInstrumentVerificationTests(x => x.CertificateId == null && x.TestDateTime >= dateFilter);
+        }
+
+        public void GetInstrumentsWithNoCertificateLastWeek()
+        {
+            var dateFilter = DateTime.Now.AddDays(-7);
+            GetInstrumentVerificationTests(x => x.CertificateId == null && x.TestDateTime >= dateFilter);
+        }
+
+        private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)
+        {
+            InstrumentItems.Clear();
+
+            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
+            {
+                var instruments = store.Query()
+                                    .Where(whereFunc)
+                                    .OrderBy(i => i.TestDateTime)
+                                    .ToList();
+
+                instruments.ForEach(i => InstrumentItems.Add(new InstrumentTestGridViewModel(_container, i)));
+            }
+
+            NotifyOfPropertyChange(() => InstrumentItems);
         }
 
         //public void CreateCertificate()

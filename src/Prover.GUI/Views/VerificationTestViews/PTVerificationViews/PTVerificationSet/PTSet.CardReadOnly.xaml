@@ -19,6 +19,8 @@
         <converters:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
+        <converters:NullToVisibilityConverter
+            x:Key="NullToHiddenConverter" />
     </UserControl.Resources>
     <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
         <StackPanel Orientation="Vertical">
@@ -46,6 +48,31 @@
                                 Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
                                 Margin="2"/>
             </StackPanel>
+            <Grid Height="50">
+                <!--<Button Content="Live Read" HorizontalAlignment="Left" Margin="5" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="LiveReadItemsCommand" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>-->
+                <Button Margin="5"
+                            HorizontalAlignment="Right"
+                            materialDesign:RippleAssist.IsCentered="True"
+                            Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
+                    </StackPanel>
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="RunTest" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
         </StackPanel>
+
     </materialDesign:Card>
 </UserControl>

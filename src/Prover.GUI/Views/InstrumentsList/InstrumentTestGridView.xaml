@@ -3,73 +3,122 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                 xmlns:cal="http://www.caliburnproject.org"
-                xmlns:converters="clr-namespace:Prover.GUI.Converters"
-                xmlns:controls="clr-namespace:Prover.GUI.Controls"
                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                xmlns:controls="clr-namespace:Prover.GUI.Controls"
                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                Background="{DynamicResource MaterialDesignPaper}"
-                TextElement.FontWeight="Medium"
-                TextElement.FontSize="14"
+                TextElement.Foreground="White"
+                TextElement.FontWeight="Normal"
+                TextElement.FontSize="18"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                mc:Ignorable="d" Width="816" Height="75">
+                mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="75">
     <UserControl.Resources>
-        <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
-        <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
-        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <DataTemplate x:Key="TestTemplate">
-            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="Grid" />
-        </DataTemplate>
+            <ImageSource x:Key="PassIcon">../../Resources/success.png</ImageSource>
+            <ImageSource x:Key="FailIcon">../../Resources/error_36.png</ImageSource>
+            <SolidColorBrush x:Key="FontColour" Color="White"/>
+            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
+            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
+            <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
+            <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
+            <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+            <DataTemplate x:Key="TestTemplate">
+                <ContentControl cal:View.Model="{Binding .}" cal:View.Context="Grid" />
+            </DataTemplate>
+
+            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="WhiteSmoke" />
+                <Setter Property="FontSize" Value="22"/>
+            </Style>
+
+            <Style x:Key="DockPanelStyle" TargetType="{x:Type DockPanel}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                        <Setter Property="Background" Value="{StaticResource PassColour}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                        <Setter Property="Background" Value="{StaticResource FailColour}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="PassFailIcon" TargetType="{x:Type Image}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                        <Setter Property="Source" Value="{StaticResource PassIcon}"></Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                        <Setter Property="Source" Value="{StaticResource FailIcon}"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Height="73">
-        <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Grid.Column="0" 
-                           x:Name="RowNumber" 
-                           Foreground="LightGray"
-                           FontSize="18" 
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
-                <StackPanel>
-                    <TextBlock Grid.Column="1"
-                               x:Name="HasPassed" FontSize="20"/>
-                    <TextBlock Foreground="Gray" FontSize="12" Text="{Binding Instrument.TestDateTime}" />
-                </StackPanel>
+    
+    <DockPanel Style="{StaticResource DockPanelStyle}">
+        <Image x:Name="Icon" 
+               Style="{StaticResource PassFailIcon}"
+               Margin="15"
+               Width="36" Height="36" />
+        <StackPanel VerticalAlignment="Center" Width="200" Orientation="Horizontal">
+            <TextBlock FontSize="24" 
+                       VerticalAlignment="Center"
+                       Text="{Binding Instrument.SiteNumber2}"></TextBlock>
+            
+            <StackPanel Orientation="Vertical">
+                <TextBlock FontSize="18" Text="{Binding Instrument.Type}"/>
+                <TextBlock FontSize="18" Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}"/>
+                <TextBlock FontSize="18" Text="{Binding Instrument.CompositionType}"/>
+            </StackPanel>
+        </StackPanel>
 
-
-                <StackPanel Orientation="Vertical" Grid.Column="2">
-                    <TextBlock Text="{Binding Instrument.SiteNumber2}" FontSize="32"/>
-                    <TextBlock Text="{Binding Instrument.TypeString}" FontSize="18"/>
-                </StackPanel>
-
-                <UniformGrid Margin="2" Grid.Column="3" Rows="2" >
-                    <controls:LabelValueControl
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25 0">
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="Export">
+                <materialDesign:PackIcon Kind="Image" 
+                                         Height="36"
+                                         Width="48"
+                                         Foreground="White"/>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="Export">
+                <materialDesign:PackIcon Kind="Delete" 
+                                         Height="36"
+                                         Width="48"
+                                         Foreground="White"/>
+            </Button>
+        </StackPanel>
+            <!--<UniformGrid Margin="2" Grid.Column="3" Rows="2" >
+                <controls:LabelValueControl
                                                 Label="Serial Number" LabelFontSize="6"                                                 
                                                 Value="{Binding Instrument.SerialNumber}" ValueFontSize="{StaticResource ValueFontSize}"/>
 
-                    <controls:LabelValueControl LabelFontSize="8"
+                <controls:LabelValueControl LabelFontSize="8"
                                                 Label="Meter Type"
                                                 ValueFontSize="{StaticResource ValueFontSize}"
                                                 Value="{Binding Instrument.Volume.MeterType}"/>
-                </UniformGrid>
+            </UniformGrid>
 
-                <UniformGrid Grid.Column="4">
-                    <controls:LabelValueControl LabelFontSize="8"
+            <UniformGrid Grid.Column="4">
+                <controls:LabelValueControl LabelFontSize="8"
                                                    Label="Frm. Ver."
                                                    ValueFontSize="{StaticResource ValueFontSize}"
                                                    Value="{Binding Instrument.FirmwareVersion}"/>
 
-                    <controls:LabelValueControl LabelFontSize="8"
+                <controls:LabelValueControl LabelFontSize="8"
                                                 Label="Displacement"
                                                 ValueFontSize="{StaticResource ValueFontSize}"
                                                 Value="{Binding Instrument.Volume.MeterDisplacement}"/>
-                </UniformGrid>
+            </UniformGrid>-->
 
-                <!--<Grid Grid.Column="5" Margin="5 0">
+            <!--<Grid Grid.Column="5" Margin="5 0">
                     <StackPanel Orientation="Horizontal">
                         <ContentControl cal:View.Model="TemperatureInfo" cal:View.Context="Grid"/>
                         <ContentControl cal:View.Model="PressureInfo" cal:View.Context="Grid"/>
@@ -77,60 +126,56 @@
                     </StackPanel>                    
                 </Grid>-->
 
-                <Grid Grid.Column="6" Margin="2 0">
-                    <ItemsControl HorizontalAlignment="Center"
+            <!--<Grid Grid.Column="6" Margin="2 0">
+                <ItemsControl HorizontalAlignment="Center"
                         ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
                         ItemsSource="{Binding TestViews}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="3"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
 
-                <materialDesign:Card  Grid.Column="7">
-                    <StackPanel Orientation="Vertical">
-                        <materialDesign:ColorZone Padding="0" 
+            <materialDesign:Card  Grid.Column="7">
+                <StackPanel Orientation="Vertical">
+                    <materialDesign:ColorZone Padding="0" 
                                     Content="Uncorrected" 
                                     Mode="Light" 
                                     materialDesign:ShadowAssist.ShadowDepth="Depth0"/>
-                        <UniformGrid>
-                            <controls:LabelValueControl LabelFontSize="8"
+                    <UniformGrid>
+                        <controls:LabelValueControl LabelFontSize="8"
                                             Label="% Error"
                                             ValueFontSize="{StaticResource ValueFontSize}"
                                             Value="{Binding Instrument.Volume.UnCorrectedPercentError}"/>
-                            <controls:LabelValueControl LabelFontSize="8"
+                        <controls:LabelValueControl LabelFontSize="8"
                                             Label="Multiplier"
                                             ValueFontSize="{StaticResource ValueFontSize}"
                                             Value="{Binding Instrument.Volume.UnCorrectedMultiplierDescription}"/>
-                        </UniformGrid>
+                    </UniformGrid>
 
-                    </StackPanel>
-                </materialDesign:Card>
+                </StackPanel>
+            </materialDesign:Card>-->
 
-                <materialDesign:Card Grid.Column="8">
-                    <StackPanel Orientation="Vertical">
-                        <materialDesign:ColorZone Padding="0" 
+        <!--<materialDesign:Card Grid.Column="8">
+            <StackPanel Orientation="Vertical">
+                <materialDesign:ColorZone Padding="0" 
                                       Content="Corrected" 
                                       Mode="Light" 
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0"/>
-                        <UniformGrid>
-                            <controls:LabelValueControl LabelFontSize="8"
+                <UniformGrid>
+                    <controls:LabelValueControl LabelFontSize="8"
                                                 Label="% Error"
                                                 ValueFontSize="{StaticResource ValueFontSize}"
                                                 Value="{Binding Instrument.Volume.CorrectedPercentError}"/>
-                            <controls:LabelValueControl LabelFontSize="8"
+                    <controls:LabelValueControl LabelFontSize="8"
                                                 Label="Multiplier"
                                                 ValueFontSize="{StaticResource ValueFontSize}"
                                                 Value="{Binding Instrument.Volume.CorrectedMultiplierDescription}"/>
-                        </UniformGrid>
-                        
-                    </StackPanel>
-                </materialDesign:Card>
+                </UniformGrid>
 
             </StackPanel>
-        </Border>
-
-    </Grid>
+        </materialDesign:Card>-->
+    </DockPanel>
 </UserControl>

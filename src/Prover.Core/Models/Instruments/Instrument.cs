@@ -26,9 +26,10 @@ namespace Prover.Core.Models.Instruments
 
     public enum CorrectorType
     {
-        TemperatureOnly,
-        PressureOnly,
-        PressureTemperature
+        T,
+        P,
+        // ReSharper disable once InconsistentNaming
+        PTZ
     }
 
     public class Instrument : ProverTable
@@ -93,32 +94,26 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped] 
-        public CorrectorType CorrectorType
+        public CorrectorType CompositionType
         {
             get
             {
                 if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live"
                   && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.PressureTemperature;
+                    return CorrectorType.PTZ;
 
                 if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.PressureOnly;
+                    return CorrectorType.P;
 
                 if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.TemperatureOnly;
+                    return CorrectorType.T;
 
-                return CorrectorType.TemperatureOnly;
+                return CorrectorType.T;
             }
         }
 
         [NotMapped]
-        public bool HasPassed
-        {
-            get
-            {
-                return VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
-            }
-        }
+        public bool HasPassed => VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
 
         [NotMapped]
         public decimal FirmwareVersion

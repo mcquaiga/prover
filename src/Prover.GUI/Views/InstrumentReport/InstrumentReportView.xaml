@@ -12,7 +12,7 @@
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                 mc:Ignorable="d"
-             d:DesignHeight="795" d:DesignWidth="1040">
+             Height="795" Width="1040">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
@@ -20,23 +20,8 @@
             <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="CardReadOnly" />
         </DataTemplate>
     </UserControl.Resources>
-    <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
-                <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
-            </StackPanel>
-
-            <ItemsControl HorizontalAlignment="Center"
-                        ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                        ItemsSource="{Binding TestViews}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-        </StackPanel>
+    <Viewbox Width="1040" Height="795" Stretch="Fill">
+        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
+                            Margin="2"/>
     </Viewbox>
 </UserControl>

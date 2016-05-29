@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Practices.ObjectBuilder2;
-using Prover.Core.Storage;
-using Prover.SerialProtocol;
-using Prover.Core.Models.Instruments;
-using System.Windows;
-using Prover.Core.Models;
 using Caliburn.Micro;
+using NLog;
 using Prover.Core.Events;
+using Prover.Core.Models;
+using Prover.Core.Models.Instruments;
+using Prover.SerialProtocol;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.Communication
 {
     public class InstrumentCommunicator
     {
-        private readonly ICommPort _commPort;
-        private miSerialProtocolClass _miSerial;
-        private NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private IEventAggregator _eventAggregator;
-        private int maxConnectAttempts = 10;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly miSerialProtocolClass _miSerial;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly int maxConnectAttempts = 10;
 
-        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, InstrumentType instrumentType)
+        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort,
+            InstrumentType instrumentType)
         {
-            _commPort = commPort;
             _eventAggregator = eventAggregator;
-            
+
             switch (instrumentType)
             {
                 case InstrumentType.Ec300:
@@ -40,13 +37,19 @@ namespace Prover.Core.Communication
             IsConnected = false;
         }
 
-        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, Instrument instrument) : this(eventAggregator, commPort, instrument.Type) { }
+        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, Instrument instrument)
+            : this(eventAggregator, commPort, instrument.Type)
+        {
+        }
 
-        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetail> itemsToDownload, bool disconnectAfter = true)
+        public bool IsConnected { get; private set; }
+
+        public async Task<Dictionary<int, string>> DownloadItemsAsync(IEnumerable<ItemDetail> itemsToDownload,
+            bool disconnectAfter = true)
         {
             await Connect();
 
-            var result = await Task.Run(()=> DownloadItems(itemsToDownload));
+            var result = await Task.Run(() => DownloadItems(itemsToDownload));
 
             if (disconnectAfter)
                 await Disconnect();
@@ -82,8 +85,6 @@ namespace Prover.Core.Communication
             return myItems;
         }
 
-        public bool IsConnected { get; private set; }
-
         public async Task Connect()
         {
             var tryCount = 0;
@@ -94,7 +95,10 @@ namespace Prover.Core.Communication
                 {
                     if (!IsConnected)
                     {
-                        //await _eventAggregator.PublishOnUIThreadAsync(new InstrumentConnectionEvent(InstrumentConnectionEvent.Status.Connecting, tryCount + 1, maxConnectAttempts));
+                        await
+                            _eventAggregator.PublishOnUIThreadAsync(
+                                new ConnectionStatusEvent(ConnectionStatusEvent.Status.Connecting, tryCount + 1,
+                                    maxConnectAttempts));
                         await Task.Run(() => _miSerial.Connect()).ContinueWith(taskResult =>
                         {
                             if (!taskResult.IsFaulted)
@@ -102,11 +106,11 @@ namespace Prover.Core.Communication
                             else
                                 IsConnected = false;
                         });
-                    }                                   
+                    }
                 }
                 catch (AggregateException ae)
                 {
-                    ae.Handle((x) =>
+                    ae.Handle(x =>
                     {
                         if (x is CommExceptions)
                         {
@@ -114,7 +118,7 @@ namespace Prover.Core.Communication
                             return true;
                         }
 
-                        return false;                        
+                        return false;
                     });
                     tryCount++;
                     IsConnected = false;
@@ -126,14 +130,21 @@ namespace Prover.Core.Communication
                 _log.Error("Could not connect to instrument.");
                 throw new InstrumentCommunicationException(InstrumentErrorsEnum.TooManyRetransmissionsError);
             }
+            await _eventAggregator.PublishOnUIThreadAsync(
+                new ConnectionStatusEvent(ConnectionStatusEvent.Status.Connected,
+                    tryCount, maxConnectAttempts));
         }
 
         public async Task Disconnect()
         {
             if (IsConnected)
-                await Task.Run(()=> _miSerial.Disconnect());
+                await Task.Run(() => _miSerial.Disconnect());
 
             IsConnected = false;
+
+            await _eventAggregator.PublishOnUIThreadAsync(
+                new ConnectionStatusEvent(ConnectionStatusEvent.Status.Disconnected,
+                    0, maxConnectAttempts));
         }
 
         public async Task<decimal> LiveReadItem(int itemNumber)
@@ -144,6 +155,5 @@ namespace Prover.Core.Communication
                 return Convert.ToDecimal(_miSerial.LR(itemNumber));
             });
         }
-        
     }
 }

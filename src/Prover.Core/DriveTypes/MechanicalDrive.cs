@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.EVCTypes
 {
@@ -14,33 +15,20 @@ namespace Prover.Core.EVCTypes
             this.Instrument = instrument;
         }
 
-        public string Discriminator
-        {
-            get
-            {
-                return "Mechanical";
-            }
-        }
+        public string Discriminator => "Mechanical";
 
-        public bool HasPassed
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool HasPassed => true;
 
         public Instrument Instrument { get; private set; }
 
         public int MaxUnCorrected()
         {
-            throw new NotImplementedException();
+            return 100;
         }
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            // AppliedInput * DriveRate
-            throw new NotImplementedException();
+            return appliedInput*Instrument.DriveRate();
         }
     }
 }

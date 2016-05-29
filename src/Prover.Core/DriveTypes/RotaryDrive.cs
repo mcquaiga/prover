@@ -1,12 +1,9 @@
-﻿using Prover.Core.Extensions;
+﻿using System;
+using Prover.Core.EVCTypes;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Prover.Core.EVCTypes
+namespace Prover.Core.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
@@ -19,21 +16,9 @@ namespace Prover.Core.EVCTypes
             Meter = new MeterTest(Instrument);
         }
 
-        public string Discriminator
-        {
-            get
-            {
-                return "Rotary";
-            }
-        }
+        public string Discriminator => "Rotary";
 
-        public bool HasPassed
-        {
-            get
-            {
-                return Meter.MeterDisplacementHasPassed;
-            }
-        }
+        public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
@@ -54,7 +39,7 @@ namespace Prover.Core.EVCTypes
 
     public class MeterTest
     {
-        private Instrument _instrument;
+        private readonly Instrument _instrument;
 
         public MeterTest(Instrument instrument)
         {

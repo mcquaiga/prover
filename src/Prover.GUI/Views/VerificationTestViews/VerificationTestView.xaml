@@ -6,62 +6,34 @@
 			    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 			    xmlns:cal="http://www.caliburnproject.org"
                 xmlns:controls="clr-namespace:Prover.GUI.Controls"
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                 TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                 Background="{DynamicResource MaterialDesignPaper}"
                 TextElement.FontWeight="Medium"
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                d:DesignWidth="1000"
+                d:DesignWidth="200"
                 mc:Ignorable="d">
-
-	<UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-
-        <DataTemplate x:Key="TestTemplate">
-            <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="Card" />
-        </DataTemplate>
-    </UserControl.Resources>
-
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
-                <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
-            </StackPanel>
-
-
-            <ItemsControl HorizontalAlignment="Center"
-                        ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                        ItemsSource="{Binding TestViews}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Width="150"
-						Margin="10"
-						Content="Instrument Report"
-						>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar Style="{DynamicResource MaterialDesignToolBar}">
+                <Button ToolTip="View QA Run Report">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Width="32" Height="32" Kind="Printer" HorizontalAlignment="Center"/>
+                        <TextBlock>Report</TextBlock>
+                    </StackPanel>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cal:ActionMessage MethodName="InstrumentReport" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-                <!--<Button Width="150"
-						Margin="10"
-						Content="Save"
-						>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="SaveInstrument" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>-->
-            </StackPanel>
-        </StackPanel>
-	</ScrollViewer>
+            </ToolBar>
+        </ToolBarTray>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
+                            Margin="2"/>
+        </ScrollViewer>
+    </DockPanel>
+
 </UserControl>

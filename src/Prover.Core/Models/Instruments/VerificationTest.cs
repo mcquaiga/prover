@@ -45,14 +45,14 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Instrument.CorrectorType == CorrectorType.TemperatureOnly && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && VolumeTest.HasPassed;
+                if (Instrument.CompositionType == CorrectorType.T && TemperatureTest != null)
+                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if (Instrument.CorrectorType == CorrectorType.PressureOnly && PressureTest != null)
-                    return PressureTest.HasPassed && VolumeTest.HasPassed;
+                if (Instrument.CompositionType == CorrectorType.P && PressureTest != null)
+                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if (Instrument.CorrectorType == CorrectorType.PressureTemperature && PressureTest != null && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && VolumeTest.HasPassed && PressureTest.HasPassed;
+                if (Instrument.CompositionType == CorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
+                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed) && PressureTest.HasPassed;
 
                 return false;
             }

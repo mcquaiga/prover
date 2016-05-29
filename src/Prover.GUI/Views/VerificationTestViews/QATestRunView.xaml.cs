@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views.Dialogs
+namespace Prover.GUI.Views.VerificationTestViews
 {
     /// <summary>
-    /// Interaction logic for RunTestView.xaml
+    /// Interaction logic for QATestRunView.xaml
     /// </summary>
-    public partial class RunTestView : Window
+    public partial class QaTestRunView : UserControl
     {
-        public RunTestView()
+        public QaTestRunView()
         {
             InitializeComponent();
         }

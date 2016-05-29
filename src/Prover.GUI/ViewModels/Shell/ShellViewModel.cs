@@ -3,19 +3,19 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using Prover.GUI.Events;
 using Prover.GUI.Interfaces;
-using Prover.GUI.ViewModels.Dialogues;
 using Prover.GUI.ViewModels.SettingsViews;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using Prover.GUI.ViewModels.Dialogs;
 
 namespace Prover.GUI.ViewModels.Shell
 {
     public class ShellViewModel : Conductor<object>.Collection.OneActive, IShell, 
         IHandle<ScreenChangeEvent>, 
         IHandle<NotificationEvent>,
-        IHandle<InstrumentConnectionEvent>
+        IHandle<ConnectionStatusEvent>
     {
         private readonly IUnityContainer _container;
         private System.Timers.Timer _timer;
@@ -65,10 +65,7 @@ namespace Prover.GUI.ViewModels.Shell
             }
         }
 
-        public string Title
-        {
-            get { return "EVC Prover"; }
-        }
+        public string Title => "EVC Prover";
 
         public ConnectionViewModel ConnectionDialogue { get; private set; }
 
@@ -97,7 +94,7 @@ namespace Prover.GUI.ViewModels.Shell
             _timer.Enabled = false;
         }
 
-        public void Handle(InstrumentConnectionEvent message)
+        public void Handle(ConnectionStatusEvent message)
         {
             
         }

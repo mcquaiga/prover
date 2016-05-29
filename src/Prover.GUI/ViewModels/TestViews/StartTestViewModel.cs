@@ -12,6 +12,7 @@ using Prover.GUI.ViewModels.Shell;
 using Prover.GUI.ViewModels.VerificationTestViews;
 using Prover.SerialProtocol;
 using System.Threading.Tasks;
+using Prover.GUI.ProgressDialog;
 
 namespace Prover.GUI.ViewModels.TestViews
 {
@@ -53,6 +54,7 @@ namespace Prover.GUI.ViewModels.TestViews
         public StartTestViewModel(IUnityContainer container)
         {
             _container = container;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public async Task CancelCommand()

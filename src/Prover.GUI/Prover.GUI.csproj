@@ -200,6 +200,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConnectionDialogManager.cs" />
     <Compile Include="Controls\DesignViewModel.cs" />
     <Compile Include="Controls\PercentageControl.xaml.cs">
       <DependentUpon>PercentageControl.xaml</DependentUpon>
@@ -214,6 +215,14 @@
     <Compile Include="Converters\BooleanToPassConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="ProgressDialog\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressDialog\ProgressDialogCancellationExcpetion.cs" />
+    <Compile Include="ProgressDialog\ProgressDialogContext.cs" />
+    <Compile Include="ProgressDialog\ProgressDialogResult.cs" />
+    <Compile Include="ProgressDialog\ProgressDialogSettings.cs" />
+    <Compile Include="ProgressDialog\WindowSettings.cs" />
     <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="DesignTimeViewModelLocator.cs" />
     <Compile Include="Events\InstrumentUpdateEvent.cs" />
@@ -226,12 +235,11 @@
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
+    <Compile Include="ViewModels\DesignData\SiteInformationDesignViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ConnectionViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ProgressDialogViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\RunTestViewModel.cs" />
     <Compile Include="ViewModels\TestViews\StartTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\InstrumentsListViewModel.cs" />
     <Compile Include="ViewModels\InstrumentsList\InstrumentTestGridViewModel.cs" />
     <Compile Include="ViewModels\InstrumentViews\InstrumentTestViewModel.cs" />
     <Compile Include="ViewModels\IWindowSettings.cs" />
@@ -240,6 +248,7 @@
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\DesignData.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
+    <Compile Include="ViewModels\VerificationTestViews\QATestRunViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\VerificationTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
@@ -269,9 +278,6 @@
     <Compile Include="Views\Dialogs\ProgressDialogView.xaml.cs">
       <DependentUpon>ProgressDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\RunTestView.xaml.cs">
-      <DependentUpon>RunTestView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml.cs">
       <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
     </Compile>
@@ -280,10 +286,6 @@
     </Compile>
     <Compile Include="Views\InstrumentReport\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentsList\InstrumentsListView.xaml.cs">
-      <DependentUpon>InstrumentsListView.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Views\InstrumentsList\InstrumentTestGridView.xaml.cs">
       <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
@@ -300,6 +302,9 @@
     <Compile Include="Views\Shell\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
+      <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
       <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
     </Compile>
@@ -308,6 +313,9 @@
     </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml.cs">
       <DependentUpon>PTSet.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerificationTestViews\QATestRunView.xaml.cs">
+      <DependentUpon>QATestRunView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
       <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
@@ -370,6 +378,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ProgressDialog\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -403,10 +415,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogs\RunTestView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -416,10 +424,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InstrumentReport\InstrumentReportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\InstrumentsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -438,6 +442,10 @@
     <Page Include="Views\LiveReadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -468,6 +476,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerificationTestViews\QATestRunView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -591,7 +603,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Screens\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

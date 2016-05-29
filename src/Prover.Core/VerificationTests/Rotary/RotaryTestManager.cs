@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Prover.Core.DriveTypes;
 using Prover.Core.EVCTypes;
 
 namespace Prover.Core.VerificationTests

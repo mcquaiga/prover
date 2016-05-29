@@ -12,11 +12,11 @@
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="400">
+             d:DesignHeight="100" d:DesignWidth="200">
     <!--  Pressure - Start  -->
     <StackPanel Orientation="Vertical">
-        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                              Mode="PrimaryDark" DockPanel.Dock="Top">
+        <materialDesign:ColorZone Padding="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                              Mode="PrimaryLight" DockPanel.Dock="Top">
             Pressure
         </materialDesign:ColorZone>
 

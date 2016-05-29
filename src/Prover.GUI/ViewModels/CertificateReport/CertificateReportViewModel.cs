@@ -25,22 +25,22 @@ namespace Prover.GUI.ViewModels.CertificateReport
         {
             _container = container;
             
-            LoadCertificate(certificate);
+            //LoadCertificate(certificate);
         }
 
         public Certificate Certificate { get; set; }
 
         public string CertificateDate { get { return Certificate.CreatedDateTime.ToShortDateString(); } }
 
-        public InstrumentsListViewModel InstrumentsView { get; set; }
+        //public InstrumentsListViewModel InstrumentsView { get; set; }
 
-        private void LoadCertificate(Certificate certificate)
-        {
-            InstrumentsView = new InstrumentsListViewModel(_container);
-            InstrumentsView.GetInstrumentsByCertificateId(certificate.Id);
-            Certificate = certificate;
-            NotifyOfPropertyChange(() => Certificate);
-        }
+        //private void LoadCertificate(Certificate certificate)
+        //{
+        //    InstrumentsView = new InstrumentsListViewModel(_container);
+        //    InstrumentsView.GetInstrumentsByCertificateId(certificate.Id);
+        //    Certificate = certificate;
+        //    NotifyOfPropertyChange(() => Certificate);
+        //}
 
         private void SaveCertificate()
         {

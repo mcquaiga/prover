@@ -5,7 +5,7 @@ using Prover.Core.Events;
 
 namespace Prover.GUI.ViewModels
 {
-    public class CommunicationStatusViewModel : ReactiveScreen, IHandle<InstrumentConnectionEvent>
+    public class CommunicationStatusViewModel : ReactiveScreen, IHandle<ConnectionStatusEvent>
     {
         public string StatusMessage { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Prover.GUI.ViewModels
             container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public void Handle(InstrumentConnectionEvent message)
+        public void Handle(ConnectionStatusEvent message)
         {
             StatusMessage = message.ConnectionStatus.ToString();
         }

@@ -54,18 +54,18 @@ namespace Prover.Core.VerificationTests
         private async Task WaitForReadingsToStablize(int level)
         {
             var liveReadItems = new Dictionary<int, ReadingStabilizer>();
-            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            if (Instrument.CompositionType == CorrectorType.PTZ)
             {
                 liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
                 liveReadItems.Add(26, new ReadingStabilizer(GetGaugeTemp(level)));
             }
 
-            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (Instrument.CompositionType == CorrectorType.T)
             {
                 liveReadItems.Add(26, new ReadingStabilizer(GetGaugeTemp(level)));
             }
 
-            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (Instrument.CompositionType == CorrectorType.P)
             {
                 liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
             }
@@ -86,18 +86,18 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadVerificationTestItems(int level)
         {
-            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            if (Instrument.CompositionType == CorrectorType.PTZ)
             {
                 await DownloadTemperatureTestItems(level, false);
                 await DownloadPressureTestItems(level);
             }
 
-            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (Instrument.CompositionType == CorrectorType.T)
             {
                 await DownloadTemperatureTestItems(level);
             }
 
-            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (Instrument.CompositionType == CorrectorType.P)
             {
                 await DownloadPressureTestItems(level);
             }
@@ -130,18 +130,18 @@ namespace Prover.Core.VerificationTests
         public async Task StartLiveRead()
         {
             var liveReadItems = new List<int>();
-            if (Instrument.CorrectorType == CorrectorType.PressureTemperature)
+            if (Instrument.CompositionType == CorrectorType.PTZ)
             {
                 liveReadItems.Add(8);
                 liveReadItems.Add(26);
             }
 
-            if (Instrument.CorrectorType == CorrectorType.TemperatureOnly)
+            if (Instrument.CompositionType == CorrectorType.T)
             {
                 liveReadItems.Add(26);
             }
 
-            if (Instrument.CorrectorType == CorrectorType.PressureOnly)
+            if (Instrument.CompositionType == CorrectorType.P)
             {
                 liveReadItems.Add(8);
             }
@@ -197,17 +197,17 @@ namespace Prover.Core.VerificationTests
             {
                 var verificationTest = new VerificationTest(i, instrument);
 
-                if (instrument.CorrectorType == CorrectorType.PressureOnly)
+                if (instrument.CompositionType == CorrectorType.P)
                 {
                     verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(instrument, i));
                 }
 
-                if (instrument.CorrectorType == CorrectorType.TemperatureOnly)
+                if (instrument.CompositionType == CorrectorType.T)
                 {
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
                 }
 
-                if (instrument.CorrectorType == CorrectorType.PressureTemperature)
+                if (instrument.CompositionType == CorrectorType.PTZ)
                 {
                     verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(instrument, i));
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));

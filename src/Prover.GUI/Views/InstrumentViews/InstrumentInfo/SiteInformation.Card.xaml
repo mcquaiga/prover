@@ -12,29 +12,37 @@
             TextElement.FontWeight="Medium"
             TextElement.FontSize="14"
             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             d:DataContext="{d:DesignInstance Type=vm:InstrumentInfoViewModel, IsDesignTimeCreatable=True}"
-             cal:Bind.AtDesignTime="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="150">
-    <materialDesign:Card>
+            d:DataContext="{d:DesignInstance Type=vm:InstrumentInfoViewModel, IsDesignTimeCreatable=True}"
+            cal:Bind.AtDesignTime="True"
+            mc:Ignorable="d" 
+            d:DesignHeight="100" d:DesignWidth="150">
+    <Grid Background="{DynamicResource MaterialDesignBackground}">
         <StackPanel Orientation="Vertical">
-            <!--  Basic Details Info  -->
+            <!--  Basic Details Info  --><!--
             <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Mode="PrimaryDark">
                 Site Information
-            </materialDesign:ColorZone>
+            </materialDesign:ColorZone>-->
 
-            <UniformGrid Rows="3">
-                <controls:ValueDescriptionControl Label="Instrument Type" Value="{Binding Instrument.TypeString}"/>
-                <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
-                <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>
-                <controls:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}"/>
-                <controls:ValueDescriptionControl Label="Firmware Version" Value="{Binding Instrument.FirmwareVersion}"/>
-                <controls:ValueDescriptionControl Label="Pulser A Select" Value="{Binding Instrument.PulseASelect}"/>
-                <controls:ValueDescriptionControl Label="Pulser A Scaling" Value="{Binding Instrument.PulseAScaling}"/>
-                <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
-                <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
-            </UniformGrid>
+            <StackPanel Orientation="Vertical">
+                <UniformGrid Rows="1">
+                    <controls:ValueDescriptionControl Label="Type" Value="{Binding Instrument.TypeString}"/>
+                    <controls:ValueDescriptionControl Label="Comp." Value="{Binding CorrectorType}"/>
+                </UniformGrid>
+                <UniformGrid Rows="3">
+                    <controls:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}"/>
+                    <controls:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}"/>
+                    <controls:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}"/>
+                    <controls:ValueDescriptionControl Label="Firmware Version" Value="{Binding Instrument.FirmwareVersion}"/>
+                    <controls:ValueDescriptionControl Label="Pulser A Select" Value="{Binding Instrument.PulseASelect}"/>
+                    <controls:ValueDescriptionControl Label="Pulser A Scaling" Value="{Binding Instrument.PulseAScaling}"/>
+                    <controls:ValueDescriptionControl Label="Pulser B Select" Value="{Binding Instrument.PulseBSelect}"/>
+                    <controls:ValueDescriptionControl Label="Pulser B Scaling" Value="{Binding Instrument.PulseBScaling}"/>
+                    <controls:ValueDescriptionControl Label="Base P." Value="{Binding BasePressure}"/>
+                    <controls:ValueDescriptionControl Label="Base T." Value="{Binding BaseTemperature}"/>
+                </UniformGrid>
+            </StackPanel>
+            
         </StackPanel>
-    </materialDesign:Card>
+    </Grid>
 </UserControl>

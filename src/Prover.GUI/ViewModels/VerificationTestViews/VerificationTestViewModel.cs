@@ -25,14 +25,12 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
                 throw new ArgumentNullException(nameof(testManager));
             InstrumentTestManager = testManager;
 
-            SiteInformationItem = new InstrumentInfoViewModel(_container, InstrumentTestManager.Instrument);
-
-            if (InstrumentTestManager is RotaryTestManager)
-                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
+            QaTestRunViewItem = new QaTestRunViewModel(container, InstrumentTestManager.Instrument);
         }
 
-        public TestManager InstrumentTestManager { get; set; }
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
+        public QaTestRunViewModel QaTestRunViewItem { get; set; }
+
+        public TestManager InstrumentTestManager { get; set; } 
 
         #region Methods
         public async Task SaveInstrument()

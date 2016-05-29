@@ -4,20 +4,18 @@ using Prover.Core.EVCTypes;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.ViewModels.InstrumentViews;
+using Prover.GUI.ViewModels.VerificationTestViews;
 using Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews;
 
 namespace Prover.GUI.ViewModels.InstrumentReport
 {
-    public class InstrumentReportViewModel : InstrumentTestViewModel
+    public class InstrumentReportViewModel
     {
-        public InstrumentReportViewModel(IUnityContainer container, Instrument instrument) : base(container, instrument)
+        public InstrumentReportViewModel(IUnityContainer container, Instrument instrument)
         {
-            SiteInformationItem = new InstrumentInfoViewModel(container, instrument);
-
-            if (Instrument.VolumeTest.DriveType is RotaryDrive)
-                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
+            QaTestRunViewItem = new QaTestRunViewModel(container, instrument);
         }
 
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
+        public QaTestRunViewModel QaTestRunViewItem { get; set; }
     }
 }
