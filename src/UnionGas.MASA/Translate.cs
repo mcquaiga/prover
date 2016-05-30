@@ -114,7 +114,7 @@ namespace UnionGas.MASA
             {
                 ActualFactor = vt.SuperFactorTest.ActualFactor.Value,
                 EvcFactor = vt.SuperFactorTest.ItemValues.EvcUnsqrFactor().Value,
-                EVCUnsqrFactor = vt.SuperFactorTest.EVCUnsqrFactor.Value,
+                EVCUnsqrFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
                 GaugePressure = vt.SuperFactorTest.GaugePressure.Value,
                 GaugeTemp = vt.SuperFactorTest.GaugeTemp,
                 PercentError = vt.SuperFactorTest.PercentError.Value

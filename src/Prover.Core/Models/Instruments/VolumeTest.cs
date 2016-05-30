@@ -189,5 +189,12 @@ namespace Prover.Core.Models.Instruments
                 }
             }
         }
+
+        public override void OnInitializing()
+        {
+            base.OnInitializing();
+
+            CreateDriveType();
+        }
     }
 }

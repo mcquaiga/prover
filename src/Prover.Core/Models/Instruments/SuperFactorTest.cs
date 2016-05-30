@@ -11,8 +11,8 @@ namespace Prover.Core.Models.Instruments
         private int N2_NUMBER = 54;
         private int CO2_NUMBER = 55;
         private int SUPER_TABLE_NUMBER = 147;
-        private TemperatureTest _temperatureTest;
-        private PressureTest _pressureTest { get; }
+        private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
+        private PressureTest PressureTest => VerificationTest.PressureTest;
 
         public FactorCalculations SuperFactorCaculations { get; set; }
 
@@ -29,33 +29,19 @@ namespace Prover.Core.Models.Instruments
         public SuperFactorTest(VerificationTest verificationTest)
         {
             VerificationTest = verificationTest;
-            _temperatureTest = verificationTest.TemperatureTest;
-            _pressureTest = verificationTest.PressureTest;
         }
 
         //TODO: This will always have to be in Fahrenheit
         [NotMapped]
-        public decimal GaugeTemp
-        {
-            get
-            {
-                return (decimal)_temperatureTest.Gauge;
-            }
-        }
+        public decimal GaugeTemp => (decimal)TemperatureTest.Gauge;
 
         //TODO: This will always have to be in PSI
         [NotMapped]
-        public decimal? GaugePressure => _pressureTest.GasGauge;
+        public decimal? GaugePressure => PressureTest.GasGauge;
 
         [NotMapped]
-        public decimal? EVCUnsqrFactor
-        {
-            get
-            {
-                return _pressureTest.ItemValues.EvcUnsqrFactor();
-            }
-        }
-        
+        public decimal? EvcUnsqrFactor => PressureTest.ItemValues.EvcUnsqrFactor();
+
         [NotMapped]
         public override decimal? ActualFactor
         {
@@ -87,8 +73,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (EVCUnsqrFactor == null || ActualFactor == 0) return null;
-                return decimal.Round((decimal)(((EVCUnsqrFactor - ActualFactor) / ActualFactor) * 100), 2);
+                if (EvcUnsqrFactor == null || ActualFactor == 0) return null;
+                return decimal.Round((decimal)(((EvcUnsqrFactor - ActualFactor) / ActualFactor) * 100), 2);
             }
         }
 

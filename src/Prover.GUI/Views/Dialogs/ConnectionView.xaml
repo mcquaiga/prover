@@ -13,7 +13,7 @@
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                 mc:Ignorable="d" Width="200" Height="150">
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
         <TextBlock Text="{Binding StatusText}" HorizontalAlignment="Center"></TextBlock>
         <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"  
                      Value="0"

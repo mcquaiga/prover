@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 
 namespace Prover.GUI.ViewModels
 {
-    public class CreateCertificateViewModel: ReactiveScreen
+    public class CreateCertificateViewModel: ReactiveScreen, IHandle<DataStorageChangeEvent>
     {
         private IUnityContainer _container;
 
@@ -138,5 +140,9 @@ namespace Prover.GUI.ViewModels
 
         //    InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
         //}
+        public void Handle(DataStorageChangeEvent message)
+        {
+            NotifyOfPropertyChange(() => InstrumentItems);
+        }
     }
 }

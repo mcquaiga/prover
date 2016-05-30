@@ -72,7 +72,5 @@ namespace Prover.Core.Models.Instruments
                 return result.HasValue ? decimal.Round(result.Value, 4) : 0;
             }
         }
-
-       
     }
 }

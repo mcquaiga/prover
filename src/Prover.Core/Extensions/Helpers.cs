@@ -35,9 +35,11 @@ namespace Prover.Core.Extensions
     {
         public static decimal? GetItemValue(this Dictionary<int, string> itemValues, int itemNumber)
         {
-            if (itemValues == null || itemValues.Count() == 0) return null;
+            if (itemValues == null || !itemValues.Any()) return null;
 
-            return decimal.Parse(itemValues.FirstOrDefault(x => x.Key == itemNumber).Value);
+            var result = itemValues.FirstOrDefault(x => x.Key == itemNumber).Value;
+            if (result == null) return null;
+            return decimal.Parse(result);
         }
 
         public static string GetItem(this Dictionary<int, string> itemValues, int itemNumber)

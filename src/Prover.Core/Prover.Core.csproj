@@ -151,6 +151,7 @@
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\ConnectionStatusEvent.cs" />
+    <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Events\TestProgressEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
@@ -206,10 +207,10 @@
     <Compile Include="Models\Instruments\InstrumentTable.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\MeterIndexes.cs" />
-    <Compile Include="Models\Instruments\PressureTests.cs" />
+    <Compile Include="Models\Instruments\PressureTest.cs" />
     <Compile Include="Models\Instruments\SuperFactorTest.cs" />
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
-    <Compile Include="Models\Instruments\Volume.cs" />
+    <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\InstrumentItem.cs" />
     <Compile Include="Settings\InstrumentItems\ItemLoader.cs" />

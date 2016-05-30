@@ -27,7 +27,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public decimal? EVCUnsqrFactor => (Test as SuperFactorTest).EVCUnsqrFactor;
+        public decimal? EVCUnsqrFactor => (Test as SuperFactorTest).EvcUnsqrFactor;
 
         public override void Handle(VerificationTestEvent message)
         {

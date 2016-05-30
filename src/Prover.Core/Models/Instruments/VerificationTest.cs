@@ -15,7 +15,6 @@ namespace Prover.Core.Models.Instruments
             TestNumber = testNumber;
             Instrument = instrument;
             InstrumentId = Instrument.Id;
-            //BuildCorrectorTypes(Instrument, hasVolumeTest);
         }
 
         public VerificationTest(int testNumber, Instrument instrument, PressureTest pressureTest,
@@ -58,6 +57,16 @@ namespace Prover.Core.Models.Instruments
                            PressureTest.HasPassed;
 
                 return false;
+            }
+        }
+
+        public override void OnInitializing()
+        {
+            base.OnInitializing();
+
+            if (Instrument.CompositionType == CorrectorType.PTZ)
+            {
+                SuperFactorTest = new SuperFactorTest(this);
             }
         }
     }
