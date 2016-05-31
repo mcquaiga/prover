@@ -31,7 +31,7 @@ namespace Prover.Core.VerificationTests
             _instrumentCommunicator = instrumentComm;
 
             VolumeTest = volumeTest;
-            _volumeItems = volumeTest.VerificationTest.Instrument.Items.Items.Where(i => i.IsVolumeTest == true).ToList();
+            _volumeItems = volumeTest.VerificationTest.Instrument.ItemDetails.Items.Where(i => i.IsVolumeTest == true).ToList();
 
             _firstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             _firstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);

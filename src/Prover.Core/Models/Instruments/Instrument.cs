@@ -1,29 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Odbc;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.Practices.ObjectBuilder2;
-using Newtonsoft.Json;
-using Prover.Core.Communication;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Models.Certificates;
-using Prover.SerialProtocol;
-using System.Collections.ObjectModel;
 
 namespace Prover.Core.Models.Instruments
 {
-    public enum InstrumentType
-    {
-        MiniMax = 4,
-        MiniAt = 3,
-        Ec300 = 7
-    }
-
     public enum CorrectorType
     {
         T,
@@ -34,45 +19,40 @@ namespace Prover.Core.Models.Instruments
 
     public class Instrument : ProverTable
     {
-        private int FIXED_PRESSURE_FACTOR = 109;
-        private int FIXED_SUPER_FACTOR = 110;
-        private int FIXED_TEMP_FACTOR = 111;
-        private int SERIAL_NUMBER = 62;
         private InstrumentType _instrumentType;
-        private InstrumentType instrumentType;
+        
 
-        [NotMapped]
-        public InstrumentItems Items;
-
+        [NotMapped] public IEnumerable<ItemMetadata> ItemDetails;
+        
         private Instrument()
         {
         }
 
-        public Instrument(InstrumentType instrumentType, InstrumentItems items, Dictionary<int, string> itemValues)
+        public Instrument(InstrumentType instrumentType, IEnumerable<ItemMetadata> items,
+            Dictionary<int, string> itemValues)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
             Type = instrumentType;
-            Items = items;
+            ItemDetails = items;
             ItemValues = itemValues;
         }
 
         public DateTime TestDateTime { get; set; }
+
         public InstrumentType Type
         {
-            get
-            {
-                return _instrumentType;
-            }
+            get { return _instrumentType; }
             set
             {
-                if (Items == null || !Items.Items.Any())
+                if (ItemDetails == null || !ItemDetails.Any())
                 {
-                    Items = new InstrumentItems(value);
+                    ItemDetails = ItemHelpers.LoadItems(value);
                 }
-                _instrumentType = value;                                   
+                _instrumentType = value;
             }
         }
+
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
 
@@ -81,31 +61,26 @@ namespace Prover.Core.Models.Instruments
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 
         #region NotMapped Properties
-        [NotMapped]
-        public int SerialNumber
-        {
-            get { return (int)Items.GetItem(SERIAL_NUMBER).GetNumericValue(ItemValues); }
-        }
 
         [NotMapped]
-        public string TypeString
-        {
-            get { return Type.ToString(); }
-        }
+        public int SerialNumber => (int) ItemDetails.GetItem(SERIAL_NUMBER).GetNumericValue(ItemValues);
 
-        [NotMapped] 
+        [NotMapped]
+        public string TypeString => Type.ToString();
+
+        [NotMapped]
         public CorrectorType CompositionType
         {
             get
             {
-                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live"
-                  && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
+                if (ItemDetails.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live"
+                    && ItemDetails.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
                     return CorrectorType.PTZ;
 
-                if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
+                if (ItemDetails.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
                     return CorrectorType.P;
 
-                if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
+                if (ItemDetails.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
                     return CorrectorType.T;
 
                 return CorrectorType.T;
@@ -118,50 +93,48 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal FirmwareVersion
         {
-            get
-            {
-                return Items.GetItem(122).GetNumericValue(ItemValues);
-            }
+            get { return ItemDetails.GetItem(122).GetNumericValue(ItemValues); }
         }
 
         [NotMapped]
         public decimal PulseAScaling
         {
-            get { return Items.GetItem(56).GetNumericValue(ItemValues); }
+            get { return ItemDetails.GetItem(56).GetNumericValue(ItemValues); }
         }
 
         [NotMapped]
         public string PulseASelect
         {
-            get { return Items.GetItem(93).GetDescriptionValue(ItemValues); }
+            get { return ItemDetails.GetItem(93).GetDescriptionValue(ItemValues); }
         }
 
         [NotMapped]
         public decimal PulseBScaling
         {
-            get { return Items.GetItem(57).GetNumericValue(ItemValues); }
+            get { return ItemDetails.GetItem(57).GetNumericValue(ItemValues); }
         }
 
         [NotMapped]
         public string PulseBSelect
         {
-            get { return Items.GetItem(94).GetDescriptionValue(ItemValues); }
+            get { return ItemDetails.GetItem(94).GetDescriptionValue(ItemValues); }
         }
 
         [NotMapped]
         public decimal SiteNumber1
         {
-            get { return Items.GetItem(200).GetNumericValue(ItemValues); }
+            get { return ItemDetails.GetItem(200).GetNumericValue(ItemValues); }
         }
 
         [NotMapped]
         public decimal SiteNumber2
         {
-            get { return Items.GetItem(201).GetNumericValue(ItemValues); }
+            get { return ItemDetails.GetItem(201).GetNumericValue(ItemValues); }
         }
 
         [NotMapped]
         public VolumeTest VolumeTest => VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null).VolumeTest;
+
         #endregion
     }
 }

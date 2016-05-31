@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+
+namespace Prover.CommProtocol.MiHoneywell.Items
+{
+    public static class ItemHelpers
+    {
+        private const string ItemDefinitionsFolder = "ItemDefinitions";
+
+        public static IEnumerable<MiItemMetadata> LoadItems(InstrumentType type)
+        {
+            var path = string.Empty;
+            switch (type)
+            {
+                case InstrumentType.MiniMax:
+                    path = "MiniMaxItems.xml";
+                    break;
+                case InstrumentType.MiniAT:
+                    path = "MiniATItems.xml";
+                    break;
+                case InstrumentType.EC3XX:
+                    path = "EC300Items.xml";
+                    break;
+            }
+
+            path = $"{ItemDefinitionsFolder}\\{path}";
+
+            var xDoc = XDocument.Load(path);
+
+            return (from x in xDoc.Descendants("item")
+                    select new MiItemMetadata()
+                    {
+                        Number = Convert.ToInt32(x.Attribute("number").Value),
+                        Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
+                        ShortDescription = x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
+                        LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
+                        IsAlarm = x.Attribute("isAlarm") != null && Convert.ToBoolean(x.Attribute("isAlarm").Value),
+                        IsPressure = x.Attribute("isPressure") != null && Convert.ToBoolean(x.Attribute("isPressure").Value),
+                        IsPressureTest = x.Attribute("isPressureTest") != null && Convert.ToBoolean(x.Attribute("isPressureTest").Value),
+                        IsTemperature = x.Attribute("isTemperature") != null && Convert.ToBoolean(x.Attribute("isTemperature").Value),
+                        IsTemperatureTest = x.Attribute("isTemperatureTest") != null && Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
+                        IsVolume = x.Attribute("isVolume") != null && Convert.ToBoolean(x.Attribute("isVolume").Value),
+                        IsVolumeTest = x.Attribute("isVolumeTest") != null && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
+                        IsSuperFactor = x.Attribute("isSuper") != null && Convert.ToBoolean(x.Attribute("isSuper").Value),
+                        ItemDescriptions =
+                            (from y in x.Descendants("value")
+                             select new MiItemMetadata.ItemDescription()
+                             {
+                                 Id = Convert.ToInt32(y.Attribute("id").Value),
+                                 Description = y.Attribute("description").Value,
+                                 Value = y.Attribute("numericvalue") == null ? (decimal?)null : Convert.ToDecimal(y.Attribute("numericvalue").Value)
+                             })
+                        .ToList()
+                    }
+            ).ToList();
+        }
+    }
+}

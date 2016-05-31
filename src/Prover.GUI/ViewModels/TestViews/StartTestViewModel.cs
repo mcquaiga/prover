@@ -12,6 +12,7 @@ using Prover.GUI.ViewModels.Shell;
 using Prover.GUI.ViewModels.VerificationTestViews;
 using Prover.SerialProtocol;
 using System.Threading.Tasks;
+using Prover.Core.VerificationTests.Rotary;
 using Prover.GUI.ProgressDialog;
 
 namespace Prover.GUI.ViewModels.TestViews

@@ -17,15 +17,13 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
     public class VolumeTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private readonly IUnityContainer _container;       
 
         public TestManager InstrumentManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
 
         public VolumeTestViewModel(IUnityContainer container, Core.Models.Instruments.VolumeTest volumeTest)
         {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
+            container.Resolve<IEventAggregator>().Subscribe(this);
 
             Volume = volumeTest;
         }

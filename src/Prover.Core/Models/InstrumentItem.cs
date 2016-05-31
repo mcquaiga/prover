@@ -95,7 +95,7 @@ namespace Prover.Core.Models
                 return GetItemDescription(intValue)?.Description;
             }
 
-            throw new KeyNotFoundException(string.Format("No description found for #{0} - {1}", Number, Code));
+            throw new KeyNotFoundException($"No description found for #{Number} - {Code}");
         }
 
         private ItemDescription GetItemDescription(int intValue)
@@ -114,56 +114,4 @@ namespace Prover.Core.Models
         }
     }
 
-    public static class ItemHelpers
-    {
-        private const string ITEM_DEFINITIONS_FOLDER = "ItemDefinitions";
-
-        public static IEnumerable<ItemDetail> LoadItems(InstrumentType type)
-        {
-            var _path = string.Empty;
-            switch (type)
-            {
-                case InstrumentType.MiniMax:
-                    _path = "MiniMaxItems.xml";
-                    break;
-                case InstrumentType.MiniAt:
-                    _path = "MiniATItems.xml";
-                    break;
-                case InstrumentType.Ec300:
-                    _path = "EC300Items.xml";
-                    break;
-            }
-
-            _path = string.Format("{0}\\{1}", ITEM_DEFINITIONS_FOLDER, _path);
-
-            var xDoc = XDocument.Load(_path);
-
-            return (from x in xDoc.Descendants("item")
-                    select new ItemDetail()
-                    {
-                        Number = Convert.ToInt32(x.Attribute("number").Value),
-                        Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
-                        ShortDescription = x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
-                        LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
-                        IsAlarm = x.Attribute("isAlarm") != null && Convert.ToBoolean(x.Attribute("isAlarm").Value),
-                        IsPressure = x.Attribute("isPressure") != null && Convert.ToBoolean(x.Attribute("isPressure").Value),
-                        IsPressureTest = x.Attribute("isPressureTest") != null && Convert.ToBoolean(x.Attribute("isPressureTest").Value),
-                        IsTemperature = x.Attribute("isTemperature") != null && Convert.ToBoolean(x.Attribute("isTemperature").Value),
-                        IsTemperatureTest = x.Attribute("isTemperatureTest") != null && Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
-                        IsVolume = x.Attribute("isVolume") != null && Convert.ToBoolean(x.Attribute("isVolume").Value),
-                        IsVolumeTest = x.Attribute("isVolumeTest") != null && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
-                        IsSuperFactor = x.Attribute("isSuper") != null && Convert.ToBoolean(x.Attribute("isSuper").Value),
-                        ItemDescriptions =
-                            (from y in x.Descendants("value")
-                             select new ItemDetail.ItemDescription()
-                             {
-                                 Id = Convert.ToInt32(y.Attribute("id").Value),
-                                 Description = y.Attribute("description").Value,
-                                 Value = y.Attribute("numericvalue") == null ? (decimal?)null : Convert.ToDecimal(y.Attribute("numericvalue").Value)
-                             })
-                        .ToList()
-                    }
-            ).ToList();
-        }
-    }
 }

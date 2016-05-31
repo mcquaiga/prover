@@ -6,8 +6,10 @@ using System.Runtime.Remoting.Contexts;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.CommPorts;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
 
@@ -15,58 +17,47 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
     public abstract class HoneywellClientBase : EvcCommunicationClient
     {
-        private const int MaxConnectionAttempts = 10;
-
         internal HoneywellClientBase(CommPort commPort, InstrumentType instrumentType) : base(commPort)
         {
             InstrumentType = instrumentType;
+            ItemDetails = ItemHelpers.LoadItems(InstrumentType);
         }
         
         public InstrumentType InstrumentType { get; }
 
+        public override IEnumerable<ItemMetadata> ItemDetails { get; }
+
         public override bool IsConnected { get; protected set; }
-
-        protected virtual async Task ExecuteCommand(string cmd)
-        {
-            await CommPort.SendAsync(cmd);
-        }
-
-        protected virtual async Task<T> ExecuteCommand<T>(string cmd, ResponseProcessor<T> processor = null)
-        {
-            await CommPort.SendAsync(cmd);
-
-            if (processor != null)
-            {
-                var messageSourceConnectable = processor.ResponseObservable(CommPort.DataReceivedObservable).Publish();
-
-                using (messageSourceConnectable.Connect())
-                {
-                    return await messageSourceConnectable
-                        .Timeout(TimeSpan.FromSeconds(2))
-                        .FirstAsync();
-                }
-            }
-
-            return default(T);
-        } 
 
         /// <summary>
         /// Establishes a link with the instrument
         /// </summary>
-        public override async Task Connect(CancellationTokenSource cancellationToken = null)
+        public override async Task Connect(int retryAttempts = MaxConnectionAttempts, CancellationTokenSource cancellationToken = null)
         {
             var connectionAttempts = 0;
             if (!IsConnected)
             {
                 do
                 {
-                    await WakeUpInstrument();
-                    var response = await ExecuteCommand(Commands.SignOnCommand(InstrumentType), ResponseProcessors.ResponseCode);
+                    connectionAttempts++;
+                    var response = await WakeUpInstrument();
+                    if (response.IsSuccess)
+                    {
+                        Thread.Sleep(300);
+                        response = await ExecuteCommand(Commands.SignOnCommand(InstrumentType), ResponseProcessors.ResponseCode);
 
-                    if (response.Item1 == ResponseCode.NoError)
-                        IsConnected = true;
-                    else
-                        connectionAttempts++;
+                        if (response.IsSuccess)
+                        {
+                            Log.Debug("Connected!");
+                            IsConnected = true;
+                        }
+                    }
+
+                    if (!response.IsSuccess)
+                    {
+                        Log.Warn($"Error connecting to instrument - {response.ResponseCode}");
+                        Thread.Sleep(1000);
+                    }
 
                 } while (!IsConnected && connectionAttempts < MaxConnectionAttempts);
             }
@@ -75,8 +66,12 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         public override async Task Disconnect()
         {
             var response = await ExecuteCommand(Commands.SignOffCommand(), ResponseProcessors.ResponseCode);
-            
-            IsConnected = false;
+
+            if (response.IsSuccess)
+            {
+                await CommPort.CloseAsync();
+                IsConnected = false;
+            }
         }
 
         public override async Task<object> GetItemValue(int itemNumber)
@@ -108,10 +103,11 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             throw new System.NotImplementedException();
         }
 
-        protected virtual async Task WakeUpInstrument()
+        private async Task<StatusResponseMessage> WakeUpInstrument()
         {
             await ExecuteCommand(Commands.WakeupOne());
-            var response = await ExecuteCommand(Commands.WakeupTwo(), ResponseProcessors.Acknowledgment);
+            Thread.Sleep(500);
+            return await ExecuteCommand(Commands.WakeupTwo(), ResponseProcessors.ResponseCode);
         }
     }
 }

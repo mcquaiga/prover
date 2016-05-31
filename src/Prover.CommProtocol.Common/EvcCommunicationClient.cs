@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
+using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
-using Prover.CommProtocol.Common.CommPorts;
+using NLog;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.Common
 {
     public abstract class EvcCommunicationClient
     {
+        protected const int MaxConnectionAttempts = 10;
+        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
@@ -17,7 +28,34 @@ namespace Prover.CommProtocol.Common
             CommPort = commPort;
         }
 
+        protected virtual async Task ExecuteCommand(string cmd)
+        {
+            await CommPort.SendAsync(cmd);
+        }
+
+        protected virtual async Task<T> ExecuteCommand<T>(string cmd, ResponseProcessor<T> processor)
+        { 
+            if (processor == null) throw new ArgumentNullException(nameof(processor));
+
+            var response = processor.ResponseObservable(CommPort.ReceivedSubject)
+                            .Timeout(TimeSpan.FromSeconds(2))
+                            .FirstAsync()
+                            .PublishLast();
+            response.Connect();
+
+            await CommPort.SendAsync(cmd);
+
+            var result = await response;
+            Log.Debug($"Response -> {result.ToString()}");
+            return result;
+        }
+
         protected CommPort CommPort { get; }
+
+        /// <summary>
+        /// Contains all the item numbers and meta data for a specific instrument type
+        /// </summary>
+        public virtual IEnumerable<ItemMetadata> ItemDetails { get; } = new List<ItemMetadata>();
 
         /// <summary>
         ///     Is there already a connection open
@@ -27,7 +65,7 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Establish a connection through the CommPort with an EVC
         /// </summary>
-        public abstract Task Connect(CancellationTokenSource cancellationToken = null);
+        public abstract Task Connect(int retryAttempts = MaxConnectionAttempts, CancellationTokenSource cancellationToken = null);
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists

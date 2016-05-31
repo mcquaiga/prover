@@ -1,45 +1,42 @@
-﻿using Caliburn.Micro;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using NLog;
-using Prover.Core.Communication;
-using Prover.Core.EVCTypes;
-using Prover.Core.Events;
-using Prover.Core.Models;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.SerialProtocol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prover.Core.Collections;
+using Prover.Core.Communication;
+using Prover.Core.Events;
+using Prover.Core.EVCTypes;
 using Prover.Core.Extensions;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Storage;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public class TestManager
     {
-        private const int VOLUME_TESTNUMBER = 0;
+        private const int VolumeTestnumber = 0;
 
-        protected static Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        protected readonly IUnityContainer _container;
-        
-        private bool _isLiveReading;
+        protected static Logger Log = LogManager.GetCurrentClassLogger();
+        protected readonly IUnityContainer Container;
         private bool _isBusy;
-        private bool _stopLiveReading;
 
-        public Instrument Instrument { get; private set; }
-        public InstrumentCommunicator InstrumentCommunicator { get; private set; }
-        public virtual BaseVolumeVerificationManager VolumeTestManager { get; set; }
+        private bool _isLiveReading;
+        private bool _stopLiveReading;
 
         protected TestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm)
         {
-            _container = container;
+            Container = container;
             Instrument = instrument;
             InstrumentCommunicator = instrumentComm;
         }
+
+        public Instrument Instrument { get; }
+        public InstrumentCommunicator InstrumentCommunicator { get; }
+        public virtual BaseVolumeVerificationManager VolumeTestManager { get; set; }
 
         public async Task RunTest(int level)
         {
@@ -76,12 +73,12 @@ namespace Prover.Core.VerificationTests
                 {
                     var liveValue = await InstrumentCommunicator.LiveReadItem(item.Key);
                     item.Value.ValueQueue.Enqueue(liveValue);
-                    _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
+                    Container.Resolve<IEventAggregator>()
+                        .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
                 }
             } while (liveReadItems.Any(x => !x.Value.IsStable()));
 
             await InstrumentCommunicator.Disconnect();
-            
         }
 
         public async Task DownloadVerificationTestItems(int level)
@@ -108,7 +105,7 @@ namespace Prover.Core.VerificationTests
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
-            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsTemperatureTest == true).ToList();
+            var itemsToDownload = Instrument.ItemDetails.Items.Where(i => i.IsTemperatureTest == true).ToList();
             if (test != null)
                 test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
 
@@ -120,7 +117,7 @@ namespace Prover.Core.VerificationTests
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
-            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsPressureTest == true).ToList();
+            var itemsToDownload = Instrument.ItemDetails.Items.Where(i => i.IsPressureTest == true).ToList();
             if (test != null)
                 test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
 
@@ -154,7 +151,7 @@ namespace Prover.Core.VerificationTests
             if (!_isBusy)
             {
                 var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
-                _log.Debug("Starting live read...");
+                Log.Debug("Starting live read...");
                 await InstrumentCommunicator.Connect();
                 _stopLiveReading = false;
                 _isLiveReading = true;
@@ -162,15 +159,15 @@ namespace Prover.Core.VerificationTests
                 {
                     foreach (var i in itemNumbers)
                     {
-                         var liveValue = await InstrumentCommunicator.LiveReadItem(i);
-                        _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
+                        var liveValue = await InstrumentCommunicator.LiveReadItem(i);
+                        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
                     }
                 } while (!_stopLiveReading);
 
                 await InstrumentCommunicator.Disconnect();
                 _isLiveReading = false;
                 _isBusy = false;
-                _log.Debug("Finished live read!");
+                Log.Debug("Finished live read!");
             }
         }
 
@@ -185,7 +182,7 @@ namespace Prover.Core.VerificationTests
 
         public async Task SaveAsync()
         {
-            using (var store = new InstrumentStore(_container))
+            using (var store = new InstrumentStore(Container))
             {
                 await store.UpsertAsync(Instrument);
             }
@@ -193,7 +190,7 @@ namespace Prover.Core.VerificationTests
 
         protected static void CreateVerificationTests(Instrument instrument, IDriveType driveType)
         {
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 var verificationTest = new VerificationTest(i, instrument);
 
@@ -214,13 +211,13 @@ namespace Prover.Core.VerificationTests
                     verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
                 }
 
-                if (i == VOLUME_TESTNUMBER)
+                if (i == VolumeTestnumber)
                     verificationTest.VolumeTest = new VolumeTest(verificationTest, driveType);
 
                 instrument.VerificationTests.Add(verificationTest);
             }
         }
-    
+
         private static decimal GetGaugeTemp(int testNumber)
         {
             return
@@ -230,18 +227,16 @@ namespace Prover.Core.VerificationTests
 
         private static decimal GetGaugePressure(Instrument instrument, int testNumber)
         {
-            var value = SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
+            var value =
+                SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
 
             if (value > 1)
                 value = value/100;
 
             var evcPressureRange = instrument.EvcPressureRange();
             if (evcPressureRange != null)
-                return value * evcPressureRange.Value;
-            else
-            {
-                return 0m;
-            }
+                return value*evcPressureRange.Value;
+            return 0m;
         }
     }
 }

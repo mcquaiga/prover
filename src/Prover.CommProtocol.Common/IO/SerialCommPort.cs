@@ -6,8 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Prover.CommProtocol.Common.Messaging;
 
-namespace Prover.CommProtocol.Common.CommPorts
+namespace Prover.CommProtocol.Common.IO
 {
     public class SerialCommPort : CommPort
     {
@@ -21,15 +22,18 @@ namespace Prover.CommProtocol.Common.CommPorts
             _serialPort = serialPort;
 
             _openPortTimeoutMs = timeout;
+
             DataReceivedObservable = CreateReceiveObservable();
+            DataReceivedObservable.Subscribe(ReceivedSubject);
+
+            ResponseProcessors.MessageProcessor.ResponseObservable(ReceivedSubject)
+                .Subscribe(msg => { _log.Debug($"Incoming >> {msg}"); });
         }
 
         public SerialCommPort(string portName, int baudRate, int timeout = 1000)
             : this(CreateSerialPort(portName, baudRate, timeout), timeout)
         {
         }
-
-        public override IObservable<char> DataReceivedObservable { get; }
 
         public override async Task OpenAsync()
         {
@@ -60,10 +64,10 @@ namespace Prover.CommProtocol.Common.CommPorts
             {
                 await OpenAsync();
 
-                _log.Debug($"WRITE - {_serialPort.PortName} - " + data);
+                _log.Debug($"Outgoing >> {_serialPort.PortName} - [{data}]");
 
                 _serialPort.DiscardOutBuffer();
-                
+
                 var content = new List<byte>();
                 content.AddRange(Encoding.ASCII.GetBytes(data));
 
@@ -73,7 +77,7 @@ namespace Prover.CommProtocol.Common.CommPorts
         }
 
         public override bool IsOpen() => _serialPort.IsOpen;
-        
+
         public override async Task CloseAsync()
         {
             if (_serialPort.IsOpen)
@@ -82,13 +86,11 @@ namespace Prover.CommProtocol.Common.CommPorts
 
         public override void Dispose()
         {
+            base.Dispose();
             CloseAsync().ContinueWith(_ => _serialPort.Dispose());
         }
 
-        public override string ToString()
-        {
-            return $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
-        }
+        public override string ToString() => $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
 
         private static SerialPort CreateSerialPort(string portName, int baudRate, int timeout = 2000)
         {
@@ -97,10 +99,10 @@ namespace Prover.CommProtocol.Common.CommPorts
 
             var port = new SerialPort(portName, baudRate)
             {
-                ReadTimeout = timeout,
-                WriteTimeout = timeout,
                 RtsEnable = true,
-                DtrEnable = true
+                DtrEnable = true,
+                ReadTimeout = 200,
+                WriteTimeout = 150
             };
 
             return port;
@@ -113,6 +115,8 @@ namespace Prover.CommProtocol.Common.CommPorts
             return Observable.FromEventPattern<SerialDataReceivedEventArgs>(_serialPort, "DataReceived")
                 .SelectMany(_ =>
                 {
+                    if (!_serialPort.IsOpen) return null;
+
                     var dataLength = _serialPort.BytesToRead;
                     var data = new byte[dataLength];
                     var nbrDataRead = _serialPort.Read(data, 0, dataLength);

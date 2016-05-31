@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prover.CommProtocol.Common.Extensions;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 {
@@ -17,9 +18,9 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             return BuildCommand(cmd);
         }
 
-        public static string WakeupOne() => ProtocolChars.EOT;
+        public static string WakeupOne() => new string(new[] { ProtocolChars.EOT });
 
-        public static string WakeupTwo() => ProtocolChars.ENQ;
+        public static string WakeupTwo() => new string(new[] { ProtocolChars.ENQ });
 
         public static string SignOffCommand() => BuildCommand("SF");
 
@@ -60,20 +61,30 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 
         internal static class ProtocolChars
         {
-            public static string SOH = FormatChar(1);
-            public static string STX = FormatChar(2);
-            public static string ETX = FormatChar(3);
-            public static string EOT = FormatChar(4);
-            public static string ENQ = FormatChar(5);
-            public static string ACK = FormatChar(6);
-            public static string CR = FormatChar(13);
-            public static string NAK = FormatChar(21);
-            public static string RS = FormatChar(30);
+            public static char SOH = (char)1;
+            public static char STX = (char)2;
+            public static char ETX = (char)3;
+            public static char EOT = (char)4;
+            public static char ENQ = (char)5;
+            public static char ACK = (char)6;
+            public static char CR = (char)13;
+            public static char NAK = (char)21;
+            public static char RS = (char)30;
 
-            private static string FormatChar(int charValue)
-            {
-                return new string(new[] {(char) charValue});
-            }
+            //public static string SOH = FormatChar(1);
+            //public static string STX = FormatChar(2);
+            //public static string ETX = FormatChar(3);
+            //public static string EOT = FormatChar(4);
+            //public static string ENQ = FormatChar(5);
+            //public static string ACK = FormatChar(6);
+            //public static string CR = FormatChar(13);
+            //public static string NAK = FormatChar(21);
+            //public static string RS = FormatChar(30);
+
+            //private static string FormatChar(int charValue)
+            //{
+            //    return new string(new[] {(char) charValue});
+            //}
         }
     }
 }

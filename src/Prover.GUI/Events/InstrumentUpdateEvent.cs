@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
+using Prover.Core.VerificationTests.Rotary;
 
 namespace Prover.GUI.Events
 {

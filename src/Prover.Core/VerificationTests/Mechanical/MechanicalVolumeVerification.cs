@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
 
-namespace Prover.Core.VerificationTests
+namespace Prover.Core.VerificationTests.Mechanical
 {
     public sealed class MechanicalVolumeVerification : BaseVolumeVerificationManager
     {

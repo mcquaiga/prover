@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Prover.CommProtocol.Common.CommPorts;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 
 namespace Prover.CommProtocol.MiHoneywell.Console
@@ -18,6 +18,8 @@ namespace Prover.CommProtocol.MiHoneywell.Console
             client.Connect().Wait();
 
             System.Console.ReadLine();
+
+            client.Disconnect().Wait();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Extensions;
 using Prover.CommProtocol.Common.Messaging;
@@ -12,16 +13,16 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public static ResponseProcessor<string>
             ItemValue = new ItemValueProcessor();
         
-        public static ResponseProcessor<Tuple<ResponseCode, string>>
+        public static ResponseProcessor<StatusResponseMessage>
             ResponseCode = new ResponseCodeProcessor();
 
-        public static ResponseProcessor<bool>
-            Acknowledgment = new AcknowledgementProcessor();
+        //public static ResponseProcessor<bool>
+        //    Acknowledgment = new AcknowledgementProcessor();
     }
 
     internal class ItemValueProcessor : ResponseProcessor<string>
     {
-        public override IObservable<string> ResponseObservable(IObservable<char> source)
+        public override IObservable<string> ResponseObservable(Subject<char> source)
         {
             return Observable.Create<string>(observer =>
             {
@@ -54,11 +55,11 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         }
     }
 
-    internal class ResponseCodeProcessor : ResponseProcessor<Tuple<ResponseCode, string>>
+    internal class ResponseCodeProcessor : ResponseProcessor<StatusResponseMessage>
     {
-        public override IObservable<Tuple<ResponseCode, string>> ResponseObservable(IObservable<char> source)
+        public override IObservable<StatusResponseMessage> ResponseObservable(Subject<char> source)
         {
-            return Observable.Create<Tuple<ResponseCode, string>>(observer =>
+            return Observable.Create<StatusResponseMessage>(observer =>
             {
                 var codeChars = new List<char>();
                 var checksumChars = new List<char>();
@@ -70,7 +71,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                         var code = int.Parse(string.Concat(codeChars.ToArray()));
                         var checksum = string.Concat(checksumChars.ToArray());
 
-                        observer.OnNext(new Tuple<ResponseCode, string>((ResponseCode)code, checksum));
+                        observer.OnNext(new StatusResponseMessage((ResponseCode)code, checksum));
 
                         codeChars.Clear();
                         checksumChars.Clear();
@@ -85,7 +86,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                     {
                         if (c.IsAcknowledgement())
                         {
-
+                            observer.OnNext(new StatusResponseMessage(ResponseCode.NoError, "0000"));
                         }
 
                         if (c.IsEndOfTransmission())
@@ -127,20 +128,24 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         }
     }
 
-    internal class AcknowledgementProcessor : ResponseProcessor<bool>
-    {
-        public override IObservable<bool> ResponseObservable(IObservable<char> source)
-        {
-            return Observable.Create<bool>(observer =>
-            {
-                return source.Subscribe(c =>
-                {
-                    if (c.IsAcknowledgement())
-                    {
-                        observer.OnNext(true);
-                    }
-                });
-            });
-        }
-    }
+    //internal class AcknowledgementProcessor : ResponseProcessor<bool>
+    //{
+    //    public override IObservable<bool> ResponseObservable(Subject<char> source)
+    //    {
+    //        return Observable.Create<bool>(observer =>
+    //        {
+    //            return source.Subscribe(c =>
+    //            {
+    //                if (c.IsAcknowledgement())
+    //                {
+    //                    observer.OnNext(true);
+    //                }
+    //                else
+    //                {
+    //                    observer.OnNext(false);
+    //                }
+    //            });
+    //        });
+    //    }
+    //}
 }

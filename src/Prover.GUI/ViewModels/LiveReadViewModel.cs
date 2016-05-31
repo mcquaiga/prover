@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.Core.VerificationTests.Rotary;
 using Action = System.Action;
 
 namespace Prover.GUI.ViewModels

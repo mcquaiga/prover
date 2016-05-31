@@ -1,26 +1,23 @@
-﻿using Caliburn.Micro;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Caliburn.Micro;
 using Microsoft.Practices.Unity;
-using NLog;
-using Prover.Core.Events;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.CommClients;
+using Prover.Core.Communication;
+using Prover.Core.DriveTypes;
 using Prover.Core.Models;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.Core.Communication;
 using Prover.SerialProtocol;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Prover.Core.DriveTypes;
-using Prover.Core.EVCTypes;
 
-namespace Prover.Core.VerificationTests
+namespace Prover.Core.VerificationTests.Rotary
 {
     public class RotaryTestManager : TestManager
     {
-        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
+        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, InstrumentType instrumentType, CommPort instrumentPort, string tachometerPortName)
         {
-            var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
 
             TachometerCommunicator tachComm = null;
             if (!string.IsNullOrEmpty(tachometerPortName))
@@ -28,15 +25,15 @@ namespace Prover.Core.VerificationTests
                 tachComm = new TachometerCommunicator(tachometerPortName);
             }
 
-            var items = new InstrumentItems(instrumentType);
-            var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
-            var instrument = new Instrument(instrumentType, items, itemValues);
+            var client = new MiniMaxClient(instrumentPort);
+            var itemValues = await client.GetItemValue(client.ItemDetails.GetAllItemNumbers());
+            var instrument = new Instrument(instrumentType, client.ItemDetails.GetAllItemNumbers(), itemValues);
 
             var driveType = new RotaryDrive(instrument);
             CreateVerificationTests(instrument, driveType);
 
             var volumeTest = instrument.VerificationTests.FirstOrDefault(x => x.VolumeTest != null).VolumeTest;
-            var rotaryVolumeTest = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentComm, tachComm);
+            var rotaryVolumeTest = new RotaryVolumeVerification(container, volumeTest, instrumentComm, tachComm);
 
             var manager = new RotaryTestManager(container, instrument, instrumentComm, rotaryVolumeTest);
             container.RegisterInstance<TestManager>(manager);
