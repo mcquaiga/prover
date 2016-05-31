@@ -38,7 +38,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (ItemValues.EvcTemperatureFactor() == null) return null;
                 if (ActualFactor == null) return null;
-                return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor() - ActualFactor)/ActualFactor)*100, 2);
+                return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor().GetValueOrDefault(0) - ActualFactor)/ActualFactor)*100, 2);
             }
         }
 
@@ -52,15 +52,11 @@ namespace Prover.Core.Models.Instruments
                     case "K":
                     case "C":
                         return
-                            Math.Round(
-                                (decimal)
-                                    ((MetericTempCorrection + VerificationTest.Instrument.EvcBaseTemperature()) /
-                                     ((decimal)Gauge + MetericTempCorrection)), 4);
+                            Math.Round((MetericTempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0)) / ((decimal)Gauge + MetericTempCorrection), 4);
                     case "R":
                     case "F":
                         return
-                            Math.Round(
-                                (decimal) ((TempCorrection + VerificationTest.Instrument.EvcBaseTemperature())/((decimal)Gauge + TempCorrection)), 4);
+                            Math.Round((TempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0)) / ((decimal)Gauge + TempCorrection), 4);
                 }
 
                 return 0;

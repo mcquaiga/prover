@@ -23,16 +23,28 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             Instrument = instrument;
         }
 
-        public Instrument Instrument { get; set; }       
+        public Instrument Instrument { get; set; }
 
-        public string BasePressure
+        public string CorrectorType
         {
             get
             {
-                return string.Format("{0} {1}", Instrument.EvcBasePressure(), Instrument.PressureUnits());
+                switch (Instrument.CompositionType)
+                {
+                    case Core.Models.Instruments.CorrectorType.PTZ:
+                        return "PTZ";
+                    case Core.Models.Instruments.CorrectorType.P:
+                        return "P";
+                    default:
+                        return "T";
+                    
+                }
             }
         }
 
+        public string BasePressure => $"{Instrument.EvcBasePressure()} {Instrument.PressureUnits()}";
+
+        public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
         public void Handle(InstrumentUpdateEvent message)
         {

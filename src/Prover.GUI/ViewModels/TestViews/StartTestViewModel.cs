@@ -6,27 +6,55 @@ using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
+using Prover.Core.VerificationTests.Mechanical;
 using Prover.GUI.ViewModels.SettingsViews;
 using Prover.GUI.ViewModels.Shell;
 using Prover.GUI.ViewModels.VerificationTestViews;
 using Prover.SerialProtocol;
 using System.Threading.Tasks;
+using Prover.GUI.ProgressDialog;
 
 namespace Prover.GUI.ViewModels.TestViews
 {
     public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
     {
         private IUnityContainer _container;
+        private bool _miniAtChecked;
+
         public BaudRateEnum BaudRate { get; private set; }
         public ICommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
 
-        public RotaryTestManager InstrumentTestManager { get; set; }
+        public TestManager InstrumentTestManager { get; set; }
         public string TachCommPortName { get; private set; }
+
+        public bool IsMiniMaxChecked
+        {
+            get
+            {
+                return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "MiniMax";
+            }
+            set
+            {
+                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "MiniMax";
+            }
+        }
+        public bool IsMiniATChecked
+        {
+            get
+            {
+                return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "MiniAT";
+            }
+            set
+            {
+                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "MiniAT";   
+            }
+        }
 
         public StartTestViewModel(IUnityContainer container)
         {
             _container = container;
+            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public async Task CancelCommand()
@@ -41,8 +69,14 @@ namespace Prover.GUI.ViewModels.TestViews
 
         public async Task InitializeTest()
         {
+            SettingsManager.Save();
+
             var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
-            InstrumentTestManager = await RotaryTestManager.Create(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
+
+            if (IsMiniMaxChecked)
+                InstrumentTestManager = await RotaryTestManager.CreateRotaryTest(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
+            else if (IsMiniATChecked)
+                InstrumentTestManager = await MechanicalTestManager.Create(_container, InstrumentType.MiniAt, commPort);
 
             await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentTestManager));
         }

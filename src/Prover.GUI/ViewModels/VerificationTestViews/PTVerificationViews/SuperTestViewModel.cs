@@ -19,16 +19,15 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
     {
         private IUnityContainer _container;
         private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        public RotaryTestManager InstrumentManager { get; set; }
 
-        public SuperTestViewModel(IUnityContainer container, SuperFactorTest test)
+        public SuperTestViewModel(IUnityContainer container, SuperFactorTest test) : base()
         {
             _container = container;
             Test = test;
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public decimal? EVCUnsqrFactor => (Test as SuperFactorTest).EVCUnsqrFactor;
+        public decimal? EVCUnsqrFactor => (Test as SuperFactorTest).EvcUnsqrFactor;
 
         public override void Handle(VerificationTestEvent message)
         {

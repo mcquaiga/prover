@@ -12,6 +12,6 @@ namespace Prover.Core.Storage
         IQueryable<T> Query();
         Instrument Get(Guid id);
         Task<Instrument> UpsertAsync(T entity);
-        void Delete(T entity);
+        Task Delete(T entity);
     }
 }

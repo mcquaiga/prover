@@ -1,39 +1,24 @@
-﻿using Prover.Core.Extensions;
+﻿using System;
+using Prover.Core.EVCTypes;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Prover.Core.EVCTypes
+namespace Prover.Core.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
-        private Instrument _instrument;
+        public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
         public RotaryDrive(Instrument instrument)
         {
-            _instrument = instrument;
-            Meter = new MeterTest(_instrument);
+            Instrument = instrument;
+            Meter = new MeterTest(Instrument);
         }
 
-        public string Discriminator
-        {
-            get
-            {
-                return "Rotary";
-            }
-        }
+        public string Discriminator => "Rotary";
 
-        public bool HasPassed
-        {
-            get
-            {
-                return Meter.MeterDisplacementHasPassed;
-            }
-        }
+        public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
@@ -42,10 +27,10 @@ namespace Prover.Core.EVCTypes
 
         public int MaxUnCorrected()
         {
-            if (_instrument.UnCorrectedMultiplier() == 10)
+            if (Instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;
 
-            if (_instrument.UnCorrectedMultiplier() == 100)
+            if (Instrument.UnCorrectedMultiplier() == 100)
                 return Meter.MeterIndex.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything
@@ -54,7 +39,7 @@ namespace Prover.Core.EVCTypes
 
     public class MeterTest
     {
-        private Instrument _instrument;
+        private readonly Instrument _instrument;
 
         public MeterTest(Instrument instrument)
         {

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views.InstrumentsList.PTZVerification
+namespace Prover.GUI.Views.VerificationTestViews
 {
     /// <summary>
-    /// Interaction logic for PTZVerificationView.xaml
+    /// Interaction logic for QATestRunView.xaml
     /// </summary>
-    public partial class PTZVerificationView : UserControl
+    public partial class QaTestRunView : UserControl
     {
-        public PTZVerificationView()
+        public QaTestRunView()
         {
             InitializeComponent();
         }

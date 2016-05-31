@@ -5,6 +5,8 @@ using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Events;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net.NetworkInformation;
+using Action = System.Action;
 
 namespace Prover.GUI.ViewModels
 {
@@ -22,7 +24,17 @@ namespace Prover.GUI.ViewModels
             if (windowsSettings != null)
                 container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
             else
-                container.Resolve<IWindowManager>().ShowPopup(dialogViewModel, null);
+                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel);
+        }
+
+        internal static void Show(IUnityContainer container, ReactiveScreen dialogViewModel)
+        {
+            var windowsSettings = dialogViewModel as IWindowSettings;
+
+            if (windowsSettings != null)
+                container.Resolve<IWindowManager>().ShowWindow(dialogViewModel, null, windowsSettings.WindowSettings);
+            else
+                container.Resolve<IWindowManager>().ShowWindow(dialogViewModel);
         }
     }
 }

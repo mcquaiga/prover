@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.ViewModels;
+using Prover.GUI.ViewModels.Dialogs;
 using Prover.GUI.ViewModels.Shell;
 
 namespace Prover.GUI
@@ -27,6 +28,8 @@ namespace Prover.GUI
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
+
+            _container.RegisterInstance(new ConnectionDialogManager(_container));
         }
 
         protected override object GetInstance(Type service, string key)

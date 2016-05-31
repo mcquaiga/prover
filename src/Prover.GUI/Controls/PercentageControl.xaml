@@ -21,22 +21,22 @@
     </UserControl.Resources>
     <!---->
     <Grid DataContext="{Binding ElementName=parent}">
-            <Grid Height="52">
+            <Grid Height="42">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="52"/>
+                    <ColumnDefinition Width="42"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" Background="{Binding Path=IconBackground}">
                     <Image x:Name="Icon" Source="{Binding Path=IconSource}" Width="36" Height="36" />
                 </Grid>
-                <Grid Grid.Column="1" Margin="8 0">
+                <Grid Grid.Column="1" Margin="6 0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Path=DisplayValue}" 
                                    FontSize="30"
                                    VerticalAlignment="Bottom"/>
                         <TextBlock Text="%"
                                    VerticalAlignment="Bottom"
-                           FontSize="24"
+                           FontSize="20"
                            Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"/>
                     </StackPanel>
                 </Grid>

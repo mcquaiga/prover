@@ -13,13 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views.Dialogues
+namespace Prover.GUI.Views.Dialogs
 {
     /// <summary>
     /// Interaction logic for ConnectionView.xaml
     /// </summary>
     public partial class ConnectionView : UserControl
-    {
+    { 
         public ConnectionView()
         {
             InitializeComponent();

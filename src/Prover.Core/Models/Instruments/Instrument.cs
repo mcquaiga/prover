@@ -26,9 +26,10 @@ namespace Prover.Core.Models.Instruments
 
     public enum CorrectorType
     {
-        TemperatureOnly,
-        PressureOnly,
-        PressureTemperature
+        T,
+        P,
+        // ReSharper disable once InconsistentNaming
+        PTZ
     }
 
     public class Instrument : ProverTable
@@ -74,8 +75,8 @@ namespace Prover.Core.Models.Instruments
         }
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
-        
-        public DateTime ExportedDateTime { get; set; }
+
+        public DateTime? ExportedDateTime { get; set; } = null;
 
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 
@@ -93,32 +94,26 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped] 
-        public CorrectorType CorrectorType
+        public CorrectorType CompositionType
         {
             get
             {
                 if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live"
                   && Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.PressureTemperature;
+                    return CorrectorType.PTZ;
 
                 if (Items.GetItem(FIXED_PRESSURE_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.PressureOnly;
+                    return CorrectorType.P;
 
                 if (Items.GetItem(FIXED_TEMP_FACTOR).GetDescriptionValue(ItemValues).ToLower() == "live")
-                    return CorrectorType.TemperatureOnly;
+                    return CorrectorType.T;
 
-                return CorrectorType.TemperatureOnly;
+                return CorrectorType.T;
             }
         }
 
         [NotMapped]
-        public bool HasPassed
-        {
-            get
-            {
-                return VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
-            }
-        }
+        public bool HasPassed => VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
 
         [NotMapped]
         public decimal FirmwareVersion
@@ -164,6 +159,9 @@ namespace Prover.Core.Models.Instruments
         {
             get { return Items.GetItem(201).GetNumericValue(ItemValues); }
         }
-        #endregion      
+
+        [NotMapped]
+        public VolumeTest VolumeTest => VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null).VolumeTest;
+        #endregion
     }
 }

@@ -45,9 +45,10 @@ namespace Prover.Core.Storage
             return instrument;
         }
 
-        public void Delete(Instrument entity)
+        public async Task Delete(Instrument entity)
         {
             _proverContext.Instruments.Remove(entity);
+            await _proverContext.SaveChangesAsync();
         }
 
         public void Dispose()

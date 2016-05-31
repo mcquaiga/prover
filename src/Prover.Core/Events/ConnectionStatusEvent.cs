@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Events
 {
-    public class InstrumentConnectionEvent
+    public class ConnectionStatusEvent
     {
         public enum Status
         {
@@ -15,7 +15,7 @@ namespace Prover.Core.Events
             Disconnected
         }
 
-        public InstrumentConnectionEvent(Status status, int attemptCount = 0, int maxAttempts = 10)
+        public ConnectionStatusEvent(Status status, int attemptCount = 0, int maxAttempts = 10)
         {
             ConnectionStatus = status;
             AttemptCount = attemptCount;

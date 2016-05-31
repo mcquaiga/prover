@@ -16,69 +16,29 @@
                 TextElement.FontSize="14"
                 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                 mc:Ignorable="d" 
-                d:DesignHeight="400" d:DesignWidth="800"> 
+> 
     <UserControl.Resources>
         <local:BoolToVisibilityConverter
          x:Key="BoolToHiddenConverter"
          TrueValue="Visible" FalseValue="Collapsed" />
     </UserControl.Resources>
-    <materialDesign:Card Margin="5">
-        <StackPanel>
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+        <StackPanel Orientation="Vertical">
             <StackPanel>
-                <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                              Mode="PrimaryDark" DockPanel.Dock="Top">
-                    Volume Verification
-                </materialDesign:ColorZone>
-                <StackPanel>
-                     <Grid>
-                       
-                    </Grid>
-                                        
-                </StackPanel>
-            </StackPanel>
-
-            <UniformGrid Columns="3" HorizontalAlignment="Center">
-                <materialDesign:Card Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="3" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent">
-                            Meter Displacement
-                        </materialDesign:ColorZone>
+                        <materialDesign:ColorZone 
+                                        Padding="2"
+                            Margin="2"
+                                      Content="Uncorrected Volume" 
+                                      Mode="PrimaryDark" 
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
                         <controls:PercentageControl 
                             Margin="5"
-                            HorizontalAlignment="Center"
-                            DisplayValue="{Binding MeterDisplacementPercentError}" 
-                            Passed="{Binding MeterDisplacementHasPassed}"/>
-                        <UniformGrid Columns="2" Margin="5">
-                            <controls:ValueDescriptionControl Label="Drive Rate (98)" Value="{Binding DriveRateDescription}"/>
-                            <controls:ValueDescriptionControl Label="Meter Type (432)" Value="{Binding MeterTypeDescription}"/>
-                            <controls:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}"/>
-                            <controls:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}"/>
-                        </UniformGrid>
-                    </StackPanel>
-                </materialDesign:Card>
-                <materialDesign:Card Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                    <StackPanel>
-                        <materialDesign:ColorZone Padding="3" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                  Mode="Accent">
-                            Uncorrected
-                        </materialDesign:ColorZone>
-                        <controls:PercentageControl 
-                            Margin="5"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Left"
                             DisplayValue="{Binding Volume.UnCorrectedPercentError}" 
                             Passed="{Binding Volume.UnCorrectedHasPassed}"/>
-                        <!--<TextBlock  Margin="0 8 0 0" VerticalAlignment="Center"
-                                    HorizontalAlignment="Center">Applied Input</TextBlock>
-                        <xctk:DecimalUpDown Width="110" Height="35" 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    FontSize="15"           
-                                            Margin="0 5"
-                                    Watermark="Input"
-                                    Value="{Binding AppliedInput}"
-                                    />-->
-
+                       
                         <UniformGrid Columns="2" Margin="5">
                             <controls:ValueDescriptionControl Label="Start Reading" Value="{Binding StartUncorrected}"/>
                             <controls:ValueDescriptionControl Label="End Reading" Value="{Binding EndUncorrected}"/>
@@ -90,15 +50,17 @@
   
                     </StackPanel>
                 </materialDesign:Card>
-                <materialDesign:Card Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                     <StackPanel>
-                        <materialDesign:ColorZone Padding="3" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                                      Mode="Accent">
-                            Corrected
-                        </materialDesign:ColorZone>
-                        <controls:PercentageControl 
+                        <materialDesign:ColorZone Padding="2" 
+                                      Content="Corrected Volume" 
+                                      Margin="2"
+                                      Mode="PrimaryDark" 
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth1"/>
+                        
+                            <controls:PercentageControl 
                             Margin="5"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Left"
                             DisplayValue="{Binding Volume.CorrectedPercentError}" 
                             Passed="{Binding Volume.CorrectedHasPassed}"/>
                         
@@ -115,30 +77,31 @@
 
                     </StackPanel>
                 </materialDesign:Card>
-            </UniformGrid>
-            <Grid Visibility="{Binding ShowTestButtons, Converter={StaticResource BoolToHiddenConverter}}" >
-                <Button Width="200" Margin="10"
+                <!--<Grid VerticalAlignment="Top" Height="75" Visibility="{Binding ShowTestButtons, Converter={StaticResource BoolToHiddenConverter}}" >
+                    <Button Width="200" Margin="10"
                             	        Content="START"
                             	        HorizontalAlignment="Right"
                             	        Visibility="{Binding ShowBeginTestButton, Converter={StaticResource BoolToHiddenConverter}}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="StartTestCommand" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="StartTestCommand" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
 
-                <Button Width="200" Margin="10"
+                    <Button Width="200" Margin="10"
                     		    Content="STOP"
-                        HorizontalAlignment="Right"
+                                HorizontalAlignment="Right"
                     		    Visibility="{Binding ShowStopTestButton, Converter={StaticResource BoolToHiddenConverter}}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="StopTestCommand" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </Grid>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="StopTestCommand" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </Grid>-->
+            </StackPanel>
+            
         </StackPanel>
     </materialDesign:Card>
 </UserControl>

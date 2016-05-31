@@ -60,12 +60,15 @@ namespace Prover.Core.Extensions
             return instrument.Items.GetItem(98).GetDescriptionValue(instrument.ItemValues);
         }
 
+        public static decimal DriveRate(this Instrument instrument)
+        {
+            return instrument.Items.GetItem(98).GetNumericValue(instrument.ItemValues);
+        }
         
         public static decimal? CorrectedMultiplier(this Instrument instrument)
         {
             return instrument.Items.GetItem(90).GetNumericValue(instrument.ItemValues);
         }
-
         
         public static string CorrectedMultiplierDescription(this Instrument instrument)
         {

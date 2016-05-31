@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Prover.GUI.Views.InstrumentsList.PTZVerification
+namespace Prover.GUI.Views.VerificationTestViews.PTVerificationViews.RotaryMeterTest
 {
     /// <summary>
-    /// Interaction logic for PTZVerificationView.xaml
+    /// Interaction logic for RotaryMeterTest.xaml
     /// </summary>
-    public partial class PTZVerificationSetView : UserControl
+    public partial class Card : UserControl
     {
-        public PTZVerificationSetView()
+        public Card()
         {
             InitializeComponent();
         }

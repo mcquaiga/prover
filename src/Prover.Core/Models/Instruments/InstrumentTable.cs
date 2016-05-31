@@ -20,6 +20,11 @@ namespace Prover.Core.Models.Instruments
         {
             Id = Guid.NewGuid();
         }
+
+        public virtual void OnInitializing()
+        {
+
+        }
     }
 
     public abstract class ProverTable : BaseEntity

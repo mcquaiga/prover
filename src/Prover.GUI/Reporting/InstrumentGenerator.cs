@@ -39,9 +39,9 @@ namespace Prover.GUI.Reporting
             controlToPrint.DataContext = new InstrumentReportViewModel(_container, _instrument);
 
             var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 8.5, 96 * 11);
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
             var pageContent = new PageContent();
-            var fixedPage = new FixedPage { Width = 96 * 8.5, Height = 96 * 11 };
+            var fixedPage = new FixedPage { Width = 96 * 11, Height = 96 * 8.5 };
 
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);

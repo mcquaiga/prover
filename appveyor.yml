@@ -20,6 +20,13 @@ assembly_info:
   assembly_version: $(appveyor_build_version)
   assembly_file_version: $(appveyor_build_version)
 
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - RC
+
 skip_tags: true
 
 pull_requests:
