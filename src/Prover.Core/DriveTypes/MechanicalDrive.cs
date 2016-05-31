@@ -1,12 +1,8 @@
-﻿using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prover.Core.EVCTypes;
 using Prover.Core.Extensions;
+using Prover.Core.Models.Instruments;
 
-namespace Prover.Core.EVCTypes
+namespace Prover.Core.DriveTypes
 {
     public class MechanicalDrive : IDriveType
     {
@@ -21,10 +17,7 @@ namespace Prover.Core.EVCTypes
 
         public Instrument Instrument { get; private set; }
 
-        public int MaxUnCorrected()
-        {
-            return 100;
-        }
+        public int MaxUnCorrected() => 100;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {

@@ -26,6 +26,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTestId = VerificationTest.Id;
             
             DriveType = driveType;
+            AppliedInput = DriveType.MaxUnCorrected();
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
@@ -183,6 +184,7 @@ namespace Prover.Core.Models.Instruments
                         break;
                     case "Mechanical":
                         DriveType = new MechanicalDrive(this.VerificationTest.Instrument);
+                        AppliedInput = DriveType.MaxUnCorrected();
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
