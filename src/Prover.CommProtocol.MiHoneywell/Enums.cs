@@ -24,7 +24,7 @@ namespace Prover.CommProtocol.MiHoneywell
         AutoDetect = 99
     }
 
-    internal enum ResponseCode
+    public enum ResponseCode
     {
         NoData = -1,
         NoError = 0,

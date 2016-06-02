@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NLog;
-using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.Common.IO
 {
     public class SerialCommPort : CommPort
     {
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-        private readonly int _openPortTimeoutMs;
         private readonly SerialPort _serialPort;
 
-        public SerialCommPort(SerialPort serialPort, int timeout = 1000)
+        public SerialCommPort(SerialPort serialPort)
         {
             _serialPort = serialPort;
 
-            _openPortTimeoutMs = timeout;
+            DataReceivedObservable = DataReceived().Publish();
+            DataReceivedObservable.Connect();
 
-            DataReceivedObservable = CreateReceiveObservable();
-            DataReceivedObservable.Subscribe(ReceivedSubject);
-
-            ResponseProcessors.MessageProcessor.ResponseObservable(ReceivedSubject)
-                .Subscribe(msg => { _log.Debug($"Incoming >> {msg}"); });
+            DataSentObservable = new Subject<string>();
         }
 
-        public SerialCommPort(string portName, int baudRate, int timeout = 1000)
-            : this(CreateSerialPort(portName, baudRate, timeout), timeout)
+        public sealed override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
+        public sealed override ISubject<string> DataSentObservable { get; protected set; }
+
+        public SerialCommPort(string portName, int baudRate, int timeout = ReadWriteTimeoutMs)
+            : this(CreateSerialPort(portName, baudRate, timeout))
         {
         }
+
+        public override string Name => _serialPort.PortName;
 
         public override async Task OpenAsync()
         {
             if (_serialPort.IsOpen) return;
 
-            var tokenSource = new CancellationTokenSource(_openPortTimeoutMs);
-            tokenSource.CancelAfter(1000);
+            var tokenSource = new CancellationTokenSource();
+            tokenSource.CancelAfter(OpenPortTimeoutMs);
 
             await Task.Run(() => _serialPort.Open(), tokenSource.Token)
                 .ContinueWith(result =>
@@ -58,22 +58,19 @@ namespace Prover.CommProtocol.Common.IO
                 }, tokenSource.Token);
         }
 
-        public override async Task SendAsync(string data)
+        public override void Send(string data)
         {
-            await Task.Run(async () =>
-            {
-                await OpenAsync();
+            OpenAsync().Wait();
 
-                _log.Debug($"Outgoing >> {_serialPort.PortName} - [{data}]");
+            _serialPort.DiscardOutBuffer();
 
-                _serialPort.DiscardOutBuffer();
+            var content = new List<byte>();
+            content.AddRange(Encoding.ASCII.GetBytes(data));
 
-                var content = new List<byte>();
-                content.AddRange(Encoding.ASCII.GetBytes(data));
-
-                var buffer = content.ToArray();
-                _serialPort.Write(buffer, 0, buffer.Length);
-            });
+            var buffer = content.ToArray();
+            //_serialPort.Write(buffer, 0, buffer.Length);
+            _serialPort.Write(data);
+            DataSentObservable.OnNext(data);
         }
 
         public override bool IsOpen() => _serialPort.IsOpen;
@@ -84,34 +81,8 @@ namespace Prover.CommProtocol.Common.IO
                 await Task.Run(() => _serialPort.Close());
         }
 
-        public override void Dispose()
+        protected sealed override IObservable<char> DataReceived()
         {
-            base.Dispose();
-            CloseAsync().ContinueWith(_ => _serialPort.Dispose());
-        }
-
-        public override string ToString() => $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
-
-        private static SerialPort CreateSerialPort(string portName, int baudRate, int timeout = 2000)
-        {
-            if (portName == null) throw new ArgumentNullException(nameof(portName));
-            if (!BaudRates.Contains(baudRate)) throw new ArgumentException("Baud rate is invalid.");
-
-            var port = new SerialPort(portName, baudRate)
-            {
-                RtsEnable = true,
-                DtrEnable = true,
-                ReadTimeout = 200,
-                WriteTimeout = 150
-            };
-
-            return port;
-        }
-
-        private IObservable<char> CreateReceiveObservable()
-        {
-            if (DataReceivedObservable != null) return DataReceivedObservable;
-
             return Observable.FromEventPattern<SerialDataReceivedEventArgs>(_serialPort, "DataReceived")
                 .SelectMany(_ =>
                 {
@@ -120,13 +91,40 @@ namespace Prover.CommProtocol.Common.IO
                     var dataLength = _serialPort.BytesToRead;
                     var data = new byte[dataLength];
                     var nbrDataRead = _serialPort.Read(data, 0, dataLength);
-
                     if (nbrDataRead == 0)
                         return new char[0];
 
                     var chars = Encoding.ASCII.GetChars(data);
+                    _serialPort.DiscardInBuffer();
                     return chars;
                 });
+        }
+
+        public override void Dispose()
+        {
+            CloseAsync().ContinueWith(_ => _serialPort.Dispose());
+        }
+
+        public override string ToString()
+            =>
+                $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
+
+        private static SerialPort CreateSerialPort(string portName, int baudRate, int timeout)
+        {
+            if (portName == null) throw new ArgumentNullException(nameof(portName));
+            if (!SerialPort.GetPortNames().Contains(portName)) throw new Exception($"{portName} does not exist.");
+
+            if (!BaudRates.Contains(baudRate)) throw new ArgumentException("Baud rate is invalid.");
+
+            var port = new SerialPort(portName, baudRate)
+            {
+                RtsEnable = true,
+                DtrEnable = true,
+                ReadTimeout = timeout,
+                WriteTimeout = timeout
+            };
+
+            return port;
         }
     }
 }

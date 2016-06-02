@@ -13,13 +13,24 @@ namespace Prover.CommProtocol.MiHoneywell.Console
         static void Main(string[] args)
         {
             var commPort = new SerialCommPort("COM11", 9600);
-            var client = new MiniMaxClient(commPort);
+            //var commPort = new IrDAPort();
+            
+            using (var client = new MiniMaxClient(commPort))
+            {
+                try
+                {
+                    client.Connect(10).Wait();
 
-            client.Connect().Wait();
+                    var sn = client.GetItemValue(62).Result;
+                    System.Console.WriteLine($"Serial Number = {sn}");
+                }
+                catch (AggregateException ex)
+                {
+                    System.Console.WriteLine(ex.Flatten().Message);
+                }
+            }
 
             System.Console.ReadLine();
-
-            client.Disconnect().Wait();
         }
     }
 }

@@ -63,11 +63,12 @@
   <ItemGroup>
     <Compile Include="CommClients\MiniMaxClient.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="CommClients\HoneywellClient.cs" />
+    <Compile Include="CommClients\MiClientBase.cs" />
     <Compile Include="Items\MiItemMetaData.cs" />
-    <Compile Include="Items\MiItem.cs" />
+    <Compile Include="Items\MiItemValue.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
+    <Compile Include="Messaging\Response\MiResponseCodes.cs" />
     <Compile Include="Messaging\Response\ResponseMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messaging\Response\ResponseProcessors.cs" />

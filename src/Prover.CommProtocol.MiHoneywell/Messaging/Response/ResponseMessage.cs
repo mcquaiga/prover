@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
+using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
 {
-    internal abstract class ResponseMessage
-    {
-        protected ResponseMessage(string checksum)
-        {
-            Checksum = checksum;
-        }
-
-        public string Checksum { get; protected set; }
-    }
-
     internal class StatusResponseMessage : ResponseMessage
     {
         public StatusResponseMessage(ResponseCode code, string checksum) : base(checksum)
@@ -30,7 +22,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
 
         public override string ToString()
         {
-            return $"{ResponseCode}";
+            return $"Code = {ResponseCode}; Checksum = {Checksum}";
         }
     }
 }

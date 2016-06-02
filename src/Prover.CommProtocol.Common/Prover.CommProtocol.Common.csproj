@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <HintPath>..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -64,13 +68,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums.cs" />
     <Compile Include="EvcCommunicationClient.cs" />
-    <Compile Include="Extensions\ControlCharacters.cs" />
+    <Compile Include="IO\ControlCharacters.cs" />
+    <Compile Include="Extensions\Task.cs" />
     <Compile Include="IO\CommPort.cs" />
+    <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialCommPort.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
     <Compile Include="Items\ItemValue.cs" />
+    <Compile Include="Messaging\Commands.cs" />
+    <Compile Include="Messaging\ResponseCode.cs" />
+    <Compile Include="Messaging\ResponseMessage.cs" />
     <Compile Include="Messaging\ResponseProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

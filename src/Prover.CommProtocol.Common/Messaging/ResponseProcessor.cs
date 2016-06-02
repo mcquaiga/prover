@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NLog;
 using NLog.Fluent;
 using Prover.CommProtocol.Common.Extensions;
+using Prover.CommProtocol.Common.IO;
 
 namespace Prover.CommProtocol.Common.Messaging
 {
@@ -21,12 +22,12 @@ namespace Prover.CommProtocol.Common.Messaging
     {
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public abstract IObservable<T> ResponseObservable(Subject<char> source);
+        public abstract IObservable<T> ResponseObservable(IObservable<char> source);
     }
 
     public class PacketProcessor : ResponseProcessor<string>
     {
-        public override IObservable<string> ResponseObservable(Subject<char> source)
+        public override IObservable<string> ResponseObservable(IObservable<char> source)
         {
             return Observable.Create<string>(observer =>
             {
@@ -39,7 +40,6 @@ namespace Prover.CommProtocol.Common.Messaging
                         var msg = string.Concat(msgChars.ToArray());
 
                         observer.OnNext(msg);
-
                         msgChars.Clear();
                     }
                 };

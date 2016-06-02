@@ -2,54 +2,92 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Extensions;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
 {
     internal class ResponseProcessors
     {
-        public static ResponseProcessor<string>
-            ItemValue = new ItemValueProcessor();
-        
         public static ResponseProcessor<StatusResponseMessage>
             ResponseCode = new ResponseCodeProcessor();
 
-        //public static ResponseProcessor<bool>
-        //    Acknowledgment = new AcknowledgementProcessor();
+        public static ResponseProcessor<ItemValue> ItemValue(ItemMetadata itemMetadata)
+            => new ItemValueProcessor(itemMetadata);
     }
 
-    internal class ItemValueProcessor : ResponseProcessor<string>
+    internal class ItemValueProcessor : ResponseProcessor<ItemValue>
     {
-        public override IObservable<string> ResponseObservable(Subject<char> source)
+        public ItemValueProcessor(ItemMetadata itemMetadata)
         {
-            return Observable.Create<string>(observer =>
+            ItemMetadata = itemMetadata;
+        }
+
+        public ItemMetadata ItemMetadata { get; }
+
+        public override IObservable<ItemValue> ResponseObservable(IObservable<char> source)
+        {
+            return Observable.Create<ItemValue>(observer =>
             {
-                var packet = new List<char>();
+                var valueChars = new List<char>();
+                var checksumChars = new List<char>();
 
                 Action emitPacket = () =>
                 {
-                    if (packet.Count > 0)
+                    if (valueChars.Count > 0)
                     {
-                        observer.OnNext(new string(packet.ToArray()));
-                        packet.Clear();
+                        var valString = new string(valueChars.ToArray());
+                        var checksum = new string(checksumChars.ToArray());
+
+                        observer.OnNext(new MiItemValue(ItemMetadata, valString, checksum));
+
+                        valueChars.Clear();
+                        checksumChars.Clear();
                     }
                 };
+
+                var parsingItemValue = false;
+                var parsingChecksum = false;
 
                 return source.Subscribe(
                     c =>
                     {
-                        if (c.IsStartOfHandshake())
+                        if (parsingItemValue && char.IsNumber(c))
                         {
-                            emitPacket();
+                            valueChars.Add(c);
                         }
 
-                        packet.Add(c);
+                        if (parsingChecksum)
+                        {
+                            checksumChars.Add(c);
+                        }
+
+                        if (c.IsStartOfHandshake()) //Start of a new value
+                        {
+                            emitPacket();
+                            parsingItemValue = true;
+                        }
+
                         if (c.IsEndOfTransmission())
                         {
                             emitPacket();
+                            parsingItemValue = false;
+                            parsingChecksum = false;
                         }
+
+                        if (c.IsEndOfText())
+                        {
+                            parsingItemValue = false;
+                            parsingChecksum = true;
+                        }
+                    },
+                    observer.OnError,
+                    () =>
+                    {
+                        emitPacket();
+                        observer.OnCompleted();
                     });
             });
         }
@@ -57,7 +95,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
 
     internal class ResponseCodeProcessor : ResponseProcessor<StatusResponseMessage>
     {
-        public override IObservable<StatusResponseMessage> ResponseObservable(Subject<char> source)
+        public override IObservable<StatusResponseMessage> ResponseObservable(IObservable<char> source)
         {
             return Observable.Create<StatusResponseMessage>(observer =>
             {
@@ -70,16 +108,14 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                     {
                         var code = int.Parse(string.Concat(codeChars.ToArray()));
                         var checksum = string.Concat(checksumChars.ToArray());
-
-                        observer.OnNext(new StatusResponseMessage((ResponseCode)code, checksum));
-
+                        observer.OnNext(new StatusResponseMessage((ResponseCode) code, checksum));
                         codeChars.Clear();
                         checksumChars.Clear();
                     }
                 };
 
-                bool parsingChecksum = false;
-                bool parsingResponseCode = false;
+                var parsingChecksum = false;
+                var parsingResponseCode = false;
 
                 return source.Subscribe(
                     c =>
@@ -127,25 +163,4 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
             });
         }
     }
-
-    //internal class AcknowledgementProcessor : ResponseProcessor<bool>
-    //{
-    //    public override IObservable<bool> ResponseObservable(Subject<char> source)
-    //    {
-    //        return Observable.Create<bool>(observer =>
-    //        {
-    //            return source.Subscribe(c =>
-    //            {
-    //                if (c.IsAcknowledgement())
-    //                {
-    //                    observer.OnNext(true);
-    //                }
-    //                else
-    //                {
-    //                    observer.OnNext(false);
-    //                }
-    //            });
-    //        });
-    //    }
-    //}
 }
