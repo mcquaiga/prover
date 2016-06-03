@@ -14,7 +14,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
     public abstract class MiClientBase : EvcCommunicationClient
     {
-        private const int ConnectionRetryDelayMs = 5000;
+        private const int ConnectionRetryDelayMs = 3000;
 
         internal MiClientBase(CommPort commPort, InstrumentType instrumentType) : base(commPort)
         {
@@ -71,12 +71,11 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             if (!CommPort.IsOpen())
                 await CommPort.OpenAsync();
 
-            if (!IsAwake)
-                await WakeUpInstrument();
+            await WakeUpInstrument();
             
             if (IsAwake)
             {
-                var response = await ExecuteCommand(Commands.SignOnCommand(InstrumentType), ResponseProcessors.ResponseCode);
+                var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
 
                 if (response.IsSuccess)
                 {
@@ -96,7 +95,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         {
             if (IsConnected)
             {
-                var response = await ExecuteCommand(Commands.SignOffCommand(), ResponseProcessors.ResponseCode);
+                var response = await ExecuteCommand(Commands.SignOffCommand());
 
                 if (response.IsSuccess)
                 {
@@ -109,18 +108,23 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         public override async Task<ItemValue> GetItemValue(int itemNumber)
         {
             var itemDetails = ItemDetails.GetItem(itemNumber);
-            return await ExecuteCommand(Commands.ReadItemCommand(itemNumber), ResponseProcessors.ItemValue(itemDetails));
+            var response = await ExecuteCommand(Commands.ReadItem(itemNumber));
+            return new ItemValue(itemDetails, response.RawValue);
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValue(IEnumerable<int> itemNumbers)
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers)
         {
             throw new NotImplementedException();
+            var results = new List<ItemValue>();
             var items = itemNumbers.ToArray();
             items = items.OrderBy(x => x).ToArray();
 
-            foreach (var i in items.Take(15))
+            var y = 0;
+            var set = items.Skip(y).Take(15).ToList();
+            while (set.Any())
             {
-                
+                var response = await ExecuteCommand(Commands.ReadGroup(set));
+                //response.ItemValues
             }
         }
 
@@ -143,12 +147,12 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         {
             await ExecuteCommand(Commands.WakeupOne());
             Thread.Sleep(500);
-            var response = await ExecuteCommand(Commands.WakeupTwo(), ResponseProcessors.ResponseCode);
+            var response = await ExecuteCommand(Commands.WakeupTwo());
 
             if (response.IsSuccess)
             {
                 IsAwake = true;
-                Thread.Sleep(300);
+                Thread.Sleep(1000);
             }
 
             return IsAwake;

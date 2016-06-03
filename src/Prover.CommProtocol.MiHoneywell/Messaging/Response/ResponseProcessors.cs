@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Prover.CommProtocol.Common.IO;
@@ -14,23 +15,27 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public static ResponseProcessor<StatusResponseMessage>
             ResponseCode = new ResponseCodeProcessor();
 
-        public static ResponseProcessor<ItemValue> ItemValue(ItemMetadata itemMetadata)
-            => new ItemValueProcessor(itemMetadata);
+        public static ResponseProcessor<ItemValueResponseMessage> 
+            ItemValue(int itemNumber) => new ItemValueProcessor(itemNumber);
+
+        public static ResponseProcessor<ItemGroupResponseMessage> 
+            ItemGroup(IEnumerable<int> itemNumbers) => new ItemGroupValuesProcessor(itemNumbers);
     }
 
-    internal class ItemValueProcessor : ResponseProcessor<ItemValue>
+    internal class ItemValueProcessor : ResponseProcessor<ItemValueResponseMessage>
     {
-        public ItemValueProcessor(ItemMetadata itemMetadata)
+        public ItemValueProcessor(int itemNumber)
         {
-            ItemMetadata = itemMetadata;
+            ItemNumber = itemNumber;
         }
 
-        public ItemMetadata ItemMetadata { get; }
+        public int ItemNumber { get; }
 
-        public override IObservable<ItemValue> ResponseObservable(IObservable<char> source)
+        public override IObservable<ItemValueResponseMessage> ResponseObservable(IObservable<char> source)
         {
-            return Observable.Create<ItemValue>(observer =>
+            return Observable.Create<ItemValueResponseMessage>(observer =>
             {
+                var numberChars = new List<char>();
                 var valueChars = new List<char>();
                 var checksumChars = new List<char>();
 
@@ -38,49 +43,146 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                 {
                     if (valueChars.Count > 0)
                     {
+                        var numberString = new string(numberChars.ToArray());
                         var valString = new string(valueChars.ToArray());
                         var checksum = new string(checksumChars.ToArray());
 
-                        observer.OnNext(new MiItemValue(ItemMetadata, valString, checksum));
+                        observer.OnNext(new ItemValueResponseMessage(ItemNumber, valString, checksum));
 
+                        numberChars.Clear();
                         valueChars.Clear();
                         checksumChars.Clear();
+                    }
+                };
+
+                var parsingItemNumber = false;
+                var parsingItemValue = false;
+                var parsingChecksum = false;
+
+                //[SOH]123[STX]12345678[ETX]ABCD[EOT]
+                return source.Subscribe(
+                    c =>
+                    {
+                        switch (c)
+                        {
+                            case ControlCharacters.SOH:
+                                emitPacket();
+                                parsingItemNumber = true;
+                                break;
+                            case ControlCharacters.STX:
+                                parsingItemNumber = false;
+                                parsingItemValue = true;
+                                break;
+                            case ControlCharacters.ETX:
+                                parsingItemValue = false;
+                                parsingChecksum = true;
+                                break;
+                            case ControlCharacters.EOT:
+                                emitPacket();
+                                parsingItemValue = false;
+                                parsingChecksum = false;
+                                parsingItemNumber = false;
+                                break;
+                            default:
+                            {
+                                if (parsingItemNumber)
+                                    numberChars.Add(c);
+                                                               
+                                if (parsingItemValue)
+                                    valueChars.Add(c);
+
+                                if (parsingChecksum)
+                                    checksumChars.Add(c);
+                                break;
+                            }
+                        }
+                    },
+                    observer.OnError,
+                    () =>
+                    {
+                        emitPacket();
+                        observer.OnCompleted();
+                    });
+            });
+        }
+    }
+
+    internal class ItemGroupValuesProcessor : ResponseProcessor<ItemGroupResponseMessage>
+    {
+        public ItemGroupValuesProcessor(IEnumerable<int> itemNumbers)
+        {
+            ItemNumbers = itemNumbers as int[] ?? itemNumbers.ToArray();
+
+            if (ItemNumbers.Count() > 15)
+                throw new ArgumentOutOfRangeException($"{nameof(itemNumbers)} can only have 15 items max");
+
+            ItemValues = ItemNumbers.ToDictionary(x => x, y => string.Empty);
+        }
+
+        public IEnumerable<int> ItemNumbers { get; set; }
+
+        private Dictionary<int, string> ItemValues { get; }
+
+        public override IObservable<ItemGroupResponseMessage> ResponseObservable(IObservable<char> source)
+        {
+            return Observable.Create<ItemGroupResponseMessage>(observer =>
+            {
+                var currentItemNumber = ItemNumbers.GetEnumerator();
+                var valueChars = new List<char>();
+                var checksumChars = new List<char>();
+
+                Action emitPacket = () =>
+                {
+                    var checksum = new string(checksumChars.ToArray());
+
+                    observer.OnNext(new ItemGroupResponseMessage(ItemValues, checksum));
+                    checksumChars.Clear();
+                };
+
+                Action addValue = () =>
+                {
+                    if (valueChars.Any())
+                    {
+                        currentItemNumber.MoveNext();
+                        ItemValues[currentItemNumber.Current] = new string(valueChars.ToArray());
+                        valueChars.Clear();
                     }
                 };
 
                 var parsingItemValue = false;
                 var parsingChecksum = false;
 
+                //[SOH]12345678,11111111[ETX]ABCD[EOT]
                 return source.Subscribe(
                     c =>
                     {
-                        if (parsingItemValue && char.IsNumber(c))
+                        switch (c)
                         {
-                            valueChars.Add(c);
-                        }
+                            case ControlCharacters.SOH:
+                                emitPacket();
+                                parsingItemValue = true;
+                                break;
+                            case ControlCharacters.ETX:
+                                parsingItemValue = false;
+                                parsingChecksum = true;
+                                break;
+                            case ControlCharacters.EOT:
+                                emitPacket();
+                                parsingItemValue = false;
+                                parsingChecksum = false;
+                                break;
+                            case ControlCharacters.Comma:
+                                addValue();
+                                break;
+                            default:
+                                {
+                                    if (parsingItemValue)
+                                        valueChars.Add(c);
 
-                        if (parsingChecksum)
-                        {
-                            checksumChars.Add(c);
-                        }
-
-                        if (c.IsStartOfHandshake()) //Start of a new value
-                        {
-                            emitPacket();
-                            parsingItemValue = true;
-                        }
-
-                        if (c.IsEndOfTransmission())
-                        {
-                            emitPacket();
-                            parsingItemValue = false;
-                            parsingChecksum = false;
-                        }
-
-                        if (c.IsEndOfText())
-                        {
-                            parsingItemValue = false;
-                            parsingChecksum = true;
+                                    if (parsingChecksum)
+                                        checksumChars.Add(c);
+                                    break;
+                                }
                         }
                     },
                     observer.OnError,
@@ -107,10 +209,12 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                     if (codeChars.Count > 0)
                     {
                         var code = int.Parse(string.Concat(codeChars.ToArray()));
-                        var checksum = string.Concat(checksumChars.ToArray());
-                        observer.OnNext(new StatusResponseMessage((ResponseCode) code, checksum));
                         codeChars.Clear();
+
+                        var checksum = string.Concat(checksumChars.ToArray());
                         checksumChars.Clear();
+
+                        observer.OnNext(new StatusResponseMessage((ResponseCode) code, checksum));
                     }
                 };
 
@@ -120,38 +224,33 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                 return source.Subscribe(
                     c =>
                     {
-                        if (c.IsAcknowledgement())
+                        switch (c)
                         {
-                            observer.OnNext(new StatusResponseMessage(ResponseCode.NoError, "0000"));
-                        }
+                            case ControlCharacters.ACK:
+                                observer.OnNext(new StatusResponseMessage(ResponseCode.NoError, "0000"));
+                                break;
+                            case ControlCharacters.SOH:
+                                emitPacket();
+                                parsingResponseCode = true;
+                                break;
+                            case ControlCharacters.ETX:
+                                parsingResponseCode = false;
+                                parsingChecksum = true;
+                                break;
+                            case ControlCharacters.EOT:
+                                emitPacket();
+                                parsingChecksum = false;
+                                parsingResponseCode = false;
+                                break;
+                            default:
+                            {
+                                if (parsingResponseCode)
+                                    codeChars.Add(c);
 
-                        if (c.IsEndOfTransmission())
-                        {
-                            emitPacket();
-                            parsingChecksum = false;
-                            parsingResponseCode = false;
-                        }
-
-                        if (parsingResponseCode && char.IsNumber(c))
-                        {
-                            codeChars.Add(c);
-                        }
-
-                        if (parsingChecksum)
-                        {
-                            checksumChars.Add(c);
-                        }
-
-                        if (c.IsEndOfText())
-                        {
-                            parsingResponseCode = false;
-                            parsingChecksum = true;
-                        }
-
-                        if (c.IsStartOfHandshake()) //Start of a new value
-                        {
-                            emitPacket();
-                            parsingResponseCode = true;
+                                if (parsingChecksum)
+                                    checksumChars.Add(c);
+                                break;
+                            }
                         }
                     },
                     observer.OnError,

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Prover.CommProtocol.Common.Messaging
+﻿namespace Prover.CommProtocol.Common.Messaging
 {
-    public abstract class CommandDefinition
+    public abstract class CommandDefinition<TResponse>
+        where TResponse : ResponseMessage
     {
-        public string Command { get; set; }   
+        public string Command { get; set; }
+        public abstract ResponseProcessor<TResponse> ResponseProcessor { get; }
     }
 }

@@ -5,15 +5,16 @@ namespace Prover.CommProtocol.Common.IO
 {
     public static class ControlCharacters
     {
-        public static char SOH = (char)1;
-        public static char STX = (char)2;
-        public static char ETX = (char)3;
-        public static char EOT = (char)4;
-        public static char ENQ = (char)5;
-        public static char ACK = (char)6;
-        public static char CR = (char)13;
-        public static char NAK = (char)21;
-        public static char RS = (char)30;
+        public const char SOH = (char)1;
+        public const char STX = (char)2;
+        public const char ETX = (char)3;
+        public const char EOT = (char)4;
+        public const char ENQ = (char)5;
+        public const char ACK = (char)6;
+        public const char CR = (char)13;
+        public const char NAK = (char)21;
+        public const char RS = (char)30;
+        public const char Comma = (char) 44;
 
         public static List<char> All => new List<char>
         {
@@ -47,9 +48,19 @@ namespace Prover.CommProtocol.Common.IO
             return c == (char)ControlCharacters.EOT;
         }
 
+        /// <summary>
+        /// Checks is the char value is equal to SOH
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static bool IsStartOfHandshake(this char c)
         {
             return c == (char)ControlCharacters.SOH;
+        }
+
+        public static bool IsStartOfText(this char c)
+        {
+            return c == ControlCharacters.STX;
         }
 
         public static bool IsEndOfText(this char c)

@@ -6,11 +6,8 @@ namespace Prover.CommProtocol.Common.Messaging
     {
         protected static Logger Log = LogManager.GetCurrentClassLogger();
 
-        protected ResponseMessage(string checksum)
+        protected ResponseMessage()
         {
-            Checksum = checksum;
         }
-
-        public string Checksum { get; protected set; }
     }
 }

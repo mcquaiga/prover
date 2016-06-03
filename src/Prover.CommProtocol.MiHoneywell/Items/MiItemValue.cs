@@ -7,13 +7,13 @@ using Prover.CommProtocol.Common.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
 {
-    public class MiItemValue : ItemValue
-    {
-        public MiItemValue(ItemMetadata itemMetadata, string value, string checkSum) : base(itemMetadata, value)
-        {
-            Checksum = checkSum;
-        }
+    //public class MiReadItemResponseMessage : ReadItemResponseMessage
+    //{
+    //    public MiReadItemResponseMessage(ItemMetadata itemMetadata, string value, string checkSum) : base(itemMetadata, value)
+    //    {
+    //        Checksum = checkSum;
+    //    }
 
-        public string Checksum { get; }
-    }
+    //    public string Checksum { get; }
+    //}
 }

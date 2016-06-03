@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Prover.CommProtocol.Common.Items
+﻿namespace Prover.CommProtocol.Common.Items
 {
     public class ItemValue
     {
-        public ItemValue(ItemMetadata itemMetadata, string value)
+        public ItemValue(ItemMetadata metadata, string value)
         {
-            this.ItemMetadata = itemMetadata;
-            this.Value = value;
+            RawValue = value;
+            Metadata = metadata;
         }
 
-        public string Value { get; set; }
-
-        public ItemMetadata ItemMetadata { get; set; }
+        protected string RawValue { get; private set; }
+        public ItemMetadata Metadata { get; private set; }
     }
 }

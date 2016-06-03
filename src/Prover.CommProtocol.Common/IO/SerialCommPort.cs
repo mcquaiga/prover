@@ -69,6 +69,7 @@ namespace Prover.CommProtocol.Common.IO
 
             var buffer = content.ToArray();
             //_serialPort.Write(buffer, 0, buffer.Length);
+            Log.Trace($"Serial Data -> {data}");
             _serialPort.Write(data);
             DataSentObservable.OnNext(data);
         }
