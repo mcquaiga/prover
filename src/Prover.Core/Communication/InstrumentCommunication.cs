@@ -29,6 +29,9 @@ namespace Prover.Core.Communication
                 case InstrumentType.Ec300:
                     _miSerial = new EC300Class(commPort);
                     break;
+                case InstrumentType.MiniAt:
+                    _miSerial = new MiniATClass(commPort);
+                    break;
                 default:
                     _miSerial = new MiniMaxClass(commPort);
                     break;
