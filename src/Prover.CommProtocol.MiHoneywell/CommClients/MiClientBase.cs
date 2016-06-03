@@ -146,13 +146,13 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         private async Task<bool> WakeUpInstrument()
         {
             await ExecuteCommand(Commands.WakeupOne());
-            Thread.Sleep(500);
+            Thread.Sleep(150);
             var response = await ExecuteCommand(Commands.WakeupTwo());
 
             if (response.IsSuccess)
             {
                 IsAwake = true;
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
 
             return IsAwake;
