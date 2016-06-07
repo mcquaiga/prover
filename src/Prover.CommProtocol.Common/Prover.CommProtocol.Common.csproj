@@ -74,6 +74,7 @@
     <Compile Include="IO\CommPort.cs" />
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialCommPort.cs" />
+    <Compile Include="IO\SimulatorPort.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
     <Compile Include="Items\ItemValue.cs" />
     <Compile Include="Messaging\Commands.cs" />

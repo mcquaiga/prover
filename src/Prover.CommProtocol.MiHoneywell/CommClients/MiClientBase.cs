@@ -32,7 +32,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        public override async Task Connect(int retryAttempts, CancellationTokenSource cancellationToken = null)
+        public override async void Connect(int retryAttempts, CancellationTokenSource cancellationToken = null)
         {
             var connectionAttempts = 0;
 
@@ -64,7 +64,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
         }
 
-        public override async Task<bool> Connect(CancellationTokenSource cancellationToken = null)
+        public override async bool Connect(CancellationTokenSource cancellationToken = null)
         {
             if (IsConnected) return true;
 
@@ -114,7 +114,6 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 
         public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers)
         {
-            throw new NotImplementedException();
             var results = new List<ItemValue>();
             var items = itemNumbers.ToArray();
             items = items.OrderBy(x => x).ToArray();
@@ -124,8 +123,14 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             while (set.Any())
             {
                 var response = await ExecuteCommand(Commands.ReadGroup(set));
-                //response.ItemValues
+                foreach (var item in response.ItemValues)
+                {
+                    var metadata = ItemDetails.FirstOrDefault(x => x.Number == item.Key);
+                    results.Add(new ItemValue(metadata, item.Value));
+                }
             }
+
+            return results;
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)

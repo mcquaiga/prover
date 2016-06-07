@@ -75,7 +75,7 @@ namespace Prover.CommProtocol.Common.IO
 
         public override bool IsOpen() => _serialPort.IsOpen;
 
-        public override async Task CloseAsync()
+        public override async void CloseAsync()
         {
             if (_serialPort.IsOpen)
                 await Task.Run(() => _serialPort.Close());

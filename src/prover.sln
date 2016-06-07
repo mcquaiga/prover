@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoney
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoneywell.Console", "Prover.CommProtocol.MiHoneywell.Console\Prover.CommProtocol.MiHoneywell.Console.csproj", "{7A630399-E7B2-4227-A6D9-B492E911DB1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoneywell.Simulator", "Prover.CommProtocol.MiHoneywell.Simulator\Prover.CommProtocol.MiHoneywell.Simulator.csproj", "{A5325D80-0B58-4455-89F5-B3129C53770D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5325D80-0B58-4455-89F5-B3129C53770D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5325D80-0B58-4455-89F5-B3129C53770D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5325D80-0B58-4455-89F5-B3129C53770D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5325D80-0B58-4455-89F5-B3129C53770D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +123,6 @@ Global
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 		{07B6D52F-8740-4924-82FC-5D89E8509A24} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
+		{A5325D80-0B58-4455-89F5-B3129C53770D} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 	EndGlobalSection
 EndGlobal
