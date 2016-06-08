@@ -22,7 +22,7 @@ namespace Prover.Core.Models.Instruments
     public sealed class VolumeTest : ProverTable
     {
 
-        public VolumeTest(VerificationTest verificationTest, IDriveType driveType) : base(verificationTest.Instrument.)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
@@ -149,22 +149,11 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public decimal EvcCorrected
-        {
-            get
-            {
-                return VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems).Value;
-            }
-        }
+        [NotMapped]
+        public decimal EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
 
         [NotMapped]
-        public decimal EvcUncorrected
-        {
-            get
-            {
-                return VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems).Value;
-            }
-        }
+        public decimal EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
 
         public string DriveTypeDiscriminator { get; set; }
 
@@ -188,7 +177,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => Instrument.Type;
+        public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
         public override void OnInitializing()
         {
@@ -197,7 +186,7 @@ namespace Prover.Core.Models.Instruments
             CreateDriveType();
 
             var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
-            AfterTestItems = ItemHelpers.LoadItems(Instrument.Type, afterItemValues);
+            AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
         }
     }
 }

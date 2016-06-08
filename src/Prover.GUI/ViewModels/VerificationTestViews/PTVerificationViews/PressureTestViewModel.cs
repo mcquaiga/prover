@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Prover.CommProtocol.Common.Items;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
@@ -30,8 +31,8 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
-        public bool ShowATMValues => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() != TransducerType.Absolute;
-        public bool ShowATMGaugeInput => (Test as PressureTest).VerificationTest.Instrument.GetTransducerType() == TransducerType.Absolute;
+        public bool ShowATMValues => (TransducerType)(Test as PressureTest).VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue != TransducerType.Absolute;
+        public bool ShowATMGaugeInput => (TransducerType)(Test as PressureTest).VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue == TransducerType.Absolute;
 
         public decimal Gauge
         {
@@ -55,9 +56,10 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             }
         }
 
-        public decimal? EvcGasPressure => (Test as PressureTest).ItemValues.EvcGasPressure();
-        public decimal? EvcFactor => (Test as PressureTest).ItemValues.EvcPressureFactor();
-        public decimal? EvcATMPressure => (Test as PressureTest).VerificationTest.Instrument.EvcAtmosphericPressure();
+        public decimal? EvcGasPressure
+            => (Test as PressureTest).Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
+        public decimal? EvcFactor => (Test as PressureTest).Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
+        public decimal? EvcATMPressure => (Test as PressureTest).VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
 
         public override void Handle(VerificationTestEvent message)
         {

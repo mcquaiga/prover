@@ -19,7 +19,7 @@
 //        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 //        private readonly int maxConnectAttempts = 10;
 
-//        public InstrumentCommunicator(IUnityContainer container, ICommPort commPort,
+//        public InstrumentCommunicator(IUnityContainer container, CommPort commPort,
 //            InstrumentType instrumentType)
 //        {
 //            _eventAggregator = eventAggregator;
@@ -37,7 +37,7 @@
 //            IsConnected = false;
 //        }
 
-//        public InstrumentCommunicator(IEventAggregator eventAggregator, ICommPort commPort, Instrument instrument)
+//        public InstrumentCommunicator(IEventAggregator eventAggregator, CommPort commPort, Instrument instrument)
 //            : this(eventAggregator, commPort, instrument.Type)
 //        {
 //        }

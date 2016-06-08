@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using NLog;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Collections;
 using Prover.Core.Communication;
 using Prover.Core.Events;
@@ -105,9 +106,8 @@ namespace Prover.Core.VerificationTests
         {
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
 
-            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsTemperatureTest == true).ToList();
             if (test != null)
-                test.ItemValues = await CommunicationClient.GetItemValues(itemsToDownload);
+                test.Items = await CommunicationClient.GetItemValues(CommunicationClient.ItemDetails.TemperatureItems());
         }
 
         public async Task DownloadPressureTestItems(int level, bool disconnectAfter = true)
@@ -115,9 +115,8 @@ namespace Prover.Core.VerificationTests
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
-            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsPressureTest == true).ToList();
             if (test != null)
-                test.ItemValues = await CommunicationClient.DownloadItemsAsync(itemsToDownload, disconnectAfter);
+                test.Items = await CommunicationClient.GetItemValues(CommunicationClient.ItemDetails.PressureItems());
 
             _isBusy = false;
         }
@@ -148,24 +147,24 @@ namespace Prover.Core.VerificationTests
         {
             if (!_isBusy)
             {
-                var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
-                Log.Debug("Starting live read...");
-                await CommunicationClient.Connect();
-                _stopLiveReading = false;
-                _isLiveReading = true;
-                do
-                {
-                    foreach (var i in itemNumbers)
-                    {
-                        var liveValue = await CommunicationClient.LiveReadItem(i);
-                        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
-                    }
-                } while (!_stopLiveReading);
+                //var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
+                //Log.Debug("Starting live read...");
+                //await CommunicationClient.Connect();
+                //_stopLiveReading = false;
+                //_isLiveReading = true;
+                //do
+                //{
+                //    foreach (var i in itemNumbers)
+                //    {
+                //        var liveValue = await CommunicationClient.LiveReadItem(i);
+                //        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
+                //    }
+                //} while (!_stopLiveReading);
 
-                await CommunicationClient.Disconnect();
-                _isLiveReading = false;
-                _isBusy = false;
-                Log.Debug("Finished live read!");
+                //await CommunicationClient.Disconnect();
+                //_isLiveReading = false;
+                //_isBusy = false;
+                //Log.Debug("Finished live read!");
             }
         }
 
@@ -231,10 +230,8 @@ namespace Prover.Core.VerificationTests
             if (value > 1)
                 value = value/100;
 
-            var evcPressureRange = instrument.EvcPressureRange();
-            if (evcPressureRange != null)
-                return value*evcPressureRange.Value;
-            return 0m;
+            var evcPressureRange = instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
+            return value*evcPressureRange;
         }
     }
 }

@@ -18,14 +18,13 @@ namespace Prover.Core.VerificationTests.Mechanical
             VolumeTestManager = volumeTestManager;
         }
 
-        public static async Task<MechanicalTestManager> Create(IUnityContainer container, InstrumentType instrumentType,
-            EvcCommunicationClient commClient)
+        public static async Task<MechanicalTestManager> Create(IUnityContainer container, EvcCommunicationClient commClient)
         {
             await commClient.Connect();
             var itemValues = await commClient.GetItemValues(commClient.ItemDetails.GetAllItemNumbers());
             await commClient.Disconnect();
 
-            var instrument = new Instrument(instrumentType, itemValues);
+            var instrument = new Instrument(InstrumentType.MiniAT, itemValues);
             var driveType = new MechanicalDrive(instrument);
             CreateVerificationTests(instrument, driveType);
 

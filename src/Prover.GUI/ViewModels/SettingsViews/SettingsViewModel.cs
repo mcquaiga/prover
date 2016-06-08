@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Windows;
+using Prover.CommProtocol.Common.IO;
 
 namespace Prover.GUI.ViewModels.SettingsViews
 {
@@ -17,7 +18,7 @@ namespace Prover.GUI.ViewModels.SettingsViews
     {
         IUnityContainer _container;
         string          _selectedCommPort;
-        BaudRateEnum    _selectedBaudRate;
+        int             _selectedBaudRate;
         string          _selectedTachCommPort;
 
         public dynamic WindowSettings
@@ -41,9 +42,9 @@ namespace Prover.GUI.ViewModels.SettingsViews
             _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
         }
 
-        public List<BaudRateEnum> BaudRate => Enum.GetValues(typeof(BaudRateEnum)).Cast<BaudRateEnum>().ToList();
-        public List<string> CommPort => Communications.GetCommPortList();
-        public List<string> TachCommPort => Communications.GetCommPortList().Where(c => !c.Contains("IrDA")).ToList();
+        public List<int> BaudRate => SerialPortV2.BaudRates;
+        public List<string> CommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
+        public List<string> TachCommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
 
         public string SelectedCommPort
         {
@@ -73,7 +74,7 @@ namespace Prover.GUI.ViewModels.SettingsViews
             }
         }
 
-        public BaudRateEnum SelectedBaudRate
+        public int SelectedBaudRate
         {
             get
             {

@@ -1,19 +1,32 @@
-﻿using NLog;
-using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.SerialProtocol;
-using System;
+﻿using System;
+using System.IO.Ports;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using NLog;
+using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.Communication
 {
     public class TachometerCommunicator : IDisposable
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly IDInOutBoard _outputBoard;
         private readonly SerialPort _serialPort;
-        private IDInOutBoard _outputBoard;
-        private static Logger _log = LogManager.GetCurrentClassLogger();
 
-        public async static Task<int> ReadTachometer(string tachCommPort)
+        public TachometerCommunicator(string portName)
+        {
+            _serialPort = new SerialPort(portName, 9600);
+            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 1);
+        }
+
+        public void Dispose()
+        {
+            _serialPort.Close();
+            _outputBoard.Dispose();
+        }
+
+        public static async Task<int> ReadTachometer(string tachCommPort)
         {
             if (!string.IsNullOrEmpty(tachCommPort))
             {
@@ -22,13 +35,12 @@ namespace Prover.Core.Communication
                     try
                     {
                         var value = await tach?.ReadTach();
-                        _log.Info(string.Format("Tachometer reading: {0}", value));
+                        Log.Info("Tachometer reading: {0}", value);
                         return value;
-                        
                     }
                     catch (Exception ex)
                     {
-                        _log.Error(string.Format("An error occured: {0}", ex));
+                        Log.Error(ex, "An error occured");
                     }
                 }
             }
@@ -47,20 +59,14 @@ namespace Prover.Core.Communication
             }
         }
 
-        public TachometerCommunicator(string portName)
-        {
-            _serialPort = new SerialPort(portName, BaudRateEnum.b9600);
-            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 1);
-        }
-
         public async Task ResetTach()
         {
             await Task.Run(() =>
             {
                 _outputBoard.StartMotor();
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
                 _outputBoard.StopMotor();
-                System.Threading.Thread.Sleep(100);
+                Thread.Sleep(100);
             });
         }
 
@@ -70,21 +76,21 @@ namespace Prover.Core.Communication
             {
                 try
                 {
-                    if (!_serialPort.IsOpen()) _serialPort.OpenPort();
+                    if (!_serialPort.IsOpen) _serialPort.Open();
 
                     _serialPort.DiscardInBuffer();
-                    _serialPort.SendDataToPort("@D0");
-                    _serialPort.SendDataToPort(((char)13).ToString());
+                    _serialPort.WriteLine("@D0");
+                    _serialPort.WriteLine(((char) 13).ToString());
                     _serialPort.DiscardInBuffer();
-                    System.Threading.Thread.Sleep(500);
+                    Thread.Sleep(500);
 
-                    var tachString = _serialPort.ReceiveDataFromPort();
-                    _log.Info(string.Format("Read data from Tach: {0}", tachString));
+                    var tachString = _serialPort.ReadExisting();
+                    Log.Info($"Read data from Tach: {tachString}");
                     return ParseTachValue(tachString);
                 }
                 catch (Exception ex)
                 {
-                    _log.Warn("An error occured connecting to the tachometer.", ex);
+                    Log.Warn(ex, "An error occured connecting to the tachometer.");
                 }
                 return 0;
             });
@@ -97,19 +103,13 @@ namespace Prover.Core.Communication
             const string pattern = @"(\d+)";
             int result;
             value = value.Replace("\n", " ").Replace("\r", " ");
-            value = value.Substring(value.IndexOf("D0", System.StringComparison.Ordinal) + 2);
+            value = value.Substring(value.IndexOf("D0", StringComparison.Ordinal) + 2);
             var regEx = new Regex(pattern, RegexOptions.IgnoreCase);
-            if (Int32.TryParse(regEx.Match(value).Value, out result))
+            if (int.TryParse(regEx.Match(value).Value, out result))
             {
                 return result;
             }
             return -1;
-        }
-
-        public void Dispose()
-        {
-            _serialPort.ClosePort();
-            _outputBoard.Dispose();
         }
     }
 }

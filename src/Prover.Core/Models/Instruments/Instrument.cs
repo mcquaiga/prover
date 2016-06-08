@@ -25,11 +25,15 @@ namespace Prover.Core.Models.Instruments
             TestDateTime = DateTime.Now;
             CertificateId = null;
             Type = instrumentType;
+            InstrumentType = instrumentType;
             Items = items;
         }
 
         public DateTime TestDateTime { get; set; }
-        public InstrumentType Type { get; set; }
+        public InstrumentType Type { get; }
+
+        [NotMapped]
+        public override InstrumentType InstrumentType { get; }
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
 
@@ -43,7 +47,7 @@ namespace Prover.Core.Models.Instruments
         public int SerialNumber => (int) Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
 
         [NotMapped]
-        public string TypeString => Type.ToString();
+        public string InstrumentTypeString => InstrumentType.ToString();
 
         [NotMapped]
         public CorrectorType CompositionType

@@ -16,11 +16,11 @@ namespace Prover.Core.VerificationTests.Mechanical
 
         public override async Task StartVolumeTest()
         {
-            if (!_runningTest)
+            if (!RunningTest)
             {
-                await _instrumentCommunicator.Connect();
-                VolumeTest.Items = await _instrumentCommunicator.GetItemValues(_instrumentCommunicator.ItemDetails.VolumeItems());
-                await _instrumentCommunicator.Disconnect();
+                await InstrumentCommunicator.Connect();
+                VolumeTest.Items = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
+                await InstrumentCommunicator.Disconnect();
 
                 VolumeTest.PulseACount = 0;
                 VolumeTest.PulseBCount = 0;
@@ -34,13 +34,13 @@ namespace Prover.Core.VerificationTests.Mechanical
         {
             await Task.Run(async () =>
             {
-                _runningTest = true;
+                RunningTest = true;
                 do
                 {
                     //TODO: Raise events so the UI can respond
                     VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !_requestStopTest);
+                } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
                 await FinishVolumeTest();
             });
         }
@@ -49,20 +49,14 @@ namespace Prover.Core.VerificationTests.Mechanical
         {
             await Task.Run(async () =>
             {
-                try
-                {
-                    System.Threading.Thread.Sleep(250);
+                System.Threading.Thread.Sleep(250);
 
-                    VolumeTest.AfterTestItems = await _instrumentCommunicator.GetItemValues(_instrumentCommunicator.ItemDetails.VolumeItems());
+                await InstrumentCommunicator.Connect();
+                VolumeTest.AfterTestItems = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
+                await ZeroInstrumentVolumeItems();
 
-                    await ZeroInstrumentVolumeItems();
-
-                    _log.Info("Volume test finished!");
-                }
-                finally
-                {
-                    _runningTest = false;
-                }
+                Log.Info("Volume test finished!");
+                RunningTest = false;
             });
         }             
     }

@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.VerificationTests;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
@@ -42,7 +43,7 @@ namespace Prover.GUI.ViewModels.InstrumentViews
             }
         }
 
-        public string BasePressure => $"{Instrument.EvcBasePressure()} {Instrument.PressureUnits()}";
+        public string BasePressure => $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 

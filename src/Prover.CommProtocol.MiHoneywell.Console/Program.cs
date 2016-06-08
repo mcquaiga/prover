@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell.CommClients;
 
 namespace Prover.CommProtocol.MiHoneywell.Console
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var commPort = new SerialPortV2("COM11", 38400);
- 
+
             using (var client = new HoneywellClient(commPort, InstrumentType.MiniMax))
             {
                 try
@@ -35,10 +31,8 @@ namespace Prover.CommProtocol.MiHoneywell.Console
                             int item;
                             if (int.TryParse(line, out item))
                             {
-
-                                    var itemValue = client.GetItemValue(item).Result;
-                                    System.Console.WriteLine($"{itemValue}");
-                           
+                                var itemValue = client.GetItemValue(item).Result;
+                                System.Console.WriteLine($"{itemValue}");
                             }
                             else if (line.Contains(","))
                             {

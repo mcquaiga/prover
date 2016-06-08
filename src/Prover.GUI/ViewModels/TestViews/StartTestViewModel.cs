@@ -12,6 +12,8 @@ using Prover.GUI.ViewModels.Shell;
 using Prover.GUI.ViewModels.VerificationTestViews;
 using Prover.SerialProtocol;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.VerificationTests.Rotary;
 using Prover.GUI.ProgressDialog;
 
@@ -22,8 +24,8 @@ namespace Prover.GUI.ViewModels.TestViews
         private IUnityContainer _container;
         private bool _miniAtChecked;
 
-        public BaudRateEnum BaudRate { get; private set; }
-        public ICommPort CommPort { get; set; }
+        public int BaudRate { get; private set; }
+        public CommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
 
         public TestManager InstrumentTestManager { get; set; }
@@ -72,12 +74,17 @@ namespace Prover.GUI.ViewModels.TestViews
         {
             SettingsManager.Save();
 
-            var commPort = Communications.CreateCommPortObject(InstrumentCommPortName, BaudRate);
+            var commPort = new SerialPortV2(InstrumentCommPortName, BaudRate);
 
             if (IsMiniMaxChecked)
-                InstrumentTestManager = await RotaryTestManager.CreateRotaryTest(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
+            {
+                InstrumentTestManager = await RotaryTestManager.CreateRotaryTest(_container, new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName);
+            }
             else if (IsMiniATChecked)
-                InstrumentTestManager = await MechanicalTestManager.Create(_container, InstrumentType.MiniAt, commPort);
+            {
+                InstrumentTestManager = await MechanicalTestManager.Create(_container, new HoneywellClient(commPort, InstrumentType.MiniAT));
+            }
+
 
             await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentTestManager));
         }

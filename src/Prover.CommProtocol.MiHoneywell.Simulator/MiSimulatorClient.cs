@@ -45,6 +45,11 @@ namespace Prover.CommProtocol.MiHoneywell.Simulator
             throw new NotImplementedException();
         }
 
+        public override Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
+        {
+            throw new NotImplementedException();
+        }
+
         public override Task<bool> SetItemValue(int itemNumber, string value)
         {
             throw new NotImplementedException();

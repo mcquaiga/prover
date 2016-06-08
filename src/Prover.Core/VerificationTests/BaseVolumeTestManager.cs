@@ -11,20 +11,20 @@ namespace Prover.Core.VerificationTests
 {
     public abstract class BaseVolumeVerificationManager
     {
+        protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;
-        protected EvcCommunicationClient _instrumentCommunicator;
-        protected bool _isFirstVolumeTest = true;
-        protected Logger _log = LogManager.GetCurrentClassLogger();
-        protected bool _requestStopTest;
-        protected bool _runningTest = false;
-        protected IEventAggregator EventAggreator;
+        protected EvcCommunicationClient InstrumentCommunicator;
+        protected bool IsFirstVolumeTest = true;
+        protected Logger Log = LogManager.GetCurrentClassLogger();
+        protected bool RequestStopTest;
+        protected bool RunningTest = false;
 
         protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm)
         {
             EventAggreator = eventAggregator;
-            _instrumentCommunicator = instrumentComm;
+            InstrumentCommunicator = instrumentComm;
 
             VolumeTest = volumeTest;
 
@@ -36,13 +36,17 @@ namespace Prover.Core.VerificationTests
 
         public virtual void StopVolumeTest()
         {
-            _requestStopTest = true;
+            RequestStopTest = true;
         }
 
         protected virtual async Task ZeroInstrumentVolumeItems()
         {
-            await _instrumentCommunicator.WriteItem(0, "0", false);
-            await _instrumentCommunicator.WriteItem(2, "0", false);
+            if (!InstrumentCommunicator.IsConnected)
+                await InstrumentCommunicator.Connect();
+
+            await InstrumentCommunicator.SetItemValue(0, "0");
+            await InstrumentCommunicator.SetItemValue(2, "0");
+            await InstrumentCommunicator.Disconnect();
         }
 
         public abstract Task StartVolumeTest();

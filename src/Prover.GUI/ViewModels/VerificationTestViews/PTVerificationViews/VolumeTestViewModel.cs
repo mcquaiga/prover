@@ -1,25 +1,19 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows.Media;
+using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using NLog;
-using Prover.Core.EVCTypes;
 using Prover.Core.Extensions;
-using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Media;
+using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
 {
     public class VolumeTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
-        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-
-        public TestManager InstrumentManager { get; set; }
-        public Instrument Instrument => Volume.Instrument;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public VolumeTestViewModel(IUnityContainer container, Core.Models.Instruments.VolumeTest volumeTest)
         {
@@ -28,14 +22,14 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             Volume = volumeTest;
         }
 
-        public Prover.Core.Models.Instruments.VolumeTest Volume { get; private set; }
-       
+        public TestManager InstrumentManager { get; set; }
+        public Instrument Instrument => Volume.Instrument;
+
+        public Core.Models.Instruments.VolumeTest Volume { get; }
+
         public decimal AppliedInput
         {
-            get
-            {
-                return Volume.AppliedInput;
-            }
+            get { return Volume.AppliedInput; }
             set
             {
                 Volume.AppliedInput = value;
@@ -47,19 +41,35 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
         public decimal? TrueCorrected => decimal.Round(Volume.TrueCorrected.Value, 4);
-        public decimal? StartUncorrected => Volume.ItemValues.Uncorrected();
-        public decimal? EndUncorrected => Volume.AfterTestItemValues.Uncorrected();
-        public decimal? StartCorrected => Volume.ItemValues.Corrected();
-        public decimal? EndCorrected => Volume.AfterTestItemValues.Corrected();
-        public decimal? EvcUncorrected => Instrument.EvcUncorrected(Volume.ItemValues, Volume.AfterTestItemValues);
-        public decimal? EvcCorrected => Instrument.EvcCorrected(Volume.ItemValues, Volume.AfterTestItemValues);
+        public decimal? StartUncorrected => Volume.Items.Uncorrected();
+        public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
+        public decimal? StartCorrected => Volume.Items.Corrected();
+        public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
+        public decimal? EvcUncorrected => Instrument.EvcUncorrected(Volume.Items, Volume.AfterTestItems);
+        public decimal? EvcCorrected => Instrument.EvcCorrected(Volume.Items, Volume.AfterTestItems);
 
         public int UncorrectedPulseCount => Volume.UncPulseCount;
         public int CorrectedPulseCount => Volume.CorPulseCount;
 
-        public Brush UnCorrectedPercentColour => Volume?.UnCorrectedHasPassed == true ? Brushes.White : (SolidColorBrush)(new BrushConverter().ConvertFrom("#DC6156"));
-        public Brush CorrectedPercentColour => Volume?.CorrectedHasPassed == true ? Brushes.White : (SolidColorBrush)(new BrushConverter().ConvertFrom("#DC6156"));
-        public Brush MeterDisplacementPercentColour => Brushes.Green; // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush UnCorrectedPercentColour
+            =>
+                Volume?.UnCorrectedHasPassed == true
+                    ? Brushes.White
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+
+        public Brush CorrectedPercentColour
+            =>
+                Volume?.CorrectedHasPassed == true
+                    ? Brushes.White
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+
+        public Brush MeterDisplacementPercentColour => Brushes.Green;
+        // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+
+        public void Handle(VerificationTestEvent message)
+        {
+            RaisePropertyChanges();
+        }
 
         private void RaisePropertyChanges()
         {
@@ -72,14 +82,9 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => EndCorrected);
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected);            
+            NotifyOfPropertyChange(() => StartCorrected);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
-        }
-
-        public void Handle(VerificationTestEvent message)
-        {
-            RaisePropertyChanges();
         }
     }
 }

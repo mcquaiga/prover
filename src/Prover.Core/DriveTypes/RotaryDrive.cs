@@ -1,4 +1,5 @@
 ﻿using System;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.EVCTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -44,7 +45,7 @@ namespace Prover.Core.DriveTypes
         public MeterTest(Instrument instrument)
         {
             _instrument = instrument;
-            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues));
+            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).NumericValue);
         }
 
         public bool MeterDisplacementHasPassed
@@ -67,7 +68,7 @@ namespace Prover.Core.DriveTypes
         {
             get
             {
-                return _instrument.Items.GetItem(439).GetNumericValue(_instrument.ItemValues);
+                return _instrument.Items.GetItem(439).NumericValue;
             }
         }
 
@@ -92,13 +93,13 @@ namespace Prover.Core.DriveTypes
 
         public string MeterType
         {
-            get { return _instrument.Items.GetItem(432).GetDescriptionValue(_instrument.ItemValues); }
+            get { return _instrument.Items.GetItem(432).Description; }
         }
 
 
         public int MeterTypeId
         {
-            get { return (int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues); }
+            get { return (int)_instrument.Items.GetItem(432).NumericValue; }
         }
     }
 }

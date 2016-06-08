@@ -109,7 +109,9 @@
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialCommPort.cs" />
     <Compile Include="IO\SerialPortV2.cs" />
+    <Compile Include="Items\ItemCodes.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
+    <Compile Include="Items\ItemMetadataExtentions.cs" />
     <Compile Include="Items\ItemValue.cs" />
     <Compile Include="Messaging\Commands.cs" />
     <Compile Include="Messaging\ResponseCode.cs" />

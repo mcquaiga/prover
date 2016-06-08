@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Prover.SerialProtocol;
 
 namespace Prover.Core.Settings
 {
@@ -7,7 +6,7 @@ namespace Prover.Core.Settings
     {
         public string LastInstrumentTypeUsed { get; set; }
         public string InstrumentCommPort { get; set; }
-        public BaudRateEnum InstrumentBaudRate { get; set; }
+        public int InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }
 
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
@@ -19,14 +18,14 @@ namespace Prover.Core.Settings
             {
                 new GaugeDefaults {Level = 0, Value = 32.0m},
                 new GaugeDefaults {Level = 1, Value = 60.0m},
-                new GaugeDefaults {Level = 2, Value = 90.0m},
+                new GaugeDefaults {Level = 2, Value = 90.0m}
             };
 
             PressureGaugeDefaults = new List<GaugeDefaults>
             {
                 new GaugeDefaults {Level = 0, Value = 80.0m},
                 new GaugeDefaults {Level = 1, Value = 50.0m},
-                new GaugeDefaults {Level = 2, Value = 20.0m},
+                new GaugeDefaults {Level = 2, Value = 20.0m}
             };
         }
     }

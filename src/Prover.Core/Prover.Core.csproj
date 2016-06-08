@@ -178,7 +178,11 @@
     <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Instruments\IVerificationTest.cs" />
+    <Compile Include="Migrations\201606082309579_instrumenttype.cs" />
+    <Compile Include="Migrations\201606082309579_instrumenttype.Designer.cs">
+      <DependentUpon>201606082309579_instrumenttype.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
@@ -279,6 +283,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606082309579_instrumenttype.resx">
+      <DependentUpon>201606082309579_instrumenttype.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
