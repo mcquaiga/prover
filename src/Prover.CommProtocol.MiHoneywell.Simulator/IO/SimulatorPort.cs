@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common.IO;
 
-namespace Prover.CommProtocol.Common.IO
+namespace Prover.CommProtocol.MiHoneywell.Simulator.IO
 {
     public class SimulatorPort : CommPort
     {
@@ -16,7 +14,7 @@ namespace Prover.CommProtocol.Common.IO
 
         protected override IObservable<char> DataReceived()
         {
-            return 
+            return null;
         }
 
         public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }

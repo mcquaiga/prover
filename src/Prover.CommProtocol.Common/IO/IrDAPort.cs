@@ -75,7 +75,7 @@ namespace Prover.CommProtocol.Common.IO
             }, tokenSource.Token);
         }
 
-        public override async void CloseAsync()
+        public override async Task CloseAsync()
         {
             await Task.Run(() => _client.Close());
         }

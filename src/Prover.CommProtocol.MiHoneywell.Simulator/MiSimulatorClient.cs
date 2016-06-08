@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.Simulator.IO;
 
 namespace Prover.CommProtocol.MiHoneywell.Simulator
 {
     public class SimulatorClient : EvcCommunicationClient
     {
-        public SimulatorClient(CommPort commPort) : base(commPort)
+        public SimulatorClient() : base(new SimulatorPort("Simulator"))
         {
         }
 

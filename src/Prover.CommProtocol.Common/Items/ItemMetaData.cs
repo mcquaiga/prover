@@ -42,49 +42,6 @@ namespace Prover.CommProtocol.Common.Items
         public abstract bool? IsVolumeTest { get; set; }
         public abstract bool? IsSuperFactor { get; set; }
 
-        public virtual decimal GetNumericValue(Dictionary<int, string> itemValues)
-        {
-            var value = itemValues.FirstOrDefault(i => i.Key == Number).Value;
-            return GetNumericValue(value);
-        }
-
-        public virtual decimal GetNumericValue(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new NullReferenceException($"No value was found for Item Number #{Number}.");
-
-            var decValue = Convert.ToDecimal(value);
-            if (ItemDescriptions.Any())
-            {
-                var intValue = Convert.ToInt32(decValue);
-                return GetItemDescription(intValue)?.Value ?? intValue;
-            }
-
-            return decValue;
-        }
-
-        public virtual string GetDescriptionValue(Dictionary<int, string> itemValues)
-        {
-            var value = itemValues.FirstOrDefault(i => i.Key == Number).Value;
-            return GetDescriptionValue(value);
-        }
-
-        public virtual string GetDescriptionValue(string value)
-        {
-            var intValue = Convert.ToInt32(value);
-            if (ItemDescriptions != null)
-            {
-                return GetItemDescription(intValue)?.Description;
-            }
-
-            throw new KeyNotFoundException($"No description found for #{Number} - {Code}");
-        }
-
-        private ItemDescription GetItemDescription(int intValue)
-        {
-            return ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
-        }
-       
         public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
 
         public class ItemDescription

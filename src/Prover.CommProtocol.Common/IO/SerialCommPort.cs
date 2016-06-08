@@ -61,7 +61,6 @@ namespace Prover.CommProtocol.Common.IO
         public override void Send(string data)
         {
             OpenAsync().Wait();
-
             _serialPort.DiscardOutBuffer();
 
             var content = new List<byte>();
@@ -75,7 +74,7 @@ namespace Prover.CommProtocol.Common.IO
 
         public override bool IsOpen() => _serialPort.IsOpen;
 
-        public override async void CloseAsync()
+        public override async Task CloseAsync()
         {
             if (_serialPort.IsOpen)
                 await Task.Run(() => _serialPort.Close());
@@ -102,12 +101,12 @@ namespace Prover.CommProtocol.Common.IO
 
         public override void Dispose()
         {
-            CloseAsync().ContinueWith(_ => _serialPort.Dispose());
+            CloseAsync().Wait();
+            _serialPort.Dispose();
         }
 
         public override string ToString()
-            =>
-                $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
+            => $"Serial = {_serialPort.PortName}; Baud Rate = {_serialPort.BaudRate}; Timeout = {_serialPort.ReadTimeout}";
 
         private static SerialPort CreateSerialPort(string portName, int baudRate, int timeout)
         {
@@ -118,7 +117,10 @@ namespace Prover.CommProtocol.Common.IO
 
             var port = new SerialPort(portName, baudRate)
             {
-                RtsEnable = true,
+                DataBits = 8,
+                StopBits = StopBits.One,
+                Parity = Parity.None,
+                RtsEnable = false,
                 DtrEnable = true,
                 NewLine = @"\\",
                 ReadTimeout = timeout,

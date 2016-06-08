@@ -8,7 +8,7 @@ using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
-    public class MiniMaxClient : MiClientBase
+    public class MiniMaxClient : MiClient
     {
         public MiniMaxClient(CommPort commPort) : base(commPort, InstrumentType.MiniMax)
         {

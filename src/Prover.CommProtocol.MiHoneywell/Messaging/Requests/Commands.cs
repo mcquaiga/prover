@@ -15,8 +15,11 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             WakeupOne() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.EOT);
 
         public static MiCommandDefinition<StatusResponseMessage>
-            WakeupTwo()
-            => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
+            WakeupTwo() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
+
+        public static MiCommandDefinition<StatusResponseMessage>
+            OkayToSend() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.NAK);
+
 
         public static MiCommandDefinition<StatusResponseMessage>
             SignOn(InstrumentType instrument, string accessCode = DefaultAccessCode)

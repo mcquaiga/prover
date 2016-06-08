@@ -12,11 +12,11 @@ using Prover.CommProtocol.MiHoneywell.Messaging.Response;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
-    public abstract class MiClientBase : EvcCommunicationClient
+    public class MiClient : EvcCommunicationClient
     {
         private const int ConnectionRetryDelayMs = 3000;
 
-        internal MiClientBase(CommPort commPort, InstrumentType instrumentType) : base(commPort)
+        public MiClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
         {
             InstrumentType = instrumentType;
             ItemDetails = ItemHelpers.LoadItems(InstrumentType);
@@ -32,14 +32,14 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        public override async void Connect(int retryAttempts, CancellationTokenSource cancellationToken = null)
+        public override async Task Connect(int retryAttempts, CancellationTokenSource cancellationToken = null)
         {
             var connectionAttempts = 0;
 
             while (!IsConnected)
             {
                 connectionAttempts++;
-                Log.Info($"Connecting to {InstrumentType}... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
+                Log.Info($"[{CommPort.Name}] Connecting to {InstrumentType}... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
 
                 try
                 {
@@ -52,19 +52,19 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 
                 if (!IsConnected)
                 {
-                    if (connectionAttempts < MaxConnectionAttempts)
+                    if (connectionAttempts < retryAttempts)
                     {
                         Thread.Sleep(ConnectionRetryDelayMs);
                     }
                     else
                     {
-                        throw new Exception("Could not connect to instrument!");
+                        throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType}!");
                     }
                 }
             }
         }
 
-        public override async bool Connect(CancellationTokenSource cancellationToken = null)
+        public override async Task<bool> Connect(CancellationTokenSource cancellationToken = null)
         {
             if (IsConnected) return true;
 
@@ -80,7 +80,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
                 if (response.IsSuccess)
                 {
                     IsConnected = true;
-                    Log.Debug($"Connected to {InstrumentType} on {CommPort.Name}!");
+                    Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
                 }
                 else
                 {
@@ -119,15 +119,22 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             items = items.OrderBy(x => x).ToArray();
 
             var y = 0;
-            var set = items.Skip(y).Take(15).ToList();
-            while (set.Any())
+            
+            while(true)
             {
+                var set = items.Skip(y).Take(15).ToList();
+
+                if (!set.Any())
+                    break;
+
                 var response = await ExecuteCommand(Commands.ReadGroup(set));
                 foreach (var item in response.ItemValues)
                 {
                     var metadata = ItemDetails.FirstOrDefault(x => x.Number == item.Key);
                     results.Add(new ItemValue(metadata, item.Value));
                 }
+
+                y += 15;
             }
 
             return results;
@@ -158,6 +165,10 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             {
                 IsAwake = true;
                 Thread.Sleep(100);
+            }
+            else
+            {
+                await ExecuteCommand(Commands.OkayToSend());
             }
 
             return IsAwake;

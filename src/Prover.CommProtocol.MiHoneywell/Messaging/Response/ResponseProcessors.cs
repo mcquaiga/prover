@@ -159,10 +159,10 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                         switch (c)
                         {
                             case ControlCharacters.SOH:
-                                emitPacket();
                                 parsingItemValue = true;
                                 break;
                             case ControlCharacters.ETX:
+                                addValue();
                                 parsingItemValue = false;
                                 parsingChecksum = true;
                                 break;

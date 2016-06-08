@@ -68,7 +68,7 @@ namespace Prover.CommProtocol.Common
             }
 
             var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Timeout(TimeSpan.FromSeconds(2))
+                .Timeout(TimeSpan.FromSeconds(3))
                 .FirstAsync()
                 .PublishLast();
 
