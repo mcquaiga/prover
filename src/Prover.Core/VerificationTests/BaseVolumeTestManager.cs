@@ -1,40 +1,35 @@
-﻿using Caliburn.Micro;
+﻿using System.Threading.Tasks;
+using Caliburn.Micro;
 using MccDaq;
 using NLog;
-using Prover.Core.Communication;
+using Prover.CommProtocol.Common;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Models;
 using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public abstract class BaseVolumeVerificationManager
     {
-        protected Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        protected IEventAggregator _eventAggreator;
-        protected InstrumentCommunicator _instrumentCommunicator;
-        protected IDInOutBoard _firstPortAInputBoard;
-        protected IDInOutBoard _firstPortBInputBoard;
-        protected List<ItemDetail> _volumeItems;
-        protected bool _requestStopTest;
+        protected IDInOutBoard FirstPortAInputBoard;
+        protected IDInOutBoard FirstPortBInputBoard;
+        protected EvcCommunicationClient _instrumentCommunicator;
         protected bool _isFirstVolumeTest = true;
+        protected Logger _log = LogManager.GetCurrentClassLogger();
+        protected bool _requestStopTest;
         protected bool _runningTest = false;
+        protected IEventAggregator EventAggreator;
 
-        protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm)
+        protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
+            EvcCommunicationClient instrumentComm)
         {
-            _eventAggreator = eventAggregator;
+            EventAggreator = eventAggregator;
             _instrumentCommunicator = instrumentComm;
 
             VolumeTest = volumeTest;
-            _volumeItems = volumeTest.VerificationTest.Instrument.ItemDetails.Items.Where(i => i.IsVolumeTest == true).ToList();
 
-            _firstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
-            _firstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
+            FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
+            FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
         public VolumeTest VolumeTest { get; private set; }

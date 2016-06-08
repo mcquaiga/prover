@@ -8,15 +8,14 @@ using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
-using Prover.CommProtocol.MiHoneywell.Messaging.Response;
 
-namespace Prover.CommProtocol.MiHoneywell.CommClients
+namespace Prover.CommProtocol.MiHoneywell
 {
-    public class MiClient : EvcCommunicationClient
+    public class HoneywellClient : EvcCommunicationClient
     {
         private const int ConnectionRetryDelayMs = 3000;
 
-        public MiClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
+        public HoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
         {
             InstrumentType = instrumentType;
             ItemDetails = ItemHelpers.LoadItems(InstrumentType);
@@ -138,6 +137,11 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
 
             return results;
+        }
+
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
+        {
+            return await GetItemValues(itemNumbers.GetAllItemNumbers());
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)

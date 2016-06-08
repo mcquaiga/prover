@@ -15,7 +15,7 @@ namespace Prover.CommProtocol.MiHoneywell.Console
         {
             var commPort = new SerialPortV2("COM11", 38400);
  
-            using (var client = new MiClient(commPort, InstrumentType.MiniMax))
+            using (var client = new HoneywellClient(commPort, InstrumentType.MiniMax))
             {
                 try
                 {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using NLog;
+using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Communication;
 using Prover.Core.Events;
@@ -27,15 +28,15 @@ namespace Prover.Core.VerificationTests
         private bool _isLiveReading;
         private bool _stopLiveReading;
 
-        protected TestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm)
+        protected TestManager(IUnityContainer container, Instrument instrument, EvcCommunicationClient commClient)
         {
             Container = container;
             Instrument = instrument;
-            InstrumentCommunicator = instrumentComm;
+            CommunicationClient = commClient;
         }
 
         public Instrument Instrument { get; }
-        public InstrumentCommunicator InstrumentCommunicator { get; }
+        public EvcCommunicationClient CommunicationClient { get; }
         public virtual BaseVolumeVerificationManager VolumeTestManager { get; set; }
 
         public async Task RunTest(int level)
@@ -71,14 +72,14 @@ namespace Prover.Core.VerificationTests
             {
                 foreach (var item in liveReadItems)
                 {
-                    var liveValue = await InstrumentCommunicator.LiveReadItem(item.Key);
-                    item.Value.ValueQueue.Enqueue(liveValue);
-                    Container.Resolve<IEventAggregator>()
-                        .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
+                    //var liveValue = await CommunicationClient.LiveReadItem(item.Key);
+                    //item.Value.ValueQueue.Enqueue(liveValue);
+                    //Container.Resolve<IEventAggregator>()
+                    //    .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
                 }
             } while (liveReadItems.Any(x => !x.Value.IsStable()));
 
-            await InstrumentCommunicator.Disconnect();
+            await CommunicationClient.Disconnect();
         }
 
         public async Task DownloadVerificationTestItems(int level)
@@ -102,14 +103,11 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadTemperatureTestItems(int levelNumber, bool disconnectAfter = true)
         {
-            if (_isLiveReading) await StopLiveRead();
-
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
-            var itemsToDownload = Instrument.ItemDetails.Items.Where(i => i.IsTemperatureTest == true).ToList();
-            if (test != null)
-                test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
 
-            _isBusy = false;
+            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsTemperatureTest == true).ToList();
+            if (test != null)
+                test.ItemValues = await CommunicationClient.GetItemValues(itemsToDownload);
         }
 
         public async Task DownloadPressureTestItems(int level, bool disconnectAfter = true)
@@ -117,9 +115,9 @@ namespace Prover.Core.VerificationTests
             if (_isLiveReading) await StopLiveRead();
 
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
-            var itemsToDownload = Instrument.ItemDetails.Items.Where(i => i.IsPressureTest == true).ToList();
+            var itemsToDownload = Instrument.Items.Items.Where(i => i.IsPressureTest == true).ToList();
             if (test != null)
-                test.ItemValues = await InstrumentCommunicator.DownloadItemsAsync(itemsToDownload, disconnectAfter);
+                test.ItemValues = await CommunicationClient.DownloadItemsAsync(itemsToDownload, disconnectAfter);
 
             _isBusy = false;
         }
@@ -152,19 +150,19 @@ namespace Prover.Core.VerificationTests
             {
                 var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
                 Log.Debug("Starting live read...");
-                await InstrumentCommunicator.Connect();
+                await CommunicationClient.Connect();
                 _stopLiveReading = false;
                 _isLiveReading = true;
                 do
                 {
                     foreach (var i in itemNumbers)
                     {
-                        var liveValue = await InstrumentCommunicator.LiveReadItem(i);
+                        var liveValue = await CommunicationClient.LiveReadItem(i);
                         Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
                     }
                 } while (!_stopLiveReading);
 
-                await InstrumentCommunicator.Disconnect();
+                await CommunicationClient.Disconnect();
                 _isLiveReading = false;
                 _isBusy = false;
                 Log.Debug("Finished live read!");
@@ -176,7 +174,7 @@ namespace Prover.Core.VerificationTests
             if (_isLiveReading)
             {
                 _stopLiveReading = true;
-                await InstrumentCommunicator.Disconnect();
+                await CommunicationClient.Disconnect();
             }
         }
 

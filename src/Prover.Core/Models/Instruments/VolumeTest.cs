@@ -10,17 +10,19 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class VolumeTest : ProverTable
+    public sealed class VolumeTest : ProverTable
     {
-        public VolumeTest() { }
 
-        public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
+        public VolumeTest(VerificationTest verificationTest, IDriveType driveType) : base(verificationTest.Instrument.)
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
@@ -30,42 +32,37 @@ namespace Prover.Core.Models.Instruments
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
-        public VolumeTest(VerificationTest verificationTest, IDriveType driveType, Dictionary<int, string> afterTestItems) : this(verificationTest, driveType)
-        {
-            AfterTestItemValues = afterTestItems;
-        }
-
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
         public decimal AppliedInput { get; set; }
 
         public IDriveType DriveType { get; set; }
-        
+
+        private string _testInstrumentData;
         public string TestInstrumentData
         {
-            get { return JsonConvert.SerializeObject(AfterTestItemValues); }
+            get { return AfterTestItems.Serialize(); }
             set
             {
-                AfterTestItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
+                _testInstrumentData = value;
             }
         }
 
         public Instrument Instrument => VerificationTest.Instrument;
 
         public Guid VerificationTestId { get; set; }
+
         [Required]
-        public virtual VerificationTest VerificationTest { get; set; }
+        public VerificationTest VerificationTest { get; set; }
 
         [NotMapped]
-        public Dictionary<int, string> AfterTestItemValues { get; set; }
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
         {
             get
             {
-                if (ItemValues == null || AfterTestItemValues == null) return null;
-
                 if (DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
                 {
                     return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
@@ -80,8 +77,6 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (ItemValues == null || AfterTestItemValues == null) return null;
-
                 if (TrueCorrected != 0 && TrueCorrected != null)
                 {
                     return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);
@@ -158,7 +153,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues).Value;
+                return VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems).Value;
             }
         }
 
@@ -167,7 +162,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues).Value;
+                return VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems).Value;
             }
         }
 
@@ -192,11 +187,17 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        [NotMapped]
+        public override InstrumentType InstrumentType => Instrument.Type;
+
         public override void OnInitializing()
         {
             base.OnInitializing();
 
             CreateDriveType();
+
+            var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
+            AfterTestItems = ItemHelpers.LoadItems(Instrument.Type, afterItemValues);
         }
     }
 }

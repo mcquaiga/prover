@@ -20,12 +20,12 @@ namespace Prover.Core.Extensions
         
         public static string PulseASelect(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(PULSER_A).GetDescriptionValue(instrument.ItemValues);
+            return instrument.Items.GetItem(PULSER_A).GetDescriptionValue(instrument.ItemValues);
         }
         
         public static string PulseBSelect(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(PULSER_B).GetDescriptionValue(instrument.ItemValues);
+            return instrument.Items.GetItem(PULSER_B).GetDescriptionValue(instrument.ItemValues);
         }
 
         public static decimal? EvcCorrected(this Instrument instrument, Dictionary<int, string> beforeItems, Dictionary<int, string> afterItems)
@@ -57,34 +57,34 @@ namespace Prover.Core.Extensions
 
         public static string DriveRateDescription(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(98).GetDescriptionValue(instrument.ItemValues);
+            return instrument.Items.GetItem(98).GetDescriptionValue(instrument.ItemValues);
         }
 
         public static decimal DriveRate(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(98).GetNumericValue(instrument.ItemValues);
+            return instrument.Items.GetItem(98).GetNumericValue(instrument.ItemValues);
         }
         
         public static decimal? CorrectedMultiplier(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(90).GetNumericValue(instrument.ItemValues);
+            return instrument.Items.GetItem(90).GetNumericValue(instrument.ItemValues);
         }
         
         public static string CorrectedMultiplierDescription(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(90).GetDescriptionValue(instrument.ItemValues);
+            return instrument.Items.GetItem(90).GetDescriptionValue(instrument.ItemValues);
         }
 
         
         public static decimal? UnCorrectedMultiplier(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(92).GetNumericValue(instrument.ItemValues);
+            return instrument.Items.GetItem(92).GetNumericValue(instrument.ItemValues);
         }
 
         
         public static string UnCorrectedMultiplierDescription(this Instrument instrument)
         {
-            return instrument.ItemDetails.GetItem(92).GetDescriptionValue(instrument.ItemValues);
+            return instrument.Items.GetItem(92).GetDescriptionValue(instrument.ItemValues);
         }
                 
       

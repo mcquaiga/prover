@@ -72,9 +72,7 @@
   <ItemGroup>
     <Compile Include="CommClients\MiniMaxClient.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="CommClients\MiClient.cs" />
-    <Compile Include="Items\MiItemMetaData.cs" />
-    <Compile Include="Items\MiItemValue.cs" />
+    <Compile Include="HoneywellClient.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
     <Compile Include="Messaging\Response\MiResponseCodes.cs" />

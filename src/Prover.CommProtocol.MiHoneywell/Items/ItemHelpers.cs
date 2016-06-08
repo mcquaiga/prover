@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Prover.CommProtocol.Common.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
 {
@@ -9,7 +10,14 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     {
         private const string ItemDefinitionsFolder = "ItemDefinitions";
 
-        public static IEnumerable<MiItemMetadata> LoadItems(InstrumentType type)
+        public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
+        {
+            var metadata = LoadItems(instrumentType);
+
+            return itemValues.Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
+        }
+
+        public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
         {
             var path = string.Empty;
             switch (type)
@@ -25,12 +33,12 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                     break;
             }
 
-            path = $"{ItemDefinitionsFolder}\\{path}";
+            path = $@"{ItemDefinitionsFolder}\{path}";
 
             var xDoc = XDocument.Load(path);
 
             return (from x in xDoc.Descendants("item")
-                    select new MiItemMetadata()
+                    select new ItemMetadata()
                     {
                         Number = Convert.ToInt32(x.Attribute("number").Value),
                         Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
@@ -46,7 +54,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                         IsSuperFactor = x.Attribute("isSuper") != null && Convert.ToBoolean(x.Attribute("isSuper").Value),
                         ItemDescriptions =
                             (from y in x.Descendants("value")
-                             select new MiItemMetadata.ItemDescription()
+                             select new ItemMetadata.ItemDescription()
                              {
                                  Id = Convert.ToInt32(y.Attribute("id").Value),
                                  Description = y.Attribute("description").Value,

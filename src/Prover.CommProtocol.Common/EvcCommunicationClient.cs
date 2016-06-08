@@ -117,6 +117,13 @@ namespace Prover.CommProtocol.Common
         public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
 
         /// <summary>
+        ///     Read a group of items from instrument
+        /// </summary>
+        /// <param name="itemNumbers">Item numbers for the values to request</param>
+        /// <returns></returns>
+        public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
         ///     Write a value to an item
         /// </summary>
         /// <param name="itemNumber">Item number to write value</param>

@@ -50,8 +50,8 @@ namespace Prover.Core.VerificationTests.Rotary
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
-                    VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                    VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !_requestStopTest);
 
                 _outputBoard?.StopMotor();
@@ -104,8 +104,8 @@ namespace Prover.Core.VerificationTests.Rotary
 
                 do
                 {
-                    VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
-                    VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                    VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < 1);
 
                 _outputBoard.StopMotor();

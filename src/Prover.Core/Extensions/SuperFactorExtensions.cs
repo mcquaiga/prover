@@ -15,10 +15,10 @@ namespace Prover.Core.Extensions
         private const int CO2_NUMBER = 55;
         private const int SUPER_TABLE_NUMBER = 147;
 
-        public static decimal? SpecGr(this Instrument instrument) => instrument.ItemDetails.GetItem(SPEC_GR_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static decimal? CO2(this Instrument instrument) => instrument.ItemDetails.GetItem(CO2_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static decimal? N2(this Instrument instrument) => instrument.ItemDetails.GetItem(N2_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static SuperFactorTable SuperTable(this Instrument instrument) => (SuperFactorTable)instrument.ItemDetails.GetItem(SUPER_TABLE_NUMBER).GetNumericValue(instrument.ItemValues);
+        public static decimal? SpecGr(this Instrument instrument) => instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue(instrument.ItemValues);
+        public static decimal? CO2(this Instrument instrument) => instrument.Items.GetItem(CO2_NUMBER).GetNumericValue(instrument.ItemValues);
+        public static decimal? N2(this Instrument instrument) => instrument.Items.GetItem(N2_NUMBER).GetNumericValue(instrument.ItemValues);
+        public static SuperFactorTable SuperTable(this Instrument instrument) => (SuperFactorTable)instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue(instrument.ItemValues);
 
     }
 }

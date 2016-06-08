@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Prover.CommProtocol.Common.Items
 {
@@ -11,6 +9,7 @@ namespace Prover.CommProtocol.Common.Items
         public static class SiteInfo
         {
             public const string SerialNumber = "SERIAL_NUM";
+            public const string Firmware = "FIRMWARE";
         }
 
         public static class Pressure
@@ -23,24 +22,35 @@ namespace Prover.CommProtocol.Common.Items
             public const string GasPressure = "GAS_PRESS";
             public const string Factor = "PRESS_FACTOR";
             public const string UnsqrFactor = "UNSQRD_SUPER_FACTOR";
+            public const string FixedFactor = "FIXED_PRESS_FACTOR";
+        }
+
+        public static class Temperature
+        {
+            public static string FixedFactor = "FIXED_TEMP_FACTOR";
+        }
+
+        public static class Super
+        {
+            public static string FixedFactor = "FIXED_SUPER_FACTOR";
         }
     }
 
-    public abstract class ItemMetadata
+    public class ItemMetadata
     {
-        public abstract int Number { get; set; }
-        public abstract string Code { get; set; }
-        public abstract string ShortDescription { get; set; }
-        public abstract string LongDescription { get; set; }
+        public int Number { get; set; }
+        public string Code { get; set; }
+        public string ShortDescription { get; set; }
+        public string LongDescription { get; set; }
 
-        public abstract bool? IsAlarm { get; set; }
-        public abstract bool? IsPressure { get; set; }
-        public abstract bool? IsPressureTest { get; set; }
-        public abstract bool? IsTemperature { get; set; }
-        public abstract bool? IsTemperatureTest { get; set; }
-        public abstract bool? IsVolume { get; set; }
-        public abstract bool? IsVolumeTest { get; set; }
-        public abstract bool? IsSuperFactor { get; set; }
+        public bool? IsAlarm { get; set; }
+        public bool? IsPressure { get; set; }
+        public bool? IsPressureTest { get; set; }
+        public bool? IsTemperature { get; set; }
+        public bool? IsTemperatureTest { get; set; }
+        public bool? IsVolume { get; set; }
+        public bool? IsVolumeTest { get; set; }
+        public bool? IsSuperFactor { get; set; }
 
         public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
 
@@ -54,10 +64,11 @@ namespace Prover.CommProtocol.Common.Items
 
     public static class ItemMetadataExtentions
     {
-        public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items) => items.Select(i => i.Number);
+        public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items)
+            => items.Select(i => i.Number);
 
         /// <summary>
-        /// Returns the item number of the first instance found in the collection
+        ///     Returns the item number of the first instance found in the collection
         /// </summary>
         /// <param name="items">Items list</param>
         /// <param name="code">Code used to identify the item number - these are set in the ItemDefinition.xml files</param>
@@ -79,16 +90,18 @@ namespace Prover.CommProtocol.Common.Items
 
         public static T GetItem<T>(this IEnumerable<ItemMetadata> items, string code) where T : ItemMetadata
         {
-            return (T)items.FirstOrDefault(i => i.Code == code);
+            return (T) items.FirstOrDefault(i => i.Code == code);
         }
 
-        public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues, string code)
+        public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
+            string code)
         {
             var result = items.GetItemString(itemValues, code);
             return decimal.Parse(result);
         }
 
-        public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues, string code)
+        public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
+            string code)
         {
             if (itemValues == null || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
 
@@ -98,6 +111,15 @@ namespace Prover.CommProtocol.Common.Items
             if (result == null) throw new KeyNotFoundException($"Item value for {code} and #{itemNumber} not found.");
 
             return result;
-        }       
+        }
+
+        public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.IsVolumeTest == true);
+
+        public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.IsPressureTest == true);
+
+        public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.IsTemperatureTest == true);
     }
 }

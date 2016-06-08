@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.MiHoneywell;
 
 namespace Prover.Core.Models.Instruments
 { 
@@ -13,9 +14,7 @@ namespace Prover.Core.Models.Instruments
     {
         private const decimal DefaultAtmGauge = 14.0m;
 
-        public PressureTest() { }
-
-        public PressureTest(VerificationTest verificationTest, decimal gauge)
+        public PressureTest(VerificationTest verificationTest, decimal gauge) : base()
         {
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
@@ -23,7 +22,6 @@ namespace Prover.Core.Models.Instruments
             AtmosphericGauge = decimal.Round(DefaultAtmGauge, 2);
         }
           
-
         public Guid VerificationTestId { get; set; }
         [Required]
         public virtual VerificationTest VerificationTest { get; set; }
@@ -72,5 +70,8 @@ namespace Prover.Core.Models.Instruments
                 return result.HasValue ? decimal.Round(result.Value, 4) : 0;
             }
         }
+
+        [NotMapped]
+        public override InstrumentType InstrumentType => Instrument.Type;
     }
 }

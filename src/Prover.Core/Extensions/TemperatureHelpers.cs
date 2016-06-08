@@ -17,9 +17,9 @@ namespace Prover.Core.Extensions
 
         public static string Range(this Instrument instrument) => "-40 - 150 " + instrument.TemperatureUnits();
 
-        public static string TemperatureUnits(this Instrument instrument) => instrument.ItemDetails.GetItem(TEMP_UNITS).GetDescriptionValue(instrument.ItemValues);
+        public static string TemperatureUnits(this Instrument instrument) => instrument.Items.GetItem(TEMP_UNITS).GetDescriptionValue(instrument.ItemValues);
 
-        public static decimal? EvcBaseTemperature(this Instrument instrument) => instrument.ItemDetails.GetItem(BASE_TEMP).GetNumericValue(instrument.ItemValues);
+        public static decimal? EvcBaseTemperature(this Instrument instrument) => instrument.Items.GetItem(BASE_TEMP).GetNumericValue(instrument.ItemValues);
 
         public static decimal? EvcTemperatureReading(this Dictionary<int, string> itemValues)
         {

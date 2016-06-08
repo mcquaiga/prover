@@ -11,15 +11,15 @@ namespace Prover.Core.Extensions
 {
     public static class PressureItems
     {
-        public static TransducerType GetTransducerType(this Instrument instrument) => (TransducerType)instrument.ItemDetails.GetItem(ItemCodes.Pressure.TransducerType).GetNumericValue(instrument.ItemValues);
+        public static TransducerType GetTransducerType(this Instrument instrument) => (TransducerType)instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).GetNumericValue(instrument.ItemValues);
 
-        public static string PressureUnits(this Instrument instrument) => instrument.ItemDetails.GetItem(ItemCodes.Pressure.Units).GetDescriptionValue(instrument.ItemValues);
+        public static string PressureUnits(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Units).GetDescriptionValue(instrument.ItemValues);
 
-        public static decimal? EvcBasePressure(this Instrument instrument) => instrument.ItemDetails.GetItem(ItemCodes.Pressure.Base).GetNumericValue(instrument.ItemValues);
+        public static decimal? EvcBasePressure(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Base).GetNumericValue(instrument.ItemValues);
 
-        public static decimal? EvcAtmosphericPressure(this Instrument instrument) => instrument.ItemDetails.GetItem(ItemCodes.Pressure.Atm).GetNumericValue(instrument.ItemValues);
+        public static decimal? EvcAtmosphericPressure(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Atm).GetNumericValue(instrument.ItemValues);
 
-        public static decimal? EvcPressureRange(this Instrument instrument) => instrument.ItemDetails.GetItem(ItemCodes.Pressure.Range).GetNumericValue(instrument.ItemValues);
+        public static decimal? EvcPressureRange(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Range).GetNumericValue(instrument.ItemValues);
 
         public static decimal? EvcGasPressure(this Dictionary<int, string> itemValues)
         {
