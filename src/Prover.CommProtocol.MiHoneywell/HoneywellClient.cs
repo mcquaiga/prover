@@ -156,12 +156,12 @@ namespace Prover.CommProtocol.MiHoneywell
 
         public override async Task<bool> SetItemValue(int itemNumber, decimal value)
         {
-            throw new NotImplementedException();
+            return await SetItemValue(itemNumber, value.ToString());
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, int value)
         {
-            throw new NotImplementedException();
+            return await SetItemValue(itemNumber, value.ToString());
         }
 
         public override async Task<ItemValue> LiveReadItemValue(int itemNumber)

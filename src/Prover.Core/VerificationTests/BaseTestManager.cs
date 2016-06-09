@@ -7,10 +7,8 @@ using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Collections;
-using Prover.Core.Communication;
 using Prover.Core.Events;
 using Prover.Core.EVCTypes;
-using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
@@ -69,6 +67,7 @@ namespace Prover.Core.VerificationTests
                 liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
             }
 
+            await CommunicationClient.Connect();
             do
             {
                 foreach (var item in liveReadItems)
@@ -157,7 +156,8 @@ namespace Prover.Core.VerificationTests
                     foreach (var i in itemNumbers)
                     {
                         var liveValue = await CommunicationClient.LiveReadItemValue(i);
-                        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue.NumericValue));
+                        Container.Resolve<IEventAggregator>()
+                            .PublishOnBackgroundThread(new LiveReadEvent(i, liveValue.NumericValue));
                     }
                 } while (!_stopLiveReading);
 

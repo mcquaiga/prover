@@ -25,7 +25,6 @@ namespace Prover.Core.VerificationTests
         {
             EventAggreator = eventAggregator;
             InstrumentCommunicator = instrumentComm;
-
             VolumeTest = volumeTest;
 
             FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
