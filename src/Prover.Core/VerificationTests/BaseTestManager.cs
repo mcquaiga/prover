@@ -73,10 +73,10 @@ namespace Prover.Core.VerificationTests
             {
                 foreach (var item in liveReadItems)
                 {
-                    //var liveValue = await CommunicationClient.LiveReadItem(item.Key);
-                    //item.Value.ValueQueue.Enqueue(liveValue);
-                    //Container.Resolve<IEventAggregator>()
-                    //    .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
+                    var liveValue = await CommunicationClient.LiveReadItemValue(item.Key);
+                    item.Value.ValueQueue.Enqueue(liveValue.NumericValue);
+                    Container.Resolve<IEventAggregator>()
+                        .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
                 }
             } while (liveReadItems.Any(x => !x.Value.IsStable()));
 
@@ -147,24 +147,24 @@ namespace Prover.Core.VerificationTests
         {
             if (!_isBusy)
             {
-                //var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
-                //Log.Debug("Starting live read...");
-                //await CommunicationClient.Connect();
-                //_stopLiveReading = false;
-                //_isLiveReading = true;
-                //do
-                //{
-                //    foreach (var i in itemNumbers)
-                //    {
-                //        var liveValue = await CommunicationClient.LiveReadItem(i);
-                //        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue));
-                //    }
-                //} while (!_stopLiveReading);
+                var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
+                Log.Debug("Starting live read...");
+                await CommunicationClient.Connect();
+                _stopLiveReading = false;
+                _isLiveReading = true;
+                do
+                {
+                    foreach (var i in itemNumbers)
+                    {
+                        var liveValue = await CommunicationClient.LiveReadItemValue(i);
+                        Container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(i, liveValue.NumericValue));
+                    }
+                } while (!_stopLiveReading);
 
-                //await CommunicationClient.Disconnect();
-                //_isLiveReading = false;
-                //_isBusy = false;
-                //Log.Debug("Finished live read!");
+                await CommunicationClient.Disconnect();
+                _isLiveReading = false;
+                _isBusy = false;
+                Log.Debug("Finished live read!");
             }
         }
 

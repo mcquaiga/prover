@@ -64,5 +64,10 @@ namespace Prover.CommProtocol.MiHoneywell.Simulator
         {
             throw new NotImplementedException();
         }
+
+        public override Task<ItemValue> LiveReadItemValue(int itemNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

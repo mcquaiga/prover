@@ -146,5 +146,13 @@ namespace Prover.CommProtocol.Common
         /// <param name="value">Value to write</param>
         /// <returns>True - Successful, False - Failed to write</returns>
         public abstract Task<bool> SetItemValue(int itemNumber, int value);
+
+        /// <summary>
+        ///     Live read item values
+        ///     Gas Temp / Gas Pressure
+        /// </summary>
+        /// <param name="itemNumber">Item number to live read</param>
+        /// <returns></returns>
+        public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
     }
 }

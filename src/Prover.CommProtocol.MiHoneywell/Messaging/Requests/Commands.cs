@@ -19,8 +19,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 
         public static MiCommandDefinition<StatusResponseMessage>
             OkayToSend() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.NAK);
-
-
+        
         public static MiCommandDefinition<StatusResponseMessage>
             SignOn(InstrumentType instrument, string accessCode = DefaultAccessCode)
         {
@@ -29,14 +28,20 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }
 
-        public static MiCommandDefinition<StatusResponseMessage> SignOffCommand()
-            => new MiCommandDefinition<StatusResponseMessage>("SF", ResponseProcessors.ResponseCode);
+        public static MiCommandDefinition<StatusResponseMessage> 
+            SignOffCommand() => new MiCommandDefinition<StatusResponseMessage>("SF", ResponseProcessors.ResponseCode);
 
         public static MiCommandDefinition<ItemValueResponseMessage>
             ReadItem(int itemNumber) => new ReadItemCommand(itemNumber);
 
         public static MiCommandDefinition<ItemGroupResponseMessage>
             ReadGroup(IEnumerable<int> itemNumbers) => new ReadGroupCommand(itemNumbers);
+
+        public static MiCommandDefinition<StatusResponseMessage>
+            WriteItem(int itemNumber, string value) => new WriteItemCommand(itemNumber, value);
+
+        public static MiCommandDefinition<ItemValueResponseMessage>
+            LiveReadItem(int itemNumber) => new LiveReadItemCommand(itemNumber);
 
         private static string GetInstrumentCode(InstrumentType instrument)
            => (int)instrument < 10 ? string.Concat("0", (int)instrument) : instrument.ToString();
@@ -65,7 +70,8 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 
         protected string BuildCommand(string body)
         {
-            body = string.Concat(body, ControlCharacters.ETX);
+            if (!body.Contains(ControlCharacters.ETX))
+                body = string.Concat(body, ControlCharacters.ETX);
 
             var crc = CRC.CRC.CalcCRC(body);
             return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
@@ -118,5 +124,42 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             var itemsArray = items.Select(x => x.ToString().PadLeft(3, Convert.ToChar("0"))).ToArray();
             return string.Join(",", itemsArray);
         }
+    }
+
+    internal class WriteItemCommand : MiCommandDefinition<StatusResponseMessage>
+    {
+        private const string CommandPrefix = "WD";
+
+        public WriteItemCommand(int number, string value)
+        {
+            Number = number;
+            Value = value;
+
+            //"WD," & i_AccessCode & Chr(CommCharEnum.STX) & ItemNumber.ToString.PadLeft(3, "0") & "," & ItemValue.PadLeft(8, "0") & Chr(CommCharEnum.ETX)
+            var cmd =
+                $"{CommandPrefix},{Commands.DefaultAccessCode}{ControlCharacters.STX}{Number.ToString().PadLeft(3, Convert.ToChar("0"))},{Value.PadLeft(8, Convert.ToChar("0"))}";
+        }
+
+        public int Number { get; }
+        public string Value { get; }
+
+        public override ResponseProcessor<StatusResponseMessage> ResponseProcessor => ResponseProcessors.ResponseCode;
+    }
+
+    internal class LiveReadItemCommand : MiCommandDefinition<ItemValueResponseMessage>
+    {
+        private const string CommandPrefix = "LR";
+
+        public LiveReadItemCommand(int itemNumber)
+        {
+            ItemNumber = itemNumber;
+            var itemString = itemNumber.ToString().PadLeft(3, Convert.ToChar("0"));
+            Command = BuildCommand($"{CommandPrefix}{ControlCharacters.STX}{itemString}");
+        }
+
+        public int ItemNumber { get; }
+
+        public override ResponseProcessor<ItemValueResponseMessage> ResponseProcessor
+            => ResponseProcessors.ItemValue(ItemNumber);
     }
 }

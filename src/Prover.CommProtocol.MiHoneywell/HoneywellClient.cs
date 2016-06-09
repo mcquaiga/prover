@@ -146,7 +146,12 @@ namespace Prover.CommProtocol.MiHoneywell
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
-            throw new NotImplementedException();
+            var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
+
+            if (result.IsSuccess)
+                return true;
+
+            return false;
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, decimal value)
@@ -157,6 +162,13 @@ namespace Prover.CommProtocol.MiHoneywell
         public override async Task<bool> SetItemValue(int itemNumber, int value)
         {
             throw new NotImplementedException();
+        }
+
+        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        {
+            var itemDetails = ItemDetails.GetItem(itemNumber);
+            var response = await ExecuteCommand(Commands.LiveReadItem(itemNumber));
+            return new ItemValue(itemDetails, response.RawValue);
         }
 
         private async Task<bool> WakeUpInstrument()
