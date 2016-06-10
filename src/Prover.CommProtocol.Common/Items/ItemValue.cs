@@ -54,21 +54,29 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            return items.FirstOrDefault(x => x.Metadata.Code == code);
+            var result = items.FirstOrDefault(x => x.Metadata.Code == code);
+            if (result == null) throw new NullReferenceException(nameof(result));
+
+            return result;
         }
 
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, int itemNumber)
         {
-            return items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
+            var result = items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
+            if (result == null) throw new NullReferenceException(nameof(result));
+
+            return result;
         }
 
         public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
         {
+            if (items == null) return new Dictionary<int, string>();
             return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
         }
 
         public static string Serialize(this IEnumerable<ItemValue> items)
         {
+            if (items == null) return string.Empty;
             return JsonConvert.SerializeObject(items.ToDictionary());
         }
     }

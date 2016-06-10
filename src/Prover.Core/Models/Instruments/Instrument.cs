@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Newtonsoft.Json;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
-using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.Core.Models.Instruments
@@ -20,20 +18,24 @@ namespace Prover.Core.Models.Instruments
 
     public class Instrument : ProverTable
     {
+        public Instrument()
+        {
+        }
+
         public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
             Type = instrumentType;
-            InstrumentType = instrumentType;
             Items = items;
         }
 
         public DateTime TestDateTime { get; set; }
-        public InstrumentType Type { get; }
+        public InstrumentType Type { get; set; }
 
         [NotMapped]
-        public override InstrumentType InstrumentType { get; }
+        public override InstrumentType InstrumentType => Type;
+
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
 

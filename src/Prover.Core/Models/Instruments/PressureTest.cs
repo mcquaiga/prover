@@ -15,6 +15,11 @@ namespace Prover.Core.Models.Instruments
     {
         private const decimal DefaultAtmGauge = 14.0m;
 
+        public PressureTest()
+        {
+            
+        }
+
         public PressureTest(VerificationTest verificationTest, decimal gauge) : base()
         {
             VerificationTest = verificationTest;

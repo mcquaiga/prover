@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.ViewModels.Dialogs;
 
 namespace Prover.GUI.ViewModels.Shell
@@ -75,7 +76,7 @@ namespace Prover.GUI.ViewModels.Shell
             {
                 (_currentView as IDisposable).Dispose();
             }
-
+            (_currentView as ReactiveScreen).TryClose();
             ActivateItem(message.ViewModel);
             _currentView = message.ViewModel;
         }

@@ -23,5 +23,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
         }
 
         public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
+
+       
     }
 }

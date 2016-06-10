@@ -35,8 +35,8 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             }
         }
 
-        public decimal? EvcReading => (Test as TemperatureTest).Items.GetItem(26).NumericValue;
-        public decimal? EvcFactor => (Test as TemperatureTest).Items.GetItem(45).NumericValue;
+        public decimal? EvcReading => (Test as TemperatureTest).Items?.GetItem(26).NumericValue;
+        public decimal? EvcFactor => (Test as TemperatureTest).Items?.GetItem(45).NumericValue;
 
         public override void Handle(VerificationTestEvent @event)
         {

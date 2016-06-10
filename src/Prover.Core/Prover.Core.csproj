@@ -178,10 +178,6 @@
     <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201606082309579_instrumenttype.cs" />
-    <Compile Include="Migrations\201606082309579_instrumenttype.Designer.cs">
-      <DependentUpon>201606082309579_instrumenttype.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
@@ -217,7 +213,6 @@
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\InstrumentItem.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
@@ -226,7 +221,7 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\BaseTestManager.cs" />
+    <Compile Include="VerificationTests\TestManager.cs" />
     <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -237,7 +232,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="..\..\..\..\Desktop\EvcProver.cd" />
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -283,9 +280,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201606082309579_instrumenttype.resx">
-      <DependentUpon>201606082309579_instrumenttype.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

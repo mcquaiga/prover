@@ -39,12 +39,12 @@ namespace UnionGas.MASA
             }
         }
 
-        public async Task<bool> UpdateCompanyNumber()
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.PostAsync(ServerUri, new )
-            } 
-        }
+        //public async Task<bool> UpdateCompanyNumber()
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+        //        var response = await client.PostAsync(ServerUri, new )
+        //    } 
+        //}
     }
 }

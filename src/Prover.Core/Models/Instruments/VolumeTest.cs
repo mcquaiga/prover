@@ -21,7 +21,10 @@ namespace Prover.Core.Models.Instruments
 {
     public sealed class VolumeTest : ProverTable
     {
-
+        public VolumeTest()
+        {
+            
+        }
         public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
             VerificationTest = verificationTest;
@@ -63,9 +66,11 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
+                if (EvcUncorrected != null && DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
                 {
-                    return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
+                    var o = EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100;
+                    if (o != null)
+                        return Math.Round((decimal)o, 2);
                 }
 
                 return null;
@@ -77,22 +82,28 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TrueCorrected != 0 && TrueCorrected != null)
+                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
                 {
-                    return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);
+                    var o = ((EvcCorrected - TrueCorrected) / TrueCorrected) * 100;
+                    if (o != null)
+                        return Math.Round((decimal)o, 2);
                 }
-                else
-                {
-                    return 0;
-                }
+
+                return null;
             }
         }
 
         [NotMapped]
-        public bool CorrectedHasPassed => CorrectedPercentError.IsBetween(Global.COR_ERROR_THRESHOLD);
+        public bool CorrectedHasPassed
+        {
+            get { return CorrectedPercentError != null && CorrectedPercentError.IsBetween(Global.COR_ERROR_THRESHOLD); }
+        }
 
         [NotMapped]
-        public bool UnCorrectedHasPassed => (UnCorrectedPercentError.IsBetween(Global.UNCOR_ERROR_THRESHOLD));
+        public bool UnCorrectedHasPassed
+        {
+            get { return UnCorrectedPercentError != null && (UnCorrectedPercentError.IsBetween(Global.UNCOR_ERROR_THRESHOLD)); }
+        }
 
         [NotMapped]
         public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
@@ -150,10 +161,10 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
+        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
 
         [NotMapped]
-        public decimal EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
+        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
 
         public string DriveTypeDiscriminator { get; set; }
 
@@ -185,8 +196,11 @@ namespace Prover.Core.Models.Instruments
 
             CreateDriveType();
 
-            var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
-            AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
+            if (!string.IsNullOrEmpty(_testInstrumentData))
+            {
+                var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
+                AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
+            }
         }
     }
 }

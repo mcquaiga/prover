@@ -40,13 +40,22 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
-        public decimal? TrueCorrected => decimal.Round(Volume.TrueCorrected.Value, 4);
-        public decimal? StartUncorrected => Volume.Items.Uncorrected();
+        public decimal? TrueCorrected
+        {
+            get
+            {
+                if (Volume.TrueCorrected != null) return decimal.Round(Volume.TrueCorrected.Value, 4);
+
+                return null;
+            }
+        }
+
+        public decimal? StartUncorrected => Volume.Items?.Uncorrected();
         public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
-        public decimal? StartCorrected => Volume.Items.Corrected();
+        public decimal? StartCorrected => Volume.Items?.Corrected();
         public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
-        public decimal? EvcUncorrected => Instrument.EvcUncorrected(Volume.Items, Volume.AfterTestItems);
-        public decimal? EvcCorrected => Instrument.EvcCorrected(Volume.Items, Volume.AfterTestItems);
+        public decimal? EvcUncorrected => Volume.EvcUncorrected;
+        public decimal? EvcCorrected => Volume.EvcCorrected;
 
         public int UncorrectedPulseCount => Volume.UncPulseCount;
         public int CorrectedPulseCount => Volume.CorPulseCount;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -16,7 +17,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
-    public class TestManager
+    public class TestManager : IDisposable
     {
         private const int VolumeTestnumber = 0;
 
@@ -84,9 +85,12 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadVerificationTestItems(int level)
         {
+            if (!CommunicationClient.IsConnected)
+                await CommunicationClient.Connect();
+
             if (Instrument.CompositionType == CorrectorType.PTZ)
             {
-                await DownloadTemperatureTestItems(level, false);
+                await DownloadTemperatureTestItems(level);
                 await DownloadPressureTestItems(level);
             }
 
@@ -99,9 +103,11 @@ namespace Prover.Core.VerificationTests
             {
                 await DownloadPressureTestItems(level);
             }
+
+            await CommunicationClient.Disconnect();
         }
 
-        public async Task DownloadTemperatureTestItems(int levelNumber, bool disconnectAfter = true)
+        public async Task DownloadTemperatureTestItems(int levelNumber)
         {
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
 
@@ -109,15 +115,11 @@ namespace Prover.Core.VerificationTests
                 test.Items = await CommunicationClient.GetItemValues(CommunicationClient.ItemDetails.TemperatureItems());
         }
 
-        public async Task DownloadPressureTestItems(int level, bool disconnectAfter = true)
+        public async Task DownloadPressureTestItems(int level)
         {
-            if (_isLiveReading) await StopLiveRead();
-
             var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
             if (test != null)
                 test.Items = await CommunicationClient.GetItemValues(CommunicationClient.ItemDetails.PressureItems());
-
-            _isBusy = false;
         }
 
         public async Task StartLiveRead()
@@ -179,9 +181,16 @@ namespace Prover.Core.VerificationTests
 
         public async Task SaveAsync()
         {
-            using (var store = new InstrumentStore(Container))
+            try
             {
-                await store.UpsertAsync(Instrument);
+                using (var store = new InstrumentStore(Container))
+                {
+                    await store.UpsertAsync(Instrument);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
 
@@ -232,6 +241,11 @@ namespace Prover.Core.VerificationTests
 
             var evcPressureRange = instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
             return value*evcPressureRange;
+        }
+
+        public void Dispose()
+        {
+            CommunicationClient.Dispose();
         }
     }
 }

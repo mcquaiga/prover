@@ -20,13 +20,25 @@ namespace Prover.Core.Extensions
 
         public static string PulseBSelect(this Instrument instrument) => instrument.Items.GetItem(PULSER_B).Description;
 
-        public static decimal EvcCorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems) => Math.Round(
-            (decimal) ((afterItems.Corrected() - beforeItems.Corrected())*instrument.CorrectedMultiplier()), 4);
+        public static decimal? EvcCorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems)
+        {
+            var o = (afterItems?.Corrected() - beforeItems?.Corrected())*instrument?.CorrectedMultiplier();
+            if (o != null)
+                return Math.Round((decimal) o, 4);
+
+            return null;
+        }
 
 
-        public static decimal EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems) => Math.Round(
-            (decimal)
-                ((afterItems.Uncorrected() - beforeItems.Uncorrected())*instrument.UnCorrectedMultiplier()), 4);
+        public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems)
+        {
+            var o = (afterItems?.Uncorrected() - beforeItems?.Uncorrected())*instrument?.UnCorrectedMultiplier();
+            if (o != null)
+                return Math.Round(
+                    (decimal)
+                        o, 4);
+            return null;
+        }
 
         public static decimal? Corrected(this IEnumerable<ItemValue> itemValues)
             => GetHighResolutionValue(itemValues, COR_VOLUME, COR_VOLUME_HIGH_RES);
@@ -57,8 +69,10 @@ namespace Prover.Core.Extensions
         public static decimal? GetHighResolutionValue(this IEnumerable<ItemValue> itemValues, int lowResItemNumber,
             int highResItemNumber)
         {
-            var lowResValue = itemValues.GetItem(lowResItemNumber).NumericValue;
-            var highResValue = itemValues.GetItem(highResItemNumber).NumericValue;
+            if (itemValues == null) return null;
+
+            var lowResValue = itemValues?.GetItem(lowResItemNumber).NumericValue;
+            var highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
 
             return JoinLowResHighResReading(lowResValue, highResValue);
         }

@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace Prover.GUI.ViewModels.VerificationTestViews
 {
-    public class VerificationTestViewModel : InstrumentTestViewModel, IHandle<VerificationTestEvent>
+    public class VerificationTestViewModel : InstrumentTestViewModel, IHandle<VerificationTestEvent>, IDisposable
     {
         public VerificationTestViewModel(IUnityContainer container, TestManager testManager) : base(container, testManager.Instrument)
         {
@@ -54,6 +54,11 @@ namespace Prover.GUI.ViewModels.VerificationTestViews
         public void Handle(VerificationTestEvent message)
         {
             Task.Run(async () => await SaveInstrument());
+        }
+
+        public void Dispose()
+        {
+            InstrumentTestManager.Dispose();
         }
     }
 }

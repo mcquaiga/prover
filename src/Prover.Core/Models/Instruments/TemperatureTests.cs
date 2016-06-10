@@ -34,7 +34,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.GetItem(ItemCodes.Temperature.Factor) == null) return null;
+                if (Items?.GetItem(ItemCodes.Temperature.Factor) == null) return null;
                 if (ActualFactor == null) return null;
                 return
                     Math.Round(

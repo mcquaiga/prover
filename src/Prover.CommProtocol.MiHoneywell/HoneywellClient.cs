@@ -31,63 +31,89 @@ namespace Prover.CommProtocol.MiHoneywell
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        public override async Task Connect(int retryAttempts, CancellationTokenSource cancellationToken = null)
+        public override async Task Connect(int retryAttempts = 10, CancellationTokenSource cancellationToken = null)
         {
             var connectionAttempts = 0;
 
-            while (!IsConnected)
+            if (cancellationToken == null) 
+                cancellationToken = new CancellationTokenSource();
+
+            var ct = cancellationToken.Token;
+
+            var result = Task.Run(async () =>
             {
-                connectionAttempts++;
-                Log.Info($"[{CommPort.Name}] Connecting to {InstrumentType}... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
+                while (!IsConnected)
+                {
+                    connectionAttempts++;
+                    Log.Info(
+                        $"[{CommPort.Name}] Connecting to {InstrumentType}... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
 
-                try
-                {
-                    await Connect();
-                }
-                catch (Exception ex)
-                {
-                    Log.Warn(ex.Message);
-                }
-
-                if (!IsConnected)
-                {
-                    if (connectionAttempts < retryAttempts)
+                    try
                     {
-                        Thread.Sleep(ConnectionRetryDelayMs);
+                        if (ct.IsCancellationRequested)
+                        {
+                            ct.ThrowIfCancellationRequested();
+                        }
+
+                        if (IsConnected) return;
+
+                        if (!CommPort.IsOpen())
+                            await CommPort.OpenAsync();
+
+                        await WakeUpInstrument();
+
+                        if (IsAwake)
+                        {
+                            var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
+
+                            if (response.IsSuccess)
+                            {
+                                IsConnected = true;
+                                Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
+                            }
+                            else
+                            {
+                                if (response.ResponseCode == ResponseCode.FramingError)
+                                {
+                                    CommPort.CloseAsync();
+                                }
+
+                                throw new Exception($"Error response {response.ResponseCode}");
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType}!");
+                        Log.Warn(ex.Message);
+                    }
+
+                    if (!IsConnected)
+                    {
+                        if (connectionAttempts < retryAttempts)
+                        {
+                            Thread.Sleep(ConnectionRetryDelayMs);
+                        }
+                        else
+                        {
+                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType}!");
+                        }
                     }
                 }
-            }
-        }
+            }, ct);
 
-        public override async Task<bool> Connect(CancellationTokenSource cancellationToken = null)
-        {
-            if (IsConnected) return true;
-
-            if (!CommPort.IsOpen())
-                await CommPort.OpenAsync();
-
-            await WakeUpInstrument();
-            
-            if (IsAwake)
+            try
             {
-                var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
-
-                if (response.IsSuccess)
-                {
-                    IsConnected = true;
-                    Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
-                }
-                else
-                {
-                    throw new Exception($"Error response {response.ResponseCode}");
-                }
+                await result;
             }
-
-            return IsConnected;
+            catch (AggregateException e)
+            {
+                foreach (var v in e.InnerExceptions)
+                    Log.Warn(e.Message + " " + v.Message);
+            }
+            finally
+            {
+                cancellationToken.Dispose();
+            }
         }
 
         public override async Task Disconnect()
@@ -98,7 +124,7 @@ namespace Prover.CommProtocol.MiHoneywell
 
                 if (response.IsSuccess)
                 {
-                    await CommPort.CloseAsync();
+                    //await CommPort.CloseAsync();
                     IsConnected = false;
                 }
             }

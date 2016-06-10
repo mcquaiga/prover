@@ -49,8 +49,11 @@ namespace Prover.Core.Models.Instruments
         {
             base.OnInitializing();
 
-            var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
-            Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
+            if (!string.IsNullOrEmpty(_instrumentData))
+            {
+                var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
+                Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
+            }
         }
     }
 }

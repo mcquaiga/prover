@@ -94,8 +94,8 @@ namespace UnionGas.MASA
             return new EvcQARun.VerificationTest.VolumeTest
             {
                 AppliedInput = vt.VolumeTest.AppliedInput,
-                EvcCorrected = vt.VolumeTest.EvcCorrected,
-                EvcUncorrected = vt.VolumeTest.EvcUncorrected,
+                EvcCorrected = vt.VolumeTest.EvcCorrected.Value,
+                EvcUncorrected = vt.VolumeTest.EvcUncorrected.Value,
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,

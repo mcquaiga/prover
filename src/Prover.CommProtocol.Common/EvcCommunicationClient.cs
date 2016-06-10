@@ -88,14 +88,7 @@ namespace Prover.CommProtocol.Common
         /// <param name="retryAttempts"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public abstract Task Connect(int retryAttempts, CancellationTokenSource cancellationToken = null);
-
-        /// <summary>
-        ///     Estbalish a link with an instrument
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public abstract Task<bool> Connect(CancellationTokenSource cancellationToken = null);
+        public abstract Task Connect(int retryAttempts = 10, CancellationTokenSource cancellationToken = null);
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists
