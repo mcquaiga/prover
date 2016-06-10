@@ -138,7 +138,15 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumber">Item number to write value</param>
         /// <param name="value">Value to write</param>
         /// <returns>True - Successful, False - Failed to write</returns>
-        public abstract Task<bool> SetItemValue(int itemNumber, int value);
+        public abstract Task<bool> SetItemValue(int itemNumber, long value);
+
+        /// <summary>
+        ///     Write a value to an item
+        /// </summary>
+        /// <param name="itemCode"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public abstract Task<bool> SetItemValue(string itemCode, long value);
 
         /// <summary>
         ///     Live read item values

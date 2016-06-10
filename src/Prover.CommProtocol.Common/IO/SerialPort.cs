@@ -11,22 +11,21 @@ using RJCP.IO.Ports;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public class SerialPortV2 : CommPort
+    public class SerialPort : CommPort
     {
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
-        private readonly ISubject<char> _rcvSubject = new Subject<char>();
         private readonly SerialPortStream _serialStream;
 
-        public SerialPortV2(string portName, int baudRate, int timeoutMs = 250)
+        public SerialPort(string portName, int baudRate, int timeoutMs = 250)
         {
             if (string.IsNullOrEmpty(portName))
                 throw new ArgumentNullException(nameof(portName));
 
             if (!SerialPortStream.GetPortNames().ToList().Contains(portName))
-                throw new Exception($"{portName} does not exist.");
+                throw new ArgumentException($"{portName} does not exist.");
 
             if (!BaudRates.Contains(baudRate))
-                throw new ArgumentException("Baud rate is invalid.");
+                throw new ArgumentException($"Baud rate is invalid. Must be one of the following: {BaudRates.ToString().JoinStrings(",")}");
 
             _serialStream = new SerialPortStream
             {

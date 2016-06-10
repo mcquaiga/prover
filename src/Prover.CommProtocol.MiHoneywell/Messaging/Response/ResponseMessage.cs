@@ -51,12 +51,17 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public StatusResponseMessage(ResponseCode code, string checksum) : base(checksum)
         {
             ResponseCode = code;
+            
+            if (!IsSuccess)
+                Log.Warn($"Instrument Response Error - {ResponseCode}");
+            
+            Log.Debug($"Instrument Response - {ResponseCode}");
         }
 
         public ResponseCode ResponseCode { get; }
 
         public bool IsSuccess
-            => ResponseCode == ResponseCode.NoError || ResponseCode == ResponseCode.InvalidEnquiryError;
+            => ResponseCode == ResponseCode.NoError;
 
         public override string ToString()
         {

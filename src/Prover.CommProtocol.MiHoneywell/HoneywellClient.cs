@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,13 +51,7 @@ namespace Prover.CommProtocol.MiHoneywell
 
                     try
                     {
-                        if (ct.IsCancellationRequested)
-                        {
-                            ct.ThrowIfCancellationRequested();
-                        }
-
-                        if (IsConnected) return;
-
+                        
                         if (!CommPort.IsOpen())
                             await CommPort.OpenAsync();
 
@@ -75,7 +70,7 @@ namespace Prover.CommProtocol.MiHoneywell
                             {
                                 if (response.ResponseCode == ResponseCode.FramingError)
                                 {
-                                    CommPort.CloseAsync();
+                                    await CommPort.CloseAsync();
                                 }
 
                                 throw new Exception($"Error response {response.ResponseCode}");
@@ -165,30 +160,20 @@ namespace Prover.CommProtocol.MiHoneywell
             return results;
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
-        {
-            return await GetItemValues(itemNumbers.GetAllItemNumbers());
-        }
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers) => await GetItemValues(itemNumbers.GetAllItemNumbers());
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
             var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
 
-            if (result.IsSuccess)
-                return true;
-
-            return false;
+            return result.IsSuccess;
         }
 
-        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
-        {
-            return await SetItemValue(itemNumber, value.ToString());
-        }
+        public override async Task<bool> SetItemValue(int itemNumber, decimal value) => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
 
-        public override async Task<bool> SetItemValue(int itemNumber, int value)
-        {
-            return await SetItemValue(itemNumber, value.ToString());
-        }
+        public override async Task<bool> SetItemValue(int itemNumber, long value) => await SetItemValue(itemNumber, value.ToString());
+
+        public override async Task<bool> SetItemValue(string itemCode, long value) => await SetItemValue(ItemDetails.GetItem(itemCode), value);
 
         public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
         {
@@ -203,7 +188,7 @@ namespace Prover.CommProtocol.MiHoneywell
             Thread.Sleep(150);
             var response = await ExecuteCommand(Commands.WakeupTwo());
 
-            if (response.IsSuccess)
+            if (response.IsSuccess || response.ResponseCode == ResponseCode.InvalidEnquiryError)
             {
                 IsAwake = true;
                 Thread.Sleep(100);

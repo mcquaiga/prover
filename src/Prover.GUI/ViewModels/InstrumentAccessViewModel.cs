@@ -16,6 +16,7 @@ using System.Windows;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
+using SerialPort = Prover.CommProtocol.Common.IO.SerialPort;
 
 namespace Prover.GUI.ViewModels
 {
@@ -82,7 +83,7 @@ namespace Prover.GUI.ViewModels
             {
                 if (InstrumentCommunicator == null)
                 {
-                    var commPort = new SerialPortV2(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
+                    var commPort = new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
                     InstrumentCommunicator = new HoneywellClient(commPort, InstrumentType.MiniMax);
                     //var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
                     //InstrumentCommunicator = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);

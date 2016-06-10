@@ -54,7 +54,12 @@ namespace Prover.CommProtocol.MiHoneywell.Simulator
             throw new NotImplementedException();
         }
 
-        public override Task<bool> SetItemValue(int itemNumber, int value)
+        public override Task<bool> SetItemValue(int itemNumber, long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<bool> SetItemValue(string itemCode, long value)
         {
             throw new NotImplementedException();
         }

@@ -6,6 +6,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             public const string SerialNumber = "SERIAL_NUM";
             public const string Firmware = "FIRMWARE";
+            public const string CompanyNumber = "SITENUMBER2";
         }
 
         public static class Pressure

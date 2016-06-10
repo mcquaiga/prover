@@ -1,36 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 
-namespace UnionGas.MASA
+namespace UnionGas.MASA.Verifiers
 {
-    public class CompanyNumberVerifier
+    public static class CompanyNumberVerifier
     {
         private const string VerifyEndPoint = "Verify";
         private const string UpdateEndPoint = "Update";
 
-        public CompanyNumberVerifier(Uri serverUri, long serialNumber, long companyNumber)
-        {
-            this.ServerUri = serverUri;
-            this.SerialNumber = serialNumber;
-            this.CompanyNumber = companyNumber;
-        }
-
-        public long SerialNumber { get; set; }
-
-        public Uri ServerUri { get; private set; }
-
-        public long CompanyNumber { get; private set; }
-
-        public async Task<object> TryVerify()
+        public static async Task<object> VerifyCompanyNumber(Uri serverUri, long companyNumber)
         {
             using (var client = new HttpClient())
             {
-                var response = await client.PostAsync(ServerUri, new StringContent(CompanyNumber.ToString()));
+                var response = await client.PostAsync(serverUri, new StringContent(companyNumber.ToString()));
                 response.EnsureSuccessStatusCode();
 
                 var content = await response.Content.ReadAsStringAsync();
@@ -39,12 +24,10 @@ namespace UnionGas.MASA
             }
         }
 
-        //public async Task<bool> UpdateCompanyNumber()
-        //{
-        //    using (var client = new HttpClient())
-        //    {
-        //        var response = await client.PostAsync(ServerUri, new )
-        //    } 
-        //}
+        public static async Task<bool> UpdateCompanyNumber(EvcCommunicationClient commClient, long newCompanyNumber)
+        {
+            await commClient.Connect();
+            return await commClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, newCompanyNumber);
+        }
     }
 }

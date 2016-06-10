@@ -11,6 +11,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Windows;
 using Prover.CommProtocol.Common.IO;
+using SerialPort = Prover.CommProtocol.Common.IO.SerialPort;
 
 namespace Prover.GUI.ViewModels.SettingsViews
 {
@@ -42,7 +43,7 @@ namespace Prover.GUI.ViewModels.SettingsViews
             _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
         }
 
-        public List<int> BaudRate => SerialPortV2.BaudRates;
+        public List<int> BaudRate => SerialPort.BaudRates;
         public List<string> CommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
         public List<string> TachCommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
 

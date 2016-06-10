@@ -103,12 +103,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EvcCommunicationClient.cs" />
-    <Compile Include="IO\ControlCharacters.cs" />
     <Compile Include="Extensions\Task.cs" />
     <Compile Include="IO\CommPort.cs" />
     <Compile Include="IO\IrDAPort.cs" />
-    <Compile Include="IO\SerialCommPort.cs" />
-    <Compile Include="IO\SerialPortV2.cs" />
+    <Compile Include="IO\SerialPort.cs" />
     <Compile Include="Items\ItemCodes.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
     <Compile Include="Items\ItemMetadataExtentions.cs" />

@@ -69,7 +69,7 @@ namespace Prover.GUI.ViewModels.TestViews
 
             try
             {
-                var commPort = new SerialPortV2(InstrumentCommPortName, BaudRate);
+                var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
 
                 if (IsMiniMaxChecked)
                 {
