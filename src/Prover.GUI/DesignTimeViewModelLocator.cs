@@ -1,8 +1,8 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using System.Globalization;
+using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 
 namespace Prover.GUI
@@ -25,21 +25,23 @@ namespace Prover.GUI
             IoC.BuildUp = container.BuildUp;
 
             var viewModels = typeof(DesignTimeViewModelLocator).Assembly.DefinedTypes
-               .Where(t => t.IsSubclassOf(typeof(ReactiveScreen)));
+                .Where(t => t.IsSubclassOf(typeof(ReactiveScreen)));
             foreach (var vm in viewModels)
             {
                 container.RegisterPerRequest(vm.AsType(), null, vm.AsType());
             }
 
             container.Singleton<IEventAggregator, EventAggregator>();
-            
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             // Blend creates types from a runtime/dynamic assembly, so match on name/namespace
             var viewModelType = typeof(DesignTimeViewModelLocator).Assembly.DefinedTypes
-                .First(t => t.Name == value.GetType().Name && value.GetType().Namespace.EndsWith(t.Namespace, StringComparison.Ordinal)).AsType();
+                .First(
+                    t =>
+                        t.Name == value.GetType().Name &&
+                        value.GetType().Namespace.EndsWith(t.Namespace, StringComparison.Ordinal)).AsType();
 
             return container.GetInstance(viewModelType, null);
         }

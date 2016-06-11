@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
-using Prover.GUI.Screens.VerificationTest;
-using Prover.GUI.ViewModels;
+using Prover.GUI.Screens.Export;
+using Prover.GUI.Screens.QAProver;
+using Prover.GUI.Screens.RawItemAccess;
 
 namespace Prover.GUI.Screens.Shell
 {
@@ -34,6 +35,7 @@ namespace Prover.GUI.Screens.Shell
         //{
         //    ProgressDialogView.Execute(_container, "Connecting to Instrument...",
         //    (bw) =>
+
         //    {
         //        var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
         //        var instrComm = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);

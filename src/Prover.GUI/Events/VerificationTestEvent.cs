@@ -1,14 +1,14 @@
-﻿using Prover.Core.Communication;
-using Prover.Core.VerificationTests;
-
-namespace Prover.GUI.Events
+﻿namespace Prover.GUI.Events
 {
     public class VerificationTestEvent
     {
+        private VerificationTestEvent()
+        {
+        }
+
         public static VerificationTestEvent Raise()
         {
             return new VerificationTestEvent();
         }
-        private VerificationTestEvent() { }
     }
 }

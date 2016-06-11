@@ -3,5 +3,5 @@
                     xmlns:local="clr-namespace:Prover.GUI">
     <ImageSource x:Key="PassIcon">success.png</ImageSource>
     <ImageSource x:Key="FailIcon">error.png</ImageSource>
-    
+
 </ResourceDictionary>

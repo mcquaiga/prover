@@ -13,25 +13,25 @@ using System.ComponentModel;
 
 namespace Prover.GUI.ProgressDialog
 {
-	internal class ProgressDialogResult
-	{
-		public object Result { get; private set; }
-		public bool Cancelled { get; private set; }
-		public Exception Error { get; private set; }
+    internal class ProgressDialogResult
+    {
+        public ProgressDialogResult(RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                Cancelled = true;
+            else if (e.Error != null)
+                Error = e.Error;
+            else
+                Result = e.Result;
+        }
 
-		public bool OperationFailed
-		{
-			get { return Error != null; }
-		}
+        public object Result { get; private set; }
+        public bool Cancelled { get; private set; }
+        public Exception Error { get; }
 
-		public ProgressDialogResult(RunWorkerCompletedEventArgs e)
-		{
-			if(e.Cancelled)
-				Cancelled = true;
-			else if(e.Error != null)
-				Error = e.Error;
-			else
-				Result = e.Result;
-		}
-	}
+        public bool OperationFailed
+        {
+            get { return Error != null; }
+        }
+    }
 }

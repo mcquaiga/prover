@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -17,7 +13,8 @@ namespace Prover.GUI.Controls.DesignData
 
             if (Passed)
             {
-                IconSource = new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/success.png"));
+                IconSource =
+                    new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/success.png"));
                 IconBackground = Brushes.ForestGreen;
             }
             else

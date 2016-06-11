@@ -10,11 +10,12 @@ namespace Prover.GUI.Controls
         #region public bool HideCloseButton (attached)
 
         public static readonly DependencyProperty HideCloseButtonProperty =
-             DependencyProperty.RegisterAttached("HideCloseButton", typeof(bool), typeof(WindowSettings), new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnHideCloseButtonPropertyChanged)));
+            DependencyProperty.RegisterAttached("HideCloseButton", typeof(bool), typeof(WindowSettings),
+                new FrameworkPropertyMetadata(false, OnHideCloseButtonPropertyChanged));
 
         public static bool GetHideCloseButton(FrameworkElement element)
         {
-            return (bool)element.GetValue(HideCloseButtonProperty);
+            return (bool) element.GetValue(HideCloseButtonProperty);
         }
 
         public static void SetHideCloseButton(FrameworkElement element, bool hideCloseButton)
@@ -22,13 +23,13 @@ namespace Prover.GUI.Controls
             element.SetValue(HideCloseButtonProperty, hideCloseButton);
         }
 
-        static void OnHideCloseButtonPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnHideCloseButtonPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Window window = d as Window;
+            var window = d as Window;
 
             if (window != null)
             {
-                var hideCloseButton = (bool)e.NewValue;
+                var hideCloseButton = (bool) e.NewValue;
 
                 if (hideCloseButton && !GetIsCloseButtonHidden(window))
                 {
@@ -51,33 +52,33 @@ namespace Prover.GUI.Controls
             }
         }
 
-        static readonly RoutedEventHandler OnWindowLoaded = (s, e) => {
-
+        private static readonly RoutedEventHandler OnWindowLoaded = (s, e) =>
+        {
             if (s is Window)
             {
-                Window window = s as Window;
+                var window = s as Window;
                 HideCloseButton(window);
                 window.Loaded -= OnWindowLoaded;
             }
-
         };
 
         #endregion
 
         #region public bool IsCloseButtonHidden (readonly attached)
 
-        static readonly DependencyPropertyKey IsHiddenCloseButtonKey =
-            DependencyProperty.RegisterAttachedReadOnly("IsCloseButtonHidden", typeof(bool), typeof(WindowSettings), new FrameworkPropertyMetadata(false));
+        private static readonly DependencyPropertyKey IsHiddenCloseButtonKey =
+            DependencyProperty.RegisterAttachedReadOnly("IsCloseButtonHidden", typeof(bool), typeof(WindowSettings),
+                new FrameworkPropertyMetadata(false));
 
         public static readonly DependencyProperty IsCloseButtonHiddenProperty =
-             IsHiddenCloseButtonKey.DependencyProperty;
+            IsHiddenCloseButtonKey.DependencyProperty;
 
         public static bool GetIsCloseButtonHidden(FrameworkElement element)
         {
-            return (bool)element.GetValue(IsCloseButtonHiddenProperty);
+            return (bool) element.GetValue(IsCloseButtonHiddenProperty);
         }
 
-        static void SetIsCloseButtonHidden(FrameworkElement element, bool isCloseButtonHidden)
+        private static void SetIsCloseButtonHidden(FrameworkElement element, bool isCloseButtonHidden)
         {
             element.SetValue(IsHiddenCloseButtonKey, isCloseButtonHidden);
         }
@@ -86,15 +87,15 @@ namespace Prover.GUI.Controls
 
         #region Helper Methods
 
-        static void HideCloseButton(Window w)
+        private static void HideCloseButton(Window w)
         {
-            IntPtr hWnd = new WindowInteropHelper(w).Handle;
+            var hWnd = new WindowInteropHelper(w).Handle;
             SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) & ~WS_SYSMENU);
         }
 
-        static void ShowCloseButton(Window w)
+        private static void ShowCloseButton(Window w)
         {
-            IntPtr hWnd = new WindowInteropHelper(w).Handle;
+            var hWnd = new WindowInteropHelper(w).Handle;
             SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) | WS_SYSMENU);
         }
 
@@ -102,13 +103,14 @@ namespace Prover.GUI.Controls
 
         #region Win32 Native Methods And Constants
 
-        const int GWL_STYLE = -16;
-        const int WS_SYSMENU = 0x80000;
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
         [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         #endregion
     }

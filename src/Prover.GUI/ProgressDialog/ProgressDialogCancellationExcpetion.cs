@@ -3,32 +3,31 @@ using System.Runtime.Serialization;
 
 namespace Prover.GUI.ProgressDialog
 {
-	[Serializable]
-	internal class ProgressDialogCancellationExcpetion : Exception
-	{
-		public ProgressDialogCancellationExcpetion()
-			: base()
-		{
-		}
+    [Serializable]
+    internal class ProgressDialogCancellationExcpetion : Exception
+    {
+        public ProgressDialogCancellationExcpetion()
+        {
+        }
 
-		public ProgressDialogCancellationExcpetion(string message)
-			: base(message)
-		{
-		}
+        public ProgressDialogCancellationExcpetion(string message)
+            : base(message)
+        {
+        }
 
-		public ProgressDialogCancellationExcpetion(string message, Exception innerException)
-			: base(message, innerException)
-		{
-		}
+        public ProgressDialogCancellationExcpetion(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
 
-		public ProgressDialogCancellationExcpetion(string format, params string[] arg)
-			: base(string.Format(format, arg))
-		{
-		}
+        public ProgressDialogCancellationExcpetion(string format, params string[] arg)
+            : base(string.Format(format, arg))
+        {
+        }
 
-		protected ProgressDialogCancellationExcpetion(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-		}
-	}
+        protected ProgressDialogCancellationExcpetion(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
 }

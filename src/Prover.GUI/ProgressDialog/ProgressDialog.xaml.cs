@@ -13,187 +13,190 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using Parago.Windows;
 
 namespace Prover.GUI.ProgressDialog
 {
-	public partial class ProgressDialog : Window
-	{
-		public static ProgressDialogContext Current { get; set; }
+    public partial class ProgressDialog : Window
+    {
+        private volatile bool _isBusy;
+        private BackgroundWorker _worker;
 
-		volatile bool _isBusy;
-		BackgroundWorker _worker;
+        public ProgressDialog(ProgressDialogSettings settings)
+        {
+            InitializeComponent();
 
-		public string Label
-		{
-			get { return TextLabel.Text; }
-			set { TextLabel.Text = value; }
-		}
+            if (settings == null)
+                settings = ProgressDialogSettings.WithLabelOnly;
 
-		public string SubLabel
-		{
-			get { return SubTextLabel.Text; }
-			set { SubTextLabel.Text = value; }
-		}
+            if (settings.ShowSubLabel)
+            {
+                Height = 140;
+                MinHeight = 140;
+                SubTextLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Height = 110;
+                MinHeight = 110;
+                SubTextLabel.Visibility = Visibility.Collapsed;
+            }
 
-		internal ProgressDialogResult Result { get; private set; }
+            CancelButton.Visibility = settings.ShowCancelButton ? Visibility.Visible : Visibility.Collapsed;
 
-		public ProgressDialog(ProgressDialogSettings settings)
-		{
-			InitializeComponent();
+            ProgressBar.IsIndeterminate = settings.ShowProgressBarIndeterminate;
+        }
 
-			if(settings == null)
-				settings = ProgressDialogSettings.WithLabelOnly;
+        public static ProgressDialogContext Current { get; set; }
 
-			if(settings.ShowSubLabel)
-			{
-				Height = 140;
-				MinHeight = 140;
-				SubTextLabel.Visibility = Visibility.Visible;
-			}
-			else
-			{
-				Height = 110;
-				MinHeight = 110;
-				SubTextLabel.Visibility = Visibility.Collapsed;
-			}
+        public string Label
+        {
+            get { return TextLabel.Text; }
+            set { TextLabel.Text = value; }
+        }
 
-			CancelButton.Visibility = settings.ShowCancelButton ? Visibility.Visible : Visibility.Collapsed;
+        public string SubLabel
+        {
+            get { return SubTextLabel.Text; }
+            set { SubTextLabel.Text = value; }
+        }
 
-			ProgressBar.IsIndeterminate = settings.ShowProgressBarIndeterminate;
-		}
+        internal ProgressDialogResult Result { get; private set; }
 
-		internal ProgressDialogResult Execute(object operation)
-		{
-			if(operation == null)
-				throw new ArgumentNullException("operation");
+        internal ProgressDialogResult Execute(object operation)
+        {
+            if (operation == null)
+                throw new ArgumentNullException("operation");
 
-			ProgressDialogResult result = null;
+            ProgressDialogResult result = null;
 
-			_isBusy = true;
+            _isBusy = true;
 
-			_worker = new BackgroundWorker();
-			_worker.WorkerReportsProgress = true;
-			_worker.WorkerSupportsCancellation = true;
+            _worker = new BackgroundWorker();
+            _worker.WorkerReportsProgress = true;
+            _worker.WorkerSupportsCancellation = true;
 
-			_worker.DoWork +=
-				(s, e) => {
+            _worker.DoWork +=
+                (s, e) =>
+                {
+                    try
+                    {
+                        Current = new ProgressDialogContext(s as BackgroundWorker, e);
 
-					try
-					{
-						ProgressDialog.Current = new ProgressDialogContext(s as BackgroundWorker, e as DoWorkEventArgs);
+                        if (operation is Action)
+                            ((Action) operation)();
+                        else if (operation is Func<object>)
+                            e.Result = ((Func<object>) operation)();
+                        else
+                            throw new InvalidOperationException("Operation type is not supoorted");
 
-						if(operation is Action)
-							((Action)operation)();
-						else if(operation is Func<object>)
-							e.Result = ((Func<object>)operation)();
-						else
-							throw new InvalidOperationException("Operation type is not supoorted");
+                        // NOTE: Always do this check in order to avoid default processing after the Cancel button has been pressed.
+                        // This call will set the Cancelled flag on the result structure.
+                        Current.CheckCancellationPending();
+                    }
+                    catch (ProgressDialogCancellationExcpetion)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!Current.CheckCancellationPending())
+                            throw ex;
+                    }
+                    finally
+                    {
+                        Current = null;
+                    }
+                };
 
-						// NOTE: Always do this check in order to avoid default processing after the Cancel button has been pressed.
-						// This call will set the Cancelled flag on the result structure.
-						ProgressDialog.Current.CheckCancellationPending();
-					}
-					catch(ProgressDialogCancellationExcpetion)
-					{ }
-					catch(Exception ex)
-					{
-						if(!ProgressDialog.Current.CheckCancellationPending())
-							throw ex;
-					}
-					finally
-					{
-						ProgressDialog.Current = null;
-					}
+            _worker.RunWorkerCompleted +=
+                (s, e) =>
+                {
+                    result = new ProgressDialogResult(e);
 
-				};
+                    Dispatcher.BeginInvoke(DispatcherPriority.Send, (SendOrPostCallback) delegate
+                    {
+                        _isBusy = false;
+                        Close();
+                    }, null);
+                };
 
-			_worker.RunWorkerCompleted +=
-				(s, e) => {
+            _worker.ProgressChanged +=
+                (s, e) =>
+                {
+                    if (!_worker.CancellationPending)
+                    {
+                        SubLabel = e.UserState as string ?? string.Empty;
+                        ProgressBar.Value = e.ProgressPercentage;
+                    }
+                };
 
-					result = new ProgressDialogResult(e);
+            _worker.RunWorkerAsync();
 
-					Dispatcher.BeginInvoke(DispatcherPriority.Send, (SendOrPostCallback)delegate {
-						_isBusy = false;
-						Close();
-					}, null);
+            ShowDialog();
 
-				};
+            return result;
+        }
 
-			_worker.ProgressChanged +=
-				(s, e) => {
+        private void OnCancelButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (_worker != null && _worker.WorkerSupportsCancellation)
+            {
+                SubLabel = "Please wait while process will be cancelled...";
+                CancelButton.IsEnabled = false;
+                _worker.CancelAsync();
+            }
+        }
 
-					if(!_worker.CancellationPending)
-					{
-						SubLabel = (e.UserState as string) ?? string.Empty;
-						ProgressBar.Value = e.ProgressPercentage;
-					}
+        private void OnClosing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = _isBusy;
+        }
 
-				};
+        internal static ProgressDialogResult Execute(Window owner, string label, Action operation)
+        {
+            return ExecuteInternal(owner, label, operation, null);
+        }
 
-			_worker.RunWorkerAsync();
+        internal static ProgressDialogResult Execute(Window owner, string label, Action operation,
+            ProgressDialogSettings settings)
+        {
+            return ExecuteInternal(owner, label, operation, settings);
+        }
 
-			ShowDialog();
+        internal static ProgressDialogResult Execute(Window owner, string label, Func<object> operationWithResult)
+        {
+            return ExecuteInternal(owner, label, operationWithResult, null);
+        }
 
-			return result;
-		}
+        internal static ProgressDialogResult Execute(Window owner, string label, Func<object> operationWithResult,
+            ProgressDialogSettings settings)
+        {
+            return ExecuteInternal(owner, label, operationWithResult, settings);
+        }
 
-		void OnCancelButtonClick(object sender, RoutedEventArgs e)
-		{
-			if(_worker != null && _worker.WorkerSupportsCancellation)
-			{
-				SubLabel = "Please wait while process will be cancelled...";
-				CancelButton.IsEnabled = false;
-				_worker.CancelAsync();
-			}
-		}
+        internal static void Execute(Window owner, string label, Action operation,
+            Action<ProgressDialogResult> successOperation, Action<ProgressDialogResult> failureOperation = null,
+            Action<ProgressDialogResult> cancelledOperation = null)
+        {
+            var result = ExecuteInternal(owner, label, operation, null);
 
-		void OnClosing(object sender, CancelEventArgs e)
-		{
-			e.Cancel = _isBusy;
-		}
+            if (result.Cancelled && cancelledOperation != null)
+                cancelledOperation(result);
+            else if (result.OperationFailed && failureOperation != null)
+                failureOperation(result);
+            else if (successOperation != null)
+                successOperation(result);
+        }
 
-		internal static ProgressDialogResult Execute(Window owner, string label, Action operation)
-		{
-			return ExecuteInternal(owner, label, (object)operation, null);
-		}
+        internal static ProgressDialogResult ExecuteInternal(Window owner, string label, object operation,
+            ProgressDialogSettings settings)
+        {
+            var dialog = new ProgressDialog(settings);
+            dialog.Owner = owner;
 
-		internal static ProgressDialogResult Execute(Window owner, string label, Action operation, ProgressDialogSettings settings)
-		{
-			return ExecuteInternal(owner, label, (object)operation, settings);
-		}
+            if (!string.IsNullOrEmpty(label))
+                dialog.Label = label;
 
-		internal static ProgressDialogResult Execute(Window owner, string label, Func<object> operationWithResult)
-		{
-			return ExecuteInternal(owner, label, (object)operationWithResult, null);
-		}
-
-		internal static ProgressDialogResult Execute(Window owner, string label, Func<object> operationWithResult, ProgressDialogSettings settings)
-		{
-			return ExecuteInternal(owner, label, (object)operationWithResult, settings);
-		}
-
-		internal static void Execute(Window owner, string label, Action operation, Action<ProgressDialogResult> successOperation, Action<ProgressDialogResult> failureOperation = null, Action<ProgressDialogResult> cancelledOperation = null)
-		{
-			ProgressDialogResult result = ExecuteInternal(owner, label, operation, null);
-
-			if(result.Cancelled && cancelledOperation != null)
-				cancelledOperation(result);
-			else if(result.OperationFailed && failureOperation != null)
-				failureOperation(result);
-			else if(successOperation != null)
-				successOperation(result);
-		}
-
-		internal static ProgressDialogResult ExecuteInternal(Window owner, string label, object operation, ProgressDialogSettings settings)
-		{
-			ProgressDialog dialog = new ProgressDialog(settings);
-			dialog.Owner = owner;
-
-			if(!string.IsNullOrEmpty(label))
-				dialog.Label = label;
-
-			return dialog.Execute(operation);
-		}
-	}
+            return dialog.Execute(operation);
+        }
+    }
 }
