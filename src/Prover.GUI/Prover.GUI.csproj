@@ -246,6 +246,14 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Reporting\CertificateGenerator.cs" />
     <Compile Include="Reporting\InstrumentGenerator.cs" />
+    <Compile Include="Screens\Shell\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Shell\MainMenuViewModel.cs" />
+    <Compile Include="Screens\Shell\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Shell\ShellViewModel.cs" />
     <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
     <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
     <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
@@ -258,7 +266,6 @@
     <Compile Include="ViewModels\InstrumentViews\InstrumentTestViewModel.cs" />
     <Compile Include="ViewModels\IWindowSettings.cs" />
     <Compile Include="ViewModels\LiveReadViewModel.cs" />
-    <Compile Include="ViewModels\Shell\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\DesignData.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
@@ -271,7 +278,6 @@
     <Compile Include="ViewModels\ScreenManager.cs" />
     <Compile Include="ViewModels\SettingsViews\SettingsViewModel.cs" />
     <Compile Include="ViewModels\InstrumentViews\InstrumentInfoViewModel.cs" />
-    <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
     <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
     <Compile Include="ViewModels\ToastNotificationViewModel.cs" />
@@ -306,9 +312,6 @@
     </Compile>
     <Compile Include="Views\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shell\MainMenuView.xaml.cs">
-      <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
       <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
@@ -351,9 +354,6 @@
     </Compile>
     <Compile Include="Views\InstrumentViews\InstrumentInfo\SiteInformation.Card.xaml.cs">
       <DependentUpon>SiteInformation.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shell\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -398,6 +398,14 @@
     <Page Include="Resources\ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Shell\MainMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Shell\ShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CertificateReport\CertificateReportView.xaml">
       <SubType>Designer</SubType>
@@ -499,19 +507,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Shell\MainMenuView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VerificationTestViews\VerificationTestView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Shell\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

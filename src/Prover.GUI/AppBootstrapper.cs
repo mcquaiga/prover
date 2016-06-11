@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
-using Prover.GUI.ViewModels;
-using Prover.GUI.ViewModels.Dialogs;
-using Prover.GUI.ViewModels.Shell;
+using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI
 {
@@ -38,7 +37,7 @@ namespace Prover.GUI
             {
                 return _container.Resolve(service);
             }
-            
+
             if (!string.IsNullOrEmpty(key))
             {
                 return _container.Resolve(Type.GetType(key));
@@ -57,7 +56,7 @@ namespace Prover.GUI
             _container.BuildUp(instance);
         }
 
-        protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
+        protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<ShellViewModel>();
         }
