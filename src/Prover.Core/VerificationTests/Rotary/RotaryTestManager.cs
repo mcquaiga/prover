@@ -8,6 +8,7 @@ using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
 using Prover.Core.DriveTypes;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.Rotary
@@ -15,13 +16,13 @@ namespace Prover.Core.VerificationTests.Rotary
     public sealed class RotaryTestManager : TestManager
     {
         private RotaryTestManager(IUnityContainer container, Instrument instrument,
-            EvcCommunicationClient instrumentCommunicator, RotaryVolumeVerification volumeTestManager)
-            : base(container, instrument, instrumentCommunicator)
+            EvcCommunicationClient instrumentCommunicator, VolumeVerificationManager volumeTestManager, IVerifier verifier)
+            : base(container, instrument, instrumentCommunicator, verifier)
         {
             VolumeTestManager = volumeTestManager;
         }
 
-        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, EvcCommunicationClient instrumentCommClient, string tachometerPortName)
+        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, EvcCommunicationClient instrumentCommClient, string tachometerPortName, IVerifier verifier)
         {
             TachometerCommunicator tachComm = null;
             if (!string.IsNullOrEmpty(tachometerPortName))
@@ -40,7 +41,7 @@ namespace Prover.Core.VerificationTests.Rotary
             var volumeTest = instrument.VolumeTest;
             var rotaryVolumeTest = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentCommClient, tachComm);
 
-            var manager = new RotaryTestManager(container, instrument, instrumentCommClient, rotaryVolumeTest);
+            var manager = new RotaryTestManager(container, instrument, instrumentCommClient, rotaryVolumeTest, verifier);
             container.RegisterInstance<TestManager>(manager);
 
             return manager;

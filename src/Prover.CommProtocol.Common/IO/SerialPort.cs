@@ -38,8 +38,6 @@ namespace Prover.CommProtocol.Common.IO
                 WriteTimeout = timeoutMs
             };
 
-            TryOpen();
-
             DataReceivedObservable = DataReceived().Publish();
             DataReceivedObservable.Connect();
 
@@ -49,13 +47,6 @@ namespace Prover.CommProtocol.Common.IO
         public sealed override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
         public sealed override ISubject<string> DataSentObservable { get; protected set; }
         public override string Name => _serialStream.PortName;
-
-        private void TryOpen()
-        {
-            if (_serialStream.IsOpen) return;
-
-            _serialStream.Open();
-        }
 
         protected sealed override IObservable<char> DataReceived()
         {
@@ -75,27 +66,33 @@ namespace Prover.CommProtocol.Common.IO
 
         public override bool IsOpen() => _serialStream.IsOpen;
 
-        public override async Task OpenAsync()
+        public override async Task Open()
         {
-            await Task.Run(() => TryOpen());
+            if (_serialStream.IsOpen) return;
+
+            await Task.Run(() => _serialStream.Open());
         }
 
-        public override async Task CloseAsync()
+        public override async Task Close()
         {
             await Task.Run(() => _serialStream.Close());
         }
 
-        public override void Send(string data)
+        public override async Task Send(string data)
         {
-            _serialStream.DiscardInBuffer();
-            _serialStream.DiscardOutBuffer();
+            await Task.Run(() =>
+            {
+                _serialStream.DiscardInBuffer();
+                _serialStream.DiscardOutBuffer();
 
-            var content = new List<byte>();
-            content.AddRange(Encoding.ASCII.GetBytes(data));
+                var content = new List<byte>();
+                content.AddRange(Encoding.ASCII.GetBytes(data));
 
-            var buffer = content.ToArray();
-            _serialStream.Write(buffer, 0, buffer.Length);
-            DataSentObservable.OnNext(data);
+                var buffer = content.ToArray();
+                _serialStream.Write(buffer, 0, buffer.Length);
+
+                DataSentObservable.OnNext(data);
+            });
         }
 
         public override void Dispose()

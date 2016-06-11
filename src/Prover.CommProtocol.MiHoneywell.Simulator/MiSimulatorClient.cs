@@ -19,7 +19,7 @@ namespace Prover.CommProtocol.MiHoneywell.Simulator
 
         public override bool IsConnected { get; protected set; }
 
-        public override async Task Connect(int retryAttempts = 10, CancellationTokenSource cancellationToken = null)
+        protected override async Task ConnectToInstrument()
         {
             await Task.Run(() => Log.Debug("Connecting on simulator."));
         }

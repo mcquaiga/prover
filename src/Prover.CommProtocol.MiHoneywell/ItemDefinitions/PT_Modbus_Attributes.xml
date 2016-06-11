@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Instrument mi_xml_version="v1.0.01" description="{PROTOCOL TRANSLATOR MODBUS XML DATA FILE}">
+<!-- v1.0.01 
+Instrument mi_xml_version="v1.0.01"  MDM 12-16-2013 Moved the Instrument tag line to above the change record to prevent XML serializer from removing
+                                     the change record comments.
+
+				        moved <Instrument mi_xml_version="v1.0.01" description="{PROTOCOL TRANSLATOR MODBUS XML DATA FILE}">
+-->
+	<InstrumentType>25</InstrumentType>
+	<InstrumentName>PT Modbus</InstrumentName>
+	<BoardType>25</BoardType>
+	<FirmwareVersion>1.000</FirmwareVersion>
+	<AuditTrailParameters>
+		<AuditTrail>No</AuditTrail>
+	</AuditTrailParameters>
+	<Events>
+		<Log>No</Log>
+<!-- This instrument doesn't deal with events. The following is shown for reference purposes only -->
+<!--		<Event>
+			<Name>Serial</Name>
+			<ID>3</ID>
+		</Event>
+ -->
+	</Events>
+	<Alarms>
+		<Log>No</Log>
+	</Alarms>
+	<SignOn>vq05</SignOn>
+	<SiteIDsRequired>No</SiteIDsRequired>
+	<ItemFileExtension>IPTC</ItemFileExtension>
+	<CustomItemFileExtension>KPTC</CustomItemFileExtension>
+	<CustomItemSetupFileExtension>CPTC</CustomItemSetupFileExtension>
+	<EnableTemperatureCalibration>No</EnableTemperatureCalibration>
+	<EnablePressureCalibration>No</EnablePressureCalibration>
+	<InternalSiteName>No</InternalSiteName>
+	<LiveDataGraph>No</LiveDataGraph>
+	
+	<FunctionGroups>
+		<Group>
+			<FuncGroup>1</FuncGroup>
+			<GroupDesc>Site Information</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>2</FuncGroup>
+			<GroupDesc>Protocol Config</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>3</FuncGroup>
+			<GroupDesc>Communication Config</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>4</FuncGroup>
+			<GroupDesc>Daily Archive Config</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>5</FuncGroup>
+			<GroupDesc>Daily Archive Items</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>6</FuncGroup>
+			<GroupDesc>Register Mapping Config</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>7</FuncGroup>
+			<GroupDesc>Mapped Registers</GroupDesc>
+		</Group>
+	</FunctionGroups>
+
+	<Items>
+		<Item>
+			<ItemNum>914</ItemNum>
+			<ItemDesc>Register Offset by 1</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>915</ItemNum>
+			<ItemDesc>Modbus Protocol Type</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">ASCII</option>
+				<option value="1">RTU</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>916</ItemNum>
+			<ItemDesc>Call-in Enable (J5/J6)</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Call-in Not Permitted</option>
+				<option value="1">Call-in Permitted</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>917</ItemNum>
+			<ItemDesc>Alarm-Event Log Enable</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>918</ItemNum>
+			<ItemDesc>CTS Timeout (J4)</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<UnitsMap default="Secs."/>
+			<MinValue>1</MinValue>
+			<MaxValue>60</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>919</ItemNum>
+			<ItemDesc>Item/Register Offset</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>1000</MinValue>
+			<MaxValue>9000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>920</ItemNum>
+			<ItemDesc>Daily Archive Item 10</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>921</ItemNum>
+			<ItemDesc>Daily Archive Item 9</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>922</ItemNum>
+			<ItemDesc>Daily Archive Item 8</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>923</ItemNum>
+			<ItemDesc>Daily Archive Item 7</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>924</ItemNum>
+			<ItemDesc>Daily Archive Item 6</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>925</ItemNum>
+			<ItemDesc>Daily Archive Item 5</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>926</ItemNum>
+			<ItemDesc>Daily Archive Item 4</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>927</ItemNum>
+			<ItemDesc>Daily Archive Item 3</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>928</ItemNum>
+			<ItemDesc>Daily Archive Item 2</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>929</ItemNum>
+			<ItemDesc>Daily Archive Item 1</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>2000</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>930</ItemNum>
+			<ItemDesc>R/W Access Level</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Read/Write</option>
+				<option value="1">Read-only</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>931</ItemNum>
+			<ItemDesc>Always Active Port</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Power Save</option>
+				<option value="2">J2 Port</option>
+				<option value="3">J3 Port</option>
+				<option value="4">J4 Port</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>932</ItemNum>
+			<ItemDesc>Register Data Format</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">32 bits MSB</option>
+				<option value="1">16 bits MSB</option>
+				<option value="2">16 bits LSB</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>933</ItemNum>
+			<ItemDesc>Archive Time Format</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">HH:MM</option>
+				<option value="1">HH:MM:SS</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>940</ItemNum>
+			<ItemDesc>Modbus Register 7039</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>40</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>941</ItemNum>
+			<ItemDesc>Modbus Register 7038</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>39</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>942</ItemNum>
+			<ItemDesc>Modbus Register 7037</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>38</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>943</ItemNum>
+			<ItemDesc>Modbus Register 7036</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>37</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>944</ItemNum>
+			<ItemDesc>Modbus Register 7035</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>36</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>945</ItemNum>
+			<ItemDesc>Modbus Register 7034</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>35</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>946</ItemNum>
+			<ItemDesc>Modbus Register 7033</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>34</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>947</ItemNum>
+			<ItemDesc>Modbus Register 7032</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>33</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>948</ItemNum>
+			<ItemDesc>Modbus Register 7031</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>32</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>949</ItemNum>
+			<ItemDesc>Modbus Register 7030</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>31</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>950</ItemNum>
+			<ItemDesc>Modbus Register 7029</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>30</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>951</ItemNum>
+			<ItemDesc>Modbus Register 7028</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>29</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>952</ItemNum>
+			<ItemDesc>Modbus Register 7027</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>28</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>953</ItemNum>
+			<ItemDesc>Modbus Register 7026</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>27</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>954</ItemNum>
+			<ItemDesc>Modbus Register 7025</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>26</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>955</ItemNum>
+			<ItemDesc>Modbus Register 7024</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>25</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>956</ItemNum>
+			<ItemDesc>Modbus Register 7023</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>24</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>957</ItemNum>
+			<ItemDesc>Modbus Register 7022</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>23</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>958</ItemNum>
+			<ItemDesc>Modbus Register 7021</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>22</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>959</ItemNum>
+			<ItemDesc>Modbus Register 7020</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>21</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>960</ItemNum>
+			<ItemDesc>Modbus Register 7019</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>20</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>961</ItemNum>
+			<ItemDesc>Modbus Register 7018</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>19</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>962</ItemNum>
+			<ItemDesc>Modbus Register 7017</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>18</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>963</ItemNum>
+			<ItemDesc>Modbus Register 7016</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>17</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>964</ItemNum>
+			<ItemDesc>Modbus Register 7015</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>16</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>965</ItemNum>
+			<ItemDesc>Modbus Register 7014</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>15</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>966</ItemNum>
+			<ItemDesc>Modbus Register 7013</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>14</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>967</ItemNum>
+			<ItemDesc>Modbus Register 7012</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>13</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>968</ItemNum>
+			<ItemDesc>Modbus Register 7011</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>12</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>969</ItemNum>
+			<ItemDesc>Modbus Register 7010</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>11</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>970</ItemNum>
+			<ItemDesc>Modbus Register 7009</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>971</ItemNum>
+			<ItemDesc>Modbus Register 7008</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>972</ItemNum>
+			<ItemDesc>Modbus Register 7007</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>973</ItemNum>
+			<ItemDesc>Modbus Register 7006</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>974</ItemNum>
+			<ItemDesc>Modbus Register 7005</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>975</ItemNum>
+			<ItemDesc>Modbus Register 7004</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>976</ItemNum>
+			<ItemDesc>Modbus Register 7003</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>977</ItemNum>
+			<ItemDesc>Modbus Register 7002</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>978</ItemNum>
+			<ItemDesc>Modbus Register 7001</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>979</ItemNum>
+			<ItemDesc>Modbus Register 7000</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>980</ItemNum>
+			<ItemDesc>Enable Mapping</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>981</ItemNum>
+			<ItemDesc>Archive TimeDate Format</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">IEEE</option>
+				<option value="1">BCD</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>982</ItemNum>
+			<ItemDesc>CTS Control Mode (J4)</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Normal Mode</option>
+				<option value="1">Delay for CTS</option>
+				<option value="2">Radio Keying</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>983</ItemNum>
+			<ItemDesc>Archive Log Mode Enable</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>984</ItemNum>
+			<ItemDesc>J4 Modem Baud Rate</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+  				<option value="0">9600</option>
+  				<option value="1">4800</option>
+  				<option value="2">2400</option>
+  				<option value="3">1200</option>
+  				<option value="4">600</option>
+  				<option value="5">19200</option>
+  				<option value="6">38400</option>
+  				<option value="7">57600</option>
+			</CodeTable>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>985</ItemNum>
+			<ItemDesc>J2 RS-485 Baud Rate</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+  				<option value="0">9600</option>
+  				<option value="1">4800</option>
+  				<option value="2">2400</option>
+  				<option value="3">1200</option>
+  				<option value="4">600</option>
+  				<option value="5">19200</option>
+  				<option value="6">38400</option>
+  				<option value="7">57600</option>
+			</CodeTable>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>989</ItemNum>
+			<ItemDesc>PT Bd F/W Version</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>990</ItemNum>
+			<ItemDesc>Archive Log Variant</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">ENRON Spec</option>
+				<option value="1">MERCURY</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>991</ItemNum>
+			<ItemDesc>ATH0 Hangup Enable (J4)</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>993</ItemNum>
+			<ItemDesc>Modbus Device Address</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>1</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>994</ItemNum>
+			<ItemDesc>Instrument Type</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">ECAT</option>
+				<option value="1">ER/ERX</option>
+				<option value="2">Mini</option>
+				<option value="3">Mini-AT</option>
+				<option value="4">Mini-Max</option>
+				<option value="6">Turbo Mon</option>
+				<option value="7">Generic</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>995</ItemNum>
+			<ItemDesc>Character Format</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">8n1</option>
+				<option value="1">7e1</option>
+				<option value="2">7o1</option>
+				<option value="3">7e1</option>
+				<option value="4">7o1</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>996</ItemNum>
+			<ItemDesc>J5/J6 Instrument Baud</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+  				<option value="0">9600</option>
+  				<option value="1">4800</option>
+  				<option value="2">2400</option>
+  				<option value="3">1200</option>
+  				<option value="4">600</option>
+  				<option value="5">19200</option>
+  				<option value="6">38400</option>
+  				<option value="7">57600</option>
+			</CodeTable>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>997</ItemNum>
+			<ItemDesc>J3 Local Baud Rate</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+  				<option value="0">9600</option>
+  				<option value="1">4800</option>
+  				<option value="2">2400</option>
+  				<option value="3">1200</option>
+  				<option value="4">600</option>
+  				<option value="5">19200</option>
+  				<option value="6">38400</option>
+  				<option value="7">57600</option>
+			</CodeTable>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>998</ItemNum>
+			<ItemDesc>Prot.Inactivity Timeout</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>1</MinValue>
+			<MaxValue>255</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>999</ItemNum>
+			<ItemDesc>Protocol Detect Timeout</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>10</MinValue>
+			<MaxValue>60</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+	</Items>
+</Instrument>

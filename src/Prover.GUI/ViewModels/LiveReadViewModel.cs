@@ -36,7 +36,7 @@ namespace Prover.GUI.ViewModels
 
         private async Task DoLiveRead()
         {
-            await _testManager.StartLiveRead();
+
         }
 
         public dynamic WindowSettings
@@ -54,7 +54,6 @@ namespace Prover.GUI.ViewModels
 
         public async Task CloseCommand()
         {
-            await _testManager.StopLiveRead();
             this.TryClose();
         }
 

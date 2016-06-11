@@ -12,14 +12,14 @@ namespace Prover.CommProtocol.Common.Items
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException(nameof(value));
 
-            if (metadata == null)
-                throw new ArgumentNullException(nameof(metadata));
+            //if (metadata == null)
+            //    throw new ArgumentNullException(nameof(metadata));
 
             RawValue = value;
             Metadata = metadata;
         }
 
-        public string RawValue { get; }
+        public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
         public virtual decimal NumericValue => ItemDescription?.Value ?? decimal.Parse(RawValue);
@@ -30,7 +30,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             get
             {
-                if (Metadata.ItemDescriptions.Any())
+                if (Metadata?.ItemDescriptions != null && Metadata.ItemDescriptions.Any())
                 {
                     var intValue = Convert.ToInt32(RawValue);
                     return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
@@ -43,7 +43,7 @@ namespace Prover.CommProtocol.Common.Items
         public override string ToString()
         {
             return $"{Environment.NewLine}================================================={Environment.NewLine}" +
-                   $"{Metadata.LongDescription} - #{Metadata.Number} {Environment.NewLine}" +
+                   $"{Metadata?.LongDescription} - #{Metadata?.Number} {Environment.NewLine}" +
                    $"   Item Value: {RawValue} {Environment.NewLine}" +
                    $"   Item Description: {Description} {Environment.NewLine}" +
                    $"   Numeric Value: {NumericValue} {Environment.NewLine}";

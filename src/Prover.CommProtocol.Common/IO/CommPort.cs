@@ -8,7 +8,7 @@ namespace Prover.CommProtocol.Common.IO
 {
     public abstract class CommPort : IDisposable
     {
-        protected const int OpenPortTimeoutMs = 1000;
+        protected const int OpenPortTimeoutMs = 5000;
         protected const int ReadWriteTimeoutMs = 200;
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
         public abstract IConnectableObservable<char> DataReceivedObservable { get; protected set; }
@@ -20,9 +20,9 @@ namespace Prover.CommProtocol.Common.IO
 
         protected abstract IObservable<char> DataReceived();
         public abstract bool IsOpen();
-        public abstract Task OpenAsync();
-        public abstract Task CloseAsync();
-        public abstract void Send(string data);
+        public abstract Task Open();
+        public abstract Task Close();
+        public abstract Task Send(string data);
     }
 
     public static class ControlCharacters

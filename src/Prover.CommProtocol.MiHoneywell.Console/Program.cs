@@ -9,7 +9,8 @@ namespace Prover.CommProtocol.MiHoneywell.Console
     {
         private static void Main(string[] args)
         {
-            var commPort = new SerialPort("COM11", 38400);
+            //var commPort = new SerialPort("COM11", 38400);
+            var commPort = new IrDAPort();
 
             using (var client = new HoneywellClient(commPort, InstrumentType.MiniMax))
             {

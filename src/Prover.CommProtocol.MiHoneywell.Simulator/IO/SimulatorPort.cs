@@ -26,19 +26,19 @@ namespace Prover.CommProtocol.MiHoneywell.Simulator.IO
             return true;
         }
 
-        public override async Task OpenAsync()
+        public override async Task Open()
         {
             await Task.Run(() => Log.Info("Open simulator port."));
         }
 
-        public override async Task CloseAsync()
+        public override async Task Close()
         {
             await Task.Run(() => Log.Info("Closing simulator port."));
         }
 
-        public override void Send(string data)
+        public override async Task Send(string data)
         {
-            
+            throw new NotImplementedException();
         }
 
         public override void Dispose()

@@ -7,9 +7,9 @@ using Microsoft.Practices.Unity;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.EVCTypes;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
@@ -19,25 +19,31 @@ namespace Prover.Core.VerificationTests
 {
     public class TestManager : IDisposable
     {
-        private const int VolumeTestnumber = 0;
-
+        private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         protected readonly IUnityContainer Container;
-        private bool _isBusy;
-
-        private bool _isLiveReading;
+        //private bool _isBusy;
+        //private bool _isLiveReading;
         private bool _stopLiveReading;
 
-        protected TestManager(IUnityContainer container, Instrument instrument, EvcCommunicationClient commClient)
+        protected TestManager(IUnityContainer container, Instrument instrument, EvcCommunicationClient commClient,
+            IVerifier verifier)
         {
             Container = container;
             Instrument = instrument;
             CommunicationClient = commClient;
+            Verifier = verifier;
         }
 
+        public IVerifier Verifier { get; }
         public Instrument Instrument { get; }
         public EvcCommunicationClient CommunicationClient { get; }
-        public virtual BaseVolumeVerificationManager VolumeTestManager { get; set; }
+        public virtual VolumeVerificationManager VolumeTestManager { get; set; }
+
+        public void Dispose()
+        {
+            CommunicationClient.Dispose();
+        }
 
         public async Task RunTest(int level)
         {
@@ -50,6 +56,13 @@ namespace Prover.Core.VerificationTests
         }
 
         private async Task WaitForReadingsToStablize(int level)
+        {
+            var liveReadItems = GetLiveReadItemNumbers(level);
+
+            await LiveReadItems(liveReadItems);
+        }
+
+        private Dictionary<int, ReadingStabilizer> GetLiveReadItemNumbers(int level)
         {
             var liveReadItems = new Dictionary<int, ReadingStabilizer>();
             if (Instrument.CompositionType == CorrectorType.PTZ)
@@ -67,8 +80,13 @@ namespace Prover.Core.VerificationTests
             {
                 liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
             }
+            return liveReadItems;
+        }
 
+        private async Task LiveReadItems(Dictionary<int, ReadingStabilizer> liveReadItems)
+        {
             await CommunicationClient.Connect();
+
             do
             {
                 foreach (var item in liveReadItems)
@@ -122,63 +140,6 @@ namespace Prover.Core.VerificationTests
                 test.Items = await CommunicationClient.GetItemValues(CommunicationClient.ItemDetails.PressureItems());
         }
 
-        public async Task StartLiveRead()
-        {
-            var liveReadItems = new List<int>();
-            if (Instrument.CompositionType == CorrectorType.PTZ)
-            {
-                liveReadItems.Add(8);
-                liveReadItems.Add(26);
-            }
-
-            if (Instrument.CompositionType == CorrectorType.T)
-            {
-                liveReadItems.Add(26);
-            }
-
-            if (Instrument.CompositionType == CorrectorType.P)
-            {
-                liveReadItems.Add(8);
-            }
-
-            await StartLiveRead(liveReadItems);
-        }
-
-        public async Task StartLiveRead(IEnumerable<int> itemNumbers)
-        {
-            if (!_isBusy)
-            {
-                var itemQueues = new Dictionary<int, FixedSizedQueue<decimal>>();
-                Log.Debug("Starting live read...");
-                await CommunicationClient.Connect();
-                _stopLiveReading = false;
-                _isLiveReading = true;
-                do
-                {
-                    foreach (var i in itemNumbers)
-                    {
-                        var liveValue = await CommunicationClient.LiveReadItemValue(i);
-                        Container.Resolve<IEventAggregator>()
-                            .PublishOnBackgroundThread(new LiveReadEvent(i, liveValue.NumericValue));
-                    }
-                } while (!_stopLiveReading);
-
-                await CommunicationClient.Disconnect();
-                _isLiveReading = false;
-                _isBusy = false;
-                Log.Debug("Finished live read!");
-            }
-        }
-
-        public async Task StopLiveRead()
-        {
-            if (_isLiveReading)
-            {
-                _stopLiveReading = true;
-                await CommunicationClient.Disconnect();
-            }
-        }
-
         public async Task SaveAsync()
         {
             try
@@ -217,7 +178,7 @@ namespace Prover.Core.VerificationTests
                     verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
                 }
 
-                if (i == VolumeTestnumber)
+                if (i == VolumeTestNumber)
                     verificationTest.VolumeTest = new VolumeTest(verificationTest, driveType);
 
                 instrument.VerificationTests.Add(verificationTest);
@@ -243,9 +204,13 @@ namespace Prover.Core.VerificationTests
             return value*evcPressureRange;
         }
 
-        public void Dispose()
+        public async Task RunVerifier()
         {
-            CommunicationClient.Dispose();
+            if (Verifier == null) return;
+
+            var success = await Verifier.Verify(Instrument);
+
+            await Container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(Verifier.VerificationNotValid);
         }
     }
 }

@@ -238,7 +238,6 @@
     <Compile Include="ProgressDialog\ProgressDialogResult.cs" />
     <Compile Include="ProgressDialog\ProgressDialogSettings.cs" />
     <Compile Include="ProgressDialog\WindowSettings.cs" />
-    <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="DesignTimeViewModelLocator.cs" />
     <Compile Include="Events\InstrumentUpdateEvent.cs" />
     <Compile Include="Events\NotificationEvent.cs" />
@@ -399,10 +398,6 @@
     <Page Include="Resources\ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CertificateReport\CertificateReportView.xaml">
       <SubType>Designer</SubType>
@@ -614,9 +609,7 @@
   <ItemGroup>
     <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

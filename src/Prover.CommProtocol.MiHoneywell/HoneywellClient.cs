@@ -14,8 +14,6 @@ namespace Prover.CommProtocol.MiHoneywell
 {
     public class HoneywellClient : EvcCommunicationClient
     {
-        private const int ConnectionRetryDelayMs = 3000;
-
         public HoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
         {
             InstrumentType = instrumentType;
@@ -32,82 +30,28 @@ namespace Prover.CommProtocol.MiHoneywell
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        public override async Task Connect(int retryAttempts = 10, CancellationTokenSource cancellationToken = null)
+        protected override async Task ConnectToInstrument()
         {
-            var connectionAttempts = 0;
+            await WakeUpInstrument();
 
-            if (cancellationToken == null) 
-                cancellationToken = new CancellationTokenSource();
-
-            var ct = cancellationToken.Token;
-
-            var result = Task.Run(async () =>
+            if (IsAwake)
             {
-                while (!IsConnected)
+                var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
+
+                if (response.IsSuccess)
                 {
-                    connectionAttempts++;
-                    Log.Info(
-                        $"[{CommPort.Name}] Connecting to {InstrumentType}... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
-
-                    try
-                    {
-                        
-                        if (!CommPort.IsOpen())
-                            await CommPort.OpenAsync();
-
-                        await WakeUpInstrument();
-
-                        if (IsAwake)
-                        {
-                            var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
-
-                            if (response.IsSuccess)
-                            {
-                                IsConnected = true;
-                                Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
-                            }
-                            else
-                            {
-                                if (response.ResponseCode == ResponseCode.FramingError)
-                                {
-                                    await CommPort.CloseAsync();
-                                }
-
-                                throw new Exception($"Error response {response.ResponseCode}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn(ex.Message);
-                    }
-
-                    if (!IsConnected)
-                    {
-                        if (connectionAttempts < retryAttempts)
-                        {
-                            Thread.Sleep(ConnectionRetryDelayMs);
-                        }
-                        else
-                        {
-                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType}!");
-                        }
-                    }
+                    IsConnected = true;
+                    Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
                 }
-            }, ct);
+                else
+                {
+                    if (response.ResponseCode == ResponseCode.FramingError)
+                    {
+                        await CommPort.Close();
+                    }
 
-            try
-            {
-                await result;
-            }
-            catch (AggregateException e)
-            {
-                foreach (var v in e.InnerExceptions)
-                    Log.Warn(e.Message + " " + v.Message);
-            }
-            finally
-            {
-                cancellationToken.Dispose();
+                    throw new Exception($"Error response {response.ResponseCode}");
+                }
             }
         }
 

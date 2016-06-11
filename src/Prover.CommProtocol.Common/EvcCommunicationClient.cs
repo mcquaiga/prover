@@ -12,7 +12,8 @@ namespace Prover.CommProtocol.Common
 {
     public abstract class EvcCommunicationClient : IDisposable
     {
-        protected const int MaxConnectionAttempts = 10;
+        private const int ConnectionRetryDelayMs = 3000;
+        private const int MaxConnectionAttempts = 10;
         private readonly IDisposable _receivedObservable;
         private readonly IDisposable _sentObservable;
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -33,7 +34,7 @@ namespace Prover.CommProtocol.Common
                     msg => { Log.Debug($"[{CommPort.Name}][OUT] >> {ControlCharacters.Prettify(msg)}"); });
         }
 
-        protected CommPort CommPort { get; }
+        protected CommPort CommPort { get; set; }
 
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
@@ -44,6 +45,8 @@ namespace Prover.CommProtocol.Common
         ///     Is this client already connected to an instrument
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
+
+        public CancellationTokenSource CancellationTokenSource { get; private set; }
 
         public virtual void Dispose()
         {
@@ -74,7 +77,7 @@ namespace Prover.CommProtocol.Common
 
             using (response.Connect())
             {
-                CommPort.Send(command.Command);
+                await CommPort.Send(command.Command);
 
                 var result = await response;
                 return result;
@@ -86,9 +89,68 @@ namespace Prover.CommProtocol.Common
         ///     Handles retries for failed connections
         /// </summary>
         /// <param name="retryAttempts"></param>
-        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public abstract Task Connect(int retryAttempts = 10, CancellationTokenSource cancellationToken = null);
+        public async Task Connect(int retryAttempts = MaxConnectionAttempts)
+        {
+            var connectionAttempts = 0;
+
+            CancellationTokenSource = new CancellationTokenSource();
+            var ct = CancellationTokenSource.Token;
+            
+            var result = Task.Run(async () =>
+            {
+                while (!IsConnected)
+                {
+                    connectionAttempts++;
+                    Log.Info($"[{CommPort.Name}] Connecting to Instrument... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
+
+                    try
+                    {
+                        if (!CommPort.IsOpen())
+                            await CommPort.Open();
+
+                        await ConnectToInstrument();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn(ex.Message);
+                    }
+
+                    if (!IsConnected)
+                    {
+                        if (connectionAttempts < retryAttempts)
+                        {
+                            Thread.Sleep(ConnectionRetryDelayMs);
+                        }
+                        else
+                        {
+                            throw new Exception($"{CommPort.Name} Could not connect to instrument.");
+                        }
+                    }
+                }
+            }, ct);
+
+            try
+            {
+                await result;
+            }
+            catch (AggregateException e)
+            {
+                foreach (var v in e.InnerExceptions)
+                    Log.Warn(e.Message + " " + v.Message);
+            }
+            finally
+            {
+                CancellationTokenSource.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Establish a link with an instrument
+        ///     Handles retries for failed connections
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Task ConnectToInstrument();
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists

@@ -5,6 +5,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.Mechanical
@@ -12,8 +13,8 @@ namespace Prover.Core.VerificationTests.Mechanical
     public sealed class MechanicalTestManager : TestManager
     {
         public MechanicalTestManager(IUnityContainer container, Instrument instrument,
-            EvcCommunicationClient instrumentComm, MechanicalVolumeVerification volumeTestManager)
-            : base(container, instrument, instrumentComm)
+            EvcCommunicationClient instrumentComm, MechanicalVolumeVerification volumeTestManager, IVerifier verifier)
+            : base(container, instrument, instrumentComm, verifier)
         {
             VolumeTestManager = volumeTestManager;
         }
@@ -32,7 +33,7 @@ namespace Prover.Core.VerificationTests.Mechanical
             var volumeManager = new MechanicalVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest,
                 commClient);
 
-            var manager = new MechanicalTestManager(container, instrument, commClient, volumeManager);
+            var manager = new MechanicalTestManager(container, instrument, commClient, volumeManager, null);
             container.RegisterInstance<TestManager>(manager);
 
             return manager;

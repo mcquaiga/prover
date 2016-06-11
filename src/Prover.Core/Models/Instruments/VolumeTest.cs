@@ -94,16 +94,10 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool CorrectedHasPassed
-        {
-            get { return CorrectedPercentError != null && CorrectedPercentError.IsBetween(Global.COR_ERROR_THRESHOLD); }
-        }
+        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
-        public bool UnCorrectedHasPassed
-        {
-            get { return UnCorrectedPercentError != null && (UnCorrectedPercentError.IsBetween(Global.UNCOR_ERROR_THRESHOLD)); }
-        }
+        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
         public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;

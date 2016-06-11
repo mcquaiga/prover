@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -16,7 +17,7 @@ namespace Prover.CommProtocol.Common.IO
     public class IrDAPort : CommPort
     {
         private const int DevicePeerIndex = 0;
-        private const string ServiceName = "IrDA:IrCOMM";
+        private const string ServiceName = "IrCOMM2kSvc";
         private readonly Encoding _encoding;
         private readonly IrDAClient _client;
         private IrDAEndPoint _endPoint;
@@ -24,6 +25,7 @@ namespace Prover.CommProtocol.Common.IO
         public IrDAPort()
         {
             _client = new IrDAClient(ServiceName);
+
             try
             {
                 _encoding = Encoding.GetEncoding("x-IAS");
@@ -59,11 +61,11 @@ namespace Prover.CommProtocol.Common.IO
             return _client.Connected;
         }
 
-        public override async Task OpenAsync()
+        public override async Task Open()
         {
             if (IsOpen()) return;
 
-            var tokenSource = new CancellationTokenSource(150);
+            var tokenSource = new CancellationTokenSource();
             tokenSource.CancelAfter(OpenPortTimeoutMs);
 
             await Task.Run(() =>
@@ -75,28 +77,31 @@ namespace Prover.CommProtocol.Common.IO
             }, tokenSource.Token);
         }
 
-        public override async Task CloseAsync()
+        public override async Task Close()
         {
             await Task.Run(() => _client.Close());
         }
 
-        public override void Send(string data)
+        public override async Task Send(string data)
         {
-            OpenAsync().Wait();
+            await Open();
 
-            using (var stream = _client.GetStream())
+            await Task.Run(() =>
             {
-                if (stream.CanWrite)
+                using (var stream = _client.GetStream())
                 {
-                    var content = new List<byte>();
-                    content.AddRange(Encoding.ASCII.GetBytes(data));
+                    if (stream.CanWrite)
+                    {
+                        var content = new List<byte>();
+                        content.AddRange(Encoding.ASCII.GetBytes(data));
 
-                    var buffer = content.ToArray();
-                    stream.Write(buffer, 0, buffer.Length);
+                        var buffer = content.ToArray();
+                        stream.Write(buffer, 0, buffer.Length);
 
-                    Log.Debug($"[{ServiceName}] Outgoing >> - {ControlCharacters.Prettify(data)}");
+                        Log.Debug($"[{ServiceName}] Outgoing >> - {ControlCharacters.Prettify(data)}");
+                    }
                 }
-            }
+            });
         }
 
         public override void Dispose()
@@ -107,12 +112,10 @@ namespace Prover.CommProtocol.Common.IO
         private void LoadDevice()
         {
             _client.Client.SetSocketOption(
-                IrDASocketOptionLevel.IrLmp,
-                IrDASocketOptionName.NineWireMode,
-                1);
+                    IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode,
+                    1);
 
             var device = SelectIrDAPeerInfo(_client);
-
             _endPoint = new IrDAEndPoint(device.DeviceAddress, ServiceName);
         }
 

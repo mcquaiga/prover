@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Events;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.Mechanical;
@@ -14,10 +15,11 @@ using Prover.Core.VerificationTests.Rotary;
 using Prover.GUI.ViewModels.SettingsViews;
 using Prover.GUI.ViewModels.Shell;
 using Prover.GUI.ViewModels.VerificationTestViews;
+using UnionGas.MASA.Verifiers;
 
 namespace Prover.GUI.ViewModels.TestViews
 {
-    public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
+    public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>, IHandle<VerificationNotValidEvent>
     {
         private readonly IUnityContainer _container;
         private bool _miniAtChecked;
@@ -69,6 +71,7 @@ namespace Prover.GUI.ViewModels.TestViews
 
             try
             {
+                var companyNumberVerifier = new CompanyNumberVerifier();
                 var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
 
                 if (IsMiniMaxChecked)
@@ -76,7 +79,9 @@ namespace Prover.GUI.ViewModels.TestViews
                     InstrumentTestManager =
                         await
                             RotaryTestManager.CreateRotaryTest(_container,
-                                new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName);
+                                new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName, companyNumberVerifier);
+
+                    await InstrumentTestManager.RunVerifier();
                 }
                 else if (IsMiniATChecked)
                 {
@@ -113,6 +118,11 @@ namespace Prover.GUI.ViewModels.TestViews
             {
                 ScreenManager.ShowDialog(_container, new SettingsViewModel(_container));
             }
+        }
+
+        public void Handle(VerificationNotValidEvent message)
+        {
+            ScreenManager.ShowDialog(_container, message.ViewModel);
         }
     }
 }

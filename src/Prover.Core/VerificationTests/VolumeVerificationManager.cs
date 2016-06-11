@@ -9,7 +9,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
-    public abstract class BaseVolumeVerificationManager
+    public abstract class VolumeVerificationManager
     {
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
@@ -20,7 +20,7 @@ namespace Prover.Core.VerificationTests
         protected bool RequestStopTest;
         protected bool RunningTest = false;
 
-        protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
+        protected VolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm)
         {
             EventAggreator = eventAggregator;
@@ -40,9 +40,7 @@ namespace Prover.Core.VerificationTests
 
         protected virtual async Task ZeroInstrumentVolumeItems()
         {
-            if (!InstrumentCommunicator.IsConnected)
-                await InstrumentCommunicator.Connect();
-
+            await InstrumentCommunicator.Connect();
             await InstrumentCommunicator.SetItemValue(0, "0");
             await InstrumentCommunicator.SetItemValue(2, "0");
             await InstrumentCommunicator.Disconnect();

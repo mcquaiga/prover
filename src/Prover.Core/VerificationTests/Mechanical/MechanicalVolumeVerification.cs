@@ -7,7 +7,7 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.Mechanical
 {
-    public sealed class MechanicalVolumeVerification : BaseVolumeVerificationManager
+    public sealed class MechanicalVolumeVerification : VolumeVerificationManager
     {
         public MechanicalVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest, EvcCommunicationClient commClient) 
             : base(eventAggregator, volumeTest, commClient)
@@ -41,6 +41,7 @@ namespace Prover.Core.VerificationTests.Mechanical
                     VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
+
                 await FinishVolumeTest();
             });
         }

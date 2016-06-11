@@ -26,7 +26,7 @@
 
             <StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">
-                    <controls:ValueDescriptionControl Label="Type" Value="{Binding Instrument.TypeString}"/>
+                    <controls:ValueDescriptionControl Label="Type" Value="{Binding Instrument.Type}"/>
                     <controls:ValueDescriptionControl Label="Comp." Value="{Binding CorrectorType}"/>
                 </UniformGrid>
                 <UniformGrid Rows="3">
