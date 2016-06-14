@@ -2,6 +2,7 @@
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Events;
+using Prover.GUI.Common;
 using Prover.GUI.Dialogs;
 using Prover.GUI.Screens;
 

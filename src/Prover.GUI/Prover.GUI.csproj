@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\build\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,7 +32,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\build\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,21 +48,24 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Prover.GUI.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.Core.3.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
+    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.3.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -114,7 +117,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PubSub, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -135,8 +138,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -167,7 +170,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -185,22 +188,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
       <Private>True</Private>
@@ -216,20 +203,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConnectionDialogManager.cs" />
-    <Compile Include="Controls\DesignViewModel.cs" />
-    <Compile Include="Controls\PercentageControl.xaml.cs">
-      <DependentUpon>PercentageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LabelValueControl.xaml.cs">
-      <DependentUpon>LabelValueControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ValueDescriptionControl.xaml.cs">
-      <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\WindowSettings.cs" />
-    <Compile Include="Converters\BooleanToPassConverter.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
@@ -238,19 +211,7 @@
       <DependentUpon>ProgressDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\ProgressDialogViewModel.cs" />
-    <Compile Include="ProgressDialog\ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ProgressDialog\ProgressDialogCancellationExcpetion.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogContext.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogResult.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogSettings.cs" />
-    <Compile Include="ProgressDialog\WindowSettings.cs" />
     <Compile Include="DesignTimeViewModelLocator.cs" />
-    <Compile Include="Events\InstrumentUpdateEvent.cs" />
-    <Compile Include="Events\NotificationEvent.cs" />
-    <Compile Include="Events\ScreenChangeEvent.cs" />
-    <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Reports\CertificateGenerator.cs" />
     <Compile Include="Reports\CertificateReportView.xaml.cs">
@@ -347,15 +308,12 @@
     <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestView.xaml.cs">
       <DependentUpon>VerificationTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
-    <Compile Include="Events\VerificationTestEvent.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
-    <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTestViewModel.cs" />
@@ -363,27 +321,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\PercentageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LabelValueControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ValueDescriptionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\ConnectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ProgressDialogView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ProgressDialog\ProgressDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -399,10 +341,6 @@
     <Page Include="Reports\InstrumentReportView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\ResourceDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Export\CreateCertificateView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -519,17 +457,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="Resources\error_36.png" />
-    <Resource Include="Resources\success.png" />
-    <Resource Include="Resources\error.png" />
-    <Resource Include="Resources\download_white.png" />
-    <Resource Include="Resources\download.png" />
-    <Resource Include="Resources\cloud-upload.png" />
-    <Resource Include="Resources\clipboard-check.png" />
-    <Resource Include="Resources\clipboard-text.png" />
-    <Resource Include="Resources\home.png" />
     <Resource Include="Resources\settings-light.png" />
-    <Resource Include="Resources\uglogo.jpg" />
+    <Resource Include="settings-light.png" />
+    <Resource Include="Resources\Home.png" />
+    <Resource Include="Resources\clipboard-check.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -565,6 +496,10 @@
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
+      <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
+      <Name>Prover.GUI.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>
@@ -573,22 +508,6 @@
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
-      <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>
-      <Name>UnionGas.MASA</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\check.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\tests-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cert-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\uniongas-logo.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

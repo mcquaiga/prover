@@ -34,7 +34,7 @@ pull_requests:
 image: Visual Studio 2015
 
 artifacts:
-  - path: build
+  - path: build\Release
     name: prover-v$(appveyor_build_version)
 services:
   - mssql2014           # start SQL Server 2014 Express

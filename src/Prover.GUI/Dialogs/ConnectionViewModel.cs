@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Events;
+using Prover.GUI.Common;
 using Prover.GUI.Screens;
 
 namespace Prover.GUI.Dialogs

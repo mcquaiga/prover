@@ -4,7 +4,7 @@ using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
-using Prover.GUI.Events;
+using Prover.GUI.Common.Events;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {

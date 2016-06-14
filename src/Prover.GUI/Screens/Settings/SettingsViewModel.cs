@@ -9,6 +9,7 @@ using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.IO;
 using Prover.Core.Events;
 using Prover.Core.Settings;
+using Prover.GUI.Common;
 
 namespace Prover.GUI.Screens.Settings
 {

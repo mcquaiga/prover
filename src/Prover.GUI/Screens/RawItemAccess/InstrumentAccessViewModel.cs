@@ -9,7 +9,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Settings;
-using Prover.GUI.Events;
+using Prover.GUI.Common.Events;
 
 namespace Prover.GUI.Screens.RawItemAccess
 {

@@ -12,10 +12,10 @@ using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.Mechanical;
 using Prover.Core.VerificationTests.Rotary;
+using Prover.GUI.Common;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
-using UnionGas.MASA.Verifiers;
 
 namespace Prover.GUI.Screens.QAProver
 {
@@ -76,7 +76,6 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                var companyNumberVerifier = new CompanyNumberVerifier();
                 var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
 
                 if (IsMiniMaxChecked)
@@ -85,7 +84,7 @@ namespace Prover.GUI.Screens.QAProver
                         await
                             RotaryTestManager.CreateRotaryTest(_container,
                                 new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
-                                companyNumberVerifier);
+                                null);
 
                     await InstrumentTestManager.RunVerifier();
                 }

@@ -35,7 +35,7 @@ namespace Prover.Core.VerificationTests
             Verifier = verifier;
         }
 
-        public IVerifier Verifier { get; }
+        public IVerifier Verifier { get; private set; }
         public Instrument Instrument { get; }
         public EvcCommunicationClient CommunicationClient { get; }
         public virtual VolumeVerificationManager VolumeTestManager { get; set; }
@@ -206,11 +206,8 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            if (Verifier == null) return;
-
-            var success = await Verifier.Verify(Instrument);
-
-            await Container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(Verifier.VerificationNotValid);
+            Verifier = Container.Resolve<IVerifier>(new ParameterOverride("commClient", CommunicationClient), new ParameterOverride("instrument", Instrument));
+            var success = await Verifier.Verify();
         }
     }
 }

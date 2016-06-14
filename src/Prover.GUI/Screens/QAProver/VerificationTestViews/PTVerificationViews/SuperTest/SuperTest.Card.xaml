@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
              TextElement.FontWeight="Medium"
@@ -16,15 +17,15 @@
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth1" />
-            <controls:PercentageControl
+            <controls1:PercentageControl
                 HorizontalAlignment="Left"
                 DisplayValue="{Binding PercentError}"
                 Passed="{Binding Test.HasPassed}" />
             <UniformGrid Columns="2" Margin="2">
-                <controls:ValueDescriptionControl
+                <controls1:ValueDescriptionControl
                     Label="Actual Factor"
                     Value="{Binding Test.ActualFactor}" />
-                <controls:ValueDescriptionControl
+                <controls1:ValueDescriptionControl
                     Label="EVC Factor"
                     Value="{Binding EVCUnsqrFactor}" />
             </UniformGrid>

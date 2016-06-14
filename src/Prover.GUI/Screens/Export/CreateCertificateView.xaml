@@ -54,8 +54,7 @@
                 </i:Interaction.Triggers>
             </Button>
             <Button
-                Content="Last 30 Days"
-               >
+                Content="Last 30 Days">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="OneMonthFilter" />
@@ -66,8 +65,7 @@
             <Button
                 Content="All"
                 HorizontalAlignment="Right"
-                Width="75"
-               >
+                Width="75">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ResetFilter" />
@@ -94,7 +92,7 @@
                 <!--<TextBlock>Created By:</TextBlock>
                     <TextBox x:Name="TestedBy" />-->
                 <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}"
-                              SelectedValue="{Binding VerificationType}" SelectedIndex="0" />
+                          SelectedValue="{Binding VerificationType}" SelectedIndex="0" />
 
                 <!--<TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
                     <TextBlock x:Name="SealExpirationDate" />-->

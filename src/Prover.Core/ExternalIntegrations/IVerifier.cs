@@ -9,9 +9,9 @@ namespace Prover.Core.ExternalIntegrations
 {
     public interface IVerifier
     {
-        Task<object> Verify(Instrument instrument);
-        Task<bool> Update(EvcCommunicationClient commClient, Instrument instrument, long newCompanyNumber);
-        VerificationNotValidEvent VerificationNotValid { get; }
+        Task<object> Verify();
+        //Task<bool> Update(EvcCommunicationClient commClient, Instrument instrument, long newCompanyNumber);
+        //VerificationNotValidEvent VerificationNotValid { get; }
     }
 
     public class VerificationNotValidEvent

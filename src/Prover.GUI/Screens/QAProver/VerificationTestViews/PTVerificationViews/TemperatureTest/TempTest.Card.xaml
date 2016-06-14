@@ -6,9 +6,10 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters"
-             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
              TextElement.FontWeight="Medium"
@@ -40,8 +41,8 @@
                                       Mode="PrimaryDark"
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
-            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}"
-                                        HorizontalAlignment="Left" Margin="2 2" />
+            <controls1:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}"
+                                         HorizontalAlignment="Left" Margin="2 2" />
             <!--<StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock FontSize="12">Gauge</TextBlock>
                 <xctk:DecimalUpDown Width="110" Height="35" 
@@ -56,18 +57,18 @@
             <!-- Instrument Report, textblock instead of displaying the button-->
             <UniformGrid Columns="2" Rows="2" Margin="0">
                 <!--INstrument Report , Text display instead of the decimal control -->
-                <controls:ValueDescriptionControl
+                <controls1:ValueDescriptionControl
                     Label="Gauge"
                     Value="{Binding Gauge}" />
 
-                <controls:ValueDescriptionControl
+                <controls1:ValueDescriptionControl
                     Label="EVC Reading"
                     Value="{Binding EvcReading}" />
 
-                <controls:ValueDescriptionControl Label="Actual Factor"
-                                                  Value="{Binding Test.ActualFactor}" />
+                <controls1:ValueDescriptionControl Label="Actual Factor"
+                                                   Value="{Binding Test.ActualFactor}" />
 
-                <controls:ValueDescriptionControl
+                <controls1:ValueDescriptionControl
                     Label="EVC Factor"
                     Value="{Binding EvcFactor}" />
             </UniformGrid>

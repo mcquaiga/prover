@@ -3,7 +3,7 @@ using Microsoft.Practices.Unity;
 using NLog;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
-using Prover.GUI.Events;
+using Prover.GUI.Common.Events;
 using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews

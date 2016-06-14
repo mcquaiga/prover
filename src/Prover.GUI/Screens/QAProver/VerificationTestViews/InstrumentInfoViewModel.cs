@@ -4,7 +4,7 @@ using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
-using Prover.GUI.Events;
+using Prover.GUI.Common.Events;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {

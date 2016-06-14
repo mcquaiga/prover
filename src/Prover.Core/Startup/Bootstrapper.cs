@@ -26,8 +26,6 @@ namespace Prover.Core.Startup
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
             SettingsManager.RefreshSettings();
-
-            
         }
     }
 }

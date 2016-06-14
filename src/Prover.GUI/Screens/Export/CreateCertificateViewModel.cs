@@ -10,7 +10,6 @@ using Prover.Core.Events;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using UnionGas.MASA;
 
 namespace Prover.GUI.Screens.Export
 {
@@ -108,7 +107,7 @@ namespace Prover.GUI.Screens.Export
         {
             var instruments = InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
 
-            await ExportManager.Export(instruments);
+            //await ExportManager.Export(instruments);
         }
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)

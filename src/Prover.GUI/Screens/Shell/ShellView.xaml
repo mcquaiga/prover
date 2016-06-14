@@ -8,8 +8,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-
-        Icon="pack://application:,,,/Resources/clipboard-check.png"
+        Icon="pack://application:,,,/../Resources/clipboard-check.png"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <materialDesign:DialogHost Identifier="RootDialog">
@@ -19,12 +18,12 @@
                 <DockPanel>
                     <Button x:Name="HomeButton" Width="64" Height="64" DockPanel.Dock="Left">
                         <StackPanel>
-                            <Image Source="..\..\Resources\home.png" />
+                            <Image Source="..\..\Resources/Home.png" />
                         </StackPanel>
                     </Button>
                     <Button x:Name="SettingsButton" Width="64" Height="64" DockPanel.Dock="Right"
                             HorizontalAlignment="Right">
-                        <Image Source="..\..\Resources\settings-light.png" />
+                        <Image Source="..\..\Resources/settings-light.png" />
                     </Button>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">Union Gas EVC Prover</TextBlock>
                 </DockPanel>

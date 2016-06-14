@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
@@ -14,21 +18,26 @@ namespace Prover.GUI
 
         public AppBootstrapper()
         {
-            Initialize();
-
             //Start Prover.Core
             var coreBootstrap = new CoreBootstrapper();
-            ConfigureContainer(coreBootstrap.Container);
+            _container = coreBootstrap.Container;
+
+            Initialize();
         }
 
-        private void ConfigureContainer(IUnityContainer container)
+        protected override void Configure()
         {
-            _container = container;
+            base.Configure();
+
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
 
-            _container.RegisterInstance(new ConnectionDialogManager(_container));
+
+            var ass = AssemblySource.Instance.FirstOrDefault(x => x.FullName.Contains("UnionGas.MASA"));
+            var type = ass.GetType("UnionGas.MASA.Startup");
+            type.GetMethod("Initialize").Invoke(null, new object[] {_container});
+            //AssemblySource.Instance.Add(ass);
         }
 
         protected override object GetInstance(Type service, string key)
@@ -44,6 +53,25 @@ namespace Prover.GUI
             }
 
             return null;
+        }
+
+        protected override IEnumerable<Assembly> SelectAssemblies()
+        {
+            var assemblies = new List<Assembly>();
+            assemblies.AddRange(base.SelectAssemblies());
+            //Load new ViewModels here
+            var fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
+
+            foreach (var fileName in fileEntries)
+            {
+                if (fileName.EndsWith("UnionGas.MASA.dll"))
+                {
+                    var ass = Assembly.LoadFrom(fileName);
+                    assemblies.Add(ass);
+                }
+            }
+
+            return assemblies;
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)

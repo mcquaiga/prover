@@ -6,9 +6,14 @@
                 xmlns:cal="http://www.caliburnproject.org"
                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                 mc:Ignorable="d" 
-                d:DesignHeight="100" d:DesignWidth="200">
-    <StackPanel Orientation="Vertical">
-        <TextBlock>Enter a new company number:</TextBlock>
-        <TextBox x:Name="CompanyNumber"/>
+                d:DesignHeight="600" d:DesignWidth="600">
+    <StackPanel Orientation="Vertical" Width="400" Height="400" Margin="10">
+        <TextBlock FontSize="24" Margin="5">Enter company number:</TextBlock>
+        <TextBox FontSize="24" Margin="10" x:Name="CompanyNumber"/>
+        <Grid>
+            <Button x:Name="Cancel" HorizontalAlignment="Left" Margin="5">Cancel</Button>
+            <Button x:Name="Update" HorizontalAlignment="Right" Margin="5">Update</Button>
+        </Grid>
+        
     </StackPanel>
 </UserControl>

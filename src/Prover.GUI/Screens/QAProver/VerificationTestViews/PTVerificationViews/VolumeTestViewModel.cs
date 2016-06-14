@@ -6,7 +6,7 @@ using NLog;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
-using Prover.GUI.Events;
+using Prover.GUI.Common.Events;
 using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews

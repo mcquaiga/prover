@@ -3,12 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:controls="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
              TextElement.FontWeight="Medium"
@@ -58,13 +56,13 @@
                 <StackPanel Grid.Row="0" Grid.Column="1">
                     <TextBlock FontSize="14" Text="Instrument Settings"
                                Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
-                    <controls:ValueDescriptionControl Label="Port" Value="{Binding InstrumentCommPortName}" />
-                    <controls:ValueDescriptionControl Label="Baud Rate" Value="{Binding BaudRate}" />
+                    <controls1:ValueDescriptionControl Label="Port" Value="{Binding InstrumentCommPortName}" />
+                    <controls1:ValueDescriptionControl Label="Baud Rate" Value="{Binding BaudRate}" />
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="2">
                     <TextBlock FontSize="14" Text="Tach Settings"
                                Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
-                    <controls:ValueDescriptionControl Label="Port" Value="{Binding TachCommPortName}" />
+                    <controls1:ValueDescriptionControl Label="Port" Value="{Binding TachCommPortName}" />
                 </StackPanel>
             </Grid>
         </Grid>
