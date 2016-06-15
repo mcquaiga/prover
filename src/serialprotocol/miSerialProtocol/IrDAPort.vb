@@ -88,8 +88,8 @@ Public Class IrDAPort
         End If
         ' Set IrCOMM Cooked/9-wire mode.
         cli.Client.SetSocketOption( _
-            CType(IrDASocketOptionLevel.IrLmp, SocketOptionLevel), _
-            CType(IrDASocketOptionName.NineWireMode, SocketOptionName), _
+            IrDASocketOptionLevel.IrLmp, _
+            IrDASocketOptionName.NineWireMode, _
             1)      ' equivalent to 'true'
 
         Dim di As IrDADeviceInfo = selectIrdaPeer(cli)

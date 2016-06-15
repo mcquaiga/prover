@@ -1,55 +1,50 @@
-﻿using Caliburn.Micro;
-using Microsoft.Practices.Unity;
-using NLog;
-using Prover.Core.Events;
-using Prover.Core.Models;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.Core.Communication;
-using Prover.SerialProtocol;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Caliburn.Micro;
+using Microsoft.Practices.Unity;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.Communication;
 using Prover.Core.DriveTypes;
-using Prover.Core.EVCTypes;
+using Prover.Core.ExternalIntegrations;
+using Prover.Core.Models.Instruments;
 
-namespace Prover.Core.VerificationTests
+namespace Prover.Core.VerificationTests.Rotary
 {
-    public class RotaryTestManager : TestManager
+    public sealed class RotaryTestManager : TestManager
     {
-        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
+        private RotaryTestManager(IUnityContainer container, Instrument instrument,
+            EvcCommunicationClient instrumentCommunicator, VolumeVerificationManager volumeTestManager, IVerifier verifier)
+            : base(container, instrument, instrumentCommunicator, verifier)
         {
-            var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
+            VolumeTestManager = volumeTestManager;
+        }
 
+        public static async Task<RotaryTestManager> CreateRotaryTest(IUnityContainer container, EvcCommunicationClient instrumentCommClient, string tachometerPortName, IVerifier verifier)
+        {
             TachometerCommunicator tachComm = null;
             if (!string.IsNullOrEmpty(tachometerPortName))
             {
                 tachComm = new TachometerCommunicator(tachometerPortName);
             }
 
-            var items = new InstrumentItems(instrumentType);
-            var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
-            var instrument = new Instrument(instrumentType, items, itemValues);
+            await instrumentCommClient.Connect();
+            var itemValues = await instrumentCommClient.GetItemValues(instrumentCommClient.ItemDetails.GetAllItemNumbers());
+            await instrumentCommClient.Disconnect();
 
+            var instrument = new Instrument(InstrumentType.MiniMax, itemValues);
             var driveType = new RotaryDrive(instrument);
             CreateVerificationTests(instrument, driveType);
 
-            var volumeTest = instrument.VerificationTests.FirstOrDefault(x => x.VolumeTest != null).VolumeTest;
-            var rotaryVolumeTest = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentComm, tachComm);
+            var volumeTest = instrument.VolumeTest;
+            var rotaryVolumeTest = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentCommClient, tachComm);
 
-            var manager = new RotaryTestManager(container, instrument, instrumentComm, rotaryVolumeTest);
+            var manager = new RotaryTestManager(container, instrument, instrumentCommClient, rotaryVolumeTest, verifier);
             container.RegisterInstance<TestManager>(manager);
 
             return manager;
         }
-
-        public RotaryTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentCommunicator, RotaryVolumeVerification volumeTestManager)
-            :base(container, instrument, instrumentCommunicator)
-        {
-            VolumeTestManager = volumeTestManager as RotaryVolumeVerification;
-        }
-
-   
     }
 }

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.VerificationTestViews.InstrumentInfo.SiteInfoCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             cal:Bind.AtDesignTime="True"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="150">
+    <Grid Background="{DynamicResource MaterialDesignBackground}">
+        <StackPanel Orientation="Vertical">
+            <!--  Basic Details Info  --><!--
+            <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Mode="PrimaryDark">
+                Site Information
+            </materialDesign:ColorZone>-->
+
+            <StackPanel Orientation="Vertical">
+                <UniformGrid Rows="1">
+                    <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.Type}" />
+                    <controls1:ValueDescriptionControl Label="Comp." Value="{Binding CorrectorType}" />
+                </UniformGrid>
+                <UniformGrid Rows="3">
+                    <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
+                    <controls1:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}" />
+                    <controls1:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}" />
+                    <controls1:ValueDescriptionControl Label="Firmware Version"
+                                                       Value="{Binding Instrument.FirmwareVersion}" />
+                    <controls1:ValueDescriptionControl Label="Pulser A Select"
+                                                       Value="{Binding Instrument.PulseASelect}" />
+                    <controls1:ValueDescriptionControl Label="Pulser A Scaling"
+                                                       Value="{Binding Instrument.PulseAScaling}" />
+                    <controls1:ValueDescriptionControl Label="Pulser B Select"
+                                                       Value="{Binding Instrument.PulseBSelect}" />
+                    <controls1:ValueDescriptionControl Label="Pulser B Scaling"
+                                                       Value="{Binding Instrument.PulseBScaling}" />
+                    <controls1:ValueDescriptionControl Label="Base P." Value="{Binding BasePressure}" />
+                    <controls1:ValueDescriptionControl Label="Base T." Value="{Binding BaseTemperature}" />
+                </UniformGrid>
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

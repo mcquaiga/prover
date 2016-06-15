@@ -1,0 +1,1400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Instrument mi_xml_version="v1.0.3" description="{MINI XML DATA FILE}">
+<!--
+
+Change record:
+<Instrument mi_xml_version="v1.0.2" Made a multitude of changes with GLM, primarily to fix Items by Number problems MDM 03-14-2012
+<Instrument mi_xml_version="v1.0.3" MDM 12-16-2013 Moved the Instrument tag line to above the change record to prevent XML serializer from removing
+                                     the change record comments.
+
+				        moved <Instrument mi_xml_version="v1.0.3" description="{MINI XML DATA FILE}">
+-->
+	<InstrumentType>2</InstrumentType>
+	<InstrumentName>Mini</InstrumentName>
+	<BoardType>2</BoardType>
+	<FirmwareVersion>1.0000</FirmwareVersion>
+	<AuditTrailParameters>
+		<AuditTrail>Yes</AuditTrail>
+	</AuditTrailParameters>
+	<Events>
+		<Log>No</Log>
+<!-- This instrument doesn't deal with events. The following is shown for reference purposes only -->
+<!--		<Event>
+			<Name>Serial</Name>
+			<ID>3</ID>
+		</Event>
+ -->
+	</Events>
+	<Alarms>
+		<Log>No</Log>
+<!-- This instrument doesn't deal with events. The following is shown for reference purposes only -->
+		<Alarm>
+			<Name>Battery Low Voltage</Name>
+			<Mask>1</Mask>
+			<Name>Battery Cycles</Name>
+			<Mask>2</Mask>
+			<Name>Memory Battery Low</Name>
+			<Mask>4</Mask>
+			<Name>SW 1 Fault</Name>
+			<Mask>8</Mask>
+			<Name>SW 2 Fault</Name>
+			<Mask>16</Mask>
+			<Name>A/D Fault</Name>
+			<Mask>32</Mask>
+			<Name>Pressure Out of Range</Name>
+			<Mask>64</Mask>
+			<Name>Temperature Out of Range</Name>
+			<Mask>128</Mask>
+			<Name>Tamper Detected</Name>
+			<Mask>256</Mask>
+			<Name>Daily Cor Vol</Name>
+			<Mask>512</Mask>
+			<Name>Pulser A Limit</Name>
+			<Mask>1024</Mask>
+			<Name>Pulser B Limit</Name>
+			<Mask>2048</Mask>
+			<Name>Pulser C Limit</Name>
+			<Mask>4096</Mask>
+			<Name>Temperature Low</Name>
+			<Mask>8192</Mask>
+			<Name>Pressure Low</Name>
+			<Mask>16384</Mask>
+			<Name>Temperature High</Name>
+			<Mask>32768</Mask>
+			<Name>Pressure High</Name>
+			<Mask>65536</Mask>
+			<Name>(Rate High)</Name>
+			<Mask>131072</Mask>
+			<Name>(PLog Pressure High)</Name>
+			<Mask>262144</Mask>
+			<Name>(PLog Pressure Low)</Name>
+			<Mask>524288</Mask>
+		</Alarm>
+
+	</Alarms>
+	<SignOn>vq00</SignOn>
+	<DBUsedMask>2</DBUsedMask>
+	<ItemFileExtension>IMN</ItemFileExtension>
+	<CustomItemFileExtension>KMN</CustomItemFileExtension>
+	<CustomItemSetupFileExtension>CMN</CustomItemSetupFileExtension>
+	<SnapShotFileExtension>SMN</SnapShotFileExtension>
+	<EnableTemperatureCalibration>Yes</EnableTemperatureCalibration>
+	<EnablePressureCalibration>Yes</EnablePressureCalibration>
+	<TimeSyncSupported>No</TimeSyncSupported>
+	<InternalSiteName>No</InternalSiteName>
+	<!-- InstrumentResponseTimeout element overrides the value that may be in the registry
+		HKEY_LOCAL_MACHINE\SOFTWARE\Mercury Instruments\Mercury Communications\Communication\InstrumentResponseTimeout
+	     This element is optional and should be removed if the registry setting is desired.
+	-->
+	<InstrumentResponseTimeout>2000</InstrumentResponseTimeout> <!-- milliseconds -->
+	<!-- RetransmitRetryMax element overrides the value that may be in the registry
+		HKEY_LOCAL_MACHINE\SOFTWARE\Mercury Instruments\MasterLink32\Retries\Retransmit
+	     This element is optional and should be removed if the registry setting is desired.
+	-->
+	<RetransmitRetryMax>3</RetransmitRetryMax>
+	<!-- RelinkRetryMax element overrides the value that may be in the registry
+		HKEY_LOCAL_MACHINE\SOFTWARE\Mercury Instruments\Mercury Communications\MasterLink32\Retries\Relink
+	     This element is optional and should be removed if the registry setting is desired.
+	-->
+	<RelinkRetryMax>3</RelinkRetryMax>
+	<!-- RemodemRetryMax element overrides the value that may be in the registry
+		HKEY_LOCAL_MACHINE\SOFTWARE\Mercury Instruments\Mercury Communications\MasterLink32\Retries\Remodem	
+	     This element is optional and should be removed if the registry setting is desired.
+	-->
+	<RemodemRetryMax>3</RemodemRetryMax>
+	<!-- DisconnectRetryMax element overrides the value that may be in the registry
+		HKEY_LOCAL_MACHINE\SOFTWARE\Mercury Instruments\Mercury Communications\MasterLink32\Retries\Disconnect
+	     This element is optional and should be removed if the registry setting is desired.
+	-->
+	<DisconnectRetryMax>1</DisconnectRetryMax>
+	
+	<FunctionGroups>
+		<Group>
+			<FuncGroup>1</FuncGroup>
+			<GroupDesc>Volume</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>2</FuncGroup>
+			<GroupDesc>Correction Factors</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>3</FuncGroup>
+			<GroupDesc>Pressure</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>4</FuncGroup>
+			<GroupDesc>Temperature</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>5</FuncGroup>
+			<GroupDesc>Meter Reader List 1</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>6</FuncGroup>
+			<GroupDesc>Meter Reader List 2</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>7</FuncGroup>
+			<GroupDesc>Pulse Output</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>8</FuncGroup>
+			<GroupDesc>Battery Power</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>9</FuncGroup>
+			<GroupDesc>Site Information</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>10</FuncGroup>
+			<GroupDesc>Display and Clear Alarms</GroupDesc>
+			<AlarmGroup>1</AlarmGroup>
+		</Group>
+		<Group>
+			<FuncGroup>11</FuncGroup>
+			<GroupDesc>Pressure Coefficients</GroupDesc>
+			<PressureCoefficient>1</PressureCoefficient>
+		</Group>
+		<Group>
+			<FuncGroup>99</FuncGroup>
+			<GroupDesc>Misc.</GroupDesc>
+		</Group>
+		<Group>
+			<FuncGroup>100</FuncGroup>
+			<GroupDesc>Mini Custom Items</GroupDesc>
+		</Group>
+	</FunctionGroups>
+
+	<Items>
+		<Item>
+			<ItemNum>0</ItemNum>
+			<ItemDesc>Corrected Volume</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>90</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>2</ItemNum>
+			<ItemDesc>Uncorrected Volume</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>92</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>5</ItemNum>
+			<ItemDesc>Pulser A # of Pulses</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>8</ItemNum>
+			<ItemDesc>Gas Pressure</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-5</MinValue>
+			<MaxValue>100000</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+			<LiveP1/>
+		</Item>
+		<Item>
+			<ItemNum>9</ItemNum>
+			<ItemDesc>Gas Pressure Maximum</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>11</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-5</MinValue>
+			<MaxValue>100000</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>10</ItemNum>
+			<ItemDesc>Press High Alrm Limit</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-5</MinValue>
+			<MaxValue>99999.99</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>11</ItemNum>
+			<ItemDesc>Press Low Alrm Limit</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-5</MinValue>
+			<MaxValue>9999.9</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>13</ItemNum>
+			<ItemDesc>Base Pressure</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>0</MinValue>
+			<MaxValue>20</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>14</ItemNum>
+			<ItemDesc>Atmospheric Pressure</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>0</MinValue>
+			<MaxValue>20</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>17</ItemNum>
+			<ItemDesc>Pressure Cal Zero</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>50</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>20</ItemNum>
+			<ItemDesc>Pressure Cal Span</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.5</MinValue>
+			<MaxValue>2</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>25</ItemNum>
+			<ItemDesc>Pressure Range PSI</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>1002</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>99999.99</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>26</ItemNum>
+			<ItemDesc>Gas Temperature</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+			<LiveT1/>
+		</Item>
+		<Item>
+			<ItemNum>27</ItemNum>
+			<ItemDesc>Gas Temp Low Limit</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>28</ItemNum>
+			<ItemDesc>Gas Temp High Limit</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>31</ItemNum>
+			<ItemDesc>Case Temperature</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+			<LiveT2/>
+		</Item>
+		<Item>
+			<ItemNum>32</ItemNum>
+			<ItemDesc>Case Temp Maximum</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>33</ItemNum>
+			<ItemDesc>Case Temp Minimum</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>34</ItemNum>
+			<ItemDesc>Base Temperature</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>35</ItemNum>
+			<ItemDesc>Temperature Cal Zero</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-50</MinValue>
+			<MaxValue>50</MaxValue>
+			<SendableFlag>8</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>38</ItemNum>
+			<ItemDesc>Temperature Cal Span</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.5</MinValue>
+			<MaxValue>2</MaxValue>
+			<SendableFlag>8</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>43</ItemNum>
+			<ItemDesc>Total Correction Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.7</MinValue>
+			<MaxValue>200</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>44</ItemNum>
+			<ItemDesc>Pressure Correction Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.7</MinValue>
+			<MaxValue>200</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>45</ItemNum>
+			<ItemDesc>Temp Correction Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.7</MinValue>
+			<MaxValue>1.6</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>46</ItemNum>
+			<ItemDesc>Aux Correction Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.7</MinValue>
+			<MaxValue>200</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>47</ItemNum>
+			<ItemDesc>Unsquared Supercompress</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.7</MinValue>
+			<MaxValue>1.6</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>48</ItemNum>
+			<ItemDesc>Battery Voltage Reading</ItemDesc>
+			<ItemGroup>8</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>1003</ItemUnits>
+			<UnitsMap default="volts"/>
+			<MinValue>0</MinValue>
+			<MaxValue>15</MaxValue>
+			<SendableFlag>64</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>49</ItemNum>
+			<ItemDesc>Battery Low Limit</ItemDesc>
+			<ItemGroup>8</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>1003</ItemUnits>
+			<UnitsMap default="volts"/>
+			<MinValue>0</MinValue>
+			<MaxValue>10</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>50</ItemNum>
+			<ItemDesc>Shutdown Voltage Limit</ItemDesc>
+			<ItemGroup>8</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>1003</ItemUnits>
+			<UnitsMap default="volts"/>
+			<MinValue>0</MinValue>
+			<MaxValue>10</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>53</ItemNum>
+			<ItemDesc>Specificic Gravity for SP</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.554</MinValue>
+			<MaxValue>1.0</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>54</ItemNum>
+			<ItemDesc>% N2 For Supercompress</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>1008</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>50.0</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>55</ItemNum>
+			<ItemDesc>% CO2 For Supercompress</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>11</SortOrder>
+			<ItemUnits>1008</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>30.0</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>56</ItemNum>
+			<ItemDesc>Pulser A Out Scaling</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.001</MinValue>
+			<MaxValue>99999.99</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>62</ItemNum>
+			<ItemDesc>Corrector Serial Number</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>63</ItemNum>
+			<ItemDesc>Gas Pressure Maximum</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>12</SortOrder>
+			<ItemUnits>87</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-5</MinValue>
+			<MaxValue>100000</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>64</ItemNum>
+			<ItemDesc>Gas Temperature Maximum</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>11</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-40</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>65</ItemNum>
+			<ItemDesc>Gas Temperature Minimum</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>12</SortOrder>
+			<ItemUnits>89</ItemUnits>
+			<MinMaxUnitCode>0</MinMaxUnitCode>
+			<MinValue>-40</MinValue>
+			<MaxValue>170</MaxValue>
+			<SendableFlag>65</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>66</ItemNum>
+			<ItemDesc>Pulser A Output Limit</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>1</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>69</ItemNum>
+			<ItemDesc>Pulser A Limit Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>75</ItemNum>
+			<ItemDesc>Mag List 2 Item 1 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>76</ItemNum>
+			<ItemDesc>Mag List 2 Item 2 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>77</ItemNum>
+			<ItemDesc>Mag List 2 Item 3 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>78</ItemNum>
+			<ItemDesc>Mag List 2 Item 4 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>79</ItemNum>
+			<ItemDesc>Mag List 2 Item 5 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>80</ItemNum>
+			<ItemDesc>Mag List 2 Item 6 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>81</ItemNum>
+			<ItemDesc>Mag List 2 Item 7 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>82</ItemNum>
+			<ItemDesc>Mag List 2 Item 8 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>83</ItemNum>
+			<ItemDesc>Mag List 2 Item 9 #</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<UnitsMap default="-1"/>
+			<MinValue>0</MinValue>
+			<MaxValue>1008</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>87</ItemNum>
+			<ItemDesc>Pressure Units</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">PSIG</option>
+				<option value="1">PSIA</option>
+				<option value="2">kPa</option>
+				<option value="4">Bar</option>
+				<option value="7">in WC</option>
+			</CodeTable>
+			<SendableFlag SendOrder="-5">1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>89</ItemNum>
+			<ItemDesc>Temperature Units</ItemDesc>
+			<ItemGroup>4</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">F</option>
+				<option value="1">C</option>
+				<option value="2">R</option>
+				<option value="3">K</option>
+			</CodeTable>
+			<SendableFlag SendOrder="-4">1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>90</ItemNum>
+			<ItemDesc>Corr Volume Units</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Cu Ft</option>
+				<option value="1">Cu Ftx10</option>
+				<option value="2">CuFtx100</option>
+				<option value="3">CF</option>
+				<option value="4">CFx10</option>
+				<option value="5">CFx100</option>
+				<option value="6">CFx1000</option>
+				<option value="7">CCF</option>
+				<option value="8">MCF</option>
+				<option value="9">m3x0.1</option>
+				<option value="10">m3</option>
+				<option value="11">m3x10</option>
+				<option value="12">m3x100</option>
+				<option value="13">m3x1000</option>
+				<option value="14">CFx10000</option>
+			</CodeTable>
+			<SendableFlag SendOrder="-3">1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>92</ItemNum>
+			<ItemDesc>Uncorr Volume Units</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Cu Ft</option>
+				<option value="1">Cu Ftx10</option>
+				<option value="2">CuFtx100</option>
+				<option value="3">CF</option>
+				<option value="4">CFx10</option>
+				<option value="5">CFx100</option>
+				<option value="6">CFx1000</option>
+				<option value="7">CCF</option>
+				<option value="8">MCF</option>
+				<option value="9">m3x0.1</option>
+				<option value="10">m3</option>
+				<option value="11">m3x10</option>
+				<option value="12">m3x100</option>
+				<option value="13">m3x1000</option>
+				<option value="14">CFx10000</option>
+			</CodeTable>
+			<SendableFlag SendOrder="-2">1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>93</ItemNum>
+			<ItemDesc>Pulser A Out Select</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Cor Vol</option>
+				<option value="3">Pulse Out Disabled</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>96</ItemNum>
+			<ItemDesc>Cor Vol Display Res</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">8 Digits</option>
+				<option value="1">7 Digits</option>
+				<option value="2">6 Digits</option>
+				<option value="3">5 Digits</option>
+				<option value="4">4 Digits</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>97</ItemNum>
+			<ItemDesc>Uncorr Vol Display Res</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">8 Digits</option>
+				<option value="1">7 Digits</option>
+				<option value="2">6 Digits</option>
+				<option value="3">5 Digits</option>
+				<option value="4">4 Digits</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>98</ItemNum>
+			<ItemDesc>Meter Index Rate</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option position="0" value="0">1 CF</option>
+				<option position="1" value="1">5 CF</option>
+				<option position="2" value="2">10 CF</option>
+				<option position="3" value="3">100 CF</option>
+				<option position="4" value="4">1000 CF</option>
+				<option position="5" value="5">0.1 m3</option>
+				<option position="6" value="6">1 m3</option>
+				<option position="7" value="7">10 m3</option>
+				<option position="8" value="8">100 m3</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>99</ItemNum>
+			<ItemDesc>Battery Low Volt Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>102</ItemNum>
+			<ItemDesc>Index SW#1 Fault Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>103</ItemNum>
+			<ItemDesc>Index SW#2 Fault Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>104</ItemNum>
+			<ItemDesc>A/D Fault Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>105</ItemNum>
+			<ItemDesc>Press Out Of Range Alrm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>106</ItemNum>
+			<ItemDesc>Temp Out Of Range Alarm</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>108</ItemNum>
+			<ItemDesc>Alarm Output</ItemDesc>
+			<ItemGroup>10</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="11111111">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>109</ItemNum>
+			<ItemDesc>Fixed Pressure Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Live</option>
+				<option value="1">Fixed</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>110</ItemNum>
+			<ItemDesc>Fixed Super Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Live</option>
+				<option value="1">Fixed</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>111</ItemNum>
+			<ItemDesc>Fixed Temp Factor</ItemDesc>
+			<ItemGroup>2</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Live</option>
+				<option value="1">Fixed</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>112</ItemNum>
+			<ItemDesc>Transducer Type</ItemDesc>
+			<ItemGroup>3</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">Gauge</option>
+				<option value="1">Absolute</option>
+			</CodeTable>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>113</ItemNum>
+			<ItemDesc>High Resolution Cor Vol</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>90</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>99999.99</MaxValue>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>114</ItemNum>
+			<ItemDesc>Meter Scaling Factor</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>0.0000001</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>115</ItemNum>
+			<ItemDesc>Pulse Output Timing</ItemDesc>
+			<ItemGroup>7</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option position="1" value="0">.0625 Seconds</option>
+				<option position="4" value="1">.500 Seconds</option>
+				<option position="5" value="2">1.00 Seconds</option>
+				<option position="2" value="3">.125 Seconds</option>
+				<option position="3" value="4">.250 Seconds</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>122</ItemNum>
+			<ItemDesc>Firmware Version</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>124</ItemNum>
+			<ItemDesc>Revolutions per Wakeup</ItemDesc>
+			<ItemGroup>1</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>1</MinValue>
+			<MaxValue>15</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>126</ItemNum>
+			<ItemDesc>Instrument Baud Rate</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+  				<option position="6" value="0">9600</option>
+  				<option position="5" value="1">4800</option>
+  				<option position="4" value="2">2400</option>
+  				<option position="3" value="3">1200</option>
+  				<option position="2" value="4">600</option>
+  				<option position="1" value="5">300</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>127</ItemNum>
+			<ItemDesc>Instrument Type Code</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>128</ItemNum>
+			<ItemDesc>Mag Alarm Acknowledge</ItemDesc>
+			<ItemGroup>6</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>129</ItemNum>
+			<ItemDesc>Live Display Enable</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">None</option>
+				<option value="1">Live Pressure</option>
+				<option value="2">Live Temperature</option>
+				<option value="3">Live Press &amp; Temp</option>
+			</CodeTable>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>130</ItemNum>
+			<ItemDesc>Mag List 1 Item 1 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>131</ItemNum>
+			<ItemDesc>Mag List 1 Item 2 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>132</ItemNum>
+			<ItemDesc>Mag List 1 Item 3 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>133</ItemNum>
+			<ItemDesc>Mag List 1 Item 4 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>134</ItemNum>
+			<ItemDesc>Mag List 1 Item 5 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>135</ItemNum>
+			<ItemDesc>Mag List 1 Item 6 #</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>1004</ItemUnits>
+			<MinValue>0</MinValue>
+			<MaxValue>999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>136</ItemNum>
+			<ItemDesc>Item Number Enable</ItemDesc>
+			<ItemGroup>5</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<CodeTable>
+				<option value="0">None</option>
+				<option value="1">List 1</option>
+				<option value="2">List 2</option>
+				<option value="3">List 1 &amp; 2</option>
+			</CodeTable>
+			<MinValue>0</MinValue>
+			<MaxValue>3</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>150</ItemNum>
+			<ItemDesc>P Coefficient 1</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>151</ItemNum>
+			<ItemDesc>P Coefficient 2</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>152</ItemNum>
+			<ItemDesc>P Coefficient 3</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>3</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>153</ItemNum>
+			<ItemDesc>P Coefficient 4</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>4</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>154</ItemNum>
+			<ItemDesc>P Coefficient 5</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>5</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>155</ItemNum>
+			<ItemDesc>P Coefficient 6</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>6</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>156</ItemNum>
+			<ItemDesc>P Coefficient 7</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>7</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>157</ItemNum>
+			<ItemDesc>P Coefficient 8</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>8</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>158</ItemNum>
+			<ItemDesc>P Coefficient 9</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>9</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>159</ItemNum>
+			<ItemDesc>P Coefficient 10</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>10</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>160</ItemNum>
+			<ItemDesc>P Coefficient 11</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>11</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>161</ItemNum>
+			<ItemDesc>P Coefficient 12</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>12</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>162</ItemNum>
+			<ItemDesc>P Coefficient 13</ItemDesc>
+			<ItemGroup>11</ItemGroup>
+			<SortOrder>13</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<MinValue>-9999999</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>2</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>200</ItemNum>
+			<ItemDesc>Site ID # Part-1</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>1</SortOrder>
+			<ItemUnits>0</ItemUnits>
+<!-- SiteIDs must be numbered sequentially 1 through n -->
+<!-- The following SiteID means that Site ID 1 can be read using this ItemNum -->
+			<SiteID>1</SiteID>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>201</ItemNum>
+			<ItemDesc>Site ID # Part-2</ItemDesc>
+			<ItemGroup>9</ItemGroup>
+			<SortOrder>2</SortOrder>
+			<ItemUnits>0</ItemUnits>
+<!-- SiteIDs must be numbered sequentially 1 through n -->
+<!-- The following SiteID means that Site ID 2 can be read using this ItemNum -->
+			<SiteID>2</SiteID>
+			<MinValue>0</MinValue>
+			<MaxValue>99999999</MaxValue>
+			<SendableFlag>1</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+		<Item>
+			<ItemNum>255</ItemNum>
+			<ItemDesc>Reserved</ItemDesc>
+			<ItemGroup>0</ItemGroup>
+			<SortOrder>0</SortOrder>
+			<ItemUnits>0</ItemUnits>
+			<SendableFlag>0</SendableFlag>
+			<LiveTurbine>0</LiveTurbine>
+		</Item>
+	</Items>
+</Instrument>

@@ -27,19 +27,19 @@ namespace UnionGas.MASA
                 DriveType = "Rotary",
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
-                InstrumentType = instrument.TypeString,
+                InstrumentType = instrument.InstrumentTypeString,
                 SerialNumber = instrument.SerialNumber.ToString(),
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
 
-                PressureInfo = new EvcQARun.PressureHeader
-                {
-                    BasePressure = instrument.EvcBasePressure().Value,
-                    PressureRange = instrument.EvcPressureRange().Value,
-                    PressureUnits = instrument.PressureUnits(),
-                    TransducerType = instrument.GetTransducerType().ToString(),
-                    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
-                },
+                //PressureInfo = new EvcQARun.PressureHeader
+                //{
+                //    BasePressure = instrument.EvcBasePressure().Value,
+                //    PressureRange = instrument.EvcPressureRange().Value,
+                //    PressureUnits = instrument.PressureUnits(),
+                //    TransducerType = instrument.GetTransducerType().ToString(),
+                //    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
+                //},
                 
                 TemperatureInfo = new EvcQARun.TemperatureHeader
                 {
@@ -94,8 +94,8 @@ namespace UnionGas.MASA
             return new EvcQARun.VerificationTest.VolumeTest
             {
                 AppliedInput = vt.VolumeTest.AppliedInput,
-                EvcCorrected = vt.VolumeTest.EvcCorrected,
-                EvcUncorrected = vt.VolumeTest.EvcUncorrected,
+                EvcCorrected = vt.VolumeTest.EvcCorrected.Value,
+                EvcUncorrected = vt.VolumeTest.EvcUncorrected.Value,
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
@@ -113,7 +113,7 @@ namespace UnionGas.MASA
             return new EvcQARun.VerificationTest.SuperFactorTest
             {
                 ActualFactor = vt.SuperFactorTest.ActualFactor.Value,
-                EvcFactor = vt.SuperFactorTest.ItemValues.EvcUnsqrFactor().Value,
+                EvcFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
                 EVCUnsqrFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
                 GaugePressure = vt.SuperFactorTest.GaugePressure.Value,
                 GaugeTemp = vt.SuperFactorTest.GaugeTemp,
@@ -129,8 +129,8 @@ namespace UnionGas.MASA
             {
                 ActualFactor = vt.TemperatureTest.ActualFactor.Value,
                 GaugeTemperature = (decimal)vt.TemperatureTest.Gauge,
-                EvcFactor = vt.TemperatureTest.ItemValues.EvcTemperatureFactor().Value,
-                EvcTemperature = vt.TemperatureTest.ItemValues.EvcTemperatureReading().Value,
+                //EvcFactor = vt.TemperatureTest.Items.GetItem.Value,
+                //EvcTemperature = vt.TemperatureTest.ItemValues.EvcTemperatureReading().Value,
                 PercentError = vt.TemperatureTest.PercentError.Value
             };
         }
@@ -146,8 +146,8 @@ namespace UnionGas.MASA
                 AtmosphericGauge = vt.PressureTest.AtmosphericGauge.Value,
                 GasPressure = vt.PressureTest.GasPressure.Value,
 
-                EvcGasPressure = vt.PressureTest.ItemValues.EvcGasPressure().Value,
-                EvcPressureFactor = vt.PressureTest.ItemValues.EvcGasPressure().Value,
+                //EvcGasPressure = vt.PressureTest.ItemValues.EvcGasPressure().Value,
+                //EvcPressureFactor = vt.PressureTest.ItemValues.EvcGasPressure().Value,
                 PercentError = vt.PressureTest.PercentError.Value
             };
         }

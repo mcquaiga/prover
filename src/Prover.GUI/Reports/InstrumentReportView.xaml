@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Prover.GUI.Reports.InstrumentReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
+             
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d"
+             Height="795" Width="1040">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+        <DataTemplate x:Key="TestTemplate">
+            <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="CardReadOnly" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Viewbox Width="1040" Height="795" Stretch="Fill">
+        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
+                        Margin="2" />
+    </Viewbox>
+</UserControl>

@@ -7,6 +7,9 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
@@ -29,21 +32,28 @@ namespace Prover.Core.Models.Instruments
 
     public abstract class ProverTable : BaseEntity
     {
-        protected ProverTable() : base()
-        {
-        
-        }
-
+        private string _instrumentData;
         public string InstrumentData
         {
-            get { return JsonConvert.SerializeObject(ItemValues); }
-            set
-            {
-                ItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
-            }
+            get { return Items.Serialize(); }
+            set { _instrumentData = value; }
         }
 
         [NotMapped]
-        public Dictionary<int, string> ItemValues { get; set; }
+        public IEnumerable<ItemValue> Items { get; set; }
+
+        [NotMapped]
+        public abstract InstrumentType InstrumentType { get; }
+
+        public override void OnInitializing()
+        {
+            base.OnInitializing();
+
+            if (!string.IsNullOrEmpty(_instrumentData))
+            {
+                var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
+                Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
+            }
+        }
     }
 }

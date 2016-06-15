@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.GUI</RootNamespace>
     <AssemblyName>Prover.GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\build\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,27 +32,40 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\build\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MiProtocolConsole|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MiProtocolConsole\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Prover.GUI.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.Core.3.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
+    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.3.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -104,7 +117,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PubSub, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PubSub.1.4.1\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReachFramework" />
@@ -121,8 +138,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -153,7 +170,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -171,22 +188,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
       <Private>True</Private>
@@ -202,178 +203,129 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConnectionDialogManager.cs" />
-    <Compile Include="Controls\DesignViewModel.cs" />
-    <Compile Include="Controls\PercentageControl.xaml.cs">
-      <DependentUpon>PercentageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LabelValueControl.xaml.cs">
-      <DependentUpon>LabelValueControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ValueDescriptionControl.xaml.cs">
-      <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\WindowSettings.cs" />
-    <Compile Include="Converters\BooleanToPassConverter.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\NullToVisibilityConverter.cs" />
-    <Compile Include="ProgressDialog\ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ProgressDialog\ProgressDialogCancellationExcpetion.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogContext.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogResult.cs" />
-    <Compile Include="ProgressDialog\ProgressDialogSettings.cs" />
-    <Compile Include="ProgressDialog\WindowSettings.cs" />
-    <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
-    <Compile Include="DesignTimeViewModelLocator.cs" />
-    <Compile Include="Events\InstrumentUpdateEvent.cs" />
-    <Compile Include="Events\NotificationEvent.cs" />
-    <Compile Include="Events\ScreenChangeEvent.cs" />
-    <Compile Include="Interfaces\IShell.cs" />
-    <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="Reporting\CertificateGenerator.cs" />
-    <Compile Include="Reporting\InstrumentGenerator.cs" />
-    <Compile Include="ViewModels\CertificateReport\CertificateReportViewModel.cs" />
-    <Compile Include="ViewModels\CommunicationStatusViewModel.cs" />
-    <Compile Include="ViewModels\CreateCertificateViewModel.cs" />
-    <Compile Include="ViewModels\DesignData\SiteInformationDesignViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\ConnectionViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\ProgressDialogViewModel.cs" />
-    <Compile Include="ViewModels\TestViews\StartTestViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentReport\InstrumentReportViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentsList\InstrumentTestGridViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentViews\InstrumentTestViewModel.cs" />
-    <Compile Include="ViewModels\IWindowSettings.cs" />
-    <Compile Include="ViewModels\LiveReadViewModel.cs" />
-    <Compile Include="ViewModels\Shell\MainMenuViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\DesignData.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\QATestRunViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\VerificationTestViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentAccessViewModel.cs" />
-    <Compile Include="Events\VerificationTestEvent.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
-    <Compile Include="ViewModels\ScreenManager.cs" />
-    <Compile Include="ViewModels\SettingsViews\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\InstrumentViews\InstrumentInfoViewModel.cs" />
-    <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
-    <Compile Include="ViewModels\ToastNotificationViewModel.cs" />
-    <Compile Include="ViewModels\VerificationTestViews\PTVerificationViews\VolumeTestViewModel.cs" />
-    <Compile Include="Views\CertificateReport\CertificateReportView.xaml.cs">
-      <DependentUpon>CertificateReportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CommunicationStatusView.xaml.cs">
-      <DependentUpon>CommunicationStatusView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CreateCertificateView.xaml.cs">
-      <DependentUpon>CreateCertificateView.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\Dialogs\ConnectionView.xaml.cs">
+    <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\ProgressDialogView.xaml.cs">
+    <Compile Include="Dialogs\ConnectionViewModel.cs" />
+    <Compile Include="Dialogs\ProgressDialogView.xaml.cs">
       <DependentUpon>ProgressDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml.cs">
-      <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
+    <Compile Include="Dialogs\ProgressDialogViewModel.cs" />
+    <Compile Include="DesignTimeViewModelLocator.cs" />
+    <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Reports\CertificateGenerator.cs" />
+    <Compile Include="Reports\CertificateReportView.xaml.cs">
+      <DependentUpon>CertificateReportView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TestViews\StartTestView.xaml.cs">
-      <DependentUpon>StartTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentReport\InstrumentReportView.xaml.cs">
+    <Compile Include="Reports\CertificateReportViewModel.cs" />
+    <Compile Include="Reports\InstrumentGenerator.cs" />
+    <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InstrumentsList\InstrumentTestGridView.xaml.cs">
+    <Compile Include="Reports\InstrumentReportViewModel.cs" />
+    <Compile Include="Screens\Export\CreateCertificateView.xaml.cs">
+      <DependentUpon>CreateCertificateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Export\CreateCertificateViewModel.cs" />
+    <Compile Include="Screens\Export\InstrumentTestGridView.xaml.cs">
       <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LiveReadView.xaml.cs">
+    <Compile Include="Screens\Export\InstrumentTestGridViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfoViewModel.cs" />
+    <Compile Include="Screens\QAProver\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shell\MainMenuView.xaml.cs">
-      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    <Compile Include="Screens\QAProver\LiveReadViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\PressureInfo.Card.xaml.cs">
+      <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
-      <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
-      <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml.cs">
-      <DependentUpon>PTSet.CardReadOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml.cs">
-      <DependentUpon>PTSet.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\QATestRunView.xaml.cs">
-      <DependentUpon>QATestRunView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
-      <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml.cs">
-      <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
-      <DependentUpon>TempTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\VerificationTestView.xaml.cs">
-      <DependentUpon>VerificationTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
-      <DependentUpon>PressureTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentAccessView.xaml.cs">
-      <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml.cs">
-      <DependentUpon>PTSet.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SettingsViews\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\InstrumentInfo\SiteInformation.Card.xaml.cs">
+    <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\SiteInformation.Card.xaml.cs">
       <DependentUpon>SiteInformation.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Shell\ShellView.xaml.cs">
+    <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
+      <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\RawItemAccess\InstrumentAccessView.xaml.cs">
+      <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\RawItemAccess\InstrumentAccessViewModel.cs" />
+    <Compile Include="Screens\Settings\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Settings\SettingsViewModel.cs" />
+    <Compile Include="Screens\Shell\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Shell\MainMenuViewModel.cs" />
+    <Compile Include="Screens\Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Shell\ShellViewModel.cs" />
+    <Compile Include="Screens\QAProver\StartTestView.xaml.cs">
+      <DependentUpon>StartTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\StartTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
+      <DependentUpon>PressureTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
+      <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
+      <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml.cs">
+      <DependentUpon>PTSet.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml.cs">
+      <DependentUpon>PTSet.CardReadOnly.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml.cs">
+      <DependentUpon>PTSet.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
+      <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml.cs">
+      <DependentUpon>SuperTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml.cs">
+      <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
+      <DependentUpon>TempTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
+      <DependentUpon>TempTest.Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
+      <DependentUpon>Volume.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml.cs">
+      <DependentUpon>QATestRunView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestView.xaml.cs">
+      <DependentUpon>VerificationTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTestViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml.cs">
-      <DependentUpon>SuperTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
-      <DependentUpon>TempTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InstrumentViews\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
-      <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ToastNotificationView.xaml.cs">
-      <DependentUpon>ToastNotificationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
-      <DependentUpon>Volume.Card.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\PercentageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LabelValueControl.xaml">
+    <Page Include="Dialogs\ConnectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ValueDescriptionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ProgressDialog\ProgressDialog.xaml">
+    <Page Include="Dialogs\ProgressDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -382,137 +334,113 @@
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
-    <Page Include="Resources\ResourceDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
+    <Page Include="Reports\CertificateReportView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CertificateReport\CertificateReportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CommunicationStatusView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CreateCertificateView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dialogs\ConnectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dialogs\ProgressDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentViews\InstrumentInfo\PressureInfo.Card.xaml">
+    <Page Include="Reports\InstrumentReportView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TestViews\StartTestView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentReport\InstrumentReportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InstrumentsList\InstrumentTestGridView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LiveReadView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
+    <Page Include="Screens\Export\CreateCertificateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
+    <Page Include="Screens\Export\InstrumentTestGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\InstrumentAccessView.xaml">
+    <Page Include="Screens\QAProver\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml">
+    <Page Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\PressureInfo.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\SiteInformation.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SettingsViews\SettingsView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\TemperatureInfo.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\InstrumentViews\InstrumentInfo\SiteInformation.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\RawItemAccess\InstrumentAccessView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\Settings\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\QATestRunView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\Shell\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\Shell\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\StartTestView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\InstrumentViews\InstrumentInfo\TemperatureInfo.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Shell\MainMenuView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\VerificationTestView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSet\PTSet.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Shell\ShellView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ToastNotificationView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\VerificationTestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -529,17 +457,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="Resources\error_36.png" />
-    <Resource Include="Resources\success.png" />
-    <Resource Include="Resources\error.png" />
-    <Resource Include="Resources\download_white.png" />
-    <Resource Include="Resources\download.png" />
-    <Resource Include="Resources\cloud-upload.png" />
-    <Resource Include="Resources\clipboard-check.png" />
-    <Resource Include="Resources\clipboard-text.png" />
-    <Resource Include="Resources\home.png" />
     <Resource Include="Resources\settings-light.png" />
-    <Resource Include="Resources\uglogo.jpg" />
+    <Resource Include="settings-light.png" />
+    <Resource Include="Resources\Home.png" />
+    <Resource Include="Resources\clipboard-check.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -563,9 +484,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
+      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
+      <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
+      <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
+      <Name>Prover.CommProtocol.MiHoneywell</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
+      <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
+      <Name>Prover.GUI.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
@@ -575,26 +508,8 @@
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
-      <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>
-      <Name>UnionGas.MASA</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\check.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\tests-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cert-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\uniongas-logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

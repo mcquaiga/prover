@@ -1,9 +1,5 @@
-﻿using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prover.CommProtocol.Common.Items;
+using Prover.Core.Models.Instruments;
 using static Prover.Core.Models.Instruments.SuperFactorTest;
 
 namespace Prover.Core.Extensions
@@ -15,10 +11,13 @@ namespace Prover.Core.Extensions
         private const int CO2_NUMBER = 55;
         private const int SUPER_TABLE_NUMBER = 147;
 
-        public static decimal? SpecGr(this Instrument instrument) => instrument.Items.GetItem(SPEC_GR_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static decimal? CO2(this Instrument instrument) => instrument.Items.GetItem(CO2_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static decimal? N2(this Instrument instrument) => instrument.Items.GetItem(N2_NUMBER).GetNumericValue(instrument.ItemValues);
-        public static SuperFactorTable SuperTable(this Instrument instrument) => (SuperFactorTable)instrument.Items.GetItem(SUPER_TABLE_NUMBER).GetNumericValue(instrument.ItemValues);
+        public static decimal? SpecGr(this Instrument instrument)
+            => instrument.Items.GetItem(SPEC_GR_NUMBER).NumericValue;
 
+        public static decimal? CO2(this Instrument instrument) => instrument.Items.GetItem(CO2_NUMBER).NumericValue;
+        public static decimal? N2(this Instrument instrument) => instrument.Items.GetItem(N2_NUMBER).NumericValue;
+
+        public static SuperFactorTable SuperTable(this Instrument instrument)
+            => (SuperFactorTable) instrument.Items.GetItem(SUPER_TABLE_NUMBER).NumericValue;
     }
 }

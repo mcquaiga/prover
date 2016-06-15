@@ -10,16 +10,21 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class VolumeTest : ProverTable
+    public sealed class VolumeTest : ProverTable
     {
-        public VolumeTest() { }
-
+        public VolumeTest()
+        {
+            
+        }
         public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
             VerificationTest = verificationTest;
@@ -30,45 +35,42 @@ namespace Prover.Core.Models.Instruments
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
-        public VolumeTest(VerificationTest verificationTest, IDriveType driveType, Dictionary<int, string> afterTestItems) : this(verificationTest, driveType)
-        {
-            AfterTestItemValues = afterTestItems;
-        }
-
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
         public decimal AppliedInput { get; set; }
 
         public IDriveType DriveType { get; set; }
-        
+
+        private string _testInstrumentData;
         public string TestInstrumentData
         {
-            get { return JsonConvert.SerializeObject(AfterTestItemValues); }
+            get { return AfterTestItems.Serialize(); }
             set
             {
-                AfterTestItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
+                _testInstrumentData = value;
             }
         }
 
         public Instrument Instrument => VerificationTest.Instrument;
 
         public Guid VerificationTestId { get; set; }
+
         [Required]
-        public virtual VerificationTest VerificationTest { get; set; }
+        public VerificationTest VerificationTest { get; set; }
 
         [NotMapped]
-        public Dictionary<int, string> AfterTestItemValues { get; set; }
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
         {
             get
             {
-                if (ItemValues == null || AfterTestItemValues == null) return null;
-
-                if (DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
+                if (EvcUncorrected != null && DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
                 {
-                    return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
+                    var o = EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100;
+                    if (o != null)
+                        return Math.Round((decimal)o, 2);
                 }
 
                 return null;
@@ -80,24 +82,22 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (ItemValues == null || AfterTestItemValues == null) return null;
+                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
+                {
+                    var o = ((EvcCorrected - TrueCorrected) / TrueCorrected) * 100;
+                    if (o != null)
+                        return Math.Round((decimal)o, 2);
+                }
 
-                if (TrueCorrected != 0 && TrueCorrected != null)
-                {
-                    return Math.Round((decimal)(((EvcCorrected - TrueCorrected) / TrueCorrected) * 100), 2);
-                }
-                else
-                {
-                    return 0;
-                }
+                return null;
             }
         }
 
         [NotMapped]
-        public bool CorrectedHasPassed => CorrectedPercentError.IsBetween(Global.COR_ERROR_THRESHOLD);
+        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
-        public bool UnCorrectedHasPassed => (UnCorrectedPercentError.IsBetween(Global.UNCOR_ERROR_THRESHOLD));
+        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
         public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
@@ -154,22 +154,11 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public decimal EvcCorrected
-        {
-            get
-            {
-                return VerificationTest.Instrument.EvcCorrected(ItemValues, AfterTestItemValues).Value;
-            }
-        }
+        [NotMapped]
+        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
 
         [NotMapped]
-        public decimal EvcUncorrected
-        {
-            get
-            {
-                return VerificationTest.Instrument.EvcUncorrected(ItemValues, AfterTestItemValues).Value;
-            }
-        }
+        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
 
         public string DriveTypeDiscriminator { get; set; }
 
@@ -192,11 +181,20 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        [NotMapped]
+        public override InstrumentType InstrumentType => Instrument.InstrumentType;
+
         public override void OnInitializing()
         {
             base.OnInitializing();
 
             CreateDriveType();
+
+            if (!string.IsNullOrEmpty(_testInstrumentData))
+            {
+                var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
+                AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
+            }
         }
     }
 }
