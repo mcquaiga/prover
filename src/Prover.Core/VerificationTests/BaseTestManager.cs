@@ -78,7 +78,7 @@ namespace Prover.Core.VerificationTests
                     item.Value.ValueQueue.Enqueue(liveValue);
                     _container.Resolve<IEventAggregator>().PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue));
                 }
-            } while (liveReadItems.Any(x => !x.Value.IsStable()));
+            } while (liveReadItems.Any(x => !x.Value.IsStable));
 
             await InstrumentCommunicator.Disconnect();
             
