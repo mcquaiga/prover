@@ -40,16 +40,16 @@ namespace UnionGas.MASA.Verifiers
 
             return await Update(viewModel.CompanyNumber);
 
-            var serverUri = new Uri(ServerUrl);
-            using (var client = new HttpClient())
-            {
-                var response = await client.PostAsync(serverUri, new StringContent(_companyNumber.ToString()));
-                response.EnsureSuccessStatusCode();
+            //var serverUri = new Uri(ServerUrl);
+            //using (var client = new HttpClient())
+            //{
+            //    var response = await client.PostAsync(serverUri, new StringContent(_companyNumber.ToString()));
+            //    response.EnsureSuccessStatusCode();
 
-                var content = await response.Content.ReadAsStringAsync();
+            //    var content = await response.Content.ReadAsStringAsync();
 
-                return content;
-            }
+            //    return content;
+            //}
         }
 
         public async Task<bool> Update(string newCompanyNumber)

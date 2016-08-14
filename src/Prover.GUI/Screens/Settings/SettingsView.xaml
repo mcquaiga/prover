@@ -23,8 +23,8 @@
                     Instrument
                 </materialDesign:ColorZone>
                 <StackPanel Margin="5">
-                    <ComboBox x:Name="CommPort" materialDesign:TextFieldAssist.Hint="Port" />
-                    <ComboBox x:Name="BaudRate" materialDesign:TextFieldAssist.Hint="Baud Rate" />
+                    <ComboBox x:Name="CommPort"/>
+                    <ComboBox x:Name="BaudRate"/>
                 </StackPanel>
             </StackPanel>
         </materialDesign:Card>
@@ -38,7 +38,7 @@
                     Tachometer
                 </materialDesign:ColorZone>
                 <StackPanel Margin="5">
-                    <ComboBox x:Name="TachCommPort" materialDesign:TextFieldAssist.Hint="Port" />
+                    <ComboBox x:Name="TachCommPort" />
                 </StackPanel>
             </StackPanel>
         </materialDesign:Card>
