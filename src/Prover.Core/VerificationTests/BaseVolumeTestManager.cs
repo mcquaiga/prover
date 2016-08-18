@@ -25,7 +25,9 @@ namespace Prover.Core.VerificationTests
         protected bool _isFirstVolumeTest = true;
         protected bool _runningTest = false;
 
-        protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm)
+        protected BaseVolumeVerificationManager(IEventAggregator eventAggregator, 
+            VolumeTest volumeTest, 
+            InstrumentCommunicator instrumentComm)
         {
             _eventAggreator = eventAggregator;
             _instrumentCommunicator = instrumentComm;
