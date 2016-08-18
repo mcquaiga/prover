@@ -96,7 +96,7 @@ namespace Prover.Core.VerificationTests
                     Container.Resolve<IEventAggregator>()
                         .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
                 }
-            } while (liveReadItems.Any(x => !x.Value.IsStable()));
+            } while (liveReadItems.Any(x => !x.Value.IsStable));
 
             await CommunicationClient.Disconnect();
         }

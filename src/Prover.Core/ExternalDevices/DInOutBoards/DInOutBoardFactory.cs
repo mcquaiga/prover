@@ -11,9 +11,16 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
     {
         public static IDInOutBoard CreateBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
         {
-            var board = new DataAcqBoard(boardNumber, channelType, channelNumber);
+            try
+            {
+                var board = new DataAcqBoard(boardNumber, channelType, channelNumber);
             
-            return board;
+                return board;            
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

@@ -22,20 +22,23 @@ namespace Prover.Core.VerificationTests
 
         public decimal GaugeValue { get; private set; }
 
-        public bool IsStable()
+        public bool IsStable
         {
-            if (ValueQueue.Count == FixedQueueSize)
+            get
             {
-                var average = ValueQueue.Sum() / FixedQueueSize;
-                var difference = Math.Abs(GaugeValue - average);
-
-                if (difference <= AverageThreshold)
+                if (ValueQueue.Count == FixedQueueSize)
                 {
-                    return true;
-                }
-            }
+                    var average = ValueQueue.Sum() / FixedQueueSize;
+                    var difference = Math.Abs(GaugeValue - average);
 
-            return false;
+                    if (difference <= AverageThreshold)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }           
         }
     }
 }
