@@ -21,13 +21,15 @@ namespace UnionGas.MASA
             foreach (var instrument in instrumentsToExport)
             {
                 var qaRun = Translate.RunTranslationForExport(instrument);
-                await SendExportDefinition(qaRun);
+
+                var isSuccess = await SendExportDefinition(qaRun);
+                
             }
 
             return true;
         }
 
-        private static async Task SendExportDefinition(EvcQARun evcQARun)
+        private static async Task<bool> SendExportDefinition(EvcQARun evcQARun)
         {
             var serializer = new XmlSerializer(typeof(EvcQARun));
             var result = new StringBuilder();
@@ -42,6 +44,8 @@ namespace UnionGas.MASA
             {
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
                 var response = await client.PostAsync(ServiceAddress, new StringContent(postBody, Encoding.UTF8, "application/xml"));
+
+                return response.IsSuccessStatusCode;
             }
         }
     }

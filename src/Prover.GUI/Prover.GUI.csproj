@@ -530,6 +530,10 @@
       <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
       <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
+      <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>
+      <Name>UnionGas.MASA</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

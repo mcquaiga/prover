@@ -32,8 +32,7 @@ namespace Prover.GUI
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
-
-
+            
             var ass = AssemblySource.Instance.FirstOrDefault(x => x.FullName.Contains("UnionGas.MASA"));
             var type = ass.GetType("UnionGas.MASA.Startup");
             type.GetMethod("Initialize").Invoke(null, new object[] {_container});
