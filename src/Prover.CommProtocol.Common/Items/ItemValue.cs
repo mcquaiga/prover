@@ -54,7 +54,7 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            var result = items.FirstOrDefault(x => x.Metadata.Code == code);
+            var result = items.FirstOrDefault(x => x.Metadata.Code.ToLower() == code.ToLower());
             if (result == null) throw new NullReferenceException(nameof(result));
 
             return result;
