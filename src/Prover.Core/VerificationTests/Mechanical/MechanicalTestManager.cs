@@ -34,6 +34,7 @@ namespace Prover.Core.VerificationTests.Mechanical
                 commClient);
 
             var manager = new MechanicalTestManager(container, instrument, commClient, volumeManager, null);
+            await manager.SaveAsync();
             container.RegisterInstance<TestManager>(manager);
 
             return manager;

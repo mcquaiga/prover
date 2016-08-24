@@ -71,8 +71,26 @@ namespace Prover.Core.Extensions
         {
             if (itemValues == null) return null;
 
-            var lowResValue = itemValues?.GetItem(lowResItemNumber).NumericValue;
-            var highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
+            decimal? lowResValue;
+            decimal? highResValue;
+
+            try
+            {
+                lowResValue = itemValues?.GetItem(lowResItemNumber).NumericValue;
+            }
+            catch
+            {
+                lowResValue = 0;
+            }
+
+            try
+            {
+                highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
+            }
+            catch
+            {
+                highResValue = 0;
+            }
 
             return JoinLowResHighResReading(lowResValue, highResValue);
         }

@@ -10,10 +10,11 @@ using System.Xml.Serialization;
 using Prover.Core.Models.Instruments;
 using NLog;
 using UnionGas.MASA.Models;
+using Prover.Core.ExternalIntegrations;
 
 namespace UnionGas.MASA
 {
-    public class ExportManager
+    public class ExportManager : IExportTestRun
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
@@ -24,17 +25,16 @@ namespace UnionGas.MASA
             ServiceUri = new Uri(serviceUriString);
         }
 
-        public async Task<bool> Export( IEnumerable<Instrument> instrumentsToExport)
+        public async Task<Instrument> Export(Instrument exportInstrument)
         {
-            foreach (var instrument in instrumentsToExport)
+            var qaRun = Translate.RunTranslationForExport(exportInstrument);
+            var isSuccess = await SendExportDefinition(qaRun);
+            if (isSuccess)
             {
-                var qaRun = Translate.RunTranslationForExport(instrument);
-                var isSuccess = await SendExportDefinition(qaRun);
-                if (isSuccess)
-                    instrument.ExportedDateTime = DateTime.Now;
-            }
+                exportInstrument.ExportedDateTime = DateTime.Now;
+            }           
 
-            return true;
+            return exportInstrument;
         }
 
         private async Task<bool> SendExportDefinition(EvcQARun evcQARun)

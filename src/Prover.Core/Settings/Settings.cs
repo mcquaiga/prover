@@ -8,12 +8,14 @@ namespace Prover.Core.Settings
         public string InstrumentCommPort { get; set; }
         public int InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }
+        public string ExportServiceAddress { get; set; }
 
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
-
+        
         public void SetDefaults()
         {
+            ExportServiceAddress = "";
             TemperatureGaugeDefaults = new List<GaugeDefaults>
             {
                 new GaugeDefaults {Level = 0, Value = 32.0m},

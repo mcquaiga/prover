@@ -22,7 +22,7 @@ namespace Prover.CommProtocol.Common.Items
         public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue => ItemDescription?.Value ?? decimal.Parse(RawValue);
+        public virtual decimal NumericValue => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
 
         public virtual string Description => ItemDescription?.Description ?? "[NULL]";
 

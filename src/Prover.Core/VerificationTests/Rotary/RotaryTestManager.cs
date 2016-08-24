@@ -42,6 +42,7 @@ namespace Prover.Core.VerificationTests.Rotary
             var rotaryVolumeTest = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentCommClient, tachComm);
 
             var manager = new RotaryTestManager(container, instrument, instrumentCommClient, rotaryVolumeTest, verifier);
+            await manager.SaveAsync();
             container.RegisterInstance<TestManager>(manager);
 
             return manager;

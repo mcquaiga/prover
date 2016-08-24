@@ -17,6 +17,7 @@ namespace Prover.Core.Models.Instruments
 
         public TemperatureTest(VerificationTest verificationTest, decimal gauge)
         {
+            Items = verificationTest.Instrument.Items;
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 

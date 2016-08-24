@@ -42,9 +42,9 @@
         </Style>
     </UserControl.Resources>
 
-    <DockPanel>
+    <DockPanel Margin="5">
         <StackPanel DockPanel.Dock="Top"
-                    Margin="10, 0, 0, 0"
+                    Margin="10"
                     Orientation=" Horizontal">
             <Button Content="Last 7 Days">
                 <i:Interaction.Triggers>
@@ -76,18 +76,19 @@
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="73*"/>
+                <ColumnDefinition Width="25*" />
             </Grid.ColumnDefinitions>
 
             <ListBox
-                Grid.Column="0"
-                Margin="10"
+                Grid.Column="1"
+                Margin="3.836,10,10,10"
                 x:Name="InstrumentItems"
                 HorizontalContentAlignment="Stretch" />
 
             <!--  Certificate Information  -->
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="2">
 
                 <!--<TextBlock>Created By:</TextBlock>
                     <TextBox x:Name="TestedBy" />-->

@@ -102,8 +102,8 @@ namespace UnionGas.MASA.Models
 
             public class VolumeTest
             {
-                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
-                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
+                public decimal? UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
+                public decimal? CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
 
                 public int PulseACount { get; set; }
                 public int PulseBCount { get; set; }
@@ -114,8 +114,8 @@ namespace UnionGas.MASA.Models
                 public int UncPulseCount { get; set; } 
                 public int CorPulseCount { get; set; }           
 
-                public decimal EvcCorrected { get; set; } // (8, 4)
-                public decimal EvcUncorrected { get; set; } // (8, 4)
+                public decimal? EvcCorrected { get; set; } // (8, 4)
+                public decimal? EvcUncorrected { get; set; } // (8, 4)
             }
 
             public class SuperFactorTest

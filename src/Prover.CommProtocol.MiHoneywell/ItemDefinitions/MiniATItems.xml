@@ -129,45 +129,4 @@
 	<item number="147" code="SUPER_TABLE" shortDescription="Super Compress. Table" description="Super Compress. Table" isVolume="true" />
 	<item number="200" code="SITENUMBER1" shortDescription="Site Number 1" description="Site Number 1" />
 	<item number="201" code="SITENUMBER2" shortDescription="Site Number 2" description="Site Number 2" />
-	<item number="432" code="METER_TYPE" shortDescription="Meter Type" description="Meter Type" isVolume="true" >
-		<value id="0" description="No Meter Type" />
-		<value id="45" description="Roots2M" />
-		<value id="2" description="Roots3M" />
-		<value id="3" description="Roots5M" />
-		<value id="4" description="Roots7M" />
-		<value id="5" description="Roots11M" />
-		<value id="6" description="Roots16M" />
-		<value id="7" description="Roots23M" />
-		<value id="8" description="Roots38M" />
-		<value id="9" description="Roots56M" />
-		<value id="10" description="Roots102M" />
-		<value id="11" description="RM1000" />
-		<value id="33" description="RM1000n" />
-		<value id="12" description="RM1500" />
-		<value id="13" description="RM2000" />
-		<value id="50" description="RM2000n" />
-		<value id="14" description="RM3000" />
-		<value id="15" description="RM5000" />
-		<value id="16" description="RM7000" />
-		<value id="17" description="RM11000" />
-		<value id="18" description="RM16000" />
-		<value id="34" description="RM16000n" />
-		<value id="35" description="RM23000" />
-		<value id="36" description="RM38000" />
-		<value id="22" description="Roots2MB3" />
-		<value id="23" description="Roots3MB3" />
-		<value id="24" description="Roots5MB3" />
-		<value id="25" description="Roots7MB3" />
-		<value id="26" description="Roots11MB3" />
-		<value id="27" description="Roots16MB3" />
-		<value id="28" description="Roots23MB3" />
-		<value id="29" description="Roots38MB3" />
-		<value id="30" description="Roots56MB3" />
-		<value id="19" description="Roots8CB3" />
-		<value id="20" description="Roots11CB3" />
-		<value id="21" description="Roots15CB3" />
-		<value id="33" description="RM1000n" />
-	</item>
-	<item number="439" code="METER_DISPLACEMENT" shortDescription="Meter Displacement" description="Meter Displacement" isVolume="true" />
-	<item number="892" code="HIGH_RES_UNCOR" shortDescription="High Res. Uncor. Volume" description="High Resolution Uncor. Volume" isVolume="true" isVolumeTest="true" />
 </InstrumentItems>

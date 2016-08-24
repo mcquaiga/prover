@@ -15,13 +15,14 @@ namespace Prover.Core.Models.Instruments
     {
         private const decimal DefaultAtmGauge = 14.0m;
 
-        public PressureTest()
+        public PressureTest() : base()
         {
             
         }
 
         public PressureTest(VerificationTest verificationTest, decimal gauge) : base()
         {
+            Items = verificationTest.Instrument.Items;
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);

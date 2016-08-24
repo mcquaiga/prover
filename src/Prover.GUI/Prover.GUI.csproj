@@ -477,6 +477,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\success.png" />
+    <Resource Include="Resources\error_36.png" />
     <Resource Include="Resources\cloud-upload.png" />
     <Resource Include="Resources\clipboard-text.png" />
     <Resource Include="Resources\settings-light.png" />

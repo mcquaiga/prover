@@ -172,6 +172,7 @@
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="Communication\InstrumentCommunication.cs" />
+    <Compile Include="ExternalIntegrations\IExportTestRun.cs" />
     <Compile Include="ExternalIntegrations\IVerifier.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ItemDetails.cs" />

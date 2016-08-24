@@ -85,9 +85,22 @@
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="Export">
+                <materialDesign:PackIcon Kind="Export"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="ExportQATestRun" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="View QA Test Run">
                 <materialDesign:PackIcon Kind="Printer"
                                          Height="36"
-                                         Width="48"
+                                         Width="36"
                                          Foreground="White" />
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -100,7 +113,7 @@
                     ToolTip="Export">
                 <materialDesign:PackIcon Kind="Delete"
                                          Height="36"
-                                         Width="48"
+                                         Width="36"
                                          Foreground="White" />
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

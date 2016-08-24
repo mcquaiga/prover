@@ -17,6 +17,7 @@ namespace Prover.Core.Models.Instruments
 
         public SuperFactorTest(VerificationTest verificationTest)
         {
+            Items = verificationTest.Instrument.Items;
             VerificationTest = verificationTest;
         }
 

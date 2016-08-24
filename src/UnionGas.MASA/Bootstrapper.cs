@@ -22,8 +22,6 @@ namespace UnionGas.MASA
 
         public Bootstrapper(IUnityContainer container)
         {
-            
-
             Initialize();
         }
     }

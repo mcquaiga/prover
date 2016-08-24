@@ -94,15 +94,15 @@ namespace UnionGas.MASA
             return new EvcQARun.VerificationTest.VolumeTest
             {
                 AppliedInput = vt.VolumeTest.AppliedInput,
-                EvcCorrected = vt.VolumeTest.EvcCorrected.Value,
-                EvcUncorrected = vt.VolumeTest.EvcUncorrected.Value,
+                EvcCorrected = vt.VolumeTest.EvcCorrected,
+                EvcUncorrected = vt.VolumeTest.EvcUncorrected,
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
                 TrueCorrected = vt.VolumeTest.TrueCorrected.Value,
-                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError.Value,
-                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError.Value
+                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError,
+                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError
             };
         }
 
