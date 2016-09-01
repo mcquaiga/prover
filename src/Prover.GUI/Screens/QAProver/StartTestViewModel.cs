@@ -55,6 +55,15 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
+        public bool IsEC350Checked
+        {
+            get { return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "EC350"; }
+            set
+            {
+                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "EC350";
+            }
+        }
+
         public void Handle(SettingsChangeEvent message)
         {
             VerifySettings();
@@ -76,25 +85,36 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
-
-                if (IsMiniMaxChecked)
+                if (IsEC350Checked)
                 {
-                    InstrumentTestManager =
-                        await
-                            RotaryTestManager.CreateRotaryTest(_container,
-                                new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
-                                null);
+                    var irdaPort = new IrDAPort();
 
-                    await InstrumentTestManager.RunVerifier();
-                }
-                else if (IsMiniATChecked)
-                {
                     InstrumentTestManager =
-                        await
-                            MechanicalTestManager.Create(_container,
-                                new HoneywellClient(commPort, InstrumentType.MiniAT));
+                        await MechanicalTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentType.EC350));
                 }
+                else
+                {
+                    var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
+
+                    if (IsMiniMaxChecked)
+                    {
+                        InstrumentTestManager =
+                            await
+                                RotaryTestManager.CreateRotaryTest(_container,
+                                    new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
+                                    null);
+
+                        await InstrumentTestManager.RunVerifier();
+                    }
+                    else if (IsMiniATChecked)
+                    {
+                        InstrumentTestManager =
+                            await
+                                MechanicalTestManager.Create(_container,
+                                    new HoneywellClient(commPort, InstrumentType.MiniAT));
+                    }
+                }                
+                
                 await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentTestManager));
             }
             catch (Exception ex)

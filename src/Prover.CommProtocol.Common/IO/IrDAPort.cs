@@ -17,15 +17,15 @@ namespace Prover.CommProtocol.Common.IO
     public class IrDAPort : CommPort
     {
         private const int DevicePeerIndex = 0;
-        private const string ServiceName = "IrCOMM2kSvc";
+        private const string ServiceName = "IrDA:IrCOMM";
         private readonly Encoding _encoding;
-        private readonly IrDAClient _client;
+        private IrDAClient _client;
         private IrDAEndPoint _endPoint;
+
+        public int RetryCount { get; private set; } = 10;
 
         public IrDAPort()
         {
-            _client = new IrDAClient(ServiceName);
-
             try
             {
                 _encoding = Encoding.GetEncoding("x-IAS");
@@ -36,6 +36,11 @@ namespace Prover.CommProtocol.Common.IO
             }
 
             LoadDevice();
+
+            DataReceivedObservable = DataReceived().Publish();
+            DataReceivedObservable.Connect();
+
+            DataSentObservable = new Subject<string>();
         }
         
         public override string Name => "IrDA";
@@ -71,9 +76,6 @@ namespace Prover.CommProtocol.Common.IO
             await Task.Run(() =>
             {
                 _client.Connect(_endPoint);
-                // Sleep for 5 seconds to give the IrDA "connected" icon lots of time to 
-                // appear.
-                Thread.Sleep(5000);
             }, tokenSource.Token);
         }
 
@@ -84,12 +86,16 @@ namespace Prover.CommProtocol.Common.IO
 
         public override async Task Send(string data)
         {
-            await Open();
+            if (!IsOpen())
+                await Open();   
 
             await Task.Run(() =>
             {
                 using (var stream = _client.GetStream())
                 {
+                    // Sleep for 5 seconds to give the IrDA "connected" icon lots of time to 
+                    // appear.
+                    Thread.Sleep(2500);
                     if (stream.CanWrite)
                     {
                         var content = new List<byte>();
@@ -98,7 +104,7 @@ namespace Prover.CommProtocol.Common.IO
                         var buffer = content.ToArray();
                         stream.Write(buffer, 0, buffer.Length);
 
-                        Log.Debug($"[{ServiceName}] Outgoing >> - {ControlCharacters.Prettify(data)}");
+                        DataSentObservable.OnNext(data);
                     }
                 }
             });
@@ -111,21 +117,33 @@ namespace Prover.CommProtocol.Common.IO
 
         private void LoadDevice()
         {
+            _client = new IrDAClient();
+
             _client.Client.SetSocketOption(
                     IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode,
                     1);
 
             var device = SelectIrDAPeerInfo(_client);
-            _endPoint = new IrDAEndPoint(device.DeviceAddress, ServiceName);
+            _endPoint = new IrDAEndPoint(device.DeviceAddress, "IrDA:IrCOMM");
         }
 
         private IrDADeviceInfo SelectIrDAPeerInfo(IrDAClient client)
         {
-            var devices = client.DiscoverDevices();
+            var tryNumber = 0;
+            
+            do
+            {
+                var devices = client.DiscoverDevices();
+                if (devices.Count() > 0)
+                {
+                    return devices[DevicePeerIndex];
+                }
 
-            if (!devices.Any()) throw new Exception("No IrDA devices found.");
+                tryNumber++;
+                Thread.Sleep(5000);
+            } while (tryNumber < RetryCount);
 
-            return devices[DevicePeerIndex];
+            throw new Exception("No IrDA devices found.");
         }
     }
 }

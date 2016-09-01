@@ -49,6 +49,9 @@
                             <RadioButton Content="Mini-AT" FontSize="16" VerticalAlignment="Center"
                                          Name="MiniAT"
                                          IsChecked="{Binding IsMiniATChecked}" />
+                            <RadioButton Content="EC350" FontSize="16" VerticalAlignment="Center"
+                                         Name="EC350"
+                                         IsChecked="{Binding IsEC350Checked}" />
                         </StackPanel>
                     </GroupBox>
 

@@ -28,8 +28,8 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                 case InstrumentType.MiniAT:
                     path = "MiniATItems.xml";
                     break;
-                case InstrumentType.EC3XX:
-                    path = "EC300Items.xml";
+                case InstrumentType.EC350:
+                    path = "EC350_Items.xml";
                     break;
             }
 

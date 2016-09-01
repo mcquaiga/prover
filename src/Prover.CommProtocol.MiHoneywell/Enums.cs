@@ -17,7 +17,7 @@ namespace Prover.CommProtocol.MiHoneywell
         TurboMon = 6,
         PulseAcc = 8,
         TCI = 12,
-        EC3XX = 13,
+        EC350 = 13,
         ER = 1,
         ERX = 10,
         PTBoard = 5,
