@@ -134,7 +134,7 @@ namespace Prover.CommProtocol.Common.IO
             do
             {
                 var devices = client.DiscoverDevices();
-                if (devices.Count() > 0)
+                if (devices.Count() > DevicePeerIndex)
                 {
                     return devices[DevicePeerIndex];
                 }
