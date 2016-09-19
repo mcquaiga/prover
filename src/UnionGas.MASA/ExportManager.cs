@@ -57,5 +57,25 @@ namespace UnionGas.MASA
                 return response.IsSuccessStatusCode;
             }
         }
+
+        private async Task<bool> ExportInstruments(IEnumerable<DCRWebService.QARunEvcTestResult> evcQARun)
+        {
+            try
+            {
+                var service = new DCRWebService.DCRWebServiceSoapClient();
+                var result = await service.SubmitQAEvcTestResultsAsync(evcQARun.ToArray());
+
+                if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return false;
+        }
     }
 }

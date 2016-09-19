@@ -11,19 +11,21 @@ namespace UnionGas.MASA
 {
     public static class Translate
     {
-        public static EvcQARun RunTranslationForExport(Instrument instrument)
+        public static DCRWebService.QARunEvcTestResult RunTranslationForExport(Instrument instrument)
         {
-            var verificationTests = new List<EvcQARun.VerificationTest>();
+            var qaRun1 = new DCRWebService.QARunEvcTestResult();
+
+            var verificationTests = new List<DCRWebService.VerificationTest>();
             
             foreach(var vt in instrument.VerificationTests)
             {
                 verificationTests.Add(TranslateVerificationTest(vt));
             }
 
-            var qaRun = new EvcQARun
+            var qaRun = new DCRWebService.QARunEvcTestResult()
             {
-                CompanyNumber = instrument.SiteNumber2.ToString(),
-                DateTime = instrument.TestDateTime,
+                InventoryCode = instrument.SiteNumber2.ToString(),
+                TestDate = instrument.TestDateTime,
                 DriveType = "Rotary",
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
@@ -32,7 +34,7 @@ namespace UnionGas.MASA
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
 
-                //PressureInfo = new EvcQARun.PressureHeader
+                //PressureInfo = new DCRWebService.PressureHeader
                 //{
                 //    BasePressure = instrument.EvcBasePressure().Value,
                 //    PressureRange = instrument.EvcPressureRange().Value,
@@ -40,15 +42,15 @@ namespace UnionGas.MASA
                 //    TransducerType = instrument.GetTransducerType().ToString(),
                 //    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
                 //},
-                
-                TemperatureInfo = new EvcQARun.TemperatureHeader
+
+                TemperatureInfo = new DCRWebService.TemperatureHeader
                 {
                     BaseTemperature = instrument.EvcBaseTemperature().Value,
                     TemperatureRange = "-40 to 170 C",
                     TemperatureUnits = instrument.TemperatureUnits()
                 },
 
-                SuperFactorInfo = new EvcQARun.SuperFactorHeader
+                SuperFactorInfo = new DCRWebService.SuperFactorHeader
                 {
                     CO2 = instrument.CO2().Value,
                     SpecGr = instrument.SpecGr().Value,
@@ -56,29 +58,29 @@ namespace UnionGas.MASA
                     FPVTable = "NX19"
                 },
 
-                VolumeInfo = new EvcQARun.VolumeHeader
+                VolumeInfo = new DCRWebService.VolumeHeader
                 {
                     CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
                     CorrectedMultiplierValue = (int)instrument.CorrectedMultiplier(),
 
                     UncorrectedMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
-                    UncorrectedMultiplierValue = (int)instrument.CorrectedMultiplier(), 
-                    
+                    UncorrectedMultiplierValue = (int)instrument.CorrectedMultiplier(),
+
                     DriveRateDescription = instrument.DriveRateDescription(),
-                    
+
                     PulseASelect = instrument.PulseASelect(),
-                    PulseBSelect = instrument.PulseBSelect()                                       
+                    PulseBSelect = instrument.PulseBSelect()
                 },
-                
-                VerificationTests = verificationTests              
+
+                VerificationTests = verificationTests.ToArray()              
             };
 
             return qaRun;
         }
 
-        private static EvcQARun.VerificationTest TranslateVerificationTest(VerificationTest vt)
+        private static DCRWebService.VerificationTest TranslateVerificationTest(VerificationTest vt)
         {
-            return new EvcQARun.VerificationTest
+            return new DCRWebService.VerificationTest
             {
                 Pressure = TranslatePressureTest(vt),
                 Temperature = TranslateTemperatureTest(vt),
@@ -87,67 +89,66 @@ namespace UnionGas.MASA
             };
         }
 
-        private static EvcQARun.VerificationTest.VolumeTest TranslateVolumeTest(VerificationTest vt)
+        private static DCRWebService.VolumeTest TranslateVolumeTest(VerificationTest vt)
         {
             if (vt.VolumeTest == null) return null;
 
-            return new EvcQARun.VerificationTest.VolumeTest
+            return new DCRWebService.VolumeTest
             {
                 AppliedInput = vt.VolumeTest.AppliedInput,
-                EvcCorrected = vt.VolumeTest.EvcCorrected,
-                EvcUncorrected = vt.VolumeTest.EvcUncorrected,
+                EvcCorrected = vt.VolumeTest.EvcCorrected.Value,
+                EvcUncorrected = vt.VolumeTest.EvcUncorrected.Value,
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
                 TrueCorrected = vt.VolumeTest.TrueCorrected.Value,
-                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError,
-                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError
+                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError.Value,
+                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError.Value
             };
         }
 
-        private static EvcQARun.VerificationTest.SuperFactorTest TranslateSuperFactorTest(VerificationTest vt)
+        private static DCRWebService.SuperFactorTest TranslateSuperFactorTest(VerificationTest vt)
         {
             if (vt.SuperFactorTest == null) return null;
 
-            return new EvcQARun.VerificationTest.SuperFactorTest
+            return new DCRWebService.SuperFactorTest
             {
                 ActualFactor = vt.SuperFactorTest.ActualFactor.Value,
                 EvcFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
-                EVCUnsqrFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
+                EvcUnsqrFactor = vt.SuperFactorTest.EvcUnsqrFactor.Value,
                 GaugePressure = vt.SuperFactorTest.GaugePressure.Value,
-                GaugeTemp = vt.SuperFactorTest.GaugeTemp,
+                GaugeTemperature = vt.SuperFactorTest.GaugeTemp,
                 PercentError = vt.SuperFactorTest.PercentError.Value
             };
         }
 
-        private static EvcQARun.VerificationTest.TemperatureTest TranslateTemperatureTest(VerificationTest vt)
+        private static DCRWebService.TemperatureTest TranslateTemperatureTest(VerificationTest vt)
         {
             if (vt.TemperatureTest == null) return null;
 
-            return new EvcQARun.VerificationTest.TemperatureTest
+            return new DCRWebService.TemperatureTest
             {
                 ActualFactor = vt.TemperatureTest.ActualFactor.Value,
                 GaugeTemperature = (decimal)vt.TemperatureTest.Gauge,
-                //EvcFactor = vt.TemperatureTest.Items.GetItem.Value,
-                //EvcTemperature = vt.TemperatureTest.ItemValues.EvcTemperatureReading().Value,
+                EvcFactor = vt.TemperatureTest.ActualFactor.Value,
+                //EvcTemperature = vt.TemperatureTest,
                 PercentError = vt.TemperatureTest.PercentError.Value
             };
         }
 
-        private static EvcQARun.VerificationTest.PressureTest TranslatePressureTest(VerificationTest vt)
+        private static DCRWebService.PressureTest TranslatePressureTest(VerificationTest vt)
         {
             if (vt.PressureTest == null) return null;
 
-            return new EvcQARun.VerificationTest.PressureTest
+            return new DCRWebService.PressureTest
             {
                 ActualFactor = vt.PressureTest.ActualFactor.Value,
                 GaugePressure = vt.PressureTest.GasGauge.Value,
                 AtmosphericGauge = vt.PressureTest.AtmosphericGauge.Value,
                 GasPressure = vt.PressureTest.GasPressure.Value,
-
-                //EvcGasPressure = vt.PressureTest.ItemValues.EvcGasPressure().Value,
-                //EvcPressureFactor = vt.PressureTest.ItemValues.EvcGasPressure().Value,
+                EvcGasPressure = vt.PressureTest.GasPressure.Value,
+                EvcPressureFactor = vt.PressureTest.EvcPressureFactor,
                 PercentError = vt.PressureTest.PercentError.Value
             };
         }
