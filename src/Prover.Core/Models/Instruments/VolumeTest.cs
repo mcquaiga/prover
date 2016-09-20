@@ -67,8 +67,6 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (ItemValues == null || AfterTestItemValues == null) return null;
-
                 if (TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
                     return Math.Round((decimal)((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100, 2);

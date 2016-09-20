@@ -17,16 +17,17 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
-    <UserControl.Resources>
+    <!--<UserControl.Resources>
         <converters:BoolToVisibilityConverter
             x:Key="BoolToHiddenConverter"
             TrueValue="Visible" FalseValue="Collapsed" />
-    </UserControl.Resources>
+    </UserControl.Resources>-->
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <StackPanel>
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                     <StackPanel>
+                        <controls1:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}" />
                         <materialDesign:ColorZone
                             Padding="2"
                             Margin="2"
@@ -43,11 +44,12 @@
                             <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartUncorrected}" />
                             <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndUncorrected}" />
                             <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcUncorrected}" />
-                            <controls1:ValueDescriptionControl Label="Multiplier"
-                                                               Value="{Binding UnCorrectedMultiplierDescription}" />
+                            <controls1:ValueDescriptionControl Label="True Calculated"
+                                                               Value="{Binding TrueUncorrected}" />
                             <controls1:ValueDescriptionControl Label="Pulse Count"
                                                                Value="{Binding UncorrectedPulseCount}" />
-                            <controls1:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}" />
+                            <controls1:ValueDescriptionControl Label="Multiplier"
+                                                               Value="{Binding UnCorrectedMultiplierDescription}" />
                         </UniformGrid>
 
                     </StackPanel>
@@ -71,12 +73,13 @@
                             <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartCorrected}" />
                             <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
                             <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcCorrected}" />
-                            <controls1:ValueDescriptionControl Label="Multiplier"
-                                                               Value="{Binding CorrectedMultiplierDescription}" />
+                            <controls1:ValueDescriptionControl Label="True Calculated"
+                                                               Value="{Binding TrueCorrected}" />
                             <controls1:ValueDescriptionControl Label="Pulse Count"
                                                                Value="{Binding CorrectedPulseCount}" />
-                            <controls1:ValueDescriptionControl Label="True Corrected"
-                                                               Value="{Binding TrueCorrected}" />
+                            <controls1:ValueDescriptionControl Label="Multiplier"
+                                                               Value="{Binding CorrectedMultiplierDescription}" />
+
                         </UniformGrid>
 
                     </StackPanel>

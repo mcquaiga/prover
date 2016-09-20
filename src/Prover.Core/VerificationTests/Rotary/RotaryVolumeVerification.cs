@@ -86,7 +86,7 @@ namespace Prover.Core.VerificationTests.Rotary
                 finally
                 {
                     RunningTest = false;
-                    await _instrumentCommunicator.Disconnect();
+                    await InstrumentCommunicator.Disconnect();
                 }
             });
         }
