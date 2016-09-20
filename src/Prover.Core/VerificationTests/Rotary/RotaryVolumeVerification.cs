@@ -99,25 +99,28 @@ namespace Prover.Core.VerificationTests
 
         private async Task RunSyncTest()
         {
-            if (!_runningTest)
+            await Task.Run(async () =>
             {
-                _log.Info("Syncing volume...");
-
-                await _instrumentCommunicator.Disconnect();
-                _outputBoard.StartMotor();
-
-                VolumeTest.PulseACount = 0;
-                VolumeTest.PulseBCount = 0;
-
-                do
+                if (!_runningTest)
                 {
-                    VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
-                    VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
-                } while (VolumeTest.UncPulseCount < 1);
+                    _log.Info("Syncing volume...");
 
-                _outputBoard.StopMotor();
-                System.Threading.Thread.Sleep(500);
-            }
+                    await _instrumentCommunicator.Disconnect();
+                    _outputBoard.StartMotor();
+
+                    VolumeTest.PulseACount = 0;
+                    VolumeTest.PulseBCount = 0;
+
+                    do
+                    {
+                        VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
+                        VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                    } while (VolumeTest.UncPulseCount < 1);
+
+                    _outputBoard.StopMotor();
+                    System.Threading.Thread.Sleep(500);
+                }
+            });
         }
 
         protected override async Task ZeroInstrumentVolumeItems()
