@@ -30,7 +30,7 @@ namespace Prover.Core.VerificationTests
             if (!_runningTest)
             {
                 _log.Info("Starting volume test...");
-                await RunSyncTest();
+                //await RunSyncTest();
 
                 VolumeTest.ItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
 
