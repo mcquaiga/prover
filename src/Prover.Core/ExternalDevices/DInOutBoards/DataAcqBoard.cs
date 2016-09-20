@@ -72,7 +72,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             {
                 if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
                 {
-                    _log.Warn("DAQ Input error: {0}", _ulStatErrorInfo.Message);
+                    _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
                 }
             }
             return 0;           
