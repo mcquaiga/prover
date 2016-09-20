@@ -27,6 +27,7 @@
             <StackPanel>
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                     <StackPanel>
+                        <controls:ValueDescriptionControl Label="Applied Input (Tach. Reading)" Value="{Binding AppliedInput}"/>
                         <materialDesign:ColorZone 
                                         Padding="2"
                             Margin="2"
@@ -45,9 +46,7 @@
                             <controls:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcUncorrected}"/>
                             <controls:ValueDescriptionControl Label="True Calculated" Value="{Binding TrueUncorrected}"/>
                             <controls:ValueDescriptionControl Label="Pulse Count" Value="{Binding UncorrectedPulseCount}"/>
-                            <controls:ValueDescriptionControl Label="Multiplier" Value="{Binding UnCorrectedMutiplierDescription}"/>
-                            <controls:ValueDescriptionControl Label="Applied Input " Value="{Binding AppliedInput}"/>
-
+                            <controls:ValueDescriptionControl Label="Multiplier" Value="{Binding UnCorrectedMultiplierDescription}"/>
                         </UniformGrid>
 
                     </StackPanel>

@@ -81,6 +81,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => CorrectedPulseCount);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
+            NotifyOfPropertyChange(() => Volume);
         }
 
         public void Handle(VerificationTestEvent message)
