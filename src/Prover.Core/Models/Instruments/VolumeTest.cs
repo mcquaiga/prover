@@ -66,12 +66,21 @@ namespace Prover.Core.Models.Instruments
             {
                 if (ItemValues == null || AfterTestItemValues == null) return null;
 
-                if (DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
+                if (TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
-                    return Math.Round((decimal)(((EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100))), 2);
+                    return Math.Round((decimal)(((EvcUncorrected - TrueUncorrected / TrueUncorrected * 100))), 2);
                 }
 
                 return null;
+            }
+        }
+
+        [NotMapped]
+        public decimal? TrueUncorrected
+        {
+            get
+            {
+                return DriveType?.UnCorrectedInputVolume(AppliedInput);
             }
         }
 

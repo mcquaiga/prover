@@ -74,8 +74,7 @@ namespace Prover.Core.VerificationTests
                     System.Threading.Thread.Sleep(250);
 
                     VolumeTest.AfterTestItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
-
-                    await ZeroInstrumentVolumeItems();
+                    await ZeroInstrumentVolumeItems(); 
 
                     try
                     {
@@ -92,6 +91,7 @@ namespace Prover.Core.VerificationTests
                 finally
                 {
                     _runningTest = false;
+                    await _instrumentCommunicator.Disconnect();
                 }
             });
         }

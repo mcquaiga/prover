@@ -49,6 +49,7 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
         public decimal? TrueCorrected => decimal.Round(Volume.TrueCorrected.Value, 4);
+        public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
         public decimal? StartUncorrected => Volume.ItemValues.Uncorrected();
         public decimal? EndUncorrected => Volume.AfterTestItemValues.Uncorrected();
         public decimal? StartCorrected => Volume.ItemValues.Corrected();
@@ -74,7 +75,9 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => EndCorrected);
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected);            
+            NotifyOfPropertyChange(() => StartCorrected);
+            NotifyOfPropertyChange(() => UncorrectedPulseCount);
+            NotifyOfPropertyChange(() => CorrectedPulseCount);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
         }
