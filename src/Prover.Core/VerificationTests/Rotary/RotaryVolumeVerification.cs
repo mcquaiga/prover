@@ -65,8 +65,7 @@ namespace Prover.Core.VerificationTests.Rotary
                     Thread.Sleep(250);
 
                     VolumeTest.AfterTestItems = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
-
-                    await ZeroInstrumentVolumeItems();
+                    await ZeroInstrumentVolumeItems(); 
 
                     try
                     {
@@ -87,6 +86,7 @@ namespace Prover.Core.VerificationTests.Rotary
                 finally
                 {
                     RunningTest = false;
+                    await _instrumentCommunicator.Disconnect();
                 }
             });
         }

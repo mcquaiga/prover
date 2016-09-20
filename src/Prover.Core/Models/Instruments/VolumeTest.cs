@@ -32,7 +32,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTestId = VerificationTest.Id;
             
             DriveType = driveType;
-            AppliedInput = DriveType.MaxUnCorrected();
+            //AppliedInput = DriveType.MaxUnCorrected();
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
@@ -67,14 +67,23 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (EvcUncorrected != null && DriveType?.UnCorrectedInputVolume(AppliedInput) != 0 && DriveType?.UnCorrectedInputVolume(AppliedInput) != null)
+                if (ItemValues == null || AfterTestItemValues == null) return null;
+
+                if (TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
-                    var o = EvcUncorrected - DriveType.UnCorrectedInputVolume(AppliedInput) / DriveType.UnCorrectedInputVolume(AppliedInput) * 100;
-                    if (o != null)
-                        return Math.Round((decimal)o, 2);
+                    return Math.Round((decimal)((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100, 2);
                 }
 
                 return null;
+            }
+        }
+
+        [NotMapped]
+        public decimal? TrueUncorrected
+        {
+            get
+            {
+                return DriveType?.UnCorrectedInputVolume(AppliedInput);
             }
         }
 
