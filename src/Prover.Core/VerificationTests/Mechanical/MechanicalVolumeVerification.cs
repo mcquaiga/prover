@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.VerificationTests
 {
     public sealed class MechanicalVolumeVerification : BaseVolumeVerificationManager
     {
+        private IDInOutBoard _outputBoard;
+        private TachometerCommunicator _tachometerCommunicator;
+
         public MechanicalVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm) 
             : base(eventAggregator, volumeTest, instrumentComm)
         {
+            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
         public override async Task StartVolumeTest()
@@ -25,10 +30,14 @@ namespace Prover.Core.VerificationTests
 
                 VolumeTest.PulseACount = 0;
                 VolumeTest.PulseBCount = 0;
-                
+
+                //Reset Tach setting
+                //await _tachometerCommunicator?.ResetTach();
+
+                _outputBoard.StartMotor();
+
                 await RunningVolumeTest();
-            }
-            
+            }            
         }
 
         public override async Task RunningVolumeTest()
@@ -42,7 +51,10 @@ namespace Prover.Core.VerificationTests
                     VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
                     VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !_requestStopTest);
+
+                _outputBoard?.StopMotor();
                 await FinishVolumeTest();
+
             });
         }
 
@@ -54,10 +66,10 @@ namespace Prover.Core.VerificationTests
                 {
                     System.Threading.Thread.Sleep(250);
 
+                    VolumeTest.AppliedInput = await _tachometerCommunicator?.ReadTach();
                     VolumeTest.AfterTestItemValues = await _instrumentCommunicator.DownloadItemsAsync(_volumeItems);
 
                     await ZeroInstrumentVolumeItems();
-
                     _log.Info("Volume test finished!");
                 }
                 finally

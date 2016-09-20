@@ -16,9 +16,15 @@ namespace Prover.Core.VerificationTests.Mechanical
 {
     public class MechanicalTestManager : TestManager
     {
-        public static async Task<MechanicalTestManager> Create(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort)
+        public static async Task<MechanicalTestManager> Create(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
         {
             var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
+
+            TachometerCommunicator tachComm = null;
+            if (!string.IsNullOrEmpty(tachometerPortName))
+            {
+                tachComm = new TachometerCommunicator(tachometerPortName);
+            }
 
             var items = new InstrumentItems(instrumentType);
             var itemValues = await instrumentComm.DownloadItemsAsync(items.Items.ToList());
@@ -28,7 +34,7 @@ namespace Prover.Core.VerificationTests.Mechanical
             CreateVerificationTests(instrument, driveType);
 
             var volumeTest = instrument.VerificationTests.FirstOrDefault(x => x.VolumeTest != null).VolumeTest;
-            var volumeManager = new MechanicalVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentComm);
+            var volumeManager = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentComm, tachComm);
 
             var manager = new MechanicalTestManager(container, instrument, instrumentComm, volumeManager);
             container.RegisterInstance<TestManager>(manager);
@@ -36,7 +42,7 @@ namespace Prover.Core.VerificationTests.Mechanical
             return manager;
         }
 
-        public MechanicalTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm, MechanicalVolumeVerification volumeTestManager) 
+        public MechanicalTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm, BaseVolumeVerificationManager volumeTestManager) 
             : base(container, instrument, instrumentComm)
         {
             VolumeTestManager = volumeTestManager;

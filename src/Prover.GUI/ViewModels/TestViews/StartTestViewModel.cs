@@ -76,7 +76,7 @@ namespace Prover.GUI.ViewModels.TestViews
             if (IsMiniMaxChecked)
                 InstrumentTestManager = await RotaryTestManager.CreateRotaryTest(_container, InstrumentType.MiniMax, commPort, TachCommPortName);
             else if (IsMiniATChecked)
-                InstrumentTestManager = await MechanicalTestManager.Create(_container, InstrumentType.MiniAt, commPort);
+                InstrumentTestManager = await MechanicalTestManager.Create(_container, InstrumentType.MiniAt, commPort, TachCommPortName);
 
             await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentTestManager));
         }

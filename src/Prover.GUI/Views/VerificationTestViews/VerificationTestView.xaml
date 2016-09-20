@@ -18,9 +18,9 @@
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar Style="{DynamicResource MaterialDesignToolBar}">
                 <Button ToolTip="View QA Run Report">
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                        <materialDesign:PackIcon Width="32" Height="32" Kind="Printer" HorizontalAlignment="Center"/>
-                        <TextBlock>Report</TextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <materialDesign:PackIcon Width="24" Height="24" Kind="Printer" HorizontalAlignment="Center"/>
+                        <TextBlock FontSize="12">Report</TextBlock>
                     </StackPanel>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -30,7 +30,7 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" DockPanel.Dock="Bottom">
             <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
                             Margin="2"/>
         </ScrollViewer>
