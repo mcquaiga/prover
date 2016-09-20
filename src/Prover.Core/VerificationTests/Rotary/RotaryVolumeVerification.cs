@@ -79,6 +79,7 @@ namespace Prover.Core.VerificationTests
                     try
                     {
                         VolumeTest.AppliedInput = await _tachometerCommunicator?.ReadTach();
+                        _log.Info(string.Format("Uncorrected % Error: {0}", VolumeTest.UnCorrectedPercentError));
                         _log.Info(string.Format("Tachometer reading: {0}", VolumeTest.AppliedInput));
                     }
                     catch (Exception ex)

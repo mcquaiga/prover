@@ -26,7 +26,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTestId = VerificationTest.Id;
             
             DriveType = driveType;
-            AppliedInput = DriveType.MaxUnCorrected();
+            //AppliedInput = DriveType.MaxUnCorrected();
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 

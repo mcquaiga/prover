@@ -69,7 +69,6 @@ namespace Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => AppliedInput);
             NotifyOfPropertyChange(() => TrueCorrected);
             NotifyOfPropertyChange(() => TrueUncorrected);
-            NotifyOfPropertyChange(() => Volume);
             NotifyOfPropertyChange(() => StartUncorrected);
             NotifyOfPropertyChange(() => EndUncorrected);
             NotifyOfPropertyChange(() => StartCorrected);
