@@ -11,58 +11,65 @@ using Prover.Core.Models.Instruments;
 using NLog;
 using UnionGas.MASA.Models;
 using Prover.Core.ExternalIntegrations;
+using Microsoft.Practices.ObjectBuilder2;
+using Prover.Core.Storage;
+using Microsoft.Practices.Unity;
 
 namespace UnionGas.MASA
 {
     public class ExportManager : IExportTestRun
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly IUnityContainer _container;
 
         public Uri ServiceUri { get; }
 
-        public ExportManager(string serviceUriString)
+        public ExportManager(IUnityContainer container, string serviceUriString)
         {
+            _container = container;
             ServiceUri = new Uri(serviceUriString);
         }
 
-        public async Task<Instrument> Export(Instrument exportInstrument)
+        public async Task<bool> Export(Instrument instrumentForExport)
         {
-            var qaRun = Translate.RunTranslationForExport(exportInstrument);
-            var isSuccess = await SendExportDefinition(qaRun);
+            var instrumentList = new List<Instrument>();
+            instrumentList.Add(instrumentForExport);
+            return await Export(instrumentList);
+        }
+
+        public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
+        {
+            var qaTestRuns = new List<DCRWebService.QARunEvcTestResult>();
+
+            foreach (var testRun in instrumentsForExport)
+            {
+                qaTestRuns.Add(Translate.RunTranslationForExport(testRun));
+            }
+            
+            var isSuccess = await SendResultsToWebService(qaTestRuns);
             if (isSuccess)
             {
-                exportInstrument.ExportedDateTime = DateTime.Now;
-            }           
-
-            return exportInstrument;
+                using (var store = new InstrumentStore(_container))
+                {
+                    foreach(var instr in instrumentsForExport)
+                    {
+                        instr.ExportedDateTime = DateTime.Now;
+                        await store.UpsertAsync(instr);
+                    }                    
+                }
+                return true;            
+            }
+            else
+            {
+                throw new Exception("An error occured sending test results to web service. Please see log for details.");
+            }            
         }
 
-        private async Task<bool> SendExportDefinition(EvcQARun evcQARun)
-        {
-            var serializer = new XmlSerializer(typeof(EvcQARun));
-            var result = new StringBuilder();
-            using (var writer = XmlWriter.Create(result))
-            {
-                serializer.Serialize(writer, evcQARun);
-            }
-            var postBody = result.ToString();
-
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
-                var response = await client.PostAsync(
-                                    ServiceUri, 
-                                    new StringContent(postBody, Encoding.UTF8, "application/xml"));
-                return response.IsSuccessStatusCode;
-            }
-        }
-
-        private async Task<bool> ExportInstruments(IEnumerable<DCRWebService.QARunEvcTestResult> evcQARun)
+        private async Task<bool> SendResultsToWebService(IEnumerable<DCRWebService.QARunEvcTestResult> evcQARun)
         {
             try
             {
-                var service = new DCRWebService.DCRWebServiceSoapClient();
+                var service = new DCRWebService.DCRWebServiceSoapClient("configName", ServiceUri.ToString());
                 var result = await service.SubmitQAEvcTestResultsAsync(evcQARun.ToArray());
 
                 if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
@@ -72,7 +79,7 @@ namespace UnionGas.MASA
             }
             catch (Exception ex)
             {
-
+                _log.Error(ex, "An error occured sending results to the web service.");
             }
 
             return false;

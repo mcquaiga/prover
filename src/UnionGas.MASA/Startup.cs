@@ -15,7 +15,7 @@ namespace UnionGas.MASA
         public static void Initialize(IUnityContainer container)
         {
             container.RegisterType<IVerifier, CompanyNumberVerifier>();
-            container.RegisterType<IExportTestRun, ExportManager>(new InjectionConstructor(SettingsManager.SettingsInstance.ExportServiceAddress));
+            container.RegisterType<IExportTestRun, ExportManager>(new InjectionConstructor(container, SettingsManager.SettingsInstance.ExportServiceAddress));
         }
     }
 }

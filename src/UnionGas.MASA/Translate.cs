@@ -1,4 +1,5 @@
-﻿using Prover.Core.Extensions;
+﻿using Prover.CommProtocol.Common.Items;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using System;
 using System.Collections.Generic;
@@ -34,14 +35,14 @@ namespace UnionGas.MASA
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
 
-                //PressureInfo = new DCRWebService.PressureHeader
-                //{
-                //    BasePressure = instrument.EvcBasePressure().Value,
-                //    PressureRange = instrument.EvcPressureRange().Value,
-                //    PressureUnits = instrument.PressureUnits(),
-                //    TransducerType = instrument.GetTransducerType().ToString(),
-                //    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
-                //},
+                PressureInfo = new DCRWebService.PressureHeader
+                {
+                    BasePressure = instrument.EvcBasePressure().Value,
+                    PressureRange = instrument.EvcPressureRange().Value,
+                    PressureUnits = instrument.PressureUnits(),
+                    TransducerType = instrument.GetTransducerType().ToString(),
+                    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
+                },
 
                 TemperatureInfo = new DCRWebService.TemperatureHeader
                 {
@@ -131,8 +132,8 @@ namespace UnionGas.MASA
             {
                 ActualFactor = vt.TemperatureTest.ActualFactor.Value,
                 GaugeTemperature = (decimal)vt.TemperatureTest.Gauge,
-                EvcFactor = vt.TemperatureTest.ActualFactor.Value,
-                //EvcTemperature = vt.TemperatureTest,
+                EvcFactor = vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue,
+                EvcTemperature = vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue,
                 PercentError = vt.TemperatureTest.PercentError.Value
             };
         }
@@ -147,8 +148,8 @@ namespace UnionGas.MASA
                 GaugePressure = vt.PressureTest.GasGauge.Value,
                 AtmosphericGauge = vt.PressureTest.AtmosphericGauge.Value,
                 GasPressure = vt.PressureTest.GasPressure.Value,
-                EvcGasPressure = vt.PressureTest.GasPressure.Value,
-                EvcPressureFactor = vt.PressureTest.EvcPressureFactor,
+                EvcGasPressure = vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue,
+                EvcPressureFactor = vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue,
                 PercentError = vt.PressureTest.PercentError.Value
             };
         }
