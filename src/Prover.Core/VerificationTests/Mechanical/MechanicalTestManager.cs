@@ -12,32 +12,38 @@ namespace Prover.Core.VerificationTests.Mechanical
 {
     public sealed class MechanicalTestManager : TestManager
     {
-        public MechanicalTestManager(IUnityContainer container, Instrument instrument,
-            EvcCommunicationClient instrumentComm, MechanicalVolumeVerification volumeTestManager, IVerifier verifier)
-            : base(container, instrument, instrumentComm, verifier)
+        public static async Task<MechanicalTestManager> Create(IUnityContainer container, InstrumentType instrumentType, ICommPort instrumentPort, string tachometerPortName)
         {
-            VolumeTestManager = volumeTestManager;
-        }
+            var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort, instrumentType);
 
-        public static async Task<MechanicalTestManager> Create(IUnityContainer container, EvcCommunicationClient commClient)
-        {
+            TachometerCommunicator tachComm = null;
+            if (!string.IsNullOrEmpty(tachometerPortName))
+            {
+                tachComm = new TachometerCommunicator(tachometerPortName);
+            }
+
             await commClient.Connect();
             var itemValues = await commClient.GetItemValues(commClient.ItemDetails.GetAllItemNumbers());
             await commClient.Disconnect();
+
 
             var instrument = new Instrument(InstrumentType.MiniAT, itemValues);
             var driveType = new MechanicalDrive(instrument);
             CreateVerificationTests(instrument, driveType);
 
             var volumeTest = instrument.VolumeTest;
-            var volumeManager = new MechanicalVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest,
-                commClient);
+            var volumeManager = new RotaryVolumeVerification(container.Resolve<IEventAggregator>(), volumeTest, instrumentComm, tachComm);
 
             var manager = new MechanicalTestManager(container, instrument, commClient, volumeManager, null);
             await manager.SaveAsync();
             container.RegisterInstance<TestManager>(manager);
 
             return manager;
+        }
+        public MechanicalTestManager(IUnityContainer container, Instrument instrument, InstrumentCommunicator instrumentComm, BaseVolumeVerificationManager volumeTestManager) 
+            : base(container, instrument, instrumentComm)
+        {
+            VolumeTestManager = volumeTestManager;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Prover.Core.VerificationTests.Rotary
         {
             if (!RunningTest)
             {
-                await RunSyncTest();
+                //await RunSyncTest();
                 
                 if (_tachometerCommunicator != null)
                     await _tachometerCommunicator?.ResetTach();
@@ -95,15 +95,15 @@ namespace Prover.Core.VerificationTests.Rotary
         {
             await Task.Run(async () =>
             {
-                if (!RunningTest)
+                if (!_runningTest)
                 {
-                    Log.Info("Syncing Volume...");
-                    await InstrumentCommunicator.Disconnect();
+                    _log.Info("Syncing volume...");
+
+                    await _instrumentCommunicator.Disconnect();
+                    _outputBoard.StartMotor();
 
                     VolumeTest.PulseACount = 0;
                     VolumeTest.PulseBCount = 0;
-
-                    _outputBoard.StartMotor();
 
                     do
                     {
@@ -112,7 +112,7 @@ namespace Prover.Core.VerificationTests.Rotary
                     } while (VolumeTest.UncPulseCount < 1);
 
                     _outputBoard.StopMotor();
-                    Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(500);
                 }
             });
         }
