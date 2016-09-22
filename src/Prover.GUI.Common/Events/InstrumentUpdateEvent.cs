@@ -1,5 +1,4 @@
-﻿using Prover.Core.VerificationTests.Rotary;
-using Prover.Core.VerificationTests.VolumeTest;
+﻿using Prover.Core.VerificationTests.VolumeTest;
 
 namespace Prover.GUI.Common.Events
 {

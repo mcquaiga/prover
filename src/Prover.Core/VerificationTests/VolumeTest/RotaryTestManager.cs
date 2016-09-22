@@ -8,7 +8,6 @@ using Prover.Core.Communication;
 using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
-using Prover.Core.VerificationTests.Rotary;
 
 namespace Prover.Core.VerificationTests.VolumeTest
 {

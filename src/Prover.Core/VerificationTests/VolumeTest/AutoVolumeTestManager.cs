@@ -6,17 +6,15 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Models.Instruments;
-using Prover.Core.VerificationTests.VolumeTest;
 
-namespace Prover.Core.VerificationTests.Rotary
+namespace Prover.Core.VerificationTests.VolumeTest
 {
     public sealed class AutoVolumeTestManager : VolumeTestManager
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerCommunicator _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm, TachometerCommunicator tachComm)
             : base(eventAggregator, volumeTest, instrumentComm)
         {

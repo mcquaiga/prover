@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using MccDaq;
 using NLog;
 using Prover.CommProtocol.Common;
+using Prover.Core.Models.Instruments;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using LogManager = NLog.LogManager;
 
