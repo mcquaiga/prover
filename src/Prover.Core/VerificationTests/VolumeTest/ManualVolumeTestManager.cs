@@ -1,24 +1,22 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
-using Prover.Core.Models.Instruments;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
-namespace Prover.Core.VerificationTests.Mechanical
+namespace Prover.Core.VerificationTests.VolumeTest
 {
-    public sealed class MechanicalVolumeVerification : VolumeVerificationManager
+    public sealed class ManualVolumeTestManager : VolumeTestManager
     {
         private IDInOutBoard _outputBoard;
         private TachometerCommunicator _tachometerCommunicator;
-        public MechanicalVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm) 
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm) 
             : base(eventAggregator, volumeTest, instrumentComm)
         {
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-        public override async Task StartVolumeTest()
+        public override async Task PreTest()
         {
             if (!RunningTest)
             {
@@ -34,11 +32,11 @@ namespace Prover.Core.VerificationTests.Mechanical
 
                 _outputBoard.StartMotor();
 
-                await RunningVolumeTest();
+                await ExecutingTest();
             }            
         }
 
-        public override async Task RunningVolumeTest()
+        public override async Task ExecutingTest()
         {
             await Task.Run(async () =>
             {
@@ -51,12 +49,12 @@ namespace Prover.Core.VerificationTests.Mechanical
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
-                await FinishVolumeTest();
+                await PostTest();
 
             });
         }
 
-        public override async Task FinishVolumeTest()
+        public override async Task PostTest()
         {
             await Task.Run(async () =>
             {

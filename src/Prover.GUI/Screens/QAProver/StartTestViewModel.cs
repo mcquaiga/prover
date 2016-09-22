@@ -12,6 +12,7 @@ using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.Mechanical;
 using Prover.Core.VerificationTests.Rotary;
+using Prover.Core.VerificationTests.VolumeTest;
 using Prover.GUI.Common;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;

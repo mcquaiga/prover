@@ -10,6 +10,7 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.Rotary;
+using Prover.Core.VerificationTests.VolumeTest;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 

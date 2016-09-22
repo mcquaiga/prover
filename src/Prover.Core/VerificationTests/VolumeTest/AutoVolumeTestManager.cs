@@ -7,15 +7,16 @@ using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
+using Prover.Core.VerificationTests.VolumeTest;
 
 namespace Prover.Core.VerificationTests.Rotary
 {
-    public sealed class RotaryVolumeVerification : VolumeVerificationManager
+    public sealed class AutoVolumeTestManager : VolumeTestManager
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerCommunicator _tachometerCommunicator;
 
-        public RotaryVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest,
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm, TachometerCommunicator tachComm)
             : base(eventAggregator, volumeTest, instrumentComm)
         {
@@ -23,11 +24,11 @@ namespace Prover.Core.VerificationTests.Rotary
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-        public override async Task StartVolumeTest()
+        public override async Task PreTest()
         {
             if (!RunningTest)
             {
-                //await RunSyncTest();
+                await RunSyncTest();
                 
                 if (_tachometerCommunicator != null)
                     await _tachometerCommunicator?.ResetTach();
@@ -36,11 +37,11 @@ namespace Prover.Core.VerificationTests.Rotary
                 VolumeTest.Items = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
                 await InstrumentCommunicator.Disconnect();
 
-                await RunningVolumeTest();
+                await ExecutingTest();
             }
         }
 
-        public override async Task RunningVolumeTest()
+        public override async Task ExecutingTest()
         {
             await Task.Run(async () =>
             {
@@ -52,11 +53,11 @@ namespace Prover.Core.VerificationTests.Rotary
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
-                await FinishVolumeTest();
+                await PostTest();
             });
         }
 
-        public override async Task FinishVolumeTest()
+        public override async Task PostTest()
         {
             await Task.Run(async () =>
             {

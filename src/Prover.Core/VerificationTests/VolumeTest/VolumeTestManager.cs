@@ -4,12 +4,11 @@ using MccDaq;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Models.Instruments;
 using LogManager = NLog.LogManager;
 
-namespace Prover.Core.VerificationTests
+namespace Prover.Core.VerificationTests.VolumeTest
 {
-    public abstract class VolumeVerificationManager
+    public abstract class VolumeTestManager
     {
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
@@ -20,7 +19,7 @@ namespace Prover.Core.VerificationTests
         protected bool RequestStopTest;
         protected bool RunningTest = false;
 
-        protected VolumeVerificationManager(IEventAggregator eventAggregator, VolumeTest volumeTest,
+        protected VolumeTestManager(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm)
         {
             EventAggreator = eventAggregator;
@@ -31,7 +30,7 @@ namespace Prover.Core.VerificationTests
             FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
-        public VolumeTest VolumeTest { get; private set; }
+        public Models.Instruments.VolumeTest VolumeTest { get; private set; }
 
         public virtual void StopVolumeTest()
         {
@@ -46,8 +45,8 @@ namespace Prover.Core.VerificationTests
             await InstrumentCommunicator.Disconnect();
         }
 
-        public abstract Task StartVolumeTest();
-        public abstract Task RunningVolumeTest();
-        public abstract Task FinishVolumeTest();
+        public abstract Task PreTest();
+        public abstract Task ExecutingTest();
+        public abstract Task PostTest();
     }
 }

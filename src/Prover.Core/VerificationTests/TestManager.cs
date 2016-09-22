@@ -13,6 +13,7 @@ using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
+using Prover.Core.VerificationTests.VolumeTest;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
@@ -22,9 +23,6 @@ namespace Prover.Core.VerificationTests
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         protected readonly IUnityContainer Container;
-        //private bool _isBusy;
-        //private bool _isLiveReading;
-        private bool _stopLiveReading;
 
         protected TestManager(IUnityContainer container, Instrument instrument, EvcCommunicationClient commClient,
             IVerifier verifier)
@@ -38,7 +36,7 @@ namespace Prover.Core.VerificationTests
         public IVerifier Verifier { get; private set; }
         public Instrument Instrument { get; }
         public EvcCommunicationClient CommunicationClient { get; }
-        public virtual VolumeVerificationManager VolumeTestManager { get; set; }
+        public virtual VolumeTestManager VolumeTestManager { get; set; }
 
         public void Dispose()
         {
@@ -52,7 +50,7 @@ namespace Prover.Core.VerificationTests
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                await VolumeTestManager.StartVolumeTest();
+                await VolumeTestManager.PreTest();
         }
 
         private async Task WaitForReadingsToStablize(int level)
@@ -72,14 +70,10 @@ namespace Prover.Core.VerificationTests
             }
 
             if (Instrument.CompositionType == CorrectorType.T)
-            {
                 liveReadItems.Add(26, new ReadingStabilizer(GetGaugeTemp(level)));
-            }
 
             if (Instrument.CompositionType == CorrectorType.P)
-            {
                 liveReadItems.Add(8, new ReadingStabilizer(GetGaugePressure(Instrument, level)));
-            }
             return liveReadItems;
         }
 
@@ -113,14 +107,10 @@ namespace Prover.Core.VerificationTests
             }
 
             if (Instrument.CompositionType == CorrectorType.T)
-            {
                 await DownloadTemperatureTestItems(level);
-            }
 
             if (Instrument.CompositionType == CorrectorType.P)
-            {
                 await DownloadPressureTestItems(level);
-            }
 
             await CommunicationClient.Disconnect();
         }
@@ -162,14 +152,10 @@ namespace Prover.Core.VerificationTests
                 var verificationTest = new VerificationTest(i, instrument);
 
                 if (instrument.CompositionType == CorrectorType.P)
-                {
                     verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(instrument, i));
-                }
 
                 if (instrument.CompositionType == CorrectorType.T)
-                {
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
-                }
 
                 if (instrument.CompositionType == CorrectorType.PTZ)
                 {
@@ -206,7 +192,8 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            Verifier = Container.Resolve<IVerifier>(new ParameterOverride("commClient", CommunicationClient), new ParameterOverride("instrument", Instrument));
+            Verifier = Container.Resolve<IVerifier>(new ParameterOverride("commClient", CommunicationClient),
+                new ParameterOverride("instrument", Instrument));
             var success = await Verifier.Verify();
         }
     }
