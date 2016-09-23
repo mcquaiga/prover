@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -19,7 +20,7 @@ namespace UnionGas.MASA
 {
     public class ExportManager : IExportTestRun
     {
-        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IUnityContainer _container;
 
         public Uri ServiceUri { get; }
@@ -32,26 +33,21 @@ namespace UnionGas.MASA
 
         public async Task<bool> Export(Instrument instrumentForExport)
         {
-            var instrumentList = new List<Instrument>();
-            instrumentList.Add(instrumentForExport);
+            var instrumentList = new List<Instrument> {instrumentForExport};
             return await Export(instrumentList);
         }
 
         public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
         {
-            var qaTestRuns = new List<DCRWebService.QARunEvcTestResult>();
+            var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
+            var qaTestRuns = forExport.Select(testRun => Translate.RunTranslationForExport(testRun)).ToList();
 
-            foreach (var testRun in instrumentsForExport)
-            {
-                qaTestRuns.Add(Translate.RunTranslationForExport(testRun));
-            }
-            
             var isSuccess = await SendResultsToWebService(qaTestRuns);
             if (isSuccess)
             {
                 using (var store = new InstrumentStore(_container))
                 {
-                    foreach(var instr in instrumentsForExport)
+                    foreach(var instr in forExport)
                     {
                         instr.ExportedDateTime = DateTime.Now;
                         await store.UpsertAsync(instr);
@@ -69,17 +65,21 @@ namespace UnionGas.MASA
         {
             try
             {
-                var service = new DCRWebService.DCRWebServiceSoapClient("configName", ServiceUri.ToString());
-                var result = await service.SubmitQAEvcTestResultsAsync(evcQARun.ToArray());
-
-                if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                using (var service = new DCRWebService.DCRWebServiceSoapClient())
                 {
-                    return true;
+                    service.Endpoint.Address = new EndpointAddress(ServiceUri);
+
+                    var result = await service.SubmitQAEvcTestResultsAsync(evcQARun.ToArray());
+                    if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                    {
+                        return true;
+                    }
                 }
+                
             }
             catch (Exception ex)
             {
-                _log.Error(ex, "An error occured sending results to the web service.");
+                Log.Error(ex, "An error occured sending results to the web service.");
             }
 
             return false;

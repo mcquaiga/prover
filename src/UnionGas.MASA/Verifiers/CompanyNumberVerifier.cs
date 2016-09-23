@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
@@ -8,51 +10,72 @@ using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
+using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 
 namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberVerifier : IVerifier
     {
-        private ItemValue _companyNumber;
-        private const string ServerUrl = "http://uniongas.masa/";
-        private const string VerifyEndPoint = "Verify";
-
-        public CompanyNumberVerifier(IUnityContainer container, EvcCommunicationClient commClient, Instrument instrument)
+        public CompanyNumberVerifier(
+            IUnityContainer container, 
+            EvcCommunicationClient commClient,
+            string serviceUriString,
+            Instrument instrument)
         {
-            this.Container = container;
-            this.CommClient = commClient;
-            this.Instrument = instrument;
+            Container = container;
+            CommClient = commClient;
+            WebServiceUrl = serviceUriString;
+            Instrument = instrument;
         }
 
-        public IUnityContainer Container { get; set; }
-
-        public Instrument Instrument { get; set; }
-
-        public EvcCommunicationClient CommClient { get; set; }
+        public IUnityContainer Container { get; }
+        public Instrument Instrument { get; }
+        public EvcCommunicationClient CommClient { get; }
+        public string WebServiceUrl { get; }
 
         public async Task<object> Verify()
         {
-            _companyNumber = Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumberItem = Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumber = companyNumberItem.ToString();
 
+            var meterDto = await VerifyWithWebService(companyNumber);
+
+            while (meterDto == null)
+            {
+                var newCompanyNumber = GetNewCompanyNumber();
+                meterDto = await VerifyWithWebService(newCompanyNumber);
+                if (meterDto != null)
+                {
+                    var success = await UpdateInstrumentCompanyNumber(newCompanyNumber);
+                }
+            }
+
+            return meterDto != null;
+        }
+
+        private string GetNewCompanyNumber()
+        {
             var viewModel = new CompanyNumberDialogViewModel(this);
             ScreenManager.ShowDialog(Container, viewModel);
 
-            return await Update(viewModel.CompanyNumber);
-
-            //var serverUri = new Uri(ServerUrl);
-            //using (var client = new HttpClient())
-            //{
-            //    var response = await client.PostAsync(serverUri, new StringContent(_companyNumber.ToString()));
-            //    response.EnsureSuccessStatusCode();
-
-            //    var content = await response.Content.ReadAsStringAsync();
-
-            //    return content;
-            //}
+            return viewModel.CompanyNumber;
         }
 
-        public async Task<bool> Update(string newCompanyNumber)
+        private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
+        {
+            return await Task.Run(() =>
+            {
+                using (var service = new DCRWebServiceSoapClient())
+                {
+                    service.Endpoint.Address = new EndpointAddress(WebServiceUrl);
+
+                    return service.GetValidatedEvcDeviceByInventoryCodeAsync(companyNumber).Result.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+                }
+            });
+        }
+
+        public async Task<bool> UpdateInstrumentCompanyNumber(string newCompanyNumber)
         {
             await CommClient.Connect();
             var response = await CommClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
