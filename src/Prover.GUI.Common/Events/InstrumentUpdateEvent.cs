@@ -4,11 +4,11 @@ namespace Prover.GUI.Common.Events
 {
     public class InstrumentUpdateEvent
     {
-        public InstrumentUpdateEvent(RotaryTestManager instrumentManager)
+        public InstrumentUpdateEvent(RotaryQaRunTestManager instrumentManager)
         {
             InstrumentManager = instrumentManager;
         }
 
-        public RotaryTestManager InstrumentManager { get; set; }
+        public RotaryQaRunTestManager InstrumentManager { get; set; }
     }
 }

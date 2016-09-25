@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.EVCTypes;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Settings;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -22,12 +24,14 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items)
+        public Instrument(InstrumentType instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
             Type = instrumentType;
             Items = items;
+
+            CreateVerificationTests(driveType);
         }
 
         public DateTime TestDateTime { get; set; }
@@ -107,5 +111,50 @@ namespace Prover.Core.Models.Instruments
         }
 
         #endregion
+
+        public void CreateVerificationTests(IDriveType driveType, int defaultVolumeTestNumber = 0)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                var verificationTest = new VerificationTest(i, this);
+
+                if (CompositionType == CorrectorType.P)
+                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
+
+                if (CompositionType == CorrectorType.T)
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
+
+                if (CompositionType == CorrectorType.PTZ)
+                {
+                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
+                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
+                }
+
+                if (i == defaultVolumeTestNumber)
+                    verificationTest.VolumeTest = new VolumeTest(verificationTest, driveType);
+
+                VerificationTests.Add(verificationTest);
+            }
+        }
+
+        public decimal GetGaugeTemp(int testNumber)
+        {
+            return
+                SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)
+                    .Value;
+        }
+
+        public decimal GetGaugePressure(int testNumber)
+        {
+            var value =
+                SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
+
+            if (value > 1)
+                value = value / 100;
+
+            var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
+            return value * evcPressureRange;
+        }
     }
 }

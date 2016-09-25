@@ -34,7 +34,7 @@ namespace Prover.GUI.Screens.QAProver
         public CommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
 
-        public TestManager InstrumentTestManager { get; set; }
+        public QaRunTestManager InstrumentQaRunTestManager { get; set; }
         public string TachCommPortName { get; private set; }
 
         public bool IsMiniMaxChecked
@@ -89,8 +89,8 @@ namespace Prover.GUI.Screens.QAProver
                 {
                     var irdaPort = new IrDAPort();
 
-                    InstrumentTestManager =
-                        await MechanicalTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentType.EC350));
+                    InstrumentQaRunTestManager =
+                        await MechanicalQaRunTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentType.EC350));
                 }
                 else
                 {
@@ -98,24 +98,28 @@ namespace Prover.GUI.Screens.QAProver
 
                     if (IsMiniMaxChecked)
                     {
-                        InstrumentTestManager =
-                            await
-                                RotaryTestManager.CreateRotaryTest(_container,
-                                    new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
-                                    null);
+                        InstrumentQaRunTestManager = new QaRunTestManager(
+                            _container,
+                            new HoneywellClient(commPort, InstrumentType.MiniMax),
+                            TachCommPortName,
+                            null);
+                        //await
+                        //    RotaryQaRunTestManager.CreateRotaryTest(_container,
+                        //        new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
+                        //        null);
 
-                        await InstrumentTestManager.RunVerifier();
+                        await InstrumentQaRunTestManager.RunVerifier();
                     }
                     else if (IsMiniATChecked)
                     {
-                        InstrumentTestManager =
+                        InstrumentQaRunTestManager =
                             await
-                                MechanicalTestManager.Create(_container,
+                                MechanicalQaRunTestManager.Create(_container,
                                     new HoneywellClient(commPort, InstrumentType.MiniAT));
                     }
                 }                
                 
-                await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentTestManager));
+                await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentQaRunTestManager));
             }
             catch (Exception ex)
             {

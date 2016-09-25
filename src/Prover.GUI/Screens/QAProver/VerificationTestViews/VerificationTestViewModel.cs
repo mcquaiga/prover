@@ -10,26 +10,27 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
     public class VerificationTestViewModel : InstrumentTestViewModel, IHandle<VerificationTestEvent>, IDisposable
     {
-        public VerificationTestViewModel(IUnityContainer container, TestManager testManager)
-            : base(container, testManager.Instrument)
+        public VerificationTestViewModel(IUnityContainer container, QaRunTestManager qaRunTestManager)
+            : base(container, qaRunTestManager.Instrument)
         {
-            _container.RegisterInstance(testManager);
+            _container.RegisterInstance(qaRunTestManager);
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            if (testManager == null)
-                throw new ArgumentNullException(nameof(testManager));
-            InstrumentTestManager = testManager;
+            if (qaRunTestManager == null)
+                throw new ArgumentNullException(nameof(qaRunTestManager));
 
-            QaTestRunViewItem = new QaTestRunViewModel(container, InstrumentTestManager.Instrument);
+            InstrumentQaRunTestManager = qaRunTestManager;
+
+            QaTestRunViewItem = new QaTestRunViewModel(container, InstrumentQaRunTestManager.Instrument);
         }
 
         public QaTestRunViewModel QaTestRunViewItem { get; set; }
 
-        public TestManager InstrumentTestManager { get; set; }
+        public QaRunTestManager InstrumentQaRunTestManager { get; set; }
 
         public void Dispose()
         {
-            InstrumentTestManager.Dispose();
+            InstrumentQaRunTestManager.Dispose();
         }
 
         public void Handle(VerificationTestEvent message)
@@ -41,19 +42,19 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 
         public async Task SaveInstrument()
         {
-            if (InstrumentTestManager == null) return;
+            if (InstrumentQaRunTestManager == null) return;
 
             //if (!Instrument.HasPassed && MessageBox.Show("This instrument hasn't passed all tests." + Environment.NewLine + "Would you still like to save?", "Save", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             //    return;
 
-            await InstrumentTestManager.SaveAsync();
+            await InstrumentQaRunTestManager.SaveAsync();
             _container.Resolve<IEventAggregator>()
                 .PublishOnBackgroundThread(new NotificationEvent("Successfully Saved instrument!"));
         }
 
         public void InstrumentReport()
         {
-            var instrumentReport = new InstrumentGenerator(InstrumentTestManager.Instrument, _container);
+            var instrumentReport = new InstrumentGenerator(InstrumentQaRunTestManager.Instrument, _container);
             instrumentReport.Generate();
         }
 
