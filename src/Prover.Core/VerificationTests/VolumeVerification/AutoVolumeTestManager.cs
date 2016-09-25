@@ -3,11 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
-namespace Prover.Core.VerificationTests.VolumeTest
+namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class AutoVolumeTestManager : VolumeTestManager
     {
@@ -48,7 +47,7 @@ namespace Prover.Core.VerificationTests.VolumeTest
                     //TODO: Raise events so the UI can respond
                     VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
+                } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
                 await PostTest();

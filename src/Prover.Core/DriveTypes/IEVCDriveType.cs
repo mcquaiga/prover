@@ -4,7 +4,7 @@
     {
         decimal? UnCorrectedInputVolume(decimal appliedInput);
         string Discriminator { get; }
-        int MaxUnCorrected();
+        int MaxUncorrectedPulses();
         bool HasPassed { get; }
     }
 }

@@ -14,7 +14,7 @@ using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
-using Prover.Core.VerificationTests.VolumeTest;
+using Prover.Core.VerificationTests.VolumeVerification;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests

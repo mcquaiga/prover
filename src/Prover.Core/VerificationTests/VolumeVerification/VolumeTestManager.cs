@@ -3,11 +3,10 @@ using Caliburn.Micro;
 using MccDaq;
 using NLog;
 using Prover.CommProtocol.Common;
-using Prover.Core.Models.Instruments;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using LogManager = NLog.LogManager;
+using LogManager = Caliburn.Micro.LogManager;
 
-namespace Prover.Core.VerificationTests.VolumeTest
+namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public abstract class VolumeTestManager
     {
@@ -20,30 +19,19 @@ namespace Prover.Core.VerificationTests.VolumeTest
         protected bool RequestStopTest;
         protected bool RunningTest = false;
 
-        protected VolumeTestManager(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
-            EvcCommunicationClient instrumentComm)
+        protected VolumeTestManager(
+            IEventAggregator eventAggregator,
+            IDAQInputService daqInputService)
         {
             EventAggreator = eventAggregator;
-            InstrumentCommunicator = instrumentComm;
-            VolumeTest = volumeTest;
 
             FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
-        public Models.Instruments.VolumeTest VolumeTest { get; private set; }
-
         public virtual void StopVolumeTest()
         {
             RequestStopTest = true;
-        }
-
-        protected virtual async Task ZeroInstrumentVolumeItems()
-        {
-            await InstrumentCommunicator.Connect();
-            await InstrumentCommunicator.SetItemValue(0, "0");
-            await InstrumentCommunicator.SetItemValue(2, "0");
-            await InstrumentCommunicator.Disconnect();
         }
 
         public abstract Task PreTest();

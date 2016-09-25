@@ -1,6 +1,4 @@
-﻿using Prover.Core.VerificationTests.VolumeTest;
-
-namespace Prover.GUI.Common.Events
+﻿namespace Prover.GUI.Common.Events
 {
     public class InstrumentUpdateEvent
     {
