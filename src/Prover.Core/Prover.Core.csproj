@@ -196,7 +196,7 @@
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
@@ -238,7 +238,7 @@
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">

@@ -8,12 +8,12 @@ using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManager : VolumeTestManager
+    public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerCommunicator _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
+        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
             EvcCommunicationClient instrumentComm, TachometerCommunicator tachComm)
             : base(eventAggregator, volumeTest, instrumentComm)
         {

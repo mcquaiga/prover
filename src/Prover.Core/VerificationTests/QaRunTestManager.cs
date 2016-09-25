@@ -44,7 +44,7 @@ namespace Prover.Core.VerificationTests
         public IVerifier Verifier { get; private set; }
         public Instrument Instrument { get; private set; }
         public EvcCommunicationClient CommunicationClient { get; }
-        public VolumeTestManager VolumeTestManager { get; set; }
+        public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
 
         public void Dispose()
         {
@@ -73,7 +73,7 @@ namespace Prover.Core.VerificationTests
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                await VolumeTestManager.PreTest();
+                await VolumeTestManagerBase.PreTest();
         }
 
         public async Task DownloadVerificationTestItems(int level)

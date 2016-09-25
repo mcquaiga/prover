@@ -14,7 +14,7 @@ namespace Prover.Core.VerificationTests.Mechanical
         //    InstrumentCommunicator instrumentComm, BaseVolumeVerificationManager volumeTestManager)
         //    : base(container, instrument, instrumentComm)
         //{
-        //    VolumeTestManager = volumeTestManager;
+        //    VolumeTestManagerBase = volumeTestManager;
         //}
 
         //public static async Task<MechanicalQaRunTestManager> Create(IUnityContainer container, InstrumentType instrumentType,
