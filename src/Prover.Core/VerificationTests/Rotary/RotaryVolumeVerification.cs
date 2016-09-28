@@ -27,7 +27,7 @@ namespace Prover.Core.VerificationTests.Rotary
         {
             if (!RunningTest)
             {
-                //await RunSyncTest();
+                await RunSyncTest();
                 
                 if (_tachometerCommunicator != null)
                     await _tachometerCommunicator?.ResetTach();
