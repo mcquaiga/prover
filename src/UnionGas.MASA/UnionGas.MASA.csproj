@@ -136,7 +136,7 @@
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
       <DependentUpon>CompanyNumberDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ExportManager.cs" />
+    <Compile Include="Exporter\ExportManager.cs" />
     <Compile Include="Models\ExportDefinition.cs" />
     <Compile Include="Service References\DCRWebService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -144,7 +144,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="Translate.cs" />
+    <Compile Include="Exporter\Translate.cs" />
     <Compile Include="Verifiers\CompanyNumberVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

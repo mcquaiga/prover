@@ -9,6 +9,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
@@ -17,26 +18,18 @@ namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberVerifier : IVerifier
     {
-        public CompanyNumberVerifier(
-            IUnityContainer container, 
-            EvcCommunicationClient commClient,
-            string serviceUriString,
-            Instrument instrument)
+        public CompanyNumberVerifier(IUnityContainer container, string serviceUriString)
         {
             Container = container;
-            CommClient = commClient;
             WebServiceUrl = serviceUriString;
-            Instrument = instrument;
         }
 
         public IUnityContainer Container { get; }
-        public Instrument Instrument { get; }
-        public EvcCommunicationClient CommClient { get; }
         public string WebServiceUrl { get; }
 
-        public async Task<object> Verify()
+        public async Task<object> Verify(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
-            var companyNumberItem = Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.ToString();
 
             var meterDto = await VerifyWithWebService(companyNumber);
@@ -47,11 +40,11 @@ namespace UnionGas.MASA.Verifiers
                 meterDto = await VerifyWithWebService(newCompanyNumber);
                 if (meterDto != null)
                 {
-                    var success = await UpdateInstrumentCompanyNumber(newCompanyNumber);
+                    await UpdateInstrumentCompanyNumber(evcCommunicationClient, instrument, newCompanyNumber);
                 }
             }
 
-            return meterDto != null;
+            return true;
         }
 
         private string GetNewCompanyNumber()
@@ -70,20 +63,23 @@ namespace UnionGas.MASA.Verifiers
                 {
                     service.Endpoint.Address = new EndpointAddress(WebServiceUrl);
 
-                    return service.GetValidatedEvcDeviceByInventoryCodeAsync(companyNumber).Result.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+                    return service.GetValidatedEvcDeviceByInventoryCode(companyNumber);
                 }
             });
         }
 
-        public async Task<bool> UpdateInstrumentCompanyNumber(string newCompanyNumber)
+        public async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument, string newCompanyNumber)
         {
-            await CommClient.Connect();
-            var response = await CommClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
-            await CommClient.Disconnect();
+            await commClient.Connect();
+            var response = await commClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
+            await commClient.Disconnect();
 
             if (response)
-                Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber.ToString();
-
+            {
+                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber.ToString();
+                await Container.Resolve<IInstrumentStore<Instrument>>().UpsertAsync(instrument);
+            }
+            
             return response;
         }
     }

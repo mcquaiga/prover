@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
-using Prover.Core.Models.Instruments;
-using NLog;
-using UnionGas.MASA.Models;
-using Prover.Core.ExternalIntegrations;
-using Microsoft.Practices.ObjectBuilder2;
-using Prover.Core.Storage;
 using Microsoft.Practices.Unity;
+using NLog;
+using Prover.Core.ExternalIntegrations;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
 
-namespace UnionGas.MASA
+namespace UnionGas.MASA.Exporter
 {
     public class ExportManager : IExportTestRun
     {
@@ -40,7 +33,7 @@ namespace UnionGas.MASA
         public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
         {
             var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
-            var qaTestRuns = forExport.Select(testRun => Translate.RunTranslationForExport(testRun)).ToList();
+            var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
 
             var isSuccess = await SendResultsToWebService(qaTestRuns);
             if (isSuccess)

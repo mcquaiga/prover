@@ -1,21 +1,14 @@
-﻿using Prover.CommProtocol.Common.Items;
+﻿using System.Collections.Generic;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnionGas.MASA.Models;
 
-namespace UnionGas.MASA
+namespace UnionGas.MASA.Exporter
 {
     public static class Translate
     {
         public static DCRWebService.QARunEvcTestResult RunTranslationForExport(Instrument instrument)
         {
-            var qaRun1 = new DCRWebService.QARunEvcTestResult();
-
             var verificationTests = new List<DCRWebService.VerificationTest>();
             
             foreach(var vt in instrument.VerificationTests)
