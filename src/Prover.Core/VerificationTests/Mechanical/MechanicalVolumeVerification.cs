@@ -4,14 +4,18 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.Models.Instruments;
+using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.VerificationTests.Mechanical
 {
     public sealed class MechanicalVolumeVerification : VolumeVerificationManager
     {
-        public MechanicalVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest, EvcCommunicationClient commClient) 
-            : base(eventAggregator, volumeTest, commClient)
+        private IDInOutBoard _outputBoard;
+        private TachometerCommunicator _tachometerCommunicator;
+        public MechanicalVolumeVerification(IEventAggregator eventAggregator, VolumeTest volumeTest, InstrumentCommunicator instrumentComm) 
+            : base(eventAggregator, volumeTest, instrumentComm)
         {
+            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
         public override async Task StartVolumeTest()
@@ -24,10 +28,14 @@ namespace Prover.Core.VerificationTests.Mechanical
 
                 VolumeTest.PulseACount = 0;
                 VolumeTest.PulseBCount = 0;
-                
+
+                //Reset Tach setting
+                //await _tachometerCommunicator?.ResetTach();
+
+                _outputBoard.StartMotor();
+
                 await RunningVolumeTest();
-            }
-            
+            }            
         }
 
         public override async Task RunningVolumeTest()
@@ -42,7 +50,9 @@ namespace Prover.Core.VerificationTests.Mechanical
                     VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !RequestStopTest);
 
+                _outputBoard?.StopMotor();
                 await FinishVolumeTest();
+
             });
         }
 
@@ -52,10 +62,9 @@ namespace Prover.Core.VerificationTests.Mechanical
             {
                 System.Threading.Thread.Sleep(250);
 
-                await InstrumentCommunicator.Connect();
+                VolumeTest.AppliedInput = await _tachometerCommunicator?.ReadTach();
                 VolumeTest.AfterTestItems = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
                 await ZeroInstrumentVolumeItems();
-
                 Log.Info("Volume test finished!");
                 RunningTest = false;
             });

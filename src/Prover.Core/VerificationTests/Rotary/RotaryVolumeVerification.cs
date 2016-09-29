@@ -65,8 +65,7 @@ namespace Prover.Core.VerificationTests.Rotary
                     Thread.Sleep(250);
 
                     VolumeTest.AfterTestItems = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
-
-                    await ZeroInstrumentVolumeItems();
+                    await ZeroInstrumentVolumeItems(); 
 
                     try
                     {
@@ -87,6 +86,7 @@ namespace Prover.Core.VerificationTests.Rotary
                 finally
                 {
                     RunningTest = false;
+                    await InstrumentCommunicator.Disconnect();
                 }
             });
         }
@@ -95,15 +95,15 @@ namespace Prover.Core.VerificationTests.Rotary
         {
             await Task.Run(async () =>
             {
-                if (!RunningTest)
+                if (!_runningTest)
                 {
-                    Log.Info("Syncing Volume...");
-                    await InstrumentCommunicator.Disconnect();
+                    _log.Info("Syncing volume...");
+
+                    await _instrumentCommunicator.Disconnect();
+                    _outputBoard.StartMotor();
 
                     VolumeTest.PulseACount = 0;
                     VolumeTest.PulseBCount = 0;
-
-                    _outputBoard.StartMotor();
 
                     do
                     {
@@ -112,7 +112,7 @@ namespace Prover.Core.VerificationTests.Rotary
                     } while (VolumeTest.UncPulseCount < 1);
 
                     _outputBoard.StopMotor();
-                    Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(500);
                 }
             });
         }

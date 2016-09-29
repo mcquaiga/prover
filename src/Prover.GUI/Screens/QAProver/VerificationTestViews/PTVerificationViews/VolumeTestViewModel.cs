@@ -41,6 +41,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
 
+        public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
         public decimal? TrueCorrected
         {
             get
@@ -85,7 +86,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
         {
             NotifyOfPropertyChange(() => AppliedInput);
             NotifyOfPropertyChange(() => TrueCorrected);
-            NotifyOfPropertyChange(() => Volume);
+            NotifyOfPropertyChange(() => TrueUncorrected);
             NotifyOfPropertyChange(() => StartUncorrected);
             NotifyOfPropertyChange(() => EndUncorrected);
             NotifyOfPropertyChange(() => StartCorrected);
@@ -93,8 +94,11 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
             NotifyOfPropertyChange(() => StartCorrected);
+            NotifyOfPropertyChange(() => UncorrectedPulseCount);
+            NotifyOfPropertyChange(() => CorrectedPulseCount);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
+            NotifyOfPropertyChange(() => Volume);
         }
     }
 }
