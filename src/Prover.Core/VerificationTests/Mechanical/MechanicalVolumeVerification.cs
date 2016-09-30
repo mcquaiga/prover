@@ -48,8 +48,8 @@ namespace Prover.Core.VerificationTests
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    VolumeTest.PulseACount += _firstPortAInputBoard.ReadInput();
-                    VolumeTest.PulseBCount += _firstPortBInputBoard.ReadInput();
+                    VolumeTest.PulseACount += await _firstPortAInputBoard.ReadInput();
+                    VolumeTest.PulseBCount += await _firstPortBInputBoard.ReadInput();
                 } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUnCorrected() && !_requestStopTest);
 
                 _outputBoard?.StopMotor();

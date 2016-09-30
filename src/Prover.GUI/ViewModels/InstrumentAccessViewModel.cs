@@ -93,13 +93,13 @@ namespace Prover.GUI.ViewModels
 
         public async Task ListenForPulses()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    PulserACount += InputABoard.ReadInput();
-                    PulserBCount += InputBBoard.ReadInput();
+                    PulserACount += await InputABoard.ReadInput();
+                    PulserBCount += await InputBBoard.ReadInput();
                     NotifyOfPropertyChange(() => PulserACount);
                     NotifyOfPropertyChange(() => PulserBCount);
                     NotifyOfPropertyChange(() => InputABoard);
