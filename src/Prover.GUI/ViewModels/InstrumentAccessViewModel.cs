@@ -88,19 +88,18 @@ namespace Prover.GUI.ViewModels
                     var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
                     InstrumentCommunicator = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
                 }
-            });      
-                  
+            });            
         }
 
         public async Task ListenForPulses()
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    PulserACount += await InputABoard.ReadInput();
-                    PulserBCount += await InputBBoard.ReadInput();
+                    PulserACount += InputABoard.ReadInput();
+                    PulserBCount += InputBBoard.ReadInput();
                     NotifyOfPropertyChange(() => PulserACount);
                     NotifyOfPropertyChange(() => PulserBCount);
                     NotifyOfPropertyChange(() => InputABoard);

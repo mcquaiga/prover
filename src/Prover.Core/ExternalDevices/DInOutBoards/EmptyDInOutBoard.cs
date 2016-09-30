@@ -13,7 +13,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             throw new NotImplementedException();
         }
 
-        public async Task<int> ReadInput()
+        public int ReadInput()
         {
             return 0;
         }
