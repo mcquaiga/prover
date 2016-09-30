@@ -50,7 +50,7 @@ namespace Prover.GUI.ViewModels
         public InstrumentAccessViewModel(IUnityContainer _container)
         {
             this._container = _container;
-            SetupDAQBoard().Wait();
+            SetupDAQBoard();
         }
 
         public override void CanClose(Action<bool> callback)
@@ -123,14 +123,11 @@ namespace Prover.GUI.ViewModels
             });
         }
 
-        private async Task SetupDAQBoard()
+        private void SetupDAQBoard()
         {
-            await Task.Run(() =>
-            {
-                OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
-                InputABoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
-                InputBBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
-            });
+            OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
+            InputABoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
+            InputBBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
         public void Handle(ScreenChangeEvent message)
