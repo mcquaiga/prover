@@ -30,24 +30,24 @@
             <TextBlock Text="Value" />
             <TextBox x:Name="ItemValue" Width="150"             />
         </StackPanel>
-        <Button Grid.Row="1"
+        <Button
 							Grid.Column="0"
 							Width="150"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Read"	>
+							Content="Read" Margin="50,93,50,0"	>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="ReadInstrumentValue" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-        <Button Grid.Row="1"
+        <Button
 							Grid.Column="1"
 							Width="150"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center"
-							Content="Write">
+							Content="Write" Margin="45,90,55,3">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="WriteInstrumentValue" />
@@ -55,5 +55,44 @@
             </i:Interaction.Triggers>
         </Button>
         
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            
+            <TextBlock 
+            x:Name="PulserACount"
+            />
+            <TextBlock>Pulse A Count</TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock 
+            x:Name="PulserBCount" />
+            <TextBlock>Pulse B Count</TextBlock>
+        </StackPanel>
+
+        <Button Grid.Row="1"
+                    Grid.Column="0"
+							Width="150"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Listen" Margin="45,90,55,3">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="ListenForPulses" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <Button Grid.Row="1"
+                    Grid.Column="1"
+							Width="150"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Start/Stop Motor" Margin="45,90,55,3">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="StartStopMotor" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
     </Grid>
 </UserControl>

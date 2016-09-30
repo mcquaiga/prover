@@ -32,7 +32,7 @@ namespace Prover.Core.VerificationTests
                 VolumeTest.PulseBCount = 0;
 
                 //Reset Tach setting
-                //await _tachometerCommunicator?.ResetTach();
+                await _tachometerCommunicator?.ResetTach();
 
                 _outputBoard.StartMotor();
 

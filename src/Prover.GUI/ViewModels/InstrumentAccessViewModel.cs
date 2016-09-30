@@ -13,13 +13,23 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MccDaq;
+using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.GUI.ViewModels
 {
     public class InstrumentAccessViewModel : ReactiveScreen, IHandle<ScreenChangeEvent>, IDisposable
     {
-        IUnityContainer _container;
+        readonly IUnityContainer _container;
+        private bool _isMotorRunning = false;
         public InstrumentCommunicator InstrumentCommunicator { get; private set; }
+
+        public IDInOutBoard OutputBoard { get; private set; }
+        public IDInOutBoard InputABoard { get; private set; }
+        public IDInOutBoard InputBBoard { get; private set; }
+
+        public long PulserACount { get; private set; }
+        public long PulserBCount { get; private set; }
 
         public static dynamic WindowInstrumentAccess
         {
@@ -40,6 +50,7 @@ namespace Prover.GUI.ViewModels
         public InstrumentAccessViewModel(IUnityContainer _container)
         {
             this._container = _container;
+            SetupDAQBoard().Wait();
         }
 
         public override void CanClose(Action<bool> callback)
@@ -78,6 +89,48 @@ namespace Prover.GUI.ViewModels
                     InstrumentCommunicator = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
                 }
             });            
+        }
+
+        public async Task ListenForPulses()
+        {
+            await Task.Run(() =>
+            {
+                do
+                {
+                    //TODO: Raise events so the UI can respond
+                    PulserACount += InputABoard.ReadInput();
+                    PulserBCount += InputBBoard.ReadInput();
+                    NotifyOfPropertyChange(() => PulserACount);
+                    NotifyOfPropertyChange(() => PulserBCount);
+                } while (true);
+            });
+        }
+
+        public async Task StartStopMotor()
+        {
+            await Task.Run(() =>
+            {
+                if (!_isMotorRunning)
+                {
+                    OutputBoard.StartMotor();
+                    _isMotorRunning = true;
+                }
+                else
+                {
+                    OutputBoard.StopMotor();
+                    _isMotorRunning = false;
+                }
+            });
+        }
+
+        private async Task SetupDAQBoard()
+        {
+            await Task.Run(() =>
+            {
+                OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
+                InputABoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
+                InputBBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
+            });
         }
 
         public void Handle(ScreenChangeEvent message)
