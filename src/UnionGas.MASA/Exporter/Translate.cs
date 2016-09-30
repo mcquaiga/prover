@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -18,7 +20,7 @@ namespace UnionGas.MASA.Exporter
 
             var qaRun = new DCRWebService.QARunEvcTestResult()
             {
-                InventoryCode = instrument.SiteNumber2.ToString(),
+                InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture),
                 TestDate = instrument.TestDateTime,
                 DriveType = "Rotary",
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
@@ -30,7 +32,7 @@ namespace UnionGas.MASA.Exporter
 
                 PressureInfo = new DCRWebService.PressureHeader
                 {
-                    BasePressure = instrument.EvcBasePressure().Value,
+                    BasePressure = instrument.EvcBasePressure().HasValue ? instrument.EvcBasePressure().Value : Decimal.Zero,
                     PressureRange = instrument.EvcPressureRange().Value,
                     PressureUnits = instrument.PressureUnits(),
                     TransducerType = instrument.GetTransducerType().ToString(),
