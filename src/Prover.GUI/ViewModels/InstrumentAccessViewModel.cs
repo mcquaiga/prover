@@ -102,6 +102,8 @@ namespace Prover.GUI.ViewModels
                     PulserBCount += InputBBoard.ReadInput();
                     NotifyOfPropertyChange(() => PulserACount);
                     NotifyOfPropertyChange(() => PulserBCount);
+                    NotifyOfPropertyChange(() => InputABoard);
+                    NotifyOfPropertyChange(() => InputBBoard);
                 } while (true);
             });
         }

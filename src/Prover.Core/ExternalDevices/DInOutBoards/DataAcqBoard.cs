@@ -52,7 +52,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             short value = 0;
 
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
-
+            InputValue = value;
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
                 if (value != 255)
@@ -77,6 +77,8 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             }
             return 0;           
         }
+
+        public short InputValue { get; private set; }
 
         private void Out(MotorValues outputValue)
         {

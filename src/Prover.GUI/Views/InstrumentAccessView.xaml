@@ -60,12 +60,14 @@
             <TextBlock 
             x:Name="PulserACount"
             />
+            <TextBlock x:Name="InputABoard_InputValue" />
             <TextBlock>Pulse A Count</TextBlock>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1">
             <TextBlock 
             x:Name="PulserBCount" />
+            <TextBlock x:Name="InputBBoard_InputValue" />
             <TextBlock>Pulse B Count</TextBlock>
         </StackPanel>
 
