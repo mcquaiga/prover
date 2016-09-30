@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MccDaq;
 using NLog;
 
 namespace Prover.Core.ExternalDevices.DInOutBoards
 {
-    public class DataAcqBoard : IDisposable, IDInOutBoard
+    public class DataAcqBoard : IDInOutBoard, IDisposable
     {
         private enum MotorValues
         {
@@ -47,40 +48,41 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             Out(MotorValues.Stop);
         }
 
-        public int ReadInput()
+        public async Task<int> ReadInput()
         {
-            short value = 0;
-
-            _ulStatErrorInfo = _board.DIn(_channelType, out value);
-            if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
+            return await Task.Run(() =>
             {
+                short value;
 
-                if (value != 255)
+                _ulStatErrorInfo = _board.DIn(_channelType, out value);
+
+                if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
                 {
-                    if (_pulseIsCleared)
+                    if (value != 255)
                     {
-                        _log.Debug($"Input value = {0}", value);
-                        _pulseIsCleared = false;
-                        return 1;
+                        if (_pulseIsCleared)
+                        {
+                            _log.Debug($"Input value = {value}");
+                            _pulseIsCleared = false;
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        _log.Debug($"Input value = {value}");
+                        _pulseIsCleared = true;
                     }
                 }
                 else
                 {
-                    _log.Debug($"Input value = {0}", value);
-                    _pulseIsCleared = true;
+                    if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
+                    {
+                        _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
+                    }
                 }
-            }
-            else
-            {
-                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
-                {
-                    _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
-                }
-            }
-            return 0;           
+                return 0;
+            });
         }
-
-        public short InputValue { get; private set; }
 
         private void Out(MotorValues outputValue)
         {

@@ -1,9 +1,11 @@
-﻿namespace Prover.Core.ExternalDevices.DInOutBoards
+﻿using System.Threading.Tasks;
+
+namespace Prover.Core.ExternalDevices.DInOutBoards
 {
     public interface IDInOutBoard
     {
         void Dispose();
-        int ReadInput();
+        Task<int> ReadInput();
         void StartMotor();
         void StopMotor();
     }
