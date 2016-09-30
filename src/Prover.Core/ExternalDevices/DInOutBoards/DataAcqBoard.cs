@@ -59,14 +59,14 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
                 {
                     if (_pulseIsCleared)
                     {
-                        _log.Debug($"Input value = {0}", value);
+                        _log.Debug($"Input value = {value}");
                         _pulseIsCleared = false;
                         return 1;
                     }
                 }
                 else
                 {
-                    _log.Debug($"Input value = {0}", value);
+                    _log.Debug($"Input value = {value}");
                     _pulseIsCleared = true;
                 }
             }
