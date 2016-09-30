@@ -55,6 +55,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             InputValue = value;
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
+                _log.Debug($"Input value = {0}", value);
                 if (value != 255)
                 {
                     if (_pulseIsCleared)
