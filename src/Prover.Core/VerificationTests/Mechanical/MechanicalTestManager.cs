@@ -11,6 +11,7 @@ using Caliburn.Micro;
 using Prover.Core.DriveTypes;
 using Prover.Core.Models;
 using Prover.Core.EVCTypes;
+using Prover.Core.VerificationTests.Rotary;
 
 namespace Prover.Core.VerificationTests.Mechanical
 {

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Prover.Core.DriveTypes;
 using Prover.Core.EVCTypes;
+using Prover.Core.VerificationTests.Rotary;
 
 namespace Prover.Core.VerificationTests
 {
