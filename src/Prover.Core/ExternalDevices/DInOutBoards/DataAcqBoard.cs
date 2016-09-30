@@ -52,20 +52,21 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             short value = 0;
 
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
-            InputValue = value;
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
-                _log.Debug($"Input value = {0}", value);
+
                 if (value != 255)
                 {
                     if (_pulseIsCleared)
                     {
+                        _log.Debug($"Input value = {0}", value);
                         _pulseIsCleared = false;
                         return 1;
                     }
                 }
                 else
                 {
+                    _log.Debug($"Input value = {0}", value);
                     _pulseIsCleared = true;
                 }
             }
