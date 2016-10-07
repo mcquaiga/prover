@@ -48,7 +48,7 @@ namespace Prover.CommProtocol.Common.IO
         public sealed override ISubject<string> DataSentObservable { get; protected set; }
         public override string Name => _serialStream.PortName;
 
-        protected sealed override IObservable<char> DataReceived()
+        public sealed override IObservable<char> DataReceived()
         {
             return Observable.FromEventPattern<SerialDataReceivedEventArgs>(_serialStream, "DataReceived")
                 .SelectMany(_ =>

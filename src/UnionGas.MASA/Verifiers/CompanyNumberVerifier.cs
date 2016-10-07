@@ -68,7 +68,7 @@ namespace UnionGas.MASA.Verifiers
             });
         }
 
-        public async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument, string newCompanyNumber)
+        private async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument, string newCompanyNumber)
         {
             await commClient.Connect();
             var response = await commClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
