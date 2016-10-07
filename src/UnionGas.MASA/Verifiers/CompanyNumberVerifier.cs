@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
+using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
@@ -13,18 +14,25 @@ using Prover.Core.Storage;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
+using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberVerifier : IVerifier
     {
-        public CompanyNumberVerifier(IUnityContainer container, DCRWebServiceSoap webService)
+        private Logger _log = LogManager.GetCurrentClassLogger();
+
+        public CompanyNumberVerifier(IWindowManager windowManager, IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService)
         {
-            Container = container;
+            WindowManager = windowManager;
+            InstrumentStore = instrumentStore;
             WebService = webService;
         }
 
-        public IUnityContainer Container { get; }
+        public IInstrumentStore<Instrument> InstrumentStore { get; set; }
+
+        public IWindowManager WindowManager { get; set; }
+
         public DCRWebServiceSoap WebService { get; }
 
         public async Task<object> Verify(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
@@ -49,10 +57,21 @@ namespace UnionGas.MASA.Verifiers
 
         private string GetNewCompanyNumber()
         {
-            var viewModel = new CompanyNumberDialogViewModel();
-            ScreenManager.ShowDialog(Container, viewModel);
+            while (true)
+            {
+                var viewModel = new CompanyNumberDialogViewModel();
+                ScreenManager.ShowDialog(WindowManager, viewModel);
 
-            return viewModel.CompanyNumber;
+                var companyNumber = viewModel.CompanyNumber;
+
+                _log.Debug($"New company number entered: {companyNumber}");
+
+                long result;
+                if (long.TryParse(companyNumber, out result))
+                {
+                    return companyNumber;
+                }
+            }
         }
 
         private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
@@ -78,7 +97,7 @@ namespace UnionGas.MASA.Verifiers
             if (response)
             {
                 instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber.ToString();
-                await Container.Resolve<IInstrumentStore<Instrument>>().UpsertAsync(instrument);
+                await InstrumentStore.UpsertAsync(instrument);
             }
             
             return response;

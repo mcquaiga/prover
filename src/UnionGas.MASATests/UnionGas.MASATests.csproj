@@ -71,6 +71,10 @@
       <Project>{ffbca1c4-59cc-4401-bc0b-b97c53a9559b}</Project>
       <Name>Prover.CommProtocol.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
+      <Project>{DE48160F-095D-40B1-8790-6CB560024CE5}</Project>
+      <Name>Prover.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
       <Project>{1C42434C-8218-44AA-B132-A5A57B9DE8B1}</Project>
       <Name>UnionGas.MASA</Name>
