@@ -43,7 +43,7 @@ namespace Prover.Core.Models.Instruments
         public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
-        public abstract InstrumentType InstrumentType { get; }
+        public abstract InstrumentTypes InstrumentType { get; }
 
         public override void OnInitializing()
         {

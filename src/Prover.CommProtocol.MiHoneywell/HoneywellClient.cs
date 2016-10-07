@@ -14,13 +14,13 @@ namespace Prover.CommProtocol.MiHoneywell
 {
     public class HoneywellClient : EvcCommunicationClient
     {
-        public HoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
+        public HoneywellClient(CommPort commPort, InstrumentTypes instrumentType) : base(commPort)
         {
             InstrumentType = instrumentType;
             ItemDetails = ItemHelpers.LoadItems(InstrumentType);
         }
 
-        public InstrumentType InstrumentType { get; }
+        public InstrumentTypes InstrumentType { get; }
 
         public override IEnumerable<ItemMetadata> ItemDetails { get; }
 

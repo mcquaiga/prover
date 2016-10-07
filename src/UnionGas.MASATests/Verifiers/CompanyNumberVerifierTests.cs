@@ -20,9 +20,7 @@ namespace UnionGas.MASATests.Verifiers
 
         [Test()]
         public void CompanyNumberVerifierTest()
-        {
-            
-
+        {            
 
             Assert.Pass();
         }

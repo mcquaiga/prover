@@ -190,7 +190,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => Instrument.InstrumentType;
+        public override InstrumentTypes InstrumentType => Instrument.InstrumentType;
 
         public override void OnInitializing()
         {

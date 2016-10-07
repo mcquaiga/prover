@@ -10,25 +10,25 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     {
         private const string ItemDefinitionsFolder = "ItemDefinitions";
 
-        public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
+        public static IEnumerable<ItemValue> LoadItems(InstrumentTypes instrumentType, Dictionary<int, string> itemValues)
         {
             var metadata = LoadItems(instrumentType);
 
             return itemValues.Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
         }
 
-        public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
+        public static IEnumerable<ItemMetadata> LoadItems(InstrumentTypes type)
         {
             var path = string.Empty;
             switch (type)
             {
-                case InstrumentType.MiniMax:
+                case InstrumentTypes.MiniMax:
                     path = "MiniMaxItems.xml";
                     break;
-                case InstrumentType.MiniAT:
+                case InstrumentTypes.MiniAT:
                     path = "MiniATItems.xml";
                     break;
-                case InstrumentType.EC350:
+                case InstrumentTypes.EC350:
                     path = "EC350_Items.xml";
                     break;
             }

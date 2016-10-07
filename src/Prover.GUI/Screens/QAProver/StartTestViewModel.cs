@@ -10,7 +10,6 @@ using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
-using Prover.Core.VerificationTests.Mechanical;
 using Prover.GUI.Common;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
@@ -18,7 +17,7 @@ using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>, IHandle<VerificationNotValidEvent>
+    public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
     {
         private readonly IUnityContainer _container;
         private bool _miniAtChecked;
@@ -68,11 +67,7 @@ namespace Prover.GUI.Screens.QAProver
             VerifySettings();
         }
 
-        public void Handle(VerificationNotValidEvent message)
-        {
-            ScreenManager.ShowDialog(_container, message.ViewModel);
-        }
-
+       
         public async Task CancelCommand()
         {
             await ScreenManager.Change(_container, new MainMenuViewModel(_container));
@@ -88,34 +83,34 @@ namespace Prover.GUI.Screens.QAProver
                 {
                     var irdaPort = new IrDAPort();
 
-                    InstrumentQaRunTestManager =
-                        await MechanicalQaRunTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentType.EC350));
+                    //InstrumentQaRunTestManager =
+                    //    await QaRunTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentTypes.EC350));
                 }
                 else
                 {
-                    var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
+                    //var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
 
-                    if (IsMiniMaxChecked)
-                    {
-                        InstrumentQaRunTestManager = new QaRunTestManager(
-                            _container,
-                            new HoneywellClient(commPort, InstrumentType.MiniMax),
-                            TachCommPortName,
-                            null);
-                        //await
-                        //    RotaryQaRunTestManager.CreateRotaryTest(_container,
-                        //        new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
-                        //        null);
+                    //if (IsMiniMaxChecked)
+                    //{
+                    //    InstrumentQaRunTestManager = new QaRunTestManager(
+                    //        _container,
+                    //        new HoneywellClient(commPort, InstrumentTypes.MiniMax),
+                    //        TachCommPortName,
+                    //        null);
+                    //    //await
+                    //    //    RotaryQaRunTestManager.CreateRotaryTest(_container,
+                    //    //        new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
+                    //    //        null);
 
-                        await InstrumentQaRunTestManager.RunVerifier();
-                    }
-                    else if (IsMiniATChecked)
-                    {
-                        InstrumentQaRunTestManager =
-                            await
-                                MechanicalQaRunTestManager.Create(_container,
-                                    new HoneywellClient(commPort, InstrumentType.MiniAT));
-                    }
+                    //    await InstrumentQaRunTestManager.RunVerifier();
+                    //}
+                    //else if (IsMiniATChecked)
+                    //{
+                    //    InstrumentQaRunTestManager =
+                    //        await
+                    //            MechanicalQaRunTestManager.Create(_container,
+                    //                new HoneywellClient(commPort, InstrumentTypes.MiniAT));
+                    //}
                 }                
                 
                 await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentQaRunTestManager));

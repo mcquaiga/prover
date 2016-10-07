@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
+using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
@@ -13,116 +15,125 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerCommunicator _tachometerCommunicator;
 
-        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, Models.Instruments.VolumeTest volumeTest,
-            EvcCommunicationClient instrumentComm, TachometerCommunicator tachComm)
-            : base(eventAggregator, volumeTest, instrumentComm)
+        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, IPulseInputService pulseInputService,
+            TachometerCommunicator tachComm)
+            : base(eventAggregator, pulseInputService)
         {
             _tachometerCommunicator = tachComm;
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-        public override async Task PreTest()
-        {
-            if (!RunningTest)
-            {
-                await RunSyncTest();
-                
-                if (_tachometerCommunicator != null)
-                    await _tachometerCommunicator?.ResetTach();
 
-                await InstrumentCommunicator.Connect();
-                VolumeTest.Items = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
-                await InstrumentCommunicator.Disconnect();
+        //protected override async Task ZeroInstrumentVolumeItems()
+        //{
+        //    await InstrumentCommunicator.Connect();
+        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
+        //    await InstrumentCommunicator.SetItemValue(434, "0");
+        //    await InstrumentCommunicator.SetItemValue(113, "0");
+        //    await InstrumentCommunicator.SetItemValue(892, "0");
+        //    await base.ZeroInstrumentVolumeItems();
+        //}
 
-                await ExecutingTest();
-            }
-        }
-
-        public override async Task ExecutingTest()
+        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
         {
             await Task.Run(async () =>
+            {
+                Log.Info("Running volume sync test...");
+
+                await commClient.Disconnect();
+
+                ResetPulseCounts(volumeTest);
+
+                _outputBoard.StartMotor();
+
+                do
+                {
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                } while (volumeTest.UncPulseCount < 1);
+
+                _outputBoard.StopMotor();
+            });
+        }
+
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
+        {
+            await InstrumentCommunicator.Connect();
+            volumeTest.Items = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
+            await InstrumentCommunicator.Disconnect();
+
+            if (_tachometerCommunicator != null)
+                await _tachometerCommunicator?.ResetTach();
+
+            ResetPulseCounts(volumeTest);
+        }
+
+        private static void ResetPulseCounts(VolumeTest volumeTest)
+        {
+            volumeTest.PulseACount = 0;
+            volumeTest.PulseBCount = 0;
+        }
+
+        protected override async Task ExecutingTest(VolumeTest volumeTest)
+        {
+            await Task.Run(() =>
             {
                 do
                 {
                     //TODO: Raise events so the UI can respond
-                    VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                    VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !RequestStopTest);
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
-                await PostTest();
             });
         }
 
-        public override async Task PostTest()
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
         {
             await Task.Run(async () =>
             {
                 try
                 {
-                    Thread.Sleep(250);
-
-                    VolumeTest.AfterTestItems = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
-                    await ZeroInstrumentVolumeItems(); 
-
-                    try
+                    var instrumentTask = Task.Run(async () =>
                     {
-                        if (_tachometerCommunicator != null)
-                            VolumeTest.AppliedInput = await _tachometerCommunicator.ReadTach();
-                        else
-                            VolumeTest.AppliedInput = 0;
+                        volumeTest.AfterTestItems =
+                            await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
 
-                        Log.Info($"Tachometer reading: {VolumeTest.AppliedInput}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"An error occured communication with the tachometer: {ex}");
-                    }
+                        if (evcPostTestItemReset != null)
+                            await evcPostTestItemReset.PostReset(commClient);
+                    });
 
-                    Log.Info("Volume test finished!");
+                    var appliedInputTask = SetAppliedInput(volumeTest);
+
+                    await Task.WhenAll(instrumentTask, appliedInputTask);
                 }
                 finally
                 {
-                    RunningTest = false;
                     await InstrumentCommunicator.Disconnect();
                 }
             });
         }
 
-        private async Task RunSyncTest()
+        private async Task SetAppliedInput(VolumeTest volumeTest)
         {
-            await Task.Run(async () =>
+            var result = 0;
+            try
             {
-                if (!_runningTest)
+                if (_tachometerCommunicator != null)
                 {
-                    _log.Info("Syncing volume...");
-
-                    await _instrumentCommunicator.Disconnect();
-                    _outputBoard.StartMotor();
-
-                    VolumeTest.PulseACount = 0;
-                    VolumeTest.PulseBCount = 0;
-
-                    do
-                    {
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < 1);
-
-                    _outputBoard.StopMotor();
-                    System.Threading.Thread.Sleep(500);
+                    result = await _tachometerCommunicator.ReadTach();
+                    Log.Debug($"Tachometer reading: {result}");
                 }
-            });
-        }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"An error occured communication with the tachometer: {ex}");
+            }
 
-        protected override async Task ZeroInstrumentVolumeItems()
-        {
-            await InstrumentCommunicator.Connect();
-            await InstrumentCommunicator.SetItemValue(264, "20140867");
-            await InstrumentCommunicator.SetItemValue(434, "0");
-            await InstrumentCommunicator.SetItemValue(113, "0");
-            await InstrumentCommunicator.SetItemValue(892, "0");
-            await base.ZeroInstrumentVolumeItems();
+            Log.Debug($"Applied Input: {result}");
+
+            volumeTest.AppliedInput = result;
         }
     }
 }

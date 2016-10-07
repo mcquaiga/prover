@@ -8,6 +8,7 @@ using Prover.CommProtocol.Common;
 using Prover.Core.ExternalIntegrations;
 using UnionGas.MASA.Verifiers;
 using Prover.Core.Settings;
+using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 
 namespace UnionGas.MASA
@@ -16,8 +17,10 @@ namespace UnionGas.MASA
     {
         public static void Initialize(IUnityContainer container)
         {
-            container.RegisterType<IVerifier, CompanyNumberVerifier>(new InjectionConstructor(container, SettingsManager.SettingsInstance.ExportServiceAddress));            
-            container.RegisterType<IExportTestRun, ExportManager>(new InjectionConstructor(container, SettingsManager.SettingsInstance.ExportServiceAddress));
+            container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("", SettingsManager.SettingsInstance.ExportServiceAddress));
+
+            container.RegisterType<IVerifier, CompanyNumberVerifier>();            
+            container.RegisterType<IExportTestRun, ExportManager>();
         }
     }
 }

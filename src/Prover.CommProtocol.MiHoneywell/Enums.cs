@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
-    public enum InstrumentType
+    public enum InstrumentTypes
     {
         Mini = 2,
         ECAT = 0,

@@ -18,14 +18,14 @@ namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberVerifier : IVerifier
     {
-        public CompanyNumberVerifier(IUnityContainer container, string serviceUriString)
+        public CompanyNumberVerifier(IUnityContainer container, DCRWebServiceSoap webService)
         {
             Container = container;
-            WebServiceUrl = serviceUriString;
+            WebService = webService;
         }
 
         public IUnityContainer Container { get; }
-        public string WebServiceUrl { get; }
+        public DCRWebServiceSoap WebService { get; }
 
         public async Task<object> Verify(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
@@ -49,7 +49,7 @@ namespace UnionGas.MASA.Verifiers
 
         private string GetNewCompanyNumber()
         {
-            var viewModel = new CompanyNumberDialogViewModel(this);
+            var viewModel = new CompanyNumberDialogViewModel();
             ScreenManager.ShowDialog(Container, viewModel);
 
             return viewModel.CompanyNumber;
@@ -59,12 +59,13 @@ namespace UnionGas.MASA.Verifiers
         {
             return await Task.Run(() =>
             {
-                using (var service = new DCRWebServiceSoapClient())
+                var request = new GetValidatedEvcDeviceByInventoryCodeRequest
                 {
-                    service.Endpoint.Address = new EndpointAddress(WebServiceUrl);
+                    Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
+                };
 
-                    return service.GetValidatedEvcDeviceByInventoryCode(companyNumber);
-                }
+                var response = WebService.GetValidatedEvcDeviceByInventoryCode(request);
+                return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
             });
         }
 

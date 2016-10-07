@@ -28,7 +28,7 @@ namespace Prover.Core.VerificationTests
         public QaRunTestManager(
             IUnityContainer container,
             EvcCommunicationClient commClient,
-            InstrumentType instrumentType,
+            InstrumentTypes instrumentType,
             IDriveType driveType,            
             IVerifier verifier)
         {
@@ -40,7 +40,7 @@ namespace Prover.Core.VerificationTests
         }
 
         public IDriveType DriveType { get; set; }
-        public InstrumentType InstrumentType { get; set; }
+        public InstrumentTypes InstrumentType { get; set; }
         public IVerifier Verifier { get; private set; }
         public Instrument Instrument { get; private set; }
         public EvcCommunicationClient CommunicationClient { get; }
@@ -72,8 +72,10 @@ namespace Prover.Core.VerificationTests
             await ReadingStabilizer.WaitForReadingsToStabilizeAsync(CommunicationClient, level);
             await DownloadVerificationTestItems(level);
 
-            if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                await VolumeTestManagerBase.PreTest();
+            if (Instrument.VolumeTest != null)
+            {
+                await VolumeTestManagerBase.RunTest(CommunicationClient, Instrument.VolumeTest, null);
+            }
         }
 
         public async Task DownloadVerificationTestItems(int level)
@@ -128,9 +130,16 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            Verifier = Container.Resolve<IVerifier>(new ParameterOverride("commClient", CommunicationClient),
-                new ParameterOverride("instrument", Instrument));
-            var success = await Verifier.Verify();
+            var verifiers = Container.ResolveAll<IVerifier>();
+
+            var enumerable = verifiers as IVerifier[] ?? verifiers.ToArray();
+            if (enumerable.Any())
+            {
+                foreach (var verifier in enumerable)
+                {
+                    await verifier.Verify(CommunicationClient, Instrument);
+                } 
+            }
         }
     }
 }

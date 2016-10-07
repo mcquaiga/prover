@@ -24,7 +24,7 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
+        public Instrument(InstrumentTypes instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
@@ -35,10 +35,10 @@ namespace Prover.Core.Models.Instruments
         }
 
         public DateTime TestDateTime { get; set; }
-        public InstrumentType Type { get; set; }
+        public InstrumentTypes Type { get; set; }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => Type;
+        public override InstrumentTypes InstrumentType => Type;
 
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }

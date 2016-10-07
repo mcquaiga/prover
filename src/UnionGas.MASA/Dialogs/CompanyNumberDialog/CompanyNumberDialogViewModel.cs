@@ -5,19 +5,15 @@ namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 {
     public class CompanyNumberDialogViewModel : ReactiveScreen
     {
-        public CompanyNumberDialogViewModel(CompanyNumberVerifier verifier)
+        public CompanyNumberDialogViewModel()
         {
             CompanyNumber = string.Empty;
-            this.Verifier = verifier;
         }
-
-        public CompanyNumberVerifier Verifier { get; set; }
 
         public string CompanyNumber { get; set; }
 
-        public void Update()
+        public void Close()
         {
-            Verifier.Update(CompanyNumber);
             this.TryClose(true);
         }
 
