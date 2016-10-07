@@ -11,15 +11,15 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
     public class PTVerificationSetViewModel : ReactiveScreen
     {
         private readonly IUnityContainer _container;
-        private readonly TestManager _testManager;
+        private readonly QaRunTestManager _qaRunTestManager;
 
         public PTVerificationSetViewModel(IUnityContainer container, VerificationTest verificationTest)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            if (_container.IsRegistered<TestManager>())
-                _testManager = _container.Resolve<TestManager>();
+            if (_container.IsRegistered<QaRunTestManager>())
+                _qaRunTestManager = _container.Resolve<QaRunTestManager>();
 
             VerificationTest = verificationTest;
             CreateViews();
@@ -61,7 +61,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public async Task RunTest()
         {
-            await _testManager.RunTest(VerificationTest.TestNumber);
+            await _qaRunTestManager.RunTest(VerificationTest.TestNumber);
             _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
         }
     }

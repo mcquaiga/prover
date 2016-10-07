@@ -26,7 +26,7 @@ namespace Prover.Core.DriveTypes
             return (Meter.MeterDisplacement * appliedInput);
         }
 
-        public int MaxUnCorrected()
+        public int MaxUncorrectedPulses()
         {
             if (Instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;

@@ -194,12 +194,14 @@
     </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
-    <Compile Include="VerificationTests\VolumeVerificationManager.cs" />
+    <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\RotaryQaRunTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -235,8 +237,8 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\TestManager.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">

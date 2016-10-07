@@ -17,7 +17,7 @@ namespace Prover.Core.DriveTypes
 
         public Instrument Instrument { get; private set; }
 
-        public int MaxUnCorrected() => 100;
+        public int MaxUncorrectedPulses() => 100;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {

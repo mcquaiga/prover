@@ -22,7 +22,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
             Volume = volumeTest;
         }
 
-        public TestManager InstrumentManager { get; set; }
+        public QaRunTestManager InstrumentManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
 
         public Core.Models.Instruments.VolumeTest Volume { get; }
