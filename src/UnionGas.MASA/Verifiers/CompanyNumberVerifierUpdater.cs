@@ -1,41 +1,36 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.Http;
-using System.ServiceModel;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Verifiers
 {
-    public class CompanyNumberVerifier : IVerifier
+    public class CompanyNumberVerifierUpdater : VerifierUpdaterBase
     {
-        private Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberVerifier(IWindowManager windowManager, IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService)
+        public CompanyNumberVerifierUpdater(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater)
         {
-            WindowManager = windowManager;
             InstrumentStore = instrumentStore;
             WebService = webService;
+            Updater = updater;
         }
+
+        public IUpdater Updater { get; set; }
 
         public IInstrumentStore<Instrument> InstrumentStore { get; set; }
 
-        public IWindowManager WindowManager { get; set; }
-
         public DCRWebServiceSoap WebService { get; }
 
-        public async Task<object> Verify(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
+        protected override async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.ToString();
@@ -44,36 +39,22 @@ namespace UnionGas.MASA.Verifiers
 
             while (meterDto == null)
             {
-                var newCompanyNumber = GetNewCompanyNumber();
-                meterDto = await VerifyWithWebService(newCompanyNumber);
+                var newCompanyNumber = await Updater.GetNewValue();
+
+                meterDto = await VerifyWithWebService(newCompanyNumber.ToString());
+
                 if (meterDto != null)
-                {
-                    await UpdateInstrumentCompanyNumber(evcCommunicationClient, instrument, newCompanyNumber);
-                }
+                    await UpdateInstrumentCompanyNumber(commClient, instrument, newCompanyNumber.ToString());
             }
 
-            return true;
+            return meterDto;
         }
 
-        private string GetNewCompanyNumber()
+        protected override Task<object> Update(EvcCommunicationClient commClient, Instrument instrument)
         {
-            while (true)
-            {
-                var viewModel = new CompanyNumberDialogViewModel();
-                ScreenManager.ShowDialog(WindowManager, viewModel);
-
-                var companyNumber = viewModel.CompanyNumber;
-
-                _log.Debug($"New company number entered: {companyNumber}");
-
-                long result;
-                if (long.TryParse(companyNumber, out result))
-                {
-                    return companyNumber;
-                }
-            }
+            throw new System.NotImplementedException();
         }
-
+        
         private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
             return await Task.Run(() =>
@@ -88,7 +69,8 @@ namespace UnionGas.MASA.Verifiers
             });
         }
 
-        private async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument, string newCompanyNumber)
+        private async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument,
+            string newCompanyNumber)
         {
             await commClient.Connect();
             var response = await commClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
@@ -96,10 +78,10 @@ namespace UnionGas.MASA.Verifiers
 
             if (response)
             {
-                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber.ToString();
+                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber;
                 await InstrumentStore.UpsertAsync(instrument);
             }
-            
+
             return response;
         }
     }

@@ -31,17 +31,5 @@ namespace Prover.GUI.Screens.Shell
         {
             await ScreenManager.Change(_container, new InstrumentAccessViewModel(_container));
         }
-
-        //    {
-        //    (bw) =>
-        //    ProgressDialogView.Execute(_container, "Connecting to Instrument...",
-        //{
-
-        //public void ConnectToInstrument()
-        //        var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
-        //        var instrComm = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
-        //        Task.Run(() => instrComm.Connect());
-        //    });
-        //}
     }
 }

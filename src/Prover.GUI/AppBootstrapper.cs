@@ -33,9 +33,17 @@ namespace Prover.GUI
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
             
-            var ass = AssemblySource.Instance.FirstOrDefault(x => x.FullName.Contains("UnionGas.MASA"));
-            var type = ass.GetType("UnionGas.MASA.Startup");
-            type.GetMethod("Initialize").Invoke(null, new object[] {_container});
+            GetAppModules();
+        }
+
+        private void GetAppModules()
+        {
+            foreach(var ass in AssemblySource.Instance.Where(x => x.FullName.Contains("UnionGas.MASA")))
+            {
+                var type = ass.GetType("UnionGas.MASA.Startup");
+                type.GetMethod("Initialize").Invoke(null, new object[] { _container });
+            }
+            
             //AssemblySource.Instance.Add(ass);
         }
 
