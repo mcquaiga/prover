@@ -11,11 +11,10 @@ namespace UnionGas.MASA
     {
         public static void Initialize(IUnityContainer container)
         {
-            container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("",
-                SettingsManager.SettingsInstance.ExportServiceAddress));
+            container.RegisterType<DCRWebServiceSoap, DCRWebServiceSoapClient>();
 
             container.RegisterType<VerifierUpdaterBase, CompanyNumberVerifierUpdater>();
-            container.RegisterType<IExportTestRun, ExportManager>();
+            container.RegisterType<IExportTestRun, ExportManager>(new InjectionConstructor(container, SettingsManager.SettingsInstance.ExportServiceAddress));
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Prover.GUI.Screens.Export
         public InstrumentTestGridViewModel(IUnityContainer container, Instrument instrument)
             : base(container, instrument)
         {
+            _container = container;
             _exportManager = container.Resolve<IExportTestRun>();
             SiteInformationItem = new InstrumentInfoViewModel(container, instrument);
             VolumeInformationItem = new VolumeTestViewModel(container, instrument.VolumeTest);
@@ -31,7 +32,7 @@ namespace Prover.GUI.Screens.Export
 
         public async Task DeleteInstrument()
         {
-            using (var store = new InstrumentStore(_container))
+            using (var store = _container.Resolve<IInstrumentStore<Instrument>>())
             {
                 await store.Delete(Instrument);
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using NLog;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -9,6 +10,8 @@ namespace UnionGas.MASA.Exporter
 {
     public static class Translate
     {
+        private static Logger _log = LogManager.GetCurrentClassLogger();
+
         public static DCRWebService.QARunEvcTestResult RunTranslationForExport(Instrument instrument)
         {
             var verificationTests = new List<DCRWebService.VerificationTest>();
@@ -22,7 +25,7 @@ namespace UnionGas.MASA.Exporter
             {
                 InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture),
                 TestDate = instrument.TestDateTime,
-                DriveType = "Rotary",
+                DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
                 InstrumentType = instrument.InstrumentTypeString,
@@ -32,11 +35,11 @@ namespace UnionGas.MASA.Exporter
 
                 PressureInfo = new DCRWebService.PressureHeader
                 {
-                    BasePressure = instrument.EvcBasePressure().HasValue ? instrument.EvcBasePressure().Value : Decimal.Zero,
-                    PressureRange = instrument.EvcPressureRange().Value,
+                    BasePressure = instrument.EvcBasePressure().HasValue ? instrument.EvcBasePressure().Value : decimal.Zero,
+                    PressureRange = instrument.EvcPressureRange().HasValue ? instrument.EvcPressureRange().Value : decimal.MinusOne,
                     PressureUnits = instrument.PressureUnits(),
                     TransducerType = instrument.GetTransducerType().ToString(),
-                    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().Value
+                    ProgrammedAtmosphericPressure = instrument.EvcAtmosphericPressure().HasValue ? instrument.EvcAtmosphericPressure().Value : decimal.MinusOne
                 },
 
                 TemperatureInfo = new DCRWebService.TemperatureHeader

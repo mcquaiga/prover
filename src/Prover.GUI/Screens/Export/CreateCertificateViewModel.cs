@@ -7,19 +7,23 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Events;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
+using UnionGas.MASA.Exporter;
 
 namespace Prover.GUI.Screens.Export
 {
     public class CreateCertificateViewModel : ReactiveScreen, IHandle<DataStorageChangeEvent>
     {
         private readonly IUnityContainer _container;
+        private readonly IExportTestRun _exportManager;
 
         public CreateCertificateViewModel(IUnityContainer container)
         {
             _container = container;
+            _exportManager = _container.Resolve<IExportTestRun>();
             GetInstrumentsByCertificateId(null);
         }
 
@@ -107,7 +111,7 @@ namespace Prover.GUI.Screens.Export
         {
             var instruments = InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
 
-            //await ExportManager.Export(instruments);
+            await _exportManager.Export(instruments);
         }
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)

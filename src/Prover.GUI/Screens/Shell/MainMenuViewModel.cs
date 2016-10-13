@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
+using Prover.Core.ExternalIntegrations;
 using Prover.GUI.Common;
 using Prover.GUI.Screens.Export;
 using Prover.GUI.Screens.QAProver;
