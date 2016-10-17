@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
@@ -17,7 +18,7 @@ namespace Prover.Core.Models.Instruments
 
         public SuperFactorTest(VerificationTest verificationTest)
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true);
             VerificationTest = verificationTest;
         }
 

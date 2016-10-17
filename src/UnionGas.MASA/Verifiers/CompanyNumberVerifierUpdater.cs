@@ -52,9 +52,9 @@ namespace UnionGas.MASA.Verifiers
 
         protected override Task<object> Update(EvcCommunicationClient commClient, Instrument instrument)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
-        
+
         private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
             return await Task.Run(() =>

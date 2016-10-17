@@ -32,26 +32,34 @@ namespace UnionGas.MASA.Exporter
 
         public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
         {
-            var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
-            var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
 
-            var isSuccess = await SendResultsToWebService(qaTestRuns);
-            if (isSuccess)
+            try
             {
+                var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
+                var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
+
+                var isSuccess = await SendResultsToWebService(qaTestRuns);
+
+                if (!isSuccess)
+                {
+                    throw new Exception("An error occured sending test results to web service. Please see log for details.");
+                }
+
                 using (var store = new InstrumentStore(_container))
                 {
-                    foreach(var instr in forExport)
+                    foreach (var instr in forExport)
                     {
                         instr.ExportedDateTime = DateTime.Now;
                         await store.UpsertAsync(instr);
-                    }                    
+                    }
                 }
-                return true;            
+                return true;
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("An error occured sending test results to web service. Please see log for details.");
-            }            
+                Log.Error(ex);
+                return false;
+            }
         }
 
         private async Task<bool> SendResultsToWebService(IEnumerable<DCRWebService.QARunEvcTestResult> evcQARun)

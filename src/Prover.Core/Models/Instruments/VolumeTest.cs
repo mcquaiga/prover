@@ -27,7 +27,7 @@ namespace Prover.Core.Models.Instruments
         }
         public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             

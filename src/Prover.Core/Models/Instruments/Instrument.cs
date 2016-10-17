@@ -42,6 +42,7 @@ namespace Prover.Core.Models.Instruments
 
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }
+        public string EmployeeId { get; set; }
 
         public DateTime? ExportedDateTime { get; set; } = null;
 

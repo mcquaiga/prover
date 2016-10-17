@@ -22,7 +22,7 @@ namespace Prover.Core.Models.Instruments
 
         public PressureTest(VerificationTest verificationTest, decimal gauge) : base()
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);

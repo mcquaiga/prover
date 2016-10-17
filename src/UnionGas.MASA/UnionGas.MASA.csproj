@@ -102,6 +102,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
@@ -124,6 +125,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -144,7 +146,12 @@
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
       <DependentUpon>CompanyNumberDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\LoginDialog\LoginDialogView.xaml.cs">
+      <DependentUpon>LoginDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\LoginDialog\LoginDialogViewModel.cs" />
     <Compile Include="Exporter\ExportManager.cs" />
+    <Compile Include="LoginService.cs" />
     <Compile Include="Models\ExportDefinition.cs" />
     <Compile Include="Service References\DCRWebService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -261,6 +268,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\LoginDialog\LoginDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DCRWebService\Reference.svcmap">
@@ -276,6 +287,7 @@
   <ItemGroup>
     <Content Include="dcrwebservice.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

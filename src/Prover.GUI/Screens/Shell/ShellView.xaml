@@ -21,6 +21,12 @@
                             <Image Source="..\..\Resources/Home.png" />
                         </StackPanel>
                     </Button>
+
+                    <Button x:Name="LoginButton" Width="64" Height="64" DockPanel.Dock="Right"
+                            HorizontalAlignment="Right">
+                        <Image />
+                    </Button>
+                    
                     <Button x:Name="SettingsButton" Width="64" Height="64" DockPanel.Dock="Right"
                             HorizontalAlignment="Right">
                         <Image Source="..\..\Resources/settings-light.png" />

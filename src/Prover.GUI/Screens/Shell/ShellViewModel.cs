@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Events;
+using Prover.Core.Login;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
@@ -84,6 +85,11 @@ namespace Prover.GUI.Screens.Shell
         public void SettingsButton()
         {
             ShowSettingsWindow();
+        }
+
+        public void LoginButton()
+        {
+            _container.Resolve<ILoginService>().Login();
         }
 
         private void ShowSettingsWindow()
