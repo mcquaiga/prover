@@ -11,7 +11,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
         {
             SiteInformationItem = new InstrumentInfoViewModel(container, instrument);
 
-            if (Instrument.VolumeTest.DriveType is RotaryDrive)
+            if (Instrument.VolumeTest?.DriveType is RotaryDrive)
                 MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Instrument.VolumeTest.DriveType);
         }
 

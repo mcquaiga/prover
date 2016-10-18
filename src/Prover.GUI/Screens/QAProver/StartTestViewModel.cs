@@ -79,39 +79,6 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                if (IsEC350Checked)
-                {
-                    var irdaPort = new IrDAPort();
-
-                    //InstrumentQaRunTestManager =
-                    //    await QaRunTestManager.Create(_container, new HoneywellClient(irdaPort, InstrumentTypes.EC350));
-                }
-                else
-                {
-                    //var commPort = new SerialPort(InstrumentCommPortName, BaudRate);
-
-                    //if (IsMiniMaxChecked)
-                    //{
-                    //    InstrumentQaRunTestManager = new QaRunTestManager(
-                    //        _container,
-                    //        new HoneywellClient(commPort, InstrumentTypes.MiniMax),
-                    //        TachCommPortName,
-                    //        null);
-                    //    //await
-                    //    //    RotaryQaRunTestManager.CreateRotaryTest(_container,
-                    //    //        new HoneywellClient(commPort, InstrumentType.MiniMax), TachCommPortName,
-                    //    //        null);
-
-                    //    await InstrumentQaRunTestManager.RunVerifier();
-                    //}
-                    //else if (IsMiniATChecked)
-                    //{
-                    //    InstrumentQaRunTestManager =
-                    //        await
-                    //            MechanicalQaRunTestManager.Create(_container,
-                    //                new HoneywellClient(commPort, InstrumentTypes.MiniAT));
-                    //}
-                }                
                 
                 await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentQaRunTestManager));
             }

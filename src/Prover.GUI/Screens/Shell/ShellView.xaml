@@ -24,7 +24,7 @@
 
                     <Button x:Name="LoginButton" Width="64" Height="64" DockPanel.Dock="Right"
                             HorizontalAlignment="Right">
-                        <Image />
+                        <TextBlock>Login...</TextBlock>
                     </Button>
                     
                     <Button x:Name="SettingsButton" Width="64" Height="64" DockPanel.Dock="Right"

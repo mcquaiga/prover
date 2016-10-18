@@ -87,9 +87,9 @@ namespace Prover.GUI.Screens.Shell
             ShowSettingsWindow();
         }
 
-        public void LoginButton()
+        public async Task LoginButton()
         {
-            _container.Resolve<ILoginService>().Login();
+            await _container.Resolve<ILoginService>().Login();
         }
 
         private void ShowSettingsWindow()
