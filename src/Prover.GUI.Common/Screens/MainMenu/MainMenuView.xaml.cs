@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Screens.Shell
+namespace Prover.GUI.Common.Screens.MainMenu
 {
     /// <summary>
     ///     Interaction logic for MainMenuView.xaml

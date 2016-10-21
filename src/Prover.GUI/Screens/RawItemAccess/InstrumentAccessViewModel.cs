@@ -87,7 +87,7 @@ namespace Prover.GUI.Screens.RawItemAccess
                 {
                     var commPort = new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort,
                         SettingsManager.SettingsInstance.InstrumentBaudRate);
-                    InstrumentCommunicator = new HoneywellClient(commPort, InstrumentTypes.MiniMax);
+                    //InstrumentCommunicator = new HoneywellClient(commPort, InstrumentTypes.MiniMax);
                     //var commPort = Communications.CreateCommPortObject(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
                     //InstrumentCommunicator = new InstrumentCommunicator(_container.Resolve<IEventAggregator>(), commPort, InstrumentType.MiniMax);
                 }

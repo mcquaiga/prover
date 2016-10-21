@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.EVCTypes;
@@ -24,21 +25,22 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentTypes instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
+        public Instrument(InstrumentType instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
-            Type = instrumentType;
+            Type = instrumentType.Id;
+            InstrumentType = instrumentType;
             Items = items;
 
             CreateVerificationTests(driveType);
         }
 
         public DateTime TestDateTime { get; set; }
-        public InstrumentTypes Type { get; set; }
+        public int Type { get; set; }
 
         [NotMapped]
-        public override InstrumentTypes InstrumentType => Type;
+        public override InstrumentType InstrumentType { get; set; }
 
         public Guid? CertificateId { get; set; }
         public virtual Certificate Certificate { get; set; }

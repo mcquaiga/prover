@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Login;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
 using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Dialogs.LoginDialog
 {
-    public class LoginDialogViewModel : ReactiveScreen
+    public class LoginDialogViewModel : ViewModelBase
     {
         public string EmployeeId { get; set; }
 
-        public LoginDialogViewModel()
+        public LoginDialogViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
             EmployeeId = string.Empty;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
@@ -11,21 +12,19 @@ using Prover.Core.ExternalIntegrations;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class StartTestViewModel : ReactiveScreen, IHandle<SettingsChangeEvent>
+    public class StartTestViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
-        private readonly IUnityContainer _container;
-        private bool _miniAtChecked;
-
-        public StartTestViewModel(IUnityContainer container)
+        
+        public StartTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public int BaudRate { get; private set; }
@@ -70,7 +69,7 @@ namespace Prover.GUI.Screens.QAProver
        
         public async Task CancelCommand()
         {
-            await ScreenManager.Change(_container, new MainMenuViewModel(_container));
+            await ScreenManager.GoHome();
         }
 
         public async Task InitializeTest()
@@ -79,8 +78,7 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                
-                await ScreenManager.Change(_container, new VerificationTestViewModel(_container, InstrumentQaRunTestManager));
+                //ScreenManager.ChangeScreen(new QATestRunInteractiveViewModel(InstrumentQaRunTestManager));
             }
             catch (Exception ex)
             {
@@ -106,7 +104,7 @@ namespace Prover.GUI.Screens.QAProver
 
             if (string.IsNullOrEmpty(InstrumentCommPortName))
             {
-                ScreenManager.ShowDialog(_container, new SettingsViewModel(_container));
+                ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
             }
         }
     }

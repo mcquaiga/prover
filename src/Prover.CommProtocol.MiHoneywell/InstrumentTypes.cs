@@ -3,33 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
     public static class Instruments
     {
-        public static IEnumerable<InstrumentType> InstrumentList = new List<InstrumentType>
+        public static IEnumerable<InstrumentType> GetAll()
         {
-            MiniAt,
-            MiniMax
-        };
+            return new List<InstrumentType>()
+            {
+                MiniAt,
+                MiniMax
+            };
+        }
 
         public static InstrumentType MiniAt = new InstrumentType
         {
+            Id = 3,
             AccessCode = 3,
-            Name = "Mini-AT"
+            Name = "Mini-AT",
+            ItemFilePath = "MiniATItems.xml"
+
         };
 
         public static InstrumentType MiniMax = new InstrumentType
         {
-            AccessCode = 3,
-            Name = "Mini-Max"
+            Id = 4,
+            AccessCode = 4,
+            Name = "Mini-Max",
+            ItemFilePath = "MiniMaxItems.xml"
         };
-
-        public class InstrumentType
-        {
-            public int AccessCode { get; set; }
-            public string Name { get; set; }
-        }
     }
 }

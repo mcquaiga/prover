@@ -8,6 +8,7 @@ using System.Data.Entity;
 using Prover.CommProtocol.Common.IO;
 using Prover.Core.Migrations;
 using Prover.Core.Settings;
+using Prover.Core.VerificationTests;
 
 namespace Prover.Core.Startup
 {
@@ -19,11 +20,15 @@ namespace Prover.Core.Startup
         {
             Container = new UnityContainer();
  
+            //Database registrations
             Container.RegisterInstance(new ProverContext());
-            Container.RegisterInstance<IInstrumentStore<Instrument>>(new InstrumentStore(Container));
-            Container.RegisterInstance<ICertificateStore<Certificate>>(new CertificateStore(Container));
-
+            Container.RegisterType<IInstrumentStore<Instrument>, InstrumentStore>();
+            Container.RegisterType<ICertificateStore<Certificate>, CertificateStore>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+
+            //
+            Container.RegisterType<IEventAggregator, EventAggregator>();
+            Container.RegisterType<IReadingStabilizer, ReadingStabilizer>();
 
             SettingsManager.RefreshSettings();
         }

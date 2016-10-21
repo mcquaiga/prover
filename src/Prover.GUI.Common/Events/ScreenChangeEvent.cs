@@ -4,7 +4,7 @@ namespace Prover.GUI.Common.Events
 {
     public class ScreenChangeEvent
     {
-        public ReactiveScreen ViewModel;
+        public ReactiveScreen ViewModel { get; }
 
         public ScreenChangeEvent(ReactiveScreen viewModel)
         {

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 
@@ -79,6 +80,6 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentTypes InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
     }
 }

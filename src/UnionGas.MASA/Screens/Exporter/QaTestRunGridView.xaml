@@ -1,11 +1,10 @@
-﻿<UserControl x:Class="Prover.GUI.Screens.Export.InstrumentTestGridView"
+﻿<UserControl x:Class="UnionGas.MASA.Screens.Exporter.QaTestRunGridView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              TextElement.Foreground="White"
@@ -20,8 +19,8 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <ImageSource x:Key="PassIcon">../../Resources/success.png</ImageSource>
-            <ImageSource x:Key="FailIcon">../../Resources/error_36.png</ImageSource>
+            <ImageSource x:Key="PassIcon">pack://application:,,,/Resources/success.png</ImageSource>
+            <ImageSource x:Key="FailIcon">pack://application:,,,/Resources/error_36.png</ImageSource>
             <SolidColorBrush x:Key="FontColour" Color="White" />
             <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
             <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
@@ -73,7 +72,7 @@
                        Text="{Binding Instrument.SiteNumber2}" />
 
             <StackPanel Margin="0 5" Orientation="Horizontal">
-                <TextBlock Text="{Binding Instrument.Type}" />
+                <TextBlock Text="{Binding Instrument.InstrumentType.Name}" />
                 <TextBlock Text=" / " />
                 <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
                 <TextBlock Text=" / " />

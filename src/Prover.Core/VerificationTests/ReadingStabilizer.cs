@@ -13,24 +13,27 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests
 {
-    public class ReadingStabilizer
+    public interface IReadingStabilizer
+    {
+        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level);
+        void CancelLiveReading();
+    }
+
+    public class ReadingStabilizer : IReadingStabilizer
     {
         private bool _cancelStabilize = false;
         private bool _isLiveReading;
 
-        public ReadingStabilizer(IUnityContainer container, Instrument instrument)
+        public ReadingStabilizer(IEventAggregator eventAggregator)
         {
-            Container = container;
-            Instrument = instrument;
+            EventAggregator = eventAggregator;
         }
 
-        public IUnityContainer Container { get; set; }
+        public IEventAggregator EventAggregator { get; set; }
 
-        public Instrument Instrument { get; set; }
-
-        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, int level)
+        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level)
         {
-            var liveReadItems = GetLiveReadItemNumbers(level);
+            var liveReadItems = GetLiveReadItemNumbers(instrument, level);
 
             await commClient.Connect();
             
@@ -41,8 +44,7 @@ namespace Prover.Core.VerificationTests
                 {
                     var liveValue = await commClient.LiveReadItemValue(item.Key);
                     item.Value.Add(liveValue.NumericValue);
-                    Container.Resolve<IEventAggregator>()
-                        .PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
+                    EventAggregator.PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
                 }
             } while (liveReadItems.Any(x => !x.Value.IsStable) && !_cancelStabilize);
 
@@ -60,20 +62,20 @@ namespace Prover.Core.VerificationTests
             }
         }
 
-        private Dictionary<int, AveragedReadingStabilizer> GetLiveReadItemNumbers(int level)
+        private Dictionary<int, AveragedReadingStabilizer> GetLiveReadItemNumbers(Instrument instrument, int level)
         {
             var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+            if (instrument.CompositionType == CorrectorType.PTZ)
             {
-                liveReadItems.Add(8, new AveragedReadingStabilizer(Instrument.GetGaugePressure(level)));
-                liveReadItems.Add(26, new AveragedReadingStabilizer(Instrument.GetGaugeTemp(level)));
+                liveReadItems.Add(8, new AveragedReadingStabilizer(instrument.GetGaugePressure(level)));
+                liveReadItems.Add(26, new AveragedReadingStabilizer(instrument.GetGaugeTemp(level)));
             }
 
-            if (Instrument.CompositionType == CorrectorType.T)
-                liveReadItems.Add(26, new AveragedReadingStabilizer(Instrument.GetGaugeTemp(level)));
+            if (instrument.CompositionType == CorrectorType.T)
+                liveReadItems.Add(26, new AveragedReadingStabilizer(instrument.GetGaugeTemp(level)));
 
-            if (Instrument.CompositionType == CorrectorType.P)
-                liveReadItems.Add(8, new AveragedReadingStabilizer(Instrument.GetGaugePressure(level)));
+            if (instrument.CompositionType == CorrectorType.P)
+                liveReadItems.Add(8, new AveragedReadingStabilizer(instrument.GetGaugePressure(level)));
             return liveReadItems;
         }
     }

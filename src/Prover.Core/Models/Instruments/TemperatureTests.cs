@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
@@ -70,6 +71,6 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public override InstrumentTypes InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
     }
 }

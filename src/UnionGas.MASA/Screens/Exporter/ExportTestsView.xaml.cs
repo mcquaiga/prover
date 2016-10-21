@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Screens.Export
+namespace UnionGas.MASA.Screens.Exporter
 {
     /// <summary>
     ///     Interaction logic for CreateCertificateView.xaml
     /// </summary>
-    public partial class CreateCertificateView : UserControl
+    public partial class ExportTestsView : UserControl
     {
-        public CreateCertificateView()
+        public ExportTestsView()
         {
             InitializeComponent();
         }

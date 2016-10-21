@@ -1,76 +1,76 @@
 ﻿using Caliburn.Micro;
-using Microsoft.Practices.Unity;
-using NLog;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
-using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
-    public class PressureTestViewModel : BaseTestViewModel
+    public class PressureTestViewModel : TestRunViewModelBase<Core.Models.Instruments.PressureTest>
     {
-        private readonly IUnityContainer _container;
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        public PressureTestViewModel(IUnityContainer container, Core.Models.Instruments.PressureTest test)
+        public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
-            _container = container;
-            Test = test;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
         }
 
         public bool ShowATMValues
             =>
-                (TransducerType)
-                    (Test as Core.Models.Instruments.PressureTest).VerificationTest.Instrument.Items.GetItem(
-                        ItemCodes.Pressure.TransducerType).NumericValue != TransducerType.Absolute;
+            (TransducerType)
+            TestRun.VerificationTest.Instrument.Items.GetItem(
+                ItemCodes.Pressure.TransducerType).NumericValue != TransducerType.Absolute;
 
         public bool ShowATMGaugeInput
             =>
-                (TransducerType)
-                    (Test as Core.Models.Instruments.PressureTest).VerificationTest.Instrument.Items.GetItem(
-                        ItemCodes.Pressure.TransducerType).NumericValue == TransducerType.Absolute;
+            (TransducerType)
+            TestRun.VerificationTest.Instrument.Items.GetItem(
+                ItemCodes.Pressure.TransducerType).NumericValue == TransducerType.Absolute;
 
         public decimal Gauge
         {
-            get { return (Test as Core.Models.Instruments.PressureTest).GasGauge.Value; }
+            get { return TestRun.GasGauge.Value; }
             set
             {
-                (Test as Core.Models.Instruments.PressureTest).GasGauge = value;
-                _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
+                TestRun.GasGauge = value;
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
-        public decimal GasPressure => (Test as Core.Models.Instruments.PressureTest).GasPressure.Value;
+        public decimal GasPressure
+        {
+            get
+            {
+                if (TestRun.GasPressure != null) return TestRun.GasPressure.Value;
+                return decimal.Zero;
+            }
+        }
 
         public decimal? AtmosphericGauge
         {
-            get { return (Test as Core.Models.Instruments.PressureTest).AtmosphericGauge; }
+            get { return TestRun.AtmosphericGauge; }
             set
             {
-                (Test as Core.Models.Instruments.PressureTest).AtmosphericGauge = value;
-                _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
+                TestRun.AtmosphericGauge = value;
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
         public decimal? EvcGasPressure
-            => (Test as Core.Models.Instruments.PressureTest).Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue
+            => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue
             ;
 
         public decimal? EvcFactor
-            => (Test as Core.Models.Instruments.PressureTest).Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
+            => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
 
         public decimal? EvcATMPressure
             =>
-                (Test as Core.Models.Instruments.PressureTest).VerificationTest.Instrument.Items.GetItem(
-                    ItemCodes.Pressure.Atm).NumericValue;
+            TestRun.VerificationTest.Instrument.Items.GetItem(
+                ItemCodes.Pressure.Atm).NumericValue;
 
         public override void Handle(VerificationTestEvent message)
         {
-            NotifyOfPropertyChange(() => Test);
-            NotifyOfPropertyChange(() => Test.PercentError);
-            NotifyOfPropertyChange(() => Test.HasPassed);
+            NotifyOfPropertyChange(() => TestRun);
+            NotifyOfPropertyChange(() => TestRun.PercentError);
+            NotifyOfPropertyChange(() => TestRun.HasPassed);
             NotifyOfPropertyChange(() => EvcGasPressure);
             NotifyOfPropertyChange(() => GasPressure);
             NotifyOfPropertyChange(() => EvcFactor);

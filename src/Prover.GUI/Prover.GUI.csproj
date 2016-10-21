@@ -94,8 +94,8 @@
       <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.0.0.638, Culture=neutral, processorArchitecture=MSIL">
@@ -230,6 +230,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Apps.cs" />
     <Compile Include="ConnectionDialogManager.cs" />
     <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
@@ -251,14 +252,6 @@
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
-    <Compile Include="Screens\Export\CreateCertificateView.xaml.cs">
-      <DependentUpon>CreateCertificateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Export\CreateCertificateViewModel.cs" />
-    <Compile Include="Screens\Export\InstrumentTestGridView.xaml.cs">
-      <DependentUpon>InstrumentTestGridView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Export\InstrumentTestGridViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfoViewModel.cs" />
     <Compile Include="Screens\QAProver\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
@@ -282,10 +275,6 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Settings\SettingsViewModel.cs" />
-    <Compile Include="Screens\Shell\MainMenuView.xaml.cs">
-      <DependentUpon>MainMenuView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Shell\MainMenuViewModel.cs" />
     <Compile Include="Screens\Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -315,10 +304,10 @@
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
       <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml.cs">
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml.cs">
       <DependentUpon>SuperTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml.cs">
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml.cs">
       <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
@@ -333,16 +322,16 @@
     <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml.cs">
       <DependentUpon>QATestRunView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestView.xaml.cs">
-      <DependentUpon>VerificationTestView.xaml</DependentUpon>
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunInteractiveView.xaml.cs">
+      <DependentUpon>QATestRunInteractiveView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\BaseTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TestRunViewModelBase.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunViewModel.cs" />
-    <Compile Include="Screens\QAProver\VerificationTestViews\VerificationTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunInteractiveViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
-    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperFactorTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TemperatureTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTestViewModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -370,14 +359,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\Export\CreateCertificateView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Export\InstrumentTestGridView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Screens\QAProver\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -399,10 +380,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\Settings\SettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Shell\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -442,11 +419,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Card.xaml">
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperTest\SuperTest.Grid.xaml">
+    <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -466,7 +443,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\VerificationTestViews\VerificationTestView.xaml">
+    <Page Include="Screens\QAProver\VerificationTestViews\QATestRunInteractiveView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -535,10 +512,6 @@
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
-      <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
-      <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
     <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
       <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>

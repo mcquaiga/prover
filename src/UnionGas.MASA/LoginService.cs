@@ -15,24 +15,28 @@ namespace UnionGas.MASA
 {
     public class LoginService : ILoginService
     {
+        private readonly IScreenManager _screenManager;
         private IEventAggregator _eventAggregator;
-        private DCRWebServiceSoap _webService;
-        private IUnityContainer _container;
-        public EmployeeDTO EmployeeDto { get; set; }
+        private readonly DCRWebServiceSoap _webService;
+        public EmployeeDTO EmployeeDto { get; private set; }
 
-        public LoginService(IUnityContainer container, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
+        public LoginService(IScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
         {
-            _container = container;
+            _screenManager = screenManager;
             _eventAggregator = eventAggregator;
             _webService = webService;
         }
 
         public async Task<object> GetLoginInfoFromUser()
         {
-            var loginInput = new LoginDialogViewModel();
-            ScreenManager.ShowDialog(_container, loginInput);
+            return await Task.Run(() =>
+            {
+                var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
+                var result = _screenManager.ShowDialog(loginViewModel);
 
-            return loginInput.EmployeeId;
+                return result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
+            });
+           
         }
 
         public async Task<object> Login(string username = null, string password = null)

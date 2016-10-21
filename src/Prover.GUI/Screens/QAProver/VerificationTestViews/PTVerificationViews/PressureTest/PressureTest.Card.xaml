@@ -24,7 +24,7 @@
     <!--**** START PRESSURE **** -->
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="3" Content="Pressure" Mode="PrimaryDark" Margin="2"
+            <materialDesign:ColorZone Padding="3" Content="PressureTestRun" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
             <controls1:PercentageControl HorizontalAlignment="Left" Margin="2"
                                          DisplayValue="{Binding Test.PercentError}"

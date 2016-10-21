@@ -8,7 +8,7 @@ namespace Prover.GUI.Reports
     {
         public InstrumentReportViewModel(IUnityContainer container, Instrument instrument)
         {
-            QaTestRunViewItem = new QaTestRunViewModel(container, instrument);
+            //QaTestRunViewItem = new QaTestRunViewModel(container, instrument);
         }
 
         public QaTestRunViewModel QaTestRunViewItem { get; set; }

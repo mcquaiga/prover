@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI
@@ -16,9 +23,14 @@ namespace Prover.GUI
     {
         private IUnityContainer _container;
 
+        private readonly List<string> _moduleFileNames = new List<string>()
+        {
+            "UnionGas.MASA.dll",
+            "Prover.GUI.Common.dll"
+        }; 
+
         public AppBootstrapper()
         {
-            //Start Prover.Core
             var coreBootstrap = new CoreBootstrapper();
             _container = coreBootstrap.Container;
 
@@ -32,8 +44,20 @@ namespace Prover.GUI
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
-            
+
+            _container.RegisterType<ScreenManager>(new ContainerControlledLifetimeManager());
+
+            //Register Apps
+            _container.RegisterType<IAppMainMenu, QaTestRunApp>("QaTestRunApp", new ContainerControlledLifetimeManager());
+
+            RegisterViewModels();
             GetAppModules();
+        }
+
+        private void RegisterViewModels()
+        {
+            _container.RegisterType<MainMenuViewModel>();
+            _container.RegisterType<SettingsViewModel>();
         }
 
         private void GetAppModules()
@@ -66,16 +90,13 @@ namespace Prover.GUI
         {
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
-            //Load new ViewModels here
+
             var fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
 
-            foreach (var fileName in fileEntries)
+            foreach (var fileName in fileEntries.Where(x => _moduleFileNames.Any(y => x.EndsWith(y))))
             {
-                if (fileName.EndsWith("UnionGas.MASA.dll"))
-                {
-                    var ass = Assembly.LoadFrom(fileName);
-                    assemblies.Add(ass);
-                }
+                var ass = Assembly.LoadFrom(fileName);
+                assemblies.Add(ass);
             }
 
             return assemblies;
@@ -94,6 +115,9 @@ namespace Prover.GUI
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<ShellViewModel>();
+
+            var screenManager = _container.Resolve<ScreenManager>();
+            Task.Run(() => screenManager.GoHome());
         }
     }
 }

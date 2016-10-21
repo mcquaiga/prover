@@ -248,7 +248,6 @@
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\IInstrumentStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
-    <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />

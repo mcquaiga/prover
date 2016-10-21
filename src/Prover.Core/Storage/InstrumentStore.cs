@@ -13,10 +13,10 @@ namespace Prover.Core.Storage
 {
     public class InstrumentStore : IInstrumentStore<Instrument>
     {
-        private ProverContext _proverContext;
-        public InstrumentStore(IUnityContainer container)
+        private readonly ProverContext _proverContext;
+        public InstrumentStore(ProverContext context)
         {
-            _proverContext = container.Resolve<ProverContext>();
+            _proverContext = context;
         }
 
         public IQueryable<Instrument> Query()

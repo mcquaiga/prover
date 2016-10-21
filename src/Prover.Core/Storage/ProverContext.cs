@@ -17,9 +17,9 @@ using System.Data.Entity.Migrations;
 
 namespace Prover.Core.Storage
 {
-    public class ProverContext : DbContext, IProverContext
-    {
 
+    public class ProverContext : DbContext
+    {
         public ProverContext()
             : base(@"name=ConnectionString")
         {
@@ -34,7 +34,7 @@ namespace Prover.Core.Storage
             (e.Entity as BaseEntity)?.OnInitializing();
         }
 
-    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 

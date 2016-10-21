@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
@@ -19,7 +20,7 @@ using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : ProverTable
+    public sealed class VolumeTest : BaseVerificationTest
     {
         public VolumeTest()
         {
@@ -110,6 +111,9 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
 
+        public override decimal? PercentError { get; }
+        public override decimal? ActualFactor { get; }
+
         [NotMapped]
         public int UncPulseCount
         {
@@ -190,7 +194,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentTypes InstrumentType => Instrument.InstrumentType;
+        public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
         public override void OnInitializing()
         {

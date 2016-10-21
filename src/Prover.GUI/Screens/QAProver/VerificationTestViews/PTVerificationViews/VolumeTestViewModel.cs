@@ -6,20 +6,17 @@ using NLog;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
-    public class VolumeTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
+    public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        public VolumeTestViewModel(IUnityContainer container, Core.Models.Instruments.VolumeTest volumeTest)
+        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
         {
-            container.Resolve<IEventAggregator>().Subscribe(this);
-
-            Volume = volumeTest;
+            Volume = testRun;
         }
 
         public QaRunTestManager InstrumentManager { get; set; }
@@ -77,11 +74,6 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
         public Brush MeterDisplacementPercentColour => Brushes.Green;
         // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
 
-        public void Handle(VerificationTestEvent message)
-        {
-            RaisePropertyChanges();
-        }
-
         private void RaisePropertyChanges()
         {
             NotifyOfPropertyChange(() => AppliedInput);
@@ -99,6 +91,11 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
+        }
+
+        public override void Handle(VerificationTestEvent message)
+        {
+            RaisePropertyChanges();
         }
     }
 }

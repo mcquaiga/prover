@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews.SuperTest
+namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews.SuperFactorTest
 {
     /// <summary>
     ///     Interaction logic for SuperTest.xaml

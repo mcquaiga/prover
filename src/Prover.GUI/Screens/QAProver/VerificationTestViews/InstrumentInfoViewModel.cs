@@ -4,21 +4,15 @@ using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
+using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
-    public class InstrumentInfoViewModel : ReactiveScreen, IHandle<InstrumentUpdateEvent>
+    public class InstrumentInfoViewModel : ViewModelBase, IHandle<InstrumentUpdateEvent>
     {
-        private readonly IUnityContainer _container;
-
-        public InstrumentInfoViewModel(IUnityContainer container)
-        {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
-        }
-
-        public InstrumentInfoViewModel(IUnityContainer container, Instrument instrument) : this(container)
+        public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Instrument instrument) : base(screenManager, eventAggregator)
         {
             Instrument = instrument;
         }

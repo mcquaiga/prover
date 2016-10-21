@@ -13,15 +13,14 @@ namespace UnionGas.MASA.Exporter
 {
     public class ExportManager : IExportTestRun
     {
+        private readonly IInstrumentStore<Instrument> _instrumentStore;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private readonly IUnityContainer _container;
 
-        public Uri ServiceUri { get; }
+        public Uri ServiceUri { get; set; }
 
-        public ExportManager(IUnityContainer container, string serviceUriString)
+        public ExportManager(IInstrumentStore<Instrument> instrumentStore)
         {
-            _container = container;
-            ServiceUri = new Uri(serviceUriString);
+            _instrumentStore = instrumentStore;
         }
 
         public async Task<bool> Export(Instrument instrumentForExport)
@@ -45,13 +44,10 @@ namespace UnionGas.MASA.Exporter
                     throw new Exception("An error occured sending test results to web service. Please see log for details.");
                 }
 
-                using (var store = new InstrumentStore(_container))
+                foreach (var instr in forExport)
                 {
-                    foreach (var instr in forExport)
-                    {
-                        instr.ExportedDateTime = DateTime.Now;
-                        await store.UpsertAsync(instr);
-                    }
+                    instr.ExportedDateTime = DateTime.Now;
+                    await _instrumentStore.UpsertAsync(instr);
                 }
                 return true;
             }

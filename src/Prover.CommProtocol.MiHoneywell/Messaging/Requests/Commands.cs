@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
@@ -46,9 +47,9 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(InstrumentTypes instrument, string accessCode = DefaultAccessCode)
+            SignOn(InstrumentType instrument, string accessCode = DefaultAccessCode)
         {
-            var code = (int)instrument < 10 ? string.Concat("0", (int)instrument) : instrument.ToString();
+            var code = instrument.Id < 10 ? string.Concat("0", instrument.Id) : instrument.ToString();
             var cmd = $"SN,{accessCode}{ControlCharacters.STX}vq{code}";
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }

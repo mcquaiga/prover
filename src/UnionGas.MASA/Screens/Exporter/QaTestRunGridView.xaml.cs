@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Screens.Export
+namespace UnionGas.MASA.Screens.Exporter
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml
     /// </summary>
-    public partial class InstrumentTestGridView : UserControl
+    public partial class QaTestRunGridView : UserControl
     {
-        public InstrumentTestGridView()
+        public QaTestRunGridView()
         {
             InitializeComponent();
         }
