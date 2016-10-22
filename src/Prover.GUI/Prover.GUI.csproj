@@ -279,10 +279,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Shell\ShellViewModel.cs" />
-    <Compile Include="Screens\QAProver\StartTestView.xaml.cs">
-      <DependentUpon>StartTestView.xaml</DependentUpon>
+    <Compile Include="Screens\QAProver\NewQaTestRunView.xaml.cs">
+      <DependentUpon>NewQaTestRunView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\StartTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\NewQaTestRunViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
       <DependentUpon>PressureTest.Card.xaml</DependentUpon>
     </Compile>
@@ -387,7 +387,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\StartTestView.xaml">
+    <Page Include="Screens\QAProver\NewQaTestRunView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

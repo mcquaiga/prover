@@ -30,7 +30,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
         public SuperFactorTestViewModel SuperFactorViewModelFactor { get; private set; }
         public VolumeTestViewModel VolumeTestViewModel { get; private set; }
 
-        public VerificationTest VerificationTest { get; }
+        public VerificationTest VerificationTest { get; set; }
 
         private void CreateViews()
         {

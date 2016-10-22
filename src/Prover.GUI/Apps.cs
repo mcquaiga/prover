@@ -17,7 +17,7 @@ namespace Prover.GUI
         public override string AppTitle => "New QA Test Run";
 
         public override Action ClickAction
-            => async () => await ScreenManager.ChangeScreen(new StartTestViewModel(ScreenManager, EventAggregator));
+            => async () => await ScreenManager.ChangeScreen<NewQaTestRunViewModel>();
     }
 
 

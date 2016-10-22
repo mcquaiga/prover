@@ -20,7 +20,7 @@ namespace Prover.Core.ExternalIntegrations
         Task<object> GetNewValue();
     }
 
-    public abstract class VerifierUpdaterBase
+    public abstract class VerifierUpdaterBase : IVerifier
     {
         protected VerifierUpdaterBase()
         {
@@ -33,7 +33,7 @@ namespace Prover.Core.ExternalIntegrations
             await Update(commClient, instrument);
         }
 
-        protected abstract Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument);
-        protected abstract Task<object> Update(EvcCommunicationClient commClient, Instrument instrument);
+        public abstract Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument);
+        public abstract Task<object> Update(EvcCommunicationClient commClient, Instrument instrument);
     }
 }

@@ -29,12 +29,10 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
-        /// <param name="instrumentType">Instrument ttype to connect to</param>
         /// <param name="commPort">Communcations interface to the device</param>
-        protected EvcCommunicationClient(CommPort commPort, InstrumentType instrumentType)
+        protected EvcCommunicationClient(CommPort commPort)
         {
             CommPort = commPort;
-            InstrumentType = instrumentType;
 
             _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
                 .Subscribe(msg => { Log.Debug($"[{CommPort.Name}][IN] << {ControlCharacters.Prettify(msg)}"); });
@@ -51,7 +49,7 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
         /// </summary>
-        public virtual IEnumerable<ItemMetadata> ItemDetails { get; } = new List<ItemMetadata>();
+        public virtual IEnumerable<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
         /// <summary>
         ///     Is this client already connected to an instrument

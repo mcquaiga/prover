@@ -9,6 +9,7 @@ using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using UnionGas.MASA.DCRWebService;
+using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 using UnionGas.MASA.Dialogs.LoginDialog;
 using UnionGas.MASA.Exporter;
 using UnionGas.MASA.Screens.Exporter;
@@ -20,18 +21,19 @@ namespace UnionGas.MASA
     {
         public static void Initialize(IUnityContainer container)
         {
+            //App Menu Icon
+            container.RegisterType<IAppMainMenu, ExportManagerApp>("ExportApp");
+
             container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            container.RegisterType<VerifierUpdaterBase, CompanyNumberVerifierUpdater>();
+            container.RegisterType<IVerifier, CompanyNumberVerifierUpdater>();
             container.RegisterType<IExportTestRun, ExportManager>(new InjectionProperty("ServiceUri", new Uri(SettingsManager.SettingsInstance.ExportServiceAddress)));
-
-            //Apps
-            container.RegisterType<IAppMainMenu, ExportManagerApp>("ExportApp");
 
             //ViewModels
             container.RegisterType<ExportTestsViewModel>();
             container.RegisterType<QaTestRunGridViewModel>();
             container.RegisterType<LoginDialogViewModel>();
+            container.RegisterType<CompanyNumberDialogViewModel>();
 
             //Login service
             var loginService = new LoginService(container.Resolve<ScreenManager>(), container.Resolve<IEventAggregator>(), container.Resolve<DCRWebServiceSoap>());

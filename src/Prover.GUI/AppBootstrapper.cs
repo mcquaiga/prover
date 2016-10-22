@@ -14,6 +14,8 @@ using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Screens.QAProver;
+using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 
@@ -58,6 +60,10 @@ namespace Prover.GUI
         {
             _container.RegisterType<MainMenuViewModel>();
             _container.RegisterType<SettingsViewModel>();
+
+            _container.RegisterType<InstrumentInfoViewModel>();
+            _container.RegisterType<NewQaTestRunViewModel>();
+            _container.RegisterType<QaTestRunViewModel>();
         }
 
         private void GetAppModules()

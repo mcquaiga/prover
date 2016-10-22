@@ -1,72 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Events;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
-using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class StartTestViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
+    public class NewQaTestRunViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
-        
-        public StartTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
+            : base(screenManager, eventAggregator)
         {
+            QaRunTestManager = qaRunTestManager;
         }
 
         public int BaudRate { get; private set; }
         public CommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
-
-        public QaRunTestManager InstrumentQaRunTestManager { get; set; }
+        public IQaRunTestManager QaRunTestManager { get; set; }
         public string TachCommPortName { get; private set; }
-
-        public bool IsMiniMaxChecked
-        {
-            get { return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "MiniMax"; }
-            set
-            {
-                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "MiniMax";
-            }
-        }
-
-        public bool IsMiniATChecked
-        {
-            get { return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "MiniAT"; }
-            set
-            {
-                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "MiniAT";
-            }
-        }
-
-        public bool IsEC350Checked
-        {
-            get { return SettingsManager.SettingsInstance.LastInstrumentTypeUsed == "EC350"; }
-            set
-            {
-                if (value) SettingsManager.SettingsInstance.LastInstrumentTypeUsed = "EC350";
-            }
-        }
-
-        public void Handle(SettingsChangeEvent message)
-        {
-            VerifySettings();
-        }
-
-       
+        
         public async Task CancelCommand()
         {
             await ScreenManager.GoHome();
@@ -78,7 +38,7 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                //ScreenManager.ChangeScreen(new QATestRunInteractiveViewModel(InstrumentQaRunTestManager));
+                await ScreenManager.ChangeScreen<QaTestRunViewModel>();
             }
             catch (Exception ex)
             {
@@ -103,9 +63,12 @@ namespace Prover.GUI.Screens.QAProver
             NotifyOfPropertyChange(() => TachCommPortName);
 
             if (string.IsNullOrEmpty(InstrumentCommPortName))
-            {
                 ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
-            }
+        }
+
+        public void Handle(SettingsChangeEvent message)
+        {
+            VerifySettings();
         }
     }
 }

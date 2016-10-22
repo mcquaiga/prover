@@ -5,9 +5,9 @@ namespace Prover.GUI.Screens.QAProver
     /// <summary>
     ///     Interaction logic for InstrumentConnectView.xaml
     /// </summary>
-    public partial class StartTestView : UserControl
+    public partial class NewQaTestRunView : UserControl
     {
-        public StartTestView()
+        public NewQaTestRunView()
         {
             InitializeComponent();
         }

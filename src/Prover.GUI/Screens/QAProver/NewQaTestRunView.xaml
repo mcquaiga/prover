@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.StartTestView"
+﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.NewQaTestRunView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,7 +16,7 @@
     <StackPanel Orientation="Vertical" Margin="15 10">
         <StackPanel>
             <TextBlock Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-                Start a new EVC verification test?
+                EVC QA Test Run
             </TextBlock>
         </StackPanel>
         <Grid>
@@ -37,36 +37,32 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock FontSize="14"
-                               Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                               Text="Instrument Type" />
-                    <GroupBox BorderThickness="0">
-                        <StackPanel Orientation="Vertical" Margin="4">
-                            <RadioButton Content="Mini-Max Rotary" FontSize="16"
-                                         Name="MiniMax"
-                                         IsChecked="{Binding IsMiniMaxChecked}" />
-                            <RadioButton Content="Mini-AT" FontSize="16" VerticalAlignment="Center"
-                                         Name="MiniAT"
-                                         IsChecked="{Binding IsMiniATChecked}" />
-                            <RadioButton Content="EC350" FontSize="16" VerticalAlignment="Center"
-                                         Name="EC350"
-                                         IsChecked="{Binding IsEC350Checked}" />
-                        </StackPanel>
-                    </GroupBox>
 
-                </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="1">
-                    <TextBlock FontSize="14" Text="Instrument Settings"
-                               Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
-                    <controls1:ValueDescriptionControl Label="Port" Value="{Binding InstrumentCommPortName}" />
-                    <controls1:ValueDescriptionControl Label="Baud Rate" Value="{Binding BaudRate}" />
-                </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="2">
-                    <TextBlock FontSize="14" Text="Tach Settings"
-                               Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+                <GroupBox BorderThickness="1" Header="Instrument Type" Grid.Row="0" Grid.Column="0">
+
+                    <StackPanel Orientation="Vertical" Margin="4">
+                        <RadioButton Content="Mini-Max Rotary" FontSize="16"
+                                        Name="MiniMax"
+                                        IsChecked="{Binding IsMiniMaxChecked}" />
+                        <RadioButton Content="Mini-AT" FontSize="16" VerticalAlignment="Center"
+                                        Name="MiniAT"
+                                        IsChecked="{Binding IsMiniATChecked}" />
+                        <RadioButton Content="EC350" FontSize="16" VerticalAlignment="Center"
+                                        Name="EC350"
+                                        IsChecked="{Binding IsEC350Checked}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
+                    <StackPanel>
+                        <controls1:ValueDescriptionControl Label="Port" Value="{Binding InstrumentCommPortName}" />
+                        <controls1:ValueDescriptionControl Label="Baud Rate" Value="{Binding BaudRate}" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Grid.Row="0" Grid.Column="2" Header="Tach. Settings">
+ 
                     <controls1:ValueDescriptionControl Label="Port" Value="{Binding TachCommPortName}" />
-                </StackPanel>
+                </GroupBox>
             </Grid>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"

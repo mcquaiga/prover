@@ -30,7 +30,7 @@ namespace UnionGas.MASA.Verifiers
 
         public DCRWebServiceSoap WebService { get; }
 
-        protected override async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
+        public override async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.ToString();
@@ -50,9 +50,9 @@ namespace UnionGas.MASA.Verifiers
             return meterDto;
         }
 
-        protected override Task<object> Update(EvcCommunicationClient commClient, Instrument instrument)
+        public override Task<object> Update(EvcCommunicationClient commClient, Instrument instrument)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         private async Task<MeterDTO> VerifyWithWebService(string companyNumber)

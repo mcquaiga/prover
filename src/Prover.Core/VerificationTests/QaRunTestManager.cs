@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.EVCTypes;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
@@ -15,45 +13,47 @@ using Prover.Core.VerificationTests.VolumeVerification;
 
 namespace Prover.Core.VerificationTests
 {
-    public class QaRunTestManager : IDisposable
+    public interface IQaRunTestManager
+    {
+        Instrument Instrument { get; }
+        void Dispose();
+        Task InitializeTest(IDriveType driveType);
+        Task RunTest(int level);
+        Task DownloadVerificationTestItems(int level);
+        Task DownloadTemperatureTestItems(int levelNumber);
+        Task DownloadPressureTestItems(int level);
+        Task SaveAsync();
+        Task RunVerifier();
+    }
+
+    public class QaRunTestManager : IDisposable, IQaRunTestManager
     {
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
-
-        private readonly IEnumerable<IVerifier> _verifiers;
-        private readonly IDriveType _driveType;
-        private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly EvcCommunicationClient _communicationClient;
+        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IReadingStabilizer _readingStabilizer;
+        private readonly IEnumerable<IVerifier> _verifiers;
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
-            IDriveType driveType,
-            IReadingStabilizer readingStabilizer,
-            IEnumerable<IVerifier> verifiers)
+            IReadingStabilizer readingStabilizer)
         {
-            _verifiers = verifiers;
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
-            _driveType = driveType;
             _readingStabilizer = readingStabilizer;
         }
 
+        public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
+        
         public Instrument Instrument { get; private set; }
 
-        public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
-
-        public void Dispose()
-        {
-            _communicationClient.Dispose();
-        }
-
-        public async Task Init()
+        public async Task InitializeTest(IDriveType driveType)
         {
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
-            Instrument = new Instrument(_communicationClient.InstrumentType, _driveType, items);
+            Instrument = new Instrument(_communicationClient.InstrumentType, driveType, items);
             await _communicationClient.Disconnect();
 
             await RunVerifier();
@@ -61,7 +61,7 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunTest(int level)
         {
-            if (Instrument == null) throw new NullReferenceException("Call Init method before running a test.");
+            if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
 
             await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level);
             await DownloadVerificationTestItems(level);
@@ -125,6 +125,11 @@ namespace Prover.Core.VerificationTests
             if (verifiers.Any())
                 foreach (var verifier in verifiers)
                     await verifier.Verify(_communicationClient, Instrument);
+        }
+
+        public void Dispose()
+        {
+            _communicationClient.Dispose();
         }
     }
 }

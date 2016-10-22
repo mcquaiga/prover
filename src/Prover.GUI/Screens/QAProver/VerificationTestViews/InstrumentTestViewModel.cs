@@ -19,8 +19,12 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
             Instrument = instrument;
 
             //TODO
-            //Instrument.VerificationTests.OrderBy(v => v.TestNumber).ForEach(x =>
-            //    TestViews.Add(new VerificationSetViewModel(EventAggregator, x)));
+            foreach (var x in Instrument.VerificationTests.OrderBy(v => v.TestNumber))
+            {
+                var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                item.VerificationTest = x;
+                TestViews.Add(item);
+            }
         }
 
         public Instrument Instrument { get; }
