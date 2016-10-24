@@ -47,6 +47,9 @@ namespace UnionGas.MASA
 
                 EmployeeDto = response.Body.GetEmployeeResult;
 
+                if (EmployeeDto != null)
+                    MessageBox.Show($"Logged in as {EmployeeDto.EmployeeName}.");
+
                 return response.Body.GetEmployeeResult?.Id;
             }
             catch (Exception ex)
