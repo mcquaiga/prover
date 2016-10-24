@@ -6,35 +6,38 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Caliburn.Micro;
 using System.Data.Entity;
+using Autofac;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Migrations;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
+using IContainer = Autofac.IContainer;
 
 namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
-        public IUnityContainer Container;
+        public IContainer Container { get; }
 
         public CoreBootstrapper()
         {
-            Container = new UnityContainer();
- 
+            var builder = new ContainerBuilder();
+            
             //Database registrations
-            Container.RegisterInstance(new ProverContext());
-            Container.RegisterType<IInstrumentStore<Instrument>, InstrumentStore>();
-            Container.RegisterType<ICertificateStore<Certificate>, CertificateStore>();
+            builder.RegisterInstance(new ProverContext());
+            builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
+            builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             
             //
-            Container.RegisterType<IEventAggregator, EventAggregator>();
+            builder.RegisterType<EventAggregator>().As<EventAggregator>();
 
             //EVC Communcation
-            Container.RegisterType<CommPort, SerialPort>("SerialPort",
-                new InjectionFactory(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate)));
+            Container.RegisterType<CommPort, SerialPort>("SerialPort", new InjectionFactory(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate)));
+            builder.RegisterType<SerialPort>().As<CommPort>()
+
             Container.RegisterType<EvcCommunicationClient, HoneywellClient>(
                 new InjectionFactory(c => new HoneywellClient(c.Resolve<CommPort>("SerialPort"))));
 
