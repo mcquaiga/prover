@@ -15,6 +15,7 @@ namespace Prover.CommProtocol.Common.IO
     {
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
         private readonly SerialPortStream _serialStream;
+        public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
         {

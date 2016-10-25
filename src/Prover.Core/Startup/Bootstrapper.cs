@@ -35,15 +35,20 @@ namespace Prover.Core.Startup
             builder.RegisterType<EventAggregator>().As<EventAggregator>();
 
             //EVC Communcation
-            Container.RegisterType<CommPort, SerialPort>("SerialPort", new InjectionFactory(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate)));
-            builder.RegisterType<SerialPort>().As<CommPort>()
+            //Container.RegisterType<CommPort, SerialPort>("SerialPort", new InjectionFactory(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate)));
+            builder.RegisterType<SerialPort>().As<CommPort>();
+            Container = builder.Build();
 
-            Container.RegisterType<EvcCommunicationClient, HoneywellClient>(
-                new InjectionFactory(c => new HoneywellClient(c.Resolve<CommPort>("SerialPort"))));
+            var commPortFactory = Container.Resolve<SerialPort.Factory>();
+            var commPort = commPortFactory.Invoke(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
 
-            //QA Test Runs
-            Container.RegisterType<IQaRunTestManager, QaRunTestManager>();
-            Container.RegisterType<IReadingStabilizer, ReadingStabilizer>();
+
+            //Container.RegisterType<EvcCommunicationClient, HoneywellClient>(
+            //    new InjectionFactory(c => new HoneywellClient(c.Resolve<CommPort>("SerialPort"))));
+
+            ////QA Test Runs
+            //Container.RegisterType<IQaRunTestManager, QaRunTestManager>();
+            //Container.RegisterType<IReadingStabilizer, ReadingStabilizer>();
 
             SettingsManager.RefreshSettings();
         }

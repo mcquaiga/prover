@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.ExternalIntegrations;
@@ -19,10 +20,11 @@ namespace UnionGas.MASA
 {
     public static class Startup
     {
-        public static void Initialize(IUnityContainer container)
+        public static void Initialize(IContainer container)
         {
             //App Menu Icon
             container.RegisterType<IAppMainMenu, ExportManagerApp>("ExportApp");
+            container.RegisterType<ExportManagerApp>().As
 
             container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
