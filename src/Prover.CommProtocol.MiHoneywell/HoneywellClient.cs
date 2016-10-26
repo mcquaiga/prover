@@ -20,8 +20,6 @@ namespace Prover.CommProtocol.MiHoneywell
         {
         }
 
-        public override InstrumentType InstrumentType { get; set; }
-
         public override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
 
         public override bool IsConnected { get; protected set; }

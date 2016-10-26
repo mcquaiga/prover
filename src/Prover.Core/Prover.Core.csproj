@@ -167,7 +167,7 @@
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
     <Compile Include="Communication\Communications.cs" />
-    <Compile Include="DriveTypes\IEVCDriveType.cs" />
+    <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />

@@ -94,6 +94,11 @@ namespace Prover.CommProtocol.Common
             }
         }
 
+        public void Initialize(InstrumentType instrumentType)
+        {
+            InstrumentType = instrumentType;
+        }
+
         /// <summary>
         ///     Establish a link with an instrument
         ///     Handles retries for failed connections

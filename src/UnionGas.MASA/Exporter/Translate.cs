@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using NLog;
 using Prover.CommProtocol.Common.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -19,16 +22,21 @@ namespace UnionGas.MASA.Exporter
 
             var qaRun = new DCRWebService.QARunEvcTestResult()
             {
+                InstrumentType = instrument.InstrumentType.Name,
                 InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture),
                 TestDate = instrument.TestDateTime,
                 DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
+                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
+                    (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
+                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ?
+                    (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement : decimal.Zero,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
-                InstrumentType = instrument.InstrumentTypeString,
                 SerialNumber = instrument.SerialNumber.ToString(),
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
-
+                EmployeeId = instrument.EmployeeId,
+               
                 PressureInfo = new DCRWebService.PressureHeader
                 {
                     BasePressure = instrument.EvcBasePressure() ?? decimal.Zero,
@@ -67,7 +75,8 @@ namespace UnionGas.MASA.Exporter
                     PulseBSelect = instrument.PulseBSelect()
                 },
 
-                VerificationTests = instrument.VerificationTests.Select(vt => TranslateVerificationTest(vt)).ToArray()              
+                VerificationTests = instrument.VerificationTests.Select(vt => TranslateVerificationTest(vt)).ToArray(),
+                JobNumber = 27084
             };
 
             return qaRun;
@@ -77,6 +86,7 @@ namespace UnionGas.MASA.Exporter
         {
             return new DCRWebService.VerificationTest
             {
+                SequenceNumber = vt.TestNumber,
                 Pressure = TranslatePressureTest(vt),
                 Temperature = TranslateTemperatureTest(vt),
                 SuperFactor = TranslateSuperFactorTest(vt),
@@ -99,7 +109,7 @@ namespace UnionGas.MASA.Exporter
                 PulseBCount = vt.VolumeTest.PulseBCount,
                 TrueCorrected = vt.VolumeTest.TrueCorrected ?? -1,
                 CorrectedPercentError = vt.VolumeTest.CorrectedPercentError ?? -1,
-                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError ?? -1
+                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError ?? -1               
             };
         }
 
@@ -129,6 +139,7 @@ namespace UnionGas.MASA.Exporter
                 EvcFactor = vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue,
                 EvcTemperature = vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue,
                 PercentError = vt.TemperatureTest.PercentError ?? decimal.MinusOne
+                
             };
         }
 
@@ -145,6 +156,7 @@ namespace UnionGas.MASA.Exporter
                 EvcGasPressure = vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue,
                 EvcPressureFactor = vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue,
                 PercentError = vt.PressureTest.PercentError ?? decimal.MinusOne
+                
             };
         }
     }

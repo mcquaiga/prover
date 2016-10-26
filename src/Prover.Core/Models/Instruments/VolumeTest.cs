@@ -16,7 +16,6 @@ using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
-using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -82,7 +81,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return DriveType?.UnCorrectedInputVolume(AppliedInput);
+                return DriveType?.UnCorrectedInputVolume(Instrument, AppliedInput);
             }
         }
 
@@ -149,17 +148,17 @@ namespace Prover.Core.Models.Instruments
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.T && VerificationTest.TemperatureTest != null)
                 {
-                    return (VerificationTest.TemperatureTest.ActualFactor * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.TemperatureTest.ActualFactor * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.P && VerificationTest.PressureTest != null)
                 {
-                    return (VerificationTest.PressureTest.ActualFactor * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.PressureTest.ActualFactor * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
                 {
-                    return (VerificationTest.PressureTest?.ActualFactor * VerificationTest.TemperatureTest?.ActualFactor * VerificationTest.SuperFactorTest.SuperFactorSquared * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.PressureTest?.ActualFactor * VerificationTest.TemperatureTest?.ActualFactor * VerificationTest.SuperFactorTest.SuperFactorSquared * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 return null;
@@ -181,11 +180,11 @@ namespace Prover.Core.Models.Instruments
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
-                        DriveType = new RotaryDrive(this.VerificationTest.Instrument);
+                        DriveType = new RotaryDrive();
                         break;
                     case "Mechanical":
-                        DriveType = new MechanicalDrive(this.VerificationTest.Instrument);
-                        AppliedInput = DriveType.MaxUncorrectedPulses();
+                        DriveType = new MechanicalDrive();
+                        AppliedInput = DriveType.MaxUncorrectedPulses(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

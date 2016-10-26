@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.EVCTypes;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -17,7 +17,7 @@ namespace Prover.Core.VerificationTests
     {
         Instrument Instrument { get; }
         void Dispose();
-        Task InitializeTest(IDriveType driveType);
+        Task InitializeTest(InstrumentType instrumentType, IDriveType driveType);
         Task RunTest(int level);
         Task DownloadVerificationTestItems(int level);
         Task DownloadTemperatureTestItems(int levelNumber);
@@ -38,24 +38,27 @@ namespace Prover.Core.VerificationTests
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
-            IReadingStabilizer readingStabilizer)
+            IReadingStabilizer readingStabilizer
+            )
         {
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
+            
         }
 
         public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
         
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(IDriveType driveType)
+        public async Task InitializeTest(InstrumentType instrumentType, IDriveType driveType)
         {
+            _communicationClient.Initialize(instrumentType);
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
-            Instrument = new Instrument(_communicationClient.InstrumentType, driveType, items);
+            Instrument = new Instrument(instrumentType, driveType, items);
             await _communicationClient.Disconnect();
-
+            await SaveAsync();
             await RunVerifier();
         }
 

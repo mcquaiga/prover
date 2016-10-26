@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
-    public partial class QATestRunInteractiveView : UserControl
+    public partial class QaTestRunInteractiveView : UserControl
     {
-        public QATestRunInteractiveView()
+        public QaTestRunInteractiveView()
         {
             InitializeComponent();
             Loaded += ControlLoaded;

@@ -83,7 +83,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     //TODO: Raise events so the UI can respond
                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !RequestStopTest);
+                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses(volumeTest.Instrument)) && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
             });
