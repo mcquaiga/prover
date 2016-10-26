@@ -81,7 +81,9 @@ namespace UnionGas.MASA.Exporter
                 JobNumber = 27084,
                 ProverNumber = "229",
                 MeterClassCode = "EV",
-                TestReason = "6"         
+                TestReason = "6" ,
+                FieldMeterDesc = "SJB",
+                SubmitRunIndicator = "Y"
             };
             
             return qaRun;
