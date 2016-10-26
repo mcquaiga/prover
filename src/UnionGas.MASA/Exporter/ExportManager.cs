@@ -81,9 +81,6 @@ namespace UnionGas.MASA.Exporter
                 Log.Error(ex, "An error occured sending results to the web service.");
             }
 
-            MessageBox.Show($"An error occured sending results to the web service. " +
-                            $"{Environment.NewLine} See log for details.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
             return false;
         }
     }

@@ -76,8 +76,12 @@ namespace UnionGas.MASA.Exporter
                 },
 
                 VerificationTests = instrument.VerificationTests.Select(vt => TranslateVerificationTest(vt)).ToArray()   ,
-                IndexReading = null,
-                Comments = string.Empty
+                IndexReading = 0,
+                Comments = "Testing DCR Webservice",
+                JobNumber = 27084,
+                ProverNumber = "229",
+                MeterClassCode = "EV",
+                TestReason = "6"         
             };
             
             return qaRun;
