@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Practices.Unity;
 using NLog;
 using Prover.Core.ExternalIntegrations;
@@ -67,16 +68,21 @@ namespace UnionGas.MASA.Exporter
                     new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(evcQARun.ToArray()));
 
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
+
                 if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
                 {
                     return true;
                 }
-               
+                
+                Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
             }
             catch (Exception ex)
-            {
+            { 
                 Log.Error(ex, "An error occured sending results to the web service.");
             }
+
+            MessageBox.Show($"An error occured sending results to the web service. " +
+                            $"{Environment.NewLine} See log for details.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             return false;
         }

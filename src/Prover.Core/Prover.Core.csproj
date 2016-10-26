@@ -166,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="Communication\Communications.cs" />
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
@@ -179,7 +178,6 @@
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
-    <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="ExternalIntegrations\IExportTestRun.cs" />
     <Compile Include="ExternalIntegrations\IVerifier.cs" />
     <Compile Include="Global.cs" />

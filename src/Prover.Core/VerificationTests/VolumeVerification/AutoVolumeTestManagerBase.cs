@@ -13,10 +13,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
     public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
     {
         private readonly IDInOutBoard _outputBoard;
-        private readonly TachometerCommunicator _tachometerCommunicator;
+        private readonly TachometerService _tachometerCommunicator;
 
         public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, IPulseInputService pulseInputService,
-            TachometerCommunicator tachComm)
+            TachometerService tachComm)
             : base(eventAggregator, pulseInputService)
         {
             _tachometerCommunicator = tachComm;

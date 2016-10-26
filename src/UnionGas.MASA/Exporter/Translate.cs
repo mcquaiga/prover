@@ -75,10 +75,11 @@ namespace UnionGas.MASA.Exporter
                     PulseBSelect = instrument.PulseBSelect()
                 },
 
-                VerificationTests = instrument.VerificationTests.Select(vt => TranslateVerificationTest(vt)).ToArray(),
-                JobNumber = 27084
+                VerificationTests = instrument.VerificationTests.Select(vt => TranslateVerificationTest(vt)).ToArray()   ,
+                IndexReading = null,
+                Comments = string.Empty
             };
-
+            
             return qaRun;
         }
 
