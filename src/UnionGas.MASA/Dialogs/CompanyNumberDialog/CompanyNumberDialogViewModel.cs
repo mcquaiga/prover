@@ -1,11 +1,14 @@
-﻿using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
 using UnionGas.MASA.Verifiers;
 
 namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 {
-    public class CompanyNumberDialogViewModel : ReactiveScreen
+    public class CompanyNumberDialogViewModel : ViewModelBase
     {
-        public CompanyNumberDialogViewModel()
+        public CompanyNumberDialogViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
             CompanyNumber = string.Empty;
         }

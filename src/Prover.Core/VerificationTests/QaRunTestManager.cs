@@ -33,18 +33,19 @@ namespace Prover.Core.VerificationTests
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IEnumerable<IVerifier> _verifiers;
+        private readonly IVerifier _verifier;
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
-            IReadingStabilizer readingStabilizer
+            IReadingStabilizer readingStabilizer,
+            IVerifier verifier
             )
         {
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
-            
+            _verifier = verifier;
         }
 
         public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
@@ -123,10 +124,10 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            if (_verifiers != null && _verifiers.Any())
+            if (_verifier != null)
             {
-                foreach (var verifier in _verifiers.ToArray())
-                    await verifier.Verify(_communicationClient, Instrument);
+                //foreach (var verifier in _verifier.ToArray())
+                    await _verifier.Verify(_communicationClient, Instrument);
             }
         }
 

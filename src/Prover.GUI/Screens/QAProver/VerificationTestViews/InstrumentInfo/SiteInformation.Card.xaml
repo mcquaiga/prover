@@ -25,13 +25,12 @@
 
             <StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">
-                    <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.Type}" />
+                    <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.InstrumentType.Name}" />
                     <controls1:ValueDescriptionControl Label="Comp." Value="{Binding CorrectorType}" />
-                </UniformGrid>
-                <UniformGrid Rows="3">
+                    <controls1:ValueDescriptionControl Label="Inventory Code" Value="{Binding Instrument.SiteNumber1}" />
                     <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
-                    <controls1:ValueDescriptionControl Label="Site Number 1" Value="{Binding Instrument.SiteNumber1}" />
-                    <controls1:ValueDescriptionControl Label="Site Number 2" Value="{Binding Instrument.SiteNumber2}" />
+                </UniformGrid>
+                <UniformGrid Rows="1">
                     <controls1:ValueDescriptionControl Label="Firmware Version"
                                                        Value="{Binding Instrument.FirmwareVersion}" />
                     <controls1:ValueDescriptionControl Label="Pulser A Select"

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps.cs" />
+    <Compile Include="Verifiers\CompanyNumberUpdater.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
       <DependentUpon>CompanyNumberDialogView.xaml</DependentUpon>
@@ -181,7 +182,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="Exporter\Translate.cs" />
-    <Compile Include="Verifiers\CompanyNumberVerifierUpdater.cs" />
+    <Compile Include="Verifiers\CompanyNumberVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,8 @@ namespace UnionGas.MASA
 
             container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            container.RegisterType<IVerifier, CompanyNumberVerifierUpdater>();
+            container.RegisterType<IUpdater, CompanyNumberUpdater>();
+            container.RegisterType<IVerifier, CompanyNumberVerifier>();
             container.RegisterType<IExportTestRun, ExportManager>();
 
             //ViewModels
