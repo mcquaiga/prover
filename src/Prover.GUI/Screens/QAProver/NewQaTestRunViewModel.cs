@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
@@ -40,7 +41,9 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                await ScreenManager.ChangeScreen<QaTestRunInteractiveViewModel>();
+                var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
+                await qaTestRun.Initialize(Instruments.MiniAt, new MechanicalDrive());
+                await ScreenManager.ChangeScreen(qaTestRun);
             }
             catch (Exception ex)
             {

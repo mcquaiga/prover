@@ -123,11 +123,11 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            var verifiers = _verifiers.ToArray();
-
-            if (verifiers.Any())
-                foreach (var verifier in verifiers)
+            if (_verifiers != null && _verifiers.Any())
+            {
+                foreach (var verifier in _verifiers.ToArray())
                     await verifier.Verify(_communicationClient, Instrument);
+            }
         }
 
         public void Dispose()

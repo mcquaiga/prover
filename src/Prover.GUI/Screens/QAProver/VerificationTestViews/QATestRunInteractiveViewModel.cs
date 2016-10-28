@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Models.Instruments;
@@ -19,8 +20,13 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
             QaRunTestManager = qaRunTestManager;
 
             QaTestRunViewItem = ScreenManager.ResolveViewModel<QaTestRunViewModel>();
+        }
 
-            Task.Run(async () => await qaRunTestManager.InitializeTest(Instruments.MiniAt, new MechanicalDrive()));
+        public async Task Initialize(InstrumentType instrumentType, IDriveType driveType)
+        {
+            await QaRunTestManager.InitializeTest(instrumentType, driveType);
+            await QaTestRunViewItem.Initialize(QaRunTestManager.Instrument);
+
         }
 
         public QaTestRunViewModel QaTestRunViewItem { get; set; }

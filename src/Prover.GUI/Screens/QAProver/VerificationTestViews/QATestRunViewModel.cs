@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.DriveTypes;
@@ -20,22 +22,27 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
            
         }
 
-        public void Initialize(Instrument instrument)
+        public async Task Initialize(Instrument instrument)
         {
-            Instrument = instrument;
-
-            SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-            SiteInformationItem.Instrument = instrument;
-
-            foreach (var x in Instrument.VerificationTests.OrderBy(v => v.TestNumber))
+            await Task.Run(() =>
             {
-                var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                item.VerificationTest = x;
-                TestViews.Add(item);
-            }
+                Instrument = instrument;
 
-            if (Instrument.VolumeTest?.DriveType is RotaryDrive)
-                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
+                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                SiteInformationItem.Instrument = instrument;
+
+                foreach (var x in Instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                {
+                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                    item.InitializeViews(x, QaRunTestManager);
+                    item.VerificationTest = x;
+
+                    TestViews.Add(item);
+                }
+
+                if (Instrument.VolumeTest?.DriveType is RotaryDrive)
+                    MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
+            });
         }
 
         public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }

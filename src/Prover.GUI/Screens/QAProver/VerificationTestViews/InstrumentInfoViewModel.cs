@@ -12,9 +12,8 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
     public class InstrumentInfoViewModel : ViewModelBase, IHandle<InstrumentUpdateEvent>
     {
-        public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Instrument instrument) : base(screenManager, eventAggregator)
+        public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
-            Instrument = instrument;
         }
 
         public Instrument Instrument { get; set; }

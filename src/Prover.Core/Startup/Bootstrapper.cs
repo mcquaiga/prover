@@ -10,6 +10,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
 using Prover.Core.Settings;
@@ -47,6 +48,7 @@ namespace Prover.Core.Startup
             //QA Test Runs
             Container.RegisterType<IQaRunTestManager, QaRunTestManager>();
             Container.RegisterType<IReadingStabilizer, AverageReadingStabilizer>();
+            Container.RegisterType<IDriveType, MechanicalDrive>();
 
             SettingsManager.RefreshSettings();
         }

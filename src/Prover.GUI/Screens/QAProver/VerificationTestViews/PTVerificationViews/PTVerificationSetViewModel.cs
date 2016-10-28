@@ -12,15 +12,11 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase
     {
-        private readonly QaRunTestManager _qaRunTestManager;
+        public IQaRunTestManager QaRunTestManager;
 
-        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, VerificationTest verificationTest, QaRunTestManager qaRunTestManager = null)
+        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaRunTestManager = qaRunTestManager;
-
-            VerificationTest = verificationTest;
-            CreateViews();
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
@@ -32,8 +28,11 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public VerificationTest VerificationTest { get; set; }
 
-        private void CreateViews()
+        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
         {
+            VerificationTest = verificationTest;
+            QaRunTestManager = qaTestRunTestManager;
+
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
@@ -59,7 +58,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public async Task RunTest()
         {
-            await _qaRunTestManager.RunTest(VerificationTest.TestNumber);
+            await QaRunTestManager.RunTest(VerificationTest.TestNumber);
             EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
         }
     }
