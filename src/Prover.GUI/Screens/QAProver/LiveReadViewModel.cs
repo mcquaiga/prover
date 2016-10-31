@@ -9,7 +9,6 @@ using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using Prover.Core.VerificationTests;
-using Prover.Core.VerificationTests.Rotary;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 
@@ -19,15 +18,14 @@ namespace Prover.GUI.Screens.QAProver
         IHandle<InstrumentUpdateEvent>
     {
         private readonly IUnityContainer _container;
-        private RotaryTestManager _instrumentManager;
-        private TestManager _testManager;
+        private QaRunTestManager _qaRunTestManager;
 
         public LiveReadViewModel(IUnityContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            _testManager = _container.Resolve<TestManager>();
+            _qaRunTestManager = _container.Resolve<QaRunTestManager>();
         }
 
         public ObservableCollection<LiveReadDisplay> LiveReadItems { get; set; } =
@@ -35,7 +33,7 @@ namespace Prover.GUI.Screens.QAProver
 
         public void Handle(InstrumentUpdateEvent message)
         {
-            _instrumentManager = message.InstrumentManager;
+            //_instrumentManager = message.InstrumentManager;
         }
 
         public void Handle(LiveReadEvent message)

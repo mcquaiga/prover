@@ -45,7 +45,7 @@ namespace Prover.CommProtocol.Common.IO
         
         public override string Name => "IrDA";
 
-        protected sealed override IObservable<char> DataReceived()
+        public sealed override IObservable<char> DataReceived()
         {
             return Observable.Defer(async () =>
             {

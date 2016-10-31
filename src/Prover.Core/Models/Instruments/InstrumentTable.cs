@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
@@ -43,17 +44,20 @@ namespace Prover.Core.Models.Instruments
         public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
-        public abstract InstrumentType InstrumentType { get; }
+        public virtual InstrumentType InstrumentType { get; set; }
 
         public override void OnInitializing()
         {
             base.OnInitializing();
 
-            if (!string.IsNullOrEmpty(_instrumentData))
-            {
-                var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
-                Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
-            }
+            if (this is Instrument)
+                this.InstrumentType =
+                    CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == (this as Instrument).Type);
+
+            if (string.IsNullOrEmpty(_instrumentData)) return;
+
+            var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
+            Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
         }
     }
 }

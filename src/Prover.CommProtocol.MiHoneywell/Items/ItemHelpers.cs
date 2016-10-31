@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
@@ -19,22 +20,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
         public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
         {
-            var path = string.Empty;
-            switch (type)
-            {
-                case InstrumentType.MiniMax:
-                    path = "MiniMaxItems.xml";
-                    break;
-                case InstrumentType.MiniAT:
-                    path = "MiniATItems.xml";
-                    break;
-                case InstrumentType.EC350:
-                    path = "EC350_Items.xml";
-                    break;
-            }
-
-            path = $@"{ItemDefinitionsFolder}\{path}";
-
+            var path = $@"{ItemDefinitionsFolder}\{type.ItemFilePath}";
             var xDoc = XDocument.Load(path);
 
             return (from x in xDoc.Descendants("item")

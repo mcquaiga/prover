@@ -1,40 +1,37 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
-using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
+using Prover.GUI.Common;
 
 namespace Prover.GUI.Reports
 {
     public class InstrumentGenerator
     {
-        private readonly IUnityContainer _container;
-        private readonly Instrument _instrument;
-        private string _filePath;
+        private readonly ScreenManager _screenManager;
 
-        public InstrumentGenerator(Instrument instrument, IUnityContainer container)
+        public InstrumentGenerator(ScreenManager screenManager)
         {
-            _instrument = instrument;
-            _container = container;
-            CreateFileName();
+            _screenManager = screenManager;   
         }
-
-        public string FileName
-            =>
-                string.Format("{0}-instrument-{1}.xps", _instrument.SerialNumber,
-                    DateTime.Now.ToFileTime().ToString().Substring(0, 10));
 
         public string InstrumentsFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
 
-        public void Generate()
+        public async Task Generate(Instrument instrument)
         {
+            var filePath = CreateFileName(instrument);
+
             //Set up the WPF Control to be printed
             var controlToPrint = new InstrumentReportView();
-            controlToPrint.DataContext = new InstrumentReportViewModel(_container, _instrument);
+            var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
+            controlToPrint.DataContext = reportViewModel;
+            
+            await reportViewModel.Initialize(instrument);
 
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
@@ -47,21 +44,26 @@ namespace Prover.GUI.Reports
             fixedDoc.Pages.Add(pageContent);
 
             // Save document
-            WriteDocument(fixedDoc, _filePath);
+            WriteDocument(fixedDoc, filePath);
 
             //View the document
-            Process.Start(_filePath);
+            Process.Start(filePath);
         }
 
-        private void CreateFileName()
+        private string CreateFileName(Instrument instrument)
         {
-            _filePath = Path.Combine(InstrumentsFolderPath, FileName);
+            var fileName = string.Format("{0}-instrument-{1}.xps", instrument.SerialNumber,
+                    DateTime.Now.ToFileTime().ToString().Substring(0, 10));
+
+            var filePath = Path.Combine(InstrumentsFolderPath, fileName);
 
             //Create the directory if it doesn't exist
             if (!Directory.Exists(InstrumentsFolderPath))
             {
                 Directory.CreateDirectory(InstrumentsFolderPath);
             }
+
+            return filePath;
         }
 
         private string WriteDocument(FixedDocument fixedDoc, string filePath)

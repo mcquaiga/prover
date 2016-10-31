@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
-using Prover.Core.EVCTypes;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : ProverTable
+    public sealed class VolumeTest : BaseVerificationTest
     {
         public VolumeTest()
         {
@@ -27,12 +27,12 @@ namespace Prover.Core.Models.Instruments
         }
         public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             
             DriveType = driveType;
-            //AppliedInput = DriveType.MaxUnCorrected();
+            //AppliedInput = DriveType.MaxUncorrectedPulses();
             DriveTypeDiscriminator = DriveType.Discriminator;
         }
 
@@ -67,9 +67,11 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TrueUncorrected != 0 && TrueUncorrected.HasValue)
+                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
-                    return Math.Round((decimal)((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100, 2);
+                    var o = (EvcUncorrected - TrueUncorrected) / TrueUncorrected;
+                    if (o != null)
+                        return Math.Round((decimal)o * 100, 2);
                 }
 
                 return null;
@@ -81,7 +83,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return DriveType?.UnCorrectedInputVolume(AppliedInput);
+                return DriveType?.UnCorrectedInputVolume(Instrument, AppliedInput);
             }
         }
 
@@ -109,6 +111,9 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
+
+        public override decimal? PercentError { get; }
+        public override decimal? ActualFactor { get; }
 
         [NotMapped]
         public int UncPulseCount
@@ -145,17 +150,17 @@ namespace Prover.Core.Models.Instruments
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.T && VerificationTest.TemperatureTest != null)
                 {
-                    return (VerificationTest.TemperatureTest.ActualFactor * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.TemperatureTest.ActualFactor * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.P && VerificationTest.PressureTest != null)
                 {
-                    return (VerificationTest.PressureTest.ActualFactor * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.PressureTest.ActualFactor * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
                 {
-                    return (VerificationTest.PressureTest?.ActualFactor * VerificationTest.TemperatureTest?.ActualFactor * VerificationTest.SuperFactorTest.SuperFactorSquared * DriveType.UnCorrectedInputVolume(AppliedInput));
+                    return (VerificationTest.PressureTest?.ActualFactor * VerificationTest.TemperatureTest?.ActualFactor * VerificationTest.SuperFactorTest.SuperFactorSquared * DriveType.UnCorrectedInputVolume(Instrument, AppliedInput));
                 }
 
                 return null;
@@ -177,11 +182,11 @@ namespace Prover.Core.Models.Instruments
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
-                        DriveType = new RotaryDrive(this.VerificationTest.Instrument);
+                        DriveType = new RotaryDrive();
                         break;
                     case "Mechanical":
-                        DriveType = new MechanicalDrive(this.VerificationTest.Instrument);
-                        AppliedInput = DriveType.MaxUnCorrected();
+                        DriveType = new MechanicalDrive();
+                        AppliedInput = DriveType.MaxUncorrectedPulses(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

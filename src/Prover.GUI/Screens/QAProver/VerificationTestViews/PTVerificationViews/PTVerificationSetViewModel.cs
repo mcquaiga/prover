@@ -4,65 +4,62 @@ using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
+using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
-    public class PTVerificationSetViewModel : ReactiveScreen
+    public class VerificationSetViewModel : ViewModelBase
     {
-        private readonly IUnityContainer _container;
-        private readonly TestManager _testManager;
+        public IQaRunTestManager QaRunTestManager;
 
-        public PTVerificationSetViewModel(IUnityContainer container, VerificationTest verificationTest)
+        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
-
-            if (_container.IsRegistered<TestManager>())
-                _testManager = _container.Resolve<TestManager>();
-
-            VerificationTest = verificationTest;
-            CreateViews();
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
         public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
         public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
         public PressureTestViewModel PressureTestViewModel { get; private set; }
-        public SuperTestViewModel SuperFactorTestViewModel { get; private set; }
+        public SuperFactorTestViewModel SuperFactorTestViewModel { get; private set; }
         public VolumeTestViewModel VolumeTestViewModel { get; private set; }
 
-        public VerificationTest VerificationTest { get; }
+        public VerificationTest VerificationTest { get; set; }
 
-        private void CreateViews()
+        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
         {
+            VerificationTest = verificationTest;
+            QaRunTestManager = qaTestRunTestManager;
+
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
-                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
-                SuperFactorTestViewModel = new SuperTestViewModel(_container, VerificationTest.SuperFactorTest);
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
             }
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.T)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(_container, VerificationTest.TemperatureTest);
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
             }
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.P)
             {
-                PressureTestViewModel = new PressureTestViewModel(_container, VerificationTest.PressureTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
             }
 
             if (VerificationTest.VolumeTest != null)
             {
-                VolumeTestViewModel = new VolumeTestViewModel(_container, VerificationTest.VolumeTest);
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
             }
         }
 
         public async Task RunTest()
         {
-            await _testManager.RunTest(VerificationTest.TestNumber);
-            _container.Resolve<IEventAggregator>().PublishOnUIThread(VerificationTestEvent.Raise());
+            await QaRunTestManager.RunTest(VerificationTest.TestNumber);
+            EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
         }
     }
 }

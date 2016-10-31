@@ -10,6 +10,14 @@ using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.Common
 {
+    public class InstrumentType
+    {
+        public int AccessCode { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public string ItemFilePath { get; set; }
+    }
+
     public abstract class EvcCommunicationClient : IDisposable
     {
         private const int ConnectionRetryDelayMs = 3000;
@@ -36,10 +44,12 @@ namespace Prover.CommProtocol.Common
 
         protected CommPort CommPort { get; set; }
 
+        public virtual InstrumentType InstrumentType { get; set; } 
+
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
         /// </summary>
-        public virtual IEnumerable<ItemMetadata> ItemDetails { get; } = new List<ItemMetadata>();
+        public virtual IEnumerable<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
         /// <summary>
         ///     Is this client already connected to an instrument
@@ -82,6 +92,11 @@ namespace Prover.CommProtocol.Common
                 var result = await response;
                 return result;
             }
+        }
+
+        public void Initialize(InstrumentType instrumentType)
+        {
+            InstrumentType = instrumentType;
         }
 
         /// <summary>

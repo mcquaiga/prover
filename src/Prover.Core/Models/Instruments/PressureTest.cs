@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 
@@ -22,7 +23,7 @@ namespace Prover.Core.Models.Instruments
 
         public PressureTest(VerificationTest verificationTest, decimal gauge) : base()
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);

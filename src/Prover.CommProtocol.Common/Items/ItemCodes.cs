@@ -26,6 +26,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             public static string FixedFactor = "FIXED_TEMP_FACTOR";
             public static string Factor = "TEMP_FACTOR";
+            public static string GasTemperature = "GAS_TEMP";
         }
 
         public static class Super

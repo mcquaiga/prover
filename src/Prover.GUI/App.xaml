@@ -13,7 +13,7 @@
                 <ResourceDictionary>
                     <gui:AppBootstrapper x:Key="AppBootstrapper" />
                 </ResourceDictionary>
-
+                
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary

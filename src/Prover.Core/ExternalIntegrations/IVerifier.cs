@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Caliburn.Micro.ReactiveUI;
+using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
@@ -9,21 +11,11 @@ namespace Prover.Core.ExternalIntegrations
 {
     public interface IVerifier
     {
-        Task<object> Verify();
-        //Task<bool> Update(EvcCommunicationClient commClient, Instrument instrument, long newCompanyNumber);
-        //VerificationNotValidEvent VerificationNotValid { get; }
+        Task<object> Verify(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
     }
 
-    public class VerificationNotValidEvent
+    public interface IUpdater
     {
-        public VerificationNotValidEvent(ItemValue item, ReactiveScreen viewModel)
-        {
-            Item = item;
-            this.ViewModel = viewModel;
-        }
-
-        public ReactiveScreen ViewModel { get; set; }
-
-        public ItemValue Item { get; set; }
+        Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
     }
 }

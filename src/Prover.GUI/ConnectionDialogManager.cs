@@ -10,14 +10,18 @@ namespace Prover.GUI
 {
     public class ConnectionDialogManager : IHandle<ConnectionStatusEvent>
     {
+        private readonly IWindowManager _windowManager;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IUnityContainer _container;
         private readonly ConnectionViewModel _viewModel;
         private bool _isDialogOpen;
 
-        public ConnectionDialogManager(IUnityContainer container)
+        public ConnectionDialogManager(IWindowManager windowManager, IEventAggregator eventAggregator)
         {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
+            _windowManager = windowManager;
+
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
 
             _viewModel = new ConnectionViewModel(_container);
         }
@@ -38,7 +42,7 @@ namespace Prover.GUI
         {
             if (!_isDialogOpen)
             {
-                ScreenManager.Show(_container, _viewModel);
+                _windowManager.ShowWindow(_viewModel);
                 _isDialogOpen = true;
             }
         }

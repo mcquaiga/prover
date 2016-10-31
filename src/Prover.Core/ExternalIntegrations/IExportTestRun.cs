@@ -9,6 +9,7 @@ namespace Prover.Core.ExternalIntegrations
 {
     public interface IExportTestRun
     {
-        Task<Instrument> Export(Instrument exportInstrument);
+        Task<bool> Export(Instrument instrumentForExport);
+        Task<bool> Export(IEnumerable<Instrument> instrumentsForExport);
     }
 }

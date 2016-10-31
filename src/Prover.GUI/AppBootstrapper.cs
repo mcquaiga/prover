@@ -1,24 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Reports;
+using Prover.GUI.Screens.QAProver;
+using Prover.GUI.Screens.QAProver.VerificationTestViews;
+using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 
 namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private IUnityContainer _container;
+        private readonly List<string> _moduleFileNames = new List<string>
+        {
+            "UnionGas.MASA.dll",
+            "Prover.GUI.Common.dll"
+        };
+
+        private readonly IUnityContainer _container;
 
         public AppBootstrapper()
         {
-            //Start Prover.Core
             var coreBootstrap = new CoreBootstrapper();
             _container = coreBootstrap.Container;
 
@@ -32,24 +43,43 @@ namespace Prover.GUI
             //Register Types with Unity
             _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
-            
-            var ass = AssemblySource.Instance.FirstOrDefault(x => x.FullName.Contains("UnionGas.MASA"));
-            var type = ass.GetType("UnionGas.MASA.Startup");
+
+            _container.RegisterType<ScreenManager>(new ContainerControlledLifetimeManager());
+
+            //Register Apps
+            _container.RegisterType<IAppMainMenu, QaTestRunApp>("QaTestRunApp", new ContainerControlledLifetimeManager());
+
+            RegisterViewModels();
+            GetAppModules();
+        }
+
+        private void RegisterViewModels()
+        {
+            _container.RegisterType<MainMenuViewModel>();
+            _container.RegisterType<SettingsViewModel>();
+
+            _container.RegisterType<InstrumentInfoViewModel>();
+            _container.RegisterType<NewQaTestRunViewModel>();
+            _container.RegisterType<QaTestRunViewModel>();
+
+            _container.RegisterType<InstrumentGenerator>();
+            _container.RegisterType<InstrumentReportViewModel>();
+        }
+
+        private void GetAppModules()
+        {
+            var assembly = Assembly.LoadFrom("UnionGas.MASA.dll");
+            var type = assembly.GetType("UnionGas.MASA.Startup");
             type.GetMethod("Initialize").Invoke(null, new object[] {_container});
-            //AssemblySource.Instance.Add(ass);
         }
 
         protected override object GetInstance(Type service, string key)
         {
             if (service != null)
-            {
                 return _container.Resolve(service);
-            }
 
             if (!string.IsNullOrEmpty(key))
-            {
                 return _container.Resolve(Type.GetType(key));
-            }
 
             return null;
         }
@@ -58,16 +88,13 @@ namespace Prover.GUI
         {
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
-            //Load new ViewModels here
+
             var fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
 
-            foreach (var fileName in fileEntries)
+            foreach (var fileName in fileEntries.Where(x => _moduleFileNames.Any(y => x.EndsWith(y))))
             {
-                if (fileName.EndsWith("UnionGas.MASA.dll"))
-                {
-                    var ass = Assembly.LoadFrom(fileName);
-                    assemblies.Add(ass);
-                }
+                var ass = Assembly.LoadFrom(fileName);
+                assemblies.Add(ass);
             }
 
             return assemblies;
@@ -86,6 +113,9 @@ namespace Prover.GUI
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<ShellViewModel>();
+
+            var screenManager = _container.Resolve<ScreenManager>();
+            Task.Run(() => screenManager.GoHome());
         }
     }
 }

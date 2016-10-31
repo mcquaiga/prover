@@ -1,67 +1,68 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
+using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
-using Prover.GUI.Common;
+using Prover.Core.Storage;
+using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
+using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberVerifier : IVerifier
     {
-        private ItemValue _companyNumber;
-        private const string ServerUrl = "http://uniongas.masa/";
-        private const string VerifyEndPoint = "Verify";
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberVerifier(IUnityContainer container, EvcCommunicationClient commClient, Instrument instrument)
+        public CompanyNumberVerifier(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater)
         {
-            this.Container = container;
-            this.CommClient = commClient;
-            this.Instrument = instrument;
+            InstrumentStore = instrumentStore;
+            WebService = webService;
+            Updater = updater;
         }
 
-        public IUnityContainer Container { get; set; }
+        public IUpdater Updater { get; set; }
 
-        public Instrument Instrument { get; set; }
+        public IInstrumentStore<Instrument> InstrumentStore { get; set; }
 
-        public EvcCommunicationClient CommClient { get; set; }
+        public DCRWebServiceSoap WebService { get; }
 
-        public async Task<object> Verify()
+        public async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
         {
-            _companyNumber = Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumber = companyNumberItem.RawValue;
 
-            var viewModel = new CompanyNumberDialogViewModel(this);
-            ScreenManager.ShowDialog(Container, viewModel);
+            var meterDto = await VerifyWithWebService(companyNumber);
+            while (meterDto.InventoryCode == null)
+            {
+                _log.Debug($"Company number wasn't present in an open job.");
+                var newCompanyNumber = await Updater.Update(commClient, instrument);
 
-            return await Update(viewModel.CompanyNumber);
+                meterDto = await VerifyWithWebService(newCompanyNumber.ToString());
+            }
 
-            //var serverUri = new Uri(ServerUrl);
-            //using (var client = new HttpClient())
-            //{
-            //    var response = await client.PostAsync(serverUri, new StringContent(_companyNumber.ToString()));
-            //    response.EnsureSuccessStatusCode();
-
-            //    var content = await response.Content.ReadAsStringAsync();
-
-            //    return content;
-            //}
+            return meterDto;
         }
 
-        public async Task<bool> Update(string newCompanyNumber)
+        private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
-            await CommClient.Connect();
-            var response = await CommClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
-            await CommClient.Disconnect();
+            _log.Debug($"Verifying company number {companyNumber} with web service.");
 
-            if (response)
-                Instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber.ToString();
+            return await Task.Run(() =>
+            {
+                var request = new GetValidatedEvcDeviceByInventoryCodeRequest
+                {
+                    Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
+                };
 
-            return response;
+                var response = WebService.GetValidatedEvcDeviceByInventoryCode(request);
+                return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+            });
         }
+
+        
     }
 }

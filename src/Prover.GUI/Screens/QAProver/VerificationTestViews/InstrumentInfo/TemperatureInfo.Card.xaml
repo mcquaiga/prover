@@ -17,7 +17,7 @@
     <StackPanel Orientation="Vertical">
         <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                   Mode="PrimaryDark" DockPanel.Dock="Top">
-            Temperature
+            TemperatureTestViewModel
         </materialDesign:ColorZone>
 
         <ContentControl cal:View.Model="{Binding LiveReadItem}" />

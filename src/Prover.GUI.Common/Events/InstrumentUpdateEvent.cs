@@ -1,14 +1,14 @@
-﻿using Prover.Core.VerificationTests.Rotary;
+﻿using Prover.Core.VerificationTests;
 
 namespace Prover.GUI.Common.Events
 {
     public class InstrumentUpdateEvent
     {
-        public InstrumentUpdateEvent(RotaryTestManager instrumentManager)
+        public InstrumentUpdateEvent(QaRunTestManager instrumentManager)
         {
             InstrumentManager = instrumentManager;
         }
 
-        public RotaryTestManager InstrumentManager { get; set; }
+        public QaRunTestManager InstrumentManager { get; set; }
     }
 }

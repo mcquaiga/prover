@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
@@ -17,7 +19,7 @@ namespace Prover.Core.Models.Instruments
 
         public TemperatureTest(VerificationTest verificationTest, decimal gauge)
         {
-            Items = verificationTest.Instrument.Items;
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 

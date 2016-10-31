@@ -6,7 +6,17 @@ using NLog;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public abstract class CommPort : IDisposable
+    public interface ICommPort
+    {
+        string Name { get; }
+        IObservable<char> DataReceived();
+        bool IsOpen();
+        Task Open();
+        Task Close();
+        Task Send(string data);
+    }
+
+    public abstract class CommPort : IDisposable, ICommPort
     {
         protected const int OpenPortTimeoutMs = 5000;
         protected const int ReadWriteTimeoutMs = 200;
@@ -18,7 +28,7 @@ namespace Prover.CommProtocol.Common.IO
 
         public abstract void Dispose();
 
-        protected abstract IObservable<char> DataReceived();
+        public abstract IObservable<char> DataReceived();
         public abstract bool IsOpen();
         public abstract Task Open();
         public abstract Task Close();

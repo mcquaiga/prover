@@ -14,24 +14,30 @@ namespace Prover.CommProtocol.MiHoneywell
 {
     public class HoneywellClient : EvcCommunicationClient
     {
-        public HoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort)
+        private InstrumentType _instrumentType;
+
+        public HoneywellClient(CommPort commPort) : base(commPort)
         {
-            InstrumentType = instrumentType;
-            ItemDetails = ItemHelpers.LoadItems(InstrumentType);
         }
 
-        public InstrumentType InstrumentType { get; }
-
-        public override IEnumerable<ItemMetadata> ItemDetails { get; }
+        public override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
 
         public override bool IsConnected { get; protected set; }
-        public bool IsAwake { get; private set; } = false;
+        public bool IsAwake { get; private set; }
 
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
         protected override async Task ConnectToInstrument()
         {
+            if (ItemDetails == null)
+            {
+                var itemTask = Task.Run(() => ItemHelpers.LoadItems(InstrumentType)).ContinueWith(_ =>
+                {
+                    ItemDetails = _.Result;
+                });
+            }
+
             await WakeUpInstrument();
 
             if (IsAwake)
@@ -46,9 +52,7 @@ namespace Prover.CommProtocol.MiHoneywell
                 else
                 {
                     if (response.ResponseCode == ResponseCode.FramingError)
-                    {
                         await CommPort.Close();
-                    }
 
                     throw new Exception($"Error response {response.ResponseCode}");
                 }
@@ -62,10 +66,7 @@ namespace Prover.CommProtocol.MiHoneywell
                 var response = await ExecuteCommand(Commands.SignOffCommand());
 
                 if (response.IsSuccess)
-                {
-                    //await CommPort.CloseAsync();
                     IsConnected = false;
-                }
             }
         }
 
@@ -83,8 +84,8 @@ namespace Prover.CommProtocol.MiHoneywell
             items = items.OrderBy(x => x).ToArray();
 
             var y = 0;
-            
-            while(true)
+
+            while (true)
             {
                 var set = items.Skip(y).Take(15).ToList();
 
@@ -104,7 +105,8 @@ namespace Prover.CommProtocol.MiHoneywell
             return results;
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers) => await GetItemValues(itemNumbers.GetAllItemNumbers());
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
+            => await GetItemValues(itemNumbers.GetAllItemNumbers());
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
@@ -113,11 +115,14 @@ namespace Prover.CommProtocol.MiHoneywell
             return result.IsSuccess;
         }
 
-        public override async Task<bool> SetItemValue(int itemNumber, decimal value) => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
+        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
+            => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
 
-        public override async Task<bool> SetItemValue(int itemNumber, long value) => await SetItemValue(itemNumber, value.ToString());
+        public override async Task<bool> SetItemValue(int itemNumber, long value)
+            => await SetItemValue(itemNumber, value.ToString());
 
-        public override async Task<bool> SetItemValue(string itemCode, long value) => await SetItemValue(ItemDetails.GetItem(itemCode), value);
+        public override async Task<bool> SetItemValue(string itemCode, long value)
+            => await SetItemValue(ItemDetails.GetItem(itemCode), value);
 
         public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
         {
@@ -132,7 +137,7 @@ namespace Prover.CommProtocol.MiHoneywell
             Thread.Sleep(150);
             var response = await ExecuteCommand(Commands.WakeupTwo());
 
-            if (response.IsSuccess || response.ResponseCode == ResponseCode.InvalidEnquiryError)
+            if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
             {
                 IsAwake = true;
                 Thread.Sleep(100);

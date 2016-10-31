@@ -10,19 +10,18 @@ using Prover.CommProtocol.Common.IO;
 using Prover.Core.Events;
 using Prover.Core.Settings;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Screens.Settings
 {
-    public class SettingsViewModel : ReactiveScreen, IWindowSettings
+    public class SettingsViewModel : ViewModelBase, IWindowSettings
     {
-        private readonly IUnityContainer _container;
         private int _selectedBaudRate;
         private string _selectedCommPort;
         private string _selectedTachCommPort;
 
-        public SettingsViewModel(IUnityContainer container)
+        public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
-            _container = container;
             _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
             _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
             _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
@@ -80,7 +79,7 @@ namespace Prover.GUI.Screens.Settings
 
         public override void CanClose(Action<bool> callback)
         {
-            _container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new SettingsChangeEvent());
+            EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
         }
 

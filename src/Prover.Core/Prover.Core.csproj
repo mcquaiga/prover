@@ -42,6 +42,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Akka, Version=1.1.2.29, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
@@ -103,7 +107,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.9\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -119,6 +123,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -158,8 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="Communication\Communications.cs" />
-    <Compile Include="DriveTypes\IEVCDriveType.cs" />
+    <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
@@ -171,11 +178,11 @@
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
-    <Compile Include="Communication\InstrumentCommunication.cs" />
     <Compile Include="ExternalIntegrations\IExportTestRun.cs" />
     <Compile Include="ExternalIntegrations\IVerifier.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ItemDetails.cs" />
+    <Compile Include="Login\ILoginService.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
@@ -192,14 +199,20 @@
     <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610171500415_add-employee-id.cs" />
+    <Compile Include="Migrations\201610171500415_add-employee-id.Designer.cs">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
-    <Compile Include="VerificationTests\VolumeVerificationManager.cs" />
+    <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\RotaryQaRunTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -233,10 +246,9 @@
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\IInstrumentStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
-    <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\TestManager.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">
@@ -294,6 +306,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171500415_add-employee-id.resx">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

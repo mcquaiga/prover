@@ -1,23 +1,22 @@
-﻿using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
 using UnionGas.MASA.Verifiers;
 
 namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 {
-    public class CompanyNumberDialogViewModel : ReactiveScreen
+    public class CompanyNumberDialogViewModel : ViewModelBase
     {
-        public CompanyNumberDialogViewModel(CompanyNumberVerifier verifier)
+        public CompanyNumberDialogViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
             CompanyNumber = string.Empty;
-            this.Verifier = verifier;
         }
-
-        public CompanyNumberVerifier Verifier { get; set; }
 
         public string CompanyNumber { get; set; }
 
-        public void Update()
+        public void Close()
         {
-            Verifier.Update(CompanyNumber);
             this.TryClose(true);
         }
 

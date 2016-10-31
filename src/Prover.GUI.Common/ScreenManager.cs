@@ -1,36 +1,111 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
+using NLog.LayoutRenderers.Wrappers;
 using Prover.GUI.Common.Events;
+using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.MainMenu;
 
 namespace Prover.GUI.Common
 {
-    public class ScreenManager
+    public interface IScreenManager
     {
-        public static async Task Change(IUnityContainer container, ReactiveScreen viewModel)
+        Task GoHome();
+        object ResolveViewModel(Type viewModelType);
+
+        T ResolveViewModel<T>()
+            where T : ViewModelBase;
+
+        /// <summary>
+        /// Changes screen or page in the ShellView
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        Task ChangeScreen(ViewModelBase viewModel);
+
+        Task ChangeScreen<T>(string key = null)
+            where T : ViewModelBase;
+
+        bool? ShowDialog(ViewModelBase dialogViewModel);
+        void ShowWindow(ViewModelBase dialogViewModel);
+    }
+
+    public class ScreenManager : IScreenManager
+    {
+        private readonly IWindowManager _windowManager;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IUnityContainer _container;
+
+        public ScreenManager(IUnityContainer container, IWindowManager windowManager, IEventAggregator eventAggregator)
         {
-            await container.Resolve<IEventAggregator>().PublishOnUIThreadAsync(new ScreenChangeEvent(viewModel));
+            _container = container;
+            _windowManager = windowManager;
+            _eventAggregator = eventAggregator;
         }
 
-        public static void ShowDialog(IUnityContainer container, ReactiveScreen dialogViewModel)
+        public async Task GoHome()
+        {
+            var main = _container.Resolve<MainMenuViewModel>();
+            await ChangeScreen(main);
+        }
+
+        public object ResolveViewModel(Type viewModelType)
+        {
+            var viewModel = _container.Resolve(viewModelType);
+            return viewModel;
+        }
+
+        public T ResolveViewModel<T>()
+            where T : ViewModelBase
+        {
+            var viewModel = _container.Resolve<T>();
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Changes screen or page in the ShellView
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        public async Task ChangeScreen(ViewModelBase viewModel)
+        {
+            await _eventAggregator.PublishOnUIThreadAsync(new ScreenChangeEvent(viewModel));
+        }
+
+        public async Task ChangeScreen<T>(string key = null)
+            where T : ViewModelBase
+        {
+            var viewModel = _container.Resolve<T>(key);
+
+            if (viewModel == null)
+                throw new NullReferenceException($"Type of {typeof(T)} was not registered.");
+
+            if (viewModel is ReactiveScreen == false)
+                throw new InvalidCastException($"{viewModel} is of {viewModel.GetType()}.");
+
+            await ChangeScreen(viewModel);
+        }
+
+        public bool? ShowDialog(ViewModelBase dialogViewModel)
         {
             var windowsSettings = dialogViewModel as IWindowSettings;
 
             if (windowsSettings != null)
-                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
+                return _windowManager.ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
             else
-                container.Resolve<IWindowManager>().ShowDialog(dialogViewModel);
+                return _windowManager.ShowDialog(dialogViewModel);
         }
 
-        public static void Show(IUnityContainer container, ReactiveScreen dialogViewModel)
+        public void ShowWindow(ViewModelBase dialogViewModel)
         {
             var windowsSettings = dialogViewModel as IWindowSettings;
 
             if (windowsSettings != null)
-                container.Resolve<IWindowManager>().ShowWindow(dialogViewModel, null, windowsSettings.WindowSettings);
+                _windowManager.ShowWindow(dialogViewModel, null, windowsSettings.WindowSettings);
             else
-                container.Resolve<IWindowManager>().ShowWindow(dialogViewModel);
+                _windowManager.ShowWindow(dialogViewModel);
         }
     }
 }

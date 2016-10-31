@@ -17,7 +17,7 @@
     <StackPanel Orientation="Vertical">
         <materialDesign:ColorZone Padding="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                   Mode="PrimaryLight" DockPanel.Dock="Top">
-            Pressure
+            PressureTestRun
         </materialDesign:ColorZone>
 
         <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
