@@ -267,6 +267,10 @@
     <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
       <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml.cs">
+      <DependentUpon>QATestRunView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunViewModel.cs" />
     <Compile Include="Screens\RawItemAccess\InstrumentAccessView.xaml.cs">
       <DependentUpon>InstrumentAccessView.xaml</DependentUpon>
     </Compile>
@@ -319,15 +323,11 @@
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
       <DependentUpon>Volume.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml.cs">
-      <DependentUpon>QATestRunView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunInteractiveView.xaml.cs">
       <DependentUpon>QATestRunInteractiveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\TestRunViewModelBase.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\RotaryMeterTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\QATestRunInteractiveViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PressureTestViewModel.cs" />
     <Compile Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\PTVerificationSetViewModel.cs" />
@@ -372,6 +372,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\QAProver\VerificationTestViews\InstrumentInfo\TemperatureInfo.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -436,10 +440,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\QAProver\VerificationTestViews\PTVerificationViews\VolumeTest\Volume.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\VerificationTestViews\QATestRunView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -512,10 +512,6 @@
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UnionGas.MASA\UnionGas.MASA.csproj">
-      <Project>{1c42434c-8218-44aa-b132-a5a57b9de8b1}</Project>
-      <Name>UnionGas.MASA</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

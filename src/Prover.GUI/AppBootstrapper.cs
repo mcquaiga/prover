@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Reports;
 using Prover.GUI.Screens.QAProver;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
@@ -23,13 +20,13 @@ namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private IUnityContainer _container;
-
-        private readonly List<string> _moduleFileNames = new List<string>()
+        private readonly List<string> _moduleFileNames = new List<string>
         {
             "UnionGas.MASA.dll",
             "Prover.GUI.Common.dll"
-        }; 
+        };
+
+        private readonly IUnityContainer _container;
 
         public AppBootstrapper()
         {
@@ -64,30 +61,25 @@ namespace Prover.GUI
             _container.RegisterType<InstrumentInfoViewModel>();
             _container.RegisterType<NewQaTestRunViewModel>();
             _container.RegisterType<QaTestRunViewModel>();
+
+            _container.RegisterType<InstrumentGenerator>();
+            _container.RegisterType<InstrumentReportViewModel>();
         }
 
         private void GetAppModules()
         {
-            foreach(var ass in AssemblySource.Instance.Where(x => x.FullName.Contains("UnionGas.MASA")))
-            {
-                var type = ass.GetType("UnionGas.MASA.Startup");
-                type.GetMethod("Initialize").Invoke(null, new object[] { _container });
-            }
-            
-            //AssemblySource.Instance.Add(ass);
+            var assembly = Assembly.LoadFrom("UnionGas.MASA.dll");
+            var type = assembly.GetType("UnionGas.MASA.Startup");
+            type.GetMethod("Initialize").Invoke(null, new object[] {_container});
         }
 
         protected override object GetInstance(Type service, string key)
         {
             if (service != null)
-            {
                 return _container.Resolve(service);
-            }
 
             if (!string.IsNullOrEmpty(key))
-            {
                 return _container.Resolve(Type.GetType(key));
-            }
 
             return null;
         }

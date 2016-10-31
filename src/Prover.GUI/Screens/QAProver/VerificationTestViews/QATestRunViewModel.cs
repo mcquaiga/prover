@@ -1,9 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
 using Prover.Core.DriveTypes;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
@@ -15,12 +13,16 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
     public class QaTestRunViewModel : ViewModelBase
     {
+        public QaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
+        {
+        }
+
         public IQaRunTestManager QaRunTestManager { get; set; }
 
-        public QaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
-        {
-           
-        }
+        public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
+
+        public Instrument Instrument { get; private set; }
 
         public async Task Initialize(Instrument instrument)
         {
@@ -41,13 +43,9 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
                 }
 
                 if (Instrument.VolumeTest?.DriveType is RotaryDrive)
-                    MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Instrument.VolumeTest.DriveType);
+                    MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Instrument.VolumeTest.DriveType);
             });
         }
-
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; private set; }
-
-        public Instrument Instrument { get; private set; }
 
         #region Views
 

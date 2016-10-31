@@ -8,7 +8,6 @@ using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Events;
 using Prover.Core.Settings;
-using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
@@ -18,8 +17,6 @@ namespace Prover.GUI.Screens.QAProver
 {
     public class NewQaTestRunViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
-        private readonly IQaRunTestManager _qaTestRunManager;
-
         public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {

@@ -67,9 +67,11 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (TrueUncorrected != 0 && TrueUncorrected.HasValue)
+                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
-                    return Math.Round((decimal)((EvcUncorrected - TrueUncorrected) / TrueUncorrected) * 100, 2);
+                    var o = (EvcUncorrected - TrueUncorrected) / TrueUncorrected;
+                    if (o != null)
+                        return Math.Round((decimal)o * 100, 2);
                 }
 
                 return null;

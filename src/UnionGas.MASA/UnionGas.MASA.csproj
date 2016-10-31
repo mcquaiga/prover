@@ -198,6 +198,10 @@
       <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
       <Name>Prover.GUI.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.GUI\Prover.GUI.csproj">
+      <Project>{5d29b63b-d73f-4b8d-b004-adba15cd75f1}</Project>
+      <Name>Prover.GUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
