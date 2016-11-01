@@ -27,9 +27,8 @@ namespace UnionGas.MASA.Exporter
                 DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
                 MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
                     (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
-                //MeterDisplacement = decimal.MinusOne,
-                //instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ?
-                  //  (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement : decimal.Zero,
+                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ?
+                    (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement : decimal.Zero,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
                 SerialNumber = instrument.SerialNumber.ToString(),
@@ -100,12 +99,12 @@ namespace UnionGas.MASA.Exporter
         {
             return new DCRWebService.VerificationTest
             {
-                SequenceNumber = vt.TestNumber,
-                CapacityLevelTypeCode = vt.TestNumber == 0 ? "L" : vt.TestNumber == 1 ? "M" : "H",
+                SequenceNumber = vt.TestNumber + 1,
+                CapacityLevelTypeCode = vt.TestNumber + 1 == 1 ? "L" : vt.TestNumber + 1 == 2 ? "M" : "H",
                 Pressure = TranslatePressureTest(vt),
                 Temperature = TranslateTemperatureTest(vt),
                 SuperFactor = TranslateSuperFactorTest(vt),
-                Volume = TranslateVolumeTest(vt)
+                Volume = TranslateVolumeTest(vt)           
             };
         }
 
@@ -115,16 +114,17 @@ namespace UnionGas.MASA.Exporter
 
             return new DCRWebService.VolumeTest
             {
-                AppliedInput = decimal.Round(vt.VolumeTest.AppliedInput, 2),
-                EvcCorrected = vt.VolumeTest.EvcCorrected.HasValue ? decimal.Round(vt.VolumeTest.EvcCorrected.Value, 4) : -999,
-                EvcUncorrected = vt.VolumeTest.EvcUncorrected.HasValue ? decimal.Round(vt.VolumeTest.EvcUncorrected.Value, 4) : -999,
+                AppliedInput = RoundTo(vt.VolumeTest.AppliedInput, 2),
+                EvcCorrected = RoundTo(vt.VolumeTest.EvcCorrected, 2),
+                EvcUncorrected = RoundTo(vt.VolumeTest.EvcUncorrected, 2),
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
-                TrueCorrected = vt.VolumeTest.TrueCorrected.HasValue ? decimal.Round(vt.VolumeTest.TrueCorrected.Value, 4) : -999,
-                CorrectedPercentError = vt.VolumeTest.CorrectedPercentError.HasValue ? decimal.Round(vt.VolumeTest.CorrectedPercentError.Value, 2) : -999,
-                UnCorrectedPercentError = vt.VolumeTest.UnCorrectedPercentError.HasValue ? decimal.Round(vt.VolumeTest.UnCorrectedPercentError.Value, 2) : -999               
+                TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
+                CorrectedPercentError = RoundTo(vt.VolumeTest.CorrectedPercentError, 2),
+                UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2)
+                         
             };
         }
 
@@ -134,12 +134,12 @@ namespace UnionGas.MASA.Exporter
 
             return new DCRWebService.SuperFactorTest
             {
-                ActualFactor = vt.SuperFactorTest.ActualFactor.HasValue ? decimal.Round(vt.SuperFactorTest.ActualFactor.Value, 4) : -999,
-                EvcFactor = vt.SuperFactorTest.EvcUnsqrFactor.HasValue ? decimal.Round(vt.SuperFactorTest.EvcUnsqrFactor.Value, 4) : -999,
-                EvcUnsqrFactor = vt.SuperFactorTest.EvcUnsqrFactor.HasValue ? decimal.Round(vt.SuperFactorTest.EvcUnsqrFactor.Value, 4) : -999,
-                GaugePressure = vt.SuperFactorTest.GaugePressure.HasValue ? decimal.Round(vt.SuperFactorTest.GaugePressure.Value, 2) : -999,
-                GaugeTemperature = decimal.Round(vt.SuperFactorTest.GaugeTemp, 2),
-                PercentError = vt.SuperFactorTest.PercentError.HasValue ? decimal.Round(vt.SuperFactorTest.PercentError.Value, 2) : -999
+                ActualFactor = RoundTo(vt.SuperFactorTest.ActualFactor, 4),
+                EvcFactor = RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4),
+                EvcUnsqrFactor = RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4),
+                GaugePressure = RoundTo(vt.SuperFactorTest.GaugePressure, 2),
+                GaugeTemperature = RoundTo(vt.SuperFactorTest.GaugeTemp, 2),
+                PercentError = RoundTo(vt.SuperFactorTest.PercentError, 2)
             };
         }
 
@@ -149,12 +149,12 @@ namespace UnionGas.MASA.Exporter
 
             return new DCRWebService.TemperatureTest
             {
-                ActualFactor = vt.TemperatureTest.ActualFactor.HasValue ? decimal.Round(vt.TemperatureTest.ActualFactor.Value, 4) : decimal.Zero,
-                GaugeTemperature = decimal.Round((decimal)vt.TemperatureTest.Gauge, 2),
-                EvcFactor = decimal.Round(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4),
-                EvcTemperature = decimal.Round(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2),
-                PercentError = vt.TemperatureTest.PercentError.HasValue ? decimal.Round(vt.TemperatureTest.PercentError.Value, 2) : decimal.MinusOne
-                
+                ActualFactor = RoundTo(vt.TemperatureTest.ActualFactor, 4),
+                GaugeTemperature = RoundTo((decimal)vt.TemperatureTest.Gauge, 2),
+                EvcFactor = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4),
+                EvcTemperature = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2),
+                PercentError = RoundTo(vt.TemperatureTest.PercentError, 2)
+
             };
         }
 
@@ -164,15 +164,22 @@ namespace UnionGas.MASA.Exporter
 
             return new DCRWebService.PressureTest
             {
-                ActualFactor = vt.PressureTest.ActualFactor.HasValue ? decimal.Round(vt.PressureTest.ActualFactor.Value, 4) : decimal.Zero,
-                GaugePressure = vt.PressureTest.GasGauge.HasValue ? decimal.Round(vt.PressureTest.GasGauge.Value, 2) : decimal.MinusOne,
-                AtmosphericGauge = vt.PressureTest.AtmosphericGauge.HasValue ? decimal.Round(vt.PressureTest.AtmosphericGauge.Value, 2) : decimal.MinusOne,
-                GasPressure = vt.PressureTest.GasPressure.HasValue ? decimal.Round(vt.PressureTest.GasPressure.Value, 2) : decimal.MinusOne,
-                EvcGasPressure = decimal.Round(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue, 2),
-                EvcPressureFactor = decimal.Round(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue, 4),
-                PercentError = vt.PressureTest.PercentError.HasValue ? decimal.Round(vt.PressureTest.PercentError.Value, 2) :  decimal.MinusOne
-                
+                ActualFactor = RoundTo(vt.PressureTest.ActualFactor, 4),
+                EvcPressureFactor = RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue, 4),
+                GaugePressure = RoundTo(vt.PressureTest.GasGauge, 2),
+                AtmosphericGauge = RoundTo(vt.PressureTest.AtmosphericGauge, 2),
+                GasPressure = RoundTo(vt.PressureTest.GasPressure, 2),
+                EvcGasPressure = RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue, 2),
+                PercentError = RoundTo(vt.PressureTest.PercentError, 2)
             };
+        }
+
+        private static decimal RoundTo(decimal? value, int places)
+        {
+            if (value.HasValue)
+                return decimal.Round(value.Value, places);
+
+            return 0;
         }
     }
 }
