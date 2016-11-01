@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Microsoft.Practices.Unity;
@@ -7,6 +8,8 @@ using NLog.LayoutRenderers.Wrappers;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.MainMenu;
+using ReactiveUI;
+using IScreen = ReactiveUI.IScreen;
 
 namespace Prover.GUI.Common
 {
@@ -32,13 +35,21 @@ namespace Prover.GUI.Common
         void ShowWindow(ViewModelBase dialogViewModel);
     }
 
-    public class ScreenManager : IScreenManager
+    public class ScreenManager : IScreenManager, IScreen
     {
         private readonly IWindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator;
         private readonly IUnityContainer _container;
 
-        public ScreenManager(IUnityContainer container, IWindowManager windowManager, IEventAggregator eventAggregator)
+        public RoutingState Router
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public ScreenManager(IContainer container, IWindowManager windowManager, IEventAggregator eventAggregator)
         {
             _container = container;
             _windowManager = windowManager;
