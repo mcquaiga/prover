@@ -6,15 +6,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using Autofac.Core;
 using Caliburn.Micro;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Reports;
-using Prover.GUI.Screens.QAProver;
-using Prover.GUI.Screens.QAProver.VerificationTestViews;
-using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 using ReactiveUI.Autofac;
@@ -30,8 +25,6 @@ namespace Prover.GUI
             "Prover.GUI.Common.dll"
         };
 
-        public ContainerBuilder Builder { get; private set; }
-
         public AppBootstrapper()
         {
             var coreBootstrap = new CoreBootstrapper();
@@ -40,48 +33,39 @@ namespace Prover.GUI
             Initialize();
         }
 
+        public ContainerBuilder Builder { get; }
+        public IContainer Container { get; private set; }
+
         protected override void Configure()
         {
             base.Configure();
 
             var assembly = Assembly.GetExecutingAssembly();
-            var builder = new ContainerBuilder();
-            
-            //Register Types with Unity
-            builder.RegisterType<WindowManager>().As<IWindowManager>();
-            builder.RegisterType<EventAggregator>().As<IEventAggregator>();
 
-            builder.RegisterViews(assembly);
-            builder.RegisterViewModels(assembly);
-            builder.RegisterScreen(assembly);
-            
-            builder.RegisterType<ScreenManager>();
+            //Register Types with Unity
+            Builder.RegisterType<WindowManager>().As<IWindowManager>();
+            Builder.RegisterType<EventAggregator>().As<IEventAggregator>();
+
+            Builder.RegisterViews(assembly);
+            Builder.RegisterViewModels(assembly);
+            Builder.RegisterScreen(assembly);
+
+            Builder.RegisterType<ScreenManager>();
 
             //Register Apps
-            builder.RegisterType<IAppMainMenu>().Named<QaTestRunApp>("QaTestRunApp");
+            Builder.RegisterType<IAppMainMenu>().Named<QaTestRunApp>("QaTestRunApp");
             GetAppModules();
 
-            RxAppAutofacExtension.UseAutofacDependencyResolver(builder.Build());
+            Container = Builder.Build();
+            RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
         }
 
-        //private void RegisterViewModels()
-        //{
-        //    _container.RegisterType<MainMenuViewModel>();
-        //    _container.RegisterType<SettingsViewModel>();
-
-        //    _container.RegisterType<InstrumentInfoViewModel>();
-        //    _container.RegisterType<NewQaTestRunViewModel>();
-        //    _container.RegisterType<QaTestRunViewModel>();
-
-        //    
-        //    _container.RegisterType<InstrumentReportViewModel>();
-        //}
 
         private void GetAppModules()
         {
             var assembly = Assembly.LoadFrom("UnionGas.MASA.dll");
             var type = assembly.GetType("UnionGas.MASA.Startup");
-            type.GetMethod("Initialize").Invoke(null, new object[] {Container});
+            type.GetMethod("Initialize").Invoke(null, new object[] {Builder});
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -99,7 +83,7 @@ namespace Prover.GUI
 
             return assemblies;
         }
-        
+
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
             return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType)) as IEnumerable<object>;
@@ -134,7 +118,7 @@ namespace Prover.GUI
         {
             DisplayRootViewFor<IViewFor<ShellViewModel>>();
 
-            var screenManager = (ScreenManager)Locator.CurrentMutable.GetService(typeof(ScreenManager));
+            var screenManager = (ScreenManager) Locator.CurrentMutable.GetService(typeof(ScreenManager));
             Task.Run(() => screenManager.GoHome());
         }
     }

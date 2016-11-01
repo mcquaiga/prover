@@ -1,30 +1,20 @@
-﻿using System;
-using System.ComponentModel;
-using Microsoft.Practices.Unity;
-using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Caliburn.Micro;
-using System.Data.Entity;
-using System.Reflection;
+﻿using System.Data.Entity;
 using Autofac;
+using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Migrations;
+using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
-using ReactiveUI;
-using ReactiveUI.Autofac;
-using Splat;
-using IContainer = Autofac.IContainer;
 
 namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
-        public ContainerBuilder Builder { get; } = new ContainerBuilder();
-
         public CoreBootstrapper()
         {
             //Database registrations
@@ -36,20 +26,21 @@ namespace Prover.Core.Startup
             Builder.RegisterType<EventAggregator>().As<EventAggregator>();
 
             //EVC Communcation
-            //Container.RegisterType<CommPort, SerialPort>("SerialPort", new InjectionFactory(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate)));
-            Builder.RegisterType<SerialPort>().As<CommPort>();
-            
-            //var commPortFactory = Container.Resolve<SerialPort.Factory>();
-            //var commPort = commPortFactory.Invoke(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
-            
-            //Container.RegisterType<EvcCommunicationClient, HoneywellClient>(
-            //    new InjectionFactory(c => new HoneywellClient(c.Resolve<CommPort>("SerialPort"))));
+            Builder.Register(
+                c =>
+                    new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort,
+                        SettingsManager.SettingsInstance.InstrumentBaudRate)).Named<CommPort>("SerialPort");
+
+            Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
+                .As<EvcCommunicationClient>();
 
             ////QA Test Runs
-            //Container.RegisterType<IQaRunTestManager, QaRunTestManager>();
-            //Container.RegisterType<IReadingStabilizer, ReadingStabilizer>();
+            Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
+            Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
             SettingsManager.RefreshSettings();
         }
+
+        public ContainerBuilder Builder { get; } = new ContainerBuilder();
     }
 }
