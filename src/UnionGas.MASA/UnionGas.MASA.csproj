@@ -324,8 +324,8 @@
     <None Include="Resources\settings-light.png" />
     <None Include="Resources\Home.png" />
     <None Include="Resources\error_36.png" />
-    <None Include="Resources\cloud-upload.png" />
-    <None Include="Resources\clipboard-text.png" />
+    <Resource Include="Resources\cloud-upload.png" />
+    <Resource Include="Resources\clipboard-text.png" />
     <None Include="Resources\clipboard-check.png" />
   </ItemGroup>
   <ItemGroup>
