@@ -55,7 +55,6 @@ namespace UnionGas.MASA.Exporter
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
                 return false;
             }
         }
@@ -73,8 +72,12 @@ namespace UnionGas.MASA.Exporter
                 {
                     return true;
                 }
-                
+
                 Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
+            }
+            catch (EndpointNotFoundException notFoundEx)
+            {
+                MessageBox.Show("Web service could not be reached.");
             }
             catch (Exception ex)
             { 
