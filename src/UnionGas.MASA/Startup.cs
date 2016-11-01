@@ -17,12 +17,12 @@ namespace UnionGas.MASA
             var assembly = Assembly.GetExecutingAssembly();
 
             //App Menu Icon
-            builder.RegisterType<ExportManagerApp>().Named<IAppMainMenu>("ExportApp");
+            builder.RegisterType<ExportManagerApp>().As<IAppMainMenu>();
 
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            builder.RegisterType<CompanyNumberUpdater>().Named<IUpdater>("CompanyNumberUpdater");
-            builder.RegisterType<CompanyNumberVerifier>().Named<IVerifier>("CompanyNumberVerifier");
+            builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
+            builder.RegisterType<CompanyNumberVerifier>().As<IVerifier>();
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
 
             //ViewModels

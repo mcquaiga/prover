@@ -44,7 +44,7 @@ namespace Prover.CommProtocol.Common
 
         protected CommPort CommPort { get; set; }
 
-        public virtual InstrumentType InstrumentType { get; set; } 
+        public virtual InstrumentType InstrumentType { get; set; }
 
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
@@ -111,13 +111,14 @@ namespace Prover.CommProtocol.Common
 
             CancellationTokenSource = new CancellationTokenSource();
             var ct = CancellationTokenSource.Token;
-            
+
             var result = Task.Run(async () =>
             {
                 while (!IsConnected)
                 {
                     connectionAttempts++;
-                    Log.Info($"[{CommPort.Name}] Connecting to Instrument... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
+                    Log.Info(
+                        $"[{CommPort.Name}] Connecting to Instrument... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
 
                     try
                     {
@@ -132,16 +133,10 @@ namespace Prover.CommProtocol.Common
                     }
 
                     if (!IsConnected)
-                    {
                         if (connectionAttempts < retryAttempts)
-                        {
                             Thread.Sleep(ConnectionRetryDelayMs);
-                        }
                         else
-                        {
                             throw new Exception($"{CommPort.Name} Could not connect to instrument.");
-                        }
-                    }
                 }
             }, ct);
 

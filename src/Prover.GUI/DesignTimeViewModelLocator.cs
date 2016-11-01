@@ -27,9 +27,7 @@ namespace Prover.GUI
             var viewModels = typeof(DesignTimeViewModelLocator).Assembly.DefinedTypes
                 .Where(t => t.IsSubclassOf(typeof(ReactiveScreen)));
             foreach (var vm in viewModels)
-            {
                 container.RegisterPerRequest(vm.AsType(), null, vm.AsType());
-            }
 
             container.Singleton<IEventAggregator, EventAggregator>();
         }
@@ -40,7 +38,7 @@ namespace Prover.GUI
             var viewModelType = typeof(DesignTimeViewModelLocator).Assembly.DefinedTypes
                 .First(
                     t =>
-                        t.Name == value.GetType().Name &&
+                        (t.Name == value.GetType().Name) &&
                         value.GetType().Namespace.EndsWith(t.Namespace, StringComparison.Ordinal)).AsType();
 
             return container.GetInstance(viewModelType, null);

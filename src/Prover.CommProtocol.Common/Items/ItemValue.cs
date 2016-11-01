@@ -22,7 +22,8 @@ namespace Prover.CommProtocol.Common.Items
         public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
+        public virtual decimal NumericValue
+            => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
 
         public virtual string Description => ItemDescription?.Description ?? "[NULL]";
 
@@ -30,7 +31,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             get
             {
-                if (Metadata?.ItemDescriptions != null && Metadata.ItemDescriptions.Any())
+                if ((Metadata?.ItemDescriptions != null) && Metadata.ItemDescriptions.Any())
                 {
                     var intValue = Convert.ToInt32(RawValue);
                     return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);

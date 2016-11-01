@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
@@ -40,7 +39,7 @@ namespace Prover.Core.VerificationTests
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             IVerifier verifier
-            )
+        )
         {
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
@@ -49,7 +48,12 @@ namespace Prover.Core.VerificationTests
         }
 
         public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
-        
+
+        public void Dispose()
+        {
+            _communicationClient.Dispose();
+        }
+
         public Instrument Instrument { get; private set; }
 
         public async Task InitializeTest(InstrumentType instrumentType, IDriveType driveType)
@@ -125,15 +129,7 @@ namespace Prover.Core.VerificationTests
         public async Task RunVerifier()
         {
             if (_verifier != null)
-            {
-                //foreach (var verifier in _verifier.ToArray())
-                    await _verifier.Verify(_communicationClient, Instrument);
-            }
-        }
-
-        public void Dispose()
-        {
-            _communicationClient.Dispose();
+                await _verifier.Verify(_communicationClient, Instrument);
         }
     }
 }

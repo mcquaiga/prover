@@ -6,7 +6,8 @@ namespace Prover.CommProtocol.Common.Items
 {
     public static class ItemMetadataExtentions
     {
-        public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items) => items.Select(i => i.Number);
+        public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items)
+            => items.Select(i => i.Number);
 
         /// <summary>
         ///     Returns the item number of the first instance found in the collection
@@ -44,7 +45,7 @@ namespace Prover.CommProtocol.Common.Items
         public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
             string code)
         {
-            if (itemValues == null || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
+            if ((itemValues == null) || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
 
             var itemNumber = items.GetItem(code);
 

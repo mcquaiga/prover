@@ -2,20 +2,19 @@
 using System.Dynamic;
 using System.Windows;
 using System.Windows.Input;
+using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using Prover.GUI.Common;
-using Prover.GUI.Screens;
 
 namespace Prover.GUI.Dialogs
 {
     public class ConnectionViewModel : ReactiveScreen, IHandle<ConnectionStatusEvent>, IWindowSettings
     {
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
 
-        public ConnectionViewModel(IUnityContainer container)
+        public ConnectionViewModel(IContainer container)
         {
             _container = container;
             container.Resolve<IEventAggregator>().Subscribe(this);
@@ -81,7 +80,7 @@ namespace Prover.GUI.Dialogs
             _execute(parameter);
         }
 
-        public static void InstrumentCommand(IUnityContainer container, Action<object> execute)
+        public static void InstrumentCommand(IContainer container, Action<object> execute)
         {
             //var dialog = new ConnectionViewModel(container.Resolve<IEventAggregator>(), execute);
             //ScreenManager.ShowDialog(container, dialog);

@@ -1,7 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Prover.Core.Communication;
-using Prover.Core.Models.Instruments;
-using System.Collections.Generic;
 
 namespace Prover.Core.VerificationTests
 {

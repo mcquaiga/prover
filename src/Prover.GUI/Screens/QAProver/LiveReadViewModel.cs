@@ -4,9 +4,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.Core.Events;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
@@ -17,10 +17,10 @@ namespace Prover.GUI.Screens.QAProver
     internal class LiveReadViewModel : ReactiveScreen, IWindowSettings, IHandle<LiveReadEvent>,
         IHandle<InstrumentUpdateEvent>
     {
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
         private QaRunTestManager _qaRunTestManager;
 
-        public LiveReadViewModel(IUnityContainer container)
+        public LiveReadViewModel(IContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
@@ -43,17 +43,13 @@ namespace Prover.GUI.Screens.QAProver
                 var item = LiveReadItems.FirstOrDefault(x => x.ItemNumber == message.ItemNumber);
 
                 if (item == null)
-                {
                     LiveReadItems.Add(new LiveReadDisplay
                     {
                         ItemNumber = message.ItemNumber,
                         LiveReadValue = message.LiveReadValue
                     });
-                }
                 else
-                {
                     item.LiveReadValue = message.LiveReadValue;
-                }
 
                 NotifyOfPropertyChange(() => LiveReadItems);
             });

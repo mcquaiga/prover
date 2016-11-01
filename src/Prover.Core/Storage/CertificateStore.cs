@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.Core.Storage
 {
-    public interface ICertificateStore<T> : IDisposable where T : class 
+    public interface ICertificateStore<T> : IDisposable where T : class
     {
         IQueryable<Certificate> Query();
         Certificate GetCertificate(Guid id);
@@ -17,10 +13,11 @@ namespace Prover.Core.Storage
 
     public class CertificateStore : ICertificateStore<Certificate>
     {
-        private ProverContext _proverContext;
-        public CertificateStore(IUnityContainer container)
+        private readonly ProverContext _proverContext;
+
+        public CertificateStore(ProverContext proverContext)
         {
-            _proverContext = container.Resolve<ProverContext>();
+            _proverContext = proverContext;
         }
 
         public IQueryable<Certificate> Query()
@@ -41,7 +38,6 @@ namespace Prover.Core.Storage
 
         public void Dispose()
         {
-            
         }
     }
 }

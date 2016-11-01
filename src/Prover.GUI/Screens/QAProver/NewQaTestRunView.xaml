@@ -42,14 +42,14 @@
 
                     <StackPanel Orientation="Vertical" Margin="4">
                         <RadioButton Content="Mini-Max Rotary" FontSize="16"
-                                        Name="MiniMax"
-                                        IsChecked="{Binding IsMiniMaxChecked}" />
+                                     Name="MiniMax"
+                                     IsChecked="{Binding IsMiniMaxChecked}" />
                         <RadioButton Content="Mini-AT" FontSize="16" VerticalAlignment="Center"
-                                        Name="MiniAT"
-                                        IsChecked="{Binding IsMiniATChecked}" />
+                                     Name="MiniAT"
+                                     IsChecked="{Binding IsMiniATChecked}" />
                         <RadioButton Content="EC350" FontSize="16" VerticalAlignment="Center"
-                                        Name="EC350"
-                                        IsChecked="{Binding IsEC350Checked}" />
+                                     Name="EC350"
+                                     IsChecked="{Binding IsEC350Checked}" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
@@ -60,7 +60,7 @@
                 </GroupBox>
 
                 <GroupBox Grid.Row="0" Grid.Column="2" Header="Tach. Settings">
- 
+
                     <controls1:ValueDescriptionControl Label="Port" Value="{Binding TachCommPortName}" />
                 </GroupBox>
             </Grid>

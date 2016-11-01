@@ -23,8 +23,6 @@ namespace Prover.Core.Startup
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
-            Builder.RegisterType<EventAggregator>().As<EventAggregator>();
-
             //EVC Communcation
             Builder.Register(
                 c =>
@@ -37,7 +35,7 @@ namespace Prover.Core.Startup
             ////QA Test Runs
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
-
+            
             SettingsManager.RefreshSettings();
         }
 

@@ -4,8 +4,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.IO;
 using Prover.Core.Events;
 using Prover.Core.Settings;
@@ -20,7 +18,8 @@ namespace Prover.GUI.Screens.Settings
         private string _selectedCommPort;
         private string _selectedTachCommPort;
 
-        public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
             _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
             _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;

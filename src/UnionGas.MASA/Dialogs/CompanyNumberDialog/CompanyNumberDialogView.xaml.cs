@@ -3,7 +3,7 @@
 namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 {
     /// <summary>
-    /// Interaction logic for CompanyNumberDialogView.xaml
+    ///     Interaction logic for CompanyNumberDialogView.xaml
     /// </summary>
     public partial class CompanyNumberDialogView : UserControl
     {

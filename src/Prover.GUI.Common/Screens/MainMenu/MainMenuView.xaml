@@ -8,7 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
@@ -17,7 +17,7 @@
                 <StackPanel>
                     <Image Source="{Binding Path=IconSource}" Width="48" Height="48" />
                     <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow"
-                           Text="{Binding Path=AppTitle}"/>
+                               Text="{Binding Path=AppTitle}" />
                 </StackPanel>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

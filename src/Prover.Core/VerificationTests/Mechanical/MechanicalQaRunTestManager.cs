@@ -10,14 +10,14 @@
 //{
 //    public sealed class MechanicalQaRunTestManager : QaRunTestManager
 //    {
-//        public MechanicalQaRunTestManager(IUnityContainer container, Instrument instrument,
+//        public MechanicalQaRunTestManager(IContainer container, Instrument instrument,
 //            InstrumentCommunicator instrumentComm, BaseVolumeVerificationManager volumeTestManager)
 //            : base(container, instrument, instrumentComm)
 //        {
 //            VolumeTestManagerBase = volumeTestManager;
 //        }
 
-//        public static async Task<MechanicalQaRunTestManager> Create(IUnityContainer container, InstrumentType instrumentType,
+//        public static async Task<MechanicalQaRunTestManager> Create(IContainer container, InstrumentType instrumentType,
 //            ICommPort instrumentPort, string tachometerPortName)
 //        {
 //            var instrumentComm = new InstrumentCommunicator(container.Resolve<IEventAggregator>(), instrumentPort,
@@ -48,3 +48,4 @@
 //        }
 //    }
 //}
+

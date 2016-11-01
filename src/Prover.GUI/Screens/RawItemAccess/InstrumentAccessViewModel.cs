@@ -2,12 +2,11 @@
 using System.Dynamic;
 using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Settings;
 using Prover.GUI.Common.Events;
 
@@ -20,7 +19,7 @@ namespace Prover.GUI.Screens.RawItemAccess
             SetupCommPort().Wait();
         }
 
-        public InstrumentAccessViewModel(IUnityContainer _container)
+        public InstrumentAccessViewModel(IContainer _container)
         {
         }
 

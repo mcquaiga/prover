@@ -4,7 +4,6 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Practices.Unity;
 using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
@@ -15,11 +14,11 @@ namespace UnionGas.MASA.Exporter
 {
     public class ExportManager : IExportTestRun
     {
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
-        private readonly DCRWebService.DCRWebServiceSoap _dcrWebService;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly DCRWebServiceSoap _dcrWebService;
+        private readonly IInstrumentStore<Instrument> _instrumentStore;
 
-        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebService.DCRWebServiceSoap dcrWebService)
+        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
         {
             _instrumentStore = instrumentStore;
             _dcrWebService = dcrWebService;
@@ -33,7 +32,6 @@ namespace UnionGas.MASA.Exporter
 
         public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
         {
-
             try
             {
                 var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
@@ -42,9 +40,8 @@ namespace UnionGas.MASA.Exporter
                 var isSuccess = await SendResultsToWebService(qaTestRuns);
 
                 if (!isSuccess)
-                {
-                    throw new Exception("An error occured sending test results to web service. Please see log for details.");
-                }
+                    throw new Exception(
+                        "An error occured sending test results to web service. Please see log for details.");
 
                 foreach (var instr in forExport)
                 {
@@ -59,7 +56,7 @@ namespace UnionGas.MASA.Exporter
             }
         }
 
-        private async Task<bool> SendResultsToWebService(IEnumerable<DCRWebService.QARunEvcTestResult> evcQARun)
+        private async Task<bool> SendResultsToWebService(IEnumerable<QARunEvcTestResult> evcQARun)
         {
             try
             {
@@ -69,9 +66,7 @@ namespace UnionGas.MASA.Exporter
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
 
                 if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
-                {
                     return true;
-                }
 
                 Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
             }
@@ -80,7 +75,7 @@ namespace UnionGas.MASA.Exporter
                 MessageBox.Show("Web service could not be reached.");
             }
             catch (Exception ex)
-            { 
+            {
                 Log.Error(ex, "An error occured sending results to the web service.");
             }
 

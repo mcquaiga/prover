@@ -1,5 +1,5 @@
 ﻿Public Module CRC
-    Public Function CalcCRC(ByVal body As String) As String
+    Public Function CalcCRC(body As String) As String
         Dim x As Integer
         Dim y As Integer
         Dim inChar As Long
@@ -7,12 +7,12 @@
         Try
             For x = 1 To Len(body)
                 inChar = Asc(Mid$(body, x, 1))
-                CRC = CRC Xor (inChar * &H100)
+                CRC = CRC Xor (inChar*&H100)
                 For y = 1 To 8
                     If CRC And 32768 Then
-                        CRC = (CRC * 2) Xor &H1021
+                        CRC = (CRC*2) Xor &H1021
                     Else
-                        CRC = CRC * 2
+                        CRC = CRC*2
                     End If
                 Next y
                 CRC = CRC And 65535
@@ -23,5 +23,4 @@
             CalcCRC = ""
         End Try
     End Function
-
 End Module

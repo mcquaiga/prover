@@ -12,16 +12,16 @@ namespace UnionGas.MASA.Screens.Exporter
     public class QaTestRunGridViewModel : ViewModelBase
     {
         private readonly IExportTestRun _exportManager;
-        private readonly InstrumentGenerator _instrumentGenerator;
+        private readonly InstrumentReportGenerator _instrumentReportGenerator;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
 
         public QaTestRunGridViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IExportTestRun exportManager, IInstrumentStore<Instrument> instrumentStore,
-            InstrumentGenerator instrumentGenerator) : base(screenManager, eventAggregator)
+            InstrumentReportGenerator instrumentReportGenerator) : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;
             _instrumentStore = instrumentStore;
-            _instrumentGenerator = instrumentGenerator;
+            _instrumentReportGenerator = instrumentReportGenerator;
         }
 
         public Instrument Instrument { get; set; }
@@ -30,7 +30,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public async Task DisplayInstrumentReport()
         {
-            await _instrumentGenerator.Generate(Instrument);
+            await _instrumentReportGenerator.GenerateAndViewReport(Instrument);
         }
 
         public async Task DeleteInstrument()

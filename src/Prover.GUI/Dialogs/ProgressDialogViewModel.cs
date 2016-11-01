@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 
 namespace Prover.GUI.Dialogs
 {
@@ -96,10 +95,7 @@ namespace Prover.GUI.Dialogs
                 (s, e) =>
                 {
                     if (!_worker.CancellationPending)
-                    {
                         SubLabel = e.UserState as string ?? string.Empty;
-                        //ProgressBar.Value = e.ProgressPercentage;
-                    }
                 };
 
             _worker.RunWorkerAsync();
@@ -111,7 +107,7 @@ namespace Prover.GUI.Dialogs
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
         {
-            if (_worker != null && _worker.WorkerSupportsCancellation)
+            if ((_worker != null) && _worker.WorkerSupportsCancellation)
             {
                 SubLabel = "Please wait while process will be cancelled...";
                 CancelButtonEnabled = false;
@@ -124,92 +120,92 @@ namespace Prover.GUI.Dialogs
             e.Cancel = _isBusy;
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label, Action operation)
+        internal static ProgressDialogResult Execute(IContainer container, string label, Action operation)
         {
             return ExecuteInternal(container, label, operation, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label, Action operation,
+        internal static ProgressDialogResult Execute(IContainer container, string label, Action operation,
             ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operation, settings);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Action<BackgroundWorker> operation)
         {
             return ExecuteInternal(container, label, operation, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Action<BackgroundWorker> operation, ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operation, settings);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Action<BackgroundWorker, DoWorkEventArgs> operation)
         {
             return ExecuteInternal(container, label, operation, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Action<BackgroundWorker, DoWorkEventArgs> operation, ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operation, settings);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<object> operationWithResult)
         {
             return ExecuteInternal(container, label, operationWithResult, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<object> operationWithResult, ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operationWithResult, settings);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<BackgroundWorker, object> operationWithResult)
         {
             return ExecuteInternal(container, label, operationWithResult, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<BackgroundWorker, object> operationWithResult, ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operationWithResult, settings);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<BackgroundWorker, DoWorkEventArgs, object> operationWithResult)
         {
             return ExecuteInternal(container, label, operationWithResult, null);
         }
 
-        internal static ProgressDialogResult Execute(IUnityContainer container, string label,
+        internal static ProgressDialogResult Execute(IContainer container, string label,
             Func<BackgroundWorker, DoWorkEventArgs, object> operationWithResult, ProgressDialogSettings settings)
         {
             return ExecuteInternal(container, label, operationWithResult, settings);
         }
 
-        internal static void Execute(IUnityContainer container, string label, Action operation,
+        internal static void Execute(IContainer container, string label, Action operation,
             Action<ProgressDialogResult> successOperation, Action<ProgressDialogResult> failureOperation = null,
             Action<ProgressDialogResult> cancelledOperation = null)
         {
             var result = ExecuteInternal(container, label, operation, null);
 
-            if (result.Cancelled && cancelledOperation != null)
+            if (result.Cancelled && (cancelledOperation != null))
                 cancelledOperation(result);
-            else if (result.OperationFailed && failureOperation != null)
+            else if (result.OperationFailed && (failureOperation != null))
                 failureOperation(result);
             else if (successOperation != null)
                 successOperation(result);
         }
 
-        internal static ProgressDialogResult ExecuteInternal(IUnityContainer container, string label, object operation,
+        internal static ProgressDialogResult ExecuteInternal(IContainer container, string label, object operation,
             ProgressDialogSettings settings)
         {
             var dialog = new ProgressDialogViewModel(settings);

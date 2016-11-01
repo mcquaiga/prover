@@ -244,7 +244,7 @@
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\CertificateReportViewModel.cs" />
-    <Compile Include="Reports\InstrumentGenerator.cs" />
+    <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>

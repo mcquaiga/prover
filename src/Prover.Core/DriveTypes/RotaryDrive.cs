@@ -10,10 +10,6 @@ namespace Prover.Core.DriveTypes
         public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
-        public RotaryDrive()
-        {
-        }
-
         public string Discriminator => "Rotary";
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
@@ -23,7 +19,7 @@ namespace Prover.Core.DriveTypes
             if (Meter == null)
                 Meter = new MeterTest(instrument);
 
-            return (Meter.MeterDisplacement * appliedInput);
+            return Meter.MeterDisplacement*appliedInput;
         }
 
         public int MaxUncorrectedPulses(Instrument instrument)
@@ -45,12 +41,12 @@ namespace Prover.Core.DriveTypes
         public MeterTest(Instrument instrument)
         {
             _instrument = instrument;
-            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).NumericValue);
+            MeterIndex = MeterIndexInfo.Get((int) _instrument.Items.GetItem(432).NumericValue);
         }
 
         public bool MeterDisplacementHasPassed
         {
-            get { return (MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD)); }
+            get { return MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD); }
         }
 
         public decimal MeterDisplacement
@@ -66,10 +62,7 @@ namespace Prover.Core.DriveTypes
 
         public decimal? EvcMeterDisplacement
         {
-            get
-            {
-                return _instrument.Items.GetItem(439).NumericValue;
-            }
+            get { return _instrument.Items.GetItem(439).NumericValue; }
         }
 
         public decimal MeterDisplacementPercentError
@@ -77,14 +70,12 @@ namespace Prover.Core.DriveTypes
             get
             {
                 if (MeterDisplacement != 0)
-                {
-                    return Math.Round((decimal)(((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement) * 100), 2);
-                }
+                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement)/MeterDisplacement*100), 2);
                 return 0;
             }
         }
 
-        public MeterIndexInfo MeterIndex { get; private set; }
+        public MeterIndexInfo MeterIndex { get; }
 
         public string MeterTypeDescription
         {
@@ -99,7 +90,7 @@ namespace Prover.Core.DriveTypes
 
         public int MeterTypeId
         {
-            get { return (int)_instrument.Items.GetItem(432).NumericValue; }
+            get { return (int) _instrument.Items.GetItem(432).NumericValue; }
         }
     }
 }

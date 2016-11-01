@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
@@ -26,7 +25,12 @@ namespace Prover.GUI.Screens.QAProver
         public CommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
         public string TachCommPortName { get; private set; }
-        
+
+        public void Handle(SettingsChangeEvent message)
+        {
+            VerifySettings();
+        }
+
         public async Task CancelCommand()
         {
             await ScreenManager.GoHome();
@@ -66,11 +70,6 @@ namespace Prover.GUI.Screens.QAProver
 
             if (string.IsNullOrEmpty(InstrumentCommPortName))
                 ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
-        }
-
-        public void Handle(SettingsChangeEvent message)
-        {
-            VerifySettings();
         }
     }
 }

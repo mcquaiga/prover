@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
@@ -12,7 +11,8 @@ namespace Prover.GUI
 {
     public class QaTestRunApp : AppMainMenuBase
     {
-        public QaTestRunApp(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public QaTestRunApp(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
         }
 

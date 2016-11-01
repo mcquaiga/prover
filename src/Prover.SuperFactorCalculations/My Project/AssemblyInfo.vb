@@ -1,5 +1,4 @@
-﻿Imports System
-Imports System.Reflection
+﻿Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following 
@@ -8,17 +7,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Prover.SuperFactorCalculations")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("Prover.SuperFactorCalculations")> 
-<Assembly: AssemblyCopyright("Copyright ©  2016")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("Prover.SuperFactorCalculations")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("Prover.SuperFactorCalculations")>
+<Assembly: AssemblyCopyright("Copyright ©  2016")>
+<Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("72c63f51-b8d7-4a82-8e13-810f85c5c835")> 
+<Assembly: Guid("72c63f51-b8d7-4a82-8e13-810f85c5c835")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +30,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>

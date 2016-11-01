@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -9,18 +8,19 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
-using LogManager = Caliburn.Micro.LogManager;
+using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Verifiers
 {
     public class CompanyNumberUpdater : IUpdater
     {
-        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
-        private readonly ScreenManager _screenManager;
         private readonly IEventAggregator _eventAggregator;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly ScreenManager _screenManager;
 
-        public CompanyNumberUpdater(ScreenManager screenManager, IEventAggregator eventAggregator, IInstrumentStore<Instrument> instrumentStore)
+        public CompanyNumberUpdater(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IInstrumentStore<Instrument> instrumentStore)
         {
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;
@@ -32,12 +32,14 @@ namespace UnionGas.MASA.Verifiers
             var newCompanyNumber = GetNewValue();
 
             await evcCommunicationClient.Connect();
-            var response = await evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse((string)newCompanyNumber));
+            var response =
+                await
+                    evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
             await evcCommunicationClient.Disconnect();
 
             if (response)
             {
-                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = (string)newCompanyNumber;
+                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber;
                 await _instrumentStore.UpsertAsync(instrument);
             }
 
@@ -46,7 +48,6 @@ namespace UnionGas.MASA.Verifiers
 
         private string GetNewValue()
         {
-            
             var dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
             var result = _screenManager.ShowDialog(dialog);
 

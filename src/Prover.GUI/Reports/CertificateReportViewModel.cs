@@ -1,14 +1,14 @@
-﻿using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
+﻿using Autofac;
+using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.GUI.Reports
 {
     public class CertificateReportViewModel : ReactiveScreen
     {
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
 
-        public CertificateReportViewModel(IUnityContainer container, Certificate certificate)
+        public CertificateReportViewModel(IContainer container, Certificate certificate)
         {
             _container = container;
 

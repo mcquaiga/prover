@@ -4,13 +4,11 @@ namespace Prover.GUI.Common.Events
 {
     public class ShowDialogEvent
     {
-        public object ViewModel { get; private set; }
-        
         public ShowDialogEvent(ReactiveScreen viewModel)
         {
             ViewModel = viewModel;
         }
-      
 
+        public object ViewModel { get; private set; }
     }
 }

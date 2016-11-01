@@ -32,10 +32,8 @@ namespace Prover.CommProtocol.MiHoneywell
         {
             if (ItemDetails == null)
             {
-                var itemTask = Task.Run(() => ItemHelpers.LoadItems(InstrumentType)).ContinueWith(_ =>
-                {
-                    ItemDetails = _.Result;
-                });
+                var itemTask =
+                    Task.Run(() => ItemHelpers.LoadItems(InstrumentType)).ContinueWith(_ => { ItemDetails = _.Result; });
             }
 
             await WakeUpInstrument();

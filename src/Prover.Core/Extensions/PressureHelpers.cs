@@ -1,28 +1,24 @@
-﻿using Prover.Core.Models;
+﻿using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prover.CommProtocol.Common.Items;
 
 namespace Prover.Core.Extensions
 {
     public static class PressureItems
     {
-        public static TransducerType GetTransducerType(this Instrument instrument) 
-            => (TransducerType)instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
+        public static TransducerType GetTransducerType(this Instrument instrument)
+            => (TransducerType) instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
-        public static string PressureUnits(this Instrument instrument) 
+        public static string PressureUnits(this Instrument instrument)
             => instrument.Items.GetItem(ItemCodes.Pressure.Units).Description;
 
-        public static decimal? EvcBasePressure(this Instrument instrument) 
+        public static decimal? EvcBasePressure(this Instrument instrument)
             => instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
 
-        public static decimal? EvcAtmosphericPressure(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
+        public static decimal? EvcAtmosphericPressure(this Instrument instrument)
+            => instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
 
-        public static decimal? EvcPressureRange(this Instrument instrument) => instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
+        public static decimal? EvcPressureRange(this Instrument instrument)
+            => instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
 
         //public static decimal? EvcGasPressure(this Dictionary<int, string> itemValues)
         //{

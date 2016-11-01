@@ -12,7 +12,7 @@ namespace Prover.Core.Settings
 
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
-        
+
         public void SetDefaults()
         {
             ExportServiceAddress = "";

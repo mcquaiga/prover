@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
-
-namespace Prover.CommProtocol.MiHoneywell.Console
+﻿namespace Prover.CommProtocol.MiHoneywell.Console
 {
     internal class Program
     {

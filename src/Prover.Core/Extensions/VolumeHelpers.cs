@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
 
@@ -15,12 +14,13 @@ namespace Prover.Core.Extensions
         private const int UNCOR_VOL_HIGHRES = 892;
         private const int PULSER_A = 93;
         private const int PULSER_B = 94;
-        
+
         public static string PulseASelect(this Instrument instrument) => instrument.Items.GetItem(PULSER_A).Description;
 
         public static string PulseBSelect(this Instrument instrument) => instrument.Items.GetItem(PULSER_B).Description;
 
-        public static decimal? EvcCorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems)
+        public static decimal? EvcCorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
+            IEnumerable<ItemValue> afterItems)
         {
             var o = (afterItems?.Corrected() - beforeItems?.Corrected())*instrument?.CorrectedMultiplier();
             if (o != null)
@@ -30,13 +30,14 @@ namespace Prover.Core.Extensions
         }
 
 
-        public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems, IEnumerable<ItemValue> afterItems)
+        public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
+            IEnumerable<ItemValue> afterItems)
         {
             var o = (afterItems?.Uncorrected() - beforeItems?.Uncorrected())*instrument?.UnCorrectedMultiplier();
             if (o != null)
                 return Math.Round(
                     (decimal)
-                        o, 4);
+                    o, 4);
             return null;
         }
 
@@ -102,7 +103,7 @@ namespace Prover.Core.Extensions
             var highResString = Convert.ToString(highResValue, CultureInfo.InvariantCulture);
             var pointLocation = highResString.IndexOf(".", StringComparison.Ordinal);
 
-            if (highResValue > 0 && pointLocation > -1)
+            if ((highResValue > 0) && (pointLocation > -1))
             {
                 var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
 

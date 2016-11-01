@@ -10,6 +10,7 @@ using Caliburn.Micro;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 using ReactiveUI.Autofac;
@@ -21,8 +22,8 @@ namespace Prover.GUI
     {
         private readonly List<string> _moduleFileNames = new List<string>
         {
-            "UnionGas.MASA.dll",
-            "Prover.GUI.Common.dll"
+            "UnionGas.MASA",
+            "Prover.GUI.Common"
         };
 
         public AppBootstrapper()
@@ -40,32 +41,18 @@ namespace Prover.GUI
         {
             base.Configure();
 
-            var assembly = Assembly.GetExecutingAssembly();
-
             //Register Types with Unity
-            Builder.RegisterType<WindowManager>().As<IWindowManager>();
-            Builder.RegisterType<EventAggregator>().As<IEventAggregator>();
-
-            Builder.RegisterViews(assembly);
-            Builder.RegisterViewModels(assembly);
-            Builder.RegisterScreen(assembly);
-
-            Builder.RegisterType<ScreenManager>();
+            Builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
+            Builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+            Builder.RegisterType<ScreenManager>().SingleInstance();
 
             //Register Apps
-            Builder.RegisterType<IAppMainMenu>().Named<QaTestRunApp>("QaTestRunApp");
-            GetAppModules();
+            Builder.RegisterType<QaTestRunApp>().As<IAppMainMenu>();
+
+            Builder.RegisterType<InstrumentReportGenerator>();
 
             Container = Builder.Build();
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
-        }
-
-
-        private void GetAppModules()
-        {
-            var assembly = Assembly.LoadFrom("UnionGas.MASA.dll");
-            var type = assembly.GetType("UnionGas.MASA.Startup");
-            type.GetMethod("Initialize").Invoke(null, new object[] {Builder});
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -73,15 +60,32 @@ namespace Prover.GUI
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            var fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
-
-            foreach (var fileName in fileEntries.Where(x => _moduleFileNames.Any(y => x.EndsWith(y))))
+            foreach (var module in _moduleFileNames)
             {
-                var ass = Assembly.LoadFrom(fileName);
-                assemblies.Add(ass);
+                var ass = Assembly.LoadFrom($"{module}.dll");
+                if (ass != null)
+                {
+                    var type = ass.GetType($"{module}.Startup");
+                    type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
+                    assemblies.Add(ass);
+                }
             }
 
+            RegisterMainMenuApps(assemblies.ToArray());
+
+            Builder.RegisterViewModels(assemblies.ToArray());
+            Builder.RegisterViews(assemblies.ToArray());
+            Builder.RegisterScreen(assemblies.ToArray());
+
             return assemblies;
+        }
+
+        private void RegisterMainMenuApps(Assembly[] assemblies)
+        {
+            //register main menu apps
+            Builder.RegisterAssemblyTypes(assemblies.ToArray())
+                    .Where(t => t.IsAssignableFrom(typeof(IAppMainMenu)))
+                    .AsImplementedInterfaces();
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
@@ -116,10 +120,9 @@ namespace Prover.GUI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<IViewFor<ShellViewModel>>();
+            DisplayRootViewFor<ShellViewModel>();
 
-            var screenManager = (ScreenManager) Locator.CurrentMutable.GetService(typeof(ScreenManager));
-            Task.Run(() => screenManager.GoHome());
+            Task.Run(() => IoC.Get<ScreenManager>().GoHome());
         }
     }
 }

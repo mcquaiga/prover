@@ -8,13 +8,13 @@ namespace Prover.Core.IO
 {
     public interface IFileSystem
     {
+        string AppBaseDirectory { get; }
         void DeleteFile(string path);
         string[] GetFilesInDir(string dir);
         string[] GetFilesInDirRecurrsive(string dir);
         string[] GetFilesInDirMatching(string dir, string pattern, bool recursive);
         string[] GetFilesInDirMatching(string dir, string pattern);
         string[] GetSubdirectories(string dir);
-        string AppBaseDirectory { get; }
         //string RequireTempDir(IEngineSettings settings);
         bool FileExists(string path);
         long GetFileLength(string path);
@@ -47,7 +47,8 @@ namespace Prover.Core.IO
 
         public string[] GetFilesInDirMatching(string dir, string pattern, bool recursive)
         {
-            return Directory.GetFiles(dir, pattern, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(dir, pattern,
+                recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
 
         public string[] GetFilesInDirMatching(string dir, string pattern)
@@ -88,7 +89,7 @@ namespace Prover.Core.IO
 
         public void DeleteDirectory(string path)
         {
-            Directory.Delete(path, recursive: true);
+            Directory.Delete(path, true);
         }
 
         public void DeleteFile(string path)
@@ -114,9 +115,9 @@ namespace Prover.Core.IO
 
         public async Task WriteAllTextAsync(string path, byte[] text)
         {
-            using (FileStream sourceStream = new FileStream(path,
+            using (var sourceStream = new FileStream(path,
                 FileMode.Append, FileAccess.Write, FileShare.None,
-                bufferSize: 4096, useAsync: true))
+                4096, true))
             {
                 await sourceStream.WriteAsync(text, 0, text.Length);
             }
@@ -141,25 +142,22 @@ namespace Prover.Core.IO
 
         public bool CheckFileHasCopied(string filePath)
         {
-
             int timeElapsed = 0, timeTick = 1000;
             while (timeElapsed < WaitIntervalForCopyMoveComplete)
-            {
                 try
                 {
                     if (File.Exists(filePath))
                         using (File.OpenRead(filePath))
+                        {
                             return true;
-                    else
-                        return false;
-
+                        }
+                    return false;
                 }
                 catch (IOException)
                 {
                     Thread.Sleep(timeTick);
                     timeElapsed += timeTick;
                 }
-            }
             return false;
         }
 
@@ -180,6 +178,5 @@ namespace Prover.Core.IO
 
             return null;
         }
-
     }
 }
