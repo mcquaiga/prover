@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.EVCTypes;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -17,7 +17,7 @@ namespace Prover.Core.VerificationTests
     {
         Instrument Instrument { get; }
         void Dispose();
-        Task InitializeTest(IDriveType driveType);
+        Task InitializeTest(InstrumentType instrumentType, IDriveType driveType);
         Task RunTest(int level);
         Task DownloadVerificationTestItems(int level);
         Task DownloadTemperatureTestItems(int levelNumber);
@@ -33,29 +33,33 @@ namespace Prover.Core.VerificationTests
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IEnumerable<IVerifier> _verifiers;
+        private readonly IVerifier _verifier;
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
-            IReadingStabilizer readingStabilizer)
+            IReadingStabilizer readingStabilizer,
+            IVerifier verifier
+            )
         {
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
+            _verifier = verifier;
         }
 
         public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
         
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(IDriveType driveType)
+        public async Task InitializeTest(InstrumentType instrumentType, IDriveType driveType)
         {
+            _communicationClient.Initialize(instrumentType);
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
-            Instrument = new Instrument(_communicationClient.InstrumentType, driveType, items);
+            Instrument = new Instrument(instrumentType, driveType, items);
             await _communicationClient.Disconnect();
-
+            await SaveAsync();
             await RunVerifier();
         }
 
@@ -120,11 +124,11 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            var verifiers = _verifiers.ToArray();
-
-            if (verifiers.Any())
-                foreach (var verifier in verifiers)
-                    await verifier.Verify(_communicationClient, Instrument);
+            if (_verifier != null)
+            {
+                //foreach (var verifier in _verifier.ToArray())
+                    await _verifier.Verify(_communicationClient, Instrument);
+            }
         }
 
         public void Dispose()

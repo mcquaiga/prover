@@ -13,10 +13,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
     public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
     {
         private readonly IDInOutBoard _outputBoard;
-        private readonly TachometerCommunicator _tachometerCommunicator;
+        private readonly TachometerService _tachometerCommunicator;
 
         public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, IPulseInputService pulseInputService,
-            TachometerCommunicator tachComm)
+            TachometerService tachComm)
             : base(eventAggregator, pulseInputService)
         {
             _tachometerCommunicator = tachComm;
@@ -83,7 +83,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     //TODO: Raise events so the UI can respond
                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !RequestStopTest);
+                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses(volumeTest.Instrument)) && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
             });

@@ -74,6 +74,10 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.9\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -138,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps.cs" />
+    <Compile Include="Verifiers\CompanyNumberUpdater.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
       <DependentUpon>CompanyNumberDialogView.xaml</DependentUpon>
@@ -169,7 +174,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="Exporter\Translate.cs" />
-    <Compile Include="Verifiers\CompanyNumberVerifierUpdater.cs" />
+    <Compile Include="Verifiers\CompanyNumberVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +189,10 @@
     <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
       <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
       <Name>Prover.GUI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.GUI\Prover.GUI.csproj">
+      <Project>{5d29b63b-d73f-4b8d-b004-adba15cd75f1}</Project>
+      <Name>Prover.GUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -307,8 +316,8 @@
     <None Include="Resources\settings-light.png" />
     <None Include="Resources\Home.png" />
     <None Include="Resources\error_36.png" />
-    <None Include="Resources\cloud-upload.png" />
-    <None Include="Resources\clipboard-text.png" />
+    <Resource Include="Resources\cloud-upload.png" />
+    <Resource Include="Resources\clipboard-text.png" />
     <None Include="Resources\clipboard-check.png" />
   </ItemGroup>
   <ItemGroup>

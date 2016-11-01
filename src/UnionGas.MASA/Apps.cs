@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
@@ -18,7 +19,9 @@ namespace UnionGas.MASA
         {
         }
 
-        public override ImageSource IconSource => null;
+        public override ImageSource IconSource
+            => new BitmapImage(new Uri("pack://application:,,,/UnionGas.MASA;component/Resources/cloud-upload.png"));
+
         public override string AppTitle => "Export to MASA";
         public override Action ClickAction => async () => await ScreenManager.ChangeScreen<ExportTestsViewModel>();
     }

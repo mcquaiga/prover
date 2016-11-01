@@ -12,33 +12,32 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase
     {
-        private readonly QaRunTestManager _qaRunTestManager;
+        public IQaRunTestManager QaRunTestManager;
 
-        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, VerificationTest verificationTest, QaRunTestManager qaRunTestManager = null)
+        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaRunTestManager = qaRunTestManager;
-
-            VerificationTest = verificationTest;
-            CreateViews();
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
         public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
         public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
-        public PressureTestViewModel PressureTestRun { get; private set; }
-        public SuperFactorTestViewModel SuperFactorViewModelFactor { get; private set; }
+        public PressureTestViewModel PressureTestViewModel { get; private set; }
+        public SuperFactorTestViewModel SuperFactorTestViewModel { get; private set; }
         public VolumeTestViewModel VolumeTestViewModel { get; private set; }
 
         public VerificationTest VerificationTest { get; set; }
 
-        private void CreateViews()
+        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
         {
+            VerificationTest = verificationTest;
+            QaRunTestManager = qaTestRunTestManager;
+
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
                 TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-                PressureTestRun = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
-                SuperFactorViewModelFactor = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
             }
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.T)
@@ -48,7 +47,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.P)
             {
-                PressureTestRun = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
             }
 
             if (VerificationTest.VolumeTest != null)
@@ -59,7 +58,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public async Task RunTest()
         {
-            await _qaRunTestManager.RunTest(VerificationTest.TestNumber);
+            await QaRunTestManager.RunTest(VerificationTest.TestNumber);
             EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
         }
     }

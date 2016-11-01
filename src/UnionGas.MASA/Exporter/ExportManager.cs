@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Practices.Unity;
 using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
+using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Exporter
 {
     public class ExportManager : IExportTestRun
     {
         private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly DCRWebService.DCRWebServiceSoap _dcrWebService;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public Uri ServiceUri { get; set; }
-
-        public ExportManager(IInstrumentStore<Instrument> instrumentStore)
+        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebService.DCRWebServiceSoap dcrWebService)
         {
             _instrumentStore = instrumentStore;
+            _dcrWebService = dcrWebService;
         }
 
         public async Task<bool> Export(Instrument instrumentForExport)
@@ -53,7 +55,6 @@ namespace UnionGas.MASA.Exporter
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
                 return false;
             }
         }
@@ -62,20 +63,24 @@ namespace UnionGas.MASA.Exporter
         {
             try
             {
-                using (var service = new DCRWebService.DCRWebServiceSoapClient())
-                {
-                    service.Endpoint.Address = new EndpointAddress(ServiceUri);
+                var request =
+                    new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(evcQARun.ToArray()));
 
-                    var result = await service.SubmitQAEvcTestResultsAsync(evcQARun.ToArray());
-                    if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
-                    {
-                        return true;
-                    }
+                var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
+
+                if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                {
+                    return true;
                 }
-                
+
+                Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
+            }
+            catch (EndpointNotFoundException notFoundEx)
+            {
+                MessageBox.Show("Web service could not be reached.");
             }
             catch (Exception ex)
-            {
+            { 
                 Log.Error(ex, "An error occured sending results to the web service.");
             }
 

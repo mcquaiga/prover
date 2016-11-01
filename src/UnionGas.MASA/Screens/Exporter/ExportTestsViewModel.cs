@@ -61,14 +61,14 @@ namespace UnionGas.MASA.Screens.Exporter
             GetInstrumentsByCertificateId(null);
         }
 
-        public IEnumerable<Instrument> GetSelectedInstruments()
+        public async Task<IEnumerable<Instrument>> GetSelectedInstruments()
         {
-            return InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument);
+            return await Task.Run(() => InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument));
         }
 
         public async Task ExportQARuns()
         {
-            await _exportTestRun.Export(GetSelectedInstruments());
+            await _exportTestRun.Export(await GetSelectedInstruments());
         }
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)

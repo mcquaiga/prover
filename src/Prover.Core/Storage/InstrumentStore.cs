@@ -22,7 +22,9 @@ namespace Prover.Core.Storage
         public IQueryable<Instrument> Query()
         {
             return _proverContext.Instruments
-                        .Include(v => v.VerificationTests)
+                        .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
+                        .Include(v => v.VerificationTests.Select(p => p.PressureTest))
+                        .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
                         .AsQueryable();
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.EVCTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -11,27 +10,28 @@ namespace Prover.Core.DriveTypes
         public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
-        public RotaryDrive(Instrument instrument)
+        public RotaryDrive()
         {
-            Instrument = instrument;
-            Meter = new MeterTest(Instrument);
         }
 
         public string Discriminator => "Rotary";
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
-        public decimal? UnCorrectedInputVolume(decimal appliedInput)
+        public decimal? UnCorrectedInputVolume(Instrument instrument, decimal appliedInput)
         {
+            if (Meter == null)
+                Meter = new MeterTest(instrument);
+
             return (Meter.MeterDisplacement * appliedInput);
         }
 
-        public int MaxUncorrectedPulses()
+        public int MaxUncorrectedPulses(Instrument instrument)
         {
-            if (Instrument.UnCorrectedMultiplier() == 10)
+            if (instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;
 
-            if (Instrument.UnCorrectedMultiplier() == 100)
+            if (instrument.UnCorrectedMultiplier() == 100)
                 return Meter.MeterIndex.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything

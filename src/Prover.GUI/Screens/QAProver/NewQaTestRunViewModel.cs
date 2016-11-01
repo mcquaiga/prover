@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.DriveTypes;
 using Prover.Core.Events;
 using Prover.Core.Settings;
-using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
@@ -15,16 +17,14 @@ namespace Prover.GUI.Screens.QAProver
 {
     public class NewQaTestRunViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
-        public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
+        public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            QaRunTestManager = qaRunTestManager;
         }
 
         public int BaudRate { get; private set; }
         public CommPort CommPort { get; set; }
         public string InstrumentCommPortName { get; private set; }
-        public IQaRunTestManager QaRunTestManager { get; set; }
         public string TachCommPortName { get; private set; }
         
         public async Task CancelCommand()
@@ -38,7 +38,9 @@ namespace Prover.GUI.Screens.QAProver
 
             try
             {
-                await ScreenManager.ChangeScreen<QaTestRunViewModel>();
+                var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
+                await qaTestRun.Initialize(Instruments.MiniAt, new MechanicalDrive());
+                await ScreenManager.ChangeScreen(qaTestRun);
             }
             catch (Exception ex)
             {

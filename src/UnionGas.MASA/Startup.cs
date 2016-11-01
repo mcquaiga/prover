@@ -28,8 +28,9 @@ namespace UnionGas.MASA
 
             container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            container.RegisterType<IVerifier, CompanyNumberVerifierUpdater>();
-            container.RegisterType<IExportTestRun, ExportManager>(new InjectionProperty("ServiceUri", new Uri(SettingsManager.SettingsInstance.ExportServiceAddress)));
+            container.RegisterType<IUpdater, CompanyNumberUpdater>();
+            container.RegisterType<IVerifier, CompanyNumberVerifier>();
+            container.RegisterType<IExportTestRun, ExportManager>();
 
             //ViewModels
             container.RegisterType<ExportTestsViewModel>();

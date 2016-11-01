@@ -19,12 +19,12 @@ namespace Prover.Core.VerificationTests
         void CancelLiveReading();
     }
 
-    public class ReadingStabilizer : IReadingStabilizer
+    public class AverageReadingStabilizer : IReadingStabilizer
     {
         private bool _cancelStabilize = false;
         private bool _isLiveReading;
 
-        public ReadingStabilizer(IEventAggregator eventAggregator)
+        public AverageReadingStabilizer(IEventAggregator eventAggregator)
         {
             EventAggregator = eventAggregator;
         }

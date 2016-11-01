@@ -1,41 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Prover.Core.Models.Instruments;
+using Prover.CommProtocol.Common;
+using Prover.Core.DriveTypes;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Reports;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
-    //public class QaTestRunInteractiveViewModel : ViewModelBase, IHandle<VerificationTestEvent>, IDisposable
-    //{
-    //    public QaTestRunInteractiveViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
-    //        : base(screenManager, eventAggregator)
-    //    {
-    //        if (qaRunTestManager == null)
-    //            throw new ArgumentNullException(nameof(qaRunTestManager));
+    public class QaTestRunInteractiveViewModel : ViewModelBase, IHandle<VerificationTestEvent>, IDisposable
+    {
+        private readonly InstrumentGenerator _reportGenerator;
 
-    //        QaRunTestManager = qaRunTestManager;
+        public QaTestRunInteractiveViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IQaRunTestManager qaRunTestManager, InstrumentGenerator reportGenerator)
+            : base(screenManager, eventAggregator)
+        {
+            _reportGenerator = reportGenerator;
+            QaRunTestManager = qaRunTestManager;
 
-    //        QaTestRunViewItem = ScreenManager.ResolveViewModel<QaTestRunViewModel>();
-    //    }
+            QaTestRunViewItem = ScreenManager.ResolveViewModel<QaTestRunViewModel>();
+        }
 
-    //    public QaTestRunViewModel QaTestRunViewItem { get; set; }
+        public QaTestRunViewModel QaTestRunViewItem { get; set; }
 
-    //    public IQaRunTestManager QaRunTestManager { get; set; }
+        public IQaRunTestManager QaRunTestManager { get; set; }
 
-    //    public void InstrumentReport()
-    //    {
-    //        //var instrumentReport = new InstrumentGenerator(InstrumentQaRunTestManager.Instrument, _container);
-    //        //instrumentReport.Generate();
-    //    }
+        public void Dispose()
+        {
+            QaRunTestManager.Dispose();
+        }
 
-    //    public void Dispose()
-    //    {
-    //        QaRunTestManager.Dispose();
-    //    }
+        public void Handle(VerificationTestEvent message)
+        {
+            throw new NotImplementedException();
+        }
 
-    //}
+        public async Task Initialize(InstrumentType instrumentType, IDriveType driveType)
+        {
+            await QaRunTestManager.InitializeTest(instrumentType, driveType);
+            await QaTestRunViewItem.Initialize(QaRunTestManager.Instrument);
+        }
+
+        public void InstrumentReport()
+        {
+            _reportGenerator.Generate(QaRunTestManager.Instrument);
+        }
+    }
 }

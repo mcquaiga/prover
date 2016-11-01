@@ -13,11 +13,11 @@ using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Verifiers
 {
-    public class CompanyNumberVerifierUpdater : VerifierUpdaterBase
+    public class CompanyNumberVerifier : IVerifier
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberVerifierUpdater(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater)
+        public CompanyNumberVerifier(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater)
         {
             InstrumentStore = instrumentStore;
             WebService = webService;
@@ -30,33 +30,27 @@ namespace UnionGas.MASA.Verifiers
 
         public DCRWebServiceSoap WebService { get; }
 
-        public override async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
+        public async Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
-            var companyNumber = companyNumberItem.ToString();
+            var companyNumber = companyNumberItem.RawValue;
 
             var meterDto = await VerifyWithWebService(companyNumber);
-
-            while (meterDto == null)
+            while (meterDto.InventoryCode == null)
             {
-                var newCompanyNumber = await Updater.GetNewValue();
+                _log.Debug($"Company number wasn't present in an open job.");
+                var newCompanyNumber = await Updater.Update(commClient, instrument);
 
                 meterDto = await VerifyWithWebService(newCompanyNumber.ToString());
-
-                if (meterDto != null)
-                    await UpdateInstrumentCompanyNumber(commClient, instrument, newCompanyNumber.ToString());
             }
 
             return meterDto;
         }
 
-        public override Task<object> Update(EvcCommunicationClient commClient, Instrument instrument)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
+            _log.Debug($"Verifying company number {companyNumber} with web service.");
+
             return await Task.Run(() =>
             {
                 var request = new GetValidatedEvcDeviceByInventoryCodeRequest
@@ -69,20 +63,6 @@ namespace UnionGas.MASA.Verifiers
             });
         }
 
-        private async Task<bool> UpdateInstrumentCompanyNumber(EvcCommunicationClient commClient, Instrument instrument,
-            string newCompanyNumber)
-        {
-            await commClient.Connect();
-            var response = await commClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
-            await commClient.Disconnect();
-
-            if (response)
-            {
-                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber;
-                await InstrumentStore.UpsertAsync(instrument);
-            }
-
-            return response;
-        }
+        
     }
 }

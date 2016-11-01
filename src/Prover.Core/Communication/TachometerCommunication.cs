@@ -8,55 +8,16 @@ using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.Communication
 {
-    public class TachometerCommunicator : IDisposable
+    public class TachometerService : IDisposable
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IDInOutBoard _outputBoard;
         private readonly SerialPort _serialPort;
 
-        public TachometerCommunicator(string portName)
+        public TachometerService(string portName, IDInOutBoard outputBoard)
         {
             _serialPort = new SerialPort(portName, 9600);
-            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 1);
-        }
-
-        public void Dispose()
-        {
-            _serialPort.Close();
-            _outputBoard.Dispose();
-        }
-
-        public static async Task<int> ReadTachometer(string tachCommPort)
-        {
-            if (!string.IsNullOrEmpty(tachCommPort))
-            {
-                using (var tach = new TachometerCommunicator(tachCommPort))
-                {
-                    try
-                    {
-                        var value = await tach?.ReadTach();
-                        Log.Info("Tachometer reading: {0}", value);
-                        return value;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "An error occured");
-                    }
-                }
-            }
-            return 0;
-        }
-
-        public static async Task ResetTach(string tachCommPort)
-        {
-            //Reset Tach setting
-            if (!string.IsNullOrEmpty(tachCommPort))
-            {
-                using (var tach = new TachometerCommunicator(tachCommPort))
-                {
-                    await tach.ResetTach();
-                }
-            }
+            _outputBoard = outputBoard;
         }
 
         public async Task ResetTach()
@@ -110,6 +71,12 @@ namespace Prover.Core.Communication
                 return result;
             }
             return -1;
+        }
+
+        public void Dispose()
+        {
+            _serialPort.Close();
+            _outputBoard.Dispose();
         }
     }
 }

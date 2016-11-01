@@ -17,23 +17,5 @@ namespace Prover.Core.ExternalIntegrations
     public interface IUpdater
     {
         Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
-        Task<object> GetNewValue();
-    }
-
-    public abstract class VerifierUpdaterBase : IVerifier
-    {
-        protected VerifierUpdaterBase()
-        {
-
-        }
-
-        public async Task VerifyUpdate(EvcCommunicationClient commClient, Instrument instrument)
-        {
-            await Verify(commClient, instrument);
-            await Update(commClient, instrument);
-        }
-
-        public abstract Task<object> Verify(EvcCommunicationClient commClient, Instrument instrument);
-        public abstract Task<object> Update(EvcCommunicationClient commClient, Instrument instrument);
     }
 }
