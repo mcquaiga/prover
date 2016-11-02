@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using Caliburn.Micro;
 using Action = System.Action;
 
@@ -7,15 +6,15 @@ namespace Prover.GUI.Common.Screens.MainMenu
 {
     public interface IAppMainMenu
     {
-        ImageSource IconSource { get;  }
-        string AppTitle { get;  }
-        Action ClickAction { get;  }
+        ImageSource IconSource { get; }
+        string AppTitle { get; }
+        Action ClickAction { get; }
     }
 
     public abstract class AppMainMenuBase : IAppMainMenu
     {
-        protected ScreenManager ScreenManager;
         protected IEventAggregator EventAggregator;
+        protected ScreenManager ScreenManager;
 
         protected AppMainMenuBase(ScreenManager screenManager, IEventAggregator eventAggregator)
         {

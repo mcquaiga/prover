@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Prover.Core.ExternalDevices.DInOutBoards
 {
@@ -20,12 +16,10 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public void StartMotor()
         {
-            return;
         }
 
         public void StopMotor()
         {
-            return;
         }
     }
 }

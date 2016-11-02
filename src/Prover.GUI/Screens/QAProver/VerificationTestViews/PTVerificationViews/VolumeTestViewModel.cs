@@ -1,20 +1,17 @@
 ﻿using System.Windows.Media;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
-using NLog;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
-using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
-        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
+        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
         {
             Volume = testRun;
         }
@@ -39,6 +36,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
 
         public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
+
         public decimal? TrueCorrected
         {
             get
@@ -61,15 +59,15 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public Brush UnCorrectedPercentColour
             =>
-                Volume?.UnCorrectedHasPassed == true
-                    ? Brushes.White
-                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+            Volume?.UnCorrectedHasPassed == true
+                ? Brushes.White
+                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
         public Brush CorrectedPercentColour
             =>
-                Volume?.CorrectedHasPassed == true
-                    ? Brushes.White
-                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+            Volume?.CorrectedHasPassed == true
+                ? Brushes.White
+                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
         public Brush MeterDisplacementPercentColour => Brushes.Green;
         // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;

@@ -27,7 +27,8 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// </summary>
         /// <returns>A response code is expected in return - ACK if successful</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            WakeupTwo() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
+            WakeupTwo()
+            => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
 
         /// <summary>
         ///     Creates an NAK request
@@ -37,13 +38,14 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// <returns>No response is expected</returns>
         public static MiCommandDefinition<StatusResponseMessage>
             OkayToSend() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.NAK);
-        
+
         /// <summary>
         ///     Creates the Sign On command to the instrument
         /// </summary>
         /// <param name="instrument">Instrument Type</param>
         /// <param name="accessCode">Password for access to the instrument</param>
-        /// <returns>A response code is expected in return
+        /// <returns>
+        ///     A response code is expected in return
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
@@ -57,10 +59,11 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// <summary>
         ///     Creates a Sign Off command
         /// </summary>
-        /// <returns>Expects a response code in return
+        /// <returns>
+        ///     Expects a response code in return
         ///     NoError indicates we're disconnected cleanly
         /// </returns>
-        public static MiCommandDefinition<StatusResponseMessage> 
+        public static MiCommandDefinition<StatusResponseMessage>
             SignOffCommand() => new MiCommandDefinition<StatusResponseMessage>("SF", ResponseProcessors.ResponseCode);
 
         /// <summary>
@@ -88,7 +91,8 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// <param name="accessCode">Password for the instrument</param>
         /// <returns>A response code is expected in return</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            WriteItem(int itemNumber, string value, string accessCode = DefaultAccessCode) => new WriteItemCommand(itemNumber, value, accessCode);
+            WriteItem(int itemNumber, string value, string accessCode = DefaultAccessCode)
+            => new WriteItemCommand(itemNumber, value, accessCode);
 
         /// <summary>
         ///     Creates a Live Read command
@@ -169,7 +173,8 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 
         public IEnumerable<int> ItemNumbers { get; }
 
-        public override ResponseProcessor<ItemGroupResponseMessage> ResponseProcessor => ResponseProcessors.ItemGroup(ItemNumbers);
+        public override ResponseProcessor<ItemGroupResponseMessage> ResponseProcessor
+            => ResponseProcessors.ItemGroup(ItemNumbers);
 
         private static string JoinItemValues(IEnumerable<int> items)
         {

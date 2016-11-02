@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
@@ -35,25 +33,25 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
-                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.TemperatureTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.PressureTest);
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.SuperFactorTest);
             }
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.T)
-            {
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-            }
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.TemperatureTest);
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.P)
-            {
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
-            }
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.PressureTest);
 
             if (VerificationTest.VolumeTest != null)
-            {
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
-            }
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator,
+                    VerificationTest.VolumeTest);
         }
 
         public async Task RunTest()

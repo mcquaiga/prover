@@ -7,12 +7,23 @@ using System.Windows.Media;
 namespace Prover.GUI.Common.Controls
 {
     /// <summary>
-    /// Interaction logic for MainMenuButton.xaml
+    ///     Interaction logic for MainMenuButton.xaml
     /// </summary>
     public partial class MainMenuButton : UserControl
     {
         public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
             "IconSource", typeof(ImageSource), typeof(MainMenuButton), new PropertyMetadata(default(ImageSource)));
+
+        public static readonly DependencyProperty AppTitleProperty = DependencyProperty.Register(
+            "AppTitle", typeof(string), typeof(MainMenuButton), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty ClickActionProperty = DependencyProperty.Register(
+            "ClickAction", typeof(Action), typeof(MainMenuButton), new PropertyMetadata(default(Action)));
+
+        public MainMenuButton()
+        {
+            InitializeComponent();
+        }
 
         public ImageSource IconSource
         {
@@ -20,17 +31,11 @@ namespace Prover.GUI.Common.Controls
             set { SetValue(IconSourceProperty, value); }
         }
 
-        public static readonly DependencyProperty AppTitleProperty = DependencyProperty.Register(
-            "AppTitle", typeof(string), typeof(MainMenuButton), new PropertyMetadata(default(string)));
-
         public string AppTitle
         {
             get { return (string) GetValue(AppTitleProperty); }
             set { SetValue(AppTitleProperty, value); }
         }
-
-        public static readonly DependencyProperty ClickActionProperty = DependencyProperty.Register(
-            "ClickAction", typeof(Action), typeof(MainMenuButton), new PropertyMetadata(default(Action)));
 
         public Action ClickAction
         {
@@ -43,11 +48,6 @@ namespace Prover.GUI.Common.Controls
         public void ActionCommand()
         {
             Task.Run(() => ClickAction);
-        }
-
-        public MainMenuButton()
-        {
-            InitializeComponent();
         }
     }
 }

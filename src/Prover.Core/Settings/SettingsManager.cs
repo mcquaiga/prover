@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using Newtonsoft.Json;
 using Prover.Core.IO;
-using System.IO;
 
 namespace Prover.Core.Settings
 {
     public static class SettingsManager
     {
         private const string SettingsFileName = "settings.conf";
-        private static string SettingsPath = Path.Combine(Environment.CurrentDirectory, SettingsFileName);
+        private static readonly string SettingsPath = Path.Combine(Environment.CurrentDirectory, SettingsFileName);
         private static Settings _singletonInstance;
 
         public static Settings SettingsInstance
@@ -29,7 +25,7 @@ namespace Prover.Core.Settings
         private static Settings LoadSettings()
         {
             var fileSystem = new FileSystem();
-            
+
             if (!fileSystem.FileExists(SettingsPath))
             {
                 var settings = new Settings();
@@ -44,9 +40,7 @@ namespace Prover.Core.Settings
             var fileSystem = new FileSystem();
 
             if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
-            {
                 fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
-            }
             new SettingsWriter(fileSystem).Write(SettingsPath, _singletonInstance);
         }
     }

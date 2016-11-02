@@ -13,10 +13,10 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
     public class QaTestRunInteractiveViewModel : ViewModelBase, IHandle<VerificationTestEvent>, IDisposable
     {
-        private readonly InstrumentGenerator _reportGenerator;
+        private readonly InstrumentReportGenerator _reportGenerator;
 
         public QaTestRunInteractiveViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IQaRunTestManager qaRunTestManager, InstrumentGenerator reportGenerator)
+            IQaRunTestManager qaRunTestManager, InstrumentReportGenerator reportGenerator)
             : base(screenManager, eventAggregator)
         {
             _reportGenerator = reportGenerator;
@@ -47,7 +47,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 
         public void InstrumentReport()
         {
-            _reportGenerator.Generate(QaRunTestManager.Instrument);
+            _reportGenerator.GenerateAndViewReport(QaRunTestManager.Instrument);
         }
     }
 }

@@ -6,32 +6,32 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
+using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 
 namespace Prover.GUI.Reports
 {
-    public class InstrumentGenerator
+    public class InstrumentReportGenerator
     {
         private readonly ScreenManager _screenManager;
 
-        public InstrumentGenerator(ScreenManager screenManager)
+        public InstrumentReportGenerator(ScreenManager screenManager)
         {
-            _screenManager = screenManager;   
+            _screenManager = screenManager;
         }
 
-        public string InstrumentsFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
+        public string OutputFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
 
-        public async Task Generate(Instrument instrument)
+        public async Task GenerateAndViewReport(Instrument instrument)
         {
             var filePath = CreateFileName(instrument);
 
             //Set up the WPF Control to be printed
             var controlToPrint = new InstrumentReportView();
             var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
-            controlToPrint.DataContext = reportViewModel;
-            
             await reportViewModel.Initialize(instrument);
+            controlToPrint.DataContext = reportViewModel;
 
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
@@ -52,16 +52,14 @@ namespace Prover.GUI.Reports
 
         private string CreateFileName(Instrument instrument)
         {
-            var fileName = string.Format("{0}-instrument-{1}.xps", instrument.SerialNumber,
-                    DateTime.Now.ToFileTime().ToString().Substring(0, 10));
+            var fileName =
+                $"{instrument.InventoryNumber}-instrument-{DateTime.Now.ToFileTime().ToString().Substring(0, 10)}.xps";
 
-            var filePath = Path.Combine(InstrumentsFolderPath, fileName);
+            var filePath = Path.Combine(OutputFolderPath, fileName);
 
             //Create the directory if it doesn't exist
-            if (!Directory.Exists(InstrumentsFolderPath))
-            {
-                Directory.CreateDirectory(InstrumentsFolderPath);
-            }
+            if (!Directory.Exists(OutputFolderPath))
+                Directory.CreateDirectory(OutputFolderPath);
 
             return filePath;
         }

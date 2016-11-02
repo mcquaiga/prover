@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
@@ -56,10 +55,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             });
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset)
         {
             await InstrumentCommunicator.Connect();
-            volumeTest.Items = await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
+            volumeTest.Items =
+                await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
             await InstrumentCommunicator.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -83,13 +84,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     //TODO: Raise events so the UI can respond
                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses(volumeTest.Instrument)) && !RequestStopTest);
+                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses(volumeTest.Instrument)) &&
+                         !RequestStopTest);
 
                 _outputBoard?.StopMotor();
             });
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcPostTestItemReset)
         {
             await Task.Run(async () =>
             {

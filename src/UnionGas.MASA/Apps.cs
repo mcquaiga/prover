@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
@@ -15,7 +11,8 @@ namespace UnionGas.MASA
 {
     public class ExportManagerApp : AppMainMenuBase
     {
-        public ExportManagerApp(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public ExportManagerApp(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
         }
 

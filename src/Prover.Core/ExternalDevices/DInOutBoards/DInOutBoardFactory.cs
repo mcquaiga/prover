@@ -1,9 +1,5 @@
-﻿using MccDaq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using MccDaq;
 
 namespace Prover.Core.ExternalDevices.DInOutBoards
 {
@@ -14,10 +10,10 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             try
             {
                 var board = new DataAcqBoard(boardNumber, channelType, channelNumber);
-            
-                return board;            
+
+                return board;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }

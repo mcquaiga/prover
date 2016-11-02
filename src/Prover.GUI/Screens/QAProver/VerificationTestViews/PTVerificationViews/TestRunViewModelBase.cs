@@ -1,6 +1,5 @@
 ﻿using System.Windows.Media;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
@@ -11,7 +10,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
     public abstract class TestRunViewModelBase<T> : ViewModelBase, IHandle<VerificationTestEvent>
         where T : BaseVerificationTest
     {
-        protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun) 
+        protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun)
             : base(screenManager, eventAggregator)
         {
             TestRun = testRun;
@@ -23,13 +22,13 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews
 
         public Brush PercentColour
             =>
-                TestRun == null || TestRun.HasPassed
-                    ? Brushes.White
-                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+            (TestRun == null) || TestRun.HasPassed
+                ? Brushes.White
+                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
-        public Brush PassColour => TestRun != null && TestRun.HasPassed ? Brushes.ForestGreen : Brushes.IndianRed;
+        public Brush PassColour => (TestRun != null) && TestRun.HasPassed ? Brushes.ForestGreen : Brushes.IndianRed;
 
-        public string PassStatusIcon => TestRun != null && TestRun.HasPassed ? "pass" : "fail";
+        public string PassStatusIcon => (TestRun != null) && TestRun.HasPassed ? "pass" : "fail";
 
         public abstract void Handle(VerificationTestEvent message);
     }

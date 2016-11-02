@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
 using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
@@ -16,9 +12,8 @@ namespace UnionGas.MASA
     public class LoginService : ILoginService
     {
         private readonly IScreenManager _screenManager;
-        private IEventAggregator _eventAggregator;
         private readonly DCRWebServiceSoap _webService;
-        public EmployeeDTO EmployeeDto { get; private set; }
+        private IEventAggregator _eventAggregator;
 
         public LoginService(IScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
         {
@@ -27,22 +22,12 @@ namespace UnionGas.MASA
             _webService = webService;
         }
 
-        public async Task<object> GetLoginInfoFromUser()
-        {
-            return await Task.Run(() =>
-            {
-                var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
-                var result = _screenManager.ShowDialog(loginViewModel);
-
-                return result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
-            });
-           
-        }
+        public EmployeeDTO EmployeeDto { get; private set; }
 
         public async Task<object> Login(string username = null, string password = null)
         {
             if (string.IsNullOrEmpty(username))
-                username = (string)await GetLoginInfoFromUser();
+                username = (string) await GetLoginInfoFromUser();
 
             try
             {
@@ -63,5 +48,15 @@ namespace UnionGas.MASA
             }
         }
 
+        public async Task<object> GetLoginInfoFromUser()
+        {
+            return await Task.Run(() =>
+            {
+                var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
+                var result = _screenManager.ShowDialog(loginViewModel);
+
+                return result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
+            });
+        }
     }
 }

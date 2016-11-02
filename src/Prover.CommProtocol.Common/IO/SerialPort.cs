@@ -4,15 +4,15 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Practices.ObjectBuilder2;
 using RJCP.IO.Ports;
 
 namespace Prover.CommProtocol.Common.IO
 {
     public class SerialPort : CommPort
     {
+        public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
+
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
         private readonly SerialPortStream _serialStream;
 
@@ -25,7 +25,8 @@ namespace Prover.CommProtocol.Common.IO
                 throw new ArgumentException($"{portName} does not exist.");
 
             if (!BaudRates.Contains(baudRate))
-                throw new ArgumentException($"Baud rate is invalid. Must be one of the following: {BaudRates.ToString().JoinStrings(",")}");
+                throw new ArgumentException(
+                    $"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
 
             _serialStream = new SerialPortStream
             {

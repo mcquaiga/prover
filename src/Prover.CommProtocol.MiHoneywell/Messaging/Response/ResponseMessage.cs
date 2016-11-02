@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
-using Prover.CommProtocol.Common.IO;
+﻿using System.Collections.Generic;
 using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
@@ -14,8 +7,8 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
     {
         protected MiResponseMessage()
         {
-           
         }
+
         protected MiResponseMessage(string checksum)
         {
             Checksum = checksum;
@@ -51,10 +44,10 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public StatusResponseMessage(ResponseCode code, string checksum) : base(checksum)
         {
             ResponseCode = code;
-            
+
             if (!IsSuccess)
                 Log.Warn($"Instrument Response Error - {ResponseCode}");
-            
+
             Log.Debug($"Instrument Response - {ResponseCode}");
         }
 

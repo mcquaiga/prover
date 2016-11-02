@@ -1,6 +1,4 @@
 ﻿using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -12,7 +10,8 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 {
     public class InstrumentInfoViewModel : ViewModelBase, IHandle<InstrumentUpdateEvent>
     {
-        public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
         }
 
@@ -36,7 +35,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
 
         public string BasePressure
             =>
-                $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
+            $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
             ;
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";

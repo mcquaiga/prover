@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Microsoft.Practices.Unity;
-using NLog.LayoutRenderers.Wrappers;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.MainMenu;
+using ReactiveUI;
+using Splat;
+using IScreen = ReactiveUI.IScreen;
 
 namespace Prover.GUI.Common
 {
     public interface IScreenManager
     {
         Task GoHome();
-        object ResolveViewModel(Type viewModelType);
-
+        
         T ResolveViewModel<T>()
             where T : ViewModelBase;
 
         /// <summary>
-        /// Changes screen or page in the ShellView
+        ///     Changes screen or page in the ShellView
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -29,43 +30,44 @@ namespace Prover.GUI.Common
             where T : ViewModelBase;
 
         bool? ShowDialog(ViewModelBase dialogViewModel);
+
+        bool? ShowDialog<T>(string key = null)
+            where T : ViewModelBase;
+
         void ShowWindow(ViewModelBase dialogViewModel);
+
     }
 
-    public class ScreenManager : IScreenManager
-    {
-        private readonly IWindowManager _windowManager;
+    public class ScreenManager : IScreenManager, IScreen
+    {        
         private readonly IEventAggregator _eventAggregator;
-        private readonly IUnityContainer _container;
+        private readonly IWindowManager _windowManager;
 
-        public ScreenManager(IUnityContainer container, IWindowManager windowManager, IEventAggregator eventAggregator)
+        public ScreenManager(IWindowManager windowManager, IEventAggregator eventAggregator)
         {
-            _container = container;
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
         }
 
-        public async Task GoHome()
+        public RoutingState Router
         {
-            var main = _container.Resolve<MainMenuViewModel>();
-            await ChangeScreen(main);
+            get { throw new NotImplementedException(); }
         }
 
-        public object ResolveViewModel(Type viewModelType)
+        public async Task GoHome()
         {
-            var viewModel = _container.Resolve(viewModelType);
-            return viewModel;
+            var main = (MainMenuViewModel)Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
+            await ChangeScreen(main);
         }
 
         public T ResolveViewModel<T>()
             where T : ViewModelBase
         {
-            var viewModel = _container.Resolve<T>();
-            return viewModel;
+            return IoC.Get<T>();
         }
 
         /// <summary>
-        /// Changes screen or page in the ShellView
+        ///     Changes screen or page in the ShellView
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -77,7 +79,7 @@ namespace Prover.GUI.Common
         public async Task ChangeScreen<T>(string key = null)
             where T : ViewModelBase
         {
-            var viewModel = _container.Resolve<T>(key);
+            var viewModel = IoC.Get<T>(key);
 
             if (viewModel == null)
                 throw new NullReferenceException($"Type of {typeof(T)} was not registered.");
@@ -94,8 +96,14 @@ namespace Prover.GUI.Common
 
             if (windowsSettings != null)
                 return _windowManager.ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
-            else
-                return _windowManager.ShowDialog(dialogViewModel);
+            return _windowManager.ShowDialog(dialogViewModel);
+        }
+
+        public bool? ShowDialog<T>(string key = null)
+            where T : ViewModelBase
+        {
+            var viewModel = IoC.Get<T>();
+            return ShowDialog(viewModel);
         }
 
         public void ShowWindow(ViewModelBase dialogViewModel)

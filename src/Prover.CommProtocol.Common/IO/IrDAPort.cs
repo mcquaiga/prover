@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -22,8 +21,6 @@ namespace Prover.CommProtocol.Common.IO
         private IrDAClient _client;
         private IrDAEndPoint _endPoint;
 
-        public int RetryCount { get; private set; } = 10;
-
         public IrDAPort()
         {
             try
@@ -42,8 +39,13 @@ namespace Prover.CommProtocol.Common.IO
 
             DataSentObservable = new Subject<string>();
         }
-        
+
+        public int RetryCount { get; } = 10;
+
         public override string Name => "IrDA";
+
+        public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
+        public override ISubject<string> DataSentObservable { get; protected set; }
 
         public sealed override IObservable<char> DataReceived()
         {
@@ -58,9 +60,6 @@ namespace Prover.CommProtocol.Common.IO
             });
         }
 
-        public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
-        public override ISubject<string> DataSentObservable { get; protected set; }
-
         public override bool IsOpen()
         {
             return _client.Connected;
@@ -73,10 +72,7 @@ namespace Prover.CommProtocol.Common.IO
             var tokenSource = new CancellationTokenSource();
             tokenSource.CancelAfter(OpenPortTimeoutMs);
 
-            await Task.Run(() =>
-            {
-                _client.Connect(_endPoint);
-            }, tokenSource.Token);
+            await Task.Run(() => { _client.Connect(_endPoint); }, tokenSource.Token);
         }
 
         public override async Task Close()
@@ -87,7 +83,7 @@ namespace Prover.CommProtocol.Common.IO
         public override async Task Send(string data)
         {
             if (!IsOpen())
-                await Open();   
+                await Open();
 
             await Task.Run(() =>
             {
@@ -120,8 +116,8 @@ namespace Prover.CommProtocol.Common.IO
             _client = new IrDAClient();
 
             _client.Client.SetSocketOption(
-                    IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode,
-                    1);
+                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode,
+                1);
 
             var device = SelectIrDAPeerInfo(_client);
             _endPoint = new IrDAEndPoint(device.DeviceAddress, "IrDA:IrCOMM");
@@ -130,14 +126,12 @@ namespace Prover.CommProtocol.Common.IO
         private IrDADeviceInfo SelectIrDAPeerInfo(IrDAClient client)
         {
             var tryNumber = 0;
-            
+
             do
             {
                 var devices = client.DiscoverDevices();
                 if (devices.Count() > DevicePeerIndex)
-                {
                     return devices[DevicePeerIndex];
-                }
 
                 tryNumber++;
                 Thread.Sleep(5000);

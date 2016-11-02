@@ -1,44 +1,37 @@
-﻿using System;
-using Caliburn.Micro;
-using Microsoft.Practices.Unity;
+﻿using System.Reflection;
+using Autofac;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Login;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Settings;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using ReactiveUI.Autofac;
 using UnionGas.MASA.DCRWebService;
-using UnionGas.MASA.Dialogs.CompanyNumberDialog;
-using UnionGas.MASA.Dialogs.LoginDialog;
 using UnionGas.MASA.Exporter;
-using UnionGas.MASA.Screens.Exporter;
 using UnionGas.MASA.Verifiers;
 
 namespace UnionGas.MASA
 {
     public static class Startup
     {
-        public static void Initialize(IUnityContainer container)
+        public static void Initialize(ContainerBuilder builder)
         {
+            var assembly = Assembly.GetExecutingAssembly();
+
             //App Menu Icon
-            container.RegisterType<IAppMainMenu, ExportManagerApp>("ExportApp");
+            builder.RegisterType<ExportManagerApp>().As<IAppMainMenu>();
 
-            container.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
+            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            container.RegisterType<IUpdater, CompanyNumberUpdater>();
-            container.RegisterType<IVerifier, CompanyNumberVerifier>();
-            container.RegisterType<IExportTestRun, ExportManager>();
+            builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
+            builder.RegisterType<CompanyNumberVerifier>().As<IVerifier>();
+            builder.RegisterType<ExportManager>().As<IExportTestRun>();
 
             //ViewModels
-            container.RegisterType<ExportTestsViewModel>();
-            container.RegisterType<QaTestRunGridViewModel>();
-            container.RegisterType<LoginDialogViewModel>();
-            container.RegisterType<CompanyNumberDialogViewModel>();
+            builder.RegisterViewModels(assembly);
+            builder.RegisterViews(assembly);
+            builder.RegisterScreen(assembly);
 
             //Login service
-            var loginService = new LoginService(container.Resolve<ScreenManager>(), container.Resolve<IEventAggregator>(), container.Resolve<DCRWebServiceSoap>());
-            container.RegisterInstance<ILoginService>(loginService, new ContainerControlledLifetimeManager());
+            builder.RegisterType<LoginService>().As<ILoginService>().SingleInstance();
         }
     }
 }

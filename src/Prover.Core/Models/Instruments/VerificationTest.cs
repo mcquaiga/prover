@@ -46,14 +46,15 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Instrument.CompositionType == CorrectorType.T && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                if ((Instrument.CompositionType == CorrectorType.T) && (TemperatureTest != null))
+                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.P && PressureTest != null)
-                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                if ((Instrument.CompositionType == CorrectorType.P) && (PressureTest != null))
+                    return PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed) &&
+                if ((Instrument.CompositionType == CorrectorType.PTZ) && (PressureTest != null) &&
+                    (TemperatureTest != null))
+                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed) &&
                            PressureTest.HasPassed;
 
                 return false;
@@ -65,9 +66,7 @@ namespace Prover.Core.Models.Instruments
             base.OnInitializing();
 
             if (Instrument.CompositionType == CorrectorType.PTZ)
-            {
                 SuperFactorTest = new SuperFactorTest(this);
-            }
         }
     }
 }

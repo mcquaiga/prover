@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Prover.CommProtocol.MiHoneywell
+﻿namespace Prover.CommProtocol.MiHoneywell
 {
     public enum InstrumentTypes
     {
@@ -29,7 +23,7 @@ namespace Prover.CommProtocol.MiHoneywell
         NoData = -1,
         NoError = 0,
         MessageFormatError = 1,
-        SignOnError = 20,  //Wrong Instrument Type
+        SignOnError = 20, //Wrong Instrument Type
         TimeoutError = 21, //Timeout Error
         FramingError = 22, //Framing Error
         CheckByteError = 23, //Check byte error

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
@@ -41,7 +40,8 @@ namespace Prover.Core.Models.Instruments
                 if (ActualFactor == null) return null;
                 return
                     Math.Round(
-                        (decimal) ((Items.GetItem(ItemCodes.Temperature.Factor).NumericValue - ActualFactor)/ActualFactor)*
+                        (decimal)
+                        ((Items.GetItem(ItemCodes.Temperature.Factor).NumericValue - ActualFactor)/ActualFactor)*
                         100, 2);
             }
         }

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using SuperFactorCalculations;
 
@@ -48,7 +47,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (EvcUnsqrFactor == null || ActualFactor == 0) return null;
+                if ((EvcUnsqrFactor == null) || (ActualFactor == 0)) return null;
                 return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor)/ActualFactor*100), 2);
             }
         }

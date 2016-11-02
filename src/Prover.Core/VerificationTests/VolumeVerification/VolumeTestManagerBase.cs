@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using MccDaq;
@@ -13,12 +12,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public abstract class VolumeTestManagerBase
     {
-        protected Logger Log;
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;
         protected EvcCommunicationClient InstrumentCommunicator;
         protected bool IsFirstVolumeTest = true;
+        protected Logger Log;
         protected bool RequestStopTest;
         protected CancellationTokenSource TestCancellationToken;
 
@@ -34,10 +33,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
 
-        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
+        public bool RunningTest { get; set; }
+
+        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset)
         {
             if (!RunningTest)
-            {
                 try
                 {
                     TestCancellationToken = new CancellationTokenSource();
@@ -54,13 +55,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
                         Log.Info("Volume test finished!");
                     }, TestCancellationToken.Token);
-                    
                 }
                 finally
                 {
                     RunningTest = false;
                 }
-            }
         }
 
         public virtual void CancelTest()
@@ -68,17 +67,18 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             TestCancellationToken.Cancel();
         }
 
-        public bool RunningTest { get; set; }
-
         protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest);
-        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset);
-        protected abstract Task ExecutingTest(VolumeTest volumeTest);
-        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset);
 
+        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset);
+
+        protected abstract Task ExecutingTest(VolumeTest volumeTest);
+
+        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcPostTestItemReset);
     }
 
     public interface IPulseInputService
     {
-
     }
 }

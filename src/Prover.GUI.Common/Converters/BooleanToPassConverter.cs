@@ -9,9 +9,7 @@ namespace Prover.GUI.Common.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((bool) value)
-            {
                 return "P";
-            }
 
             return "F";
         }
@@ -19,9 +17,7 @@ namespace Prover.GUI.Common.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((string) value == "P")
-            {
                 return true;
-            }
 
             return false;
         }

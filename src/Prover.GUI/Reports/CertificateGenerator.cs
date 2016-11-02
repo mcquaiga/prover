@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
-using Microsoft.Practices.Unity;
+using Autofac;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.GUI.Reports
@@ -12,10 +12,10 @@ namespace Prover.GUI.Reports
     public class CertificateGenerator
     {
         private readonly Certificate _certificate;
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
         private string _filePath;
 
-        public CertificateGenerator(Certificate certificate, IUnityContainer container)
+        public CertificateGenerator(Certificate certificate, IContainer container)
         {
             _certificate = certificate;
             _container = container;
@@ -54,9 +54,7 @@ namespace Prover.GUI.Reports
 
             //Create the directory if it doesn't exist
             if (!Directory.Exists(CertificateFolderPath))
-            {
                 Directory.CreateDirectory(CertificateFolderPath);
-            }
         }
 
         private string WriteDocument(FixedDocument fixedDoc, string filePath)

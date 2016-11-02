@@ -26,13 +26,13 @@ namespace Prover.CommProtocol.Common.IO
 
         public abstract string Name { get; }
 
-        public abstract void Dispose();
-
         public abstract IObservable<char> DataReceived();
         public abstract bool IsOpen();
         public abstract Task Open();
         public abstract Task Close();
         public abstract Task Send(string data);
+
+        public abstract void Dispose();
     }
 
     public static class ControlCharacters

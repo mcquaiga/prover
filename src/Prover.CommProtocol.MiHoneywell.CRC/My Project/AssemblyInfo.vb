@@ -1,5 +1,4 @@
-﻿Imports System
-Imports System.Reflection
+﻿Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following 
@@ -8,17 +7,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Prover.CommProtocol.MiHoneywell.CRC")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("Prover.CommProtocol.MiHoneywell.CRC")> 
-<Assembly: AssemblyCopyright("Copyright ©  2016")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("Prover.CommProtocol.MiHoneywell.CRC")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("Prover.CommProtocol.MiHoneywell.CRC")>
+<Assembly: AssemblyCopyright("Copyright ©  2016")>
+<Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("e2ae6281-0f12-488d-839b-934ddb623fde")> 
+<Assembly: Guid("e2ae6281-0f12-488d-839b-934ddb623fde")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +30,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>

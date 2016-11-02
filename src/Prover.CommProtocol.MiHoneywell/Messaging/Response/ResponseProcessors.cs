@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
-using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
 {
@@ -15,10 +12,10 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public static ResponseProcessor<StatusResponseMessage>
             ResponseCode = new ResponseCodeProcessor();
 
-        public static ResponseProcessor<ItemValueResponseMessage> 
+        public static ResponseProcessor<ItemValueResponseMessage>
             ItemValue(int itemNumber) => new ItemValueProcessor(itemNumber);
 
-        public static ResponseProcessor<ItemGroupResponseMessage> 
+        public static ResponseProcessor<ItemGroupResponseMessage>
             ItemGroup(IEnumerable<int> itemNumbers) => new ItemGroupValuesProcessor(itemNumbers);
     }
 
@@ -87,7 +84,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                             {
                                 if (parsingItemNumber)
                                     numberChars.Add(c);
-                                                               
+
                                 if (parsingItemValue)
                                     valueChars.Add(c);
 
@@ -175,14 +172,14 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                                 addValue();
                                 break;
                             default:
-                                {
-                                    if (parsingItemValue)
-                                        valueChars.Add(c);
+                            {
+                                if (parsingItemValue)
+                                    valueChars.Add(c);
 
-                                    if (parsingChecksum)
-                                        checksumChars.Add(c);
-                                    break;
-                                }
+                                if (parsingChecksum)
+                                    checksumChars.Add(c);
+                                break;
+                            }
                         }
                     },
                     observer.OnError,

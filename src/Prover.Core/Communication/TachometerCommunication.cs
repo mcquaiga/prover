@@ -20,6 +20,12 @@ namespace Prover.Core.Communication
             _outputBoard = outputBoard;
         }
 
+        public void Dispose()
+        {
+            _serialPort.Close();
+            _outputBoard.Dispose();
+        }
+
         public async Task ResetTach()
         {
             await Task.Run(() =>
@@ -67,16 +73,8 @@ namespace Prover.Core.Communication
             value = value.Substring(value.IndexOf("D0", StringComparison.Ordinal) + 2);
             var regEx = new Regex(pattern, RegexOptions.IgnoreCase);
             if (int.TryParse(regEx.Match(value).Value, out result))
-            {
                 return result;
-            }
             return -1;
-        }
-
-        public void Dispose()
-        {
-            _serialPort.Close();
-            _outputBoard.Dispose();
         }
     }
 }

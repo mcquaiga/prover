@@ -111,10 +111,7 @@ namespace Prover.GUI.Dialogs
                 (s, e) =>
                 {
                     if (!_worker.CancellationPending)
-                    {
                         SubLabel = e.UserState as string ?? string.Empty;
-                        //ProgressBar.Value = e.ProgressPercentage;
-                    }
                 };
 
             _worker.RunWorkerAsync();
@@ -126,7 +123,7 @@ namespace Prover.GUI.Dialogs
 
         private void OnCancelButtonClick(object sender, RoutedEventArgs e)
         {
-            if (_worker != null && _worker.WorkerSupportsCancellation)
+            if ((_worker != null) && _worker.WorkerSupportsCancellation)
             {
                 SubLabel = "Please wait while process will be cancelled...";
                 CancelButton.IsEnabled = false;
@@ -214,9 +211,9 @@ namespace Prover.GUI.Dialogs
         {
             var result = ExecuteInternal(owner, label, operation, null);
 
-            if (result.Cancelled && cancelledOperation != null)
+            if (result.Cancelled && (cancelledOperation != null))
                 cancelledOperation(result);
-            else if (result.OperationFailed && failureOperation != null)
+            else if (result.OperationFailed && (failureOperation != null))
                 failureOperation(result);
             else if (successOperation != null)
                 successOperation(result);

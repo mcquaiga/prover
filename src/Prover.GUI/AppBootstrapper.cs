@@ -5,16 +5,16 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Reports;
-using Prover.GUI.Screens.QAProver;
-using Prover.GUI.Screens.QAProver.VerificationTestViews;
-using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
+using ReactiveUI;
+using ReactiveUI.Autofac;
+using Splat;
 
 namespace Prover.GUI
 {
@@ -22,66 +22,37 @@ namespace Prover.GUI
     {
         private readonly List<string> _moduleFileNames = new List<string>
         {
-            "UnionGas.MASA.dll",
-            "Prover.GUI.Common.dll"
+            "UnionGas.MASA",
+            "Prover.GUI.Common"
         };
-
-        private readonly IUnityContainer _container;
 
         public AppBootstrapper()
         {
             var coreBootstrap = new CoreBootstrapper();
-            _container = coreBootstrap.Container;
+            Builder = coreBootstrap.Builder;
 
             Initialize();
         }
+
+        public ContainerBuilder Builder { get; }
+        public IContainer Container { get; private set; }
 
         protected override void Configure()
         {
             base.Configure();
 
             //Register Types with Unity
-            _container.RegisterType<IWindowManager, WindowManager>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IEventAggregator, EventAggregator>(new ContainerControlledLifetimeManager());
-
-            _container.RegisterType<ScreenManager>(new ContainerControlledLifetimeManager());
+            Builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
+            Builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+            Builder.RegisterType<ScreenManager>().SingleInstance();
 
             //Register Apps
-            _container.RegisterType<IAppMainMenu, QaTestRunApp>("QaTestRunApp", new ContainerControlledLifetimeManager());
+            Builder.RegisterType<QaTestRunApp>().As<IAppMainMenu>();
 
-            RegisterViewModels();
-            GetAppModules();
-        }
+            Builder.RegisterType<InstrumentReportGenerator>();
 
-        private void RegisterViewModels()
-        {
-            _container.RegisterType<MainMenuViewModel>();
-            _container.RegisterType<SettingsViewModel>();
-
-            _container.RegisterType<InstrumentInfoViewModel>();
-            _container.RegisterType<NewQaTestRunViewModel>();
-            _container.RegisterType<QaTestRunViewModel>();
-
-            _container.RegisterType<InstrumentGenerator>();
-            _container.RegisterType<InstrumentReportViewModel>();
-        }
-
-        private void GetAppModules()
-        {
-            var assembly = Assembly.LoadFrom("UnionGas.MASA.dll");
-            var type = assembly.GetType("UnionGas.MASA.Startup");
-            type.GetMethod("Initialize").Invoke(null, new object[] {_container});
-        }
-
-        protected override object GetInstance(Type service, string key)
-        {
-            if (service != null)
-                return _container.Resolve(service);
-
-            if (!string.IsNullOrEmpty(key))
-                return _container.Resolve(Type.GetType(key));
-
-            return null;
+            Container = Builder.Build();
+            RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -89,33 +60,69 @@ namespace Prover.GUI
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            var fileEntries = Directory.GetFiles(Directory.GetCurrentDirectory());
-
-            foreach (var fileName in fileEntries.Where(x => _moduleFileNames.Any(y => x.EndsWith(y))))
+            foreach (var module in _moduleFileNames)
             {
-                var ass = Assembly.LoadFrom(fileName);
-                assemblies.Add(ass);
+                var ass = Assembly.LoadFrom($"{module}.dll");
+                if (ass != null)
+                {
+                    var type = ass.GetType($"{module}.Startup");
+                    type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
+                    assemblies.Add(ass);
+                }
             }
+
+            RegisterMainMenuApps(assemblies.ToArray());
+
+            Builder.RegisterViewModels(assemblies.ToArray());
+            Builder.RegisterViews(assemblies.ToArray());
+            Builder.RegisterScreen(assemblies.ToArray());
 
             return assemblies;
         }
 
-        protected override IEnumerable<object> GetAllInstances(Type service)
+        private void RegisterMainMenuApps(Assembly[] assemblies)
         {
-            return _container.ResolveAll(service);
+            //register main menu apps
+            Builder.RegisterAssemblyTypes(assemblies.ToArray())
+                    .Where(t => t.IsAssignableFrom(typeof(IAppMainMenu)))
+                    .AsImplementedInterfaces();
+        }
+
+        protected override IEnumerable<object> GetAllInstances(Type serviceType)
+        {
+            return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType)) as IEnumerable<object>;
+        }
+
+        protected override object GetInstance(Type serviceType, string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                if (Container.IsRegistered(serviceType))
+                    return Container.Resolve(serviceType);
+            }
+            else
+            {
+                if (Container.IsRegisteredWithName(key, serviceType))
+                    return Container.ResolveNamed(key, serviceType);
+            }
+
+            throw new Exception($"Could not locate any instances of contract {key ?? serviceType.Name}.");
         }
 
         protected override void BuildUp(object instance)
         {
-            _container.BuildUp(instance);
+            Container.InjectProperties(instance);
+        }
+
+        protected virtual void ConfigureContainer(ContainerBuilder builder)
+        {
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<ShellViewModel>();
 
-            var screenManager = _container.Resolve<ScreenManager>();
-            Task.Run(() => screenManager.GoHome());
+            Task.Run(() => IoC.Get<ScreenManager>().GoHome());
         }
     }
 }
