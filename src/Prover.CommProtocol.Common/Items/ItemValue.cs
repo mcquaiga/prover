@@ -64,7 +64,7 @@ namespace Prover.CommProtocol.Common.Items
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, int itemNumber)
         {
             var result = items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
-            if (result == null) throw new NullReferenceException(nameof(result));
+            if (result == null) throw new NullReferenceException($"Item number {itemNumber} could not be found.");
 
             return result;
         }

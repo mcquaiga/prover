@@ -88,7 +88,7 @@ namespace Prover.Core.Extensions
             {
                 highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
             }
-            catch
+            catch(NullReferenceException)
             {
                 highResValue = 0;
             }

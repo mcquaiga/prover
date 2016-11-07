@@ -11,7 +11,8 @@
   <item number="12" shortDescription="P Cal Atmos" description="Pressure Corrected Atmospheric" />
   <item number="13" code="BASE_PRESS" shortDescription="Base Press" description="Base Pressure" isPressure="true" />
   <item number="14" code="ATM_PRESS" shortDescription="ATM Press" description="ATM Pressure" isPressure="true" />
-  <item number="26" shortDescription="Gas Temperat" description="EVC Gas Temperature" isTemperatureTest="true" />
+  <item number="26" code="GAS_TEMP" shortDescription="Gas Temperat" description="EVC Gas Temperature"
+      isTemperatureTest="true" />
   <item number="27" shortDescription="Gas Temp Lo" description="Gas Temp Lo" isTemperature="true" />
   <item number="28" shortDescription="Gas Temp Hi" description="Gas Temp Hi" isTemperature="true" />
   <item number="34" shortDescription="Base Temp" description="Base Temperature" isTemperature="true" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
@@ -20,7 +21,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
         public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
         {
-            var path = $@"{ItemDefinitionsFolder}\{type.ItemFilePath}";
+            var path = $@"{Environment.CurrentDirectory}\{ItemDefinitionsFolder}\{type.ItemFilePath}";
             var xDoc = XDocument.Load(path);
 
             return (from x in xDoc.Descendants("item")

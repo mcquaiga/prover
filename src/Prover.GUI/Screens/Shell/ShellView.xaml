@@ -31,7 +31,7 @@
                             HorizontalAlignment="Right">
                         <Image Source="..\..\Resources/settings-light.png" />
                     </Button>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">Union Gas EVC Prover</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">EVC Prover</TextBlock>
                 </DockPanel>
             </materialDesign:ColorZone>
 
