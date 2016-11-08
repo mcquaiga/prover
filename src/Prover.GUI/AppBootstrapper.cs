@@ -10,6 +10,7 @@ using Caliburn.Micro;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI;
@@ -46,9 +47,6 @@ namespace Prover.GUI
             Builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             Builder.RegisterType<ScreenManager>().SingleInstance();
 
-            //Register Apps
-            Builder.RegisterType<QaTestRunApp>().As<IAppMainMenu>();
-
             Builder.RegisterType<InstrumentReportGenerator>();
 
             Container = Builder.Build();
@@ -72,6 +70,7 @@ namespace Prover.GUI
             }
 
             RegisterMainMenuApps(assemblies.ToArray());
+            //RegisterToolbarItems(assemblies.ToArray());
 
             Builder.RegisterViewModels(assemblies.ToArray());
             Builder.RegisterViews(assemblies.ToArray());
@@ -83,9 +82,11 @@ namespace Prover.GUI
         private void RegisterMainMenuApps(Assembly[] assemblies)
         {
             //register main menu apps
-            Builder.RegisterAssemblyTypes(assemblies.ToArray())
-                    .Where(t => t.IsAssignableFrom(typeof(IAppMainMenu)))
-                    .AsImplementedInterfaces();
+            Builder.RegisterAssemblyTypes(assemblies)
+                .Where(t => t.GetTypeInfo()
+                    .ImplementedInterfaces.Any(
+                        i => i == typeof(IAppMainMenu)))
+                .As<IAppMainMenu>();
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

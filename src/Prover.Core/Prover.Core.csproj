@@ -183,7 +183,7 @@
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
     <Compile Include="ExternalIntegrations\IExportTestRun.cs" />
-    <Compile Include="ExternalIntegrations\IVerifier.cs" />
+    <Compile Include="ExternalIntegrations\Validators\ItemValidatorUpdater.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ItemDetails.cs" />
     <Compile Include="Login\ILoginService.cs" />
@@ -206,6 +206,10 @@
     <Compile Include="Migrations\201610171500415_add-employee-id.cs" />
     <Compile Include="Migrations\201610171500415_add-employee-id.Designer.cs">
       <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611070412573_add job-id.cs" />
+    <Compile Include="Migrations\201611070412573_add job-id.Designer.cs">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610171500415_add-employee-id.resx">
       <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070412573_add job-id.resx">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
