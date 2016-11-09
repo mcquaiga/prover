@@ -13,6 +13,14 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.Resources>
+        <DataTemplate x:Key="InstrumentSelect">
+            <RadioButton Content="{Binding Path=Instrument.Name}"
+                         GroupName="Instruments"
+                         IsChecked="{Binding Path=IsSelected}"
+                         FontSize="16"/>
+        </DataTemplate>
+    </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="15 10">
         <StackPanel>
             <TextBlock Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}">
@@ -39,8 +47,15 @@
                 </Grid.ColumnDefinitions>
 
                 <GroupBox BorderThickness="1" Header="Instrument Type" Grid.Row="0" Grid.Column="0">
-
-                    <StackPanel Orientation="Vertical" Margin="4">
+                    <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
+                      ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" Margin="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <!--<StackPanel Orientation="Vertical" Margin="4">
                         <RadioButton Content="Mini-Max Rotary" FontSize="16"
                                      Name="MiniMax"
                                      IsChecked="{Binding IsMiniMaxChecked}" />
@@ -50,7 +65,7 @@
                         <RadioButton Content="EC350" FontSize="16" VerticalAlignment="Center"
                                      Name="EC350"
                                      IsChecked="{Binding IsEC350Checked}" />
-                    </StackPanel>
+                    </StackPanel>-->
                 </GroupBox>
                 <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
                     <StackPanel>

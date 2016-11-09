@@ -37,7 +37,7 @@
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="2"
-                                      Content="TemperatureTestViewModel"
+                                      Content="Temperature"
                                       Mode="PrimaryDark"
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
