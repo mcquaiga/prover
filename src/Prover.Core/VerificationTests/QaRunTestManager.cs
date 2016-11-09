@@ -12,10 +12,9 @@ using Prover.Core.VerificationTests.VolumeVerification;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IQaRunTestManager
+    public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-        void Dispose();
         Task InitializeTest(InstrumentType instrumentType, IDriveType driveType);
         Task RunTest(int level);
         Task DownloadVerificationTestItems(int level);
@@ -25,7 +24,7 @@ namespace Prover.Core.VerificationTests
         Task RunVerifier();
     }
 
-    public class QaRunTestManager : IDisposable, IQaRunTestManager
+    public class QaRunTestManager :  IQaRunTestManager
     {
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();

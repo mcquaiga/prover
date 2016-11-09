@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Login;
 using Prover.GUI.Common;
@@ -41,7 +42,11 @@ namespace Prover.GUI.Screens.Shell
         public void Handle(ScreenChangeEvent message)
         {
             if (_currentView != null)
+            {
+                (_currentView as IDisposable)?.Dispose();
                 DeactivateItem(_currentView, true);
+            }
+                
 
             ActivateItem(message.ViewModel);
             _currentView = message.ViewModel;

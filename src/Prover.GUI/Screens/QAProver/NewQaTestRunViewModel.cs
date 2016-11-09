@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Akka.Util.Internal;
@@ -29,9 +30,23 @@ namespace Prover.GUI.Screens.QAProver
              */
             Instruments.GetAll().ForEach(
                 x => InstrumentTypes.Add(new SelectableInstrumentType { Instrument = x, IsSelected = false}));
+
+            SetLastSelectedInstrumentType();
         }
 
-        public List<SelectableInstrumentType> InstrumentTypes { get; } = new List<SelectableInstrumentType>();
+        private void SetLastSelectedInstrumentType()
+        {
+            var lastSelected = InstrumentTypes.FirstOrDefault(
+                i => i.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+            if (lastSelected != null) lastSelected.IsSelected = true;
+        }
+
+        private ReactiveList<SelectableInstrumentType> _instrumentTypes = new ReactiveList<SelectableInstrumentType>();
+        public ReactiveList<SelectableInstrumentType> InstrumentTypes
+        {
+            get { return _instrumentTypes; }
+            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        }
 
         public InstrumentType SelectedInstrument => InstrumentTypes.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
@@ -52,6 +67,7 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task InitializeTest()
         {
+            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
             SettingsManager.Save();
 
             if (SelectedInstrument != null)
@@ -64,6 +80,7 @@ namespace Prover.GUI.Screens.QAProver
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex);
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 }
             }
