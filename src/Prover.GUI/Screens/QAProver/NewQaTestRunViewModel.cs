@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Akka.Util.Internal;
 using Caliburn.Micro;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
@@ -11,6 +16,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.VerificationTestViews;
 using Prover.GUI.Screens.Settings;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver
 {
@@ -19,7 +25,30 @@ namespace Prover.GUI.Screens.QAProver
         public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
+            /*
+             Setup Instruments list
+             */
+            Instruments.GetAll().ForEach(
+                x => InstrumentTypes.Add(new SelectableInstrumentType { Instrument = x, IsSelected = false}));
+
+            SetLastSelectedInstrumentType();
         }
+
+        private void SetLastSelectedInstrumentType()
+        {
+            var lastSelected = InstrumentTypes.FirstOrDefault(
+                i => i.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+            if (lastSelected != null) lastSelected.IsSelected = true;
+        }
+
+        private ReactiveList<SelectableInstrumentType> _instrumentTypes = new ReactiveList<SelectableInstrumentType>();
+        public ReactiveList<SelectableInstrumentType> InstrumentTypes
+        {
+            get { return _instrumentTypes; }
+            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        }
+
+        public InstrumentType SelectedInstrument => InstrumentTypes.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
         public int BaudRate { get; private set; }
         public CommPort CommPort { get; set; }
@@ -38,17 +67,22 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task InitializeTest()
         {
+            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
             SettingsManager.Save();
 
-            try
+            if (SelectedInstrument != null)
             {
-                var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
-                await qaTestRun.Initialize(Instruments.MiniAt, new MechanicalDrive());
-                await ScreenManager.ChangeScreen(qaTestRun);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                try
+                {
+                    var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
+                    await qaTestRun.Initialize(SelectedInstrument, new MechanicalDrive());
+                    await ScreenManager.ChangeScreen(qaTestRun);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
             }
         }
 
@@ -70,6 +104,12 @@ namespace Prover.GUI.Screens.QAProver
 
             if (string.IsNullOrEmpty(InstrumentCommPortName))
                 ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
+        }
+
+        public class SelectableInstrumentType
+        {
+            public InstrumentType Instrument { get; set; }
+            public bool IsSelected { get; set; }
         }
     }
 }

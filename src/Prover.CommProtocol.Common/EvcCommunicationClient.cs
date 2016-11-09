@@ -35,11 +35,11 @@ namespace Prover.CommProtocol.Common
             CommPort = commPort;
 
             _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}][IN] << {ControlCharacters.Prettify(msg)}"); });
+                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
 
             _sentObservable =
                 CommPort.DataSentObservable.Subscribe(
-                    msg => { Log.Debug($"[{CommPort.Name}][OUT] >> {ControlCharacters.Prettify(msg)}"); });
+                    msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
         }
 
         protected CommPort CommPort { get; set; }

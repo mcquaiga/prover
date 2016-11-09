@@ -28,12 +28,7 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
         public QaTestRunViewModel QaTestRunViewItem { get; set; }
 
         public IQaRunTestManager QaRunTestManager { get; set; }
-
-        public void Dispose()
-        {
-            QaRunTestManager.Dispose();
-        }
-
+        
         public void Handle(VerificationTestEvent message)
         {
             throw new NotImplementedException();
@@ -48,6 +43,11 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
         public void InstrumentReport()
         {
             _reportGenerator.GenerateAndViewReport(QaRunTestManager.Instrument);
+        }
+
+        public void Dispose()
+        {
+            QaRunTestManager.Dispose();
         }
     }
 }
