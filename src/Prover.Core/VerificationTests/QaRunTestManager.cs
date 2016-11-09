@@ -6,6 +6,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations;
+using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.VolumeVerification;
@@ -31,19 +32,19 @@ namespace Prover.Core.VerificationTests
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IVerifier _verifier;
+        private readonly IValidator _validator;
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
-            IVerifier verifier
+            IValidator validator
         )
         {
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
-            _verifier = verifier;
+            _validator = validator;
         }
 
         public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
@@ -127,8 +128,8 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            if (_verifier != null)
-                await _verifier.Verify(_communicationClient, Instrument);
+            if (_validator != null)
+                await _validator.Validate(_communicationClient, Instrument);
         }
     }
 }

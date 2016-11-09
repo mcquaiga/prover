@@ -42,8 +42,12 @@ namespace Prover.Core.Models.Instruments
         public override InstrumentType InstrumentType { get; set; }
 
         public Guid? CertificateId { get; set; }
+
         public virtual Certificate Certificate { get; set; }
+
         public string EmployeeId { get; set; }
+
+        public string JobId { get; set; }
 
         public DateTime? ExportedDateTime { get; set; } = null;
 

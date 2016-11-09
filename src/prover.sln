@@ -33,8 +33,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalIntegrations", "Ext
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnionGas.MASA", "UnionGas.MASA\UnionGas.MASA.csproj", "{1C42434C-8218-44AA-B132-A5A57B9DE8B1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{F6A2637F-CFC8-4DCB-B8F7-C3222DCCB1D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Common", "Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj", "{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoneywell", "Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj", "{07FACEC7-67D1-49A8-BB19-DDC7B636C689}"

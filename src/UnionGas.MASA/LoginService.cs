@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using NLog;
+using NLog.Fluent;
 using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
@@ -9,54 +12,44 @@ using UnionGas.MASA.Dialogs.LoginDialog;
 
 namespace UnionGas.MASA
 {
-    public class LoginService : ILoginService
+    public class LoginService : ILoginService<EmployeeDTO>
     {
+        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
         private readonly IScreenManager _screenManager;
         private readonly DCRWebServiceSoap _webService;
         private IEventAggregator _eventAggregator;
 
-        public LoginService(IScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
+        public LoginService(ScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
         {
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;
             _webService = webService;
         }
 
-        public EmployeeDTO EmployeeDto { get; private set; }
+        public EmployeeDTO User { get; private set; }
 
-        public async Task<object> Login(string username = null, string password = null)
+        public async Task<bool> Login(string username, string password = null)
         {
-            if (string.IsNullOrEmpty(username))
-                username = (string) await GetLoginInfoFromUser();
+            User = null;
 
+            _log.Debug($"Logging into MASA using Employee Number {username} ...");
             try
             {
                 var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
                 var response = await _webService.GetEmployeeAsync(employeeRequest);
 
-                EmployeeDto = response.Body.GetEmployeeResult;
-
-                if (EmployeeDto != null)
-                    MessageBox.Show($"Logged in as {EmployeeDto.EmployeeName}.");
-
-                return response.Body.GetEmployeeResult?.Id;
+                User = response.Body.GetEmployeeResult;
+            }
+            catch (EndpointNotFoundException)
+            {
+                MessageBox.Show("Couldn't connect to web service.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-                return null;
+                _log.Error(ex);
             }
-        }
 
-        public async Task<object> GetLoginInfoFromUser()
-        {
-            return await Task.Run(() =>
-            {
-                var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
-                var result = _screenManager.ShowDialog(loginViewModel);
-
-                return result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
-            });
+            return User.Id != null;
         }
     }
 }

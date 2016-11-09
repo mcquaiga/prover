@@ -1,12 +1,15 @@
 ﻿using System.Reflection;
 using Autofac;
 using Prover.Core.ExternalIntegrations;
+using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Common.Screens.Toolbar;
 using ReactiveUI.Autofac;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
-using UnionGas.MASA.Verifiers;
+using UnionGas.MASA.Screens.Toolbars;
+using UnionGas.MASA.Validators.InventoryCode;
 
 namespace UnionGas.MASA
 {
@@ -16,22 +19,16 @@ namespace UnionGas.MASA
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            //App Menu Icon
-            builder.RegisterType<ExportManagerApp>().As<IAppMainMenu>();
-
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
 
-            builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
-            builder.RegisterType<CompanyNumberVerifier>().As<IVerifier>();
+            builder.RegisterType<InventoryCodeUpdater>().As<IUpdater>();
+            builder.RegisterType<NewInventoryCodePopupRequestor>().As<IGetValue>();
+            builder.RegisterType<InventoryCodeValidator>().As<IValidator>();
+
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
 
-            //ViewModels
-            builder.RegisterViewModels(assembly);
-            builder.RegisterViews(assembly);
-            builder.RegisterScreen(assembly);
-
             //Login service
-            builder.RegisterType<LoginService>().As<ILoginService>().SingleInstance();
+            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
         }
     }
 }

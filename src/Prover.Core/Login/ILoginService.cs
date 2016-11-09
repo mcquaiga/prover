@@ -2,8 +2,10 @@
 
 namespace Prover.Core.Login
 {
-    public interface ILoginService
+    public interface ILoginService<T>
+        where T : class
     {
-        Task<object> Login(string username = null, string password = null);
+        Task<bool> Login(string username = null, string password = null);
+        T User { get; }
     }
 }

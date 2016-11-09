@@ -3,13 +3,13 @@
     //public sealed class RotaryQaRunTestManager : QaRunTestManager
     //{
     //    private RotaryQaRunTestManager(IContainer container, Instrument instrument,
-    //        EvcCommunicationClient instrumentCommunicator, VolumeTestManagerBase volumeTestManager, IVerifier verifier)
+    //        EvcCommunicationClient instrumentCommunicator, VolumeTestManagerBase volumeTestManager, IValidator verifier)
     //        : base(container, instrument, instrumentCommunicator, verifier)
     //    {
     //        VolumeTestManagerBase = volumeTestManager;
     //    }
 
-    //    public static async Task<RotaryQaRunTestManager> CreateRotaryTest(IContainer container, EvcCommunicationClient instrumentCommClient, string tachometerPortName, IVerifier verifier)
+    //    public static async Task<RotaryQaRunTestManager> CreateRotaryTest(IContainer container, EvcCommunicationClient instrumentCommClient, string tachometerPortName, IValidator verifier)
     //    {
     //        TachometerCommunicator tachComm = null;
     //        if (!string.IsNullOrEmpty(tachometerPortName))

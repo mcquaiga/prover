@@ -84,13 +84,15 @@ namespace UnionGas.MASA.Exporter
                     PulseASelect = instrument.PulseASelect(),
                     PulseBSelect = instrument.PulseBSelect()
                 },
+
                 VerificationTests =
                     instrument.VerificationTests.Select(TranslateVerificationTest)
                         .OrderBy(t => t.SequenceNumber)
                         .ToArray(),
+
                 IndexReading = 0,
-                Comments = "Testing DCR Webservice",
-                JobNumber = 27084,
+                Comments = string.Empty,
+                JobNumber = instrument.JobId != null ? int.Parse(instrument.JobId) : -1,
                 ProverNumber = "229", //
                 MeterClassCode = "EV",
                 TestReason = "6",
@@ -134,7 +136,8 @@ namespace UnionGas.MASA.Exporter
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
-                TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
+                //TODO - Make a real value again
+                TrueCorrected = 8765.4321m, //RoundTo(vt.VolumeTest.TrueCorrected, 2),
                 CorrectedPercentError = RoundTo(vt.VolumeTest.CorrectedPercentError, 2),
                 UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2)
             };
@@ -164,8 +167,7 @@ namespace UnionGas.MASA.Exporter
                 ActualFactor = RoundTo(vt.TemperatureTest.ActualFactor, 4),
                 GaugeTemperature = RoundTo((decimal) vt.TemperatureTest.Gauge, 2),
                 EvcFactor = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4),
-                EvcTemperature =
-                    RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2),
+                EvcTemperature = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2),
                 PercentError = RoundTo(vt.TemperatureTest.PercentError, 2)
             };
         }

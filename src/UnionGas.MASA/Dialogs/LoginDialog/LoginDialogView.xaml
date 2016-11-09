@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:UnionGas.MASA.Dialogs.LoginDialog"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
-        <TextBlock Text="Employee Id:" />
-        <TextBox x:Name="EmployeeId" HorizontalAlignment="Center" Width="300" />
+    <StackPanel FocusManager.FocusedElement="{Binding ElementName=EmployeeId}">
+        <TextBlock Text="Employee Number" FontSize="24" Margin="5"/>
+        <TextBox x:Name="EmployeeId" HorizontalAlignment="Center" FontSize="22" Margin="5" Width="300" />
 
-        <Button x:Name="Close" HorizontalAlignment="Right" Margin="5">Login</Button>
+        <Button x:Name="Close" HorizontalAlignment="Right" Margin="5" IsDefault="True">OK</Button>
     </StackPanel>
 </UserControl>
