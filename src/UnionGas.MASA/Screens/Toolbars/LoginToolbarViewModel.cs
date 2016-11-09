@@ -4,6 +4,7 @@ using Prover.Core.Login;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Toolbar;
+using ReactiveUI;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.LoginDialog;
 using UnionGas.MASA.Screens.Toolbars.LoginToolbar;
@@ -33,9 +34,16 @@ namespace UnionGas.MASA.Screens.Toolbars
             var result = ScreenManager.ShowDialog(loginViewModel);
             var userId = result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
 
-            var isSuccess = await _loginService.Login(userId);
+            if (userId != null)
+            {
+                var success = await _loginService.Login(userId);
+                if (success) ChangeContext(LoggedInViewContext);
+            }
+        }
 
-            if (isSuccess) ChangeContext(LoggedInViewContext);
+        public async Task LogoutButton()
+        {
+            
         }
 
         private void ChangeContext(string contextName)

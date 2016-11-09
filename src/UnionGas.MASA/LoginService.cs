@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
@@ -39,12 +40,16 @@ namespace UnionGas.MASA
 
                 User = response.Body.GetEmployeeResult;
             }
+            catch (EndpointNotFoundException)
+            {
+                MessageBox.Show("Couldn't connect to web service.");
+            }
             catch (Exception ex)
             {
                 _log.Error(ex);
             }
 
-            return User != null;
+            return User.Id != null;
         }
     }
 }

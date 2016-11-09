@@ -14,7 +14,7 @@
              d:DesignHeight="75" d:DesignWidth="75">
     <Grid>
         <Button x:Name="LoginButton" Width="64" Height="64"
-                Style="{StaticResource MaterialDesignToolButton}" Padding="2 0 2 0"
+                Style="{StaticResource MaterialDesignRaisedAccentButton}" Padding="2 0 2 0"
                             materialDesign:RippleAssist.IsCentered="True"
                             HorizontalAlignment="Right">
             <TextBlock Text="LOGIN"></TextBlock>
