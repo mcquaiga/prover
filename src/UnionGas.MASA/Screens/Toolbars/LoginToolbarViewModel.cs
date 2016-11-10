@@ -2,6 +2,7 @@
 using Caliburn.Micro;
 using Prover.Core.Login;
 using Prover.GUI.Common;
+using Prover.GUI.Common.BackgroundWork;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Toolbar;
 using ReactiveUI;
@@ -19,7 +20,7 @@ namespace UnionGas.MASA.Screens.Toolbars
         
         public LoginToolbarViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ILoginService<EmployeeDTO> loginService) : base(screenManager, eventAggregator)
         {
-            _loginService = loginService as LoginService;
+            _loginService = loginService;
 
             ViewContext = LoginViewContext;
         }

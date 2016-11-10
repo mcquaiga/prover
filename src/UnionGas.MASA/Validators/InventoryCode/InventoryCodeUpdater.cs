@@ -14,18 +14,17 @@ namespace UnionGas.MASA.Validators.InventoryCode
     {
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IGetValue _valueRequestor;
-        private readonly LoginService _loginService;
 
-        public InventoryCodeUpdater(IInstrumentStore<Instrument> instrumentStore, IGetValue valueRequestor, LoginService loginService)
+        public InventoryCodeUpdater(IInstrumentStore<Instrument> instrumentStore, IGetValue valueRequestor)
         {
             _instrumentStore = instrumentStore;
             _valueRequestor = valueRequestor;
-            _loginService = loginService;
         }
 
         public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
             var newCompanyNumber = _valueRequestor.GetValue();
+            if (newCompanyNumber == null) return null;
 
             await evcCommunicationClient.Connect();
 

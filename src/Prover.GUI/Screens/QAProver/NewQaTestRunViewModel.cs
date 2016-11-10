@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Akka.Util.Internal;
@@ -22,6 +21,11 @@ namespace Prover.GUI.Screens.QAProver
 {
     public class NewQaTestRunViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
+        private ReactiveList<SelectableInstrumentType> _instrumentTypes = new ReactiveList<SelectableInstrumentType>();
+        private int _selectedBaudRate;
+        private string _selectedCommPort;
+        private string _selectedTachCommPort;
+
         public NewQaTestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
@@ -29,19 +33,33 @@ namespace Prover.GUI.Screens.QAProver
              Setup Instruments list
              */
             Instruments.GetAll().ForEach(
-                x => InstrumentTypes.Add(new SelectableInstrumentType { Instrument = x, IsSelected = false}));
+                x => InstrumentTypes.Add(new SelectableInstrumentType {Instrument = x, IsSelected = false}));
 
-            SetLastSelectedInstrumentType();
+            SetDefaultValues();
+
+            this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort)
+                .Subscribe(_ =>
+                {
+                    SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
+                    SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
+                    SettingsManager.SettingsInstance.TachCommPort = _.Item3;
+                    SettingsManager.Save();
+                });
         }
 
-        private void SetLastSelectedInstrumentType()
+        private void SetDefaultValues()
         {
+            SettingsManager.RefreshSettings();
+
+            _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
+            _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
+            _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
+
             var lastSelected = InstrumentTypes.FirstOrDefault(
                 i => i.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
             if (lastSelected != null) lastSelected.IsSelected = true;
         }
 
-        private ReactiveList<SelectableInstrumentType> _instrumentTypes = new ReactiveList<SelectableInstrumentType>();
         public ReactiveList<SelectableInstrumentType> InstrumentTypes
         {
             get { return _instrumentTypes; }
@@ -50,16 +68,41 @@ namespace Prover.GUI.Screens.QAProver
 
         public InstrumentType SelectedInstrument => InstrumentTypes.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
-        public int BaudRate { get; private set; }
-        public CommPort CommPort { get; set; }
-        public string InstrumentCommPortName { get; private set; }
-        public string TachCommPortName { get; private set; }
+        public List<string> CommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
+        public string SelectedCommPort
+        {
+            get { return _selectedCommPort; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedCommPort, value);
+            }
+        }
+
+        public List<string> TachCommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
+        public string SelectedTachCommPort
+        {
+            get { return _selectedTachCommPort; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedTachCommPort, value);
+            }
+        }
+
+        public List<int> BaudRate => SerialPort.BaudRates;
+        public int SelectedBaudRate
+        {
+            get { return _selectedBaudRate; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedBaudRate, value);
+            }
+        }
 
         public void Handle(SettingsChangeEvent message)
         {
             VerifySettings();
         }
-
+ 
         public async Task CancelCommand()
         {
             await ScreenManager.GoHome();
@@ -67,11 +110,11 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task InitializeTest()
         {
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            SettingsManager.Save();
-
             if (SelectedInstrument != null)
             {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                SettingsManager.Save();
+
                 try
                 {
                     var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
@@ -84,25 +127,20 @@ namespace Prover.GUI.Screens.QAProver
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 }
             }
-        }
-
-        protected override void OnViewReady(object view)
-        {
-            base.OnViewReady(view);
-            VerifySettings();
+                
         }
 
         private void VerifySettings()
         {
-            InstrumentCommPortName = SettingsManager.SettingsInstance.InstrumentCommPort;
-            BaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
-            TachCommPortName = SettingsManager.SettingsInstance.TachCommPort;
+            _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
+            _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
+            _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
 
-            NotifyOfPropertyChange(() => InstrumentCommPortName);
-            NotifyOfPropertyChange(() => BaudRate);
-            NotifyOfPropertyChange(() => TachCommPortName);
+            NotifyOfPropertyChange(() => SelectedCommPort);
+            NotifyOfPropertyChange(() => SelectedBaudRate);
+            NotifyOfPropertyChange(() => SelectedTachCommPort);
 
-            if (string.IsNullOrEmpty(InstrumentCommPortName))
+            if (string.IsNullOrEmpty(SelectedCommPort))
                 ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
         }
 

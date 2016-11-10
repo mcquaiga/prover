@@ -20,15 +20,16 @@ namespace UnionGas.MASA
             var assembly = Assembly.GetExecutingAssembly();
 
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
+            //Login service
+            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
 
+            builder.RegisterType<InventoryCodeValidator>().As<IValidator>();
             builder.RegisterType<InventoryCodeUpdater>().As<IUpdater>();
             builder.RegisterType<NewInventoryCodePopupRequestor>().As<IGetValue>();
-            builder.RegisterType<InventoryCodeValidator>().As<IValidator>();
 
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
 
-            //Login service
-            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
+
         }
     }
 }
