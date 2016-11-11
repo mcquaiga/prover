@@ -5,17 +5,22 @@ namespace Prover.Core.DriveTypes
 {
     public class MechanicalDrive : IDriveType
     {
-        public Instrument Instrument { get; private set; }
+        public MechanicalDrive(Instrument instrument)
+        {
+            Instrument = instrument;
+        }
+
+        public Instrument Instrument { get; }
 
         public string Discriminator => "Mechanical";
 
         public bool HasPassed => true;
 
-        public int MaxUncorrectedPulses(Instrument instrument) => 100;
+        public int MaxUncorrectedPulses() => 100;
 
-        public decimal? UnCorrectedInputVolume(Instrument instrument, decimal appliedInput)
+        public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            return appliedInput*instrument.DriveRate();
+            return appliedInput*Instrument.DriveRate();
         }
     }
 }

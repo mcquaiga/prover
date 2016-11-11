@@ -34,15 +34,15 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
             throw new NotImplementedException();
         }
 
-        public async Task Initialize(InstrumentType instrumentType, IDriveType driveType)
+        public async Task Initialize(InstrumentType instrumentType)
         {
-            await QaRunTestManager.InitializeTest(instrumentType, driveType);
+            await QaRunTestManager.InitializeTest(instrumentType);
             await QaTestRunViewItem.Initialize(QaRunTestManager.Instrument);
         }
 
-        public void InstrumentReport()
+        public async Task InstrumentReport()
         {
-            _reportGenerator.GenerateAndViewReport(QaRunTestManager.Instrument);
+            await _reportGenerator.GenerateAndViewReport(QaRunTestManager.Instrument);
         }
 
         public void Dispose()

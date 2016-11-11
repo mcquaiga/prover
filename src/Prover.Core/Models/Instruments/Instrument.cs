@@ -32,7 +32,6 @@ namespace Prover.Core.Models.Instruments
             InstrumentType = instrumentType;
             Items = items;
 
-
             CreateVerificationTests();
         }
 
@@ -56,10 +55,6 @@ namespace Prover.Core.Models.Instruments
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
-            IDriveType driveType = null;
-
-            if (Items.GetItem(98).Description.ToLower() == "rotary")
-                driveType = new RotaryDrive();
 
             for (var i = 0; i < 3; i++)
             {
@@ -79,7 +74,7 @@ namespace Prover.Core.Models.Instruments
                 }
 
                 if (i == defaultVolumeTestNumber)
-                    verificationTest.VolumeTest = new VolumeTest(verificationTest, driveType);
+                    verificationTest.VolumeTest = new VolumeTest(verificationTest);
 
                 VerificationTests.Add(verificationTest);
             }

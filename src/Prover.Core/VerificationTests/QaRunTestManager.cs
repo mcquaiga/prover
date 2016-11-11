@@ -16,7 +16,7 @@ namespace Prover.Core.VerificationTests
     public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-        Task InitializeTest(InstrumentType instrumentType, IDriveType driveType);
+        Task InitializeTest(InstrumentType instrumentType);
         Task RunTest(int level);
         Task DownloadVerificationTestItems(int level);
         Task DownloadTemperatureTestItems(int levelNumber);
@@ -56,13 +56,13 @@ namespace Prover.Core.VerificationTests
 
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType, IDriveType driveType)
+        public async Task InitializeTest(InstrumentType instrumentType)
         {
             _communicationClient.Initialize(instrumentType);
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
 
-            Instrument = new Instrument(instrumentType, driveType, items);
+            Instrument = new Instrument(instrumentType, items);
             await _communicationClient.Disconnect();
             await SaveAsync();
             await RunVerifier();

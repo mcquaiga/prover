@@ -166,7 +166,7 @@ namespace Prover.GUI.Screens.QAProver
                 try
                 {
                     var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
-                    await qaTestRun.Initialize(SelectedInstrument, SelectedDriveType);
+                    await qaTestRun.Initialize(SelectedInstrument);
                     await ScreenManager.ChangeScreen(qaTestRun);
                 }
                 catch (Exception ex)

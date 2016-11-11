@@ -6,7 +6,7 @@ namespace Prover.Core.DriveTypes
     {
         string Discriminator { get; }
         bool HasPassed { get; }
-        decimal? UnCorrectedInputVolume(Instrument instrument, decimal appliedInput);
-        int MaxUncorrectedPulses(Instrument instrument);
+        decimal? UnCorrectedInputVolume(decimal appliedInput);
+        int MaxUncorrectedPulses();
     }
 }

@@ -20,15 +20,13 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public VolumeTest(VerificationTest verificationTest, IDriveType driveType)
+        public VolumeTest(VerificationTest verificationTest)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
-            DriveType = driveType;
-            //AppliedInput = DriveType.MaxUncorrectedPulses();
-            DriveTypeDiscriminator = DriveType.Discriminator;
+            CreateDriveType();
         }
 
         public int PulseACount { get; set; }
@@ -72,7 +70,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? TrueUncorrected
         {
-            get { return DriveType?.UnCorrectedInputVolume(Instrument, AppliedInput); }
+            get { return DriveType?.UnCorrectedInputVolume(AppliedInput); }
         }
 
         [NotMapped]
@@ -137,17 +135,17 @@ namespace Prover.Core.Models.Instruments
                 if ((VerificationTest.Instrument.CompositionType == CorrectorType.T) &&
                     (VerificationTest.TemperatureTest != null))
                     return VerificationTest.TemperatureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(Instrument, AppliedInput);
+                           DriveType.UnCorrectedInputVolume(AppliedInput);
 
                 if ((VerificationTest.Instrument.CompositionType == CorrectorType.P) &&
                     (VerificationTest.PressureTest != null))
                     return VerificationTest.PressureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(Instrument, AppliedInput);
+                           DriveType.UnCorrectedInputVolume(AppliedInput);
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
                     return VerificationTest.PressureTest?.ActualFactor*VerificationTest.TemperatureTest?.ActualFactor*
                            VerificationTest.SuperFactorTest.SuperFactorSquared*
-                           DriveType.UnCorrectedInputVolume(Instrument, AppliedInput);
+                           DriveType.UnCorrectedInputVolume(AppliedInput);
 
                 return null;
             }
@@ -166,19 +164,26 @@ namespace Prover.Core.Models.Instruments
 
         private void CreateDriveType()
         {
+            if (string.IsNullOrEmpty(DriveTypeDiscriminator))
+                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
+            
             if ((DriveType == null) && (DriveTypeDiscriminator != null) && (VerificationTest != null))
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
-                        DriveType = new RotaryDrive();
+                        DriveType = new RotaryDrive(this.Instrument);
                         break;
                     case "Mechanical":
-                        DriveType = new MechanicalDrive();
-                        AppliedInput = DriveType.MaxUncorrectedPulses(Instrument);
+                        DriveType = new MechanicalDrive(Instrument);
+                        AppliedInput = DriveType.MaxUncorrectedPulses();
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
                 }
+            else
+            {
+                throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
+            }
         }
 
         public override void OnInitializing()

@@ -7,6 +7,12 @@ namespace Prover.Core.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
+        public RotaryDrive(Instrument instrument)
+        {
+            Instrument = instrument;
+            Meter = new MeterTest(Instrument);
+        }
+
         public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
@@ -14,20 +20,18 @@ namespace Prover.Core.DriveTypes
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
-        public decimal? UnCorrectedInputVolume(Instrument instrument, decimal appliedInput)
+        public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            if (Meter == null)
-                Meter = new MeterTest(instrument);
-
+            
             return Meter.MeterDisplacement*appliedInput;
         }
 
-        public int MaxUncorrectedPulses(Instrument instrument)
+        public int MaxUncorrectedPulses()
         {
-            if (instrument.UnCorrectedMultiplier() == 10)
+            if (Instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;
 
-            if (instrument.UnCorrectedMultiplier() == 100)
+            if (Instrument.UnCorrectedMultiplier() == 100)
                 return Meter.MeterIndex.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything
