@@ -8,16 +8,16 @@
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="200">
     <!--  Pressure - Start  -->
     <StackPanel Orientation="Vertical">
-        <materialDesign:ColorZone Padding="2" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                  Mode="PrimaryLight" DockPanel.Dock="Top">
-            PressureTestRun
+        <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+            Pressure
         </materialDesign:ColorZone>
 
         <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">

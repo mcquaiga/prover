@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -39,6 +40,8 @@ namespace Prover.GUI.Screens.QAProver.VerificationTestViews
             ;
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
+
+        public string TestDatePretty => $"{Instrument.TestDateTime: MMMM d, yyyy h:mm tt}";
 
         public void Handle(InstrumentUpdateEvent message)
         {

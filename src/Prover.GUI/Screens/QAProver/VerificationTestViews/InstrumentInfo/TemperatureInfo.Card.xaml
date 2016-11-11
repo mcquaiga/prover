@@ -8,16 +8,16 @@
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="829">
     <!--  Temperature - Start  -->
     <StackPanel Orientation="Vertical">
-        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+        <materialDesign:ColorZone Padding="8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                   Mode="PrimaryDark" DockPanel.Dock="Top">
-            TemperatureTestViewModel
+            Temperature
         </materialDesign:ColorZone>
 
         <ContentControl cal:View.Model="{Binding LiveReadItem}" />

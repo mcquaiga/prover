@@ -12,8 +12,8 @@
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="250">
     <!--xmlns:dvm="clr-namespace:Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews"

@@ -9,9 +9,8 @@
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <Grid>
@@ -26,12 +25,15 @@
                     HorizontalAlignment="Center"
                     DisplayValue="{Binding MeterDisplacementPercentError}"
                     Passed="{Binding MeterDisplacementHasPassed}" />
-                <UniformGrid Columns="2" Margin="5">
-                    <controls1:ValueDescriptionControl Label="Drive Rate (98)" Value="{Binding DriveRateDescription}" />
-                    <controls1:ValueDescriptionControl Label="Meter Type (432)" Value="{Binding MeterTypeDescription}" />
-                    <controls1:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
-                    <controls1:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
-                </UniformGrid>
+                <StackPanel Margin="5">
+                    <TextBlock Text="{Binding MeterTypeDescription}"
+                               FontSize="24"/>
+                    <StackPanel Orientation="Horizontal">
+                        <controls1:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
+                        <controls1:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
+                    </StackPanel>
+                    
+                </StackPanel>
             </StackPanel>
         </materialDesign:Card>
     </Grid>

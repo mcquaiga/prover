@@ -15,7 +15,7 @@
              d:DesignWidth="200"
              mc:Ignorable="d">
     <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top">
+        <!--<ToolBarTray DockPanel.Dock="Top">
             <ToolBar Style="{DynamicResource MaterialDesignToolBar}">
                 <Button ToolTip="View QA Run Report">
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -29,7 +29,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </ToolBar>
-        </ToolBarTray>
+        </ToolBarTray>-->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
                             Margin="2" />
