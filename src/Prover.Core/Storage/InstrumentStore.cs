@@ -32,7 +32,10 @@ namespace Prover.Core.Storage
         public async Task<Instrument> UpsertAsync(Instrument instrument)
         {
             if (Get(instrument.Id) != null)
+            {
+                _proverContext.Instruments.Attach(instrument);
                 _proverContext.Entry(instrument).State = EntityState.Modified;
+            }
             else
                 _proverContext.Instruments.Add(instrument);
 

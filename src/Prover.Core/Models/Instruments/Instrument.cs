@@ -24,7 +24,7 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType instrumentType, IDriveType driveType, IEnumerable<ItemValue> items)
+        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
@@ -32,7 +32,8 @@ namespace Prover.Core.Models.Instruments
             InstrumentType = instrumentType;
             Items = items;
 
-            CreateVerificationTests(driveType);
+
+            CreateVerificationTests();
         }
 
         public DateTime TestDateTime { get; set; }
@@ -53,8 +54,13 @@ namespace Prover.Core.Models.Instruments
 
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 
-        public void CreateVerificationTests(IDriveType driveType, int defaultVolumeTestNumber = 0)
+        public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
+            IDriveType driveType = null;
+
+            if (Items.GetItem(98).Description.ToLower() == "rotary")
+                driveType = new RotaryDrive();
+
             for (var i = 0; i < 3; i++)
             {
                 var verificationTest = new VerificationTest(i, this);

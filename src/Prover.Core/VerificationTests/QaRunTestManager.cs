@@ -61,10 +61,11 @@ namespace Prover.Core.VerificationTests
             _communicationClient.Initialize(instrumentType);
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+
             Instrument = new Instrument(instrumentType, driveType, items);
             await _communicationClient.Disconnect();
-            await RunVerifier();
             await SaveAsync();
+            await RunVerifier();
         }
 
         public async Task RunTest(int level)

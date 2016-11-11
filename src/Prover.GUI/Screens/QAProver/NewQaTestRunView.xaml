@@ -47,16 +47,37 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <GroupBox BorderThickness="1" Header="Instrument Type" Grid.Row="0" Grid.Column="0">
-                    <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
-                      ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" Margin="4" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </GroupBox>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" 
+                              BorderThickness="1" 
+                              Header="Instrument Type" >
+                        <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
+                                        ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" Margin="4" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1"
+                              Header="Drive Type"
+                              BorderThickness="1">
+                        <StackPanel>
+                            <RadioButton x:Name="RotaryDriveChecked" 
+                                         Content="Rotary"
+                                         GroupName="DriveType"/>
+                            <RadioButton x:Name="MechanicalDriveChecked"
+                                         Content="Mechanical"
+                                         GroupName="DriveType"/>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+               
                 <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
                     <StackPanel>
                         <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>

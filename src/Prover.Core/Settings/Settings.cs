@@ -5,6 +5,7 @@ namespace Prover.Core.Settings
     public class Settings
     {
         public string LastInstrumentTypeUsed { get; set; }
+        public string LastDriveTypeUsed { get; set; }
         public string InstrumentCommPort { get; set; }
         public int InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }

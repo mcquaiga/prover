@@ -21,6 +21,9 @@ namespace Prover.GUI.Screens.QAProver
 {
     public class NewQaTestRunViewModel : ViewModelBase, IHandle<SettingsChangeEvent>
     {
+        private const string RotaryDriveName = "Rotary";
+        private const string MechanicalDriveName = "Mechanical";
+
         private ReactiveList<SelectableInstrumentType> _instrumentTypes = new ReactiveList<SelectableInstrumentType>();
         private int _selectedBaudRate;
         private string _selectedCommPort;
@@ -45,6 +48,7 @@ namespace Prover.GUI.Screens.QAProver
                     SettingsManager.SettingsInstance.TachCommPort = _.Item3;
                     SettingsManager.Save();
                 });
+
         }
 
         private void SetDefaultValues()
@@ -58,6 +62,13 @@ namespace Prover.GUI.Screens.QAProver
             var lastSelected = InstrumentTypes.FirstOrDefault(
                 i => i.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
             if (lastSelected != null) lastSelected.IsSelected = true;
+
+            //Drive types
+            var driveType = SettingsManager.SettingsInstance.LastDriveTypeUsed;
+            if (driveType == RotaryDriveName)
+                _rotaryDriveChecked = true;
+            else
+                _mechanicalDriveChecked = true;
         }
 
         public ReactiveList<SelectableInstrumentType> InstrumentTypes
@@ -98,6 +109,43 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
+        private bool _rotaryDriveChecked;
+        public bool RotaryDriveChecked
+        {
+            get { return _rotaryDriveChecked; }
+            set
+            {
+                if (value.Equals(_rotaryDriveChecked)) return;
+                _rotaryDriveChecked = value;
+                if (_rotaryDriveChecked)
+                {
+                    SettingsManager.SettingsInstance.LastDriveTypeUsed = RotaryDriveName;
+                    SettingsManager.Save();
+                }
+
+                NotifyOfPropertyChange(() => RotaryDriveChecked);
+            }
+        }
+
+        private bool _mechanicalDriveChecked;
+        public bool MechanicalDriveChecked
+        {
+            get { return _mechanicalDriveChecked; }
+            set
+            {
+                if (value.Equals(_mechanicalDriveChecked)) return;
+                _mechanicalDriveChecked = value;
+
+                if (_mechanicalDriveChecked)
+                {
+                    SettingsManager.SettingsInstance.LastDriveTypeUsed = MechanicalDriveName;
+                    SettingsManager.Save();
+                }
+
+                NotifyOfPropertyChange(() => MechanicalDriveChecked);
+            }
+        }
+
         public void Handle(SettingsChangeEvent message)
         {
             VerifySettings();
@@ -118,7 +166,7 @@ namespace Prover.GUI.Screens.QAProver
                 try
                 {
                     var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
-                    await qaTestRun.Initialize(SelectedInstrument, new MechanicalDrive());
+                    await qaTestRun.Initialize(SelectedInstrument, SelectedDriveType);
                     await ScreenManager.ChangeScreen(qaTestRun);
                 }
                 catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -31,7 +32,7 @@ namespace UnionGas.MASA.Validators.InventoryCode
         public async Task<object> Validate(EvcCommunicationClient commClient, Instrument instrument)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
-            var companyNumber = companyNumberItem.RawValue;
+            var companyNumber = companyNumberItem.RawValue.TrimStart('0');
 
             MeterDTO meterDto;
             do
@@ -58,7 +59,8 @@ namespace UnionGas.MASA.Validators.InventoryCode
         private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)
         {
             instrument.JobId = meterDto?.JobNumber.ToString();
-            instrument.EmployeeId = _loginService.User.Id;
+            instrument.EmployeeId = _loginService.User?.Id;
+            await _instrumentStore.UpsertAsync(instrument);
         }
 
         public async Task<MeterDTO> VerifyWithWebService(string companyNumber)
