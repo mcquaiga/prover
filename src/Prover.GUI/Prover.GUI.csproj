@@ -249,6 +249,16 @@
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
+    <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
+      <DependentUpon>TestRunView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\TestRunViewModel.cs" />
+    <Compile Include="Screens\QAProver\TestRun\EditTestView.xaml.cs">
+      <DependentUpon>EditTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\TestRun\NewTestView.xaml.cs">
+      <DependentUpon>NewTestView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\QAProver\VerificationTestViews\InstrumentInfoViewModel.cs" />
     <Compile Include="Screens\QAProver\LiveReadView.xaml.cs">
       <DependentUpon>LiveReadView.xaml</DependentUpon>
@@ -357,6 +367,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\QAProver\LiveReadView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\TestRunView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\TestRun\EditTestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\TestRun\NewTestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -56,9 +56,7 @@
                 </DockPanel>
             </materialDesign:ColorZone>
 
-            <Grid>
-                <ContentControl Grid.Row="0" x:Name="ActiveItem" />
-            </Grid>
+            <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
         </DockPanel>
     </materialDesign:DialogHost>
 </Window>
