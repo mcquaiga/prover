@@ -12,7 +12,7 @@ configuration: Release
 platform: Any CPU
 
 build:
-  project: src\prover.sln
+  project: src\EvcProver.sln
   verbosity: normal
 assembly_info:
   patch: true
