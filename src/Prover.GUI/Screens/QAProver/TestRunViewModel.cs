@@ -55,10 +55,7 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /***  Setup Comm Ports and Baud Rate settings ***/
-            CommPort = PortsWatcherObservable().CreateCollection(s =>
-            {
-                if (CommPort)
-            });
+            CommPort = PortsWatcherObservable().CreateCollection();
               
             //_serialPortsObservable = new SerialPortWatcher().ComPorts.ToObservable();
             //_serialPortsObservable
