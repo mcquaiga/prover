@@ -50,7 +50,7 @@ namespace UnionGas.MASA.Exporter
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

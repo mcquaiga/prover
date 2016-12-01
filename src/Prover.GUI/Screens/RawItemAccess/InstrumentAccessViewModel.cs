@@ -43,18 +43,12 @@ namespace Prover.GUI.Screens.RawItemAccess
 
         public void Dispose()
         {
-            DisconnectFromInstrument();
+            Task.Run(async () => await DisconnectFromInstrument());
         }
 
         public void Handle(ScreenChangeEvent message)
         {
-            DisconnectFromInstrument();
-        }
-
-        public override void CanClose(Action<bool> callback)
-        {
-            DisconnectFromInstrument().Wait();
-            base.CanClose(callback);
+            
         }
 
         public async Task ReadInstrumentValue()

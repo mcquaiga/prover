@@ -11,7 +11,7 @@ namespace Prover.CommProtocol.Common.Extensions
             {
                 await task;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // log errors
             }

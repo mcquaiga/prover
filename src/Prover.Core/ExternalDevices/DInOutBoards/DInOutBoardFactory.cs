@@ -13,7 +13,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
                 return board;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
