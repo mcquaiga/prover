@@ -3,47 +3,56 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Xml.Linq;
 using Newtonsoft.Json;
-using Prover.Core.Extensions;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.Core.Models.Instruments
 {
     public abstract class BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
         protected BaseEntity()
         {
             Id = Guid.NewGuid();
         }
 
+        [Key]
+        public Guid Id { get; set; }
+
         public virtual void OnInitializing()
         {
-
         }
     }
 
     public abstract class ProverTable : BaseEntity
     {
-        protected ProverTable() : base()
-        {
-        
-        }
+        private string _instrumentData;
 
         public string InstrumentData
         {
-            get { return JsonConvert.SerializeObject(ItemValues); }
-            set
-            {
-                ItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(value);
-            }
+            get { return Items.Serialize(); }
+            set { _instrumentData = value; }
         }
 
         [NotMapped]
-        public Dictionary<int, string> ItemValues { get; set; }
+        public IEnumerable<ItemValue> Items { get; set; }
+
+        [NotMapped]
+        public virtual InstrumentType InstrumentType { get; set; }
+
+        public override void OnInitializing()
+        {
+            base.OnInitializing();
+
+            if (this is Instrument)
+                InstrumentType =
+                    CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == (this as Instrument).Type);
+
+            if (string.IsNullOrEmpty(_instrumentData)) return;
+
+            var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
+            Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
+        }
     }
 }

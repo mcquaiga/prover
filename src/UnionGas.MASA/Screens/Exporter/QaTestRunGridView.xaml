@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="UnionGas.MASA.Screens.Exporter.QaTestRunGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             TextElement.Foreground="White"
+             TextElement.FontWeight="Normal"
+             TextElement.FontSize="18"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="75">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ImageSource x:Key="PassIcon">pack://application:,,,/Resources/success.png</ImageSource>
+            <ImageSource x:Key="FailIcon">pack://application:,,,/Resources/error_36.png</ImageSource>
+            <SolidColorBrush x:Key="FontColour" Color="White" />
+            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
+            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
+            <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
+            <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
+            <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+            <DataTemplate x:Key="TestTemplate">
+                <ContentControl cal:View.Model="{Binding .}" cal:View.Context="Grid" />
+            </DataTemplate>
+
+            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="WhiteSmoke" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+
+            <Style x:Key="DockPanelStyle" TargetType="{x:Type DockPanel}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                        <Setter Property="Background" Value="{StaticResource PassColour}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                        <Setter Property="Background" Value="{StaticResource FailColour}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="PassFailIcon" TargetType="{x:Type Image}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                        <Setter Property="Source" Value="{StaticResource PassIcon}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                        <Setter Property="Source" Value="{StaticResource FailIcon}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel Style="{StaticResource DockPanelStyle}">
+        <Image x:Name="Icon"
+               Style="{StaticResource PassFailIcon}"
+               Margin="15"
+               Width="36" Height="36" />
+        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+            <TextBlock FontSize="24"
+                       VerticalAlignment="Center"
+                       Text="{Binding Instrument.SiteNumber2}" />
+
+            <StackPanel Margin="0 5" Orientation="Horizontal">
+                <TextBlock Text="{Binding Instrument.InstrumentType.Name}" />
+                <TextBlock Text=" / " />
+                <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
+                <TextBlock Text=" / " />
+                <TextBlock Text="{Binding Instrument.CompositionType}" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25 0">
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="Export">
+                <materialDesign:PackIcon Kind="Export"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="ExportQATestRun" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="View QA Test Run">
+                <materialDesign:PackIcon Kind="Printer"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="DisplayInstrumentReport" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    ToolTip="Export">
+                <materialDesign:PackIcon Kind="Delete"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="DeleteInstrument" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+      
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.VerificationTestViews.PTVerificationViews.TemperatureTest.Card"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:cal="http://www.caliburnproject.org"
+
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" d:DesignWidth="170" d:DesignHeight="250">
+    <!--xmlns:dvm="clr-namespace:Prover.GUI.ViewModels.VerificationTestViews.PTVerificationViews"
+             d:DataContext ="{d:DesignInstance {x:Type dvm:TemperatureTestDesignData}, IsDesignTimeCreatable=True}"-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter" TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!--**** START TEMPERATURE **** -->
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+        <StackPanel Orientation="Vertical">
+            <materialDesign:ColorZone Padding="2"
+                                      Content="Temperature"
+                                      Mode="PrimaryDark"
+                                      Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1" />
+
+            <controls1:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}"
+                                         HorizontalAlignment="Left" Margin="2 2" />
+            <!--<StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
+                <TextBlock FontSize="12">Gauge</TextBlock>
+                <xctk:DecimalUpDown Width="110" Height="35" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    FontSize="18"   
+                                            Watermark="Gauge"                         
+							                Value="{Binding Gauge}"
+                                           />
+            </StackPanel>-->
+
+            <!-- Instrument Report, textblock instead of displaying the button-->
+            <UniformGrid Columns="2" Rows="2" Margin="0">
+                <!--INstrument Report , Text display instead of the decimal control -->
+                <controls1:ValueDescriptionControl
+                    Label="Gauge"
+                    Value="{Binding Gauge}" />
+
+                <controls1:ValueDescriptionControl
+                    Label="EVC Reading"
+                    Value="{Binding EvcReading}" />
+
+                <controls1:ValueDescriptionControl Label="Actual Factor"
+                                                   Value="{Binding Test.ActualFactor}" />
+
+                <controls1:ValueDescriptionControl
+                    Label="EVC Factor"
+                    Value="{Binding EvcFactor}" />
+            </UniformGrid>
+        </StackPanel>
+    </materialDesign:Card>
+    <!--**** END TEMPERATURE ****-->
+</UserControl>

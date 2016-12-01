@@ -1,34 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class TemperatureTest : BaseVerificationTest
+    public sealed class TemperatureTest : BaseVerificationTest
     {
         private const decimal TempCorrection = 459.67m;
         private const decimal MetericTempCorrection = 273.15m;
 
-        public TemperatureTest() { }
-
-        public TemperatureTest(VerificationTest verificationTest, decimal gauge) : 
-            base()
+        public TemperatureTest()
         {
+        }
+
+        public TemperatureTest(VerificationTest verificationTest, decimal gauge)
+        {
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
-            Gauge = (double)gauge;
+            Gauge = (double) gauge;
         }
 
         public Guid VerificationTestId { get; set; }
+
         [Required]
-        public virtual VerificationTest VerificationTest { get; set; }
+        public VerificationTest VerificationTest { get; set; }
 
         public double Gauge { get; set; }
 
@@ -36,9 +36,13 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (ItemValues.EvcTemperatureFactor() == null) return null;
+                if (Items?.GetItem(ItemCodes.Temperature.Factor) == null) return null;
                 if (ActualFactor == null) return null;
-                return Math.Round((decimal) ((ItemValues.EvcTemperatureFactor().GetValueOrDefault(0) - ActualFactor)/ActualFactor)*100, 2);
+                return
+                    Math.Round(
+                        (decimal)
+                        ((Items.GetItem(ItemCodes.Temperature.Factor).NumericValue - ActualFactor)/ActualFactor)*
+                        100, 2);
             }
         }
 
@@ -46,21 +50,27 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-
                 switch (VerificationTest.Instrument.TemperatureUnits())
                 {
                     case "K":
                     case "C":
                         return
-                            Math.Round((MetericTempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0)) / ((decimal)Gauge + MetericTempCorrection), 4);
+                            Math.Round(
+                                (MetericTempCorrection +
+                                 VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0))/
+                                ((decimal) Gauge + MetericTempCorrection), 4);
                     case "R":
                     case "F":
                         return
-                            Math.Round((TempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0)) / ((decimal)Gauge + TempCorrection), 4);
+                            Math.Round(
+                                (TempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0))/
+                                ((decimal) Gauge + TempCorrection), 4);
                 }
 
                 return 0;
             }
         }
+
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
     }
 }

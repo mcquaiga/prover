@@ -1,5 +1,5 @@
 ﻿using System;
-using Prover.Core.EVCTypes;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -7,14 +7,14 @@ namespace Prover.Core.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
-        public Instrument Instrument { get; set; }
-        public MeterTest Meter { get; set; }
-
         public RotaryDrive(Instrument instrument)
         {
             Instrument = instrument;
             Meter = new MeterTest(Instrument);
         }
+
+        public Instrument Instrument { get; set; }
+        public MeterTest Meter { get; set; }
 
         public string Discriminator => "Rotary";
 
@@ -22,10 +22,11 @@ namespace Prover.Core.DriveTypes
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            return (Meter.MeterDisplacement * appliedInput);
+            
+            return Meter.MeterDisplacement*appliedInput;
         }
 
-        public int MaxUnCorrected()
+        public int MaxUncorrectedPulses()
         {
             if (Instrument.UnCorrectedMultiplier() == 10)
                 return Meter.MeterIndex.UnCorPulsesX10;
@@ -44,12 +45,12 @@ namespace Prover.Core.DriveTypes
         public MeterTest(Instrument instrument)
         {
             _instrument = instrument;
-            MeterIndex = MeterIndexInfo.Get((int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues));
+            MeterIndex = MeterIndexInfo.Get((int) _instrument.Items.GetItem(432).NumericValue);
         }
 
         public bool MeterDisplacementHasPassed
         {
-            get { return (MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD)); }
+            get { return MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD); }
         }
 
         public decimal MeterDisplacement
@@ -65,10 +66,7 @@ namespace Prover.Core.DriveTypes
 
         public decimal? EvcMeterDisplacement
         {
-            get
-            {
-                return _instrument.Items.GetItem(439).GetNumericValue(_instrument.ItemValues);
-            }
+            get { return _instrument.Items.GetItem(439).NumericValue; }
         }
 
         public decimal MeterDisplacementPercentError
@@ -76,14 +74,12 @@ namespace Prover.Core.DriveTypes
             get
             {
                 if (MeterDisplacement != 0)
-                {
-                    return Math.Round((decimal)(((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement) * 100), 2);
-                }
+                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement)/MeterDisplacement*100), 2);
                 return 0;
             }
         }
 
-        public MeterIndexInfo MeterIndex { get; private set; }
+        public MeterIndexInfo MeterIndex { get; }
 
         public string MeterTypeDescription
         {
@@ -92,13 +88,13 @@ namespace Prover.Core.DriveTypes
 
         public string MeterType
         {
-            get { return _instrument.Items.GetItem(432).GetDescriptionValue(_instrument.ItemValues); }
+            get { return _instrument.Items.GetItem(432).Description; }
         }
 
 
         public int MeterTypeId
         {
-            get { return (int)_instrument.Items.GetItem(432).GetNumericValue(_instrument.ItemValues); }
+            get { return (int) _instrument.Items.GetItem(432).NumericValue; }
         }
     }
 }

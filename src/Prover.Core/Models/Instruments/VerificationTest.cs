@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Prover.Core.Models.Instruments
 {
-    public class VerificationTest : BaseEntity
+    public sealed class VerificationTest : BaseEntity
     {
         public VerificationTest()
         {
@@ -32,28 +32,29 @@ namespace Prover.Core.Models.Instruments
         public Guid InstrumentId { get; set; }
 
         [Required]
-        public virtual Instrument Instrument { get; set; }
+        public Instrument Instrument { get; set; }
 
-        public virtual PressureTest PressureTest { get; set; }
-        public virtual TemperatureTest TemperatureTest { get; set; }
-        public virtual VolumeTest VolumeTest { get; set; }
+        public PressureTest PressureTest { get; set; }
+        public TemperatureTest TemperatureTest { get; set; }
+        public VolumeTest VolumeTest { get; set; }
 
         [NotMapped]
-        public virtual SuperFactorTest SuperFactorTest { get; set; }
+        public SuperFactorTest SuperFactorTest { get; set; }
 
         [NotMapped]
         public bool HasPassed
         {
             get
             {
-                if (Instrument.CompositionType == CorrectorType.T && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                if ((Instrument.CompositionType == CorrectorType.T) && (TemperatureTest != null))
+                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.P && PressureTest != null)
-                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                if ((Instrument.CompositionType == CorrectorType.P) && (PressureTest != null))
+                    return PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed) &&
+                if ((Instrument.CompositionType == CorrectorType.PTZ) && (PressureTest != null) &&
+                    (TemperatureTest != null))
+                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed) &&
                            PressureTest.HasPassed;
 
                 return false;
@@ -65,9 +66,7 @@ namespace Prover.Core.Models.Instruments
             base.OnInitializing();
 
             if (Instrument.CompositionType == CorrectorType.PTZ)
-            {
                 SuperFactorTest = new SuperFactorTest(this);
-            }
         }
     }
 }

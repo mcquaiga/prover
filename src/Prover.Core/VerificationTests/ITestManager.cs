@@ -1,7 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Prover.Core.Communication;
-using Prover.Core.Models.Instruments;
-using System.Collections.Generic;
 
 namespace Prover.Core.VerificationTests
 {
@@ -23,7 +20,7 @@ namespace Prover.Core.VerificationTests
     //    Task SaveAsync();
     //    Task StartLiveRead();
     //    Task StartLiveRead(IEnumerable<int> itemNumbers);
-    //    Task StartVolumeTest();
+    //    Task PreTest();
     //    Task StopLiveRead();
     //    void StopVolumeTest();
     //}

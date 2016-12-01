@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnionGas.MASA.Models
 {
@@ -28,6 +25,18 @@ namespace UnionGas.MASA.Models
 
         //Pressure Info
         public PressureHeader PressureInfo { get; set; }
+
+        //Temperature Info
+        public TemperatureHeader TemperatureInfo { get; set; }
+
+        //Supercompress. Info - Gas Composition
+        public SuperFactorHeader SuperFactorInfo { get; set; }
+
+        //Volume Info
+        public VolumeHeader VolumeInfo { get; set; }
+
+        public List<VerificationTest> VerificationTests { get; set; }
+
         public class PressureHeader
         {
             public string TransducerType { get; set; } // A or G
@@ -37,8 +46,6 @@ namespace UnionGas.MASA.Models
             public decimal ProgrammedAtmosphericPressure { get; set; } // (3,2)
         }
 
-        //Temperature Info
-        public TemperatureHeader TemperatureInfo { get; set; }
         public class TemperatureHeader
         {
             public string TemperatureRange { get; set; } // -40 to 170
@@ -46,8 +53,6 @@ namespace UnionGas.MASA.Models
             public decimal BaseTemperature { get; set; } // (3, 2)
         }
 
-        //Supercompress. Info - Gas Composition
-        public SuperFactorHeader SuperFactorInfo { get; set; }
         public class SuperFactorHeader
         {
             public decimal SpecGr { get; set; } // SG - (4,4)
@@ -56,8 +61,6 @@ namespace UnionGas.MASA.Models
             public string FPVTable { get; set; } //FPV = NX-19
         }
 
-        //Volume Info
-        public VolumeHeader VolumeInfo { get; set; }
         public class VolumeHeader
         {
             public string PulseASelect { get; set; }
@@ -71,7 +74,6 @@ namespace UnionGas.MASA.Models
             public string UncorrectedMultiplierDescription { get; set; } // Description - CuFTx10
         }
 
-        public List<VerificationTest> VerificationTests { get; set; }
         public class VerificationTest
         {
             public PressureTest Pressure { get; set; }
@@ -102,8 +104,8 @@ namespace UnionGas.MASA.Models
 
             public class VolumeTest
             {
-                public decimal UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
-                public decimal CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
+                public decimal? UnCorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
+                public decimal? CorrectedPercentError { get; set; } //Only value displayed on Certificate - (3, 2)
 
                 public int PulseACount { get; set; }
                 public int PulseBCount { get; set; }
@@ -111,11 +113,11 @@ namespace UnionGas.MASA.Models
                 public decimal AppliedInput { get; set; } // (8, 4)
                 public decimal TrueCorrected { get; set; } // (8, 4)
 
-                public int UncPulseCount { get; set; } 
-                public int CorPulseCount { get; set; }           
+                public int UncPulseCount { get; set; }
+                public int CorPulseCount { get; set; }
 
-                public decimal EvcCorrected { get; set; } // (8, 4)
-                public decimal EvcUncorrected { get; set; } // (8, 4)
+                public decimal? EvcCorrected { get; set; } // (8, 4)
+                public decimal? EvcUncorrected { get; set; } // (8, 4)
             }
 
             public class SuperFactorTest

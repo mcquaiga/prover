@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.Core</RootNamespace>
     <AssemblyName>Prover.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -32,21 +32,38 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MiProtocolConsole|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MiProtocolConsole\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.Core.3.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Akka, Version=1.1.2.29, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.3.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -77,35 +94,43 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.9\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ReactiveUI, Version=6.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-core.6.0.3\lib\Net45\ReactiveUI.dll</HintPath>
+    <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Splat, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Splat.1.3.3\lib\Net45\Splat.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.6.5.0\lib\Net45\ReactiveUI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReactiveUI.Autofac, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveUI.Autofac.6.5.0\lib\net452\ReactiveUI.Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReactiveUI.Blend, Version=2.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-xaml.2.0.0.2\lib\Net4\ReactiveUI.Blend.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReactiveUI.Xaml, Version=2.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-xaml.2.0.0.2\lib\Net4\ReactiveUI.Xaml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -133,7 +158,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -145,8 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="Communication\Communications.cs" />
-    <Compile Include="DriveTypes\IEVCDriveType.cs" />
+    <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
@@ -158,9 +182,11 @@
     <Compile Include="Extensions\TemperatureHelpers.cs" />
     <Compile Include="Extensions\VolumeHelpers.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\DataAcqBoard.cs" />
-    <Compile Include="Communication\InstrumentCommunication.cs" />
+    <Compile Include="ExternalIntegrations\IExportTestRun.cs" />
+    <Compile Include="ExternalIntegrations\Validators\ItemValidatorUpdater.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ItemDetails.cs" />
+    <Compile Include="Login\ILoginService.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
     <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
       <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
@@ -177,14 +203,24 @@
     <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Instruments\IVerificationTest.cs" />
+    <Compile Include="Migrations\201610171500415_add-employee-id.cs" />
+    <Compile Include="Migrations\201610171500415_add-employee-id.Designer.cs">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611070412573_add job-id.cs" />
+    <Compile Include="Migrations\201611070412573_add job-id.Designer.cs">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
-    <Compile Include="VerificationTests\BaseVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalTestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalVolumeVerification.cs" />
+    <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\RotaryQaRunTestManager.cs" />
     <Compile Include="Communication\TachometerCommunication.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
@@ -212,18 +248,15 @@
     <Compile Include="Models\Instruments\TemperatureTests.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\InstrumentItem.cs" />
-    <Compile Include="Settings\InstrumentItems\ItemLoader.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\IInstrumentStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
-    <Compile Include="Storage\IProverContext.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\BaseTestManager.cs" />
-    <Compile Include="VerificationTests\Rotary\RotaryVolumeVerification.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">
@@ -233,20 +266,26 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="..\..\..\..\Desktop\EvcProver.cd" />
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
+      <Project>{ffbca1c4-59cc-4401-bc0b-b97c53a9559b}</Project>
+      <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
+      <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
+      <Name>Prover.CommProtocol.MiHoneywell</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\serialprotocol\miSerialProtocol\Prover.CommProtocol.MiSerialProtocol.vbproj">
-      <Project>{8c7e475a-15bb-477b-99f3-7b2abf41e43f}</Project>
-      <Name>Prover.CommProtocol.MiSerialProtocol</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +314,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
       <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171500415_add-employee-id.resx">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070412573_add job-id.resx">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

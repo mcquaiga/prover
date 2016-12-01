@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
     public class InstrumentStore : IInstrumentStore<Instrument>
     {
-        private ProverContext _proverContext;
-        public InstrumentStore(IUnityContainer container)
+        private readonly ProverContext _proverContext;
+
+        public InstrumentStore(ProverContext context)
         {
-            _proverContext = container.Resolve<ProverContext>();
+            _proverContext = context;
         }
 
         public IQueryable<Instrument> Query()
         {
             return _proverContext.Instruments
-                        .Include(v => v.VerificationTests)
-                        .AsQueryable();
+                .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
+                .Include(v => v.VerificationTests.Select(p => p.PressureTest))
+                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
+                .AsQueryable();
         }
 
         public Instrument Get(Guid id)
@@ -33,14 +31,14 @@ namespace Prover.Core.Storage
 
         public async Task<Instrument> UpsertAsync(Instrument instrument)
         {
-            if (this.Get(instrument.Id) != null)
+            if (Get(instrument.Id) != null)
             {
                 _proverContext.Instruments.Attach(instrument);
+                _proverContext.Entry(instrument).State = EntityState.Modified;
             }
             else
-            {
                 _proverContext.Instruments.Add(instrument);
-            }
+
             await _proverContext.SaveChangesAsync();
             return instrument;
         }
@@ -53,7 +51,6 @@ namespace Prover.Core.Storage
 
         public void Dispose()
         {
-            
         }
     }
 }

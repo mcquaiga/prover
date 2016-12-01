@@ -1,5 +1,4 @@
-﻿using Prover.Core.EVCTypes;
-using Prover.Core.Extensions;
+﻿using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.DriveTypes
@@ -8,16 +7,16 @@ namespace Prover.Core.DriveTypes
     {
         public MechanicalDrive(Instrument instrument)
         {
-            this.Instrument = instrument;
+            Instrument = instrument;
         }
+
+        public Instrument Instrument { get; }
 
         public string Discriminator => "Mechanical";
 
         public bool HasPassed => true;
 
-        public Instrument Instrument { get; private set; }
-
-        public int MaxUnCorrected() => 100;
+        public int MaxUncorrectedPulses() => 100;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {

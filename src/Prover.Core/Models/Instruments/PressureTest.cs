@@ -1,32 +1,33 @@
-﻿using Prover.Core.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 
 namespace Prover.Core.Models.Instruments
-{ 
-    public class PressureTest : BaseVerificationTest
+{
+    public sealed class PressureTest : BaseVerificationTest
     {
         private const decimal DefaultAtmGauge = 14.0m;
 
-        public PressureTest() { }
+        public PressureTest()
+        {
+        }
 
         public PressureTest(VerificationTest verificationTest, decimal gauge)
         {
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);
             AtmosphericGauge = decimal.Round(DefaultAtmGauge, 2);
         }
-          
 
         public Guid VerificationTestId { get; set; }
+
         [Required]
-        public virtual VerificationTest VerificationTest { get; set; }
+        public VerificationTest VerificationTest { get; set; }
 
         public decimal? GasPressure
         {
@@ -35,7 +36,9 @@ namespace Prover.Core.Models.Instruments
                 if (VerificationTest == null) return null;
 
                 var result = 0.0m;
-                switch (VerificationTest.Instrument.GetTransducerType())
+                switch (
+                    (TransducerType)
+                    VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue)
                 {
                     case TransducerType.Gauge:
                         result = GasGauge.GetValueOrDefault(0);
@@ -45,7 +48,7 @@ namespace Prover.Core.Models.Instruments
                         break;
                 }
                 return decimal.Round(result, 2);
-            } 
+            }
         }
 
         public decimal? GasGauge { get; set; }
@@ -56,9 +59,12 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (ItemValues.EvcPressureFactor() == null) return null;
-                if (ActualFactor == 0 || ActualFactor == null) return null;
-                return Math.Round((decimal)((ItemValues.EvcPressureFactor().GetValueOrDefault(0) - ActualFactor) / ActualFactor) * 100, 2);
+                if (Items.GetItem(ItemCodes.Pressure.Factor) == null) return null;
+                if ((ActualFactor == 0) || (ActualFactor == null)) return null;
+                return
+                    Math.Round(
+                        (decimal) ((Items.GetItem(ItemCodes.Pressure.Factor).NumericValue - ActualFactor)/ActualFactor)*
+                        100, 2);
             }
         }
 
@@ -67,10 +73,13 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (VerificationTest.Instrument.EvcBasePressure() == 0) return 0;
-                var result = GasPressure / VerificationTest.Instrument.EvcBasePressure().GetValueOrDefault(1);
+                if (VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue == 0) return 0;
+                var result = GasPressure/VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
                 return result.HasValue ? decimal.Round(result.Value, 4) : 0;
             }
         }
+
+        [NotMapped]
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
     }
 }

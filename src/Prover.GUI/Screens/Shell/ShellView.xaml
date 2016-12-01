@@ -1,0 +1,62 @@
+﻿<Window x:Class="Prover.GUI.Screens.Shell.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="{Binding Title}"
+        Height="600" Width="600"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        Icon="pack://application:,,,/../Resources/clipboard-check.png"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Window.Resources>
+        <DataTemplate x:Key="ToolbarItem">
+            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="{Binding Path=ViewContext}"></ContentControl>
+        </DataTemplate>
+    </Window.Resources>
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <DockPanel>
+            <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                      Mode="PrimaryDark" DockPanel.Dock="Top">
+                <DockPanel>
+      
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Button x:Name="HomeButton" 
+                                Width="64" 
+                                Height="64" 
+                                DockPanel.Dock="Left" Grid.Column="0">
+                            <StackPanel>
+                                <Image Source="..\..\Resources/Home.png" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="SettingsButton" Width="64" Height="64" Grid.Column="1"
+                            HorizontalAlignment="Right">
+                            <Image Source="..\..\Resources/settings-light.png" />
+                        </Button>
+                    </StackPanel>
+   
+                    <StackPanel DockPanel.Dock="Right">
+                        <ItemsControl
+                                  ItemsSource="{Binding Path=ToolbarItems}"
+                                    ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                    
+                    <Grid DockPanel.Dock="Top">
+                        <TextBlock HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" FontSize="22">EVC Prover</TextBlock>
+                    </Grid>
+                </DockPanel>
+            </materialDesign:ColorZone>
+
+            <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
+        </DockPanel>
+    </materialDesign:DialogHost>
+</Window>

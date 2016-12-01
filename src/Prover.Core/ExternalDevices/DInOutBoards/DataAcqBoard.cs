@@ -6,24 +6,13 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 {
     public class DataAcqBoard : IDisposable, IDInOutBoard
     {
-        private enum MotorValues
-        {
-            Start = 1023,
-            Stop = 0
-        }
-
-        private enum OutputPorts
-        {
-            DaOut0 = 0,
-            DaOut1 = 1
-        }
+        private readonly int _channelNum;
+        private readonly DigitalPortType _channelType;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         private MccBoard _board;
-        private readonly DigitalPortType _channelType;
-        private readonly int _channelNum;
-        private ErrorInfo _ulStatErrorInfo;
         private bool _pulseIsCleared;
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private ErrorInfo _ulStatErrorInfo;
 
         public DataAcqBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
         {
@@ -34,7 +23,8 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             _channelNum = channelNumber;
 
             _pulseIsCleared = true;
-            _log.Info("Initialized DataAcqBoard: {0}, channel type {1}, channel number {2}", boardNumber, channelType, channelNumber);
+            _log.Info("Initialized DataAcqBoard: {0}, channel type {1}, channel number {2}", boardNumber, channelType,
+                channelNumber);
         }
 
         public void StartMotor()
@@ -72,28 +62,37 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             else
             {
                 if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
-                {
                     _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
-                }
             }
-            return 0;           
-        }
-
-        public short InputValue { get; private set; }
-
-        private void Out(MotorValues outputValue)
-        {
-            _ulStatErrorInfo = _board.AOut(_channelNum, Range.UniPt05Volts, (short)outputValue);
-            if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors && _ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
-            {
-                _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo.Message);
-            }
+            return 0;
         }
 
         public void Dispose()
         {
             _board = null;
             GC.SuppressFinalize(this);
+        }
+
+        public short InputValue { get; private set; }
+
+        private void Out(MotorValues outputValue)
+        {
+            _ulStatErrorInfo = _board.AOut(_channelNum, Range.UniPt05Volts, (short) outputValue);
+            if ((_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors) &&
+                (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard))
+                _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo.Message);
+        }
+
+        private enum MotorValues
+        {
+            Start = 1023,
+            Stop = 0
+        }
+
+        private enum OutputPorts
+        {
+            DaOut0 = 0,
+            DaOut1 = 1
         }
     }
 }

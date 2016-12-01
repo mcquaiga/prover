@@ -1,38 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Threading;
 using Caliburn.Micro;
-using Microsoft.Practices.Unity;
 using Prover.Core.Events;
-using Prover.GUI.ViewModels;
-using Prover.GUI.ViewModels.Dialogs;
+using Prover.GUI.Dialogs;
 
 namespace Prover.GUI
 {
     public class ConnectionDialogManager : IHandle<ConnectionStatusEvent>
     {
-        private readonly IUnityContainer _container;
-        private bool _isDialogOpen = false;
+        private readonly IEventAggregator _eventAggregator;
         private readonly ConnectionViewModel _viewModel;
+        private readonly IWindowManager _windowManager;
+        private bool _isDialogOpen;
 
-        public ConnectionDialogManager(IUnityContainer container)
+        public ConnectionDialogManager(IWindowManager windowManager, IEventAggregator eventAggregator)
         {
-            _container = container;
-            _container.Resolve<IEventAggregator>().Subscribe(this);
+            _windowManager = windowManager;
 
-            _viewModel = new ConnectionViewModel(_container);
-        }
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
 
-        private void OpenConnectDialog()
-        {
-            if (!_isDialogOpen)
-            {
-                ScreenManager.Show(_container, _viewModel);
-                _isDialogOpen = true;
-            }
+            //_viewModel = new ConnectionViewModel(_container);
         }
 
         public void Handle(ConnectionStatusEvent message)
@@ -41,9 +28,18 @@ namespace Prover.GUI
 
             if (message.ConnectionStatus == ConnectionStatusEvent.Status.Disconnected)
             {
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
                 _viewModel.TryClose();
                 _isDialogOpen = false;
+            }
+        }
+
+        private void OpenConnectDialog()
+        {
+            if (!_isDialogOpen)
+            {
+                _windowManager.ShowWindow(_viewModel);
+                _isDialogOpen = true;
             }
         }
     }

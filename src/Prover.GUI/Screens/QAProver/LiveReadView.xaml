@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.LiveReadView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" d:DesignWidth="245" d:DesignHeight="200">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+        <DataTemplate x:Key="LiveReadTemplate">
+            <StackPanel Margin="10">
+                <TextBlock HorizontalAlignment="Center"
+                           Text="{Binding Title}"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+                <TextBlock FontSize="45"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                           HorizontalAlignment="Center"
+                           Text="{Binding LiveReadValue}" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ItemsControl Grid.Row="0" HorizontalAlignment="Center"
+                      ItemTemplate="{StaticResource ResourceKey=LiveReadTemplate}"
+                      ItemsSource="{Binding LiveReadItems}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <Button Content="Cancel" Grid.Row="1"
+                HorizontalAlignment="Right">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="CloseCommand" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <!--<ListView ItemsSource="{Binding LiveReadItems}" HorizontalContentAlignment="Stretch" >
+            <ListView.ItemTemplate >
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Path=ItemNumber}"/>
+                        <TextBlock Text="{Binding Path=LiveReadValue}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+
+
+    </Grid>
+
+
+</UserControl>

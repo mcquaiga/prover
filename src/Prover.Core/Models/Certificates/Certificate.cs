@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
 
 namespace Prover.Core.Models.Certificates
 {
@@ -34,45 +28,42 @@ namespace Prover.Core.Models.Certificates
             {
                 var period = 10; //Re-Verification
                 if (VerificationType == "Verification")
-                {
                     period = 12;
-                }
-                
+
                 return CreatedDateTime.AddYears(period).ToString("yyyy-MM-dd");
             }
         }
-        
+
         [NotMapped]
-        public int InstrumentCount 
+        public int InstrumentCount
         {
             get { return Instruments.Count(); }
         }
 
-        public static Certificate CreateCertificate(IUnityContainer container, string testedBy, string verificationType, List<Instrument> instruments)
+        public static Certificate CreateCertificate(string testedBy, string verificationType,
+            List<Instrument> instruments)
         {
+            //var certificateStore = new CertificateStore(container);
+            //var number = certificateStore.Query().DefaultIfEmpty().Max(x => x.Number) + 1;
 
-            var certificateStore = new CertificateStore(container);
-            var number = certificateStore.Query().DefaultIfEmpty().Max(x => x.Number) + 1;
+            //var certificate = new Certificate
+            //{
+            //    CreatedDateTime = DateTime.Now,
+            //    VerificationType = verificationType,
+            //    TestedBy = testedBy,
+            //    Number = number,
+            //    Instruments = new Collection<Instrument>()
+            //};
 
-            var certificate = new Certificate
-            {
-                CreatedDateTime = DateTime.Now,
-                VerificationType = verificationType,
-                TestedBy = testedBy,
-                Number = number,
-                Instruments = new Collection<Instrument>()
-            };
+            //instruments.ForEach(i =>
+            //{
+            //    i.CertificateId = certificate.Id;
+            //    i.Certificate = certificate;
+            //    certificate.Instruments.Add(i);
+            //});
 
-            instruments.ForEach(i =>
-            {
-                i.CertificateId = certificate.Id;
-                i.Certificate = certificate;
-                certificate.Instruments.Add(i);
-
-            });
-
-            certificateStore.Upsert(certificate);
-            return certificate;
+            //certificateStore.Upsert(certificate);
+            return new Certificate();
         }
     }
 }
