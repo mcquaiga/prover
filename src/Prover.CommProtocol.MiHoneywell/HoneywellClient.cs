@@ -14,8 +14,6 @@ namespace Prover.CommProtocol.MiHoneywell
 {
     public class HoneywellClient : EvcCommunicationClient
     {
-        private InstrumentType _instrumentType;
-
         public HoneywellClient(CommPort commPort) : base(commPort)
         {
         }
