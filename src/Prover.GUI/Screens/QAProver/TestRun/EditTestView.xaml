@@ -14,20 +14,22 @@
             <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="Card" />
         </DataTemplate>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
-            <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
-        </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
+                <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
+            </StackPanel>
 
-        <ItemsControl HorizontalAlignment="Center"
-                      ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                      ItemsSource="{Binding TestViews}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-    </StackPanel>
+            <ItemsControl HorizontalAlignment="Center"
+                          ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                          ItemsSource="{Binding TestViews}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -3,7 +3,7 @@ using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.GUI.Screens.QAProver.VerificationTestViews;
+using Prover.GUI.Screens.QAProver;
 
 namespace Prover.GUI.Reports
 {
@@ -12,14 +12,14 @@ namespace Prover.GUI.Reports
         public InstrumentReportViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            QaTestRunViewItem = screenManager.ResolveViewModel<QaTestRunViewModel>();
+            QaTestRunViewItem = screenManager.ResolveViewModel<TestRunViewModel>();
         }
 
-        public QaTestRunViewModel QaTestRunViewItem { get; set; }
+        public TestRunViewModel QaTestRunViewItem { get; set; }
 
         public async Task Initialize(Instrument instrument)
         {
-            await QaTestRunViewItem.Initialize(instrument);
+            //await QaTestRunViewItem.Initialize(instrument);
         }
     }
 }
