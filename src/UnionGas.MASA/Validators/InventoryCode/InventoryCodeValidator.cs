@@ -73,7 +73,6 @@ namespace UnionGas.MASA.Validators.InventoryCode
                 {
                     Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
                 };
-
                 var response = await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request);
                 return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
             }

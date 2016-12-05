@@ -42,13 +42,14 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             short value = 0;
 
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
-
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
+
                 if (value != 255)
                 {
                     if (_pulseIsCleared)
                     {
+                        _log.Debug($"Pulse value read -> value = {value}");
                         _pulseIsCleared = false;
                         return 1;
                     }
@@ -71,6 +72,8 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             _board = null;
             GC.SuppressFinalize(this);
         }
+
+        public short InputValue { get; private set; }
 
         private void Out(MotorValues outputValue)
         {

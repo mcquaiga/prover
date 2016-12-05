@@ -10,11 +10,14 @@ using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.DriveTypes;
 using Prover.Core.Events;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.GUI.Screens.QAProver.VerificationTestViews;
+using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using Prover.GUI.Screens.Settings;
 using ReactiveUI;
 using SerialPort = System.IO.Ports.SerialPort;
@@ -24,13 +27,17 @@ namespace Prover.GUI.Screens.QAProver
     public class TestRunViewModel : ViewModelBase
     {
         private const string NewQaTestViewContext = "NewTestView";
-        private const string EditQaTestViewContext = "Edit";
+        private const string EditQaTestViewContext = "EditTestView";
+
+        private IQaRunTestManager _qaRunTestManager;
 
         public ReactiveCommand<object> StartTestCommand { get; private set; }
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
             : base(screenManager, eventAggregator)
         {
+            _qaRunTestManager = qaRunTestManager;
+
             SettingsManager.RefreshSettings();
 
             /***  Setup Instruments list  ***/
@@ -45,7 +52,7 @@ namespace Prover.GUI.Screens.QAProver
                         Instrument = x,
                         IsSelected = x.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed
                     }));
-
+            
             InstrumentTypes.ItemChanged
                 .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)
                 .Select(x => x.Sender)
@@ -155,16 +162,35 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task StartNewQaTest()
         {
-            if (SelectedInstrument != null)
+            if (SelectedInstrument != null) 
             {
                 SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
                 SettingsManager.Save();
 
                 try
                 {
-                    var qaTestRun = ScreenManager.ResolveViewModel<QaTestRunInteractiveViewModel>();
-                    await qaTestRun.Initialize(SelectedInstrument);
-                    await ScreenManager.ChangeScreen(qaTestRun);
+                    await _qaRunTestManager.InitializeTest(SelectedInstrument);
+
+                    await Task.Run(() =>
+                    {
+                        SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                        SiteInformationItem.Instrument = _qaRunTestManager.Instrument;
+
+                        foreach (var x in _qaRunTestManager.Instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                        {
+                            var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                            item.InitializeViews(x, _qaRunTestManager);
+                            item.VerificationTest = x;
+
+                            TestViews.Add(item);
+                        }
+
+                        if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is RotaryDrive)
+                            MeterDisplacementItem = 
+                                new RotaryMeterTestViewModel((RotaryDrive)_qaRunTestManager.Instrument.VolumeTest.DriveType);
+                    });
+
+                    ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
@@ -174,19 +200,14 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        //private void VerifySettings()
-        //{
-        //    _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
-        //    _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
-        //    _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
+        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
 
-        //    NotifyOfPropertyChange(() => SelectedCommPort);
-        //    NotifyOfPropertyChange(() => SelectedBaudRate);
-        //    NotifyOfPropertyChange(() => SelectedTachCommPort);
+        public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
-        //    if (string.IsNullOrEmpty(SelectedCommPort))
-        //        ScreenManager.ShowWindow(new SettingsViewModel(ScreenManager, EventAggregator));
-        //}
+        public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
+            new ObservableCollection<VerificationSetViewModel>();
+
+        public VolumeTestViewModel VolumeInformationItem { get; set; }
 
         public class SelectableInstrumentType
         {
