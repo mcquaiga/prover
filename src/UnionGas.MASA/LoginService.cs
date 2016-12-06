@@ -62,7 +62,7 @@ namespace UnionGas.MASA
                 _log.Error(ex);
             }
 
-            return User.Id != null;
+            return User?.Id != null;
         }
 
 
