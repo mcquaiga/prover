@@ -8,13 +8,13 @@ using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Validators.InventoryCode
 {
-    public class NewInventoryCodePopupRequestor : IGetValue
+    public class NewCompanyNumberPopupRequestor : IGetValue
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly ScreenManager _screenManager;
 
-        public NewInventoryCodePopupRequestor(ScreenManager screenManager, IEventAggregator eventAggregator)
+        public NewCompanyNumberPopupRequestor(ScreenManager screenManager, IEventAggregator eventAggregator)
         {
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;

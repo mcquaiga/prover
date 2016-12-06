@@ -24,9 +24,9 @@ namespace UnionGas.MASA
             //Login service
             builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
 
-            builder.RegisterType<InventoryCodeValidator>().As<IValidator>();
-            builder.RegisterType<InventoryCodeUpdater>().As<IUpdater>();
-            builder.RegisterType<NewInventoryCodePopupRequestor>().As<IGetValue>();
+            builder.RegisterType<CompanyNumberValidator>().As<IValidator>();
+            builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
+            builder.RegisterType<NewCompanyNumberPopupRequestor>().As<IGetValue>();
 
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
             

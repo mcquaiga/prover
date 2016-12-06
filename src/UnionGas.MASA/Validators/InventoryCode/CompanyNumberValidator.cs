@@ -14,7 +14,7 @@ using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Validators.InventoryCode
 {
-    public class InventoryCodeValidator : IValidator
+    public class CompanyNumberValidator : IValidator
     {
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly DCRWebServiceSoap _webService;
@@ -22,7 +22,7 @@ namespace UnionGas.MASA.Validators.InventoryCode
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public InventoryCodeValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
         {
             _instrumentStore = instrumentStore;
             _webService = webService;

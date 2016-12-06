@@ -161,8 +161,8 @@
     <Compile Include="Screens\Toolbars\LoginToolbar\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Validators\InventoryCode\NewInventoryCodePopupRequestor.cs" />
-    <Compile Include="Validators\InventoryCode\InventoryCodeUpdater.cs" />
+    <Compile Include="Validators\InventoryCode\NewCompanyNumberPopupRequestor.cs" />
+    <Compile Include="Validators\InventoryCode\CompanyNumberUpdater.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
       <DependentUpon>CompanyNumberDialogView.xaml</DependentUpon>
@@ -194,7 +194,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="Exporter\Translate.cs" />
-    <Compile Include="Validators\InventoryCode\InventoryCodeValidator.cs" />
+    <Compile Include="Validators\InventoryCode\CompanyNumberValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\UnionGasItemValidatorUpdater.cs" />
   </ItemGroup>

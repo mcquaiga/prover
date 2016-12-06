@@ -29,7 +29,7 @@ namespace Prover.GUI.Screens.QAProver
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
 
-        private IQaRunTestManager _qaRunTestManager;
+        private readonly IQaRunTestManager _qaRunTestManager;
 
         public ReactiveCommand<object> StartTestCommand { get; private set; }
 

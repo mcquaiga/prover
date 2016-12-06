@@ -10,12 +10,12 @@ using Prover.GUI.Common;
 
 namespace UnionGas.MASA.Validators.InventoryCode
 {
-    public class InventoryCodeUpdater : IUpdater
+    public class CompanyNumberUpdater : IUpdater
     {
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IGetValue _valueRequestor;
 
-        public InventoryCodeUpdater(IInstrumentStore<Instrument> instrumentStore, IGetValue valueRequestor)
+        public CompanyNumberUpdater(IInstrumentStore<Instrument> instrumentStore, IGetValue valueRequestor)
         {
             _instrumentStore = instrumentStore;
             _valueRequestor = valueRequestor;

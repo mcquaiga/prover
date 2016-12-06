@@ -64,7 +64,5 @@ namespace UnionGas.MASA
 
             return User?.Id != null;
         }
-
-
     }
 }
