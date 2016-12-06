@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -13,7 +14,7 @@ using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Validators.InventoryCode
 {
-    public class InventoryCodeValidator : IValidator
+    public class CompanyNumberValidator : IValidator
     {
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly DCRWebServiceSoap _webService;
@@ -21,7 +22,7 @@ namespace UnionGas.MASA.Validators.InventoryCode
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public InventoryCodeValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
         {
             _instrumentStore = instrumentStore;
             _webService = webService;
@@ -65,6 +66,9 @@ namespace UnionGas.MASA.Validators.InventoryCode
 
         public async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
+            var tokenSource = new CancellationTokenSource(1500);
+            var token = tokenSource.Token;
+
             _log.Debug($"Verifying company number {companyNumber} with web service.");
 
             try
@@ -73,7 +77,8 @@ namespace UnionGas.MASA.Validators.InventoryCode
                 {
                     Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
                 };
-                var response = await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request);
+                
+                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), token);
                 return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
             }
             catch (EndpointNotFoundException)

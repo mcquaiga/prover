@@ -32,8 +32,9 @@
                 <TextBlock Text="{Binding CorrectorType}"/>
             </StackPanel>
             <TextBlock Margin="2 8 2 5" FontSize="12"
-                       FontWeight="Medium"
-                       Text="{Binding TestDatePretty}"/>
+                    FontWeight="Medium"
+                    Text="{Binding TestDatePretty}"/>
+            <TextBlock FontSize="12" Text="{Binding JobIdDisplay}" />
         </StackPanel>
 
         <StackPanel Grid.Column="1">

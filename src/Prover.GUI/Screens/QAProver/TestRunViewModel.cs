@@ -20,11 +20,12 @@ using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using Prover.GUI.Screens.Settings;
 using ReactiveUI;
+using Splat;
 using SerialPort = System.IO.Ports.SerialPort;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class TestRunViewModel : ViewModelBase
+    public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
@@ -33,11 +34,9 @@ namespace Prover.GUI.Screens.QAProver
 
         public ReactiveCommand<object> StartTestCommand { get; private set; }
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaRunTestManager = qaRunTestManager;
-
             SettingsManager.RefreshSettings();
 
             /***  Setup Instruments list  ***/
@@ -164,6 +163,8 @@ namespace Prover.GUI.Screens.QAProver
         {
             if (SelectedInstrument != null) 
             {
+                _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+
                 SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
                 SettingsManager.Save();
 
@@ -213,6 +214,11 @@ namespace Prover.GUI.Screens.QAProver
         {
             public InstrumentType Instrument { get; set; }
             public bool IsSelected { get; set; }
+        }
+
+        public void Dispose()
+        {
+            _qaRunTestManager?.Dispose();
         }
     }
 }

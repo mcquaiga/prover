@@ -3,12 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             TextElement.FontSize="24"
+             TextElement.FontWeight="Light"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="600">
-    <StackPanel Orientation="Vertical" Width="400" Height="400" Margin="10">
-        <TextBlock FontSize="24" Margin="5">Enter new company number:</TextBlock>
-        <TextBox FontSize="24" Margin="10" x:Name="CompanyNumber" />
+             d:DesignHeight="600" d:DesignWidth="800">
+    <StackPanel Orientation="Vertical" Width="650" Height="200" Margin="10">
+        <TextBlock Margin="5">Inventory Number could not be found in an open job.</TextBlock>
+        <TextBlock Margin="5">Enter new inventory number:</TextBlock>
+        <TextBox Margin="10" x:Name="CompanyNumber" />
         <Grid>
+            <Button x:Name="Cancel" HorizontalAlignment="Left" Margin="5">Skip</Button>
             <Button x:Name="Close" HorizontalAlignment="Right" Margin="5">Update</Button>
         </Grid>
 

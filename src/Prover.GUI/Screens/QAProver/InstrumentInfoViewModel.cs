@@ -42,6 +42,8 @@ namespace Prover.GUI.Screens.QAProver
 
         public string TestDatePretty => $"{Instrument.TestDateTime: MMMM d, yyyy h:mm tt}";
 
+        public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
+
         public void Handle(InstrumentUpdateEvent message)
         {
             Instrument = message.InstrumentManager.Instrument;
