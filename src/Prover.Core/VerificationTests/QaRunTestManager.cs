@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -25,7 +23,7 @@ namespace Prover.Core.VerificationTests
         Task RunVerifier();
     }
 
-    public class QaRunTestManager :  IQaRunTestManager
+    public class QaRunTestManager : IQaRunTestManager
     {
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
@@ -38,16 +36,18 @@ namespace Prover.Core.VerificationTests
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
+            VolumeTestManagerBase volumeTestManager,
             IValidator validator
         )
         {
+            VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _validator = validator;
         }
 
-        public VolumeTestManagerBase VolumeTestManagerBase { get; set; }
+        public VolumeTestManagerBase VolumeTestManager { get; set; }
 
         public void Dispose()
         {
@@ -76,7 +76,7 @@ namespace Prover.Core.VerificationTests
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VolumeTest != null)
-                await VolumeTestManagerBase.RunTest(_communicationClient, Instrument.VolumeTest, null);
+                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, null);
         }
 
         public async Task DownloadVerificationTestItems(int level)

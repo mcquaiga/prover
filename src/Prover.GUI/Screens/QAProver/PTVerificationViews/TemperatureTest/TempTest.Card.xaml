@@ -41,7 +41,7 @@
                                       Mode="PrimaryDark"
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
-            <controls1:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding Test.HasPassed}"
+            <controls1:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding TestRun.HasPassed}"
                                          HorizontalAlignment="Center" Margin="2 2" />
             <!--<StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock FontSize="12">Gauge</TextBlock>

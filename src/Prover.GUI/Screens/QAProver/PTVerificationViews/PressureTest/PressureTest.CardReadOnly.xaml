@@ -28,7 +28,7 @@
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
             <controls1:PercentageControl HorizontalAlignment="Left" Margin="2"
                                          DisplayValue="{Binding Test.PercentError}"
-                                         Passed="{Binding Test.HasPassed}" />
+                                         Passed="{Binding TestRun.HasPassed}" />
 
 
             <UniformGrid Columns="2" Margin="0">

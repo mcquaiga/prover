@@ -14,9 +14,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, IPulseInputService pulseInputService,
-            TachometerService tachComm)
-            : base(eventAggregator, pulseInputService)
+        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, TachometerService tachComm)
+            : base(eventAggregator)
         {
             _tachometerCommunicator = tachComm;
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
