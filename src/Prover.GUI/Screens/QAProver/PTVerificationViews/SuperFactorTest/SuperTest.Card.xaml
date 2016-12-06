@@ -20,7 +20,7 @@
             <controls1:PercentageControl
                 HorizontalAlignment="Center"
                 DisplayValue="{Binding PercentError}"
-                Passed="{Binding Test.HasPassed}" />
+                Passed="{Binding TestRun.HasPassed}" />
             <UniformGrid Columns="2" Margin="2">
                 <controls1:ValueDescriptionControl
                     Label="Actual Factor"

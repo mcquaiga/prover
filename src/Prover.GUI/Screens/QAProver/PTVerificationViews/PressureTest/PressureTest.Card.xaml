@@ -27,8 +27,8 @@
             <materialDesign:ColorZone Padding="3" Content="Pressure" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
             <controls1:PercentageControl HorizontalAlignment="Center" Margin="2"
-                                         DisplayValue="{Binding Test.PercentError}"
-                                         Passed="{Binding Test.HasPassed}" />
+                                         DisplayValue="{Binding TestRun.PercentError}"
+                                         Passed="{Binding TestRun.HasPassed}" />
 
             <UniformGrid HorizontalAlignment="Center"
                          Margin="0"

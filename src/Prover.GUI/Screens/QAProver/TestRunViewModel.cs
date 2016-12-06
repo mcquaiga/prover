@@ -62,11 +62,7 @@ namespace Prover.GUI.Screens.QAProver
 
             /***  Setup Comm Ports and Baud Rate settings ***/
             CommPort = PortsWatcherObservable().CreateCollection();
-              
-            //_serialPortsObservable = new SerialPortWatcher().ComPorts.ToObservable();
-            //_serialPortsObservable
-            //    .Subscribe(CommPort.Add);
-
+            
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort) ? SettingsManager.SettingsInstance.InstrumentCommPort : string.Empty;
             _selectedBaudRate = BaudRate.Contains(SettingsManager.SettingsInstance.InstrumentBaudRate) ? SettingsManager.SettingsInstance.InstrumentBaudRate : -1;
             _selectedTachCommPort = TachCommPort.Contains(SettingsManager.SettingsInstance.TachCommPort) ? SettingsManager.SettingsInstance.TachCommPort : string.Empty;
@@ -81,13 +77,12 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedInstrument, x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
-                (instrumentType, baud, instrumentPort, tachPort) => 
-                    instrumentType != null && BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
+                (baud, instrumentPort, tachPort) => 
+                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.Create(canStartNewTest);
-            StartTestCommand
-                .Subscribe(async _ => await StartNewQaTest());
+            StartTestCommand.Subscribe(async _ => await StartNewQaTest());
 
             _viewContext = NewQaTestViewContext;
         }

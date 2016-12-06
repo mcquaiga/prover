@@ -221,7 +221,7 @@
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
     <Compile Include="VerificationTests\VolumeVerification\RotaryQaRunTestManager.cs" />
-    <Compile Include="Communication\TachometerCommunication.cs" />
+    <Compile Include="Communication\TachometerService.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\Helpers.cs" />
