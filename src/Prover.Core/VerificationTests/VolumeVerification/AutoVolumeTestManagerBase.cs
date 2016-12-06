@@ -80,6 +80,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 _outputBoard?.StartMotor();
 
+
                 do
                 {
                     //TODO: Raise events so the UI can respond
