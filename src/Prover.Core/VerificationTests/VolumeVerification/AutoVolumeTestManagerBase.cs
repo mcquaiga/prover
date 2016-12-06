@@ -57,10 +57,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcTestItemReset)
         {
-            await InstrumentCommunicator.Connect();
+            await commClient.Connect();
             volumeTest.Items =
-                await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
-            await InstrumentCommunicator.Disconnect();
+                await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+            await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
                 await _tachometerCommunicator?.ResetTach();
@@ -78,13 +78,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             await Task.Run(() =>
             {
+                _outputBoard?.StartMotor();
+
                 do
                 {
                     //TODO: Raise events so the UI can respond
                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                     volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) &&
-                         !RequestStopTest);
+                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !RequestStopTest);
 
                 _outputBoard?.StopMotor();
             });
@@ -100,7 +101,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     var instrumentTask = Task.Run(async () =>
                     {
                         volumeTest.AfterTestItems =
-                            await InstrumentCommunicator.GetItemValues(InstrumentCommunicator.ItemDetails.VolumeItems());
+                            await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
 
                         if (evcPostTestItemReset != null)
                             await evcPostTestItemReset.PostReset(commClient);
@@ -112,7 +113,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 }
                 finally
                 {
-                    await InstrumentCommunicator.Disconnect();
+                    await commClient.Disconnect();
                 }
             });
         }

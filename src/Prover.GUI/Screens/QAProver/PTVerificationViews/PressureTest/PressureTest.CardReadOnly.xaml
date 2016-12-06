@@ -27,7 +27,7 @@
             <materialDesign:ColorZone Padding="3" Content="PressureTestRun" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
             <controls1:PercentageControl HorizontalAlignment="Left" Margin="2"
-                                         DisplayValue="{Binding Test.PercentError}"
+                                         DisplayValue="{Binding TestRun.PercentError}"
                                          Passed="{Binding TestRun.HasPassed}" />
 
 

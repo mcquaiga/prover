@@ -15,7 +15,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;
-        protected EvcCommunicationClient InstrumentCommunicator;
+        
         protected bool IsFirstVolumeTest = true;
         protected Logger Log;
         protected bool RequestStopTest;
