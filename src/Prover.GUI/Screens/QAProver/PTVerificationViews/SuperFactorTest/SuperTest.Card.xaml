@@ -24,7 +24,7 @@
             <UniformGrid Columns="2" Margin="2">
                 <controls1:ValueDescriptionControl
                     Label="Actual Factor"
-                    Value="{Binding Test.ActualFactor}" />
+                    Value="{Binding TestRun.ActualFactor}" />
                 <controls1:ValueDescriptionControl
                     Label="EVC Factor"
                     Value="{Binding EVCUnsqrFactor}" />

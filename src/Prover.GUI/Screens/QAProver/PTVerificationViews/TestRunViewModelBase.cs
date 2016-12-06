@@ -14,6 +14,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             TestRun = testRun;
+            eventAggregator.Subscribe(this);
         }
 
         public T TestRun { get; set; }

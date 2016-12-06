@@ -82,7 +82,7 @@
                 <controls1:ValueDescriptionControl LabelFontSize="10"
                                                    ValueFontSize="20"
                                                    Label="Actual Factor"
-                                                   Value="{Binding Test.ActualFactor}" />
+                                                   Value="{Binding TestRun.ActualFactor}" />
 
                 <controls1:ValueDescriptionControl LabelFontSize="10"
                                                    ValueFontSize="20"
