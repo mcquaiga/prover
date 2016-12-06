@@ -79,8 +79,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await Task.Run(() =>
             {
                 _outputBoard?.StartMotor();
-
-
+                
                 do
                 {
                     //TODO: Raise events so the UI can respond
