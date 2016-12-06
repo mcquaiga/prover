@@ -31,6 +31,7 @@ namespace UnionGas.MASA.Validators.InventoryCode
                 return dialog.CompanyNumber;
             }
 
+            _log.Debug($"Skipping inventory code verification.");
             return null;
         }
     }

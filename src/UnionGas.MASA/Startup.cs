@@ -29,8 +29,7 @@ namespace UnionGas.MASA
             builder.RegisterType<NewInventoryCodePopupRequestor>().As<IGetValue>();
 
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
-
-
+            
         }
     }
 }

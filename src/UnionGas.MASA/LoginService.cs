@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
@@ -26,23 +27,35 @@ namespace UnionGas.MASA
             _webService = webService;
         }
 
+        public bool Logout()
+        {
+            User = null;
+
+            return true;
+        }
+        
         public EmployeeDTO User { get; private set; }
 
         public async Task<bool> Login(string username, string password = null)
         {
+            var cts = new CancellationTokenSource(new TimeSpan(0, 0,3));
+            var ct = cts.Token;
+            ct.ThrowIfCancellationRequested();
+
             User = null;
 
-            _log.Debug($"Logging into MASA using Employee Number {username} ...");
+            _log.Debug($"Logging into MASA using Employee #{username} ...");
             try
             {
                 var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-                var response = await _webService.GetEmployeeAsync(employeeRequest);
+                var response = 
+                    await Task.Run(async () => await _webService.GetEmployeeAsync(employeeRequest), ct);
 
                 User = response.Body.GetEmployeeResult;
             }
             catch (EndpointNotFoundException)
             {
-                MessageBox.Show("Couldn't connect to web service.");
+                MessageBox.Show("Couldn't connect to web service.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
@@ -51,5 +64,7 @@ namespace UnionGas.MASA
 
             return User.Id != null;
         }
+
+
     }
 }

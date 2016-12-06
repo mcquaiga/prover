@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -65,6 +66,9 @@ namespace UnionGas.MASA.Validators.InventoryCode
 
         public async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
+            var tokenSource = new CancellationTokenSource(1500);
+            var token = tokenSource.Token;
+
             _log.Debug($"Verifying company number {companyNumber} with web service.");
 
             try
@@ -73,7 +77,8 @@ namespace UnionGas.MASA.Validators.InventoryCode
                 {
                     Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
                 };
-                var response = await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request);
+                
+                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), token);
                 return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
             }
             catch (EndpointNotFoundException)

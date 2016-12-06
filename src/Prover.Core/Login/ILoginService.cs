@@ -6,6 +6,7 @@ namespace Prover.Core.Login
         where T : class
     {
         Task<bool> Login(string username = null, string password = null);
+        bool Logout();
         T User { get; }
     }
 }

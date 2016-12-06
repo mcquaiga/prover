@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
+             TextElement.FontSize="24"
+             TextElement.FontWeight="Light"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:reactiveUi="clr-namespace:ReactiveUI;assembly=ReactiveUI"
              d:DesignHeight="500" d:DesignWidth="500">
