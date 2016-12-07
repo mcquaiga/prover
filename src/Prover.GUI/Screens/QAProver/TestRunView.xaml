@@ -15,7 +15,7 @@
         <materialDesign:DialogHost IsOpen="{Binding ShowConnectionDialog}">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
-                    <TextBlock Text="Connecting to Instrument..." HorizontalAlignment="Center" />
+                    <TextBlock Text="Starting New Test..." HorizontalAlignment="Center" />
                     <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
                                 Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center"
                      Margin="12 12 12 12" />
@@ -23,9 +23,10 @@
                                HorizontalAlignment="Center"/>
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
+
+            <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
+			                                        cal:View.Model="{Binding}" />
         </materialDesign:DialogHost>
-        <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
-			                                    cal:View.Model="{Binding}" />
     </Grid>
 </UserControl>
 

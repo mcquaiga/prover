@@ -175,7 +175,6 @@ namespace Prover.Core.Models.Instruments
                         break;
                     case "Mechanical":
                         DriveType = new MechanicalDrive(Instrument);
-                        AppliedInput = DriveType.MaxUncorrectedPulses();
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

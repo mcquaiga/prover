@@ -148,19 +148,16 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task StartNewQaTest()
         {
+            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+            SettingsManager.Save();
+
             if (SelectedInstrument != null)
             {
-                _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-
-                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-                SettingsManager.Save();
-
                 try
                 {
                     ShowConnectionDialog = true;
+                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
-                    ShowConnectionDialog = false;
-
                     await Task.Run(() =>
                     {
                         SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
@@ -180,7 +177,7 @@ namespace Prover.GUI.Screens.QAProver
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
                     });
-
+                    ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
