@@ -35,7 +35,7 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1">
-            <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber1}" />
+            <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber2}" />
             <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
             <controls1:ValueDescriptionControl Label="Firmware Version"
                                                        Value="{Binding Instrument.FirmwareVersion}" />
