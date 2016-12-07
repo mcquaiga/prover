@@ -98,18 +98,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 try
                 {
-                    await GetAppliedInput(volumeTest);
-
                     await commClient.Connect();
                     volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
                     if (evcPostTestItemReset != null)
                         await evcPostTestItemReset.PostReset(commClient);
-
                 }
                 finally
                 {
                     await commClient.Disconnect();
                 }
+
+                await GetAppliedInput(volumeTest);
             });
         }
 
