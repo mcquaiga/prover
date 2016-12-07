@@ -13,12 +13,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="75" d:DesignWidth="75">
     <Grid>
-        <Button x:Name="LoginButton" Width="64" Height="64"
-                Style="{StaticResource MaterialDesignRaisedAccentButton}" Padding="2 0 2 0"
-                            materialDesign:RippleAssist.IsCentered="True"
-                            HorizontalAlignment="Right">
-            <TextBlock Text="LOGIN"></TextBlock>
-        </Button>
-
+        <StackPanel VerticalAlignment="Center">
+            <Button x:Name="LoginButton" Width="100" VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignRaisedAccentButton}" 
+                Padding="2 0 2 0"
+                materialDesign:RippleAssist.IsCentered="True">
+                Login
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>

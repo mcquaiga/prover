@@ -61,9 +61,10 @@ namespace Prover.Core.VerificationTests
             _communicationClient.Initialize(instrumentType);
             await _communicationClient.Connect();
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+            await _communicationClient.Disconnect();
 
             Instrument = new Instrument(instrumentType, items);
-            await _communicationClient.Disconnect();
+
             await SaveAsync();
             await RunVerifier();
         }

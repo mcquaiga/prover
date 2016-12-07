@@ -14,6 +14,6 @@
             <TextBlock Text="Welcome, "/>
             <TextBlock x:Name="Username"></TextBlock>
         </StackPanel>
-        <Button x:Name="LogoutButton" Style="{StaticResource MaterialDesignRaisedAccentButton}">Logout</Button>
+        <Button x:Name="LogoutButton" Style="{StaticResource MaterialDesignRaisedLightButton}">Logout</Button>
     </StackPanel>
 </UserControl>

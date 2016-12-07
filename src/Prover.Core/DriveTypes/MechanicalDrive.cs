@@ -16,7 +16,7 @@ namespace Prover.Core.DriveTypes
 
         public bool HasPassed => true;
 
-        public int MaxUncorrectedPulses() => 100;
+        public int MaxUncorrectedPulses() => 10;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {

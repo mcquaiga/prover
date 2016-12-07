@@ -11,6 +11,7 @@ namespace Prover.GUI.Screens.Shell
         {
             InitializeComponent();
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
+            Style = (Style)FindResource(typeof(Window));
         }
     }
 }
