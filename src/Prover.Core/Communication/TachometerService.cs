@@ -46,10 +46,9 @@ namespace Prover.Core.Communication
                     if (!_serialPort.IsOpen) _serialPort.Open();
 
                     _serialPort.DiscardInBuffer();
-                    _serialPort.WriteLine("@D0");
-                    _serialPort.WriteLine(((char) 13).ToString());
-                    _serialPort.DiscardInBuffer();
-                    Thread.Sleep(500);
+                    _serialPort.Write("@D0");
+                    _serialPort.Write(((char) 13).ToString());
+                    Thread.Sleep(100);
 
                     var tachString = _serialPort.ReadExisting();
                     Log.Info($"Read data from Tach: {tachString}");

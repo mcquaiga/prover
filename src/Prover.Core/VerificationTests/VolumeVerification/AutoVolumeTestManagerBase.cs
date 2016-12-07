@@ -98,18 +98,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 try
                 {
-                    var instrumentTask = Task.Run(async () =>
-                    {
-                        volumeTest.AfterTestItems =
-                            await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    await GetAppliedInput(volumeTest);
 
-                        if (evcPostTestItemReset != null)
-                            await evcPostTestItemReset.PostReset(commClient);
-                    });
+                    await commClient.Connect();
+                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    if (evcPostTestItemReset != null)
+                        await evcPostTestItemReset.PostReset(commClient);
 
-                    var appliedInputTask = SetAppliedInput(volumeTest);
-
-                    await Task.WhenAll(instrumentTask, appliedInputTask);
                 }
                 finally
                 {
@@ -118,7 +113,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             });
         }
 
-        private async Task SetAppliedInput(VolumeTest volumeTest)
+        private async Task GetAppliedInput(VolumeTest volumeTest)
         {
             var result = 0;
             try

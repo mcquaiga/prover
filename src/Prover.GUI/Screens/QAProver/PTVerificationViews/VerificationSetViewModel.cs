@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
@@ -56,8 +57,18 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         public async Task RunTest()
         {
-            await QaRunTestManager.RunTest(VerificationTest.TestNumber);
-            EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+            try
+            {
+                await QaRunTestManager.RunTest(VerificationTest.TestNumber);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occured during the verification test. See exception for details.");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+            }
         }
     }
 }
