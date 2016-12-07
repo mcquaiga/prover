@@ -12,10 +12,8 @@
              d:DesignHeight="500" d:DesignWidth="500">
 
     <Grid>
-        <materialDesign:DialogHost x:Name="TestViewDialogHost"
-            HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
+        <materialDesign:DialogHost Identifier="TestViewDialogHost"/>
+        <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
 			                                    cal:View.Model="{Binding}" />
-        </materialDesign:DialogHost>
     </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Akka.Util.Internal;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
@@ -17,6 +18,7 @@ using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Dialogs;
 using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using Prover.GUI.Screens.Settings;
 using ReactiveUI;
@@ -158,6 +160,8 @@ namespace Prover.GUI.Screens.QAProver
         {
             if (SelectedInstrument != null) 
             {
+                
+
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
 
                 SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
@@ -165,6 +169,12 @@ namespace Prover.GUI.Screens.QAProver
 
                 try
                 {
+                    var connectionView = new ConnectionView
+                    {
+                        DataContext = new ConnectionViewModel(EventAggregator)
+                    };
+                    var showDialog = DialogHost.Show(connectionView, "TestViewDialogHost");
+
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
 
                     await Task.Run(() =>
