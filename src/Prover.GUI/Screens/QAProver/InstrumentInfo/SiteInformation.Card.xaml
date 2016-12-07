@@ -24,16 +24,13 @@
 
         <StackPanel Margin="10" Grid.Column="0">
             <TextBlock FontSize="38" 
-                       Margin="0 2 0 5" 
                        Text="{Binding Instrument.InstrumentType.Name}"/>
-            <StackPanel Orientation="Horizontal" Margin="0 0">
-                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}"/>
-                <TextBlock FontWeight="ExtraLight" Text=" | "/>
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding CorrectorType}"/>
+                <TextBlock FontWeight="UltraLight" Text=" | "/>
+                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}"/>
             </StackPanel>
-            <TextBlock Margin="0 8 2 5" FontSize="16"
-                    FontWeight="Light"
-                    Text="{Binding TestDatePretty}"/>
+            <TextBlock FontSize="16" Text="{Binding TestDatePretty}"/>
             <TextBlock FontSize="16" Text="{Binding JobIdDisplay}" />
         </StackPanel>
 
