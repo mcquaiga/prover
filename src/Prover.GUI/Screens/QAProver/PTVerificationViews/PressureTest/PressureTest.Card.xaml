@@ -30,7 +30,7 @@
                                          DisplayValue="{Binding TestRun.PercentError}"
                                          Passed="{Binding TestRun.HasPassed}" />
 
-            <UniformGrid HorizontalAlignment="Center"
+            <!--<UniformGrid HorizontalAlignment="Center"
                          Margin="0"
                          Rows="1">
                 <StackPanel Orientation="Vertical"
@@ -59,7 +59,7 @@
                                         Value="{Binding AtmosphericGauge}" />
                 </StackPanel>
 
-            </UniformGrid>
+            </UniformGrid>-->
 
             <UniformGrid Columns="2" Margin="0">
                 <controls1:ValueDescriptionControl
