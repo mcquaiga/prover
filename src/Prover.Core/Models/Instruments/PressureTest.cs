@@ -21,7 +21,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);
-            AtmosphericGauge = decimal.Round(DefaultAtmGauge, 2);
+            AtmosphericGauge = 0; // decimal.Round(DefaultAtmGauge, 2);
         }
 
         public Guid VerificationTestId { get; set; }
