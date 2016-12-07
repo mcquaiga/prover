@@ -27,7 +27,7 @@ using SerialPort = System.IO.Ports.SerialPort;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable
+    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<ConnectionStatusEvent>
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
@@ -150,7 +150,21 @@ namespace Prover.GUI.Screens.QAProver
             get { return _selectedBaudRate; }
             set { this.RaiseAndSetIfChanged(ref _selectedBaudRate, value); }
         }
-        
+
+        private bool _showConnectionDialog;
+        public bool ShowConnectionDialog
+        {
+            get { return _showConnectionDialog; }
+            set { this.RaiseAndSetIfChanged(ref _showConnectionDialog, value); }
+        }
+
+        private string _connectionStatusMessage;
+        public string ConnectionStatusMessage
+        {
+            get { return _connectionStatusMessage; }
+            set { this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value); }
+        }
+
         public async Task CancelCommand()
         {
             await ScreenManager.GoHome();
@@ -169,13 +183,9 @@ namespace Prover.GUI.Screens.QAProver
 
                 try
                 {
-                    var connectionView = new ConnectionView
-                    {
-                        DataContext = new ConnectionViewModel(EventAggregator)
-                    };
-                    var showDialog = DialogHost.Show(connectionView, "TestViewDialogHost");
-
+                    ShowConnectionDialog = true;
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
+                    ShowConnectionDialog = false;
 
                     await Task.Run(() =>
                     {
@@ -224,6 +234,11 @@ namespace Prover.GUI.Screens.QAProver
         public void Dispose()
         {
             _qaRunTestManager?.Dispose();
+        }
+
+        public void Handle(ConnectionStatusEvent message)
+        {
+            ConnectionStatusMessage = $"Attempt {message.ConnectionStatus} of {message.MaxAttempts}...";
         }
     }
 }
