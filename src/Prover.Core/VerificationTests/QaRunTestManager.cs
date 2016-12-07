@@ -76,7 +76,7 @@ namespace Prover.Core.VerificationTests
             await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level);
             await DownloadVerificationTestItems(level);
 
-            if (Instrument.VolumeTest != null)
+            if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
                 await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, null);
         }
 
