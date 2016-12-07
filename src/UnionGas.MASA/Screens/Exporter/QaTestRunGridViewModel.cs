@@ -26,6 +26,8 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public Instrument Instrument { get; set; }
 
+        public string DateTimePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+
         public bool IsSelected { get; set; }
 
         public async Task DisplayInstrumentReport()

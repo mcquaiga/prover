@@ -8,8 +8,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              TextElement.Foreground="White"
-             TextElement.FontWeight="Normal"
-             TextElement.FontSize="18"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="75">
     <UserControl.Resources>
@@ -60,67 +60,69 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-
     <DockPanel Style="{StaticResource DockPanelStyle}">
-        <Image x:Name="Icon"
+        <StackPanel Orientation="Horizontal">
+            <Image x:Name="Icon"
                Style="{StaticResource PassFailIcon}"
                Margin="15"
                Width="36" Height="36" />
-        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-            <TextBlock FontSize="24"
-                       VerticalAlignment="Center"
-                       Text="{Binding Instrument.SiteNumber2}" />
-
-            <StackPanel Margin="0 5" Orientation="Horizontal">
-                <TextBlock Text="{Binding Instrument.InstrumentType.Name}" />
-                <TextBlock Text=" / " />
-                <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
-                <TextBlock Text=" / " />
-                <TextBlock Text="{Binding Instrument.CompositionType}" />
+            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                <TextBlock FontSize="32" Text="{Binding Instrument.InstrumentType.Name}" />
+                <TextBlock FontSize="18" Text="{Binding Instrument.CompanyNumber}" />
+                <TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
             </StackPanel>
-        </StackPanel>
+            <StackPanel Margin="10" Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock Text="{Binding DateTimePretty}"/>
+                <StackPanel Margin="0 5" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Instrument.CompositionType}" />
+                    <TextBlock Text=" | " />
+                    <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
+                </StackPanel>
+            </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25 0">
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25 0">
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="Export">
-                <materialDesign:PackIcon Kind="Export"
+                    <materialDesign:PackIcon Kind="Export"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ExportQATestRun" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="ExportQATestRun" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="View QA Test Run">
-                <materialDesign:PackIcon Kind="Printer"
+                    <materialDesign:PackIcon Kind="Printer"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="DisplayInstrumentReport" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="DisplayInstrumentReport" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="Export">
-                <materialDesign:PackIcon Kind="Delete"
+                    <materialDesign:PackIcon Kind="Delete"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="DeleteInstrument" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="DeleteInstrument" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+
         </StackPanel>
-      
     </DockPanel>
+   
 </UserControl>

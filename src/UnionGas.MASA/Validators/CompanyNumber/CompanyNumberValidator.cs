@@ -1,18 +1,16 @@
-﻿using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using UnionGas.MASA.DCRWebService;
 
-namespace UnionGas.MASA.Validators.InventoryCode
+namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberValidator : IValidator
     {
@@ -35,14 +33,22 @@ namespace UnionGas.MASA.Validators.InventoryCode
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.RawValue.TrimStart('0');
 
+            var serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber);
+            var serialNumber = serialNumberItem.RawValue.TrimStart('0');
+
             MeterDTO meterDto;
             do
             {
                 meterDto = await VerifyWithWebService(companyNumber);
 
-                if (meterDto != null && (meterDto?.InventoryCode == null || meterDto.InventoryCode != companyNumber))
+                if (meterDto != null 
+                    && (
+                            (meterDto?.InventoryCode == null || meterDto.InventoryCode != companyNumber)
+                        ||  (meterDto?.SerialNumber != serialNumberItem.RawValue)
+                       )
+                   )
                 {
-                    _log.Warn($"Inventory code {companyNumber} not found in an open job.");
+                    _log.Warn($"Company number {companyNumber} not found in an open job.");
                     companyNumber = (string) await _updater.Update(commClient, instrument);
                 }
                 else

@@ -21,7 +21,7 @@
         </DataTemplate>
     </UserControl.Resources>
     <Viewbox Width="1040" Height="795" Stretch="Fill">
-        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
+        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}" cal:View.Context="{Binding ReportViewContext}"
                         Margin="2" />
     </Viewbox>
 </UserControl>
