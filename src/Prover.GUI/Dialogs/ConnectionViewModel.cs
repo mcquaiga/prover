@@ -12,12 +12,9 @@ namespace Prover.GUI.Dialogs
 {
     public class ConnectionViewModel : ReactiveScreen, IHandle<ConnectionStatusEvent>, IWindowSettings
     {
-        private readonly IContainer _container;
-
-        public ConnectionViewModel(IContainer container)
+        public ConnectionViewModel(IEventAggregator eventAggregator)
         {
-            _container = container;
-            container.Resolve<IEventAggregator>().Subscribe(this);
+            eventAggregator.Subscribe(this);
         }
 
         public string StatusText { get; private set; }
