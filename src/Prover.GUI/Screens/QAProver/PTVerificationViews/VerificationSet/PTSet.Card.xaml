@@ -20,51 +20,63 @@
         <converters:NullToVisibilityConverter
             x:Key="NullToHiddenConverter" />
     </UserControl.Resources>
-    <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
-        <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="8" Content="{Binding Level}" Margin="2"
-                                      materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                      Mode="Accent" />
-            <StackPanel Orientation="Horizontal">
-                <!-- Column 1 - PTZ Verification -->
-                <StackPanel Orientation="Vertical">
 
-
-                    <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
-                                    Margin="2" />
-
-                    <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
-                                    Margin="2" />
-
-                    <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
-                                    Margin="2" />
-
+    <Grid>
+        <materialDesign:DialogHost Identifier="TestDialogHost" IsOpen="{Binding ShowProgressDialog}">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
+                    <TextBlock Text="Running test..." HorizontalAlignment="Center" />
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center"
+                     Margin="12 12 12 12" />
+                    <TextBlock Text="{Binding ConnectionStatusMessage}"
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+            
+            <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+            <StackPanel Orientation="Vertical">
+                <materialDesign:ColorZone Padding="8" Content="{Binding Level}" Margin="2"
+                                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                    Mode="Accent" />
+                <Grid>
+                    <Button Margin="5"
+            HorizontalAlignment="Right"
+            materialDesign:RippleAssist.IsCentered="True"
+            Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0" />
+                                <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
+                            </StackPanel>
 
-                <!-- Column 2 - Volume Verification -->
-                <ContentControl cal:View.Model="{Binding VolumeTestViewModel}"
-                                cal:View.Context="Card"
-                                Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
-                                Margin="2" />
-            </StackPanel>
-            <Grid Height="50">
-                <Button Margin="5"
-                        HorizontalAlignment="Right"
-                        materialDesign:RippleAssist.IsCentered="True"
-                        Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <cal:ActionMessage MethodName="RunTest" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                </Grid>
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0" />
-                        <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
+                        <!-- Column 1 - PTZ Verification -->
+                        <StackPanel Orientation="Vertical">
+                            <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
+                            Margin="2" />
+
+                            <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
+                                Margin="2" />
+
+                            <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
+                                Margin="2" />
+                           
+                        </StackPanel>
+                        <!-- Column 2 - Volume Verification -->
+                        <ContentControl cal:View.Model="{Binding VolumeTestViewModel}"
+                            cal:View.Context="Card"
+                            Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
+                            Margin="2" />
                     </StackPanel>
-
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="RunTest" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </Grid>
-        </StackPanel>
-
-    </materialDesign:Card>
+                </StackPanel>
+        </materialDesign:Card>
+        </materialDesign:DialogHost>
+    </Grid>
 </UserControl>

@@ -6,6 +6,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
@@ -55,10 +56,18 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                     VerificationTest.VolumeTest);
         }
 
+        private bool _showProgressDialog;
+        public bool ShowProgressDialog
+        {
+            get { return _showProgressDialog; }
+            set { this.RaiseAndSetIfChanged(ref _showProgressDialog, value); }
+        }
+
         public async Task RunTest()
         {
             try
             {
+                ShowProgressDialog = true;
                 await QaRunTestManager.RunTest(VerificationTest.TestNumber);
             }
             catch (Exception ex)
@@ -67,6 +76,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
             finally
             {
+                ShowProgressDialog = false;
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
