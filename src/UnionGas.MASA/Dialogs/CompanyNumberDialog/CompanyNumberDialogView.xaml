@@ -8,8 +8,8 @@
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800">
     <StackPanel Orientation="Vertical" Width="650" Height="200" Margin="10">
-        <TextBlock Margin="5">Inventory Number could not be found in an open job.</TextBlock>
-        <TextBlock Margin="5">Enter new inventory number:</TextBlock>
+        <TextBlock Margin="5">Company Number could not be found in an open job.</TextBlock>
+        <TextBlock Margin="5">Enter new company number:</TextBlock>
         <TextBox Margin="10" x:Name="CompanyNumber" />
         <Grid>
             <Button x:Name="Cancel" HorizontalAlignment="Left" Margin="5">Skip</Button>

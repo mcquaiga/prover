@@ -42,7 +42,7 @@ namespace UnionGas.MASA.Screens.Toolbars
             }
         }
 
-        public async Task Logout()
+        public async Task LogoutButton()
         {
             await Task.Run(() => _loginService.Logout());
             ChangeContext(LoginViewContext);
