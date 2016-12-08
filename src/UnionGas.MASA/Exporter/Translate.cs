@@ -125,7 +125,7 @@ namespace UnionGas.MASA.Exporter
 
         private static VolumeTest TranslateVolumeTest(Prover.Core.Models.Instruments.VerificationTest vt)
         {
-            if (vt.VolumeTest == null) return null;
+            if (vt.VolumeTest == null) return new VolumeTest();
 
             return new VolumeTest
             {
@@ -145,7 +145,7 @@ namespace UnionGas.MASA.Exporter
 
         private static SuperFactorTest TranslateSuperFactorTest(Prover.Core.Models.Instruments.VerificationTest vt)
         {
-            if (vt.SuperFactorTest == null) return null;
+            if (vt.SuperFactorTest == null) return new SuperFactorTest();
 
             return new SuperFactorTest
             {
@@ -160,7 +160,7 @@ namespace UnionGas.MASA.Exporter
 
         private static TemperatureTest TranslateTemperatureTest(Prover.Core.Models.Instruments.VerificationTest vt)
         {
-            if (vt.TemperatureTest == null) return null;
+            if (vt.TemperatureTest == null) return new TemperatureTest();
 
             return new TemperatureTest
             {
@@ -174,7 +174,7 @@ namespace UnionGas.MASA.Exporter
 
         private static PressureTest TranslatePressureTest(Prover.Core.Models.Instruments.VerificationTest vt)
         {
-            if (vt.PressureTest == null) return null;
+            if (vt.PressureTest == null) return new PressureTest();
 
             return new PressureTest
             {
