@@ -66,11 +66,14 @@ namespace UnionGas.MASA.Exporter
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
 
                 if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                {
+                    Log.Info($"Successfully exported instrument(s).");
                     return true;
+                }
 
                 Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
             }
-            catch (EndpointNotFoundException notFoundEx)
+            catch (EndpointNotFoundException)
             {
                 MessageBox.Show("Web service could not be reached.");
             }
