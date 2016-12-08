@@ -79,7 +79,7 @@ namespace UnionGas.MASA.Exporter
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occured sending results to the web service.");
+                Log.Error(ex, $"An error occured sending results to the web service. {ex}");
             }
 
             return false;
