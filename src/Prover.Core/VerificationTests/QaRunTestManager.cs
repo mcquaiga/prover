@@ -78,6 +78,8 @@ namespace Prover.Core.VerificationTests
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
                 await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, null);
+
+            await SaveAsync();
         }
 
         public async Task DownloadVerificationTestItems(int level)
