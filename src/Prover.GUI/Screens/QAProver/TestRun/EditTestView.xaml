@@ -19,6 +19,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCard" />
                 <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
+                <ContentControl Margin="2" cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" />
             </StackPanel>
 
             <ItemsControl HorizontalAlignment="Center"
