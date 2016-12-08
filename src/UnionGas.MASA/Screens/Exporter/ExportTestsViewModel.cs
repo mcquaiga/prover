@@ -25,7 +25,7 @@ namespace UnionGas.MASA.Screens.Exporter
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
             GetInstrumentsWithNoExportDate();
-            GetInstrumentsByCertificateId(null);
+            //GetInstrumentsByCertificateId(null);
         }
 
         
