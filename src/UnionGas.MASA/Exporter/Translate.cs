@@ -136,7 +136,8 @@ namespace UnionGas.MASA.Exporter
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
-                TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
+                TrueCorrected = -1.0000m,
+                //TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
                 CorrectedPercentError = RoundTo(vt.VolumeTest.CorrectedPercentError, 2),
                 UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2)
             };
