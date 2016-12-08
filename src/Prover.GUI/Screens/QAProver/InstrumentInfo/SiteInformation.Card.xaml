@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
@@ -17,6 +16,7 @@
     <Grid Background="{DynamicResource MaterialDesignBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.25*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -45,16 +45,19 @@
             <controls1:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
         </StackPanel>
 
-        <UniformGrid Grid.Column="3">
+        <StackPanel Grid.Column="3">
             <controls1:ValueDescriptionControl Label="Pulser A Select"
                                                        Value="{Binding Instrument.PulseASelect}" />
             <controls1:ValueDescriptionControl Label="Pulser A Scaling"
                                                        Value="{Binding Instrument.PulseAScaling}" />
+        </StackPanel>
+        <StackPanel Grid.Column="4">
             <controls1:ValueDescriptionControl Label="Pulser B Select"
                                                        Value="{Binding Instrument.PulseBSelect}" />
             <controls1:ValueDescriptionControl Label="Pulser B Scaling"
-                                                       Value="{Binding Instrument.PulseBScaling}" />
-        </UniformGrid>
+                                                       Value="{Binding Instrument.PulseBScaling}" />    
+        </StackPanel>
+        
         <!--<StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">
                     <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.InstrumentType.Name}" />

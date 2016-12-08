@@ -29,7 +29,6 @@ namespace Prover.Core.Extensions
             return null;
         }
 
-
         public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
             IEnumerable<ItemValue> afterItems)
         {
@@ -39,6 +38,23 @@ namespace Prover.Core.Extensions
                     (decimal)
                     o, 4);
             return null;
+        }
+
+        public static decimal? EvcEnergy(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
+            IEnumerable<ItemValue> afterItems)
+        {
+            var o = afterItems?.Energy() - beforeItems?.Energy();
+            if (o.HasValue)
+            {
+                return decimal.Round(o.Value, 4);
+            }
+
+            return null;
+        }
+
+        public static decimal? Energy(this IEnumerable<ItemValue> itemValues)
+        {
+            return itemValues.GetItem(140).NumericValue;
         }
 
         public static decimal? Corrected(this IEnumerable<ItemValue> itemValues)
@@ -61,8 +77,7 @@ namespace Prover.Core.Extensions
 
         public static decimal? UnCorrectedMultiplier(this Instrument instrument)
             => instrument.Items.GetItem(92).NumericValue;
-
-
+        
         public static string UnCorrectedMultiplierDescription(this Instrument instrument)
             => instrument.Items.GetItem(92).Description;
 
