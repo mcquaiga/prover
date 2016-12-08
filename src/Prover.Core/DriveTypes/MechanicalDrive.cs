@@ -23,4 +23,16 @@ namespace Prover.Core.DriveTypes
             return appliedInput*Instrument.DriveRate();
         }
     }
+
+    public class Energy
+    {
+        private readonly Instrument _instrument;
+
+        public Energy(Instrument instrument)
+        {
+            _instrument = instrument;
+        }
+
+        public decimal EVC
+    }
 }
