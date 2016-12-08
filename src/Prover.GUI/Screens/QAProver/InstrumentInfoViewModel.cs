@@ -47,7 +47,10 @@ namespace Prover.GUI.Screens.QAProver
         public bool EventLogChecked
         {
             get { return Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value; }
-            set { Instrument.EventLogPassed = value; }
+            set
+            {
+                Instrument.EventLogPassed = value;
+            }
         }
 
         public bool CommPortChecked
