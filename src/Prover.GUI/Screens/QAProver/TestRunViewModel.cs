@@ -116,6 +116,8 @@ namespace Prover.GUI.Screens.QAProver
 
         public VolumeTestViewModel VolumeInformationItem { get; set; }
 
+        public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
+
         public void Dispose()
         {
             _qaRunTestManager?.Dispose();
@@ -170,6 +172,11 @@ namespace Prover.GUI.Screens.QAProver
                             item.VerificationTest = x;
 
                             TestViews.Add(item);
+                        }
+
+                        if (_qaRunTestManager.Instrument.InstrumentType == Instruments.MiniAt)
+                        {
+                            EventLogCommPortItem = SiteInformationItem;
                         }
 
                         if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is RotaryDrive)

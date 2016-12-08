@@ -44,6 +44,18 @@ namespace Prover.GUI.Screens.QAProver
 
         public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
+        public bool EventLogChecked
+        {
+            get { return Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value; }
+            set { Instrument.EventLogPassed = value; }
+        }
+
+        public bool CommPortChecked
+        {
+            get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
+            set { Instrument.CommPortsPassed = value; }
+        }
+
         public void Handle(InstrumentUpdateEvent message)
         {
             Instrument = message.InstrumentManager.Instrument;
