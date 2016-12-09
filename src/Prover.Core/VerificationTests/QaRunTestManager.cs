@@ -104,7 +104,8 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadTemperatureTestItems(int levelNumber)
         {
-            var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber).TemperatureTest;
+            var firstOrDefault = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == levelNumber);
+            var test = firstOrDefault?.TemperatureTest;
 
             if (test != null)
                 test.Items =
@@ -113,7 +114,8 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadPressureTestItems(int level)
         {
-            var test = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level).PressureTest;
+            var firstOrDefault = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
+            var test = firstOrDefault?.PressureTest;
             if (test != null)
                 test.Items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.PressureItems());
         }

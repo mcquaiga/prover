@@ -68,10 +68,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected
-        {
-            get { return DriveType?.UnCorrectedInputVolume(AppliedInput); }
-        }
+        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         [NotMapped]
         public decimal? CorrectedPercentError
@@ -96,7 +93,7 @@ namespace Prover.Core.Models.Instruments
         public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
-        public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
+        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
 
         public override decimal? PercentError { get; }
         public override decimal? ActualFactor { get; }

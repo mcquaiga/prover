@@ -51,6 +51,10 @@ namespace Prover.Core.Models.Instruments
 
         public DateTime? ExportedDateTime { get; set; } = null;
 
+        public bool? EventLogPassed { get; set; }
+
+        public bool? CommPortsPassed { get; set; }
+
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)

@@ -105,16 +105,16 @@ namespace Prover.GUI.Screens.QAProver
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand<object> StartTestCommand { get; }
-        
+        public ReactiveCommand<object> StartTestCommand { get; } 
+               
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-
+        public EnergyTestViewModel EnergyTestItem { get; set; }
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
-
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
-
         public VolumeTestViewModel VolumeInformationItem { get; set; }
+
+        public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
         public void Dispose()
         {
@@ -172,10 +172,19 @@ namespace Prover.GUI.Screens.QAProver
                             TestViews.Add(item);
                         }
 
+                        if (_qaRunTestManager.Instrument.InstrumentType == Instruments.MiniAt)
+                        {
+                            EventLogCommPortItem = SiteInformationItem;
+                        }
+
                         if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is RotaryDrive)
                             MeterDisplacementItem =
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
+                        else if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is MechanicalDrive)
+                            EnergyTestItem =
+                                new EnergyTestViewModel(
+                                    (MechanicalDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
                     });
                     ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;

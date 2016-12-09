@@ -211,6 +211,10 @@
     <Compile Include="Migrations\201611070412573_add job-id.Designer.cs">
       <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.cs" />
+    <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.Designer.cs">
+      <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
@@ -319,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611070412573_add job-id.resx">
       <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612081436258_add-event-log-comm-ports-bool.resx">
+      <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
