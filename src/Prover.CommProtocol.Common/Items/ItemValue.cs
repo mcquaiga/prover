@@ -67,7 +67,7 @@ namespace Prover.CommProtocol.Common.Items
             if (result == null)
             {
                 NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");
-                throw new NullReferenceException($"Item number {itemNumber} could not be found.");
+                //throw new NullReferenceException($"Item number {itemNumber} could not be found.");
             }
 
             return result;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
 
@@ -87,27 +88,10 @@ namespace Prover.Core.Extensions
         {
             if (itemValues == null) return null;
 
-            decimal? lowResValue;
-            decimal? highResValue;
-
-            try
-            {
-                lowResValue = itemValues?.GetItem(lowResItemNumber).NumericValue;
-            }
-            catch
-            {
-                lowResValue = 0;
-            }
-
-            try
-            {
-                highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
-            }
-            catch(NullReferenceException)
-            {
-                highResValue = 0;
-            }
-
+            var items = itemValues as ItemValue[] ?? itemValues.ToArray();
+            decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
+            decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
+            
             return JoinLowResHighResReading(lowResValue, highResValue);
         }
 

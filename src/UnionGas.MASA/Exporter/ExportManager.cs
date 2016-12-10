@@ -56,12 +56,12 @@ namespace UnionGas.MASA.Exporter
             }
         }
 
-        private async Task<bool> SendResultsToWebService(IEnumerable<QARunEvcTestResult> evcQARun)
+        private async Task<bool> SendResultsToWebService(IEnumerable<QARunEvcTestResult> evcQaRuns)
         {
             try
             {
                 var request =
-                    new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(evcQARun.ToArray()));
+                    new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(evcQaRuns.ToArray()));
 
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
 
@@ -70,7 +70,7 @@ namespace UnionGas.MASA.Exporter
 
                 Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
             }
-            catch (EndpointNotFoundException notFoundEx)
+            catch (EndpointNotFoundException)
             {
                 MessageBox.Show("Web service could not be reached.");
             }

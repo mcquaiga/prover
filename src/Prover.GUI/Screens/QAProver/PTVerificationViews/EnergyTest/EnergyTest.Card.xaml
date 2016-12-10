@@ -26,11 +26,11 @@
                 <StackPanel Margin="5">
                     <TextBlock HorizontalAlignment="Center"
                         Text="{Binding EnergyTest.EnergyUnits}"
-                               FontSize="24"/>
-                    <StackPanel Orientation="Horizontal">
-                        <controls1:ValueDescriptionControl Label="Actual" Value="{Binding EnergyTest.ActualEnergy}" />
-                        <controls1:ValueDescriptionControl Label="EVC Reading" Value="{Binding EnergyTest.EvcEnergy}" />
-                    </StackPanel>
+                               FontSize="16"/>
+                    <UniformGrid Columns="2" HorizontalAlignment="Center">
+                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
+                        <controls1:ValueDescriptionControl Label="True Calculated" Value="{Binding EnergyTest.ActualEnergy}" />
+                    </UniformGrid>
                     
                 </StackPanel>
             </StackPanel>

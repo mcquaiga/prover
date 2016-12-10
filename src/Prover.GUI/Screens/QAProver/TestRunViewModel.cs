@@ -27,19 +27,15 @@ namespace Prover.GUI.Screens.QAProver
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
 
-        private IReactiveDerivedList<string> _commPort;
-
         private string _connectionStatusMessage;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
 
         private IQaRunTestManager _qaRunTestManager;
-        private int _selectedBaudRate;
 
+        private int _selectedBaudRate;
         private string _selectedCommPort;
         private string _selectedTachCommPort;
-
         private bool _showConnectionDialog;
-
         private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
@@ -71,11 +67,10 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /***  Setup Comm Ports and Baud Rate settings ***/
-            CommPort = PortsWatcherObservable().CreateCollection();
-
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
-                ? SettingsManager.SettingsInstance.InstrumentCommPort
-                : string.Empty;
+                    ? SettingsManager.SettingsInstance.InstrumentCommPort
+                    : string.Empty;
+
             _selectedBaudRate = BaudRate.Contains(SettingsManager.SettingsInstance.InstrumentBaudRate)
                 ? SettingsManager.SettingsInstance.InstrumentBaudRate
                 : -1;
@@ -108,7 +103,7 @@ namespace Prover.GUI.Screens.QAProver
         public ReactiveCommand<object> StartTestCommand { get; } 
                
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-        public EnergyTestViewModel EnergyTestItem { get; set; }
+        
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
@@ -124,21 +119,6 @@ namespace Prover.GUI.Screens.QAProver
         public void Handle(ConnectionStatusEvent message)
         {
             ConnectionStatusMessage = $"Attempt {message.ConnectionStatus} of {message.MaxAttempts}...";
-        }
-
-        private IObservable<string> PortsWatcherObservable()
-        {
-            return Observable.Create<string>(observer =>
-            {
-                return Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(
-                        _ =>
-                        {
-                            if (!_commPort.SequenceEqual(SerialPort.GetPortNames()))
-                                SerialPort.GetPortNames().ForEach(observer.OnNext);
-                        });
-            });
         }
 
         public async Task CancelCommand()
@@ -181,10 +161,7 @@ namespace Prover.GUI.Screens.QAProver
                             MeterDisplacementItem =
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
-                        else if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is MechanicalDrive)
-                            EnergyTestItem =
-                                new EnergyTestViewModel(
-                                    (MechanicalDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
+                        
                     });
                     ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;
@@ -211,11 +188,7 @@ namespace Prover.GUI.Screens.QAProver
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
         }
 
-        public IReactiveDerivedList<string> CommPort
-        {
-            get { return _commPort; }
-            set { this.RaiseAndSetIfChanged(ref _commPort, value); }
-        }
+        public List<string> CommPort => SerialPort.GetPortNames().ToList();
 
         public string SelectedCommPort
         {

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Media;
 using Caliburn.Micro;
+using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
@@ -14,6 +15,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
         {
             Volume = testRun;
+
+            if (Volume?.DriveType is MechanicalDrive)
+                EnergyTestItem =
+                    new EnergyTestViewModel(
+                        (MechanicalDrive)Volume.DriveType);
         }
 
         public QaRunTestManager InstrumentManager { get; set; }
@@ -30,6 +36,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 RaisePropertyChanges();
             }
         }
+
+        public EnergyTestViewModel EnergyTestItem { get; set; }
 
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
@@ -69,8 +77,14 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 ? Brushes.White
                 : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
-        public Brush MeterDisplacementPercentColour => Brushes.Green;
-        // Volume.DriveType.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+        public Brush MeterDisplacementPercentColour
+        {
+            get
+            {
+                var rotaryDrive = Volume?.DriveType as RotaryDrive;
+                return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+            }
+        }
 
         private void RaisePropertyChanges()
         {
