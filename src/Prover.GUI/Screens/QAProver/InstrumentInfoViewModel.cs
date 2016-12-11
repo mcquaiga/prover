@@ -1,18 +1,21 @@
-﻿using Caliburn.Micro;
+﻿using System.Threading.Tasks;
+using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class InstrumentInfoViewModel : ViewModelBase, IHandle<InstrumentUpdateEvent>
+    public class InstrumentInfoViewModel : ViewModelBase, IHandle<VerificationTestEvent>
     {
         public InstrumentInfoViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
+            eventAggregator.Subscribe(this);
         }
 
         public Instrument Instrument { get; set; }
@@ -50,18 +53,25 @@ namespace Prover.GUI.Screens.QAProver
             set
             {
                 Instrument.EventLogPassed = value;
+                Task.Run(() => QaTestManager?.SaveAsync());
+                NotifyOfPropertyChange(() => Instrument);
             }
         }
 
         public bool CommPortChecked
         {
             get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
-            set { Instrument.CommPortsPassed = value; }
+            set
+            {
+                Instrument.CommPortsPassed = value;
+                Task.Run(() => QaTestManager?.SaveAsync());
+                NotifyOfPropertyChange(() => Instrument);
+            }
         }
 
-        public void Handle(InstrumentUpdateEvent message)
+        public IQaRunTestManager QaTestManager { get; set; }
+        public void Handle(VerificationTestEvent message)
         {
-            Instrument = message.InstrumentManager.Instrument;
             NotifyOfPropertyChange(() => Instrument);
         }
     }
