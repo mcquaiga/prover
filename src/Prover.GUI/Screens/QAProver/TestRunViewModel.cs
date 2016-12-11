@@ -111,20 +111,20 @@ namespace Prover.GUI.Screens.QAProver
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
-        public override void CanClose(Action<bool> callback)
-        {
-            base.CanClose(callback);
-            if (_qaRunTestManager != null)
-            {
-                if (!_qaRunTestManager.Instrument.HasPassed)
-                {
-                    var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
-                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.No)
-                        callback(false);
-                }
-            }
-        }
+        //public override void CanClose(Action<bool> callback)
+        //{
+        //    base.CanClose(callback);
+        //    if (_qaRunTestManager != null)
+        //    {
+        //        if (!_qaRunTestManager.Instrument.HasPassed)
+        //        {
+        //            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+        //                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        //            if (result == MessageBoxResult.No)
+        //                callback(false);
+        //        }
+        //    }
+        //}
 
         public void Dispose()
         {
