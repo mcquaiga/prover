@@ -38,6 +38,8 @@ namespace Prover.GUI.Screens.QAProver
         private bool _showConnectionDialog;
         private string _viewContext;
 
+        private IDisposable _testStatusSubscription;
+
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
@@ -105,14 +107,17 @@ namespace Prover.GUI.Screens.QAProver
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
         
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
+
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
+
         public VolumeTestViewModel VolumeInformationItem { get; set; }
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
         public void Dispose()
         {
+            _testStatusSubscription.Dispose();
             _qaRunTestManager?.Dispose();
         }
 
@@ -128,15 +133,20 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task StartNewQaTest()
         {
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            SettingsManager.Save();
+            ShowConnectionDialog = true;
+
+            await Task.Run(() =>
+            {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                SettingsManager.Save();
+            });
 
             if (SelectedInstrument != null)
             {
                 try
                 {
-                    ShowConnectionDialog = true;
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(this.OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await Task.Run(() =>
                     {
@@ -161,15 +171,18 @@ namespace Prover.GUI.Screens.QAProver
                             MeterDisplacementItem =
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
-                        
+
                     });
-                    ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
+                finally
+                {
+                    ShowConnectionDialog = false;
                 }
             }
         }
@@ -228,6 +241,11 @@ namespace Prover.GUI.Screens.QAProver
         {
             public InstrumentType Instrument { get; set; }
             public bool IsSelected { get; set; }
+        }
+
+        private void OnTestStatusChange(string status)
+        {
+            ConnectionStatusMessage = status;
         }
     }
 }
