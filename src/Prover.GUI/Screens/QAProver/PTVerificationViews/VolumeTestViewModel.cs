@@ -18,8 +18,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
             if (Volume?.DriveType is MechanicalDrive)
                 EnergyTestItem =
-                    new EnergyTestViewModel(
-                        (MechanicalDrive)Volume.DriveType);
+                    new EnergyTestViewModel(EventAggregator, (MechanicalDrive)Volume.DriveType);
         }
 
         public QaRunTestManager InstrumentManager { get; set; }

@@ -132,7 +132,7 @@ namespace Prover.GUI.Screens.QAProver
 
         public void Dispose()
         {
-            _testStatusSubscription.Dispose();
+            _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
 

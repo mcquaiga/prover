@@ -128,7 +128,8 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 var expectedPulses = AfterTestItems.Uncorrected() - Items.Uncorrected();
-                return expectedPulses == UncPulseCount;
+                return expectedPulses != null 
+                    && Math.Round(expectedPulses.Value) == UncPulseCount;
             } 
         }
 
@@ -139,7 +140,7 @@ namespace Prover.Core.Models.Instruments
             {
                 var expectedPulses = AfterTestItems.Corrected() - Items.Corrected();
                 return expectedPulses != null 
-                    && Math.Floor(expectedPulses.Value) == UncPulseCount;
+                    && Math.Round(expectedPulses.Value) == CorPulseCount;
             }
         }
 
