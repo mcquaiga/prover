@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -21,6 +23,8 @@ namespace Prover.Core.VerificationTests
         Task DownloadPressureTestItems(int level);
         Task SaveAsync();
         Task RunVerifier();
+
+        IObservable<string> TestStatus { get; }
     }
 
     public class QaRunTestManager : IQaRunTestManager
@@ -31,6 +35,7 @@ namespace Prover.Core.VerificationTests
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IValidator _validator;
+        private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
@@ -47,6 +52,8 @@ namespace Prover.Core.VerificationTests
             _validator = validator;
         }
 
+        public IObservable<string> TestStatus => _testStatus.AsObservable();
+
         public VolumeTestManagerBase VolumeTestManager { get; set; }
 
         public void Dispose()
@@ -58,9 +65,16 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType)
         {
+            
             _communicationClient.Initialize(instrumentType);
+
+            _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
             await _communicationClient.Connect();
+
+            _testStatus.OnNext("Downloading items...");
             var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+
+            _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await _communicationClient.Disconnect();
 
             Instrument = new Instrument(instrumentType, items);
@@ -135,7 +149,10 @@ namespace Prover.Core.VerificationTests
         public async Task RunVerifier()
         {
             if (_validator != null)
-                await _validator.Validate(_communicationClient, Instrument);
+            {
+                _testStatus.OnNext($"Verifying items.");
+                await _validator.Validate(_communicationClient, Instrument);  
+            }       
         }
     }
 }
