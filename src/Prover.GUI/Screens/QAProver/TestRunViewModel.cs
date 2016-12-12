@@ -146,7 +146,7 @@ namespace Prover.GUI.Screens.QAProver
                 try
                 {
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(this.OnTestStatusChange);
+                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await Task.Run(() =>
                     {
