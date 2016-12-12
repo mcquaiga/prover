@@ -111,6 +111,21 @@ namespace Prover.GUI.Screens.QAProver
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
+        //public override void CanClose(Action<bool> callback)
+        //{
+        //    base.CanClose(callback);
+        //    if (_qaRunTestManager != null)
+        //    {
+        //        if (!_qaRunTestManager.Instrument.HasPassed)
+        //        {
+        //            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+        //                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        //            if (result == MessageBoxResult.No)
+        //                callback(false);
+        //        }
+        //    }
+        //}
+
         public void Dispose()
         {
             _qaRunTestManager?.Dispose();
@@ -141,6 +156,7 @@ namespace Prover.GUI.Screens.QAProver
                     await Task.Run(() =>
                     {
                         SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                        SiteInformationItem.QaTestManager = _qaRunTestManager;
                         SiteInformationItem.Instrument = _qaRunTestManager.Instrument;
 
                         foreach (var x in _qaRunTestManager.Instrument.VerificationTests.OrderBy(v => v.TestNumber))

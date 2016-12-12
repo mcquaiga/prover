@@ -15,14 +15,17 @@
              d:DesignHeight="125" d:DesignWidth="700">
     <Grid Background="{DynamicResource MaterialDesignBackground}">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55"/>
             <ColumnDefinition Width="1.25*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
-        <StackPanel Margin="10 5 5 5" Grid.Column="0">
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+            <controls1:PercentageControl Passed="{Binding Instrument.HasPassed}"></controls1:PercentageControl>
+        </StackPanel>
+        <StackPanel Margin="10 5 5 5" Grid.Column="1" VerticalAlignment="Center">
             <TextBlock FontSize="16" Margin="0 0 0 2"  Text="{Binding TestDatePretty}"/>
             <TextBlock FontSize="38" Text="{Binding Instrument.InstrumentType.Name}"/>
             <StackPanel Orientation="Horizontal">
@@ -33,25 +36,25 @@
             <TextBlock FontSize="16" Text="{Binding JobIdDisplay}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1">
+        <StackPanel Grid.Column="2">
             <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber2}" />
             <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
             <controls1:ValueDescriptionControl Label="Firmware Version"
                                                        Value="{Binding Instrument.FirmwareVersion}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="2">
+        <StackPanel Grid.Column="3">
             <controls1:ValueDescriptionControl Label="Base Pressure" Value="{Binding BasePressure}" />
             <controls1:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="3">
+        <StackPanel Grid.Column="4">
             <controls1:ValueDescriptionControl Label="Pulser A Select"
                                                        Value="{Binding Instrument.PulseASelect}" />
             <controls1:ValueDescriptionControl Label="Pulser A Scaling"
                                                        Value="{Binding Instrument.PulseAScaling}" />
         </StackPanel>
-        <StackPanel Grid.Column="4">
+        <StackPanel Grid.Column="5">
             <controls1:ValueDescriptionControl Label="Pulser B Select"
                                                        Value="{Binding Instrument.PulseBSelect}" />
             <controls1:ValueDescriptionControl Label="Pulser B Scaling"
