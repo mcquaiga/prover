@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
 
@@ -29,7 +30,6 @@ namespace Prover.Core.Extensions
             return null;
         }
 
-
         public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
             IEnumerable<ItemValue> afterItems)
         {
@@ -39,6 +39,23 @@ namespace Prover.Core.Extensions
                     (decimal)
                     o, 4);
             return null;
+        }
+
+        public static decimal? EvcEnergy(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
+            IEnumerable<ItemValue> afterItems)
+        {
+            var o = afterItems?.Energy() - beforeItems?.Energy();
+            if (o.HasValue)
+            {
+                return decimal.Round(o.Value, 4);
+            }
+
+            return null;
+        }
+
+        public static decimal? Energy(this IEnumerable<ItemValue> itemValues)
+        {
+            return itemValues.GetItem(140).NumericValue;
         }
 
         public static decimal? Corrected(this IEnumerable<ItemValue> itemValues)
@@ -61,8 +78,7 @@ namespace Prover.Core.Extensions
 
         public static decimal? UnCorrectedMultiplier(this Instrument instrument)
             => instrument.Items.GetItem(92).NumericValue;
-
-
+        
         public static string UnCorrectedMultiplierDescription(this Instrument instrument)
             => instrument.Items.GetItem(92).Description;
 
@@ -72,27 +88,10 @@ namespace Prover.Core.Extensions
         {
             if (itemValues == null) return null;
 
-            decimal? lowResValue;
-            decimal? highResValue;
-
-            try
-            {
-                lowResValue = itemValues?.GetItem(lowResItemNumber).NumericValue;
-            }
-            catch
-            {
-                lowResValue = 0;
-            }
-
-            try
-            {
-                highResValue = itemValues?.GetItem(highResItemNumber).NumericValue;
-            }
-            catch(NullReferenceException)
-            {
-                highResValue = 0;
-            }
-
+            var items = itemValues as ItemValue[] ?? itemValues.ToArray();
+            decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
+            decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
+            
             return JoinLowResHighResReading(lowResValue, highResValue);
         }
 

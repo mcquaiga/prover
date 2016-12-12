@@ -9,6 +9,8 @@ namespace Prover.GUI.Reports
 {
     public class InstrumentReportViewModel : ViewModelBase
     {
+        public string ReportViewContext => "EditTestView";
+
         public InstrumentReportViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
@@ -19,7 +21,7 @@ namespace Prover.GUI.Reports
 
         public async Task Initialize(Instrument instrument)
         {
-            //await QaTestRunViewItem.Initialize(instrument);
+            //await QaTestRunViewItem.In(instrument);
         }
     }
 }

@@ -27,20 +27,18 @@ namespace Prover.GUI.Screens.QAProver
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
 
-        private IReactiveDerivedList<string> _commPort;
-
         private string _connectionStatusMessage;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
 
         private IQaRunTestManager _qaRunTestManager;
-        private int _selectedBaudRate;
 
+        private int _selectedBaudRate;
         private string _selectedCommPort;
         private string _selectedTachCommPort;
-
         private bool _showConnectionDialog;
-
         private string _viewContext;
+
+        private IDisposable _testStatusSubscription;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -71,11 +69,10 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /***  Setup Comm Ports and Baud Rate settings ***/
-            CommPort = PortsWatcherObservable().CreateCollection();
-
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
-                ? SettingsManager.SettingsInstance.InstrumentCommPort
-                : string.Empty;
+                    ? SettingsManager.SettingsInstance.InstrumentCommPort
+                    : string.Empty;
+
             _selectedBaudRate = BaudRate.Contains(SettingsManager.SettingsInstance.InstrumentBaudRate)
                 ? SettingsManager.SettingsInstance.InstrumentBaudRate
                 : -1;
@@ -105,10 +102,10 @@ namespace Prover.GUI.Screens.QAProver
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand<object> StartTestCommand { get; }
-        
+        public ReactiveCommand<object> StartTestCommand { get; } 
+               
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-
+        
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
@@ -116,29 +113,32 @@ namespace Prover.GUI.Screens.QAProver
 
         public VolumeTestViewModel VolumeInformationItem { get; set; }
 
+        public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
+
+        //public override void CanClose(Action<bool> callback)
+        //{
+        //    base.CanClose(callback);
+        //    if (_qaRunTestManager != null)
+        //    {
+        //        if (!_qaRunTestManager.Instrument.HasPassed)
+        //        {
+        //            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+        //                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        //            if (result == MessageBoxResult.No)
+        //                callback(false);
+        //        }
+        //    }
+        //}
+
         public void Dispose()
         {
+            _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
 
         public void Handle(ConnectionStatusEvent message)
         {
             ConnectionStatusMessage = $"Attempt {message.ConnectionStatus} of {message.MaxAttempts}...";
-        }
-
-        private IObservable<string> PortsWatcherObservable()
-        {
-            return Observable.Create<string>(observer =>
-            {
-                return Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(
-                        _ =>
-                        {
-                            if (!_commPort.SequenceEqual(SerialPort.GetPortNames()))
-                                SerialPort.GetPortNames().ForEach(observer.OnNext);
-                        });
-            });
         }
 
         public async Task CancelCommand()
@@ -148,19 +148,25 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task StartNewQaTest()
         {
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            SettingsManager.Save();
+            ShowConnectionDialog = true;
+
+            await Task.Run(() =>
+            {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                SettingsManager.Save();
+            });
 
             if (SelectedInstrument != null)
             {
                 try
                 {
-                    ShowConnectionDialog = true;
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await Task.Run(() =>
                     {
                         SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                        SiteInformationItem.QaTestManager = _qaRunTestManager;
                         SiteInformationItem.Instrument = _qaRunTestManager.Instrument;
 
                         foreach (var x in _qaRunTestManager.Instrument.VerificationTests.OrderBy(v => v.TestNumber))
@@ -172,18 +178,27 @@ namespace Prover.GUI.Screens.QAProver
                             TestViews.Add(item);
                         }
 
+                        if (_qaRunTestManager.Instrument.InstrumentType == Instruments.MiniAt)
+                        {
+                            EventLogCommPortItem = SiteInformationItem;
+                        }
+
                         if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is RotaryDrive)
                             MeterDisplacementItem =
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
+
                     });
-                    ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
+                finally
+                {
+                    ShowConnectionDialog = false;
                 }
             }
         }
@@ -202,11 +217,7 @@ namespace Prover.GUI.Screens.QAProver
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
         }
 
-        public IReactiveDerivedList<string> CommPort
-        {
-            get { return _commPort; }
-            set { this.RaiseAndSetIfChanged(ref _commPort, value); }
-        }
+        public List<string> CommPort => SerialPort.GetPortNames().ToList();
 
         public string SelectedCommPort
         {
@@ -246,6 +257,11 @@ namespace Prover.GUI.Screens.QAProver
         {
             public InstrumentType Instrument { get; set; }
             public bool IsSelected { get; set; }
+        }
+
+        private void OnTestStatusChange(string status)
+        {
+            ConnectionStatusMessage = status;
         }
     }
 }

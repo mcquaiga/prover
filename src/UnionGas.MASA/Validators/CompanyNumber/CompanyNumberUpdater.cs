@@ -1,14 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Prover.GUI.Common;
 
-namespace UnionGas.MASA.Validators.InventoryCode
+namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberUpdater : IUpdater
     {
@@ -24,10 +21,9 @@ namespace UnionGas.MASA.Validators.InventoryCode
         public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
             var newCompanyNumber = _valueRequestor.GetValue();
-            if (newCompanyNumber == null) return null;
+            if (string.IsNullOrEmpty(newCompanyNumber)) return string.Empty;
 
             await evcCommunicationClient.Connect();
-
             var response =
                 await
                     evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));

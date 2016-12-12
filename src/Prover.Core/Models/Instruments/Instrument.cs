@@ -51,6 +51,10 @@ namespace Prover.Core.Models.Instruments
 
         public DateTime? ExportedDateTime { get; set; } = null;
 
+        public bool? EventLogPassed { get; set; }
+
+        public bool? CommPortsPassed { get; set; }
+
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
@@ -130,7 +134,19 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool HasPassed => VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
+        public bool HasPassed
+        {
+            get
+            {
+                var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
+                if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
+                {
+                    return verificationTestsPassed && EventLogPassed != null && CommPortsPassed != null && CommPortsPassed.Value && EventLogPassed.Value;
+                }
+
+                return verificationTestsPassed;
+            }
+        } 
 
         [NotMapped]
         public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;

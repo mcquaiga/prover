@@ -9,7 +9,7 @@ using ReactiveUI.Autofac;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 using UnionGas.MASA.Screens.Toolbars;
-using UnionGas.MASA.Validators.InventoryCode;
+using UnionGas.MASA.Validators.CompanyNumber;
 
 namespace UnionGas.MASA
 {

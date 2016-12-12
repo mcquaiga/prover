@@ -1,12 +1,11 @@
 ﻿using Caliburn.Micro;
 using NLog;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.GUI.Common;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 using LogManager = NLog.LogManager;
 
-namespace UnionGas.MASA.Validators.InventoryCode
+namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class NewCompanyNumberPopupRequestor : IGetValue
     {
@@ -22,17 +21,23 @@ namespace UnionGas.MASA.Validators.InventoryCode
 
         public string GetValue()
         {
-            var dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
-            var result = _screenManager.ShowDialog(dialog);
-
-            if (result.HasValue && result.Value)
+            while (true)
             {
-                _log.Debug($"New inventory code {dialog.CompanyNumber} was entered.");
-                return dialog.CompanyNumber;
-            }
+                var dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
+                var result = _screenManager.ShowDialog(dialog);
 
-            _log.Debug($"Skipping inventory code verification.");
-            return null;
+                if (result.HasValue && result.Value)
+                {
+                    _log.Debug($"New company number {dialog.CompanyNumber} was entered.");
+                    if (string.IsNullOrEmpty(dialog.CompanyNumber))
+                        continue;
+
+                    return dialog.CompanyNumber;
+                }
+
+                _log.Debug($"Skipping inventory code verification.");
+                return string.Empty;
+            }
         }
     }
 }

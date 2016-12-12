@@ -68,10 +68,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected
-        {
-            get { return DriveType?.UnCorrectedInputVolume(AppliedInput); }
-        }
+        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         [NotMapped]
         public decimal? CorrectedPercentError
@@ -96,7 +93,7 @@ namespace Prover.Core.Models.Instruments
         public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
-        public bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed;
+        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed && UnCorPulsesPassed && CorPulsesPassed;
 
         public override decimal? PercentError { get; }
         public override decimal? ActualFactor { get; }
@@ -122,6 +119,28 @@ namespace Prover.Core.Models.Instruments
                     return PulseACount;
 
                 return PulseBCount;
+            }
+        }
+
+        [NotMapped]
+        public bool UnCorPulsesPassed
+        {
+            get
+            {
+                var expectedPulses = AfterTestItems.Uncorrected() - Items.Uncorrected();
+                return expectedPulses != null 
+                    && Math.Round(expectedPulses.Value) == UncPulseCount;
+            } 
+        }
+
+        [NotMapped]
+        public bool CorPulsesPassed
+        {
+            get
+            {
+                var expectedPulses = AfterTestItems.Corrected() - Items.Corrected();
+                return expectedPulses != null 
+                    && Math.Round(expectedPulses.Value) == CorPulseCount;
             }
         }
 

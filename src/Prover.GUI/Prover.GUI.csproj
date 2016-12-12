@@ -250,6 +250,13 @@
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
+    <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
+      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
+      <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
     </Compile>
@@ -354,7 +361,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\QAProver\LiveReadView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

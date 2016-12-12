@@ -85,6 +85,7 @@
 
                 </StackPanel>
             </materialDesign:Card>
+            <ContentControl Margin="2" cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" />
         </StackPanel>
     </materialDesign:Card>
 </UserControl>
