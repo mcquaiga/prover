@@ -44,7 +44,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 if (meterDto != null 
                     && (
                             (meterDto?.InventoryCode == null || meterDto.InventoryCode != companyNumber)
-                        ||  (meterDto?.SerialNumber != serialNumberItem.RawValue)
+                        ||  (meterDto?.SerialNumber.TrimStart('0') != serialNumber)
                        )
                    )
                 {
@@ -55,9 +55,8 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 {
                     break;
                 }
-            } while (companyNumber != null);
+            } while (!string.IsNullOrEmpty(companyNumber));
             
-
             await UpdateInstrumentValues(instrument, meterDto);
 
             return meterDto;
