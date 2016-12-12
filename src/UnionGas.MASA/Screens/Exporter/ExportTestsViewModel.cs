@@ -24,8 +24,11 @@ namespace UnionGas.MASA.Screens.Exporter
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
-            GetInstrumentsByCertificateId(null);
+            GetInstrumentsWithNoExportDate();
+            //GetInstrumentsByCertificateId(null);
         }
+
+        
 
         public List<string> VerificationTypes => new List<string> {"Verification", "Re-Verification"};
 
@@ -86,6 +89,11 @@ namespace UnionGas.MASA.Screens.Exporter
         {
             var dateFilter = DateTime.Now.AddDays(-7);
             GetInstrumentVerificationTests(x => (x.CertificateId == null) && (x.TestDateTime >= dateFilter));
+        }
+
+        private void GetInstrumentsWithNoExportDate()
+        {
+            GetInstrumentVerificationTests(x => x.ExportedDateTime == null);
         }
 
         private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)

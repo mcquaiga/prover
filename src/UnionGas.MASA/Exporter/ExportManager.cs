@@ -66,7 +66,10 @@ namespace UnionGas.MASA.Exporter
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
 
                 if (result.Body.SubmitQAEvcTestResultsResult.ToLower() == "success")
+                {
+                    Log.Info($"Successfully exported instrument(s).");
                     return true;
+                }
 
                 Log.Warn($"Web service returned: {result.Body.SubmitQAEvcTestResultsResult}");
             }
@@ -76,7 +79,7 @@ namespace UnionGas.MASA.Exporter
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occured sending results to the web service.");
+                Log.Error(ex, $"An error occured sending results to the web service. {ex}");
             }
 
             return false;
