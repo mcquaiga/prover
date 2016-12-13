@@ -41,7 +41,7 @@ namespace Prover.Core.Settings
             {
                 settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
             }
-            catch (KeyNotFoundException ex)
+            catch (KeyNotFoundException)
             {
                 settings = new Settings();
                 settings.SetDefaults();
