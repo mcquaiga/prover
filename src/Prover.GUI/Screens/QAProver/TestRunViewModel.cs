@@ -38,6 +38,8 @@ namespace Prover.GUI.Screens.QAProver
         private bool _showConnectionDialog;
         private string _viewContext;
 
+        private IDisposable _testStatusSubscription;
+
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
@@ -105,14 +107,32 @@ namespace Prover.GUI.Screens.QAProver
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
         
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
+
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
+
         public VolumeTestViewModel VolumeInformationItem { get; set; }
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
+        //public override void CanClose(Action<bool> callback)
+        //{
+        //    base.CanClose(callback);
+        //    if (_qaRunTestManager != null)
+        //    {
+        //        if (!_qaRunTestManager.Instrument.HasPassed)
+        //        {
+        //            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+        //                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        //            if (result == MessageBoxResult.No)
+        //                callback(false);
+        //        }
+        //    }
+        //}
+
         public void Dispose()
         {
+            _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
 
@@ -128,19 +148,25 @@ namespace Prover.GUI.Screens.QAProver
 
         public async Task StartNewQaTest()
         {
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            SettingsManager.Save();
+            ShowConnectionDialog = true;
+
+            await Task.Run(() =>
+            {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                SettingsManager.Save();
+            });
 
             if (SelectedInstrument != null)
             {
                 try
                 {
-                    ShowConnectionDialog = true;
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await Task.Run(() =>
                     {
                         SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                        SiteInformationItem.QaTestManager = _qaRunTestManager;
                         SiteInformationItem.Instrument = _qaRunTestManager.Instrument;
 
                         foreach (var x in _qaRunTestManager.Instrument.VerificationTests.OrderBy(v => v.TestNumber))
@@ -161,15 +187,18 @@ namespace Prover.GUI.Screens.QAProver
                             MeterDisplacementItem =
                                 new RotaryMeterTestViewModel(
                                     (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
-                        
+
                     });
-                    ShowConnectionDialog = false;
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                }
+                finally
+                {
+                    ShowConnectionDialog = false;
                 }
             }
         }
@@ -228,6 +257,11 @@ namespace Prover.GUI.Screens.QAProver
         {
             public InstrumentType Instrument { get; set; }
             public bool IsSelected { get; set; }
+        }
+
+        private void OnTestStatusChange(string status)
+        {
+            ConnectionStatusMessage = status;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
@@ -26,7 +27,7 @@ namespace Prover.Core.Storage
 
         public Instrument Get(Guid id)
         {
-            return _proverContext.Instruments.FirstOrDefault(x => x.Id == id);
+            return Query().FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<Instrument> UpsertAsync(Instrument instrument)
@@ -45,8 +46,8 @@ namespace Prover.Core.Storage
 
         public async Task Delete(Instrument entity)
         {
-            _proverContext.Instruments.Remove(entity);
-            await _proverContext.SaveChangesAsync();
+            entity.ArchivedDateTime = DateTime.UtcNow;
+            await UpsertAsync(entity);
         }
 
         public void Dispose()

@@ -36,6 +36,9 @@ namespace Prover.Core.Models.Instruments
         }
 
         public DateTime TestDateTime { get; set; }
+
+        public DateTime? ArchivedDateTime { get; set; }
+
         public int Type { get; set; }
 
         [NotMapped]
@@ -134,7 +137,19 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool HasPassed => VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
+        public bool HasPassed
+        {
+            get
+            {
+                var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
+                if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
+                {
+                    return verificationTestsPassed && EventLogPassed != null && CommPortsPassed != null && CommPortsPassed.Value && EventLogPassed.Value;
+                }
+
+                return verificationTestsPassed;
+            }
+        } 
 
         [NotMapped]
         public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;

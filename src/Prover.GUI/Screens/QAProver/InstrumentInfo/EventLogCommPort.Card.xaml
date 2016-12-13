@@ -14,12 +14,12 @@
              cal:Bind.AtDesignTime="True"
              mc:Ignorable="d"
              d:DesignHeight="79" d:DesignWidth="200">
-    <StackPanel Orientation="Vertical">
-        <CheckBox x:Name="EventLogChecked"
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+        <CheckBox x:Name="EventLogChecked" VerticalContentAlignment="Center"
             Style="{StaticResource MaterialDesignCheckBox}" Margin="0 0 8 8" VerticalAlignment="Center">
             Event Log
         </CheckBox>
-        <CheckBox x:Name="CommPortChecked"
+        <CheckBox x:Name="CommPortChecked" VerticalContentAlignment="Center"
             Style="{StaticResource MaterialDesignCheckBox}" Margin="0 0 8 8" VerticalAlignment="Center">
             Comm. Port
         </CheckBox>

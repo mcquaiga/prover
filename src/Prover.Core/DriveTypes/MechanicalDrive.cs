@@ -1,4 +1,5 @@
-﻿using Prover.CommProtocol.Common.Items;
+﻿using System;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -46,15 +47,27 @@ namespace Prover.Core.DriveTypes
 
         public bool HasPassed => PercentError < 1 && PercentError > -1;
 
-        public decimal? PercentError => (EvcEnergy - ActualEnergy) / ActualEnergy*100;
-
-        public decimal EvcEnergy
+        public decimal? PercentError
         {
             get
             {
-                var startEnergy = _instrument.VolumeTest.Items.GetItem(140).NumericValue;
-                var endEnergy = _instrument.VolumeTest.Items.GetItem(140).NumericValue;
-                return endEnergy - startEnergy;
+                var error = (EvcEnergy - ActualEnergy)/ActualEnergy*100;
+                if (error != null)
+                    return decimal.Round(error.Value, 2);
+                return null;
+            }
+        } 
+
+        public decimal? EvcEnergy
+        {
+            get
+            {
+                var startEnergy = _instrument.VolumeTest.Items?.GetItem(140)?.NumericValue;
+                var endEnergy = _instrument.VolumeTest.AfterTestItems?.GetItem(140)?.NumericValue;
+                if (endEnergy != null && startEnergy != null)
+                    return endEnergy.Value - startEnergy.Value;
+
+                return null;
             }
         }
 
@@ -69,7 +82,7 @@ namespace Prover.Core.DriveTypes
                 {
                     case Therms:
                         if (_instrument.VolumeTest.EvcCorrected.HasValue)
-                            return decimal.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value, -5) / 100000;
+                            return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
                         break;
                     case Dktherms:
 
