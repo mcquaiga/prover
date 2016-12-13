@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -26,7 +27,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public Instrument Instrument { get; set; }
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
 
         public bool IsSelected { get; set; }
 
@@ -38,11 +39,13 @@ namespace UnionGas.MASA.Screens.Exporter
         public async Task DeleteInstrument()
         {
             await _instrumentStore.Delete(Instrument);
+            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
 
-        public async Task ExportQATestRun()
+        public async Task ExportQaTestRun()
         {
             await _exportManager.Export(Instrument);
+            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
     }
 }

@@ -157,6 +157,7 @@
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -214,6 +215,10 @@
     <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.cs" />
     <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.Designer.cs">
       <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612121748479_add-archived-date-time.cs" />
+    <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
+      <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
@@ -326,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612081436258_add-event-log-comm-ports-bool.resx">
       <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
+      <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

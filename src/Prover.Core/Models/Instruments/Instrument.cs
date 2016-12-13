@@ -36,6 +36,9 @@ namespace Prover.Core.Models.Instruments
         }
 
         public DateTime TestDateTime { get; set; }
+
+        public DateTime? ArchivedDateTime { get; set; }
+
         public int Type { get; set; }
 
         [NotMapped]

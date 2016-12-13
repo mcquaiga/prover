@@ -13,6 +13,14 @@
              cal:Bind.AtDesignTime="True"
              mc:Ignorable="d"
              d:DesignHeight="125" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ImageSource x:Key="PassIcon">..\Resources\clipboard-check.png</ImageSource>
+            <ImageSource x:Key="FailIcon">..\Resources\clipboard-error.png</ImageSource>
+            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
+            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Background="{DynamicResource MaterialDesignBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="55"/>

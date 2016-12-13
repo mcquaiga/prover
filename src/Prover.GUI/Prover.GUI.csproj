@@ -472,6 +472,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\clipboard-error.png" />
     <Resource Include="Resources\success.png" />
     <Resource Include="Resources\error_36.png" />
     <Resource Include="Resources\cloud-upload.png" />

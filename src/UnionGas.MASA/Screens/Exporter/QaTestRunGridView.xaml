@@ -9,7 +9,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              TextElement.Foreground="White"
              TextElement.FontWeight="Light"
-             TextElement.FontSize="16"
+             TextElement.FontSize="18"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="75">
     <UserControl.Resources>
@@ -61,26 +61,37 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Style="{StaticResource DockPanelStyle}">
-        <StackPanel Orientation="Horizontal">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
             <Image x:Name="Icon"
+                   Grid.Column="0"
                Style="{StaticResource PassFailIcon}"
                Margin="15"
                Width="36" Height="36" />
-            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                <TextBlock FontSize="32" Text="{Binding Instrument.InstrumentType.Name}" />
-                <TextBlock FontSize="18" Text="{Binding Instrument.CompanyNumber}" />
-                <TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
-            </StackPanel>
-            <StackPanel Margin="10" Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical">
                 <TextBlock Text="{Binding DateTimePretty}"/>
-                <StackPanel Margin="0 5" Orientation="Horizontal">
+                <TextBlock FontSize="36" Text="{Binding Instrument.InstrumentType.Name}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Margin="15" Orientation="Vertical" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Instrument.CompositionType}" />
                     <TextBlock Text=" | " />
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>C/N: </TextBlock><TextBlock FontSize="18" Text="{Binding Instrument.SiteNumber2}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>S/N: </TextBlock><TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
+                </StackPanel>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="25 0">
+            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     ToolTip="Export">
@@ -90,13 +101,13 @@
                                          Foreground="White" />
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="ExportQATestRun" />
+                            <cal:ActionMessage MethodName="ExportQaTestRun" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
-                    ToolTip="View QA Test Run">
+                    ToolTip="View QA Test Run Report">
                     <materialDesign:PackIcon Kind="Printer"
                                          Height="36"
                                          Width="36"
@@ -109,7 +120,7 @@
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
-                    ToolTip="Export">
+                    ToolTip="Delete Test">
                     <materialDesign:PackIcon Kind="Delete"
                                          Height="36"
                                          Width="36"
@@ -122,7 +133,7 @@
                 </Button>
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
     </DockPanel>
    
 </UserControl>
