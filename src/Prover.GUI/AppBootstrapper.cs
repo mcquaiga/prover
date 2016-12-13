@@ -24,6 +24,7 @@ namespace Prover.GUI
         private readonly List<string> _moduleFileNames = new List<string>
         {
             "UnionGas.MASA",
+            "CrWall",
             "Prover.GUI.Common"
         };
 
@@ -60,12 +61,15 @@ namespace Prover.GUI
 
             foreach (var module in _moduleFileNames)
             {
-                var ass = Assembly.LoadFrom($"{module}.dll");
-                if (ass != null)
+                if (File.Exists($"{module}.dll"))
                 {
-                    var type = ass.GetType($"{module}.Startup");
-                    type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
-                    assemblies.Add(ass);
+                    var ass = Assembly.LoadFrom($"{module}.dll");
+                    if (ass != null)
+                    {
+                        var type = ass.GetType($"{module}.Startup");
+                        type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
+                        assemblies.Add(ass);
+                    }
                 }
             }
 
