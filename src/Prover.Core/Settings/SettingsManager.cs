@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,8 @@ namespace Prover.Core.Settings
             {
                 if (_singletonInstance == null)
                 {
-                    LoadSettings().Wait();
+                    var result = LoadSettings().Result;
+                    _singletonInstance = result;
                 }
                 return _singletonInstance;
             }
@@ -34,27 +36,23 @@ namespace Prover.Core.Settings
 
         private static async Task<Settings> LoadSettings()
         {
-            //var fileSystem = new FileSystem();
-
-            //if (!fileSystem.FileExists(SettingsPath))
-            //{
-            //    var settings = new Settings();
-            //    settings.SetDefaults();
-            //    return settings;
-            //}
-            //return new SettingsReader(fileSystem).Read(SettingsPath);
-             
-            return await BlobCache.LocalMachine.GetObject<Settings>("Settings");
+            Settings settings;
+            try
+            {
+                settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                settings = new Settings();
+                settings.SetDefaults();
+            }
+           
+            return settings;
         }
 
         public static async Task Save()
         {
-            //var fileSystem = new FileSystem();
-
-            //if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
-            //    fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
-            //new SettingsWriter(fileSystem).Write(SettingsPath, _singletonInstance);
-            await BlobCache.LocalMachine.InsertObject("Settings", _singletonInstance);
+            await BlobCache.LocalMachine.InsertObject("settings", _singletonInstance);
         }
     }
 
