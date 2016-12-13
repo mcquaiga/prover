@@ -12,6 +12,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Events;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
@@ -163,32 +164,7 @@ namespace Prover.GUI.Screens.QAProver
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
-                    await Task.Run(() =>
-                    {
-                        SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-                        SiteInformationItem.QaTestManager = _qaRunTestManager;
-                        SiteInformationItem.Instrument = _qaRunTestManager.Instrument;
-
-                        foreach (var x in _qaRunTestManager.Instrument.VerificationTests.OrderBy(v => v.TestNumber))
-                        {
-                            var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                            item.InitializeViews(x, _qaRunTestManager);
-                            item.VerificationTest = x;
-
-                            TestViews.Add(item);
-                        }
-
-                        if (_qaRunTestManager.Instrument.InstrumentType == Instruments.MiniAt)
-                        {
-                            EventLogCommPortItem = SiteInformationItem;
-                        }
-
-                        if (_qaRunTestManager.Instrument.VolumeTest?.DriveType is RotaryDrive)
-                            MeterDisplacementItem =
-                                new RotaryMeterTestViewModel(
-                                    (RotaryDrive) _qaRunTestManager.Instrument.VolumeTest.DriveType);
-
-                    });
+                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
@@ -201,6 +177,35 @@ namespace Prover.GUI.Screens.QAProver
                     ShowConnectionDialog = false;
                 }
             }
+        }
+
+        public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
+        {
+            await Task.Run(() =>
+            {
+                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                SiteInformationItem.QaTestManager = qaTestRunTestManager;
+                SiteInformationItem.Instrument = instrument;
+
+                foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                {
+                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                    item.InitializeViews(x, qaTestRunTestManager);
+                    item.VerificationTest = x;
+
+                    TestViews.Add(item);
+                }
+
+                if (instrument.InstrumentType == Instruments.MiniAt)
+                {
+                    EventLogCommPortItem = SiteInformationItem;
+                }
+
+                if (instrument.VolumeTest?.DriveType is RotaryDrive)
+                    MeterDisplacementItem =
+                        new RotaryMeterTestViewModel(
+                            (RotaryDrive) instrument.VolumeTest.DriveType);
+            });
         }
 
         public string ViewContext

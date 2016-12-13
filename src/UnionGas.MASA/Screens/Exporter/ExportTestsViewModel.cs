@@ -10,6 +10,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using ReactiveUI;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
@@ -61,14 +62,14 @@ namespace UnionGas.MASA.Screens.Exporter
             GetInstrumentsByCertificateId(null);
         }
 
-        public async Task<IEnumerable<Instrument>> GetSelectedInstruments()
+        public async Task<IEnumerable<Instrument>> GetAllPassedQaRuns()
         {
-            return await Task.Run(() => InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument));
+            return await Task.Run(() => InstrumentItems.Where(x => x.Instrument.HasPassed).Select(i => i.Instrument));
         }
 
-        public async Task ExportQARuns()
+        public async Task ExportAllPassedQaRuns()
         {
-            await _exportTestRun.Export(await GetSelectedInstruments());
+            await _exportTestRun.Export(await GetAllPassedQaRuns());
         }
 
         public void GetInstrumentsByCertificateId(Guid? certificateGuid)

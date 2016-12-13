@@ -89,21 +89,9 @@
 
             <!--  Certificate Information  -->
             <StackPanel Grid.Column="2">
-
-                <!--<TextBlock>Created By:</TextBlock>
-                    <TextBox x:Name="TestedBy" />-->
-                <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}"
-                          SelectedValue="{Binding VerificationType}" SelectedIndex="0" />
-
-                <!--<TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
-                    <TextBlock x:Name="SealExpirationDate" />-->
-
-                <Button Margin="0,20,0,0" Content="Export to MASA">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="ExportQARuns" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                <Button Margin="0,20,0,0" 
+                        Content="Export all passed">
+                    
                 </Button>
 
 
