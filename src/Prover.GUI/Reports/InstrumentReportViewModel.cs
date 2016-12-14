@@ -21,7 +21,8 @@ namespace Prover.GUI.Reports
 
         public async Task Initialize(Instrument instrument)
         {
-            //await QaTestRunViewItem.In(instrument);
+            await QaTestRunViewItem.InitializeViews(null, instrument);
+            QaTestRunViewItem.ViewContext = ReportViewContext;
         }
     }
 }

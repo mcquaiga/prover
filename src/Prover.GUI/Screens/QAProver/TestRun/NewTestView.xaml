@@ -100,9 +100,8 @@
                 </i:Interaction.Triggers>
                 CANCEL
             </Button>
-
             <Button HorizontalAlignment="Right"
-                    Command="{Binding Path=StartTestCommand}"
+                    Command="{Binding StartTestCommand}"
                     Content="START">
                 <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

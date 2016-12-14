@@ -76,6 +76,7 @@
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical">
                 <TextBlock Text="{Binding DateTimePretty}"/>
                 <TextBlock FontSize="36" Text="{Binding Instrument.InstrumentType.Name}" />
+                <TextBlock Text="{Binding Instrument.JobId}"/>
             </StackPanel>
             <StackPanel Grid.Column="2" Margin="15" Orientation="Vertical" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
@@ -94,16 +95,12 @@
             <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
+                    Command="{Binding ExportQaTestRunCommand}"
                     ToolTip="Export">
                     <materialDesign:PackIcon Kind="Export"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="ExportQaTestRun" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"

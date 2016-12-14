@@ -59,15 +59,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.11\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.0\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RJCP.SerialPortStream, Version=2.0.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\SerialPortStream.2.0.1.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
+    <Reference Include="RJCP.SerialPortStream, Version=2.0.2.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerialPortStream.2.0.2\lib\net45\RJCP.SerialPortStream.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
