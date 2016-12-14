@@ -43,7 +43,7 @@
     </UserControl.Resources>
 
     <DockPanel Margin="5">
-        <StackPanel DockPanel.Dock="Top"
+        <!--<StackPanel DockPanel.Dock="Top"
                     Margin="10"
                     Orientation=" Horizontal">
             <Button Content="Last 7 Days">
@@ -72,7 +72,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-        </StackPanel>
+        </StackPanel>-->
 
         <Grid>
             <Grid.ColumnDefinitions>
