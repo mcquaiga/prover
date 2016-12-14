@@ -44,7 +44,7 @@ namespace Prover.Core.VerificationTests
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
             IValidator validator,
-            IEvcItemReset itemResetter
+            IEvcItemReset itemResetter = null
         )
         {
             VolumeTestManager = volumeTestManager;
@@ -68,7 +68,6 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType)
         {
-            
             _communicationClient.Initialize(instrumentType);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");

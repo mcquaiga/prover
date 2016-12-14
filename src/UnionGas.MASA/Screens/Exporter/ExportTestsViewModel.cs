@@ -29,8 +29,7 @@ namespace UnionGas.MASA.Screens.Exporter
             
             var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, 
                 (passed) => passed.Any());          
-            ExportAllPassedQaRunsCommand = ReactiveCommand.Create(canExportAllPassed);
-            ExportAllPassedQaRunsCommand.Subscribe(async _ => await ExportAllPassedQaRuns());
+            ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns, canExportAllPassed);
         }
 
         public ObservableCollection<QaTestRunGridViewModel> InstrumentItems { get; set; } =
@@ -40,7 +39,7 @@ namespace UnionGas.MASA.Screens.Exporter
             InstrumentItems.Where(x => x.Instrument.HasPassed && !string.IsNullOrEmpty(x.Instrument.JobId) && !string.IsNullOrEmpty(x.Instrument.EmployeeId))
                 .Select(i => i.Instrument);
 
-        public ReactiveCommand<object> ExportAllPassedQaRunsCommand { get; set; }
+        public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
         public async Task ExportAllPassedQaRuns()
         {
             await _exportTestRun.Export(PassedInstrumentTests);

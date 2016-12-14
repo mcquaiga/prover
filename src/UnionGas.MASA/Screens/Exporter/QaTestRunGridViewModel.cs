@@ -28,8 +28,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
             var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
                 (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
-            ExportQaTestRunCommand = ReactiveCommand.Create(canExport);
-            ExportQaTestRunCommand.Subscribe(async _ => await ExportQaTestRun());
+            ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
         }
 
         public Instrument Instrument { get; set; }
@@ -49,7 +48,7 @@ namespace UnionGas.MASA.Screens.Exporter
             await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
 
-        public ReactiveCommand<object> ExportQaTestRunCommand { get; }
+        public ReactiveCommand ExportQaTestRunCommand { get; }
         public async Task ExportQaTestRun()
         {
             await _exportManager.Export(Instrument);

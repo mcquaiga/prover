@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,7 +20,9 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using ReactiveUI;
+using ReactiveUI.Legacy;
 using Splat;
+using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Prover.GUI.Screens.QAProver
 {
@@ -41,11 +44,12 @@ namespace Prover.GUI.Screens.QAProver
 
         private IDisposable _testStatusSubscription;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
             : base(screenManager, eventAggregator)
         {
+            _qaRunTestManager = qaRunTestManager ?? Locator.Current.GetService<IQaRunTestManager>();
+
             eventAggregator.Subscribe(this);
-            SettingsManager.RefreshSettings();
 
             /***  Setup Instruments list  ***/
             InstrumentTypes = new ReactiveList<SelectableInstrumentType>
@@ -63,10 +67,10 @@ namespace Prover.GUI.Screens.QAProver
             InstrumentTypes.ItemChanged
                 .Where(x => (x.PropertyName == "IsSelected") && x.Sender.IsSelected)
                 .Select(x => x.Sender)
-                .Subscribe(x =>
+                .Subscribe(async x =>
                 {
                     SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Instrument.Name;
-                    SettingsManager.Save();
+                    await SettingsManager.Save();
                 });
 
             /***  Setup Comm Ports and Baud Rate settings ***/
@@ -82,12 +86,12 @@ namespace Prover.GUI.Screens.QAProver
                 : string.Empty;
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort)
-                .Subscribe(_ =>
+                .Subscribe(async _ =>
                 {
                     SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
                     SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    SettingsManager.Save();
+                    await SettingsManager.Save();
                 });
 
             /*** Commands ***/
@@ -97,13 +101,12 @@ namespace Prover.GUI.Screens.QAProver
                     BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
                     !string.IsNullOrEmpty(tachPort));
 
-            StartTestCommand = ReactiveCommand.Create(canStartNewTest);
-            StartTestCommand.Subscribe(async _ => await StartNewQaTest());
+            StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
 
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand<object> StartTestCommand { get; } 
+        public ReactiveCommand StartTestCommand { get; } 
                
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
         
@@ -146,22 +149,18 @@ namespace Prover.GUI.Screens.QAProver
         {
             await ScreenManager.GoHome();
         }
-
-        public async Task StartNewQaTest()
+        
+        private async Task StartNewQaTest()
         {
             ShowConnectionDialog = true;
 
-            await Task.Run(() =>
-            {
-                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-                SettingsManager.Save();
-            });
+            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+            await SettingsManager.Save();
 
             if (SelectedInstrument != null)
             {
                 try
                 {
-                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
