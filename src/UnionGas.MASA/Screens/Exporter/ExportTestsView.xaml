@@ -43,38 +43,7 @@
     </UserControl.Resources>
 
     <DockPanel Margin="5">
-        <!--<StackPanel DockPanel.Dock="Top"
-                    Margin="10"
-                    Orientation=" Horizontal">
-            <Button Content="Last 7 Days">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OneWeekFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button
-                Content="Last 30 Days">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OneMonthFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-
-            <Button
-                Content="All"
-                HorizontalAlignment="Right"
-                Width="75">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ResetFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-        </StackPanel>-->
-
-        <Grid>
+       <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="73*" />
@@ -89,19 +58,11 @@
 
             <!--  Certificate Information  -->
             <StackPanel Grid.Column="2">
-                <Button Margin="0,20,0,0" 
+                <Button Margin="0,20,0,0"
+                        Command="{Binding ExportAllPassedQaRunsCommand}"
                         Content="Export all passed">
-                    
+
                 </Button>
-
-
-                <!--<StackPanel>
-                        <TextBlock FontSize="24">No. Selected:</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontSize="24" Name="InstrumentCount"></TextBlock>
-                            <TextBlock FontSize="24">/8</TextBlock>
-                        </StackPanel>
-                    </StackPanel >-->
             </StackPanel>
         </Grid>
     </DockPanel>

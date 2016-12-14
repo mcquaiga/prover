@@ -26,67 +26,24 @@ namespace UnionGas.MASA.Screens.Exporter
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
             GetInstrumentsWithNoExportDate();
-        }
-
-        public List<string> VerificationTypes => new List<string> {"Verification", "Re-Verification"};
-
-        public DateTime CreatedDateTime { get; set; }
-        public string VerificationType { get; set; }
-        public string TestedBy { get; set; }
-
-        public int InstrumentCount
-        {
-            get { return InstrumentItems.Count(x => x.IsSelected); }
+            
+            var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, 
+                (passed) => passed.Any());          
+            ExportAllPassedQaRunsCommand = ReactiveCommand.Create(canExportAllPassed);
+            ExportAllPassedQaRunsCommand.Subscribe(async _ => await ExportAllPassedQaRuns());
         }
 
         public ObservableCollection<QaTestRunGridViewModel> InstrumentItems { get; set; } =
             new ObservableCollection<QaTestRunGridViewModel>();
 
-        public void Handle(DataStorageChangeEvent message)
-        {
-            GetInstrumentsWithNoExportDate();
-        }
+        public IEnumerable<Instrument> PassedInstrumentTests => 
+            InstrumentItems.Where(x => x.Instrument.HasPassed && !string.IsNullOrEmpty(x.Instrument.JobId) && !string.IsNullOrEmpty(x.Instrument.EmployeeId))
+                .Select(i => i.Instrument);
 
-        public void OneWeekFilter()
-        {
-            GetInstrumentsWithNoCertificateLastWeek();
-        }
-
-        public void OneMonthFilter()
-        {
-            GetInstrumentsWithNoCertificateLastMonth();
-        }
-
-        public void ResetFilter()
-        {
-            GetInstrumentsByCertificateId(null);
-        }
-
-        public async Task<IEnumerable<Instrument>> GetAllPassedQaRuns()
-        {
-            return await Task.Run(() => InstrumentItems.Where(x => x.Instrument.HasPassed).Select(i => i.Instrument));
-        }
-
+        public ReactiveCommand<object> ExportAllPassedQaRunsCommand { get; set; }
         public async Task ExportAllPassedQaRuns()
         {
-            await _exportTestRun.Export(await GetAllPassedQaRuns());
-        }
-
-        public void GetInstrumentsByCertificateId(Guid? certificateGuid)
-        {
-            GetInstrumentVerificationTests(x => x.CertificateId == certificateGuid);
-        }
-
-        public void GetInstrumentsWithNoCertificateLastMonth()
-        {
-            var dateFilter = DateTime.Now.AddDays(-30);
-            GetInstrumentVerificationTests(x => (x.CertificateId == null) && (x.TestDateTime >= dateFilter));
-        }
-
-        public void GetInstrumentsWithNoCertificateLastWeek()
-        {
-            var dateFilter = DateTime.Now.AddDays(-7);
-            GetInstrumentVerificationTests(x => (x.CertificateId == null) && (x.TestDateTime >= dateFilter));
+            await _exportTestRun.Export(PassedInstrumentTests);
         }
 
         private void GetInstrumentsWithNoExportDate()
@@ -111,6 +68,11 @@ namespace UnionGas.MASA.Screens.Exporter
             }
 
             NotifyOfPropertyChange(() => InstrumentItems);
+        }
+
+        public void Handle(DataStorageChangeEvent message)
+        {
+            GetInstrumentsWithNoExportDate();
         }
     }
 }
