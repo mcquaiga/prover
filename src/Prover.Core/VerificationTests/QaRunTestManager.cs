@@ -90,12 +90,18 @@ namespace Prover.Core.VerificationTests
         {
             if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
 
+            _testStatus.OnNext($"Waiting for live readings to stabilize...");
             await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level);
+
+            _testStatus.OnNext($"Download items...");
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+            {
+                _testStatus.OnNext($"Running volume test...");
                 await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
-
+            }
+            _testStatus.OnNext($"Saving test...");
             await SaveAsync();
         }
 
@@ -153,7 +159,7 @@ namespace Prover.Core.VerificationTests
         {
             if (_validator != null)
             {
-                _testStatus.OnNext($"Verifying items.");
+                _testStatus.OnNext($"Verifying items...");
                 await _validator.Validate(_communicationClient, Instrument);  
             }       
         }
