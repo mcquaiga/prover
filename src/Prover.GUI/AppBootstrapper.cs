@@ -107,7 +107,7 @@ namespace Prover.GUI
                     return Container.ResolveNamed(key, serviceType);
             }
 
-            throw new Exception($"Could not locate any instances of contract {key ?? serviceType.Name}.");
+            return null;        
         }
 
         protected override void BuildUp(object instance)
