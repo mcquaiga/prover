@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Akavache;
 using Newtonsoft.Json;
 using Prover.Core.IO;
 
@@ -13,35 +17,42 @@ namespace Prover.Core.Settings
 
         public static Settings SettingsInstance
         {
-            get { return _singletonInstance ?? (_singletonInstance = LoadSettings()); }
+            get
+            {
+                if (_singletonInstance == null)
+                {
+                    var result = LoadSettings().Result;
+                    _singletonInstance = result;
+                }
+                return _singletonInstance;
+            }
             set { _singletonInstance = value; }
         }
 
-        public static void RefreshSettings()
+        public static async Task RefreshSettings()
         {
-            _singletonInstance = LoadSettings();
+            _singletonInstance = await LoadSettings();
         }
 
-        private static Settings LoadSettings()
+        private static async Task<Settings> LoadSettings()
         {
-            var fileSystem = new FileSystem();
-
-            if (!fileSystem.FileExists(SettingsPath))
+            Settings settings;
+            try
             {
-                var settings = new Settings();
-                settings.SetDefaults();
-                return settings;
+                settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
             }
-            return new SettingsReader(fileSystem).Read(SettingsPath);
+            catch (KeyNotFoundException)
+            {
+                settings = new Settings();
+                settings.SetDefaults();
+            }
+           
+            return settings;
         }
 
-        public static void Save()
+        public static async Task Save()
         {
-            var fileSystem = new FileSystem();
-
-            if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
-                fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
-            new SettingsWriter(fileSystem).Write(SettingsPath, _singletonInstance);
+            await BlobCache.LocalMachine.InsertObject("settings", _singletonInstance);
         }
     }
 
