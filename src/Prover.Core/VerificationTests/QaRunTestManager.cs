@@ -35,6 +35,7 @@ namespace Prover.Core.VerificationTests
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IValidator _validator;
+        private readonly IEvcItemReset _itemResetter;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
@@ -42,7 +43,8 @@ namespace Prover.Core.VerificationTests
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
-            IValidator validator
+            IValidator validator,
+            IEvcItemReset itemResetter
         )
         {
             VolumeTestManager = volumeTestManager;
@@ -50,6 +52,7 @@ namespace Prover.Core.VerificationTests
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _validator = validator;
+            _itemResetter = itemResetter;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
@@ -91,7 +94,7 @@ namespace Prover.Core.VerificationTests
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, null);
+                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
 
             await SaveAsync();
         }
