@@ -127,9 +127,9 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var expectedPulses = AfterTestItems.Uncorrected() - Items.Uncorrected();
+                var expectedPulses = (AfterTestItems.Uncorrected() - Items.Uncorrected()) * Instrument.UnCorrectedMultiplier();
                 return expectedPulses != null 
-                    && Math.Round(expectedPulses.Value) == UncPulseCount;
+                    && (int)expectedPulses.Value == UncPulseCount;
             } 
         }
 
@@ -138,9 +138,14 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var expectedPulses = (AfterTestItems.Corrected() - Items.Corrected());// * Items.GetItem();
-                return expectedPulses != null 
-                    && Math.Round(expectedPulses.Value) == CorPulseCount;
+                var expectedPulses = (AfterTestItems.Corrected() - Items.Corrected()) * Instrument.CorrectedMultiplier();
+
+                if (expectedPulses != null)
+                {
+                    var variance = (int) expectedPulses.Value - CorPulseCount;
+                    return variance.IsBetween(2);
+                }
+                return false;
             }
         }
 
