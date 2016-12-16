@@ -93,8 +93,7 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
-                x => x.SelectedTachCommPort,
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                 (baud, instrumentPort, tachPort) =>
                     BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
                     !string.IsNullOrEmpty(tachPort));

@@ -31,7 +31,12 @@ namespace UnionGas.MASA.Screens.Exporter
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
         }
 
-        public Instrument Instrument { get; set; }
+        private Instrument _instrument;
+        public Instrument Instrument
+        {
+            get { return _instrument; } 
+            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
+        }
 
         public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
 
@@ -51,6 +56,9 @@ namespace UnionGas.MASA.Screens.Exporter
         public ReactiveCommand ExportQaTestRunCommand { get; }
         public async Task ExportQaTestRun()
         {
+            if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
+                return;
+
             await _exportManager.Export(Instrument);
             await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }

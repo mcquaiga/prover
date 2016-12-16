@@ -138,7 +138,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                var expectedPulses = AfterTestItems.Corrected() - Items.Corrected();
+                var expectedPulses = (AfterTestItems.Corrected() - Items.Corrected());// * Items.GetItem();
                 return expectedPulses != null 
                     && Math.Round(expectedPulses.Value) == CorPulseCount;
             }
