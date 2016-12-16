@@ -152,13 +152,13 @@ namespace Prover.GUI.Screens.QAProver
         {
             ShowConnectionDialog = true;
 
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            await SettingsManager.Save();
-
             if (SelectedInstrument != null)
             {
                 try
                 {
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                    await SettingsManager.Save();
+
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
