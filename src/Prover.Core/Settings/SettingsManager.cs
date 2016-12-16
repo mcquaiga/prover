@@ -36,23 +36,44 @@ namespace Prover.Core.Settings
 
         private static async Task<Settings> LoadSettings()
         {
-            Settings settings;
-            try
+            //Settings settings;
+            //try
+            //{
+            //    settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
+            //}
+            //catch (KeyNotFoundException)
+            //{
+            //    settings = new Settings();
+            //    settings.SetDefaults();
+            //}
+
+            //return settings;
+
+            return await Task.Run(() =>
             {
-                settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
-            }
-            catch (KeyNotFoundException)
-            {
-                settings = new Settings();
-                settings.SetDefaults();
-            }
-           
-            return settings;
+                var fileSystem = new FileSystem();
+
+                if (!fileSystem.FileExists(SettingsPath))
+                {
+                    var settings = new Settings();
+                    settings.SetDefaults();
+                    return settings;
+                }
+                return new SettingsReader(fileSystem).Read(SettingsPath);
+            });
         }
 
         public static async Task Save()
         {
-            await BlobCache.LocalMachine.InsertObject("settings", _singletonInstance);
+            //await BlobCache.LocalMachine.InsertObject("settings", _singletonInstance);
+            await Task.Run(() =>
+            {
+                var fileSystem = new FileSystem();
+
+                if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
+                    fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
+                new SettingsWriter(fileSystem).Write(SettingsPath, _singletonInstance);
+            });
         }
     }
 
