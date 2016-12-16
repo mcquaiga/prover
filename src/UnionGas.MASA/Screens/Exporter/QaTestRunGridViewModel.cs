@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Reports;
+using ReactiveUI;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
@@ -22,11 +25,15 @@ namespace UnionGas.MASA.Screens.Exporter
             _exportManager = exportManager;
             _instrumentStore = instrumentStore;
             _instrumentReportGenerator = instrumentReportGenerator;
+
+            var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
+                (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
+            ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
         }
 
         public Instrument Instrument { get; set; }
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
 
         public bool IsSelected { get; set; }
 
@@ -38,11 +45,14 @@ namespace UnionGas.MASA.Screens.Exporter
         public async Task DeleteInstrument()
         {
             await _instrumentStore.Delete(Instrument);
+            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
 
-        public async Task ExportQATestRun()
+        public ReactiveCommand ExportQaTestRunCommand { get; }
+        public async Task ExportQaTestRun()
         {
             await _exportManager.Export(Instrument);
+            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
     }
 }

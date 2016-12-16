@@ -35,6 +35,7 @@ namespace Prover.Core.VerificationTests
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IValidator _validator;
+        private readonly IEvcItemReset _itemResetter;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
@@ -42,7 +43,8 @@ namespace Prover.Core.VerificationTests
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
-            IValidator validator
+            IValidator validator,
+            IEvcItemReset itemResetter = null
         )
         {
             VolumeTestManager = volumeTestManager;
@@ -50,6 +52,7 @@ namespace Prover.Core.VerificationTests
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _validator = validator;
+            _itemResetter = itemResetter;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
@@ -65,7 +68,6 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType)
         {
-            
             _communicationClient.Initialize(instrumentType);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
@@ -87,12 +89,18 @@ namespace Prover.Core.VerificationTests
         {
             if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
 
+            _testStatus.OnNext($"Waiting for live readings to stabilize...");
             await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level);
+
+            _testStatus.OnNext($"Download items...");
             await DownloadVerificationTestItems(level);
 
             if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, null);
-
+            {
+                _testStatus.OnNext($"Running volume test...");
+                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
+            }
+            _testStatus.OnNext($"Saving test...");
             await SaveAsync();
         }
 
@@ -150,7 +158,7 @@ namespace Prover.Core.VerificationTests
         {
             if (_validator != null)
             {
-                _testStatus.OnNext($"Verifying items.");
+                _testStatus.OnNext($"Verifying items...");
                 await _validator.Validate(_communicationClient, Instrument);  
             }       
         }

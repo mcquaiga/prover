@@ -20,8 +20,8 @@
             <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="CardReadOnly" />
         </DataTemplate>
     </UserControl.Resources>
-    <Viewbox Width="1040" Height="795" Stretch="Fill">
-        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}" cal:View.Context="{Binding ReportViewContext}"
+    <Viewbox Width="1056" Height="816" Stretch="Uniform">
+        <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
                         Margin="2" />
     </Viewbox>
 </UserControl>

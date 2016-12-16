@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Akavache;
 using Autofac;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
@@ -20,6 +21,8 @@ namespace Prover.Core.Startup
     {
         public CoreBootstrapper()
         {
+            BlobCache.ApplicationName = "EvcProver";
+
             //Database registrations
             Builder.RegisterInstance(new ProverContext());
             Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
@@ -43,8 +46,7 @@ namespace Prover.Core.Startup
             Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
-            
-            SettingsManager.RefreshSettings();
+           
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

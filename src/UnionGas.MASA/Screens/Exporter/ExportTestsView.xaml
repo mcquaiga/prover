@@ -43,38 +43,7 @@
     </UserControl.Resources>
 
     <DockPanel Margin="5">
-        <StackPanel DockPanel.Dock="Top"
-                    Margin="10"
-                    Orientation=" Horizontal">
-            <Button Content="Last 7 Days">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OneWeekFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button
-                Content="Last 30 Days">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OneMonthFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-
-            <Button
-                Content="All"
-                HorizontalAlignment="Right"
-                Width="75">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ResetFilter" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-        </StackPanel>
-
-        <Grid>
+       <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="73*" />
@@ -89,31 +58,11 @@
 
             <!--  Certificate Information  -->
             <StackPanel Grid.Column="2">
+                <Button Margin="0,20,0,0"
+                        Command="{Binding ExportAllPassedQaRunsCommand}"
+                        Content="Export all passed">
 
-                <!--<TextBlock>Created By:</TextBlock>
-                    <TextBox x:Name="TestedBy" />-->
-                <ComboBox x:Name="VerificationType" Margin="0,15,0,0" ItemsSource="{Binding VerificationTypes}"
-                          SelectedValue="{Binding VerificationType}" SelectedIndex="0" />
-
-                <!--<TextBlock Margin="0,15,0,0">Seal Exp. Date</TextBlock>
-                    <TextBlock x:Name="SealExpirationDate" />-->
-
-                <Button Margin="0,20,0,0" Content="Export to MASA">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="ExportQARuns" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </Button>
-
-
-                <!--<StackPanel>
-                        <TextBlock FontSize="24">No. Selected:</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontSize="24" Name="InstrumentCount"></TextBlock>
-                            <TextBlock FontSize="24">/8</TextBlock>
-                        </StackPanel>
-                    </StackPanel >-->
             </StackPanel>
         </Grid>
     </DockPanel>

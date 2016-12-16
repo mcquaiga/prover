@@ -36,14 +36,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             await Task.Run(async () =>
             {
-                Log.Info("Running volume sync test...");
-
                 await commClient.Disconnect();
-
+                Log.Info("Running volume sync test...");
                 ResetPulseCounts(volumeTest);
-
                 _outputBoard.StartMotor();
-
                 do
                 {
                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
@@ -58,8 +54,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             IEvcItemReset evcTestItemReset)
         {
             await commClient.Connect();
-            volumeTest.Items =
-                await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+            if (evcTestItemReset != null) await evcTestItemReset.PreReset(commClient);
+            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -100,8 +96,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     await commClient.Connect();
                     volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-                    if (evcPostTestItemReset != null)
-                        await evcPostTestItemReset.PostReset(commClient);
+                    if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset(commClient);
                 }
                 finally
                 {
@@ -114,23 +109,28 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         private async Task GetAppliedInput(VolumeTest volumeTest)
         {
-            var result = 0;
-            try
+            if (_tachometerCommunicator == null) return;
+
+            int? result = null;
+            var tries = 0;
+            do
             {
-                if (_tachometerCommunicator != null)
+                try
                 {
+                    tries++;
+                    Log.Error($"Reading tachometer .... Attempt {tries} of 10");
                     result = await _tachometerCommunicator.ReadTach();
-                    Log.Debug($"Tachometer reading: {result}");
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"An error occured communication with the tachometer: {ex}");
-            }
+                catch (Exception ex)
+                {
+                    Log.Error($"An error occured communication with the tachometer: {ex}");
 
-            Log.Debug($"Applied Input: {result}");
+                }
+            } while (!result.HasValue || tries < 10);
+            
+            Log.Debug($"Applied Input: {result.Value}");
 
-            volumeTest.AppliedInput = result;
+            volumeTest.AppliedInput = result.Value;
         }
     }
 }
