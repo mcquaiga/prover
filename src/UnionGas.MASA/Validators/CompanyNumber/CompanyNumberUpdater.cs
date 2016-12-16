@@ -9,10 +9,10 @@ namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberUpdater : IUpdater
     {
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
         private readonly IGetValue _valueRequestor;
 
-        public CompanyNumberUpdater(IInstrumentStore<Instrument> instrumentStore, IGetValue valueRequestor)
+        public CompanyNumberUpdater(IProverStore<Instrument> instrumentStore, IGetValue valueRequestor)
         {
             _instrumentStore = instrumentStore;
             _valueRequestor = valueRequestor;

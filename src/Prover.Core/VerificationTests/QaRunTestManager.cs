@@ -32,14 +32,14 @@ namespace Prover.Core.VerificationTests
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         private readonly EvcCommunicationClient _communicationClient;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IValidator _validator;
         private readonly IEvcItemReset _itemResetter;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
-            IInstrumentStore<Instrument> instrumentStore,
+            IProverStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,

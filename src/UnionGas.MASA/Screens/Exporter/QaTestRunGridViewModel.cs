@@ -16,10 +16,10 @@ namespace UnionGas.MASA.Screens.Exporter
     {
         private readonly IExportTestRun _exportManager;
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
 
         public QaTestRunGridViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportManager, IInstrumentStore<Instrument> instrumentStore,
+            IExportTestRun exportManager, IProverStore<Instrument> instrumentStore,
             InstrumentReportGenerator instrumentReportGenerator) : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;

@@ -9,6 +9,7 @@ using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
@@ -25,8 +26,9 @@ namespace Prover.Core.Startup
 
             //Database registrations
             Builder.RegisterInstance(new ProverContext());
-            Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
+            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>();
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
+            Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
             //EVC Communcation

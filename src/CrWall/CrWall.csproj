@@ -128,6 +128,9 @@
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Clients\ClientManagerViewModel.cs" />
+    <Compile Include="Screens\Clients\ClientManager\ClientListView.xaml.cs">
+      <DependentUpon>ClientListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Screens\Clients\ClientManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Clients\ClientManager\ClientListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

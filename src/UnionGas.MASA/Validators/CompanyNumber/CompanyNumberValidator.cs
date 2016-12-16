@@ -14,13 +14,13 @@ namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberValidator : IValidator
     {
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
         private readonly DCRWebServiceSoap _webService;
         private readonly IUpdater _updater;
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidator(IProverStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
         {
             _instrumentStore = instrumentStore;
             _webService = webService;

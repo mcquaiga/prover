@@ -5,11 +5,11 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
-    public interface IInstrumentStore<T> : IDisposable where T : class
+    public interface IProverStore<T> : IDisposable where T : class
     {
         IQueryable<T> Query();
-        Instrument Get(Guid id);
-        Task<Instrument> UpsertAsync(T entity);
+        T Get(Guid id);
+        Task<T> UpsertAsync(T entity);
         Task Delete(T entity);
     }
 }

@@ -17,11 +17,11 @@ namespace UnionGas.MASA.Screens.Exporter
     public class ExportTestsViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
     {
         private readonly IExportTestRun _exportTestRun;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
 
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IExportTestRun exportTestRun,
-            IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
+            IProverStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;

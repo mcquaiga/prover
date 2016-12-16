@@ -239,8 +239,14 @@
     <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612151919517_AddClients.cs" />
+    <Compile Include="Migrations\201612151919517_AddClients.Designer.cs">
+      <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
+    <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
@@ -279,7 +285,7 @@
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
-    <Compile Include="Storage\IInstrumentStore.cs" />
+    <Compile Include="Storage\IProverStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
@@ -353,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612151919517_AddClients.resx">
+      <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
