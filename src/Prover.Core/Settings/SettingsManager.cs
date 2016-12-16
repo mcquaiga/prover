@@ -19,11 +19,11 @@ namespace Prover.Core.Settings
         {
             get
             {
-                if (_singletonInstance == null)
-                {
-                    var result = LoadSettings().Result;
-                    _singletonInstance = result;
-                }
+                //if (_singletonInstance == null)
+                //{
+                //    var result = Task.Run(async () => await LoadSettings());
+                //    _singletonInstance = result.Result;
+                //}
                 return _singletonInstance;
             }
             set { _singletonInstance = value; }
