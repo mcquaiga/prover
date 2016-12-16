@@ -44,11 +44,9 @@ namespace Prover.GUI.Screens.QAProver
 
         private IDisposable _testStatusSubscription;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaRunTestManager = qaRunTestManager ?? Locator.Current.GetService<IQaRunTestManager>();
-
             eventAggregator.Subscribe(this);
 
             /***  Setup Instruments list  ***/
@@ -161,6 +159,7 @@ namespace Prover.GUI.Screens.QAProver
             {
                 try
                 {
+                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
