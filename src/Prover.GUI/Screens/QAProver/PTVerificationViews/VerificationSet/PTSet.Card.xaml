@@ -35,26 +35,41 @@
             </materialDesign:DialogHost.DialogContent>
             
             <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
-            <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone Padding="8" Content="{Binding Level}" Margin="2"
+                <StackPanel Orientation="Vertical">
+                    <materialDesign:ColorZone Padding="2" Margin="2"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                    Mode="Accent" />
-                <Grid>
-                    <Button Margin="5"
-            HorizontalAlignment="Right"
-            materialDesign:RippleAssist.IsCentered="True"
-            Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0" />
-                                <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
-                            </StackPanel>
+                                    Mode="Accent" >
+                        <Grid>
+                            <TextBlock Text="{Binding Level}" 
+                                       FontSize="18"
+                                       Foreground="White"
+                                       Margin="5"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"/>
+                            <Button Margin="2"
+                                    Width="90"
+                                    Height="36"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="Play" Height="32" Width="32" Margin="0" VerticalAlignment="Center" />
+                                    <TextBlock Margin="2" 
+                                               FontWeight="Light" 
+                                               Text="Run"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
 
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <cal:ActionMessage MethodName="RunTest" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <cal:ActionMessage MethodName="RunTest" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
+                       
+                    </materialDesign:ColorZone>
+                <Grid>
+                    
                 </Grid>
                     <StackPanel Orientation="Horizontal">
                         <!-- Column 1 - PTZ Verification -->

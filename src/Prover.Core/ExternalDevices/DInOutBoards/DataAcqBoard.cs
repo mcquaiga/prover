@@ -49,7 +49,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
                 {
                     if (_pulseIsCleared)
                     {
-                        _log.Debug($"Pulse value read -> value = {value}");
+                        _log.Trace($"Pulse value read -> value = {value}");
                         _pulseIsCleared = false;
                         return 1;
                     }

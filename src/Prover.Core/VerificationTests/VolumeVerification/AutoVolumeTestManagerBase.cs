@@ -118,7 +118,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 try
                 {
                     tries++;
-                    Log.Error($"Reading tachometer .... Attempt {tries} of 10");
+                    Log.Debug($"Reading tachometer .... Attempt {tries} of 10");
                     result = await _tachometerCommunicator.ReadTach();
                 }
                 catch (Exception ex)
