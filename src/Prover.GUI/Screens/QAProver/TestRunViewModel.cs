@@ -44,11 +44,9 @@ namespace Prover.GUI.Screens.QAProver
 
         private IDisposable _testStatusSubscription;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaRunTestManager)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaRunTestManager = qaRunTestManager ?? Locator.Current.GetService<IQaRunTestManager>();
-
             eventAggregator.Subscribe(this);
 
             /***  Setup Instruments list  ***/
@@ -95,8 +93,7 @@ namespace Prover.GUI.Screens.QAProver
                 });
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
-                x => x.SelectedTachCommPort,
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                 (baud, instrumentPort, tachPort) =>
                     BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
                     !string.IsNullOrEmpty(tachPort));
@@ -154,13 +151,14 @@ namespace Prover.GUI.Screens.QAProver
         {
             ShowConnectionDialog = true;
 
-            SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-            await SettingsManager.Save();
-
             if (SelectedInstrument != null)
             {
                 try
                 {
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                    await SettingsManager.Save();
+
+                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument);
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);

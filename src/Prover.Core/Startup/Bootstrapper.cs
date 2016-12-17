@@ -48,7 +48,8 @@ namespace Prover.Core.Startup
             Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
-           
+
+            SettingsManager.RefreshSettings();
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();
