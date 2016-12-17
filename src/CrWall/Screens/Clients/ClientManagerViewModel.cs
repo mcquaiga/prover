@@ -28,6 +28,9 @@ namespace CrWall.Screens.Clients
                 .OrderBy(c => c.Name));
         }
 
+        private ReactiveCommand _addClientCommand;
+        public ReactiveCommand
+
         private ReactiveList<Client> _clientList = new ReactiveList<Client>();
         public ReactiveList<Client> ClientList
         {
