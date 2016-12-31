@@ -19,7 +19,9 @@ namespace Prover.Core.Storage
 
         public IQueryable<Client> Query()
         {
-            return _context.Clients.AsQueryable();
+            return _context.Clients
+                .Include(x => x.Items)
+                .AsQueryable();
         }
 
         public Client Get(Guid id)

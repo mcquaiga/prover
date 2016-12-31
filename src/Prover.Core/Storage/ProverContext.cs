@@ -31,6 +31,7 @@ namespace Prover.Core.Storage
         public DbSet<Instrument> Instruments { get; set; }
 
         public DbSet<Client> Clients { get; set; }
+        public DbSet<ClientItems> ClientItemses { get; set; }
 
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {

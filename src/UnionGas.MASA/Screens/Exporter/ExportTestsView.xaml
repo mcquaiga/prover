@@ -52,7 +52,7 @@
 
             <ListBox
                 Grid.Column="1"
-                Margin="3.836,10,10,10"
+                Margin="5"
                 x:Name="InstrumentItems"
                 HorizontalContentAlignment="Stretch" />
 

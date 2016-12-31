@@ -12,17 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ReactiveUI;
 
 namespace CrWall.Screens.Clients
 {
     /// <summary>
     /// Interaction logic for ClientManager.xaml
     /// </summary>
-    public partial class ClientManagerView : UserControl
+    public partial class ClientManagerView : UserControl, IViewFor<ClientManagerViewModel>
     {
         public ClientManagerView()
         {
             InitializeComponent();
         }
+
+        object IViewFor.ViewModel
+        {
+            get { return ViewModel; }
+            set { ViewModel = (ClientManagerViewModel) value; }
+        }
+
+        public ClientManagerViewModel ViewModel { get; set; }
     }
 }

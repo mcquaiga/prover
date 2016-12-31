@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
@@ -14,25 +15,44 @@ namespace CrWall.Screens.Clients
 {
     public class ClientManagerViewModel : ViewModelBase
     {
-        private readonly IProverStore<Client> _clientStore;
+        private readonly IProverStore<Prover.Core.Models.Clients.Client> _clientStore;
         private const string ClientListViewContext = "ClientListView";
 
         public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Client> clientStore) : base(screenManager, eventAggregator)
+            IProverStore<Prover.Core.Models.Clients.Client> clientStore) : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
 
             ViewContext = ClientListViewContext;
 
-            ClientList.AddRange(clientStore.Query()
-                .OrderBy(c => c.Name));
+            LoadClients();
+
+            AddClientCommand = ReactiveCommand.CreateFromTask(AddClient);
+        }
+
+        private void LoadClients()
+        {
+            _clientStore.Query()
+                .OrderBy(c => c.Name)
+                .ToList()
+                .ForEach(x => ClientList.Add(new ClientViewModel(ScreenManager, EventAggregator, _clientStore, x)));
+        }
+
+        private async Task AddClient()
+        {
+            var newClientVm = new ClientViewModel(ScreenManager, EventAggregator, _clientStore, new Prover.Core.Models.Clients.Client());
+            await newClientVm.Edit();
         }
 
         private ReactiveCommand _addClientCommand;
-        public ReactiveCommand
+        public ReactiveCommand AddClientCommand
+        {
+            get { return _addClientCommand; }
+            set { this.RaiseAndSetIfChanged(ref _addClientCommand, value); }
+        }
 
-        private ReactiveList<Client> _clientList = new ReactiveList<Client>();
-        public ReactiveList<Client> ClientList
+        private ReactiveList<ClientViewModel> _clientList = new ReactiveList<ClientViewModel>();
+        public ReactiveList<ClientViewModel> ClientList
         {
             get { return _clientList; }
             set { this.RaiseAndSetIfChanged(ref _clientList, value); }

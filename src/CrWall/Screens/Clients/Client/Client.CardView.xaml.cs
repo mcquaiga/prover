@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CrWall.Screens.Clients.ClientManager
+namespace CrWall.Screens.Clients.Client
 {
     /// <summary>
-    /// Interaction logic for ClientListView.xaml
+    /// Interaction logic for Client.xaml
     /// </summary>
-    public partial class ClientListView : UserControl
+    public partial class CardView : UserControl
     {
-        public ClientListView()
+        public CardView()
         {
             InitializeComponent();
         }

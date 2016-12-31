@@ -251,7 +251,16 @@
     <Compile Include="Migrations\201612151919517_AddClients.Designer.cs">
       <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612301400385_AddClientItems.cs" />
+    <Compile Include="Migrations\201612301400385_AddClientItems.Designer.cs">
+      <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.cs" />
+    <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.Designer.cs">
+      <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
+    <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Storage\ClientStore.cs" />
@@ -370,6 +379,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612151919517_AddClients.resx">
       <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612301400385_AddClientItems.resx">
+      <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.resx">
+      <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
