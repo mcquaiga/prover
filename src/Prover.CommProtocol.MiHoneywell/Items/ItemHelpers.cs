@@ -11,6 +11,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     public static class ItemHelpers
     {
         private const string ItemDefinitionsFolder = "ItemDefinitions";
+        private static Dictionary<InstrumentType, IEnumerable<ItemMetadata>> _itemFileCache = new Dictionary<InstrumentType, IEnumerable<ItemMetadata>>();
 
         public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
         {
@@ -21,10 +22,13 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
         public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
         {
+            if (_itemFileCache.ContainsKey(type))
+                return _itemFileCache[type];
+
             var path = $@"{Environment.CurrentDirectory}\{ItemDefinitionsFolder}\{type.ItemFilePath}";
             var xDoc = XDocument.Load(path);
 
-            return (from x in xDoc.Descendants("item")
+            var items = (from x in xDoc.Descendants("item")
                 select new ItemMetadata
                 {
                     Number = Convert.ToInt32(x.Attribute("number").Value),
@@ -61,6 +65,10 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                             .ToList()
                 }
             ).ToList();
+
+            _itemFileCache.Add(type, items);
+
+            return items;
         }
     }
 }

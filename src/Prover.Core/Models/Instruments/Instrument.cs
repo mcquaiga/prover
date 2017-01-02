@@ -6,6 +6,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
 
 namespace Prover.Core.Models.Instruments
@@ -24,13 +25,16 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items)
+        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items, Client client = null)
         {
             TestDateTime = DateTime.Now;
             CertificateId = null;
             Type = instrumentType.Id;
             InstrumentType = instrumentType;
             Items = items;
+
+            Client = client;
+            ClientId = client?.Id;
 
             CreateVerificationTests();
         }
@@ -47,6 +51,10 @@ namespace Prover.Core.Models.Instruments
         public Guid? CertificateId { get; set; }
 
         public virtual Certificate Certificate { get; set; }
+
+        public Guid? ClientId { get; set; }
+
+        public virtual Client Client { get; set; }
 
         public string EmployeeId { get; set; }
 

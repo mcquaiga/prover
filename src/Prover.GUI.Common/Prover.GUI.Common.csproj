@@ -171,6 +171,7 @@
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Screens\SelectableViewModel.cs" />
     <Compile Include="Screens\Toolbar\ToolbarItem.cs" />
     <Compile Include="Screens\ViewModelBase.cs" />
     <Compile Include="WindowSettings.cs" />

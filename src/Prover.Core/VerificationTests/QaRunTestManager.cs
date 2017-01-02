@@ -7,6 +7,7 @@ using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations.Validators;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.VolumeVerification;
@@ -16,13 +17,13 @@ namespace Prover.Core.VerificationTests
     public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-        Task InitializeTest(InstrumentType instrumentType);
+        Task InitializeTest(InstrumentType instrumentType, Client client = null);
         Task RunTest(int level);
         Task DownloadVerificationTestItems(int level);
         Task DownloadTemperatureTestItems(int levelNumber);
         Task DownloadPressureTestItems(int level);
         Task SaveAsync();
-        Task RunVerifier();
+        Task RunVerifiers();
 
         IObservable<string> TestStatus { get; }
     }
@@ -37,6 +38,7 @@ namespace Prover.Core.VerificationTests
         private readonly IValidator _validator;
         private readonly IEvcItemReset _itemResetter;
         private readonly Subject<string> _testStatus = new Subject<string>();
+        private Client _client;
 
         public QaRunTestManager(
             IProverStore<Instrument> instrumentStore,
@@ -66,8 +68,10 @@ namespace Prover.Core.VerificationTests
 
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType)
+        public async Task InitializeTest(InstrumentType instrumentType, Client client = null)
         {
+            _client = client;
+
             _communicationClient.Initialize(instrumentType);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
@@ -79,10 +83,10 @@ namespace Prover.Core.VerificationTests
             _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await _communicationClient.Disconnect();
 
-            Instrument = new Instrument(instrumentType, items);
+            Instrument = new Instrument(instrumentType, items, client);
 
             await SaveAsync();
-            await RunVerifier();
+            await RunVerifiers();
         }
 
         public async Task RunTest(int level)
@@ -100,6 +104,14 @@ namespace Prover.Core.VerificationTests
                 _testStatus.OnNext($"Running volume test...");
                 await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
             }
+
+            _testStatus.OnNext($"Resetting items...");
+            var resetItems = _client.Items.FirstOrDefault(x => x.ItemFileType == ItemType.PostTest && x.InstrumentType == Instrument.InstrumentType)?.Items.ToList();
+            if (_itemResetter != null && resetItems != null && resetItems.Any())
+            {
+                await _itemResetter?.PostReset(_communicationClient, resetItems);
+            }
+
             _testStatus.OnNext($"Saving test...");
             await SaveAsync();
         }
@@ -154,7 +166,7 @@ namespace Prover.Core.VerificationTests
             }
         }
 
-        public async Task RunVerifier()
+        public async Task RunVerifiers()
         {
             if (_validator != null)
             {

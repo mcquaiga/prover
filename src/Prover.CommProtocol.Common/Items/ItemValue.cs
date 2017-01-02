@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -25,7 +26,7 @@ namespace Prover.CommProtocol.Common.Items
         public virtual decimal NumericValue
             => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
 
-        public virtual string Description => ItemDescription?.Description ?? "[NULL]";
+        public virtual string Description => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
         private ItemMetadata.ItemDescription ItemDescription
         {
@@ -43,8 +44,7 @@ namespace Prover.CommProtocol.Common.Items
 
         public override string ToString()
         {
-            return $"{Environment.NewLine}================================================={Environment.NewLine}" +
-                   $"{Metadata?.LongDescription} - #{Metadata?.Number} {Environment.NewLine}" +
+            return $" {Metadata?.LongDescription} - #{Metadata?.Number} {Environment.NewLine}" +
                    $"   Item Value: {RawValue} {Environment.NewLine}" +
                    $"   Item Description: {Description} {Environment.NewLine}" +
                    $"   Numeric Value: {NumericValue} {Environment.NewLine}";

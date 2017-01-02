@@ -13,8 +13,10 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Events;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -44,7 +46,7 @@ namespace Prover.GUI.Screens.QAProver
 
         private IDisposable _testStatusSubscription;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IProverStore<Client> clientStore)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -99,6 +101,14 @@ namespace Prover.GUI.Screens.QAProver
                     !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
+
+            _clientList = clientStore.Query().ToList();
+                
+            Clients = new ReactiveList<string>(_clientList.Select(x => x.Name).OrderBy(x => x).ToList());
+            this.WhenAnyValue(x => x.SelectedClient).Subscribe(_ =>
+            {
+                _client = _clientList.FirstOrDefault(x => x.Name == SelectedClient);
+            });
 
             _viewContext = NewQaTestViewContext;
         }
@@ -160,7 +170,7 @@ namespace Prover.GUI.Screens.QAProver
 
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument);
+                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _client);
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                     ViewContext = EditQaTestViewContext;
                 }
@@ -217,6 +227,24 @@ namespace Prover.GUI.Screens.QAProver
         {
             get { return _instrumentTypes; }
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        }
+
+
+        private string _selectedClient;
+        private Client _client;
+        private List<Client> _clientList;
+
+        private ReactiveList<string> _clients;
+        public ReactiveList<string> Clients
+        {
+            get { return _clients; }
+            set { this.RaiseAndSetIfChanged(ref _clients, value);  }
+        }
+
+        public string SelectedClient
+        {
+            get { return _selectedClient; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClient, value);  }
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();

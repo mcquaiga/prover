@@ -136,6 +136,7 @@
       <DependentUpon>ClientView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
+    <Compile Include="Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,10 @@
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
       <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
       <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
+      <Project>{07FACEC7-67D1-49A8-BB19-DDC7B636C689}</Project>
+      <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>

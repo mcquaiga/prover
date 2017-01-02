@@ -4,11 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CrWall.Screens.Clients.Client"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <Grid Margin="10">
+             xmlns:domain="clr-namespace:Prover.GUI.Common.Screens;assembly=Prover.GUI.Common"
+             xmlns:common="clr-namespace:Prover.CommProtocol.Common;assembly=Prover.CommProtocol.Common"
+             xmlns:designer="clr-namespace:CrWall.Screens.Clients.Designer"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance designer:DesignTimeClientViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <StackPanel>
+            
+            <Grid Margin="10" DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -28,33 +42,115 @@
                              Height="50"                             
                              MaxLines="3"></TextBox>
                 </StackPanel>
+        </Grid>
+        
+        <Grid Margin="5 25 5 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.50*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+                <UniformGrid Grid.Column="1" Grid.Row="0" Rows="1">
+                    <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
+                    <Button Content="Post-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
+                    <Button Content="Verify" Style="{DynamicResource MaterialDesignFlatButton}" Margin="0,12"/>
+                </UniformGrid>
+            
+                <ItemsControl Grid.Row="1" Grid.Column="0" 
+                            ItemsSource="{Binding InstrumentTypes}"
+                            Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" HorizontalAlignment="Left"
+                                ToolTip="MaterialDesignFlatPrimaryToggleButton" Height="50" Width="150">
+                                <Border x:Name="Border" Padding="8" BorderThickness="0 0 2 0"
+                                        BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Checkerz" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="8 0 0 0" Grid.Column="1" >
+                                            <TextBlock FontWeight="Bold" Text="{Binding Object.Name}" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </ToggleButton>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <DataGrid ScrollViewer.CanContentScroll="True" FontSize="18"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                materialDesign:DataGridAssist.CellPadding="13 8 8 8" materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                                Margin="10 8 0 0" ItemsSource="{Binding CurrentItemData}" CanUserSortColumns="True" CanUserAddRows="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <!--<DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
+                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                            <DataGridCheckBoxColumn.Header>
+                                -->
+                            <!--padding to allow hit test to pass thru for sorting -->
+                            <!--
+                                <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
+                                    <CheckBox HorizontalAlignment="Center"                                               
+                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
+                                              IsChecked="{Binding IsAllItems3Selected}" />
+                                </Border>
+                            </DataGridCheckBoxColumn.Header>
+                        </DataGridCheckBoxColumn>-->
+                            <DataGridTextColumn Binding="{Binding Metadata.Number}"
+                                            Header="Item #"/>
+
+                                <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
+                                            Header="Description"
+                                            />
+                            <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
+                                                        Header="Value"                                                                                    
+                                                        />
+                            <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
+                            <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        
+                                                            SelectedValueBinding="{Binding Food}"                                                            
+                                                            ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                                         PlacementMode="BottomAndAlignCentres"
+                                         ToolTipService.Placement="Right"
+                                         ToolTip="Add Item">
+                        <StackPanel>
+                            <Button ToolTip="One with custom opacity" Opacity="0.5">Add Item</Button>
+                            <Button ToolTip="Two">Import CSV</Button>
+                            <Button ToolTip="Three">Import Item File</Button>
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+                </Grid>
             </Grid>
-            <Grid Margin="5 25 5 5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="125"/>
-                </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal" 
-                            Grid.Row="0" 
-                            Margin="5"
-                            Height="50">
-                    <Button Content="Mini-AT"/>
-                    <Button Content="Mini-Max"/>
-                </StackPanel>
-                
-                <ListBox Grid.Row="1" 
-                        
-                         ItemsSource="{Binding CurrentItemData}"
-                         />
-            </Grid>
-            <Button Command="{Binding SaveCommand}" 
+        <Button Command="{Binding SaveCommand}" 
                     Margin="5"
                     Content="SAVE"
                     HorizontalAlignment="Right"
                     Height="32"/>
         </StackPanel>
-        
-          
-    </Grid>
+    </DockPanel>
 </UserControl>
+
+
+
+
+
+
 

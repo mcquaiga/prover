@@ -64,18 +64,13 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </GroupBox>
-                    <!--<GroupBox Grid.Row="1"
-                              Header="Drive Type"
+                    <GroupBox Grid.Row="1"
+                              Header="Client"
                               BorderThickness="1">
                         <StackPanel>
-                            <RadioButton x:Name="RotaryDriveChecked" 
-                                         Content="Rotary"
-                                         GroupName="DriveType"/>
-                            <RadioButton x:Name="MechanicalDriveChecked"
-                                         Content="Mechanical"
-                                         GroupName="DriveType"/>
+                            <ComboBox x:Name="Clients"/>
                         </StackPanel>
-                    </GroupBox>-->
+                    </GroupBox>
                 </Grid>
                
                 <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">

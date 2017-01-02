@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -27,12 +31,13 @@ namespace CrWall.Screens.Clients
             //    _ => !string.IsNullOrEmpty(_.Name) && !string.IsNullOrEmpty(_.Address));
             SaveCommand = ReactiveCommand.CreateFromTask(Save);
 
-
+            
         }
 
         public async Task Edit()
         {
             await ScreenManager.ChangeScreen(this);
+            UpdateItemList(Instruments.MiniAt, ItemType.Verify);
         }
 
         private async Task Save()
@@ -41,9 +46,12 @@ namespace CrWall.Screens.Clients
             await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
-        private async Task UpdateItemList()
+        private void UpdateItemList(InstrumentType instrumentType, ItemType itemFileType)
         {
-            
+            var itemList =
+                Client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == itemFileType);
+
+            CurrentItemData = itemList != null ? itemList.Items : new List<ItemValue>();
         }
 
         #region Commands
@@ -61,6 +69,18 @@ namespace CrWall.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _editCommand, value); }
         }
         #endregion
+        
+        #region Properties   
+
+        public IEnumerable<SelectableViewModel<InstrumentType>> InstrumentTypes
+        {
+            get
+            {
+                var instruments = new List<SelectableViewModel<InstrumentType>>();
+                Instruments.GetAll().ToList().ForEach(x => instruments.Add(new SelectableViewModel<InstrumentType>(x)));
+                return instruments;
+            }
+        }
 
         private Prover.Core.Models.Clients.Client _client;
         public Prover.Core.Models.Clients.Client Client
@@ -75,6 +95,7 @@ namespace CrWall.Screens.Clients
             get { return _currentItemValues; }
             set { this.RaiseAndSetIfChanged(ref _currentItemValues, value); }
         }
+        #endregion
 
     }
 }
