@@ -171,13 +171,14 @@ namespace Prover.GUI.Screens.QAProver
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaRunTestManager.InitializeTest(SelectedInstrument, _client);
+
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                    throw;
                 }
                 finally
                 {

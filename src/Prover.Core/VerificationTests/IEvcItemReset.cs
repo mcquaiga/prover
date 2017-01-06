@@ -9,6 +9,8 @@ namespace Prover.Core.VerificationTests
     public interface IEvcItemReset
     {
         Task PreReset(EvcCommunicationClient commClient, IEnumerable<ItemValue> items);
+        Task PreReset();
         Task PostReset(EvcCommunicationClient commClient, IEnumerable<ItemValue> items);
+        Task PostReset();
     }
 }

@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using CrWall.Screens.Items;
+using MaterialDesignThemes.Wpf;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
+using Splat;
 
 namespace CrWall.Screens.Clients
 {
@@ -26,32 +31,60 @@ namespace CrWall.Screens.Clients
             _client = client;
 
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
-
-            //var canSave = this.WhenAnyValue(x => x.Client,
-            //    _ => !string.IsNullOrEmpty(_.Name) && !string.IsNullOrEmpty(_.Address));
             SaveCommand = ReactiveCommand.CreateFromTask(Save);
 
-            
+            UpdateItemListCommand = ReactiveCommand.CreateFromTask<InstrumentType>(UpdateItemList);
+            this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Where(x => x != null)
+                .InvokeCommand(UpdateItemListCommand);
+
+            this.WhenAnyValue(x => x.SelectedItem);
+
+            InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());
+
+            GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
+
+            var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue,
+                (selectedItem, itemValue) => selectedItem != null && itemValue != null);
+            AddItemCommand = ReactiveCommand.CreateFromTask(AddItem, canAddItem);
+        }
+
+        private async Task AddItem()
+        {
+            var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());
+            var currentValues = CurrentItemValues;
+            currentValues.Add(itemValue);
+            Client.Items.Where(x => x.)
+            await _clientStore.UpsertAsync(Client);
         }
 
         public async Task Edit()
         {
             await ScreenManager.ChangeScreen(this);
-            UpdateItemList(Instruments.MiniAt, ItemType.Verify);
+            SelectedInstrumentType = InstrumentTypes.First();
+            SelectedItemFileType = ItemType.PostTest;
+        }
+
+        private async Task GoBack()
+        {
+            await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
         private async Task Save()
         {
             await _clientStore.UpsertAsync(this.Client);
-            await ScreenManager.ChangeScreen<ClientManagerViewModel>();
+            await GoBack();
         }
 
-        private void UpdateItemList(InstrumentType instrumentType, ItemType itemFileType)
+        private async Task UpdateItemList(InstrumentType instrumentType)
         {
-            var itemList =
-                Client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == itemFileType);
+            await Task.Run(() =>
+            {
+                Items = ItemHelpers.LoadItems(instrumentType);
+                ItemStrings = Items.Select(x => $"{x.Number} - {x.LongDescription}").ToList();
 
-            CurrentItemData = itemList != null ? itemList.Items : new List<ItemValue>();
+                CurrentItemData = CurrentItemValues;
+            });
         }
 
         #region Commands
@@ -68,18 +101,62 @@ namespace CrWall.Screens.Clients
             get { return _editCommand; }
             set { this.RaiseAndSetIfChanged(ref _editCommand, value); }
         }
-        #endregion
         
+        private ReactiveCommand _updateItemListCommand;
+        public ReactiveCommand UpdateItemListCommand
+        {
+            get { return _updateItemListCommand; }
+            set { this.RaiseAndSetIfChanged(ref _updateItemListCommand, value); }
+        }
+
+        private ReactiveCommand _goBackCommand;
+        public ReactiveCommand GoBackCommand
+        {
+            get { return _goBackCommand; }
+            set { this.RaiseAndSetIfChanged(ref _goBackCommand, value); }
+        }
+
+        private ReactiveCommand _addItemCommand;
+        public ReactiveCommand AddItemCommand
+        {
+            get { return _addItemCommand; }
+            set { this.RaiseAndSetIfChanged(ref _addItemCommand, value); }
+        }
+        #endregion
+
         #region Properties   
 
-        public IEnumerable<SelectableViewModel<InstrumentType>> InstrumentTypes
+        private List<ItemValue> CurrentItemValues
         {
             get
             {
-                var instruments = new List<SelectableViewModel<InstrumentType>>();
-                Instruments.GetAll().ToList().ForEach(x => instruments.Add(new SelectableViewModel<InstrumentType>(x)));
-                return instruments;
+                var firstOrDefault = Client.Items.FirstOrDefault(x => x.InstrumentType == SelectedInstrumentType && x.ItemFileType == SelectedItemFileType);
+                if (firstOrDefault != null)
+                    return firstOrDefault.Items.ToList();
+
+                return new List<ItemValue>();
             }
+        }
+
+        private IEnumerable<InstrumentType> _instrumentTypes;
+        public IEnumerable<InstrumentType> InstrumentTypes
+        {
+            get { return _instrumentTypes; }
+            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        }
+
+        private InstrumentType _selecedInstrumentType;
+        public InstrumentType SelectedInstrumentType
+        {
+            get { return _selecedInstrumentType; }
+            set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
+        }
+
+        private ItemType _selectedItemFileType;
+        public ItemType SelectedItemFileType
+        {
+            get { return _selectedItemFileType; }
+            set { this.RaiseAndSetIfChanged(ref _selectedItemFileType, value); }
         }
 
         private Prover.Core.Models.Clients.Client _client;
@@ -95,7 +172,42 @@ namespace CrWall.Screens.Clients
             get { return _currentItemValues; }
             set { this.RaiseAndSetIfChanged(ref _currentItemValues, value); }
         }
-        #endregion
 
-    }
+        private IEnumerable<ItemMetadata> _items;
+        public IEnumerable<ItemMetadata> Items
+        {
+            get { return _items; }
+            set { this.RaiseAndSetIfChanged(ref _items, value); }
+        }
+
+        //private ItemValue _itemValue;
+        //public ItemValue ItemValue
+        //{
+        //    get { return _itemValue; }
+        //    set { this.RaiseAndSetIfChanged(ref _itemValue, value); }
+        //}
+        private object _itemValue;
+        public object ItemValue
+        {
+            get { return _itemValue; }
+            set { this.RaiseAndSetIfChanged(ref _itemValue, value); }
+        }
+
+        private ItemMetadata _selectedItem;
+        public ItemMetadata SelectedItem
+        {
+            get { return _selectedItem; }
+            set { this.RaiseAndSetIfChanged(ref _selectedItem, value); }
+        }
+
+        private IEnumerable<string> _itemStrings;
+        public IEnumerable<string> ItemStrings
+        {
+            get { return _itemStrings; }
+            set { this.RaiseAndSetIfChanged(ref _itemStrings, value); }
+        }
+
+    #endregion
+
+}
 }

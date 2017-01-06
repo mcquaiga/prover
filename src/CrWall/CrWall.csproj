@@ -137,6 +137,10 @@
     </Compile>
     <Compile Include="Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
     <Compile Include="Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
+    <Compile Include="Screens\Items\ItemView.xaml.cs">
+      <DependentUpon>ItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Items\ItemViewModel.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Clients\ClientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Items\ItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

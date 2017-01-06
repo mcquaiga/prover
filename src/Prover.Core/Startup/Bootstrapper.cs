@@ -40,7 +40,7 @@ namespace Prover.Core.Startup
             Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
                 .As<EvcCommunicationClient>();
 
-            ////QA Test Runs
+            //QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
@@ -49,7 +49,7 @@ namespace Prover.Core.Startup
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
-            SettingsManager.RefreshSettings();
+            SettingsManager.RefreshSettings().Wait();
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

@@ -13,16 +13,35 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel>
-        <StackPanel>
-            
-            <Grid Margin="10" DockPanel.Dock="Top">
+    <materialDesign:DialogHost>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+            <materialDesign:ColorZone Mode="PrimaryLight" Padding="2" Grid.Row="0">
+            <Grid>
+                <Button Command="{Binding GoBackCommand}"
+                    Style="{DynamicResource MaterialDesignFlatButton}" 
+                    HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="ArrowLeft" />
+                </Button>
+                <Button Command="{Binding SaveCommand}"
+                    Content="SAVE"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    HorizontalAlignment="Right"/>
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid Margin="10" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -43,52 +62,101 @@
                              MaxLines="3"></TextBox>
                 </StackPanel>
         </Grid>
-        
-        <Grid Margin="5 25 5 5">
+       
+        <Grid Margin="5 25 5 5" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.50*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.1*"/>
+                <RowDefinition Height="0.4*"/>
                 <RowDefinition Height="4*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-                <UniformGrid Grid.Column="1" Grid.Row="0" Rows="1">
-                    <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
-                    <Button Content="Post-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
-                    <Button Content="Verify" Style="{DynamicResource MaterialDesignFlatButton}" Margin="0,12"/>
-                </UniformGrid>
-            
-                <ItemsControl Grid.Row="1" Grid.Column="0" 
-                            ItemsSource="{Binding InstrumentTypes}"
-                            Grid.IsSharedSizeScope="True">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" HorizontalAlignment="Left"
-                                ToolTip="MaterialDesignFlatPrimaryToggleButton" Height="50" Width="150">
-                                <Border x:Name="Border" Padding="8" BorderThickness="0 0 2 0"
-                                        BorderBrush="{DynamicResource MaterialDesignDivider}">
+                
+                <!--<GroupBox x:Name="ItemFileTypeGroup" Grid.Column="1" Grid.Row="0">
+                    <UniformGrid Rows="1" VerticalAlignment="Center">
+                        <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
+                        <RadioButton GroupName="ItemFileTypeGroup" Content="Post-Test Reset" />
+                        <RadioButton GroupName="ItemFileTypeGroup" Content="Verify" />
+                    </UniformGrid>
+                </GroupBox>-->
+                <!--<ListBox ItemsSource="{Binding ItemFileTypes}" Grid.Column="1" Grid.Row="0"
+                         SelectedItem="{Binding SelectedItemFileType}" 
+                         SelectionMode="Single">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    --><!--<ListBoxItem Content="Pre-Test"/>--><!--
+                    <ListBoxItem Content="Post-Test Reset" />
+                    <ListBoxItem Content="Verify" />
+                </ListBox>-->
+                <StackPanel Grid.Row="1" Grid.Column="1"
+                            Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock VerticalAlignment="Center">Item</TextBlock>
+                        <ComboBox SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Items}" Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
                                     <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition SharedSizeGroup="Checkerz" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Margin="8 0 0 0" Grid.Column="1" >
-                                            <TextBlock FontWeight="Bold" Text="{Binding Object.Name}" HorizontalAlignment="Left" />
-                                        </StackPanel>
+                                        <TextBlock Text="{Binding Number}" />
+                                        <TextBlock Text="{Binding LongDescription}" />
                                     </Grid>
-                                </Border>
-                            </ToggleButton>
-                            <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                                </DataTrigger>
-                            </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock VerticalAlignment="Center">Value</TextBlock>
+                        <TextBox x:Name="ItemValue" Width="200" Margin="10"/>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding AddItemCommand}"
+                            Style="{DynamicResource MaterialDesignFlatButton}">ADD</Button>
+
+                </StackPanel>
+                <ListBox ItemsSource="{Binding InstrumentTypes}" 
+                         SelectedItem="{Binding SelectedInstrumentType}" 
+                         Grid.Row="2" Grid.Column="0" 
+                         SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Grid Grid.Column="1" Grid.Row="1">
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!--<GroupBox x:Name="InstrumentTypesGroup" Grid.Row="1" Grid.Column="0" >
+                    <ItemsControl ItemsSource="{Binding InstrumentTypes}" Grid.IsSharedSizeScope="True">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton GroupName="InstrumentTypesGroup" VerticalAlignment="Stretch" Margin="5 15"
+                                             IsChecked="{Binding IsSelected}"
+                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+                                    <Border x:Name="Border" BorderThickness="0 0 2 0" BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock FontWeight="Bold" Text="{Binding Object.Name}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </RadioButton>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </GroupBox>-->
+                <ContentControl Grid.Column="1" Grid.Row="2">
                     <DataGrid ScrollViewer.CanContentScroll="True" FontSize="18"
                               ScrollViewer.VerticalScrollBarVisibility="Visible"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -112,7 +180,7 @@
                             <DataGridTextColumn Binding="{Binding Metadata.Number}"
                                             Header="Item #"/>
 
-                                <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
                                             Header="Description"
                                             />
                             <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
@@ -125,28 +193,34 @@
                                                             ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
                         </DataGrid.Columns>
                     </DataGrid>
-                </Grid>
-                <Grid Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                </ContentControl>
+            <!--<Grid Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
                                          PlacementMode="BottomAndAlignCentres"
                                          ToolTipService.Placement="Right"
                                          ToolTip="Add Item">
-                        <StackPanel>
-                            <Button ToolTip="One with custom opacity" Opacity="0.5">Add Item</Button>
-                            <Button ToolTip="Two">Import CSV</Button>
-                            <Button ToolTip="Three">Import Item File</Button>
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                </Grid>
-            </Grid>
-        <Button Command="{Binding SaveCommand}" 
-                    Margin="5"
-                    Content="SAVE"
-                    HorizontalAlignment="Right"
-                    Height="32"/>
-        </StackPanel>
-    </DockPanel>
+                    <StackPanel>
+                        <Button 
+                            Command="{Binding AddItemCommand}"
+                            ToolTip="Add Item" Opacity="0.5">
+                            <materialDesign:PackIcon Kind="PlusOne"></materialDesign:PackIcon>
+                        </Button>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+            </Grid>-->
+        </Grid>
+
+    </Grid>
+    </materialDesign:DialogHost>
 </UserControl>
+
+
+
+
+
+
+
+
 
 
 
