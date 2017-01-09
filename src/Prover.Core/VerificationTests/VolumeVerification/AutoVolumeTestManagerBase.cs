@@ -107,6 +107,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             });
         }
 
+        public override void Dispose()
+        {
+            _tachometerCommunicator.Dispose();
+        }
+
         private async Task GetAppliedInput(VolumeTest volumeTest)
         {
             if (_tachometerCommunicator == null) return;
@@ -126,7 +131,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     Log.Error($"An error occured communication with the tachometer: {ex}");
 
                 }
-            } while (!result.HasValue || tries < 10);
+            } while (!result.HasValue && tries < 10);
             
             Log.Debug($"Applied Input: {result.Value}");
 
