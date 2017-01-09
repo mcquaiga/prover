@@ -52,9 +52,11 @@ namespace CrWall.Screens.Clients
         private async Task AddItem()
         {
             var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());
-            var currentValues = CurrentItemValues;
-            currentValues.Add(itemValue);
-            Client.Items.Where(x => x.)
+
+            if (CurrentClientItems.Items == null)
+                CurrentClientItems.Items = new List<ItemValue>();
+
+            CurrentClientItems.Items.ToList().Add(itemValue);
             await _clientStore.UpsertAsync(Client);
         }
 
@@ -125,19 +127,6 @@ namespace CrWall.Screens.Clients
         #endregion
 
         #region Properties   
-
-        private List<ItemValue> CurrentItemValues
-        {
-            get
-            {
-                var firstOrDefault = Client.Items.FirstOrDefault(x => x.InstrumentType == SelectedInstrumentType && x.ItemFileType == SelectedItemFileType);
-                if (firstOrDefault != null)
-                    return firstOrDefault.Items.ToList();
-
-                return new List<ItemValue>();
-            }
-        }
-
         private IEnumerable<InstrumentType> _instrumentTypes;
         public IEnumerable<InstrumentType> InstrumentTypes
         {
