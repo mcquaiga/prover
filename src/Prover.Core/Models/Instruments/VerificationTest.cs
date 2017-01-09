@@ -52,10 +52,8 @@ namespace Prover.Core.Models.Instruments
                 if ((Instrument.CompositionType == CorrectorType.P) && (PressureTest != null))
                     return PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
 
-                if ((Instrument.CompositionType == CorrectorType.PTZ) && (PressureTest != null) &&
-                    (TemperatureTest != null))
-                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed) &&
-                           PressureTest.HasPassed;
+                if ((Instrument.CompositionType == CorrectorType.PTZ) && (PressureTest != null) && (TemperatureTest != null))
+                    return TemperatureTest.HasPassed && PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed) ;
 
                 return false;
             }

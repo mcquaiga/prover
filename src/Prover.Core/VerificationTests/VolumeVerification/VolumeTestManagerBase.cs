@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using MccDaq;
@@ -10,7 +11,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public abstract class VolumeTestManagerBase
+    public abstract class VolumeTestManagerBase : IDisposable
     {
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
@@ -73,6 +74,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcPostTestItemReset);
+
+        public abstract void Dispose();
+
     }
 
     public interface IPulseInputService

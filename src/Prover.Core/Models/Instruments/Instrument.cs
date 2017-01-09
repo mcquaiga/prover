@@ -144,7 +144,8 @@ namespace Prover.Core.Models.Instruments
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
                 if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
                 {
-                    return verificationTestsPassed && EventLogPassed != null && CommPortsPassed != null && CommPortsPassed.Value && EventLogPassed.Value;
+                    return verificationTestsPassed && 
+                        (EventLogPassed != null && EventLogPassed.Value) && (CommPortsPassed != null && CommPortsPassed.Value);
                 }
 
                 return verificationTestsPassed;
