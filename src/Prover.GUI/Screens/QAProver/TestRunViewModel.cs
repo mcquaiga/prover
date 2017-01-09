@@ -105,8 +105,6 @@ namespace Prover.GUI.Screens.QAProver
 
         public ReactiveCommand StartTestCommand { get; } 
                
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-        
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
@@ -196,12 +194,7 @@ namespace Prover.GUI.Screens.QAProver
                 if (instrument.InstrumentType == Instruments.MiniAt)
                 {
                     EventLogCommPortItem = SiteInformationItem;
-                }
-
-                if (instrument.VolumeTest?.DriveType is RotaryDrive)
-                    MeterDisplacementItem =
-                        new RotaryMeterTestViewModel(
-                            (RotaryDrive) instrument.VolumeTest.DriveType);
+                }            
             });
         }
 

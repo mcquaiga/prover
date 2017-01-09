@@ -19,6 +19,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             if (Volume?.DriveType is MechanicalDrive)
                 EnergyTestItem =
                     new EnergyTestViewModel(EventAggregator, (MechanicalDrive)Volume.DriveType);
+
+            if (Volume?.DriveType is RotaryDrive)
+                MeterDisplacementItem =
+                    new RotaryMeterTestViewModel(
+                        (RotaryDrive)Volume.DriveType);
         }
 
         public QaRunTestManager InstrumentManager { get; set; }
@@ -37,6 +42,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         }
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
+        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
 
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
