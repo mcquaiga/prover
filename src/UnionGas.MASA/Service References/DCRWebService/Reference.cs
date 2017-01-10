@@ -5528,19 +5528,19 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private decimal PercentErrorField;
+        private System.Nullable<decimal> PercentErrorField;
         
-        private decimal GasPressureField;
+        private System.Nullable<decimal> GasPressureField;
         
-        private decimal GaugePressureField;
+        private System.Nullable<decimal> GaugePressureField;
         
-        private decimal AtmosphericGaugeField;
+        private System.Nullable<decimal> AtmosphericGaugeField;
         
-        private decimal ActualFactorField;
+        private System.Nullable<decimal> ActualFactorField;
         
-        private decimal EvcGasPressureField;
+        private System.Nullable<decimal> EvcGasPressureField;
         
-        private decimal EvcPressureFactorField;
+        private System.Nullable<decimal> EvcPressureFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5553,7 +5553,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public decimal PercentError {
+        public System.Nullable<decimal> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5566,7 +5566,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public decimal GasPressure {
+        public System.Nullable<decimal> GasPressure {
             get {
                 return this.GasPressureField;
             }
@@ -5579,7 +5579,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal GaugePressure {
+        public System.Nullable<decimal> GaugePressure {
             get {
                 return this.GaugePressureField;
             }
@@ -5592,7 +5592,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public decimal AtmosphericGauge {
+        public System.Nullable<decimal> AtmosphericGauge {
             get {
                 return this.AtmosphericGaugeField;
             }
@@ -5605,7 +5605,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public decimal ActualFactor {
+        public System.Nullable<decimal> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5618,7 +5618,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public decimal EvcGasPressure {
+        public System.Nullable<decimal> EvcGasPressure {
             get {
                 return this.EvcGasPressureField;
             }
@@ -5631,7 +5631,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=6)]
-        public decimal EvcPressureFactor {
+        public System.Nullable<decimal> EvcPressureFactor {
             get {
                 return this.EvcPressureFactorField;
             }
@@ -5662,15 +5662,15 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private decimal PercentErrorField;
+        private System.Nullable<decimal> PercentErrorField;
         
-        private decimal GaugeTemperatureField;
+        private System.Nullable<decimal> GaugeTemperatureField;
         
-        private decimal EvcTemperatureField;
+        private System.Nullable<decimal> EvcTemperatureField;
         
-        private decimal EvcFactorField;
+        private System.Nullable<decimal> EvcFactorField;
         
-        private decimal ActualFactorField;
+        private System.Nullable<decimal> ActualFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5683,7 +5683,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public decimal PercentError {
+        public System.Nullable<decimal> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5696,7 +5696,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public decimal GaugeTemperature {
+        public System.Nullable<decimal> GaugeTemperature {
             get {
                 return this.GaugeTemperatureField;
             }
@@ -5709,7 +5709,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal EvcTemperature {
+        public System.Nullable<decimal> EvcTemperature {
             get {
                 return this.EvcTemperatureField;
             }
@@ -5722,7 +5722,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public decimal EvcFactor {
+        public System.Nullable<decimal> EvcFactor {
             get {
                 return this.EvcFactorField;
             }
@@ -5735,7 +5735,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public decimal ActualFactor {
+        public System.Nullable<decimal> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5766,17 +5766,17 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private decimal PercentErrorField;
+        private System.Nullable<decimal> PercentErrorField;
         
-        private decimal GaugeTemperatureField;
+        private System.Nullable<decimal> GaugeTemperatureField;
         
-        private decimal GaugePressureField;
+        private System.Nullable<decimal> GaugePressureField;
         
-        private decimal EvcUnsqrFactorField;
+        private System.Nullable<decimal> EvcUnsqrFactorField;
         
-        private decimal EvcFactorField;
+        private System.Nullable<decimal> EvcFactorField;
         
-        private decimal ActualFactorField;
+        private System.Nullable<decimal> ActualFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5789,7 +5789,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public decimal PercentError {
+        public System.Nullable<decimal> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5802,7 +5802,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public decimal GaugeTemperature {
+        public System.Nullable<decimal> GaugeTemperature {
             get {
                 return this.GaugeTemperatureField;
             }
@@ -5815,7 +5815,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal GaugePressure {
+        public System.Nullable<decimal> GaugePressure {
             get {
                 return this.GaugePressureField;
             }
@@ -5828,7 +5828,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public decimal EvcUnsqrFactor {
+        public System.Nullable<decimal> EvcUnsqrFactor {
             get {
                 return this.EvcUnsqrFactorField;
             }
@@ -5841,7 +5841,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public decimal EvcFactor {
+        public System.Nullable<decimal> EvcFactor {
             get {
                 return this.EvcFactorField;
             }
@@ -5854,7 +5854,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public decimal ActualFactor {
+        public System.Nullable<decimal> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5885,25 +5885,25 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private decimal UnCorrectedPercentErrorField;
+        private System.Nullable<decimal> UnCorrectedPercentErrorField;
         
-        private decimal CorrectedPercentErrorField;
+        private System.Nullable<decimal> CorrectedPercentErrorField;
         
-        private int PulseACountField;
+        private System.Nullable<int> PulseACountField;
         
-        private int PulseBCountField;
+        private System.Nullable<int> PulseBCountField;
         
-        private decimal AppliedInputField;
+        private System.Nullable<decimal> AppliedInputField;
         
-        private decimal TrueCorrectedField;
+        private System.Nullable<decimal> TrueCorrectedField;
         
-        private int UncPulseCountField;
+        private System.Nullable<int> UncPulseCountField;
         
-        private int CorPulseCountField;
+        private System.Nullable<int> CorPulseCountField;
         
-        private decimal EvcCorrectedField;
+        private System.Nullable<decimal> EvcCorrectedField;
         
-        private decimal EvcUncorrectedField;
+        private System.Nullable<decimal> EvcUncorrectedField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5916,7 +5916,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public decimal UnCorrectedPercentError {
+        public System.Nullable<decimal> UnCorrectedPercentError {
             get {
                 return this.UnCorrectedPercentErrorField;
             }
@@ -5929,7 +5929,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public decimal CorrectedPercentError {
+        public System.Nullable<decimal> CorrectedPercentError {
             get {
                 return this.CorrectedPercentErrorField;
             }
@@ -5942,7 +5942,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public int PulseACount {
+        public System.Nullable<int> PulseACount {
             get {
                 return this.PulseACountField;
             }
@@ -5955,7 +5955,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public int PulseBCount {
+        public System.Nullable<int> PulseBCount {
             get {
                 return this.PulseBCountField;
             }
@@ -5968,7 +5968,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public decimal AppliedInput {
+        public System.Nullable<decimal> AppliedInput {
             get {
                 return this.AppliedInputField;
             }
@@ -5981,7 +5981,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public decimal TrueCorrected {
+        public System.Nullable<decimal> TrueCorrected {
             get {
                 return this.TrueCorrectedField;
             }
@@ -5994,7 +5994,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=6)]
-        public int UncPulseCount {
+        public System.Nullable<int> UncPulseCount {
             get {
                 return this.UncPulseCountField;
             }
@@ -6007,7 +6007,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=7)]
-        public int CorPulseCount {
+        public System.Nullable<int> CorPulseCount {
             get {
                 return this.CorPulseCountField;
             }
@@ -6020,7 +6020,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=8)]
-        public decimal EvcCorrected {
+        public System.Nullable<decimal> EvcCorrected {
             get {
                 return this.EvcCorrectedField;
             }
@@ -6033,7 +6033,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=9)]
-        public decimal EvcUncorrected {
+        public System.Nullable<decimal> EvcUncorrected {
             get {
                 return this.EvcUncorrectedField;
             }
@@ -6053,13 +6053,6 @@ namespace UnionGas.MASA.DCRWebService {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.CollectionDataContractAttribute(Name="ArrayOfString", Namespace="http://tempuri.org/", ItemName="string")]
-    [System.SerializableAttribute()]
-    public class ArrayOfString : System.Collections.Generic.List<string> {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -6198,13 +6191,6 @@ namespace UnionGas.MASA.DCRWebService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQARotaryTestResults", ReplyAction="*")]
         System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitQARotaryTestResultsResponse> SubmitQARotaryTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitQARotaryTestResultsRequest request);
-        
-        // CODEGEN: Generating message contract since element name employeeId from namespace http://tempuri.org/ is not marked nillable
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitSimpleQARotaryTestResults", ReplyAction="*")]
-        UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse SubmitSimpleQARotaryTestResults(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitSimpleQARotaryTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse> SubmitSimpleQARotaryTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest request);
         
         // CODEGEN: Generating message contract since element name tr from namespace http://tempuri.org/ is not marked nillable
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQATurbineTestResults", ReplyAction="*")]
@@ -7519,122 +7505,6 @@ namespace UnionGas.MASA.DCRWebService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class SubmitSimpleQARotaryTestResultsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitSimpleQARotaryTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequestBody Body;
-        
-        public SubmitSimpleQARotaryTestResultsRequest() {
-        }
-        
-        public SubmitSimpleQARotaryTestResultsRequest(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequestBody Body) {
-            this.Body = Body;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
-    public partial class SubmitSimpleQARotaryTestResultsRequestBody {
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
-        public int jobNbr;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
-        public string employeeId;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
-        public string proverNbr;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-        public System.DateTime enteredDate;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
-        public string inventoryCode;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
-        public string testReasonCode;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=6)]
-        public string fieldMeterDesc;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-        public System.Nullable<int> indexReadingNbr;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=8)]
-        public string comments;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=9)]
-        public string meterOutputDesc;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=10)]
-        public string testSetupDesc;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=11)]
-        public string spanTestResult;
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=12)]
-        public UnionGas.MASA.DCRWebService.ArrayOfString rotaryTestDetailRecords;
-        
-        public SubmitSimpleQARotaryTestResultsRequestBody() {
-        }
-        
-        public SubmitSimpleQARotaryTestResultsRequestBody(int jobNbr, string employeeId, string proverNbr, System.DateTime enteredDate, string inventoryCode, string testReasonCode, string fieldMeterDesc, System.Nullable<int> indexReadingNbr, string comments, string meterOutputDesc, string testSetupDesc, string spanTestResult, UnionGas.MASA.DCRWebService.ArrayOfString rotaryTestDetailRecords) {
-            this.jobNbr = jobNbr;
-            this.employeeId = employeeId;
-            this.proverNbr = proverNbr;
-            this.enteredDate = enteredDate;
-            this.inventoryCode = inventoryCode;
-            this.testReasonCode = testReasonCode;
-            this.fieldMeterDesc = fieldMeterDesc;
-            this.indexReadingNbr = indexReadingNbr;
-            this.comments = comments;
-            this.meterOutputDesc = meterOutputDesc;
-            this.testSetupDesc = testSetupDesc;
-            this.spanTestResult = spanTestResult;
-            this.rotaryTestDetailRecords = rotaryTestDetailRecords;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class SubmitSimpleQARotaryTestResultsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitSimpleQARotaryTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponseBody Body;
-        
-        public SubmitSimpleQARotaryTestResultsResponse() {
-        }
-        
-        public SubmitSimpleQARotaryTestResultsResponse(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponseBody Body) {
-            this.Body = Body;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
-    public partial class SubmitSimpleQARotaryTestResultsResponseBody {
-        
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public string SubmitSimpleQARotaryTestResultsResult;
-        
-        public SubmitSimpleQARotaryTestResultsResponseBody() {
-        }
-        
-        public SubmitSimpleQARotaryTestResultsResponseBody(string SubmitSimpleQARotaryTestResultsResult) {
-            this.SubmitSimpleQARotaryTestResultsResult = SubmitSimpleQARotaryTestResultsResult;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class SubmitQATurbineTestResultsRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQATurbineTestResults", Namespace="http://tempuri.org/", Order=0)]
@@ -8271,55 +8141,6 @@ namespace UnionGas.MASA.DCRWebService {
             inValue.Body = new UnionGas.MASA.DCRWebService.SubmitQARotaryTestResultsRequestBody();
             inValue.Body.tr = tr;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitQARotaryTestResultsAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse UnionGas.MASA.DCRWebService.DCRWebServiceSoap.SubmitSimpleQARotaryTestResults(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest request) {
-            return base.Channel.SubmitSimpleQARotaryTestResults(request);
-        }
-        
-        public string SubmitSimpleQARotaryTestResults(int jobNbr, string employeeId, string proverNbr, System.DateTime enteredDate, string inventoryCode, string testReasonCode, string fieldMeterDesc, System.Nullable<int> indexReadingNbr, string comments, string meterOutputDesc, string testSetupDesc, string spanTestResult, UnionGas.MASA.DCRWebService.ArrayOfString rotaryTestDetailRecords) {
-            UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest inValue = new UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest();
-            inValue.Body = new UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequestBody();
-            inValue.Body.jobNbr = jobNbr;
-            inValue.Body.employeeId = employeeId;
-            inValue.Body.proverNbr = proverNbr;
-            inValue.Body.enteredDate = enteredDate;
-            inValue.Body.inventoryCode = inventoryCode;
-            inValue.Body.testReasonCode = testReasonCode;
-            inValue.Body.fieldMeterDesc = fieldMeterDesc;
-            inValue.Body.indexReadingNbr = indexReadingNbr;
-            inValue.Body.comments = comments;
-            inValue.Body.meterOutputDesc = meterOutputDesc;
-            inValue.Body.testSetupDesc = testSetupDesc;
-            inValue.Body.spanTestResult = spanTestResult;
-            inValue.Body.rotaryTestDetailRecords = rotaryTestDetailRecords;
-            UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitSimpleQARotaryTestResults(inValue);
-            return retVal.Body.SubmitSimpleQARotaryTestResultsResult;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse> UnionGas.MASA.DCRWebService.DCRWebServiceSoap.SubmitSimpleQARotaryTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest request) {
-            return base.Channel.SubmitSimpleQARotaryTestResultsAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse> SubmitSimpleQARotaryTestResultsAsync(int jobNbr, string employeeId, string proverNbr, System.DateTime enteredDate, string inventoryCode, string testReasonCode, string fieldMeterDesc, System.Nullable<int> indexReadingNbr, string comments, string meterOutputDesc, string testSetupDesc, string spanTestResult, UnionGas.MASA.DCRWebService.ArrayOfString rotaryTestDetailRecords) {
-            UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest inValue = new UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequest();
-            inValue.Body = new UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsRequestBody();
-            inValue.Body.jobNbr = jobNbr;
-            inValue.Body.employeeId = employeeId;
-            inValue.Body.proverNbr = proverNbr;
-            inValue.Body.enteredDate = enteredDate;
-            inValue.Body.inventoryCode = inventoryCode;
-            inValue.Body.testReasonCode = testReasonCode;
-            inValue.Body.fieldMeterDesc = fieldMeterDesc;
-            inValue.Body.indexReadingNbr = indexReadingNbr;
-            inValue.Body.comments = comments;
-            inValue.Body.meterOutputDesc = meterOutputDesc;
-            inValue.Body.testSetupDesc = testSetupDesc;
-            inValue.Body.spanTestResult = spanTestResult;
-            inValue.Body.rotaryTestDetailRecords = rotaryTestDetailRecords;
-            return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitSimpleQARotaryTestResultsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
