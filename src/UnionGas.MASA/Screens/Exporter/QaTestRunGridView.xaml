@@ -11,7 +11,7 @@
              TextElement.FontWeight="Light"
              TextElement.FontSize="18"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="75">
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="100">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -73,26 +73,32 @@
                Style="{StaticResource PassFailIcon}"
                Margin="15"
                Width="36" Height="36" />
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical">
+            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
                 <TextBlock Text="{Binding DateTimePretty}"/>
-                <TextBlock FontSize="36" Text="{Binding Instrument.InstrumentType.Name}" />
-                <TextBlock Text="{Binding Instrument.JobId}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="2" Margin="15" Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock FontSize="32" Text="{Binding Instrument.InstrumentType.Name}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Instrument.CompositionType}" />
                     <TextBlock Text=" | " />
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
                 </StackPanel>
+                
+            </StackPanel>
+            <StackPanel Grid.Column="2" Margin="10 5" Orientation="Vertical" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>C/N: </TextBlock><TextBlock FontSize="18" Text="{Binding Instrument.SiteNumber2}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>S/N: </TextBlock><TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
+                    <TextBlock>S/N:</TextBlock>
+                    <TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Job #</TextBlock>
+                    <TextBlock Text="{Binding Instrument.JobId}"/>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">
+                
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     Command="{Binding ExportQaTestRunCommand}"
@@ -103,30 +109,23 @@
                                          Foreground="White" />
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Height="48"
-                    ToolTip="View QA Test Run Report">
+                        Height="48"
+                        Command="{Binding ViewQaTestReportCommand}"
+                        ToolTip="View QA Test Report">
+                   
                     <materialDesign:PackIcon Kind="Printer"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="DisplayInstrumentReport" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </Button>
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="15 0 0 0"
                     Height="48"
-                    ToolTip="Delete Test">
-                    <materialDesign:PackIcon Kind="Delete"
+                    Command="{Binding ArchiveTestCommand}"
+                    ToolTip="Archive Test">
+                    <materialDesign:PackIcon Kind="Archive"
                                          Height="36"
                                          Width="36"
                                          Foreground="White" />
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="DeleteInstrument" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
 

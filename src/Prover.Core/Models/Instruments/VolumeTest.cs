@@ -141,8 +141,7 @@ namespace Prover.Core.Models.Instruments
                 var expectedPulses = (int) (AfterTestItems.Corrected() - Items.Corrected());
 
                 var variance = expectedPulses - CorPulseCount;
-                return variance.IsBetween(2);
-              
+                return variance.IsBetween(2);              
             }
         }
 
