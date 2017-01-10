@@ -4502,6 +4502,12 @@ namespace UnionGas.MASA.DCRWebService {
         private string ConfirmedStatusField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CommPortPassedIndField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string EventLogPassedIndField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private UnionGas.MASA.DCRWebService.PressureHeader PressureInfoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -4634,6 +4640,32 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=9)]
+        public string CommPortPassedInd {
+            get {
+                return this.CommPortPassedIndField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CommPortPassedIndField, value) != true)) {
+                    this.CommPortPassedIndField = value;
+                    this.RaisePropertyChanged("CommPortPassedInd");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=10)]
+        public string EventLogPassedInd {
+            get {
+                return this.EventLogPassedIndField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EventLogPassedIndField, value) != true)) {
+                    this.EventLogPassedIndField = value;
+                    this.RaisePropertyChanged("EventLogPassedInd");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=11)]
         public UnionGas.MASA.DCRWebService.PressureHeader PressureInfo {
             get {
                 return this.PressureInfoField;
@@ -4646,7 +4678,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=10)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=12)]
         public UnionGas.MASA.DCRWebService.TemperatureHeader TemperatureInfo {
             get {
                 return this.TemperatureInfoField;
@@ -4659,7 +4691,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=11)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=13)]
         public UnionGas.MASA.DCRWebService.SuperFactorHeader SuperFactorInfo {
             get {
                 return this.SuperFactorInfoField;
@@ -4672,7 +4704,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=12)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=14)]
         public UnionGas.MASA.DCRWebService.VolumeHeader VolumeInfo {
             get {
                 return this.VolumeInfoField;
@@ -4685,7 +4717,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=13)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=15)]
         public UnionGas.MASA.DCRWebService.VerificationTest[] VerificationTests {
             get {
                 return this.VerificationTestsField;
@@ -5905,6 +5937,9 @@ namespace UnionGas.MASA.DCRWebService {
         
         private System.Nullable<decimal> EvcUncorrectedField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string EnergyPassedIndField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -6041,6 +6076,19 @@ namespace UnionGas.MASA.DCRWebService {
                 if ((this.EvcUncorrectedField.Equals(value) != true)) {
                     this.EvcUncorrectedField = value;
                     this.RaisePropertyChanged("EvcUncorrected");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=10)]
+        public string EnergyPassedInd {
+            get {
+                return this.EnergyPassedIndField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EnergyPassedIndField, value) != true)) {
+                    this.EnergyPassedIndField = value;
+                    this.RaisePropertyChanged("EnergyPassedInd");
                 }
             }
         }

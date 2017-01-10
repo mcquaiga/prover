@@ -19,7 +19,7 @@ namespace UnionGas.MASA.Exporter
 {
     public static class Translate
     {
-        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static QARunEvcTestResult RunTranslationForExport(Instrument instrument)
         {
@@ -41,6 +41,8 @@ namespace UnionGas.MASA.Exporter
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
                 EmployeeId = instrument.EmployeeId,
+                EventLogPassedInd = instrument.EventLogPassed.HasValue ? instrument.EventLogPassed.Value ? "Y" : "N" : null,
+                CommPortPassedInd = instrument.CommPortsPassed.HasValue ? instrument.CommPortsPassed.Value ? "Y" : "N" : null,
                 PressureInfo = new PressureHeader
                 {
                     BasePressure =
@@ -104,7 +106,7 @@ namespace UnionGas.MASA.Exporter
             {
                 var objectString = JsonConvert.SerializeObject(qaRun, Formatting.Indented,
                     new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
-                _log.Debug($"Exporting Instrument object to MASA: {Environment.NewLine} {objectString}");
+                Log.Debug($"Exporting Instrument object to MASA: {Environment.NewLine} {objectString}");
             });
 
             return qaRun;
@@ -127,6 +129,8 @@ namespace UnionGas.MASA.Exporter
         {
             if (vt.VolumeTest == null) return new VolumeTest();
 
+            var mechanicalDrive = vt.VolumeTest.DriveType as MechanicalDrive;
+
             return new VolumeTest
             {
                 AppliedInput = RoundTo(vt.VolumeTest.AppliedInput, 2),
@@ -138,7 +142,8 @@ namespace UnionGas.MASA.Exporter
                 PulseBCount = vt.VolumeTest.PulseBCount,
                 TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
                 CorrectedPercentError = RoundTo(vt.VolumeTest.CorrectedPercentError, 2),
-                UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2)
+                UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2),
+                EnergyPassedInd = mechanicalDrive != null ? mechanicalDrive.Energy.HasPassed ? "Y" : "N" : null
             };
         }
 
