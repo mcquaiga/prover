@@ -72,7 +72,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occured during the verification test. See exception for details.");
+                Log.Error(ex, $"An error occured during the verification test. See exception for details. {ex.Message}");
             }
             finally
             {
