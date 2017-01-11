@@ -4491,9 +4491,9 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MeterTypeField;
         
-        private decimal MeterDisplacementField;
+        private double MeterDisplacementField;
         
-        private decimal FirmwareVersionField;
+        private double FirmwareVersionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string InstrumentDataField;
@@ -4588,7 +4588,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public decimal MeterDisplacement {
+        public double MeterDisplacement {
             get {
                 return this.MeterDisplacementField;
             }
@@ -4601,7 +4601,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=6)]
-        public decimal FirmwareVersion {
+        public double FirmwareVersion {
             get {
                 return this.FirmwareVersionField;
             }
@@ -5031,11 +5031,11 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PressureUnitsField;
         
-        private decimal BasePressureField;
+        private double BasePressureField;
         
-        private decimal PressureRangeField;
+        private double PressureRangeField;
         
-        private decimal ProgrammedAtmosphericPressureField;
+        private double ProgrammedAtmosphericPressureField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5074,7 +5074,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal BasePressure {
+        public double BasePressure {
             get {
                 return this.BasePressureField;
             }
@@ -5087,7 +5087,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public decimal PressureRange {
+        public double PressureRange {
             get {
                 return this.PressureRangeField;
             }
@@ -5100,7 +5100,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public decimal ProgrammedAtmosphericPressure {
+        public double ProgrammedAtmosphericPressure {
             get {
                 return this.ProgrammedAtmosphericPressureField;
             }
@@ -5137,7 +5137,7 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string TemperatureUnitsField;
         
-        private decimal BaseTemperatureField;
+        private double BaseTemperatureField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5176,7 +5176,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal BaseTemperature {
+        public double BaseTemperature {
             get {
                 return this.BaseTemperatureField;
             }
@@ -5207,11 +5207,11 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private decimal SpecGrField;
+        private double SpecGrField;
         
-        private decimal CO2Field;
+        private double CO2Field;
         
-        private decimal N2Field;
+        private double N2Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string FPVTableField;
@@ -5227,7 +5227,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public decimal SpecGr {
+        public double SpecGr {
             get {
                 return this.SpecGrField;
             }
@@ -5240,7 +5240,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public decimal CO2 {
+        public double CO2 {
             get {
                 return this.CO2Field;
             }
@@ -5253,7 +5253,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public decimal N2 {
+        public double N2 {
             get {
                 return this.N2Field;
             }
@@ -5560,19 +5560,19 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private System.Nullable<decimal> PercentErrorField;
+        private System.Nullable<double> PercentErrorField;
         
-        private System.Nullable<decimal> GasPressureField;
+        private System.Nullable<double> GasPressureField;
         
-        private System.Nullable<decimal> GaugePressureField;
+        private System.Nullable<double> GaugePressureField;
         
-        private System.Nullable<decimal> AtmosphericGaugeField;
+        private System.Nullable<double> AtmosphericGaugeField;
         
-        private System.Nullable<decimal> ActualFactorField;
+        private System.Nullable<double> ActualFactorField;
         
-        private System.Nullable<decimal> EvcGasPressureField;
+        private System.Nullable<double> EvcGasPressureField;
         
-        private System.Nullable<decimal> EvcPressureFactorField;
+        private System.Nullable<double> EvcPressureFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5585,7 +5585,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public System.Nullable<decimal> PercentError {
+        public System.Nullable<double> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5598,7 +5598,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public System.Nullable<decimal> GasPressure {
+        public System.Nullable<double> GasPressure {
             get {
                 return this.GasPressureField;
             }
@@ -5611,7 +5611,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public System.Nullable<decimal> GaugePressure {
+        public System.Nullable<double> GaugePressure {
             get {
                 return this.GaugePressureField;
             }
@@ -5624,7 +5624,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public System.Nullable<decimal> AtmosphericGauge {
+        public System.Nullable<double> AtmosphericGauge {
             get {
                 return this.AtmosphericGaugeField;
             }
@@ -5637,7 +5637,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public System.Nullable<decimal> ActualFactor {
+        public System.Nullable<double> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5650,7 +5650,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public System.Nullable<decimal> EvcGasPressure {
+        public System.Nullable<double> EvcGasPressure {
             get {
                 return this.EvcGasPressureField;
             }
@@ -5663,7 +5663,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=6)]
-        public System.Nullable<decimal> EvcPressureFactor {
+        public System.Nullable<double> EvcPressureFactor {
             get {
                 return this.EvcPressureFactorField;
             }
@@ -5694,15 +5694,15 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private System.Nullable<decimal> PercentErrorField;
+        private System.Nullable<double> PercentErrorField;
         
-        private System.Nullable<decimal> GaugeTemperatureField;
+        private System.Nullable<double> GaugeTemperatureField;
         
-        private System.Nullable<decimal> EvcTemperatureField;
+        private System.Nullable<double> EvcTemperatureField;
         
-        private System.Nullable<decimal> EvcFactorField;
+        private System.Nullable<double> EvcFactorField;
         
-        private System.Nullable<decimal> ActualFactorField;
+        private System.Nullable<double> ActualFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5715,7 +5715,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public System.Nullable<decimal> PercentError {
+        public System.Nullable<double> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5728,7 +5728,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public System.Nullable<decimal> GaugeTemperature {
+        public System.Nullable<double> GaugeTemperature {
             get {
                 return this.GaugeTemperatureField;
             }
@@ -5741,7 +5741,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public System.Nullable<decimal> EvcTemperature {
+        public System.Nullable<double> EvcTemperature {
             get {
                 return this.EvcTemperatureField;
             }
@@ -5754,7 +5754,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public System.Nullable<decimal> EvcFactor {
+        public System.Nullable<double> EvcFactor {
             get {
                 return this.EvcFactorField;
             }
@@ -5767,7 +5767,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public System.Nullable<decimal> ActualFactor {
+        public System.Nullable<double> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5798,17 +5798,17 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private System.Nullable<decimal> PercentErrorField;
+        private System.Nullable<double> PercentErrorField;
         
-        private System.Nullable<decimal> GaugeTemperatureField;
+        private System.Nullable<double> GaugeTemperatureField;
         
-        private System.Nullable<decimal> GaugePressureField;
+        private System.Nullable<double> GaugePressureField;
         
-        private System.Nullable<decimal> EvcUnsqrFactorField;
+        private System.Nullable<double> EvcUnsqrFactorField;
         
-        private System.Nullable<decimal> EvcFactorField;
+        private System.Nullable<double> EvcFactorField;
         
-        private System.Nullable<decimal> ActualFactorField;
+        private System.Nullable<double> ActualFactorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -5821,7 +5821,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public System.Nullable<decimal> PercentError {
+        public System.Nullable<double> PercentError {
             get {
                 return this.PercentErrorField;
             }
@@ -5834,7 +5834,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public System.Nullable<decimal> GaugeTemperature {
+        public System.Nullable<double> GaugeTemperature {
             get {
                 return this.GaugeTemperatureField;
             }
@@ -5847,7 +5847,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=2)]
-        public System.Nullable<decimal> GaugePressure {
+        public System.Nullable<double> GaugePressure {
             get {
                 return this.GaugePressureField;
             }
@@ -5860,7 +5860,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=3)]
-        public System.Nullable<decimal> EvcUnsqrFactor {
+        public System.Nullable<double> EvcUnsqrFactor {
             get {
                 return this.EvcUnsqrFactorField;
             }
@@ -5873,7 +5873,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public System.Nullable<decimal> EvcFactor {
+        public System.Nullable<double> EvcFactor {
             get {
                 return this.EvcFactorField;
             }
@@ -5886,7 +5886,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public System.Nullable<decimal> ActualFactor {
+        public System.Nullable<double> ActualFactor {
             get {
                 return this.ActualFactorField;
             }
@@ -5917,25 +5917,25 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        private System.Nullable<decimal> UnCorrectedPercentErrorField;
+        private System.Nullable<double> UnCorrectedPercentErrorField;
         
-        private System.Nullable<decimal> CorrectedPercentErrorField;
+        private System.Nullable<double> CorrectedPercentErrorField;
         
         private System.Nullable<int> PulseACountField;
         
         private System.Nullable<int> PulseBCountField;
         
-        private System.Nullable<decimal> AppliedInputField;
+        private System.Nullable<double> AppliedInputField;
         
-        private System.Nullable<decimal> TrueCorrectedField;
+        private System.Nullable<double> TrueCorrectedField;
         
         private System.Nullable<int> UncPulseCountField;
         
         private System.Nullable<int> CorPulseCountField;
         
-        private System.Nullable<decimal> EvcCorrectedField;
+        private System.Nullable<double> EvcCorrectedField;
         
-        private System.Nullable<decimal> EvcUncorrectedField;
+        private System.Nullable<double> EvcUncorrectedField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string EnergyPassedIndField;
@@ -5951,7 +5951,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
-        public System.Nullable<decimal> UnCorrectedPercentError {
+        public System.Nullable<double> UnCorrectedPercentError {
             get {
                 return this.UnCorrectedPercentErrorField;
             }
@@ -5964,7 +5964,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
-        public System.Nullable<decimal> CorrectedPercentError {
+        public System.Nullable<double> CorrectedPercentError {
             get {
                 return this.CorrectedPercentErrorField;
             }
@@ -6003,7 +6003,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=4)]
-        public System.Nullable<decimal> AppliedInput {
+        public System.Nullable<double> AppliedInput {
             get {
                 return this.AppliedInputField;
             }
@@ -6016,7 +6016,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=5)]
-        public System.Nullable<decimal> TrueCorrected {
+        public System.Nullable<double> TrueCorrected {
             get {
                 return this.TrueCorrectedField;
             }
@@ -6055,7 +6055,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=8)]
-        public System.Nullable<decimal> EvcCorrected {
+        public System.Nullable<double> EvcCorrected {
             get {
                 return this.EvcCorrectedField;
             }
@@ -6068,7 +6068,7 @@ namespace UnionGas.MASA.DCRWebService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=9)]
-        public System.Nullable<decimal> EvcUncorrected {
+        public System.Nullable<double> EvcUncorrected {
             get {
                 return this.EvcUncorrectedField;
             }

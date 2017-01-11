@@ -30,9 +30,10 @@ namespace UnionGas.MASA.Exporter
                 TestDate = instrument.TestDateTime,
                 DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
                 MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
-                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement : decimal.Zero,
+                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
+                    Convert.ToDouble((instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement) : 0,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
-                FirmwareVersion = instrument.FirmwareVersion,
+                FirmwareVersion = Convert.ToDouble(instrument.FirmwareVersion),
                 SerialNumber = instrument.SerialNumber.ToString(),
                 InstrumentData = instrument.InstrumentData,
                 InstrumentComposition = instrument.CompositionType.ToString(),
@@ -43,31 +44,25 @@ namespace UnionGas.MASA.Exporter
                 {
                     BasePressure =
                         instrument.EvcBasePressure().HasValue
-                            ? decimal.Round(instrument.EvcBasePressure().Value, 2)
-                            : decimal.Zero,
-                    PressureRange = instrument.EvcPressureRange() ?? decimal.MinusOne,
+                            ? Convert.ToDouble(decimal.Round(instrument.EvcBasePressure().Value, 2)) : 0,
+                    PressureRange = Convert.ToDouble(instrument.EvcPressureRange()),
                     PressureUnits = instrument.PressureUnits(),
                     TransducerType = instrument.GetTransducerType().ToString().Substring(0, 1),
                     ProgrammedAtmosphericPressure =
-                        instrument.EvcAtmosphericPressure().HasValue
-                            ? decimal.Round(instrument.EvcAtmosphericPressure().Value, 2)
-                            : decimal.MinusOne
+                        instrument.EvcAtmosphericPressure().HasValue ? Convert.ToDouble(decimal.Round(instrument.EvcAtmosphericPressure().Value, 2)) : 0
                 },
                 TemperatureInfo = new TemperatureHeader
                 {
                     BaseTemperature =
-                        instrument.EvcBaseTemperature().HasValue
-                            ? decimal.Round(instrument.EvcBaseTemperature().Value, 2)
-                            : decimal.MinusOne,
+                        instrument.EvcBaseTemperature().HasValue ? Convert.ToDouble(decimal.Round(instrument.EvcBaseTemperature().Value, 2)) : 0,
                     TemperatureRange = "-40 to 170",
                     TemperatureUnits = $"deg{instrument.TemperatureUnits()}"
                 },
                 SuperFactorInfo = new SuperFactorHeader
                 {
-                    CO2 = instrument.CO2().HasValue ? decimal.Round(instrument.CO2().Value, 4) : decimal.MinusOne,
-                    SpecGr =
-                        instrument.SpecGr().HasValue ? decimal.Round(instrument.SpecGr().Value, 4) : decimal.MinusOne,
-                    N2 = instrument.N2().HasValue ? decimal.Round(instrument.N2().Value, 4) : decimal.MinusOne,
+                    CO2 = instrument.CO2().HasValue ? Convert.ToDouble(decimal.Round(instrument.CO2().Value, 4)) : 0,
+                    SpecGr = instrument.SpecGr().HasValue ? Convert.ToDouble(decimal.Round(instrument.SpecGr().Value, 4)) : 0,
+                    N2 = instrument.N2().HasValue ? Convert.ToDouble(decimal.Round(instrument.N2().Value, 4)) : 0,
                     FPVTable = "NX19"
                 },
                 VolumeInfo = new VolumeHeader
@@ -128,16 +123,16 @@ namespace UnionGas.MASA.Exporter
 
             return new VolumeTest
             {
-                AppliedInput = RoundTo(vt.VolumeTest.AppliedInput, 2),
-                EvcCorrected = RoundTo(vt.VolumeTest.EvcCorrected, 2),
-                EvcUncorrected = RoundTo(vt.VolumeTest.EvcUncorrected, 2),
+                AppliedInput = Convert.ToDouble(RoundTo(vt.VolumeTest.AppliedInput, 2)),
+                EvcCorrected = Convert.ToDouble(RoundTo(vt.VolumeTest.EvcCorrected, 2)),
+                EvcUncorrected = Convert.ToDouble(RoundTo(vt.VolumeTest.EvcUncorrected, 2)),
                 CorPulseCount = vt.VolumeTest.CorPulseCount,
                 UncPulseCount = vt.VolumeTest.UncPulseCount,
                 PulseACount = vt.VolumeTest.PulseACount,
                 PulseBCount = vt.VolumeTest.PulseBCount,
-                TrueCorrected = RoundTo(vt.VolumeTest.TrueCorrected, 4),
-                CorrectedPercentError = RoundTo(vt.VolumeTest.CorrectedPercentError, 2),
-                UnCorrectedPercentError = RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2),
+                TrueCorrected = Convert.ToDouble(RoundTo(vt.VolumeTest.TrueCorrected, 4)),
+                CorrectedPercentError = Convert.ToDouble(RoundTo(vt.VolumeTest.CorrectedPercentError, 2)),
+                UnCorrectedPercentError = Convert.ToDouble(RoundTo(vt.VolumeTest.UnCorrectedPercentError, 2)),
                 EnergyPassedInd = mechanicalDrive != null ? mechanicalDrive.Energy.HasPassed ? "Y" : "N" : null
             };
         }
@@ -148,12 +143,12 @@ namespace UnionGas.MASA.Exporter
 
             return new SuperFactorTest
             {
-                ActualFactor = RoundTo(vt.SuperFactorTest.ActualFactor, 4),
-                EvcFactor = RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4),
-                EvcUnsqrFactor = RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4),
-                GaugePressure = RoundTo(vt.SuperFactorTest.GaugePressure, 2),
-                GaugeTemperature = RoundTo(vt.SuperFactorTest.GaugeTemp, 2),
-                PercentError = RoundTo(vt.SuperFactorTest.PercentError, 2)
+                ActualFactor = Convert.ToDouble(RoundTo(vt.SuperFactorTest.ActualFactor, 4)),
+                EvcFactor = Convert.ToDouble(RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4)),
+                EvcUnsqrFactor = Convert.ToDouble(RoundTo(vt.SuperFactorTest.EvcUnsqrFactor, 4)),
+                GaugePressure = Convert.ToDouble(RoundTo(vt.SuperFactorTest.GaugePressure, 2)),
+                GaugeTemperature = Convert.ToDouble(RoundTo(vt.SuperFactorTest.GaugeTemp, 2)),
+                PercentError = Convert.ToDouble(RoundTo(vt.SuperFactorTest.PercentError, 2))
             };
         }
 
@@ -163,11 +158,11 @@ namespace UnionGas.MASA.Exporter
 
             return new TemperatureTest
             {
-                ActualFactor = RoundTo(vt.TemperatureTest.ActualFactor, 4),
-                GaugeTemperature = RoundTo((decimal) vt.TemperatureTest.Gauge, 2),
-                EvcFactor = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4),
-                EvcTemperature = RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2),
-                PercentError = RoundTo(vt.TemperatureTest.PercentError, 2)
+                ActualFactor = Convert.ToDouble(RoundTo(vt.TemperatureTest.ActualFactor, 4)),
+                GaugeTemperature = Convert.ToDouble(RoundTo((decimal) vt.TemperatureTest.Gauge, 2)),
+                EvcFactor = Convert.ToDouble(RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4)),
+                EvcTemperature = Convert.ToDouble(RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2)),
+                PercentError = Convert.ToDouble(RoundTo(vt.TemperatureTest.PercentError, 2))
             };
         }
 
@@ -177,13 +172,13 @@ namespace UnionGas.MASA.Exporter
 
             return new PressureTest
             {
-                ActualFactor = RoundTo(vt.PressureTest.ActualFactor, 4),
-                EvcPressureFactor = RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue, 4),
-                GaugePressure = RoundTo(vt.PressureTest.GasGauge, 2),
-                AtmosphericGauge = RoundTo(vt.PressureTest.AtmosphericGauge, 2),
-                GasPressure = RoundTo(vt.PressureTest.GasPressure, 2),
-                EvcGasPressure = RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue, 2),
-                PercentError = RoundTo(vt.PressureTest.PercentError, 2)
+                ActualFactor = Convert.ToDouble(RoundTo(vt.PressureTest.ActualFactor, 4)),
+                EvcPressureFactor = Convert.ToDouble(RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue, 4)),
+                GaugePressure = Convert.ToDouble(RoundTo(vt.PressureTest.GasGauge, 2)),
+                AtmosphericGauge = Convert.ToDouble(RoundTo(vt.PressureTest.AtmosphericGauge, 2)),
+                GasPressure = Convert.ToDouble(RoundTo(vt.PressureTest.GasPressure, 2)),
+                EvcGasPressure = Convert.ToDouble(RoundTo(vt.PressureTest.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue, 2)),
+                PercentError = Convert.ToDouble(RoundTo(vt.PressureTest.PercentError, 2))
             };
         }
 
