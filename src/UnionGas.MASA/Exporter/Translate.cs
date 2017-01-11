@@ -29,12 +29,8 @@ namespace UnionGas.MASA.Exporter
                 InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture).PadLeft(7, '0'),
                 TestDate = instrument.TestDateTime,
                 DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
-                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary"
-                    ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription
-                    : string.Empty,
-                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary"
-                    ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement
-                    : decimal.Zero,
+                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
+                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement : decimal.Zero,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = instrument.FirmwareVersion,
                 SerialNumber = instrument.SerialNumber.ToString(),
@@ -87,14 +83,13 @@ namespace UnionGas.MASA.Exporter
                     PulseBSelect = instrument.PulseBSelect()
                 },
 
-                VerificationTests =
-                    instrument.VerificationTests.Select(TranslateVerificationTest)
+                VerificationTests = instrument.VerificationTests.Select(TranslateVerificationTest)
                         .OrderBy(t => t.SequenceNumber)
                         .ToArray(),
 
-                IndexReading = 0,
+                IndexReading = (int)instrument.Items.GetItem(98).NumericValue,
                 Comments = string.Empty,
-                JobNumber = instrument.JobId != null ? int.Parse(instrument.JobId) : -1,
+                JobNumber = !string.IsNullOrEmpty(instrument.JobId) ? int.Parse(instrument.JobId) : -1,
                 ProverNumber = "229", //
                 MeterClassCode = "EV",
                 TestReason = "6",
