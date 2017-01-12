@@ -285,9 +285,6 @@
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.SubmitQATurbineTestResultsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.SubmitSimpleQARotaryTestResultsResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.TestReasonDTO.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

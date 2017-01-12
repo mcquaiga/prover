@@ -1,13 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
-                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/"
-                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema"
-                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/"
-                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 4.64</wsdl:documentation>
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="GetCurrentlyConnectedDatabase">
@@ -122,8 +115,7 @@
       <s:element name="GetValidatedAcceptanceSampleMeterByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByInventoryCodeResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByInventoryCodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -176,8 +168,7 @@
       <s:element name="GetValidatedAcceptanceSampleMeterByBarcodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByBarcodeResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByBarcodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -191,8 +182,7 @@
       <s:element name="GetValidatedComplianceSampleMeterByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByInventoryCodeResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByInventoryCodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -206,8 +196,7 @@
       <s:element name="GetValidatedComplianceSampleMeterByBarcodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByBarcodeResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByBarcodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -221,8 +210,7 @@
       <s:element name="GetValidatedEvcDeviceByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -251,8 +239,7 @@
       <s:element name="GetMeterDataByInventoryCodeAndSerialNumberResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMeterDataByInventoryCodeAndSerialNumberResult"
-                       type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetMeterDataByInventoryCodeAndSerialNumberResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -397,8 +384,7 @@
       </s:complexType>
       <s:complexType name="ArrayOfTurbineReading">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="TurbineReading" nillable="true"
-                     type="tns:TurbineReading" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TurbineReading" nillable="true" type="tns:TurbineReading" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="TurbineReading">
@@ -511,8 +497,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="MeterOutputDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="TestSetupDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="SpanTestResult" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="RotaryTestResultDetails"
-                         type="tns:ArrayOfQARunRotaryTestResultDetail" />
+              <s:element minOccurs="0" maxOccurs="1" name="RotaryTestResultDetails" type="tns:ArrayOfQARunRotaryTestResultDetail" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -533,8 +518,7 @@
       </s:complexType>
       <s:complexType name="ArrayOfQARunRotaryTestResultDetail">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunRotaryTestResultDetail" nillable="true"
-                     type="tns:QARunRotaryTestResultDetail" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunRotaryTestResultDetail" nillable="true" type="tns:QARunRotaryTestResultDetail" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunRotaryTestResultDetail">
@@ -589,37 +573,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="SubmitSimpleQARotaryTestResults">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
-            <s:element minOccurs="0" maxOccurs="1" name="employeeId" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="proverNbr" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="enteredDate" type="s:dateTime" />
-            <s:element minOccurs="0" maxOccurs="1" name="inventoryCode" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="testReasonCode" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="fieldMeterDesc" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="indexReadingNbr" nillable="true" type="s:int" />
-            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="meterOutputDesc" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="testSetupDesc" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="spanTestResult" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="rotaryTestDetailRecords" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:complexType name="ArrayOfString">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="SubmitSimpleQARotaryTestResultsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="SubmitSimpleQARotaryTestResultsResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="SubmitQATurbineTestResults">
         <s:complexType>
           <s:sequence>
@@ -646,8 +599,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="MainRotorMinSpinUomCode" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="SensorRotorMinSpinQty" nillable="true" type="s:double" />
               <s:element minOccurs="0" maxOccurs="1" name="SensorRotorMinSpinUomCode" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="AvgRelativeAdjustmentPercentage" nillable="true"
-                         type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="AvgRelativeAdjustmentPercentage" nillable="true" type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="OrderNumber" nillable="true" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="MeterConstructionDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="QmaxDescription" type="s:string" />
@@ -656,16 +608,14 @@
               <s:element minOccurs="1" maxOccurs="1" name="SlotsCount" nillable="true" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="FiftyPercentTestIndicator" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="DriveRateTemperature" nillable="true" type="s:double" />
-              <s:element minOccurs="0" maxOccurs="1" name="TurbineTestResultDetails"
-                         type="tns:ArrayOfQARunTurbineTestResultDetail" />
+              <s:element minOccurs="0" maxOccurs="1" name="TurbineTestResultDetails" type="tns:ArrayOfQARunTurbineTestResultDetail" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ArrayOfQARunTurbineTestResultDetail">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunTurbineTestResultDetail" nillable="true"
-                     type="tns:QARunTurbineTestResultDetail" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunTurbineTestResultDetail" nillable="true" type="tns:QARunTurbineTestResultDetail" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunTurbineTestResultDetail">
@@ -734,8 +684,7 @@
       </s:element>
       <s:complexType name="ArrayOfQARunEvcTestResult">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunEvcTestResult" nillable="true"
-                     type="tns:QARunEvcTestResult" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunEvcTestResult" nillable="true" type="tns:QARunEvcTestResult" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunEvcTestResult">
@@ -747,10 +696,12 @@
               <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="DriveType" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="MeterType" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="MeterDisplacement" type="s:decimal" />
-              <s:element minOccurs="1" maxOccurs="1" name="FirmwareVersion" type="s:decimal" />
+              <s:element minOccurs="1" maxOccurs="1" name="MeterDisplacement" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="FirmwareVersion" type="s:double" />
               <s:element minOccurs="0" maxOccurs="1" name="InstrumentData" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="ConfirmedStatus" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CommPortPassedInd" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="EventLogPassedInd" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="PressureInfo" type="tns:PressureHeader" />
               <s:element minOccurs="0" maxOccurs="1" name="TemperatureInfo" type="tns:TemperatureHeader" />
               <s:element minOccurs="0" maxOccurs="1" name="SuperFactorInfo" type="tns:SuperFactorHeader" />
@@ -764,23 +715,23 @@
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="TransducerType" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="PressureUnits" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="BasePressure" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="PressureRange" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="ProgrammedAtmosphericPressure" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BasePressure" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PressureRange" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ProgrammedAtmosphericPressure" type="s:double" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="TemperatureHeader">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="TemperatureRange" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="TemperatureUnits" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="BaseTemperature" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BaseTemperature" type="s:double" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="SuperFactorHeader">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="SpecGr" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="CO2" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="N2" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpecGr" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CO2" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="N2" type="s:double" />
           <s:element minOccurs="0" maxOccurs="1" name="FPVTable" type="s:string" />
         </s:sequence>
       </s:complexType>
@@ -797,8 +748,7 @@
       </s:complexType>
       <s:complexType name="ArrayOfVerificationTest">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="VerificationTest" nillable="true"
-                     type="tns:VerificationTest" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VerificationTest" nillable="true" type="tns:VerificationTest" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="VerificationTest">
@@ -813,46 +763,47 @@
       </s:complexType>
       <s:complexType name="PressureTest">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="PercentError" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="GasPressure" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="GaugePressure" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="AtmosphericGauge" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcGasPressure" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcPressureFactor" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PercentError" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="GasPressure" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="GaugePressure" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="AtmosphericGauge" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcGasPressure" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcPressureFactor" nillable="true" type="s:double" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="TemperatureTest">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="PercentError" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="GaugeTemperature" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcTemperature" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcFactor" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PercentError" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="GaugeTemperature" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcTemperature" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcFactor" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" nillable="true" type="s:double" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="SuperFactorTest">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="PercentError" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="GaugeTemperature" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="GaugePressure" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcUnsqrFactor" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcFactor" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PercentError" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="GaugeTemperature" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="GaugePressure" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcUnsqrFactor" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcFactor" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="ActualFactor" nillable="true" type="s:double" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="VolumeTest">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="UnCorrectedPercentError" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="CorrectedPercentError" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="PulseACount" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="PulseBCount" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="AppliedInput" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="TrueCorrected" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="UncPulseCount" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="CorPulseCount" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcCorrected" type="s:decimal" />
-          <s:element minOccurs="1" maxOccurs="1" name="EvcUncorrected" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="UnCorrectedPercentError" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CorrectedPercentError" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PulseACount" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PulseBCount" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="AppliedInput" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TrueCorrected" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="UncPulseCount" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CorPulseCount" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcCorrected" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="EvcUncorrected" nillable="true" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="EnergyPassedInd" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="SubmitQAEvcTestResultsResponse">
@@ -978,12 +929,6 @@
   <wsdl:message name="SubmitQARotaryTestResultsSoapOut">
     <wsdl:part name="parameters" element="tns:SubmitQARotaryTestResultsResponse" />
   </wsdl:message>
-  <wsdl:message name="SubmitSimpleQARotaryTestResultsSoapIn">
-    <wsdl:part name="parameters" element="tns:SubmitSimpleQARotaryTestResults" />
-  </wsdl:message>
-  <wsdl:message name="SubmitSimpleQARotaryTestResultsSoapOut">
-    <wsdl:part name="parameters" element="tns:SubmitSimpleQARotaryTestResultsResponse" />
-  </wsdl:message>
   <wsdl:message name="SubmitQATurbineTestResultsSoapIn">
     <wsdl:part name="parameters" element="tns:SubmitQATurbineTestResults" />
   </wsdl:message>
@@ -1002,14 +947,17 @@
       <wsdl:output message="tns:GetCurrentlyConnectedDatabaseSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetEmployee">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a data transfer object (EmployeeDTO) for the employee number parameter passed in if found. It returns an empty data transfer object (EmployeeDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetEmployeeSoapIn" />
       <wsdl:output message="tns:GetEmployeeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="ValidateProver">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a boolean indicating if the prover number passed in is valid or not.</wsdl:documentation>
       <wsdl:input message="tns:ValidateProverSoapIn" />
       <wsdl:output message="tns:ValidateProverSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestReasons">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a list of test reason data transfer objects (TestReasonDTO) for the reason type passed in.</wsdl:documentation>
       <wsdl:input message="tns:GetTestReasonsSoapIn" />
       <wsdl:output message="tns:GetTestReasonsSoapOut" />
     </wsdl:operation>
@@ -1022,34 +970,42 @@
       <wsdl:output message="tns:VerifyRotaryMeterIsInJobSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByInventoryCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedAcceptanceSampleMeterByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetValidatedAcceptanceSampleMeterByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByBarcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedAcceptanceSampleMeterByBarcodeSoapIn" />
       <wsdl:output message="tns:GetValidatedAcceptanceSampleMeterByBarcodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByInventoryCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedComplianceSampleMeterByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetValidatedComplianceSampleMeterByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByBarcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode number passed in if found. The barcode must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapIn" />
       <wsdl:output message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open EVC job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedEvcDeviceByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetValidatedEvcDeviceByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByInventoryCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetMeterDataByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByInventoryCodeAndSerialNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code and serial number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByInventoryCodeAndSerialNumberSoapIn" />
       <wsdl:output message="tns:GetMeterDataByInventoryCodeAndSerialNumberSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByBarcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByBarcodeSoapIn" />
       <wsdl:output message="tns:GetMeterDataByBarcodeSoapOut" />
     </wsdl:operation>
@@ -1058,30 +1014,32 @@
       <wsdl:output message="tns:GetMeterListByJobNumberSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="ParseProverTestFile">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to parse the test file created by the North Bay rotary and turbine provers. The test file is passed in as a string and is returned as a FileAsEntities object to be used by the North Bay Data Capture client application to present the test file data to the user.</wsdl:documentation>
       <wsdl:input message="tns:ParseProverTestFileSoapIn" />
       <wsdl:output message="tns:ParseProverTestFileSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitProdTestResults">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the Production Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitProdTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitProdTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQADiaphragmTestResults">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQADiaphragmTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQADiaphragmTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQARotaryTestResults">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Rotary provers to be saved in the database. A QARunRotaryTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQARotaryTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQARotaryTestResultsSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="SubmitSimpleQARotaryTestResults">
-      <wsdl:input message="tns:SubmitSimpleQARotaryTestResultsSoapIn" />
-      <wsdl:output message="tns:SubmitSimpleQARotaryTestResultsSoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="SubmitQATurbineTestResults">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Turbine provers to be saved in the database. A QARunTurbineTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQATurbineTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQATurbineTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQAEvcTestResults">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA EVC provers to be saved in the database. A list of QARunEvcTestResult objects is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQAEvcTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQAEvcTestResultsSoapOut" />
     </wsdl:operation>
@@ -1259,15 +1217,6 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SubmitSimpleQARotaryTestResults">
-      <soap:operation soapAction="http://tempuri.org/SubmitSimpleQARotaryTestResults" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SubmitQATurbineTestResults">
       <soap:operation soapAction="http://tempuri.org/SubmitQATurbineTestResults" style="document" />
       <wsdl:input>
@@ -1344,8 +1293,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByInventoryCode">
-      <soap12:operation soapAction="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode"
-                        style="document" />
+      <soap12:operation soapAction="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1363,8 +1311,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByInventoryCode">
-      <soap12:operation soapAction="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode"
-                        style="document" />
+      <soap12:operation soapAction="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1462,15 +1409,6 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SubmitSimpleQARotaryTestResults">
-      <soap12:operation soapAction="http://tempuri.org/SubmitSimpleQARotaryTestResults" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="SubmitQATurbineTestResults">
       <soap12:operation soapAction="http://tempuri.org/SubmitQATurbineTestResults" style="document" />
       <wsdl:input>
@@ -1491,7 +1429,7 @@
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="DCRWebService">
-    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 4.64</wsdl:documentation>
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
     <wsdl:port name="DCRWebServiceSoap" binding="tns:DCRWebServiceSoap">
       <soap:address location="http://dosdev/uniongas.dcrwebservice/dcrwebservice.asmx" />
     </wsdl:port>
