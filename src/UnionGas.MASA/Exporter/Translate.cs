@@ -85,7 +85,7 @@ namespace UnionGas.MASA.Exporter
                 IndexReading = (int)instrument.Items.GetItem(98).NumericValue,
                 Comments = string.Empty,
                 JobNumber = !string.IsNullOrEmpty(instrument.JobId) ? int.Parse(instrument.JobId) : -1,
-                ProverNumber = "229", //
+                ProverNumber = "236", //
                 MeterClassCode = "EV",
                 TestReason = "6",
                 FieldMeterDesc = "SJB",
