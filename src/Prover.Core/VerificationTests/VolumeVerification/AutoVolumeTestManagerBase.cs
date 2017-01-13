@@ -22,17 +22,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-
-        //protected override async Task ZeroInstrumentVolumeItems()
-        //{
-        //    await InstrumentCommunicator.Connect();
-        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
-        //    await InstrumentCommunicator.SetItemValue(434, "0");
-        //    await InstrumentCommunicator.SetItemValue(113, "0");
-        //    await InstrumentCommunicator.SetItemValue(892, "0");
-        //    await base.ZeroInstrumentVolumeItems();
-        //}
-
         protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             try
@@ -99,7 +88,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                         volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                     } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
                 }, ct);
-
                 ct.ThrowIfCancellationRequested();
             }         
             catch (OperationCanceledException ex)
@@ -162,5 +150,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
             volumeTest.AppliedInput = result.Value;
         }
+
+        //protected override async Task ZeroInstrumentVolumeItems()
+        //{
+        //    await InstrumentCommunicator.Connect();
+        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
+        //    await InstrumentCommunicator.SetItemValue(434, "0");
+        //    await InstrumentCommunicator.SetItemValue(113, "0");
+        //    await InstrumentCommunicator.SetItemValue(892, "0");
+        //    await base.ZeroInstrumentVolumeItems();
+        //}
     }
 }
