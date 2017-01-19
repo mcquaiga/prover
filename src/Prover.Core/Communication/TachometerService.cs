@@ -51,14 +51,14 @@ namespace Prover.Core.Communication
                     Thread.Sleep(100);
 
                     var tachString = _serialPort.ReadExisting();
+
                     Log.Debug($"Read data from Tach: {tachString}");
                     return ParseTachValue(tachString);
-                }
-                catch (Exception ex)
+                }                
+                finally
                 {
-                    Log.Warn($"An error occured connecting to the tachometer. {ex.Message}.");
+                    _serialPort.Close();
                 }
-                return 0;
             });
         }
 

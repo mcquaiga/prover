@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
@@ -71,8 +72,8 @@ namespace UnionGas.MASA.Validators.CompanyNumber
 
         public async Task<MeterDTO> VerifyWithWebService(string companyNumber)
         {
-            var tokenSource = new CancellationTokenSource(1500);
-            var token = tokenSource.Token;
+            var tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
+            tokenSource.Token.ThrowIfCancellationRequested();
 
             _log.Debug($"Verifying company number {companyNumber} with web service.");
 
@@ -82,9 +83,14 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 {
                     Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
                 };
-                
-                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), token);
+
+                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), tokenSource.Token);
                 return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+            }
+            catch (OperationCanceledException)
+            {
+                _log.Warn($"Timed out contacting the web service.");
+                return null;
             }
             catch (EndpointNotFoundException)
             {

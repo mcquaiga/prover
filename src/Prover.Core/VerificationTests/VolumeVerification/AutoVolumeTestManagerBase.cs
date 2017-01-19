@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
@@ -21,33 +22,36 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-
-        //protected override async Task ZeroInstrumentVolumeItems()
-        //{
-        //    await InstrumentCommunicator.Connect();
-        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
-        //    await InstrumentCommunicator.SetItemValue(434, "0");
-        //    await InstrumentCommunicator.SetItemValue(113, "0");
-        //    await InstrumentCommunicator.SetItemValue(892, "0");
-        //    await base.ZeroInstrumentVolumeItems();
-        //}
-
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
+        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(async () =>
+            try
             {
                 await commClient.Disconnect();
-                Log.Info("Running volume sync test...");
-                ResetPulseCounts(volumeTest);
-                _outputBoard.StartMotor();
-                do
-                {
-                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while (volumeTest.UncPulseCount < 1);
 
+                Log.Info("Running volume sync test...");
+
+                await Task.Run(() =>
+                {
+                    ResetPulseCounts(volumeTest);
+                    _outputBoard.StartMotor();
+                    do
+                    {
+                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                    } while (volumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
+                }, ct);
+
+                ct.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Info("Cancelling volume sync test.");
+                throw;
+            }
+            finally
+            {
                 _outputBoard.StopMotor();
-            });
+            }
         }
 
         protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
@@ -70,25 +74,34 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             volumeTest.PulseBCount = 0;
         }
 
-        protected override async Task ExecutingTest(VolumeTest volumeTest)
+        protected override async Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(() =>
+            try
             {
-                _outputBoard?.StartMotor();
-                
-                do
+                await Task.Run(() =>
                 {
-                    //TODO: Raise events so the UI can respond
-                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !RequestStopTest);
-
+                    _outputBoard?.StartMotor();
+                    do
+                    {
+                        //TODO: Raise events so the UI can respond
+                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                    } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
+                }, ct);
+                ct.ThrowIfCancellationRequested();
+            }         
+            catch (OperationCanceledException ex)
+            {
+                Log.Info("Cancelling volume test.");
+                throw;
+            }
+            finally
+            {
                 _outputBoard?.StopMotor();
-            });
+            }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcPostTestItemReset)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
         {
             await Task.Run(async () =>
             {
@@ -137,5 +150,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
             volumeTest.AppliedInput = result.Value;
         }
+
+        //protected override async Task ZeroInstrumentVolumeItems()
+        //{
+        //    await InstrumentCommunicator.Connect();
+        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
+        //    await InstrumentCommunicator.SetItemValue(434, "0");
+        //    await InstrumentCommunicator.SetItemValue(113, "0");
+        //    await InstrumentCommunicator.SetItemValue(892, "0");
+        //    await base.ZeroInstrumentVolumeItems();
+        //}
     }
 }
