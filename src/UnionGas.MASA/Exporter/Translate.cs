@@ -88,7 +88,7 @@ namespace UnionGas.MASA.Exporter
                 ProverNumber = "236", //
                 MeterClassCode = "EV",
                 TestReason = "6",
-                FieldMeterDesc = "SJB",
+                FieldMeterDesc = string.Empty,
                 SubmitRunIndicator = "Y"
             };
 
