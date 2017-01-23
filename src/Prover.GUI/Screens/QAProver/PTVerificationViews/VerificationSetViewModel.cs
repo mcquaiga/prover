@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
@@ -12,11 +13,14 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase
     {
+        private CancellationTokenSource _cancellationTokenSource;
+
         public IQaRunTestManager QaRunTestManager;
 
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
+            CancelTestCommand = ReactiveCommand.Create(CancelTest);
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
@@ -32,6 +36,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
+            _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
@@ -63,21 +68,49 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             set { this.RaiseAndSetIfChanged(ref _showProgressDialog, value); }
         }
 
+        private ReactiveCommand _cancelTestCommand;
+        private IDisposable _testStatusSubscription;
+
+        private void OnTestStatusChange(string status)
+        {
+            TestStatusMessage = status;
+        }
+
+        private string _testStatusMessage;
+        public string TestStatusMessage
+        {
+            get { return _testStatusMessage; }
+            set { this.RaiseAndSetIfChanged(ref _testStatusMessage, value); }
+        }
+
+        public ReactiveCommand CancelTestCommand
+        {
+            get { return _cancelTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _cancelTestCommand, value); }
+        }
+
+        public void CancelTest()
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+
         public async Task RunTest()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             try
             {
                 ShowProgressDialog = true;
-                await QaRunTestManager.RunTest(VerificationTest.TestNumber);
+                await QaRunTestManager.RunTest(VerificationTest.TestNumber, _cancellationTokenSource.Token);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occured during the verification test. See exception for details.");
+                Log.Error(ex, $"An error occured during the verification test. See exception for details. {ex.Message}");
             }
             finally
             {
                 ShowProgressDialog = false;
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+                _cancellationTokenSource.Dispose();
             }
         }
     }

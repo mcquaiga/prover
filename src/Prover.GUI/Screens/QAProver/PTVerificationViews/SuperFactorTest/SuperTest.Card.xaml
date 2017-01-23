@@ -15,7 +15,7 @@
     <!--**** START SUPER **** -->
     <instrumentInfo:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Padding="2" Content="Supercompressibility Factor" Mode="PrimaryDark" Margin="2"
+            <materialDesign:ColorZone Padding="2" Content="Supercompressibility" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth1" />
             <controls1:PercentageControl
                 HorizontalAlignment="Center"

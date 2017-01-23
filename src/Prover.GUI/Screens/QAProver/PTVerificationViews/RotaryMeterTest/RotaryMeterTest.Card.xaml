@@ -26,7 +26,7 @@
                     DisplayValue="{Binding MeterDisplacementPercentError}"
                     Passed="{Binding MeterDisplacementHasPassed}" />
                 <StackPanel Margin="5">
-                    <TextBlock Text="{Binding MeterTypeDescription}"
+                    <TextBlock Text="{Binding MeterTypeDescription}" HorizontalAlignment="Center"
                                FontSize="24"/>
                     <StackPanel Orientation="Horizontal">
                         <controls1:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />

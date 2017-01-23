@@ -8,7 +8,6 @@
              xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls">
     <UserControl.Resources>
         <ResourceDictionary>

@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
+using LogManager = Caliburn.Micro.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public interface IReadingStabilizer
     {
-        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level);
+        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct);
         void CancelLiveReading();
     }
 
     public class AverageReadingStabilizer : IReadingStabilizer
     {
+        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
         private bool _cancelStabilize;
         private bool _isLiveReading;
 
@@ -28,28 +33,39 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; set; }
 
-        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument,
-            int level)
+        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct)
         {
-            var liveReadItems = GetLiveReadItemNumbers(instrument, level);
-
-            await commClient.Connect();
-
-            do
+            try
             {
-                _isLiveReading = true;
-                foreach (var item in liveReadItems)
+                var liveReadItems = GetLiveReadItemNumbers(instrument, level);
+                await commClient.Connect();
+                ct.ThrowIfCancellationRequested();
+                do
                 {
-                    var liveValue = await commClient.LiveReadItemValue(item.Key);
-                    item.Value.Add(liveValue.NumericValue);
-                    EventAggregator.PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
-                }
-            } while (liveReadItems.Any(x => !x.Value.IsStable) && !_cancelStabilize);
+                    _isLiveReading = true;
+                    foreach (var item in liveReadItems)
+                    {
+                        var liveValue = await commClient.LiveReadItemValue(item.Key);
+                        item.Value.Add(liveValue.NumericValue);
+                        EventAggregator.PublishOnBackgroundThread(new LiveReadEvent(item.Key, liveValue.NumericValue));
+                    }
 
-            _isLiveReading = false;
-            _cancelStabilize = false;
+                    ct.ThrowIfCancellationRequested();
+                } while (liveReadItems.Any(x => !x.Value.IsStable));
+            }
+            catch (OperationCanceledException ex)
+            {
+                _log.Info("Cancelled live reading.");
+                throw;
+            }
+            finally
+            {
+                _isLiveReading = false;
+                _cancelStabilize = false;
 
-            await commClient.Disconnect();
+                if (commClient != null)
+                    await commClient.Disconnect();
+            }
         }
 
         public void CancelLiveReading()

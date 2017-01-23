@@ -29,6 +29,10 @@ namespace UnionGas.MASA.Screens.Exporter
             var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
                 (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
+
+            ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
+
+            ViewQaTestReportCommand = ReactiveCommand.CreateFromTask(DisplayInstrumentReport);
         }
 
         private Instrument _instrument;
@@ -42,12 +46,24 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public bool IsSelected { get; set; }
 
+        private ReactiveCommand _viewQaTestReportCommand;
+        public ReactiveCommand ViewQaTestReportCommand
+        {
+            get { return _viewQaTestReportCommand; }
+            set { this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value); }
+        }
         public async Task DisplayInstrumentReport()
         {
             await _instrumentReportGenerator.GenerateAndViewReport(Instrument);
         }
 
-        public async Task DeleteInstrument()
+        private ReactiveCommand _archiveTestCommand;
+        public ReactiveCommand ArchiveTestCommand
+        {
+            get { return _archiveTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _archiveTestCommand, value); }
+        }
+        public async Task ArchiveTest()
         {
             await _instrumentStore.Delete(Instrument);
             await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());

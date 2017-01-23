@@ -30,7 +30,6 @@ namespace UnionGas.MASA
         public bool Logout()
         {
             User = null;
-
             return true;
         }
         
@@ -38,11 +37,11 @@ namespace UnionGas.MASA
 
         public async Task<bool> Login(string username, string password = null)
         {
+            User = null;
+
             var cts = new CancellationTokenSource(new TimeSpan(0, 0,3));
             var ct = cts.Token;
             ct.ThrowIfCancellationRequested();
-
-            User = null;
 
             _log.Debug($"Logging into MASA using Employee #{username} ...");
             try

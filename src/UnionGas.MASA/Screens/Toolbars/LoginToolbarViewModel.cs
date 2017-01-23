@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.ServiceModel.Security.Tokens;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Login;
 using Prover.GUI.Common;
@@ -40,6 +41,9 @@ namespace UnionGas.MASA.Screens.Toolbars
                 var success = await _loginService.Login(userId);
                 if (success) ChangeContext(LoggedInViewContext);
             }
+
+            loginViewModel = null;
+            result = null;
         }
 
         public async Task LogoutButton()
@@ -51,7 +55,9 @@ namespace UnionGas.MASA.Screens.Toolbars
         private void ChangeContext(string contextName)
         {
             ViewContext = contextName;
+            
             NotifyOfPropertyChange(() => ViewContext);
+            NotifyOfPropertyChange(() => Username);
         }
     }
 }
