@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -17,10 +18,7 @@ namespace Prover.Core.VerificationTests
     {
         Instrument Instrument { get; }
         Task InitializeTest(InstrumentType instrumentType);
-        Task RunTest(int level);
-        Task DownloadVerificationTestItems(int level);
-        Task DownloadTemperatureTestItems(int levelNumber);
-        Task DownloadPressureTestItems(int level);
+        Task RunTest(int level, CancellationToken ct = new CancellationToken());
         Task SaveAsync();
         Task RunVerifier();
 
@@ -86,26 +84,34 @@ namespace Prover.Core.VerificationTests
             await RunVerifier();
         }
 
-        public async Task RunTest(int level)
+        public async Task RunTest(int level, CancellationToken ct)
         {
-            if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
 
-            _testStatus.OnNext($"Waiting for live readings to stabilize...");
-            await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level);
-
-            _testStatus.OnNext($"Download items...");
-            await DownloadVerificationTestItems(level);
-
-            if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+            try
             {
-                _testStatus.OnNext($"Running volume test...");
-                await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
+                if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
+
+                _testStatus.OnNext($"Stabilizing live readings...");
+                await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct);
+
+                _testStatus.OnNext($"Downloading items...");
+                await DownloadVerificationTestItems(level, ct);
+
+                if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+                {
+                    _testStatus.OnNext($"Running volume test...");
+                    await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter, ct);
+                }
+                _testStatus.OnNext($"Saving test...");
+                await SaveAsync();
             }
-            _testStatus.OnNext($"Saving test...");
-            await SaveAsync();
+            catch (OperationCanceledException ex)
+            {
+                Log.Info("Test run cancelled.");
+            }            
         }
 
-        public async Task DownloadVerificationTestItems(int level)
+        private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
             if (!_communicationClient.IsConnected)
                 await _communicationClient.Connect();
