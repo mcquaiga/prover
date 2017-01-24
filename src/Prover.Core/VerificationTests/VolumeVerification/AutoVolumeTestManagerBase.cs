@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Reactive.Subjects;
@@ -64,7 +65,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             await commClient.Connect();
             if (evcTestItemReset != null) await evcTestItemReset.PreReset();
-            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+            volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)

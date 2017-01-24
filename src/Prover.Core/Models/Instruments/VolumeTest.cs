@@ -22,7 +22,7 @@ namespace Prover.Core.Models.Instruments
 
         public VolumeTest(VerificationTest verificationTest)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true);
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 

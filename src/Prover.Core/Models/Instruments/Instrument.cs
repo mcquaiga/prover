@@ -31,7 +31,7 @@ namespace Prover.Core.Models.Instruments
             CertificateId = null;
             Type = instrumentType.Id;
             InstrumentType = instrumentType;
-            Items = items;
+            Items = items.ToList();
 
             Client = client;
             ClientId = client?.Id;

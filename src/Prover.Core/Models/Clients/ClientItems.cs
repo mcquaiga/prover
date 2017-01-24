@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
@@ -24,6 +25,13 @@ namespace Prover.Core.Models.Clients
         public ClientItems()
         {
             
+        }
+
+        public ClientItems(Client client)
+        {
+            Client = client;
+            ClientId = client.Id;
+            Items = new List<ItemValue>();
         }
 
         public Guid ClientId { get; set; }

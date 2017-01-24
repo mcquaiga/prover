@@ -17,7 +17,7 @@ namespace Prover.Core.Models.Instruments
 
         public PressureTest(VerificationTest verificationTest, decimal gauge)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true);
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gauge, 2);

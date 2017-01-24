@@ -151,7 +151,7 @@ namespace Prover.Core.VerificationTests
 
             if (test != null)
                 test.Items =
-                    await _communicationClient.GetItemValues(_communicationClient.ItemDetails.TemperatureItems());
+                    (ICollection<ItemValue>) await _communicationClient.GetItemValues(_communicationClient.ItemDetails.TemperatureItems());
         }
 
         public async Task DownloadPressureTestItems(int level)
@@ -159,7 +159,7 @@ namespace Prover.Core.VerificationTests
             var firstOrDefault = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
             var test = firstOrDefault?.PressureTest;
             if (test != null)
-                test.Items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.PressureItems());
+                test.Items = (ICollection<ItemValue>) await _communicationClient.GetItemValues(_communicationClient.ItemDetails.PressureItems());
         }
 
         public async Task SaveAsync()

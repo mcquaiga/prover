@@ -18,7 +18,7 @@ namespace Prover.Core.Models.Instruments
 
         public SuperFactorTest(VerificationTest verificationTest)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true);
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true).ToList();
             VerificationTest = verificationTest;
         }
 

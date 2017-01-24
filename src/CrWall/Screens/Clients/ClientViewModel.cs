@@ -51,13 +51,11 @@ namespace CrWall.Screens.Clients
 
         private async Task AddItem()
         {
-            var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());
-
-            if (CurrentClientItems.Items == null)
-                CurrentClientItems.Items = new List<ItemValue>();
-
-            CurrentClientItems.Items.ToList().Add(itemValue);
-            await _clientStore.UpsertAsync(Client);
+            var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());   
+            CurrentClientItems.Items.Add(itemValue);
+            CurrentItemData.Add(itemValue);  
+            SelectedItem = null;
+            ItemValue = null;
         }
 
         public async Task Edit()
@@ -80,13 +78,22 @@ namespace CrWall.Screens.Clients
 
         private async Task UpdateItemList(InstrumentType instrumentType)
         {
-            await Task.Run(() =>
-            {
-                Items = ItemHelpers.LoadItems(instrumentType);
-                ItemStrings = Items.Select(x => $"{x.Number} - {x.LongDescription}").ToList();
+            CurrentItemData.Clear();
+            Items = ItemHelpers.LoadItems(instrumentType);
+            ItemStrings = Items.Select(x => $"{x.Number} - {x.LongDescription}").ToList();
 
-                CurrentItemData = CurrentItemValues;
-            });
+            if (_client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType) == null)
+            {
+                var items = new ClientItems(Client)
+                {
+                    InstrumentType = instrumentType,
+                    Items = new List<ItemValue>()
+                };
+                _client.Items.Add(items);
+            }
+
+            CurrentClientItems = _client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType);
+            CurrentItemData.AddRange(CurrentClientItems?.Items);
         }
 
         #region Commands
@@ -155,8 +162,8 @@ namespace CrWall.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private IEnumerable<ItemValue> _currentItemValues = new List<ItemValue>();
-        public IEnumerable<ItemValue> CurrentItemData
+        private ReactiveList<ItemValue> _currentItemValues = new ReactiveList<ItemValue>();
+        public ReactiveList<ItemValue> CurrentItemData
         {
             get { return _currentItemValues; }
             set { this.RaiseAndSetIfChanged(ref _currentItemValues, value); }
@@ -196,7 +203,14 @@ namespace CrWall.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _itemStrings, value); }
         }
 
-    #endregion
+        private ClientItems _currentClientItems;
+        public ClientItems CurrentClientItems
+        {
+            get { return _currentClientItems; }
+            set { this.RaiseAndSetIfChanged(ref _currentClientItems, value); }
+        }
 
-}
+        #endregion
+
+    }
 }
