@@ -1,0 +1,229 @@
+﻿<UserControl x:Class="Prover.Modules.Clients.Screens.Clients.ClientView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:domain="clr-namespace:Prover.GUI.Common.Screens;assembly=Prover.GUI.Common"
+             xmlns:common="clr-namespace:Prover.CommProtocol.Common;assembly=Prover.CommProtocol.Common"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:designer="clr-namespace:Prover.Modules.Clients.Screens.Clients.Designer"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance designer:DesignTimeClientViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <materialDesign:DialogHost>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+            <materialDesign:ColorZone Mode="PrimaryLight" Padding="2" Grid.Row="0">
+            <Grid>
+                <Button Command="{Binding GoBackCommand}"
+                    Style="{DynamicResource MaterialDesignFlatButton}" 
+                    HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="ArrowLeft" />
+                </Button>
+                <Button Command="{Binding SaveCommand}"
+                    Content="SAVE"
+                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    HorizontalAlignment="Right"/>
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid Margin="10" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0 0 5 0">
+                    <TextBlock Text="Client"/>
+                    <TextBox Text="{Binding Client.Name}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="Address"/>
+                    <TextBox Text="{Binding Client.Address}" 
+                             Height="50"                             
+                             MaxLines="3"></TextBox>
+                </StackPanel>
+        </Grid>
+       
+        <Grid Margin="5 25 5 5" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.50*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.1*"/>
+                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+                
+                <!--<GroupBox x:Name="ItemFileTypeGroup" Grid.Column="1" Grid.Row="0">
+                    <UniformGrid Rows="1" VerticalAlignment="Center">
+                        <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
+                        <RadioButton GroupName="ItemFileTypeGroup" Content="Post-Test Reset" />
+                        <RadioButton GroupName="ItemFileTypeGroup" Content="Verify" />
+                    </UniformGrid>
+                </GroupBox>-->
+                <!--<ListBox ItemsSource="{Binding ItemFileTypes}" Grid.Column="1" Grid.Row="0"
+                         SelectedItem="{Binding SelectedItemFileType}" 
+                         SelectionMode="Single">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    --><!--<ListBoxItem Content="Pre-Test"/>--><!--
+                    <ListBoxItem Content="Post-Test Reset" />
+                    <ListBoxItem Content="Verify" />
+                </ListBox>-->
+                <StackPanel Grid.Row="1" Grid.Column="1"
+                            Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock VerticalAlignment="Center">Item</TextBlock>
+                        <ComboBox SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Items}" Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding Number}" />
+                                        <TextBlock Text="{Binding LongDescription}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock VerticalAlignment="Center">Value</TextBlock>
+                        <TextBox x:Name="ItemValue" Width="200" Margin="10"/>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding AddItemCommand}"
+                            Style="{DynamicResource MaterialDesignFlatButton}">ADD</Button>
+
+                </StackPanel>
+                <ListBox ItemsSource="{Binding InstrumentTypes}" 
+                         SelectedItem="{Binding SelectedInstrumentType}" 
+                         Grid.Row="2" Grid.Column="0" 
+                         SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!--<GroupBox x:Name="InstrumentTypesGroup" Grid.Row="1" Grid.Column="0" >
+                    <ItemsControl ItemsSource="{Binding InstrumentTypes}" Grid.IsSharedSizeScope="True">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton GroupName="InstrumentTypesGroup" VerticalAlignment="Stretch" Margin="5 15"
+                                             IsChecked="{Binding IsSelected}"
+                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+                                    <Border x:Name="Border" BorderThickness="0 0 2 0" BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock FontWeight="Bold" Text="{Binding Object.Name}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </RadioButton>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </GroupBox>-->
+                <ContentControl Grid.Column="1" Grid.Row="2">
+                    <DataGrid ScrollViewer.CanContentScroll="True" FontSize="18"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                materialDesign:DataGridAssist.CellPadding="13 8 8 8" materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                                Margin="10 8 0 0" ItemsSource="{Binding CurrentItemData}" CanUserSortColumns="True" CanUserAddRows="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <!--<DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
+                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                            <DataGridCheckBoxColumn.Header>
+                                -->
+                            <!--padding to allow hit test to pass thru for sorting -->
+                            <!--
+                                <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
+                                    <CheckBox HorizontalAlignment="Center"                                               
+                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
+                                              IsChecked="{Binding IsAllItems3Selected}" />
+                                </Border>
+                            </DataGridCheckBoxColumn.Header>
+                        </DataGridCheckBoxColumn>-->
+                            <DataGridTextColumn Binding="{Binding Metadata.Number}"
+                                            Header="Item #"/>
+
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
+                                            Header="Description"
+                                            />
+                            <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
+                                                        Header="Value"                                                                                    
+                                                        />
+                            <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
+                            <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        
+                                                            SelectedValueBinding="{Binding Food}"                                                            
+                                                            ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
+            <!--<Grid Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                                         PlacementMode="BottomAndAlignCentres"
+                                         ToolTipService.Placement="Right"
+                                         ToolTip="Add Item">
+                    <StackPanel>
+                        <Button 
+                            Command="{Binding AddItemCommand}"
+                            ToolTip="Add Item" Opacity="0.5">
+                            <materialDesign:PackIcon Kind="PlusOne"></materialDesign:PackIcon>
+                        </Button>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+            </Grid>-->
+        </Grid>
+
+    </Grid>
+    </materialDesign:DialogHost>
+</UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

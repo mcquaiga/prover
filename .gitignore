@@ -180,3 +180,5 @@ src/.vs/config/applicationhost.config
 **/**/settings.conf
 **/**/*.orig
 src/.vs/EvcProver.sqlite
+src/.vs/EvcProver.sqlite
+src/.vs/EvcProver.sqlite

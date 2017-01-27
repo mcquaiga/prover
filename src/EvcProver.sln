@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -50,6 +50,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI.Common", "Prover.GUI.Common\Prover.GUI.Common.csproj", "{904F99E1-2E5B-4C16-B900-7559D2E11553}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrWall", "CrWall\CrWall.csproj", "{D5B8B839-F012-4B88-8E64-268B02CE15DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{ED11E7E8-BD81-4306-87E5-67E64BDBB588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Modules.Clients", "Prover.Modules.Clients\Prover.Modules.Clients.csproj", "{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +135,12 @@ Global
 		{D5B8B839-F012-4B88-8E64-268B02CE15DE}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
 		{D5B8B839-F012-4B88-8E64-268B02CE15DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5B8B839-F012-4B88-8E64-268B02CE15DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,5 +158,6 @@ Global
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 		{904F99E1-2E5B-4C16-B900-7559D2E11553} = {2A28EC01-0F71-4788-9A69-9620A0CDD436}
 		{D5B8B839-F012-4B88-8E64-268B02CE15DE} = {995685C4-0F24-40E0-B1B0-536377FDAFD2}
+		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B} = {ED11E7E8-BD81-4306-87E5-67E64BDBB588}
 	EndGlobalSection
 EndGlobal
