@@ -29,7 +29,6 @@ namespace UnionGas.MASA
             builder.RegisterType<NewCompanyNumberPopupRequestor>().As<IGetValue>();
 
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
-            
         }
     }
 }

@@ -23,8 +23,9 @@ namespace Prover.GUI
     {
         private readonly List<string> _moduleFileNames = new List<string>
         {
+            "Prover.Modules.Clients",
+            "Prover.Modules.Exporter",
             "UnionGas.MASA",
-            "CrWall",
             "Prover.GUI.Common"
         };
 

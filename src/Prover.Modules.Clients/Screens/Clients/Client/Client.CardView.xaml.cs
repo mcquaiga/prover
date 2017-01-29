@@ -1,4 +1,6 @@
-﻿namespace Prover.Modules.Clients.Screens.Clients.Client
+﻿using System.Windows.Controls;
+
+namespace Prover.Modules.Clients.Screens.Clients.Client
 {
     /// <summary>
     /// Interaction logic for Client.xaml
