@@ -21,7 +21,22 @@ namespace Prover.Core.DriveTypes
 
         public bool HasPassed => Energy.HasPassed;
 
-        public int MaxUncorrectedPulses() => 10;
+        public int MaxUncorrectedPulses()
+        {
+            switch ((int)Instrument.Items.GetItem(92).NumericValue)
+            {
+                case 1:
+                    return 1000;
+                case 10:
+                    return 100;
+                case 100:
+                    return 10;
+                case 1000:
+                    return 1;
+                default:
+                    return 10;
+            }
+        }
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
