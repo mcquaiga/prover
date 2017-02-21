@@ -15,6 +15,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ReactiveUI.Legacy;
+using ReactiveCommand = ReactiveUI.ReactiveCommand;
+using ReactiveCommandMixins = ReactiveUI.ReactiveCommandMixins;
 
 namespace Prover.Modules.Clients.Screens.Clients
 {
@@ -34,17 +37,22 @@ namespace Prover.Modules.Clients.Screens.Clients
 
             InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());
             UpdateItemListCommand = ReactiveCommand.CreateFromTask<Tuple<InstrumentType, ClientItemType>>(UpdateItemList);
-            this.WhenAnyValue(x => x.SelectedInstrumentType, x => x.SelectedItemFileType)
-                .Where(x => x.Item1 != null & x.Item2 != null)
-                .InvokeCommand(UpdateItemListCommand);      
+            ReactiveCommandMixins.InvokeCommand(this.WhenAnyValue(x => x.SelectedInstrumentType, x => x.SelectedItemFileType)
+                    .Where(x => x.Item1 != null & x.Item2 != null), UpdateItemListCommand);      
 
             var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue,
                 (selectedItem, itemValue) => selectedItem != null && itemValue != null);
             AddItemCommand = ReactiveCommand.CreateFromTask(AddItem, canAddItem);
 
+            DeleteRowCommand = ReactiveCommand.Create<ItemValue>(x =>
+            {
+                CurrentItemData.Remove(x);
+                CurrentClientItems.Items.Remove(x);
+            });
+
             CurrentItemData.ResetChangeThreshold = 90;
         }
-
+        
         private async Task AddItem()
         {
             var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());
@@ -128,6 +136,13 @@ namespace Prover.Modules.Clients.Screens.Clients
         {
             get { return _goBackCommand; }
             set { this.RaiseAndSetIfChanged(ref _goBackCommand, value); }
+        }
+
+        private ReactiveCommand _deleteRowCommand;
+        public ReactiveCommand DeleteRowCommand
+        {
+            get { return _deleteRowCommand; }
+            set { this.RaiseAndSetIfChanged(ref _deleteRowCommand, value); }
         }
 
         private ReactiveCommand _addItemCommand;

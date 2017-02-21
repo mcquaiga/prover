@@ -96,8 +96,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" Grid.Column="0">
-                        <TextBlock VerticalAlignment="Center">Item</TextBlock>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10">
+                        <TextBlock VerticalAlignment="Center" Margin="5 0 10 0">Item</TextBlock>
                         <ComboBox SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Items}" Width="200">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -110,7 +110,7 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10">
                         <TextBlock VerticalAlignment="Center">Value</TextBlock>
                         <TextBox x:Name="ItemValue" Width="200" Margin="2 5"/>
                     </StackPanel>
@@ -126,7 +126,7 @@
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}" Content="{Binding Name}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -159,11 +159,10 @@
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button>
-                                            <materialDesign:PackIcon Kind="Delete"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="Black" />
+                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.DeleteRowCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" Foreground="White" />
                                         </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
