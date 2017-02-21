@@ -62,7 +62,7 @@ namespace CrWall.Screens.Clients
         {
             await ScreenManager.ChangeScreen(this);
             SelectedInstrumentType = InstrumentTypes.First();
-            SelectedItemFileType = ItemType.PostTest;
+            SelectedClientItemFileType = ClientItemType.Reset;
         }
 
         private async Task GoBack()
@@ -148,11 +148,11 @@ namespace CrWall.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
         }
 
-        private ItemType _selectedItemFileType;
-        public ItemType SelectedItemFileType
+        private ClientItemType _selectedClientItemFileType;
+        public ClientItemType SelectedClientItemFileType
         {
-            get { return _selectedItemFileType; }
-            set { this.RaiseAndSetIfChanged(ref _selectedItemFileType, value); }
+            get { return _selectedClientItemFileType; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClientItemFileType, value); }
         }
 
         private Prover.Core.Models.Clients.Client _client;

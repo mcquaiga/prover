@@ -13,10 +13,9 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Models.Clients
 {
-    public enum ItemType
+    public enum ClientItemType
     {
-        PreTest,
-        PostTest,
+        Reset,
         Verify
     }
 
@@ -43,11 +42,11 @@ namespace Prover.Core.Models.Clients
         public string ItemFileTypeString
         {
             get { return ItemFileType.ToString(); }
-            private set { ItemFileType = value.ParseEnum<ItemType>(); }
+            private set { ItemFileType = value.ParseEnum<ClientItemType>(); }
         }
 
         [NotMapped]
-        public ItemType ItemFileType { get; set; }       
+        public ClientItemType ItemFileType { get; set; }       
 
         [Column("InstrumentType")]
         public string InstrumentTypeString

@@ -6,11 +6,13 @@ using Prover.Core.Models.Clients;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IEvcItemReset
+    public interface IPreTestCommand
     {
-        Task PreReset(EvcCommunicationClient commClient, IEnumerable<ItemValue> items);
-        Task PreReset();
-        Task PostReset(EvcCommunicationClient commClient, IEnumerable<ItemValue> items);
-        Task PostReset();
+        Task Execute(EvcCommunicationClient commClient);
+    }
+
+    public interface IPostTestCommand
+    {
+        Task Execute(EvcCommunicationClient commClient);
     }
 }

@@ -7,23 +7,23 @@ namespace Prover.Modules.Clients.Screens.Clients.Designer
     {
         public DesignTimeClientManagerViewModel()
         {
-            ClientList = new ReactiveList<Prover.Core.Models.Clients.Client>()
-            {
-                new Prover.Core.Models.Clients.Client()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Adam",
-                    Address = "1028 Fraser"
-                },
-                new Prover.Core.Models.Clients.Client()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "C.R. Wall",
-                    Address = "Thompson Drive, Cambridge"
-                }
-            };
+            //ClientList.Add(new ClientViewModel());
+            //{
+            //    new Prover.Core.Models.Clients.Client()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = "Adam",
+            //        Address = "1028 Fraser"
+            //    },
+            //    new Prover.Core.Models.Clients.Client()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = "C.R. Wall",
+            //        Address = "Thompson Drive, Cambridge"
+            //    }
+            //};
         }
 
-        public ReactiveList<Core.Models.Clients.Client> ClientList { get; set; }
+        public ReactiveList<ClientViewModel> ClientList { get; set; } = new ReactiveList<ClientViewModel>();
     }
 }

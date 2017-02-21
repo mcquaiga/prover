@@ -60,11 +60,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcTestItemReset)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
         {
             await commClient.Connect();
-            if (evcTestItemReset != null) await evcTestItemReset.PreReset();
+            
             volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
@@ -107,15 +106,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
         {
             await Task.Run(async () =>
             {
                 try
                 {
                     await commClient.Connect();
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-                    if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset();
+                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());                    
                 }
                 finally
                 {

@@ -35,7 +35,8 @@ namespace Prover.Core.VerificationTests
         private readonly IProverStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IEnumerable<IValidator> _validators;
-        private readonly IEvcItemReset _itemResetter;
+        private readonly IEnumerable<IPreTestCommand> _preTestCommands;
+        private readonly IEnumerable<IPostTestCommand> _postTestCommands;
         private readonly Subject<string> _testStatus = new Subject<string>();
         private Client _client;
 
@@ -45,15 +46,16 @@ namespace Prover.Core.VerificationTests
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
             IEnumerable<IValidator> validators = null,
-            IEvcItemReset itemResetter = null
-        )
+            IEnumerable<IPreTestCommand> preTestCommands = null,
+            IEnumerable<IPostTestCommand> postTestCommands = null)
         {
             VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _validators = validators;
-            _itemResetter = itemResetter;
+            _preTestCommands = preTestCommands;
+            _postTestCommands = postTestCommands;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
@@ -105,15 +107,14 @@ namespace Prover.Core.VerificationTests
                 if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
                 {
                     _testStatus.OnNext($"Running volume test...");
-                    await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter, ct);
-                }
+                    await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, ct);
 
-            _testStatus.OnNext($"Resetting items...");
-            var resetItems = _client.Items.FirstOrDefault(x => x.ItemFileType == ItemType.PostTest && x.InstrumentType == Instrument.InstrumentType)?.Items.ToList();
-            if (_itemResetter != null && resetItems != null && resetItems.Any())
-            {
-                await _itemResetter?.PostReset(_communicationClient, resetItems);
-            }
+					//Execute any Post test clean up methods
+					foreach (var command in _postTestCommands)
+					{
+						await command.Execute(_communicationClient);
+					} 
+                }
 
                 _testStatus.OnNext($"Saving test...");
                 await SaveAsync();

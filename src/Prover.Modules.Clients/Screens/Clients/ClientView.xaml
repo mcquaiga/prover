@@ -1,13 +1,12 @@
 ﻿<UserControl x:Class="Prover.Modules.Clients.Screens.Clients.ClientView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:domain="clr-namespace:Prover.GUI.Common.Screens;assembly=Prover.GUI.Common"
-             xmlns:common="clr-namespace:Prover.CommProtocol.Common;assembly=Prover.CommProtocol.Common"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:designer="clr-namespace:Prover.Modules.Clients.Screens.Clients.Designer"
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance designer:DesignTimeClientViewModel, IsDesignTimeCreatable=True}"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance designer:DesignTimeClientViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="800" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -46,8 +45,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
+                    <!--<RowDefinition/>-->
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="0 0 5 0">
                     <TextBlock Text="Client"/>
@@ -56,8 +55,8 @@
 
                 <StackPanel Grid.Row="0" Grid.Column="1">
                     <TextBlock Text="Address"/>
-                    <TextBox Text="{Binding Client.Address}" 
-                             Height="50"                             
+                    <TextBox Text="{Binding Client.Address}"  
+                             Height="75"
                              MaxLines="3"></TextBox>
                 </StackPanel>
         </Grid>
@@ -70,56 +69,60 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.1*"/>
                 <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="0.4*"/>
                 <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
                 
-                <!--<GroupBox x:Name="ItemFileTypeGroup" Grid.Column="1" Grid.Row="0">
+                <!--<GroupBox x:Name="ItemFileTypeGroup" Grid.Column="1" Grid.Row="2">
                     <UniformGrid Rows="1" VerticalAlignment="Center">
                         <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
                         <RadioButton GroupName="ItemFileTypeGroup" Content="Post-Test Reset" />
                         <RadioButton GroupName="ItemFileTypeGroup" Content="Verify" />
                     </UniformGrid>
                 </GroupBox>-->
-                <!--<ListBox ItemsSource="{Binding ItemFileTypes}" Grid.Column="1" Grid.Row="0"
+                <ListBox ItemsSource="{Binding ItemFileTypesList}" 
+                         Grid.Column="1" Grid.Row="1"
                          SelectedItem="{Binding SelectedItemFileType}" 
                          SelectionMode="Single">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" />
+                            <StackPanel Orientation="Horizontal" IsItemsHost="True" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
-                    --><!--<ListBoxItem Content="Pre-Test"/>--><!--
-                    <ListBoxItem Content="Post-Test Reset" />
-                    <ListBoxItem Content="Verify" />
-                </ListBox>-->
-                <StackPanel Grid.Row="1" Grid.Column="1"
-                            Orientation="Horizontal">
-                    <StackPanel Orientation="Vertical">
+                </ListBox>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Column="0">
                         <TextBlock VerticalAlignment="Center">Item</TextBlock>
                         <ComboBox SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Items}" Width="200">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding Number}" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Number}" Margin="0 0 5 0" />
                                         <TextBlock Text="{Binding LongDescription}" />
-                                    </Grid>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical" Grid.Column="1">
                         <TextBlock VerticalAlignment="Center">Value</TextBlock>
-                        <TextBox x:Name="ItemValue" Width="200" Margin="10"/>
+                        <TextBox x:Name="ItemValue" Width="200" Margin="2 5"/>
                     </StackPanel>
-                    <Button HorizontalAlignment="Right"
+                    <Button HorizontalAlignment="Left" Grid.Column="2"
                             Command="{Binding AddItemCommand}"
+                            HorizontalContentAlignment="Left"
                             Style="{DynamicResource MaterialDesignFlatButton}">ADD</Button>
 
-                </StackPanel>
+                </Grid>
                 <ListBox ItemsSource="{Binding InstrumentTypes}" 
                          SelectedItem="{Binding SelectedInstrumentType}" 
-                         Grid.Row="2" Grid.Column="0" 
+                         Grid.Row="2" Grid.Column="0" Grid.RowSpan="2"
                          SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -127,55 +130,18 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <!--<GroupBox x:Name="InstrumentTypesGroup" Grid.Row="1" Grid.Column="0" >
-                    <ItemsControl ItemsSource="{Binding InstrumentTypes}" Grid.IsSharedSizeScope="True">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <RadioButton GroupName="InstrumentTypesGroup" VerticalAlignment="Stretch" Margin="5 15"
-                                             IsChecked="{Binding IsSelected}"
-                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
-                                    <Border x:Name="Border" BorderThickness="0 0 2 0" BorderBrush="{DynamicResource MaterialDesignDivider}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="1">
-                                                <TextBlock FontWeight="Bold" Text="{Binding Object.Name}" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </RadioButton>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </GroupBox>-->
-                <ContentControl Grid.Column="1" Grid.Row="2">
+                
+                <ContentControl Grid.Column="1" Grid.Row="3">
                     <DataGrid ScrollViewer.CanContentScroll="True" FontSize="18"
                               ScrollViewer.VerticalScrollBarVisibility="Visible"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                materialDesign:DataGridAssist.CellPadding="13 8 8 8" materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                                Margin="10 8 0 0" ItemsSource="{Binding CurrentItemData}" CanUserSortColumns="True" CanUserAddRows="False" AutoGenerateColumns="False">
+                              materialDesign:DataGridAssist.CellPadding="13 8 8 8" materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                              Margin="10 8 0 0" ItemsSource="{Binding CurrentItemData}" 
+                              CanUserSortColumns="True" CanUserAddRows="False" 
+                              CanUserDeleteRows="True"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <!--<DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
-                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-                            <DataGridCheckBoxColumn.Header>
-                                -->
-                            <!--padding to allow hit test to pass thru for sorting -->
-                            <!--
-                                <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
-                                    <CheckBox HorizontalAlignment="Center"                                               
-                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItems3Selected}" />
-                                </Border>
-                            </DataGridCheckBoxColumn.Header>
-                        </DataGridCheckBoxColumn>-->
+
                             <DataGridTextColumn Binding="{Binding Metadata.Number}"
                                             Header="Item #"/>
 
@@ -190,7 +156,20 @@
                             <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        
                                                             SelectedValueBinding="{Binding Food}"                                                            
                                                             ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button>
+                                            <materialDesign:PackIcon Kind="Delete"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="Black" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        
                     </DataGrid>
                 </ContentControl>
             <!--<Grid Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">

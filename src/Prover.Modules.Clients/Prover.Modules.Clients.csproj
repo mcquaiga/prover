@@ -52,6 +52,9 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.2.1.750, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.2.1.750\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ReactiveUI, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -67,6 +70,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
     </Reference>
@@ -100,6 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps.cs" />
+    <Compile Include="Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
+    <Compile Include="Screens\ItemValidation\ItemValidationView.xaml.cs">
+      <DependentUpon>ItemValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ItemValidation\ItemValidationViewModel.cs" />
+    <Compile Include="Validators\ItemVerificationManager.cs" />
     <Compile Include="Screens\Clients\ClientManagerView.xaml.cs">
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>
@@ -133,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\ItemValidation\ItemValidationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
@@ -159,5 +173,6 @@
   <ItemGroup>
     <Resource Include="Resources\group.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

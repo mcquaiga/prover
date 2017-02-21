@@ -7,6 +7,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
     public interface IVolumeTestManager
     {
         bool RunningTest { get; set; }
-        Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset);
+        Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest);
     }
 }

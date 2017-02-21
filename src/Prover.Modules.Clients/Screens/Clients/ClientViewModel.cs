@@ -1,63 +1,64 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
-using Prover.CommProtocol.MiHoneywell.Items;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Prover.Modules.Clients.Screens.Clients
 {
     public class ClientViewModel : ViewModelBase
     {
-        private readonly IProverStore<Prover.Core.Models.Clients.Client> _clientStore;
+        private readonly IProverStore<Core.Models.Clients.Client> _clientStore;
 
         public ClientViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, 
             IProverStore<Prover.Core.Models.Clients.Client> clientStore, Prover.Core.Models.Clients.Client client = null) : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
             _client = client;
-
+           
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
             SaveCommand = ReactiveCommand.CreateFromTask(Save);
-
-            UpdateItemListCommand = ReactiveCommand.CreateFromTask<InstrumentType>(UpdateItemList);
-            this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Where(x => x != null)
-                .InvokeCommand(UpdateItemListCommand);
-
-            this.WhenAnyValue(x => x.SelectedItem);
+            GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());
-
-            GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
+            UpdateItemListCommand = ReactiveCommand.CreateFromTask<Tuple<InstrumentType, ClientItemType>>(UpdateItemList);
+            this.WhenAnyValue(x => x.SelectedInstrumentType, x => x.SelectedItemFileType)
+                .Where(x => x.Item1 != null & x.Item2 != null)
+                .InvokeCommand(UpdateItemListCommand);      
 
             var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue,
                 (selectedItem, itemValue) => selectedItem != null && itemValue != null);
             AddItemCommand = ReactiveCommand.CreateFromTask(AddItem, canAddItem);
+
+            CurrentItemData.ResetChangeThreshold = 90;
         }
 
         private async Task AddItem()
         {
-            var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());   
+            var itemValue = new ItemValue(SelectedItem, ItemValue.ToString());
             CurrentClientItems.Items.Add(itemValue);
-            CurrentItemData.Add(itemValue);  
+            CurrentItemData.Add(itemValue);
             SelectedItem = null;
-            ItemValue = null;
+            ItemValue = null;         
         }
 
         public async Task Edit()
         {
             await ScreenManager.ChangeScreen(this);
             SelectedInstrumentType = InstrumentTypes.First();
-            SelectedItemFileType = ItemType.PostTest;
+            SelectedItemFileType = ClientItemType.Reset;
         }
 
         private async Task GoBack()
@@ -71,24 +72,33 @@ namespace Prover.Modules.Clients.Screens.Clients
             await GoBack();
         }
 
-        private async Task UpdateItemList(InstrumentType instrumentType)
+        private async Task UpdateItemList(Tuple<InstrumentType, ClientItemType> values)
         {
-            CurrentItemData.Clear();
-            Items = ItemHelpers.LoadItems(instrumentType);
-            ItemStrings = Items.Select(x => $"{x.Number} - {x.LongDescription}").ToList();
-
-            if (_client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType) == null)
+            using (CurrentItemData.SuppressChangeNotifications())
             {
-                var items = new ClientItems(Client)
-                {
-                    InstrumentType = instrumentType,
-                    Items = new List<ItemValue>()
-                };
-                _client.Items.Add(items);
-            }
+                CurrentItemData.Clear();
 
-            CurrentClientItems = _client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType);
-            CurrentItemData.AddRange(CurrentClientItems?.Items);
+                Items.Clear();
+                Items.AddRange(ItemHelpers.LoadItems(SelectedInstrumentType));
+
+                if (GetItemList(SelectedInstrumentType, SelectedItemFileType) == null)
+                {
+                    var items = new ClientItems(Client)
+                    {
+                        InstrumentType = SelectedInstrumentType,
+                        ItemFileType = SelectedItemFileType,
+                        Items = new List<ItemValue>()
+                    };
+                    _client.Items.Add(items);
+                }
+                CurrentClientItems = GetItemList(SelectedInstrumentType, SelectedItemFileType);
+                CurrentItemData.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
+            }
+        }
+
+        private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
+        {
+             return _client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
         }
 
         #region Commands
@@ -143,12 +153,14 @@ namespace Prover.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
         }
 
-        private ItemType _selectedItemFileType;
-        public ItemType SelectedItemFileType
+        private ClientItemType _selectedClientItemFileType;
+        public ClientItemType SelectedItemFileType
         {
-            get { return _selectedItemFileType; }
-            set { this.RaiseAndSetIfChanged(ref _selectedItemFileType, value); }
+            get { return _selectedClientItemFileType; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClientItemFileType, value); }
         }
+
+        public List<ClientItemType> ItemFileTypesList => Enum.GetValues(typeof(ClientItemType)).Cast<ClientItemType>().ToList();
 
         private Prover.Core.Models.Clients.Client _client;
         public Prover.Core.Models.Clients.Client Client
@@ -164,8 +176,8 @@ namespace Prover.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _currentItemValues, value); }
         }
 
-        private IEnumerable<ItemMetadata> _items;
-        public IEnumerable<ItemMetadata> Items
+        private ReactiveList<ItemMetadata> _items = new ReactiveList<ItemMetadata>();
+        public ReactiveList<ItemMetadata> Items
         {
             get { return _items; }
             set { this.RaiseAndSetIfChanged(ref _items, value); }
