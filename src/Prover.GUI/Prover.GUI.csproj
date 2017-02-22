@@ -205,22 +205,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Apps.cs" />
-    <Compile Include="ConnectionDialogManager.cs" />
-    <Compile Include="Dialogs\ConnectionView.xaml.cs">
-      <DependentUpon>ConnectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\ConnectionViewModel.cs" />
-    <Compile Include="Dialogs\ProgressDialogView.xaml.cs">
-      <DependentUpon>ProgressDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\ProgressDialogViewModel.cs" />
-    <Compile Include="DesignTimeViewModelLocator.cs" />
     <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="Reports\CertificateGenerator.cs" />
-    <Compile Include="Reports\CertificateReportView.xaml.cs">
-      <DependentUpon>CertificateReportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\CertificateReportViewModel.cs" />
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -316,22 +301,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Dialogs\ConnectionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\ProgressDialogView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
-    </Page>
-    <Page Include="Reports\CertificateReportView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Reports\InstrumentReportView.xaml">
       <Generator>MSBuild:Compile</Generator>

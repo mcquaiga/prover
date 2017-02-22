@@ -190,10 +190,7 @@
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
-    <Compile Include="Events\CommunicationStatusEvent.cs" />
-    <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
-    <Compile Include="Events\TestProgressEvent.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />

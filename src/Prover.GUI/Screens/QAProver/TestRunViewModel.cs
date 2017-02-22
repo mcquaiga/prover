@@ -28,7 +28,7 @@ using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<ConnectionStatusEvent>
+    public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
@@ -143,12 +143,7 @@ namespace Prover.GUI.Screens.QAProver
         {
             _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
-        }
-
-        public void Handle(ConnectionStatusEvent message)
-        {
-            ConnectionStatusMessage = $"Attempt {message.ConnectionStatus} of {message.MaxAttempts}...";
-        }
+        }      
 
         public async Task CancelCommand()
         {

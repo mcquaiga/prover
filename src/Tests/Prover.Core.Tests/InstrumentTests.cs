@@ -1,10 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.Core.Communication;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Startup;
-using Prover.Core.Storage;
-using Prover.SerialProtocol;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Prover.Core.Tests
 {
