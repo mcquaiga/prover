@@ -23,8 +23,6 @@ namespace Prover.GUI
     public class AppBootstrapper : BootstrapperBase
     {
         private string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
-            "Prover.Modules.Clients",
-            "Prover.Modules.Exporter",
 
         public AppBootstrapper()
         {
@@ -69,8 +67,6 @@ namespace Prover.GUI
 
             foreach (var module in modules)
             {
-                if (File.Exists($"{module}.dll"))
-                {
                 if (File.Exists($"{module}.dll"))
                 {
                     var ass = Assembly.LoadFrom($"{module}.dll");
