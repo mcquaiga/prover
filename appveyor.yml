@@ -47,8 +47,16 @@ deploy:
 - provider: GitHub
   tag: v$(APPVEYOR_BUILD_VERSION)
   release: v$(APPVEYOR_BUILD_VERSION)
-  description: 'EvcProver release - v$(APPVEYOR_BUILD_VERSION)'
+  description: 'EvcProver RC - v$(APPVEYOR_BUILD_VERSION)'
   auth_token:
     secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
   on:
     branch: RC
+- provider: GitHub
+  tag: v$(APPVEYOR_BUILD_VERSION)
+  description: 'EvcProver - v$(APPVEYOR_BUILD_VERSION)'
+  auth_token:
+    secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
+  on:
+    branch: master
+
