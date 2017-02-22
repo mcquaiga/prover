@@ -87,22 +87,14 @@
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                     Margin="0 16 20 0">
-            <Button Margin="25 0" HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="CancelCommand" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+            <Button Margin="25 0" 
+                    Command="{Binding CancelCommand}"
+                    HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
                 CANCEL
             </Button>
             <Button HorizontalAlignment="Right"
                     Command="{Binding StartTestCommand}"
                     Content="START">
-                <!--<i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="StartCommand" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>-->
             </Button>
         </StackPanel>
 

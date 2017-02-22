@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
+using Newtonsoft.Json;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
@@ -21,13 +22,9 @@ namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private readonly List<string> _moduleFileNames = new List<string>
-        {
+        private string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
             "Prover.Modules.Clients",
             "Prover.Modules.Exporter",
-            "UnionGas.MASA",
-            "Prover.GUI.Common"
-        };
 
         public AppBootstrapper()
         {
@@ -57,11 +54,23 @@ namespace Prover.GUI
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
+            if (!File.Exists(_moduleFilePath))
+            {
+                throw new Exception("Could not find a modules.conf file in the current directory.");
+            }
+
+            List<string> modules = new List<string>();
+
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            foreach (var module in _moduleFileNames)
+            var modulesString = File.ReadAllText(_moduleFilePath);
+            modules.AddRange(JsonConvert.DeserializeObject<List<string>>(modulesString));
+
+            foreach (var module in modules)
             {
+                if (File.Exists($"{module}.dll"))
+                {
                 if (File.Exists($"{module}.dll"))
                 {
                     var ass = Assembly.LoadFrom($"{module}.dll");

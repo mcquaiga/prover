@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.IO;
@@ -9,6 +10,7 @@ using Prover.Core.Events;
 using Prover.Core.Settings;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.Settings
 {
@@ -24,6 +26,8 @@ namespace Prover.GUI.Screens.Settings
             _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
             _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
             _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
+
+            RefreshCommSettingsCommand = ReactiveCommand.Create(RefreshCommSettings);
         }
 
         public List<int> BaudRate => SerialPort.BaudRates;
@@ -82,7 +86,14 @@ namespace Prover.GUI.Screens.Settings
             base.CanClose(callback);
         }
 
-        public void RefreshCommSettingsCommand()
+        private ReactiveCommand _refreshCommSettingsCommand;
+        public ReactiveCommand RefreshCommSettingsCommand
+        {
+            get { return _refreshCommSettingsCommand; }
+            set { this.RaiseAndSetIfChanged(ref _refreshCommSettingsCommand, value); }
+        }
+
+        public void RefreshCommSettings()
         {
             NotifyOfPropertyChange(() => CommPort);
             NotifyOfPropertyChange(() => TachCommPort);

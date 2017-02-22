@@ -51,6 +51,7 @@
                             <Button Margin="2"
                                     Width="90"
                                     Height="36"
+                                    Command="{Binding RunTestCommand}"
                                     HorizontalAlignment="Right"
                                     Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -60,12 +61,6 @@
                                                Text="Run"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
-
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <cal:ActionMessage MethodName="RunTest" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
                             </Button>
                         </Grid>
                        

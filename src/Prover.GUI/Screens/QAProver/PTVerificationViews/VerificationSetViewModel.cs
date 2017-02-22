@@ -21,6 +21,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             CancelTestCommand = ReactiveCommand.Create(CancelTest);
+            RunTestCommand = ReactiveCommand.CreateFromTask(RunTest);
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
@@ -92,6 +93,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         public void CancelTest()
         {
             _cancellationTokenSource?.Cancel();
+        }
+
+        private ReactiveCommand _runTestCommand;
+        public ReactiveCommand RunTestCommand
+        {
+            get { return _runTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
         }
 
         public async Task RunTest()
