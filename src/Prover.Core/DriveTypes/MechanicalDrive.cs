@@ -26,7 +26,7 @@ namespace Prover.Core.DriveTypes
         public int MaxUncorrectedPulses()
         {
             var uncorPulseTable = SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits;
-            var uncorUnitValue = (int) Instrument.Items.GetItem(92).NumericValue;
+            var uncorUnitValue = (int) Instrument.Items.GetItem(98).NumericValue;
 
             return uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
