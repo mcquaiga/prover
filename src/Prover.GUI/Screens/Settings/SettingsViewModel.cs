@@ -21,8 +21,6 @@ namespace Prover.GUI.Screens.Settings
             : base(screenManager, eventAggregator)
         { 
             MechanicalUncorrectedTestLimits.AddRange(SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits.ToList());            
-
-            RefreshCommSettingsCommand = ReactiveCommand.Create(RefreshCommSettings);
         }
 
         public async Task SaveSettings()
