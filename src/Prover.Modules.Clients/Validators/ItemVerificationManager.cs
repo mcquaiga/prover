@@ -30,6 +30,8 @@ namespace Prover.Modules.Clients.Validators
 
         public async Task<object> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
+            if (instrument.Client == null) return true;
+
             InvalidInstrumentValues.Clear();
 
             _clientValidationItems.Clear();
