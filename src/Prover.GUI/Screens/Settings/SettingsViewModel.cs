@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
@@ -16,55 +17,26 @@ namespace Prover.GUI.Screens.Settings
 {
     public class SettingsViewModel : ViewModelBase, IWindowSettings
     {
-        private int _selectedBaudRate;
-        private string _selectedCommPort;
-        private string _selectedTachCommPort;
-
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {
-            _selectedBaudRate = SettingsManager.SettingsInstance.InstrumentBaudRate;
-            _selectedCommPort = SettingsManager.SettingsInstance.InstrumentCommPort;
-            _selectedTachCommPort = SettingsManager.SettingsInstance.TachCommPort;
+        { 
+            MechanicalUncorrectedTestLimits.AddRange(SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits.ToList());            
 
             RefreshCommSettingsCommand = ReactiveCommand.Create(RefreshCommSettings);
         }
 
-        public List<int> BaudRate => SerialPort.BaudRates;
-        public List<string> CommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
-        public List<string> TachCommPort => System.IO.Ports.SerialPort.GetPortNames().ToList();
-
-        public string SelectedCommPort
+        public async Task SaveSettings()
         {
-            get { return _selectedCommPort; }
-            set
-            {
-                _selectedCommPort = value;
-                SettingsManager.SettingsInstance.InstrumentCommPort = value;
-                SettingsManager.Save();
-            }
+            SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits =
+                        MechanicalUncorrectedTestLimits.ToList();
+            await SettingsManager.Save();
         }
 
-        public string SelectedTachCommPort
+        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits = new ReactiveList<MechanicalUncorrectedTestLimit>();
+        public ReactiveList<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
         {
-            get { return _selectedTachCommPort; }
-            set
-            {
-                SettingsManager.SettingsInstance.TachCommPort = value;
-                _selectedTachCommPort = value;
-                SettingsManager.Save();
-            }
-        }
-
-        public int SelectedBaudRate
-        {
-            get { return _selectedBaudRate; }
-            set
-            {
-                SettingsManager.SettingsInstance.InstrumentBaudRate = value;
-                SettingsManager.Save();
-                _selectedBaudRate = value;
-            }
+            get { return _mechanicalUncorrectedTestLimits; }
+            set { this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value); }
         }
 
         public dynamic WindowSettings
@@ -73,8 +45,8 @@ namespace Prover.GUI.Screens.Settings
             {
                 dynamic settings = new ExpandoObject();
                 settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                settings.ResizeMode = ResizeMode.NoResize;
-                settings.MinWidth = 450;
+                settings.ResizeMode = ResizeMode.CanResizeWithGrip;
+                settings.MinWidth = 600;
                 settings.Title = "Settings";
                 return settings;
             }
@@ -82,21 +54,9 @@ namespace Prover.GUI.Screens.Settings
 
         public override void CanClose(Action<bool> callback)
         {
+            Task.Run(async () => await SaveSettings());
             EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
-        }
-
-        private ReactiveCommand _refreshCommSettingsCommand;
-        public ReactiveCommand RefreshCommSettingsCommand
-        {
-            get { return _refreshCommSettingsCommand; }
-            set { this.RaiseAndSetIfChanged(ref _refreshCommSettingsCommand, value); }
-        }
-
-        public void RefreshCommSettings()
-        {
-            NotifyOfPropertyChange(() => CommPort);
-            NotifyOfPropertyChange(() => TachCommPort);
-        }
+        }      
     }
 }

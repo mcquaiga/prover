@@ -18,12 +18,7 @@ namespace Prover.Core.Settings
         public static Settings SettingsInstance
         {
             get
-            {
-                //if (_singletonInstance == null)
-                //{
-                //    var result = Task.Run(async () => await LoadSettings());
-                //    _singletonInstance = result.Result;
-                //}
+            {               
                 return _singletonInstance;
             }
             set { _singletonInstance = value; }
@@ -32,40 +27,22 @@ namespace Prover.Core.Settings
         public static async Task RefreshSettings()
         {
             _singletonInstance = await LoadSettings();
+            await Save();
         }
 
         private static async Task<Settings> LoadSettings()
         {
-            //Settings settings;
-            //try
-            //{
-            //    settings = await BlobCache.LocalMachine.GetObject<Settings>("settings");
-            //}
-            //catch (KeyNotFoundException)
-            //{
-            //    settings = new Settings();
-            //    settings.SetDefaults();
-            //}
-
-            //return settings;
-
             return await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
-
-                if (!fileSystem.FileExists(SettingsPath))
-                {
-                    var settings = new Settings();
-                    settings.SetDefaults();
-                    return settings;
-                }
-                return new SettingsReader(fileSystem).Read(SettingsPath);
+                var settings = (fileSystem.FileExists(SettingsPath) ? new SettingsReader(fileSystem).Read(SettingsPath) : null) ?? new Settings();
+                settings.SetDefaults();
+                return settings;
             });
         }
 
         public static async Task Save()
-        {
-            //await BlobCache.LocalMachine.InsertObject("settings", _singletonInstance);
+        {           
             await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
