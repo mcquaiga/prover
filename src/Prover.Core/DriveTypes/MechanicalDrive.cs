@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 
 namespace Prover.Core.DriveTypes
 {
@@ -23,19 +25,10 @@ namespace Prover.Core.DriveTypes
 
         public int MaxUncorrectedPulses()
         {
-            switch ((int)Instrument.Items.GetItem(92).NumericValue)
-            {
-                case 1:
-                    return 1000;
-                case 10:
-                    return 100;
-                case 100:
-                    return 10;
-                case 1000:
-                    return 1;
-                default:
-                    return 10;
-            }
+            var uncorPulseTable = SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits;
+            var uncorUnitValue = (int) Instrument.Items.GetItem(92).NumericValue;
+
+            return uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
