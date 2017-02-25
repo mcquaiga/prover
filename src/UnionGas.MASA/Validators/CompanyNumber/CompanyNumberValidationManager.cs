@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Subjects;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             _loginService = loginService;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument)
+        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
             await Validate(commClient, instrument);
         }
@@ -151,7 +152,5 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 return null;
             }
         }
-
-       
     }
 }

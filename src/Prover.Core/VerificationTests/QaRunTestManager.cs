@@ -98,7 +98,7 @@ namespace Prover.Core.VerificationTests
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)
-                        await command.Execute(_communicationClient, Instrument);
+                        await command.Execute(_communicationClient, Instrument, _testStatus);
                 }
 
                 _testStatus.OnNext($"Saving test...");

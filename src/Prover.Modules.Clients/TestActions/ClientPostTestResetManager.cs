@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,17 +27,22 @@ namespace Prover.Modules.Clients.TestActions
             _screenManager = screenManager;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument)
+        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
+            
             var resetItems = instrument.Client.Items.FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset && c.InstrumentType == instrument.InstrumentType)?.Items.ToList();
 
             if (resetItems == null || !resetItems.Any()) return;
 
             var cts = new CancellationTokenSource();
             await commClient.Connect(cts.Token);
+
+            var progress = 1;
             foreach (var item in resetItems)
             {
+                statusUpdates?.OnNext($"Resetting items... {progress} of {resetItems.Count}");
                 var response = await commClient.SetItemValue(item.Metadata.Number, item.RawValue);
+                progress++;
             }
             await commClient.Disconnect();
         }

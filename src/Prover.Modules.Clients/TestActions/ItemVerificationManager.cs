@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
@@ -28,7 +29,7 @@ namespace Prover.Modules.Clients.TestActions
             _screenManager = screenManager;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument)
+        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
             if (!await Validate(commClient, instrument))
             {
@@ -73,20 +74,17 @@ namespace Prover.Modules.Clients.TestActions
 
         private async Task<bool> ShowItemDialog()
         {
-            return await Task.Run(() =>
+            if (InvalidInstrumentValues.Any())
             {
-                if (InvalidInstrumentValues.Any())
-                {
-                    //show dialog
-                    var dialog = _screenManager.ResolveViewModel<ItemValidationViewModel>();
-                    dialog.ItemVerificationManager = this;
+                //show dialog
+                var dialog = _screenManager.ResolveViewModel<ItemValidationViewModel>();
+                dialog.ItemVerificationManager = this;
 
-                    var result = _screenManager.ShowDialog(dialog);
-                    return result.HasValue && result.Value;
-                }
+                var result = _screenManager.ShowDialog(dialog);
+                return result.HasValue && result.Value;
+            }
 
-                return true;
-            });
+            return true;
         }
 
         /// <summary>
@@ -102,8 +100,9 @@ namespace Prover.Modules.Clients.TestActions
             await evcCommunicationClient.Connect(ct);
             foreach (var invalidItem in InvalidInstrumentValues)
             {
-                await evcCommunicationClient.SetItemValue(invalidItem.Key.Number, invalidItem.Value.Item1.RawValue);
-                instrument.Items.First(i => i.Metadata.Number == invalidItem.Key.Number).RawValue = invalidItem.Value.Item1.RawValue;
+                var response = await evcCommunicationClient.SetItemValue(invalidItem.Key.Number, invalidItem.Value.Item1.RawValue);
+                if (response)
+                    instrument.Items.First(i => i.Metadata.Number == invalidItem.Key.Number).RawValue = invalidItem.Value.Item1.RawValue;
             }
             await evcCommunicationClient.Disconnect();
             await _instrumentStore.UpsertAsync(instrument);

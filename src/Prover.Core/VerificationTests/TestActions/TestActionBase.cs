@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
@@ -10,7 +11,7 @@ namespace Prover.Core.VerificationTests.TestActions
 {
     public abstract class TestActionBase
     {
-        public abstract Task Execute(EvcCommunicationClient commClient, Instrument instrument);
+        public abstract Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null);
     }
 
     public abstract class PostTestResetBase : TestActionBase
