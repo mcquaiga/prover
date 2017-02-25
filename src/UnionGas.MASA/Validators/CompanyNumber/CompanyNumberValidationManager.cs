@@ -21,16 +21,14 @@ namespace UnionGas.MASA.Validators.CompanyNumber
     public class CompanyNumberValidationManager : PreTestValidationBase
     {
         private readonly ScreenManager _screenManager;
-        private readonly EventAggregator _eventAggregator;
         private readonly IProverStore<Instrument> _instrumentStore;
         private readonly DCRWebServiceSoap _webService;
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberValidationManager(ScreenManager screenManager, EventAggregator eventAggregator,IProverStore<Instrument> instrumentStore, DCRWebServiceSoap webService, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidationManager(ScreenManager screenManager, IProverStore<Instrument> instrumentStore, DCRWebServiceSoap webService, ILoginService<EmployeeDTO> loginService)
         {
             _screenManager = screenManager;
-            _eventAggregator = eventAggregator;
             _instrumentStore = instrumentStore;
             _webService = webService;
             _loginService = loginService;

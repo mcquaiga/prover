@@ -103,6 +103,7 @@ namespace Prover.GUI.Screens.QAProver
                     !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
+            CancelCommand = ReactiveCommand.Create(Cancel);
 
             _clientList = clientStore.Query().ToList();
                 
@@ -115,8 +116,10 @@ namespace Prover.GUI.Screens.QAProver
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand StartTestCommand { get; } 
-               
+        public ReactiveCommand StartTestCommand { get; }
+        public ReactiveCommand CancelCommand { get; }
+
+
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
@@ -147,7 +150,7 @@ namespace Prover.GUI.Screens.QAProver
             _qaRunTestManager?.Dispose();
         }      
 
-        public async Task CancelCommand()
+        public async Task Cancel()
         {
             await ScreenManager.GoHome();
         }

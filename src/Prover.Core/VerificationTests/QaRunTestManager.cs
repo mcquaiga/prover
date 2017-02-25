@@ -33,11 +33,11 @@ namespace Prover.Core.VerificationTests
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IProverStore<Instrument> _instrumentStore;
-        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
-        private readonly IEnumerable<IPreTestCommand> _preTestCommands;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly Subject<string> _testStatus = new Subject<string>();
+
         private readonly IEnumerable<PreTestValidationBase> _validators;
+        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
 
         public QaRunTestManager(
             IProverStore<Instrument> instrumentStore,
