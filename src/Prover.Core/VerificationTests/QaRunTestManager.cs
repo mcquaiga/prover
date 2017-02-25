@@ -12,6 +12,7 @@ using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
+using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 
 namespace Prover.Core.VerificationTests
@@ -32,27 +33,25 @@ namespace Prover.Core.VerificationTests
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IProverStore<Instrument> _instrumentStore;
-        private readonly IEnumerable<IPostTestCommand> _postTestCommands;
+        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
         private readonly IEnumerable<IPreTestCommand> _preTestCommands;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly Subject<string> _testStatus = new Subject<string>();
-        private readonly IEnumerable<IValidator> _validators;
+        private readonly IEnumerable<PreTestValidationBase> _validators;
 
         public QaRunTestManager(
             IProverStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
-            IEnumerable<IValidator> validators = null,
-            IEnumerable<IPreTestCommand> preTestCommands = null,
-            IEnumerable<IPostTestCommand> postTestCommands = null)
+            IEnumerable<PreTestValidationBase> validators = null,
+            IEnumerable<PostTestResetBase> postTestCommands = null)
         {
             VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _validators = validators;
-            _preTestCommands = preTestCommands;
             _postTestCommands = postTestCommands;
         }
 
@@ -99,7 +98,7 @@ namespace Prover.Core.VerificationTests
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)
-                        await command.Execute(_communicationClient);
+                        await command.Execute(_communicationClient, Instrument);
                 }
 
                 _testStatus.OnNext($"Saving test...");
@@ -129,7 +128,7 @@ namespace Prover.Core.VerificationTests
                 foreach (var validator in _validators)
                 {
                     _testStatus.OnNext($"Verifying items...");
-                    await validator.Validate(_communicationClient, Instrument);
+                    await validator.Execute(_communicationClient, Instrument);
                 }
         }
 

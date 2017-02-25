@@ -109,7 +109,8 @@
       <DependentUpon>ItemValidationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\ItemValidation\ItemValidationViewModel.cs" />
-    <Compile Include="Validators\ItemVerificationManager.cs" />
+    <Compile Include="TestActions\ClientPostTestResetManager.cs" />
+    <Compile Include="TestActions\ItemVerificationManager.cs" />
     <Compile Include="Screens\Clients\ClientManagerView.xaml.cs">
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>

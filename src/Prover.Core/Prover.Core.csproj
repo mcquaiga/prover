@@ -255,6 +255,7 @@
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />

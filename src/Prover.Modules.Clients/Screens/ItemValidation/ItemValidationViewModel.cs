@@ -4,7 +4,7 @@ using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.Modules.Clients.Validators;
+using Prover.Modules.Clients.TestActions;
 using ReactiveUI;
 
 namespace Prover.Modules.Clients.Screens.ItemValidation
