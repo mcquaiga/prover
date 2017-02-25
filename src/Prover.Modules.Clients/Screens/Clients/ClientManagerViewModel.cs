@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Storage;
@@ -8,7 +9,7 @@ using ReactiveUI;
 
 namespace Prover.Modules.Clients.Screens.Clients
 {
-    public class ClientManagerViewModel : ViewModelBase
+    public class ClientManagerViewModel : ViewModelBase, IDisposable
     {
         private readonly IProverStore<Prover.Core.Models.Clients.Client> _clientStore;
         private const string ClientListViewContext = "ClientListView";
@@ -58,6 +59,11 @@ namespace Prover.Modules.Clients.Screens.Clients
         {
             get { return _viewContext; }
             set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+        }
+
+        public void Dispose()
+        {
+            ClientList = null;
         }
     }
 }

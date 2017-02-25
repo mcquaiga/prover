@@ -16,64 +16,72 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+            <Style TargetType="{x:Type materialDesign:PackIcon}" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="8 0 8 0" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <materialDesign:DialogHost>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="0.25*"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
-            <materialDesign:ColorZone Mode="PrimaryLight" Padding="2" Grid.Row="0">
-            <Grid>
-                <Button Command="{Binding GoBackCommand}"
-                    Style="{DynamicResource MaterialDesignFlatButton}" 
-                    HorizontalAlignment="Left">
-                        <materialDesign:PackIcon Kind="ArrowLeft" />
+            <materialDesign:ColorZone Mode="PrimaryLight" Padding="10" Grid.Row="0">
+                <Button Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="-15 0 0 0"
+                    Style="{DynamicResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="ArrowLeft" Height="48" Width="48" />
                 </Button>
-                <Button Command="{Binding SaveCommand}"
-                    Content="SAVE"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
-                    HorizontalAlignment="Right"/>
-            </Grid>
-        </materialDesign:ColorZone>
-            <UniformGrid Grid.Row="1" Margin="15" >
-                <StackPanel>
-                    <TextBox Text="{Binding Client.Name}" materialDesign:HintAssist.Hint="Name"/>
-                </StackPanel>
+            </materialDesign:ColorZone>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <materialDesign:PackIcon Grid.Column="0" Grid.Row="0"
+                                         Kind="Account" Foreground="{Binding ElementName=NameTextBox, Path=BorderBrush}" />
+                <TextBox x:Name="NameTextBox" Grid.Column="1"  Grid.Row="0"
+                         Text="{Binding Client.Name}" materialDesign:HintAssist.Hint="Name"/>
 
-                <TextBox Text="{Binding Client.Address}"  
+                <materialDesign:PackIcon Grid.Column="0" Grid.Row="1" 
+                                         Kind="Home" Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
+                <TextBox x:Name="AddressTextBox" Grid.Column="1" Grid.Row="1" 
+                            Text="{Binding Client.Address}"  
                              materialDesign:HintAssist.Hint="Address"
-                             TextWrapping="Wrap" VerticalAlignment="Stretch" Margin="32 0 0 0"
-                             MinWidth="280"
+                             TextWrapping="Wrap" VerticalAlignment="Stretch"
                              AcceptsReturn="True"                 
-                             VerticalScrollBarVisibility="Auto"
-                             Height="100"/>
-            </UniformGrid>
+                             VerticalScrollBarVisibility="Auto"/>
+            </Grid>
             
             <Grid Margin="10" Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.50*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"/>
-                    <RowDefinition Height="0.4*"/>
-                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="4*"/>
                 </Grid.RowDefinitions>
 
-                <!--<GroupBox x:Name="ItemFileTypeGroup" Grid.Column="1" Grid.Row="2">
-                    <UniformGrid Rows="1" VerticalAlignment="Center">
-                        <Button Content="Pre-Test" Style="{DynamicResource MaterialDesignFlatButton}"/>
-                        <RadioButton GroupName="ItemFileTypeGroup" Content="Post-Test Reset" />
-                        <RadioButton GroupName="ItemFileTypeGroup" Content="Verify" />
-                    </UniformGrid>
-                </GroupBox>-->
+                
                 <ListBox ItemsSource="{Binding ItemFileTypesList}" 
-                         Grid.Column="1" Grid.Row="1"
+                         Grid.Column="1" Grid.Row="0"
+                         FontSize="18"
                          SelectedItem="{Binding SelectedItemFileType}" 
                          SelectionMode="Single">
                     <ListBox.ItemsPanel>
@@ -81,63 +89,98 @@
                             <StackPanel Orientation="Horizontal" IsItemsHost="True" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
+                    <!--<ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                      HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                    FontSize="18" Content="{Binding .}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>-->
                 </ListBox>
-                <WrapPanel Grid.Row="2" Grid.Column="1">
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10">
-                        <TextBlock VerticalAlignment="Center" Margin="5 0 10 0">Item</TextBlock>
-                        <ComboBox SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding Items}" Width="200">
+                <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="1" 
+                              materialDesign:HintAssist.Hint="Item"
+                              SelectedItem="{Binding SelectedItem}" 
+                              ItemsSource="{Binding Items}" Width="200">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Number}" Margin="0 0 5 0" />
+                                    <TextBlock Text="{Binding LongDescription}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    
+                    <Grid Grid.Column="3" Margin="10 0 0 0">
+                        <TextBox Text="{Binding ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="2 5" 
+                                 materialDesign:HintAssist.Hint="Value"
+                                 Visibility="{Binding ShowItemValueTextBox, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <ComboBox ItemsSource="{Binding ItemDescriptionsList}" 
+                                  SelectedItem="{Binding SelectedItemDescription}"
+                                  materialDesign:HintAssist.Hint="Value"
+                                  Width="200" Margin="2 5" 
+                                  Visibility="{Binding ShowItemDescriptions, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Number}" Margin="0 0 5 0" />
-                                        <TextBlock Text="{Binding LongDescription}" />
-                                    </StackPanel>
+                                    <TextBlock Text="{Binding Description}" Margin="2"/>        
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock VerticalAlignment="Center">Value</TextBlock>
-                        <TextBox x:Name="ItemValue" Width="200" Margin="2 5"/>
-                    </StackPanel>
-                    <Button  VerticalAlignment="Center"
+                    </Grid>
+                    
+                    <Button Grid.Column="4" 
+                            VerticalAlignment="Center"
                             Command="{Binding AddItemCommand}"
                             HorizontalContentAlignment="Left"
-                            Style="{DynamicResource MaterialDesignFlatButton}">ADD</Button>
+                            Style="{DynamicResource MaterialDesignFlatButton}" Content="ADD"/>
 
-                </WrapPanel>
-                <ListBox ItemsSource="{Binding InstrumentTypes}" 
+                </Grid>
+                <Border Grid.Row="2" Grid.Column="0" Grid.RowSpan="2"
+                        BorderBrush="LightGray" BorderThickness="0 0 2 0">
+                    <ListBox ItemsSource="{Binding InstrumentTypes}" 
                          SelectedItem="{Binding SelectedInstrumentType}" 
-                         Grid.Row="2" Grid.Column="0" Grid.RowSpan="2"
                          SelectionMode="Single">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{DynamicResource MaterialDesignFlatButton}" Content="{Binding Name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                                
+                                <!--<Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        FontSize="18" Content="{Binding Name}"/>-->
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
                 
-                <ContentControl Grid.Column="1" Grid.Row="3">
+                <ContentControl Grid.Column="1" Grid.Row="2">
                     <DataGrid ScrollViewer.CanContentScroll="True" FontSize="18"
                               ScrollViewer.VerticalScrollBarVisibility="Visible"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
                               materialDesign:DataGridAssist.CellPadding="13 8 8 8" materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                              Margin="10 8 0 0" ItemsSource="{Binding CurrentItemData}" 
+                              Margin="4" ItemsSource="{Binding CurrentItemData}" 
                               CanUserSortColumns="True" CanUserAddRows="False" 
+                              IsReadOnly="True"
                               CanUserDeleteRows="True"
                               AutoGenerateColumns="False">
                         <DataGrid.Columns>
 
-                            <DataGridTextColumn Binding="{Binding Metadata.Number}"
-                                            Header="Item #"/>
+                            <DataGridTextColumn Binding="{Binding Metadata.Number}" Header="Item #"/>
 
-                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
-                                            Header="Description"
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}" Header="Description"
                                             />
                             <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
-                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
-                                                        Header="Value"                                                                                    
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}" Header="Value"                                                                                    
                                                         />
                             <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
                             <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        

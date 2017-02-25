@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Instruments;
@@ -60,6 +61,9 @@ namespace Prover.Modules.Clients.Validators
 
         private async Task ShowItemDialog(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
+            var ctSource = new CancellationTokenSource();
+            var ct = ctSource.Token;
+
             if (InvalidInstrumentValues.Any())
             {
                 //show dialog
@@ -69,7 +73,7 @@ namespace Prover.Modules.Clients.Validators
                 var result = _screenManager.ShowDialog(dialog);
                 if (result.HasValue && result.Value)
                 {
-                    await Update(evcCommunicationClient, instrument);
+                    await Update(evcCommunicationClient, instrument, ct);
                 }
             }
         }
@@ -82,9 +86,9 @@ namespace Prover.Modules.Clients.Validators
         public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidInstrumentValues = new Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>>();
         public List<ItemValue> ValidationItems => _clientValidationItems;
 
-        public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
+        public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
         {
-            await evcCommunicationClient.Connect();
+            await evcCommunicationClient.Connect(ct);
             foreach (var invalidItem in InvalidInstrumentValues)
             {
                 await evcCommunicationClient.SetItemValue(invalidItem.Key.Number, invalidItem.Value.Item1.RawValue);

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations.Validators;
@@ -18,12 +19,12 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             _valueRequestor = valueRequestor;
         }
 
-        public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
+        public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
         {
             var newCompanyNumber = _valueRequestor.GetValue();
             if (string.IsNullOrEmpty(newCompanyNumber)) return string.Empty;
 
-            await evcCommunicationClient.Connect();
+            await evcCommunicationClient.Connect(ct);
             var response =
                 await
                     evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));

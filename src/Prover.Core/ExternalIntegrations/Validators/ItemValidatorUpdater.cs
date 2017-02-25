@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Instruments;
@@ -15,7 +16,7 @@ namespace Prover.Core.ExternalIntegrations.Validators
 
     public interface IUpdater
     {
-        Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
+        Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct);
     }
 
     public interface IGetValue

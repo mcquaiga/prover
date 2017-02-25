@@ -60,9 +60,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
-            await commClient.Connect();
+            await commClient.Connect(ct);
             
             volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
@@ -106,13 +106,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             await Task.Run(async () =>
             {
                 try
                 {
-                    await commClient.Connect();
+                    ct.ThrowIfCancellationRequested();
+                    await commClient.Connect(ct);
                     volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());                    
                 }
                 finally
@@ -121,7 +122,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 }
 
                 await GetAppliedInput(volumeTest);
-            });
+            }, ct);
         }
 
         public override void Dispose()

@@ -26,6 +26,8 @@ namespace Prover.CommProtocol.Common
         private readonly IDisposable _sentObservable;
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        private CancellationToken _cancellationToken;
+
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
@@ -55,8 +57,6 @@ namespace Prover.CommProtocol.Common
         ///     Is this client already connected to an instrument
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
-
-        public CancellationTokenSource CancellationTokenSource { get; private set; }
 
         public virtual void Dispose()
         {
@@ -103,19 +103,20 @@ namespace Prover.CommProtocol.Common
         ///     Establish a link with an instrument
         ///     Handles retries for failed connections
         /// </summary>
+        /// <param name="ct">Cancellation token</param>
         /// <param name="retryAttempts"></param>
         /// <returns></returns>
-        public async Task Connect(int retryAttempts = MaxConnectionAttempts)
+        public async Task Connect(CancellationToken ct, int retryAttempts = MaxConnectionAttempts)
         {
             var connectionAttempts = 0;
-
-            CancellationTokenSource = new CancellationTokenSource();
-            var ct = CancellationTokenSource.Token;
 
             var result = Task.Run(async () =>
             {
                 while (!IsConnected)
                 {
+                    if (ct.IsCancellationRequested)
+                        ct.ThrowIfCancellationRequested();
+
                     connectionAttempts++;
                     Log.Info(
                         $"[{CommPort.Name}] Connecting to Instrument... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
@@ -151,7 +152,6 @@ namespace Prover.CommProtocol.Common
             }
             finally
             {
-                CancellationTokenSource.Dispose();
             }
         }
 

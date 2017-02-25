@@ -50,7 +50,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                    )
                 {
                     _log.Warn($"Company number {companyNumber} not found in an open job.");
-                    companyNumber = (string) await _updater.Update(commClient, instrument);
+                    companyNumber = (string) await _updater.Update(commClient, instrument, new CancellationTokenSource().Token);
                 }
                 else
                 {
@@ -58,7 +58,8 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 }
             } while (!string.IsNullOrEmpty(companyNumber));
             
-            await UpdateInstrumentValues(instrument, meterDto);
+            if (meterDto != null)
+                await UpdateInstrumentValues(instrument, meterDto);
 
             return meterDto;
         }

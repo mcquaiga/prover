@@ -37,6 +37,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
+            ShowDownloadButton = QaRunTestManager != null;
+
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
@@ -60,6 +62,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
                 VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator,
                     VerificationTest.VolumeTest);
+        }
+
+        private bool _showDownloadButton;
+        public bool ShowDownloadButton
+        {
+            get { return _showDownloadButton; }
+            set { this.RaiseAndSetIfChanged(ref _showDownloadButton, value); }
         }
 
         private bool _showProgressDialog;

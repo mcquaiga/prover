@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Akka.Util.Internal;
@@ -43,6 +44,7 @@ namespace Prover.GUI.Screens.QAProver
         private string _selectedTachCommPort;
         private bool _showConnectionDialog;
         private string _viewContext;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private IDisposable _testStatusSubscription;
 
@@ -156,6 +158,8 @@ namespace Prover.GUI.Screens.QAProver
 
             if (SelectedInstrument != null)
             {
+                _cancellationTokenSource = new CancellationTokenSource();
+                
                 try
                 {
                     SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
@@ -163,7 +167,7 @@ namespace Prover.GUI.Screens.QAProver
 
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _client);
+                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
 
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                     ViewContext = EditQaTestViewContext;

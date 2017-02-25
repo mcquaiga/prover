@@ -48,12 +48,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     await ExecuteSyncTest(commClient, volumeTest, ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await PreTest(commClient, volumeTest);
+                    await PreTest(commClient, volumeTest, ct);
 
                     await ExecutingTest(volumeTest, ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await PostTest(commClient, volumeTest);
+                    await PostTest(commClient, volumeTest, ct);
 
                     Log.Info("Volume test finished!");
                 }, ct);
@@ -71,11 +71,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
-        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest);
+        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
 
-        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest);
+        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
         public abstract void Dispose();
 
