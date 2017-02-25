@@ -63,6 +63,12 @@
     <value id="6" description="CFx1000" numericvalue="1000" />
     <value id="7" description="CCF" numericvalue="100" />
     <value id="8" description="MCF" numericvalue="1000" />
+    <value id="9" description="m3x0.1" numericvalue="0.1" />
+    <value id="10" description="m3" numericvalue="1" />
+    <value id="11" description="m3x10" numericvalue="10" />
+    <value id="12" description="m3x100" numericvalue="100" />
+    <value id="13" description="m3x1000" numericvalue="1000" />
+    <value id="14" description="CFx10000" numericvalue="10000" />
   </item>
   <item number="92" code="Uncorr Volume Units" shortDescription="Uncorr Volume Units"
         description="UnCorrected Volume Units" isVolume="true">
@@ -75,6 +81,12 @@
     <value id="6" description="CFx1000" numericvalue="1000" />
     <value id="7" description="CCF" numericvalue="100" />
     <value id="8" description="MCF" numericvalue="1000" />
+    <value id="9" description="m3x0.1" numericvalue="0.1" />
+    <value id="10" description="m3" numericvalue="1" />
+    <value id="11" description="m3x10" numericvalue="10" />
+    <value id="12" description="m3x100" numericvalue="100" />
+    <value id="13" description="m3x1000" numericvalue="1000" />
+    <value id="14" description="CFx10000" numericvalue="10000" />
   </item>
   <item number="93" code="PULSER_A" shortDescription="Pulser A" description="Pulser A" isVolume="true">
     <value id="0" description="CorVol" />
