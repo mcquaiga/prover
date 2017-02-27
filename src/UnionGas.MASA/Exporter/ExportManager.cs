@@ -16,9 +16,9 @@ namespace UnionGas.MASA.Exporter
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly DCRWebServiceSoap _dcrWebService;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
 
-        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
+        public ExportManager(IProverStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
         {
             _instrumentStore = instrumentStore;
             _dcrWebService = dcrWebService;

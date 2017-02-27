@@ -7,7 +7,7 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
-    public class InstrumentStore : IInstrumentStore<Instrument>
+    public class InstrumentStore : IProverStore<Instrument>
     {
         private readonly ProverContext _proverContext;
 

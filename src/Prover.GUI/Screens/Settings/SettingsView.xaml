@@ -60,12 +60,8 @@
 
         <Button Width="150" Margin="5" HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
+                Command="{Binding RefreshCommSettingsCommand}"
                 Content="Refresh Ports">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <cal:ActionMessage MethodName="RefreshCommSettingsCommand" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </Button>-->
     </StackPanel>
 </UserControl>

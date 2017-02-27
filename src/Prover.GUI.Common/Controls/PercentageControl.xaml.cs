@@ -23,7 +23,7 @@ namespace Prover.GUI.Common.Controls
         // Using a DependencyProperty as the backing store for Passed.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PassedProperty =
             DependencyProperty.Register(nameof(Passed), typeof(bool), typeof(PercentageControl),
-                new FrameworkPropertyMetadata(PassedPropertyChanged));
+                    new FrameworkPropertyMetadata(PassedPropertyChanged));
 
         // Using a DependencyProperty as the backing store for DisplayValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DisplayValueProperty =
@@ -54,7 +54,6 @@ namespace Prover.GUI.Common.Controls
             get { return (Brush) GetValue(IconBackgroundProperty); }
             set { SetValue(IconBackgroundProperty, value); }
         }
-
 
         public decimal? DisplayValue
         {

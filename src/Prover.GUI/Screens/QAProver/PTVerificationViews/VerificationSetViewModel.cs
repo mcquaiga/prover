@@ -21,6 +21,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             CancelTestCommand = ReactiveCommand.Create(CancelTest);
+            RunTestCommand = ReactiveCommand.CreateFromTask(RunTest);
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
@@ -36,6 +37,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
+            ShowDownloadButton = QaRunTestManager != null;
+
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
             if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
@@ -59,6 +62,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
                 VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator,
                     VerificationTest.VolumeTest);
+        }
+
+        private bool _showDownloadButton;
+        public bool ShowDownloadButton
+        {
+            get { return _showDownloadButton; }
+            set { this.RaiseAndSetIfChanged(ref _showDownloadButton, value); }
         }
 
         private bool _showProgressDialog;
@@ -92,6 +102,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         public void CancelTest()
         {
             _cancellationTokenSource?.Cancel();
+        }
+
+        private ReactiveCommand _runTestCommand;
+        public ReactiveCommand RunTestCommand
+        {
+            get { return _runTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
         }
 
         public async Task RunTest()

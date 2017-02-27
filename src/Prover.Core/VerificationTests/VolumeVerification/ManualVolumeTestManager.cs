@@ -54,7 +54,7 @@
 //            });
 //        }
 
-//        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
+//        protected override async Task Reset(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
 //        {
 //            await Task.Run(async () =>
 //            {

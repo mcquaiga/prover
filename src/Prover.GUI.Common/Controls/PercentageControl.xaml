@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Name="parent"
+             x:Name="PercentUserControl"
              xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -17,19 +17,19 @@
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <!---->
-    <Grid DataContext="{Binding ElementName=parent}">
+    <!--"-->
+    <Grid DataContext="{Binding ElementName=PercentUserControl}">
         <Grid Height="42">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="42" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Background="{Binding Path=IconBackground}">
-                <Image x:Name="Icon" Source="{Binding Path=IconSource}" Width="36" Height="36" />
+            <Grid Grid.Column="0" Background="{Binding Path=IconBackground, ElementName=PercentUserControl}">
+                <Image x:Name="Icon" Source="{Binding Path=IconSource, ElementName=PercentUserControl}" Width="36" Height="36" />
             </Grid>
             <Grid Grid.Column="1" Margin="6 0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Path=DisplayValue}"
+                    <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl}"
                                FontSize="30"
                                VerticalAlignment="Bottom" />
                     <TextBlock Text="%"

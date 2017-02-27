@@ -1,11 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.Core.Models.Clients;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IEvcItemReset
+    public interface IPreTestCommand
     {
-        Task PreReset(EvcCommunicationClient commClient);
-        Task PostReset(EvcCommunicationClient commClient);
+        Task Execute(EvcCommunicationClient commClient);
+    }
+
+    public interface IPostTestCommand
+    {
+        Task Execute(EvcCommunicationClient commClient);
     }
 }

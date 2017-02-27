@@ -31,7 +31,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
-            <controls1:PercentageControl Passed="{Binding Instrument.HasPassed}"></controls1:PercentageControl>
+            <controls1:PercentageControl DisplayValue="0" Passed="{Binding Instrument.HasPassed}"
+                                         HorizontalAlignment="Center" Margin="2 2"/>
         </StackPanel>
         <StackPanel Margin="10 5 5 5" Grid.Column="1" VerticalAlignment="Center">
             <TextBlock FontSize="16" Margin="0 0 0 2"  Text="{Binding TestDatePretty}"/>

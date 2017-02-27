@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Akka.Util.Internal;
@@ -13,8 +14,10 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Events;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -26,7 +29,7 @@ using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<ConnectionStatusEvent>
+    public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
@@ -41,10 +44,11 @@ namespace Prover.GUI.Screens.QAProver
         private string _selectedTachCommPort;
         private bool _showConnectionDialog;
         private string _viewContext;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private IDisposable _testStatusSubscription;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IProverStore<Client> clientStore)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -99,12 +103,23 @@ namespace Prover.GUI.Screens.QAProver
                     !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
+            CancelCommand = ReactiveCommand.Create(Cancel);
+
+            _clientList = clientStore.Query().ToList();
+                
+            Clients = new ReactiveList<string>(_clientList.Select(x => x.Name).OrderBy(x => x).ToList());
+            this.WhenAnyValue(x => x.SelectedClient).Subscribe(_ =>
+            {
+                _client = _clientList.FirstOrDefault(x => x.Name == SelectedClient);
+            });
 
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand StartTestCommand { get; } 
-               
+        public ReactiveCommand StartTestCommand { get; }
+        public ReactiveCommand CancelCommand { get; }
+
+
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
@@ -133,14 +148,9 @@ namespace Prover.GUI.Screens.QAProver
         {
             _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
-        }
+        }      
 
-        public void Handle(ConnectionStatusEvent message)
-        {
-            ConnectionStatusMessage = $"Attempt {message.ConnectionStatus} of {message.MaxAttempts}...";
-        }
-
-        public async Task CancelCommand()
+        public async Task Cancel()
         {
             await ScreenManager.GoHome();
         }
@@ -151,6 +161,8 @@ namespace Prover.GUI.Screens.QAProver
 
             if (SelectedInstrument != null)
             {
+                _cancellationTokenSource = new CancellationTokenSource();
+                
                 try
                 {
                     SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
@@ -158,14 +170,15 @@ namespace Prover.GUI.Screens.QAProver
 
                     _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument);
+                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+
                     await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                    throw;
                 }
                 finally
                 {
@@ -210,6 +223,24 @@ namespace Prover.GUI.Screens.QAProver
         {
             get { return _instrumentTypes; }
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        }
+
+
+        private string _selectedClient;
+        private Client _client;
+        private List<Client> _clientList;
+
+        private ReactiveList<string> _clients;
+        public ReactiveList<string> Clients
+        {
+            get { return _clients; }
+            set { this.RaiseAndSetIfChanged(ref _clients, value);  }
+        }
+
+        public string SelectedClient
+        {
+            get { return _selectedClient; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClient, value);  }
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();

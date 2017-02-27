@@ -4,23 +4,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Name="parent"
-             xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             x:Name="ValueUserControl"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}">
-    <Grid DataContext="{Binding ElementName=parent}">
+    <Grid>
         <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
-            <Grid Background="{Binding ControlBackground}">
+            <Grid>
                 <StackPanel Margin="4 0">
-                    <TextBlock Text="{Binding Path=Value}"
-                               FontSize="{Binding ValueFontSize}"
+                    <TextBlock Text="{Binding Path=Value, ElementName=ValueUserControl}"
+                               FontSize="{Binding ValueFontSize, ElementName=ValueUserControl}"
                                HorizontalAlignment="Left"
                                Foreground="{DynamicResource PrimaryHueDarkBrush}" />
 
-                    <TextBlock Text="{Binding Path=Label}"
+                    <TextBlock Text="{Binding Path=Label, ElementName=ValueUserControl}"
                                HorizontalAlignment="Left"
-                               FontSize="{Binding LabelFontSize}"
+                               FontSize="{Binding LabelFontSize, ElementName=ValueUserControl}"
                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
 
                 </StackPanel>

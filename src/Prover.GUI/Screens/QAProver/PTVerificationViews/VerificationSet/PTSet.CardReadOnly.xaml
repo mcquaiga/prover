@@ -61,17 +61,14 @@
                 <Button Margin="5"
                         HorizontalAlignment="Right"
                         materialDesign:RippleAssist.IsCentered="True"
+                        Command="{Binding RunTestCommand}"
                         Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Download" Height="25" Width="25" Margin="5 0" />
                         <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
                     </StackPanel>
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="RunTest" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    
                 </Button>
             </Grid>
         </StackPanel>

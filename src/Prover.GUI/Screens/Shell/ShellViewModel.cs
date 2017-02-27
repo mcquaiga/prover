@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Prover.Core.Login;
+﻿using Caliburn.Micro;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
-using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Toolbar;
-using Prover.GUI.Dialogs;
 using Prover.GUI.Screens.Settings;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Prover.GUI.Screens.Shell
 {
@@ -31,8 +26,6 @@ namespace Prover.GUI.Screens.Shell
         }
 
         public string Title => "EVC Prover";
-
-        public ConnectionViewModel ConnectionDialogue { get; private set; }
 
         public void Handle(ScreenChangeEvent message)
         {

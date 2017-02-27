@@ -44,12 +44,8 @@
         </ItemsControl>
 
         <Button Content="Cancel" Grid.Row="1"
+                Command="{Binding CloseCommand}"
                 HorizontalAlignment="Right">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <cal:ActionMessage MethodName="CloseCommand" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </Button>
         <!--<ListView ItemsSource="{Binding LiveReadItems}" HorizontalContentAlignment="Stretch" >
             <ListView.ItemTemplate >

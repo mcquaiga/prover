@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
@@ -13,6 +16,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
     public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
     {
         private readonly IDInOutBoard _outputBoard;
+
+        private readonly Subject<string> _status = new Subject<string>();
         private readonly TachometerService _tachometerCommunicator;
 
         public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, TachometerService tachComm)
@@ -22,6 +27,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
+        public IObservable<string> StatusMessage => _status.AsObservable();
         protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             try
@@ -54,12 +60,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcTestItemReset)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
-            await commClient.Connect();
-            if (evcTestItemReset != null) await evcTestItemReset.PreReset(commClient);
-            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+            await commClient.Connect(ct);
+            
+            volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -101,15 +106,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             await Task.Run(async () =>
             {
                 try
                 {
-                    await commClient.Connect();
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-                    if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset(commClient);
+                    ct.ThrowIfCancellationRequested();
+                    await commClient.Connect(ct);
+                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());                    
                 }
                 finally
                 {
@@ -117,7 +122,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 }
 
                 await GetAppliedInput(volumeTest);
-            });
+            }, ct);
         }
 
         public override void Dispose()
@@ -142,10 +147,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 catch (Exception ex)
                 {
                     Log.Error($"An error occured communication with the tachometer: {ex}");
-
                 }
             } while (!result.HasValue && tries < 10);
-            
+
             Log.Debug($"Applied Input: {result.Value}");
 
             volumeTest.AppliedInput = result.Value;

@@ -36,7 +36,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public IEnumerable<ItemValue> Items { get; set; }
+        public ICollection<ItemValue> Items { get; set; }
 
         [NotMapped]
         public virtual InstrumentType InstrumentType { get; set; }
@@ -52,7 +52,7 @@ namespace Prover.Core.Models.Instruments
             if (string.IsNullOrEmpty(_instrumentData)) return;
 
             var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
-            Items = ItemHelpers.LoadItems(InstrumentType, itemValues);
+            Items = ItemHelpers.LoadItems(InstrumentType, itemValues).ToList();
         }
     }
 }

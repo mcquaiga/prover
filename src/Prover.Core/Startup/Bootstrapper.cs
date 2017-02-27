@@ -9,6 +9,7 @@ using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
@@ -25,8 +26,9 @@ namespace Prover.Core.Startup
 
             //Database registrations
             Builder.RegisterInstance(new ProverContext());
-            Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
+            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>();
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
+            Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
             //EVC Communcation
@@ -38,7 +40,7 @@ namespace Prover.Core.Startup
             Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
                 .As<EvcCommunicationClient>();
 
-            ////QA Test Runs
+            //QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
@@ -47,7 +49,7 @@ namespace Prover.Core.Startup
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
-            SettingsManager.RefreshSettings();
+            SettingsManager.RefreshSettings().Wait();
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

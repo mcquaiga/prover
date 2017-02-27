@@ -96,6 +96,7 @@ namespace Prover.GUI.Common
 
             if (windowsSettings != null)
                 return _windowManager.ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
+
             return _windowManager.ShowDialog(dialogViewModel);
         }
 

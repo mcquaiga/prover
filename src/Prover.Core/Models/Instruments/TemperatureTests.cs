@@ -18,7 +18,7 @@ namespace Prover.Core.Models.Instruments
 
         public TemperatureTest(VerificationTest verificationTest, decimal gauge)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true);
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 

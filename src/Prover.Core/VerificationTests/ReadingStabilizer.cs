@@ -38,7 +38,7 @@ namespace Prover.Core.VerificationTests
             try
             {
                 var liveReadItems = GetLiveReadItemNumbers(instrument, level);
-                await commClient.Connect();
+                await commClient.Connect(ct);
                 ct.ThrowIfCancellationRequested();
                 do
                 {
