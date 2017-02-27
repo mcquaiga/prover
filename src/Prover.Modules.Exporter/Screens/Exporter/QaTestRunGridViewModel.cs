@@ -25,8 +25,10 @@ namespace Prover.Modules.Exporter.Screens.Exporter
             _instrumentStore = instrumentStore;
             _instrumentReportGenerator = instrumentReportGenerator;
 
-            var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
-                (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
+            var canExport = this.WhenAnyValue(x => x.Instrument, exportManager.CanExport);
+                //this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
+                //(jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
+
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
 
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
@@ -71,11 +73,9 @@ namespace Prover.Modules.Exporter.Screens.Exporter
         public ReactiveCommand ExportQaTestRunCommand { get; }
         public async Task ExportQaTestRun()
         {
-            if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
-                return;
-
-            await _exportManager.Export(Instrument);
-            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
+            var success = await _exportManager.Export(Instrument);
+            
+            if (success) await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
     }
 }

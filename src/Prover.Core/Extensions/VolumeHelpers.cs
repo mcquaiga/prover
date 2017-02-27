@@ -23,7 +23,7 @@ namespace Prover.Core.Extensions
         public static decimal? EvcCorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
             IEnumerable<ItemValue> afterItems)
         {
-            var o = (afterItems?.Corrected() - beforeItems?.Corrected())*instrument?.CorrectedMultiplier();
+            var o = (afterItems?.Corrected() - beforeItems?.Corrected()) * instrument?.CorrectedMultiplier();
             if (o != null)
                 return Math.Round((decimal) o, 4);
 
@@ -33,7 +33,7 @@ namespace Prover.Core.Extensions
         public static decimal? EvcUncorrected(this Instrument instrument, IEnumerable<ItemValue> beforeItems,
             IEnumerable<ItemValue> afterItems)
         {
-            var o = (afterItems?.Uncorrected() - beforeItems?.Uncorrected())*instrument?.UnCorrectedMultiplier();
+            var o = (afterItems?.Uncorrected() - beforeItems?.Uncorrected()) * instrument?.UnCorrectedMultiplier();
             if (o != null)
                 return Math.Round(
                     (decimal)
@@ -46,9 +46,7 @@ namespace Prover.Core.Extensions
         {
             var o = afterItems?.Energy() - beforeItems?.Energy();
             if (o.HasValue)
-            {
                 return decimal.Round(o.Value, 4);
-            }
 
             return null;
         }
@@ -78,7 +76,7 @@ namespace Prover.Core.Extensions
 
         public static decimal? UnCorrectedMultiplier(this Instrument instrument)
             => instrument.Items.GetItem(92).NumericValue;
-        
+
         public static string UnCorrectedMultiplierDescription(this Instrument instrument)
             => instrument.Items.GetItem(92).Description;
 
@@ -91,7 +89,7 @@ namespace Prover.Core.Extensions
             var items = itemValues as ItemValue[] ?? itemValues.ToArray();
             decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
             decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
-            
+
             return JoinLowResHighResReading(lowResValue, highResValue);
         }
 
@@ -102,7 +100,7 @@ namespace Prover.Core.Extensions
             var highResString = Convert.ToString(highResValue, CultureInfo.InvariantCulture);
             var pointLocation = highResString.IndexOf(".", StringComparison.Ordinal);
 
-            if ((highResValue > 0) && (pointLocation > -1))
+            if (highResValue > 0 && pointLocation > -1)
             {
                 var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
 

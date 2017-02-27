@@ -20,14 +20,14 @@ namespace Prover.Modules.Exporter.Screens.Exporter
         private readonly IProverStore<Instrument> _instrumentStore;
 
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, IExportTestRun exportTestRun = null) : base(screenManager, eventAggregator)
+            IProverStore<Instrument> instrumentStore, IExportTestRun exportTestRun) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
             GetInstrumentsWithNoExportDate();
             
-            var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, 
-                (passed) => passed.Any());          
+            var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, (passed) => passed.Any());   
+            
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns, canExportAllPassed);
         }
 

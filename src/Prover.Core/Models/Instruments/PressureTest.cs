@@ -60,10 +60,11 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (Items.GetItem(ItemCodes.Pressure.Factor) == null) return null;
-                if ((ActualFactor == 0) || (ActualFactor == null)) return null;
+                if (ActualFactor == 0 || ActualFactor == null) return null;
                 return
                     Math.Round(
-                        (decimal) ((Items.GetItem(ItemCodes.Pressure.Factor).NumericValue - ActualFactor)/ActualFactor)*
+                        (decimal)
+                        ((Items.GetItem(ItemCodes.Pressure.Factor).NumericValue - ActualFactor) / ActualFactor) *
                         100, 2);
             }
         }
@@ -74,7 +75,8 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 if (VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue == 0) return 0;
-                var result = GasPressure/VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
+                var result = GasPressure /
+                             VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
                 return result.HasValue ? decimal.Round(result.Value, 4) : 0;
             }
         }

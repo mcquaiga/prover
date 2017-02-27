@@ -7,8 +7,8 @@ namespace Prover.Core.Extensions
     {
         public static bool IsBetween<T>(this T value, T lowerLimit, T upperLimit)
         {
-            return (Comparer<T>.Default.Compare(value, lowerLimit) >= 0)
-                   && (Comparer<T>.Default.Compare(value, upperLimit) <= 0);
+            return Comparer<T>.Default.Compare(value, lowerLimit) >= 0
+                   && Comparer<T>.Default.Compare(value, upperLimit) <= 0;
         }
 
         public static bool IsBetween<T>(this T value, T absoluteLimit)

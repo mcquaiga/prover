@@ -22,8 +22,7 @@ namespace Prover.Core.DriveTypes
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            
-            return Meter.MeterDisplacement*appliedInput;
+            return Meter.MeterDisplacement * appliedInput;
         }
 
         public int MaxUncorrectedPulses()
@@ -74,7 +73,8 @@ namespace Prover.Core.DriveTypes
             get
             {
                 if (MeterDisplacement != 0)
-                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement)/MeterDisplacement*100), 2);
+                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100),
+                        2);
                 return 0;
             }
         }

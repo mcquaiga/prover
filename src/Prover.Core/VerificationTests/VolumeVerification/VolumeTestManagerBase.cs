@@ -16,7 +16,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;
-        
+
         protected bool IsFirstVolumeTest = true;
         protected Logger Log;
         protected bool RequestStopTest;
@@ -34,6 +34,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public bool RunningTest { get; set; }
+
+        public abstract void Dispose();
 
         public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
@@ -69,16 +71,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
+        protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct);
 
         protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
 
         protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
-
-        public abstract void Dispose();
-
     }
 
     public interface IPulseInputService

@@ -20,12 +20,12 @@ namespace Prover.Core.Extensions
         public static decimal? EvcPressureRange(this Instrument instrument)
             => instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
 
-        //public static decimal? EvcGasPressure(this Dictionary<int, string> itemValues)
-        //{
-        //    return itemValues.GetItem(ItemCodes.Pressure.GasPressure);
-        //}
-
         //public static decimal? EvcPressureFactor(this Dictionary<int, string> itemValues)
+        //}
+        //    return itemValues.GetItem(ItemCodes.Pressure.GasPressure);
+        //{
+
+        //public static decimal? EvcGasPressure(this Dictionary<int, string> itemValues)
         //{
         //    return itemValues.GetItemValue(ItemCodes.Pressure.Factor);
         //}

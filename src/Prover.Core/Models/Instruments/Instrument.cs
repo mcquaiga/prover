@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
-using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
 
@@ -28,7 +26,6 @@ namespace Prover.Core.Models.Instruments
         public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items, Client client = null)
         {
             TestDateTime = DateTime.Now;
-            CertificateId = null;
             Type = instrumentType.Id;
             InstrumentType = instrumentType;
             Items = items.ToList();
@@ -70,7 +67,6 @@ namespace Prover.Core.Models.Instruments
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
-
             for (var i = 0; i < 3; i++)
             {
                 var verificationTest = new VerificationTest(i, this);
@@ -108,10 +104,10 @@ namespace Prover.Core.Models.Instruments
                 SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
 
             if (value > 1)
-                value = value/100;
+                value = value / 100;
 
             var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return value*evcPressureRange;
+            return value * evcPressureRange;
         }
 
         #region NotMapped Properties
@@ -130,8 +126,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
-                    && (Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live"))
+                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live"
+                    && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
                     return CorrectorType.PTZ;
 
                 if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
@@ -151,14 +147,12 @@ namespace Prover.Core.Models.Instruments
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
                 if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
-                {
-                    return verificationTestsPassed && 
-                        (EventLogPassed != null && EventLogPassed.Value) && (CommPortsPassed != null && CommPortsPassed.Value);
-                }
+                    return verificationTestsPassed && EventLogPassed != null && EventLogPassed.Value &&
+                           CommPortsPassed != null && CommPortsPassed.Value;
 
                 return verificationTestsPassed;
             }
-        } 
+        }
 
         [NotMapped]
         public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;

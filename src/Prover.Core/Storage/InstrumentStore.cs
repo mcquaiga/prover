@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
@@ -38,7 +37,9 @@ namespace Prover.Core.Storage
                 _proverContext.Entry(instrument).State = EntityState.Modified;
             }
             else
+            {
                 _proverContext.Instruments.Add(instrument);
+            }
 
             await _proverContext.SaveChangesAsync();
             return instrument;

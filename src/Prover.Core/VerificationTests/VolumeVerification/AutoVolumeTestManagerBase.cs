@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
@@ -28,7 +28,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public IObservable<string> StatusMessage => _status.AsObservable();
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+
+        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             try
             {
@@ -60,11 +62,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             await commClient.Connect(ct);
-            
-            volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+
+            volumeTest.Items =
+                (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -91,10 +95,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                         //TODO: Raise events so the UI can respond
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                         volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
+                    } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() &&
+                             !ct.IsCancellationRequested);
                 }, ct);
                 ct.ThrowIfCancellationRequested();
-            }         
+            }
             catch (OperationCanceledException ex)
             {
                 Log.Info("Cancelling volume test.");
@@ -106,7 +111,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             await Task.Run(async () =>
             {
@@ -114,7 +120,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     ct.ThrowIfCancellationRequested();
                     await commClient.Connect(ct);
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());                    
+                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
                 }
                 finally
                 {
@@ -155,14 +161,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             volumeTest.AppliedInput = result.Value;
         }
 
-        //protected override async Task ZeroInstrumentVolumeItems()
-        //{
-        //    await InstrumentCommunicator.Connect();
-        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
-        //    await InstrumentCommunicator.SetItemValue(434, "0");
-        //    await InstrumentCommunicator.SetItemValue(113, "0");
-        //    await InstrumentCommunicator.SetItemValue(892, "0");
-        //    await base.ZeroInstrumentVolumeItems();
         //}
+        //    await base.ZeroInstrumentVolumeItems();
+        //    await InstrumentCommunicator.SetItemValue(892, "0");
+        //    await InstrumentCommunicator.SetItemValue(113, "0");
+        //    await InstrumentCommunicator.SetItemValue(434, "0");
+        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
+        //    await InstrumentCommunicator.Connect();
+        //{
+
+        //protected override async Task ZeroInstrumentVolumeItems()
     }
 }

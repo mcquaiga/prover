@@ -84,5 +84,10 @@ namespace UnionGas.MASA.Exporter
 
             return false;
         }
+
+        public bool CanExport(Instrument instrument)
+        {
+            return !string.IsNullOrEmpty(instrument.JobId) && !string.IsNullOrEmpty(instrument.EmployeeId);
+        }
     }
 }

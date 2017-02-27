@@ -4,7 +4,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using Prover.Core.Migrations;
-using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 
@@ -27,7 +26,6 @@ namespace Prover.Core.Storage
         public DbSet<VolumeTest> VolumeTests { get; set; }
         public DbSet<TemperatureTest> TemperatureTests { get; set; }
         public DbSet<PressureTest> PressureTests { get; set; }
-        public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
 
         public DbSet<Client> Clients { get; set; }

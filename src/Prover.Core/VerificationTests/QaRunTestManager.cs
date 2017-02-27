@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -22,7 +21,10 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
 
         IObservable<string> TestStatus { get; }
-        Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(), Client client = null);
+
+        Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(),
+            Client client = null);
+
         Task RunTest(int level, CancellationToken ct = new CancellationToken());
         Task SaveAsync();
         Task RunVerifiers();
@@ -33,11 +35,11 @@ namespace Prover.Core.VerificationTests
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         private readonly IEnumerable<PreTestValidationBase> _validators;
-        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
 
         public QaRunTestManager(
             IProverStore<Instrument> instrumentStore,

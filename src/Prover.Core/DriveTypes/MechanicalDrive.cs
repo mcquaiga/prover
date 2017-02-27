@@ -33,7 +33,7 @@ namespace Prover.Core.DriveTypes
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            return appliedInput*Instrument.DriveRate();
+            return appliedInput * Instrument.DriveRate();
         }
     }
 
@@ -59,12 +59,12 @@ namespace Prover.Core.DriveTypes
         {
             get
             {
-                var error = (EvcEnergy - ActualEnergy)/ActualEnergy*100;
+                var error = (EvcEnergy - ActualEnergy) / ActualEnergy * 100;
                 if (error != null)
                     return decimal.Round(error.Value, 2);
                 return null;
             }
-        } 
+        }
 
         public decimal? EvcEnergy
         {

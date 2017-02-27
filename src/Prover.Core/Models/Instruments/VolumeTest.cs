@@ -56,11 +56,11 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((EvcUncorrected != null) && (TrueUncorrected != 0) && TrueUncorrected.HasValue)
+                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
-                    var o = (EvcUncorrected - TrueUncorrected)/TrueUncorrected;
+                    var o = (EvcUncorrected - TrueUncorrected) / TrueUncorrected;
                     if (o != null)
-                        return Math.Round((decimal) o*100, 2);
+                        return Math.Round((decimal) o * 100, 2);
                 }
 
                 return null;
@@ -75,9 +75,9 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((EvcCorrected != null) && (TrueCorrected != 0) && (TrueCorrected != null))
+                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
                 {
-                    var o = (EvcCorrected - TrueCorrected)/TrueCorrected*100;
+                    var o = (EvcCorrected - TrueCorrected) / TrueCorrected * 100;
                     if (o != null)
                         return Math.Round((decimal) o, 2);
                 }
@@ -93,7 +93,9 @@ namespace Prover.Core.Models.Instruments
         public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
         [NotMapped]
-        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed && UnCorPulsesPassed && CorPulsesPassed;
+        public new bool HasPassed
+            => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed && UnCorPulsesPassed && CorPulsesPassed
+        ;
 
         public override decimal? PercentError { get; }
         public override decimal? ActualFactor { get; }
@@ -130,7 +132,7 @@ namespace Prover.Core.Models.Instruments
                 var expectedPulses = (int) (AfterTestItems.Uncorrected() - Items.Uncorrected());
                 var variance = expectedPulses - UncPulseCount;
                 return variance.IsBetween(2);
-            } 
+            }
         }
 
         [NotMapped]
@@ -141,7 +143,7 @@ namespace Prover.Core.Models.Instruments
                 var expectedPulses = (int) (AfterTestItems.Corrected() - Items.Corrected());
 
                 var variance = expectedPulses - CorPulseCount;
-                return variance.IsBetween(2);              
+                return variance.IsBetween(2);
             }
         }
 
@@ -152,19 +154,19 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.T) &&
-                    (VerificationTest.TemperatureTest != null))
-                    return VerificationTest.TemperatureTest.ActualFactor*
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.T &&
+                    VerificationTest.TemperatureTest != null)
+                    return VerificationTest.TemperatureTest.ActualFactor *
                            DriveType.UnCorrectedInputVolume(AppliedInput);
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.P) &&
-                    (VerificationTest.PressureTest != null))
-                    return VerificationTest.PressureTest.ActualFactor*
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.P &&
+                    VerificationTest.PressureTest != null)
+                    return VerificationTest.PressureTest.ActualFactor *
                            DriveType.UnCorrectedInputVolume(AppliedInput);
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor*VerificationTest.TemperatureTest?.ActualFactor*
-                           VerificationTest.SuperFactorTest.SuperFactorSquared*
+                    return VerificationTest.PressureTest?.ActualFactor * VerificationTest.TemperatureTest?.ActualFactor *
+                           VerificationTest.SuperFactorTest.SuperFactorSquared *
                            DriveType.UnCorrectedInputVolume(AppliedInput);
 
                 return null;
@@ -185,13 +187,15 @@ namespace Prover.Core.Models.Instruments
         private void CreateDriveType()
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
-                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
-            
-            if ((DriveType == null) && (DriveTypeDiscriminator != null) && (VerificationTest != null))
+                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
+                    ? "Rotary"
+                    : "Mechanical";
+
+            if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
-                        DriveType = new RotaryDrive(this.Instrument);
+                        DriveType = new RotaryDrive(Instrument);
                         break;
                     case "Mechanical":
                         DriveType = new MechanicalDrive(Instrument);
@@ -200,9 +204,7 @@ namespace Prover.Core.Models.Instruments
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
                 }
             else
-            {
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
-            }
         }
 
         public override void OnInitializing()

@@ -9,22 +9,23 @@ using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
-using LogManager = Caliburn.Micro.LogManager;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public interface IReadingStabilizer
     {
-        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct);
+        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level,
+            CancellationToken ct);
+
         void CancelLiveReading();
     }
 
     public class AverageReadingStabilizer : IReadingStabilizer
     {
-        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
-
         private bool _cancelStabilize;
         private bool _isLiveReading;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public AverageReadingStabilizer(IEventAggregator eventAggregator)
         {
@@ -33,7 +34,8 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; set; }
 
-        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct)
+        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument,
+            int level, CancellationToken ct)
         {
             try
             {
@@ -112,7 +114,7 @@ namespace Prover.Core.VerificationTests
             {
                 if (_valueQueue.Count == FixedQueueSize)
                 {
-                    var average = _valueQueue.Sum()/FixedQueueSize;
+                    var average = _valueQueue.Sum() / FixedQueueSize;
                     var difference = Math.Abs(GaugeValue - average);
 
                     if (difference <= AverageThreshold)

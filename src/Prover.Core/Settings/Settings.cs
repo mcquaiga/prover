@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Akavache;
 
 namespace Prover.Core.Settings
 {
@@ -39,10 +38,10 @@ namespace Prover.Core.Settings
             if (MechanicalUncorrectedTestLimits == null)
                 MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
                 {
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 1, UncorrectedPulses = 1000},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 10, UncorrectedPulses = 100},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 100, UncorrectedPulses = 10},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 1000, UncorrectedPulses = 1}  
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 1, UncorrectedPulses = 1000},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 100},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 100, UncorrectedPulses = 10},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
                 };
         }
     }
