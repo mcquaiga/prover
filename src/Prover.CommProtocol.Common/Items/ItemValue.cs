@@ -10,8 +10,8 @@ namespace Prover.CommProtocol.Common.Items
     {
         public ItemValue(ItemMetadata metadata, string value)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
+            //if (string.IsNullOrEmpty(value))
+            //    throw new ArgumentNullException(nameof(value));
 
             //if (metadata == null)
             //    throw new ArgumentNullException(nameof(metadata));

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Clients;
@@ -42,12 +43,12 @@ namespace Prover.Core.Models.Instruments
 
         public int Type { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public override InstrumentType InstrumentType { get; set; }
 
-        public Guid? CertificateId { get; set; }
+        //public Guid? CertificateId { get; set; }
 
-        public virtual Certificate Certificate { get; set; }
+        //public virtual Certificate Certificate { get; set; }
 
         public Guid? ClientId { get; set; }
 
@@ -112,16 +113,16 @@ namespace Prover.Core.Models.Instruments
 
         #region NotMapped Properties
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public int SerialNumber => (int) Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public string InventoryNumber => Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public string InstrumentTypeString => InstrumentType.ToString();
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public CorrectorType CompositionType
         {
             get
@@ -140,7 +141,7 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool HasPassed
         {
             get
@@ -154,36 +155,34 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal PulseAScaling => Items.GetItem(56).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public string PulseASelect => Items.GetItem(93).Description;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal PulseBScaling => Items.GetItem(57).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public string PulseBSelect => Items.GetItem(94).Description;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal SiteNumber1 => Items.GetItem(200).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal SiteNumber2 => Items.GetItem(201).NumericValue;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public VolumeTest VolumeTest
         {
             get
             {
                 var firstOrDefault = VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null);
-                if (firstOrDefault != null)
-                    return firstOrDefault.VolumeTest;
-                return null;
+                return firstOrDefault?.VolumeTest;
             }
         }
 

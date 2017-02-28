@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -14,16 +15,16 @@ namespace Prover.Core.Models.Instruments
         {
             TestNumber = testNumber;
             Instrument = instrument;
-            InstrumentId = Instrument.Id;
+            InstrumentId = Instrument?.Id ?? Guid.Empty;
         }
 
         public VerificationTest(int testNumber, Instrument instrument, PressureTest pressureTest,
-            TemperatureTest temperatureTest, SuperFactorTest superTest, VolumeTest volumeTest)
+            TemperatureTest temperatureTest, SuperFactorTest superFactorTest, VolumeTest volumeTest)
             : this(testNumber, instrument)
         {
             PressureTest = pressureTest;
             TemperatureTest = temperatureTest;
-            SuperFactorTest = superTest;
+            SuperFactorTest = superFactorTest;
             VolumeTest = volumeTest;
         }
 

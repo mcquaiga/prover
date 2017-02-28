@@ -280,7 +280,6 @@
       <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\InstrumentTable.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\MeterIndexes.cs" />
@@ -292,7 +291,6 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
-    <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\IProverStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />

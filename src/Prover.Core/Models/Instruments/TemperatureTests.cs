@@ -71,6 +71,6 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override InstrumentType InstrumentType => VerificationTest?.Instrument?.InstrumentType;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Caliburn.Micro.ReactiveUI;
-using Prover.Core.Models.Certificates;
+using Prover.Modules.Certificates.Models;
 
 namespace Prover.GUI.Reports
 {

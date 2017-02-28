@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.Core.Models.Instruments;
 
-namespace Prover.Core.Models.Certificates
+namespace Prover.Modules.Certificates.Models
 {
     public class Certificate
     {
@@ -19,7 +19,7 @@ namespace Prover.Core.Models.Certificates
         public string TestedBy { get; set; }
         public long Number { get; set; }
 
-        public virtual ICollection<Instrument> Instruments { get; set; }
+        public virtual ICollection<CertificateInstrument> Instruments { get; set; }
 
         [NotMapped]
         public string SealExpirationDate

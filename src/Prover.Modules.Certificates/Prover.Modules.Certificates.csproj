@@ -107,6 +107,8 @@
   <ItemGroup>
     <Compile Include="Exporter\ExportToCertificateServerManager.cs" />
     <Compile Include="ICertificateStore.cs" />
+    <Compile Include="Models\Certificate.cs" />
+    <Compile Include="Models\CertificateInstrument.cs" />
     <Compile Include="Reports\CertificateGenerator.cs" />
     <Compile Include="Reports\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
@@ -144,9 +146,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

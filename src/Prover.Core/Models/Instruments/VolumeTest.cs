@@ -20,6 +20,7 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
+        
         public VolumeTest(VerificationTest verificationTest)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
@@ -29,11 +30,22 @@ namespace Prover.Core.Models.Instruments
             CreateDriveType();
         }
 
+        [JsonConstructor]
+        public VolumeTest(IEnumerable<ItemValue> items, string testInstrumentData, string driveTypeDiscriminator)
+        {
+            Items = items.ToList();
+            DriveTypeDiscriminator = driveTypeDiscriminator;
+            _testInstrumentData = testInstrumentData;
+
+            OnInitializing();
+        }
+
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
         public decimal AppliedInput { get; set; }
 
-        public IDriveType DriveType { get; set; }
+        [JsonIgnore]
+        public IDriveType DriveType { get; private set; }
 
         public string TestInstrumentData
         {
@@ -41,17 +53,17 @@ namespace Prover.Core.Models.Instruments
             set { _testInstrumentData = value; }
         }
 
-        public Instrument Instrument => VerificationTest.Instrument;
+        public Instrument Instrument => VerificationTest?.Instrument;
 
         public Guid VerificationTestId { get; set; }
 
         [Required]
         public VerificationTest VerificationTest { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public IEnumerable<ItemValue> AfterTestItems { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? UnCorrectedPercentError
         {
             get
@@ -67,10 +79,10 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? CorrectedPercentError
         {
             get
@@ -86,13 +98,13 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public new bool HasPassed
             => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed && UnCorPulsesPassed && CorPulsesPassed
         ;
@@ -100,7 +112,7 @@ namespace Prover.Core.Models.Instruments
         public override decimal? PercentError { get; }
         public override decimal? ActualFactor { get; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public int UncPulseCount
         {
             get
@@ -112,7 +124,7 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public int CorPulseCount
         {
             get
@@ -124,30 +136,35 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool UnCorPulsesPassed
         {
             get
-            {
-                var expectedPulses = (int) (AfterTestItems.Uncorrected() - Items.Uncorrected());
+            {               
+                var result = AfterTestItems?.Uncorrected() - Items?.Uncorrected();
+                if (result == null) return false;
+
+                var expectedPulses = (int) result;
                 var variance = expectedPulses - UncPulseCount;
                 return variance.IsBetween(2);
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool CorPulsesPassed
         {
             get
             {
-                var expectedPulses = (int) (AfterTestItems.Corrected() - Items.Corrected());
+                var result = AfterTestItems?.Corrected() - Items?.Corrected();
+                if (result == null) return false;
 
+                var expectedPulses = (int) result;
                 var variance = expectedPulses - CorPulseCount;
                 return variance.IsBetween(2);
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? TrueCorrected
         {
             get
@@ -173,15 +190,15 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
 
         public string DriveTypeDiscriminator { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
         private void CreateDriveType()
@@ -191,13 +208,13 @@ namespace Prover.Core.Models.Instruments
                     ? "Rotary"
                     : "Mechanical";
 
-            if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
-                switch (DriveTypeDiscriminator)
+            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && Instrument != null)
+                switch (DriveTypeDiscriminator.ToLower())
                 {
-                    case "Rotary":
+                    case "rotary":
                         DriveType = new RotaryDrive(Instrument);
                         break;
-                    case "Mechanical":
+                    case "mechanical":
                         DriveType = new MechanicalDrive(Instrument);
                         break;
                     default:

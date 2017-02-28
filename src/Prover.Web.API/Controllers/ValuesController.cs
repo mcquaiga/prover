@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Prover.Web.Test.Controllers
+namespace Prover.Web.API.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller

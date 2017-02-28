@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 
@@ -15,12 +16,13 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public PressureTest(VerificationTest verificationTest, decimal gauge)
+        [JsonConstructor]
+        public PressureTest(VerificationTest verificationTest, decimal gasGauge)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
-            GasGauge = decimal.Round(gauge, 2);
+            GasGauge = decimal.Round(gasGauge, 2);
             AtmosphericGauge = 0; // decimal.Round(DefaultAtmGauge, 2);
         }
 
@@ -82,6 +84,6 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override InstrumentType InstrumentType => VerificationTest?.Instrument?.InstrumentType;
     }
 }
