@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,7 +17,6 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        [JsonConstructor]
         public PressureTest(VerificationTest verificationTest, decimal gasGauge)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
@@ -24,6 +24,12 @@ namespace Prover.Core.Models.Instruments
             VerificationTestId = VerificationTest.Id;
             GasGauge = decimal.Round(gasGauge, 2);
             AtmosphericGauge = 0; // decimal.Round(DefaultAtmGauge, 2);
+        }
+
+        [JsonConstructor]
+        public PressureTest(IEnumerable<ItemValue> items)
+        {
+            Items = items.Where(i => i.Metadata.IsPressureTest == true).ToList();
         }
 
         public Guid VerificationTestId { get; set; }

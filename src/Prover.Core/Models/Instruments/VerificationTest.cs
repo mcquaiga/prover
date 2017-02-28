@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VerificationTest : BaseEntity
+    public class VerificationTest : BaseEntity
     {
         public VerificationTest()
         {
@@ -36,13 +36,15 @@ namespace Prover.Core.Models.Instruments
         public Instrument Instrument { get; set; }
 
         public PressureTest PressureTest { get; set; }
+
         public TemperatureTest TemperatureTest { get; set; }
+
         public VolumeTest VolumeTest { get; set; }
 
         [NotMapped]
         public SuperFactorTest SuperFactorTest { get; set; }
 
-        [NotMapped]
+        [NotMapped, JsonIgnore]
         public bool HasPassed
         {
             get

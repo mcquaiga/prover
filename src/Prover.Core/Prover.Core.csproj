@@ -249,6 +249,10 @@
     <Compile Include="Migrations\201701021633015_AddClientIdToInstrument.Designer.cs">
       <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702280106567_RemoveCertificates.cs" />
+    <Compile Include="Migrations\201702280106567_RemoveCertificates.Designer.cs">
+      <DependentUpon>201702280106567_RemoveCertificates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
@@ -377,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701021633015_AddClientIdToInstrument.resx">
       <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702280106567_RemoveCertificates.resx">
+      <DependentUpon>201702280106567_RemoveCertificates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
