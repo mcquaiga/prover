@@ -50,7 +50,7 @@ namespace Prover.Core.Models.Clients
             private set
             {
                 InstrumentType =
-                    CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == int.Parse(value));
+                    CommProtocol.Common.InstrumentTypes.Instruments.GetAll().FirstOrDefault(i => i.Id == int.Parse(value));
             }
         }
     }

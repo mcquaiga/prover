@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Prover.CommProtocol.Common;
 
-namespace Prover.CommProtocol.MiHoneywell
+namespace Prover.CommProtocol.Common.InstrumentTypes
 {
     public static class Instruments
     {

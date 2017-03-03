@@ -18,16 +18,9 @@ namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
-        public CoreBootstrapper()
+        public CoreBootstrapper(bool initializeDatabase = true)
         {
-            BlobCache.ApplicationName = "EvcProver";
-
-            //Database registrations
-            Builder.RegisterInstance(new ProverContext());
-            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>();
-
-            Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            if (initializeDatabase) InitializeDatabase();
 
             //EVC Communcation
             Builder.Register(
@@ -51,6 +44,16 @@ namespace Prover.Core.Startup
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
             SettingsManager.RefreshSettings().Wait();
+        }
+
+        public void InitializeDatabase()
+        {
+//Database registrations
+            Builder.RegisterInstance(new ProverContext());
+            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>();
+
+            Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

@@ -11,6 +11,7 @@ using System.Windows;
 using Akka.Util.Internal;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.InstrumentTypes;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.Events;

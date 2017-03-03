@@ -2,7 +2,7 @@
 
 namespace Prover.Core.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         ///     Get substring of specified number of characters on the right.

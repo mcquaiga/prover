@@ -19,7 +19,7 @@ namespace Prover.Modules.Certificates.Models
         public string TestedBy { get; set; }
         public long Number { get; set; }
 
-        public virtual ICollection<CertificateInstrument> Instruments { get; set; }
+        public virtual ICollection<Instrument> Instruments { get; set; }
 
         [NotMapped]
         public string SealExpirationDate

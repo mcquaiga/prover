@@ -47,7 +47,7 @@ namespace Prover.Core.Models.Instruments
 
             if (this is Instrument)
                 InstrumentType =
-                    CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == (this as Instrument).Type);
+                    CommProtocol.Common.InstrumentTypes.Instruments.GetAll().FirstOrDefault(i => i.Id == (this as Instrument).Type);
 
             if (string.IsNullOrEmpty(_instrumentData)) return;
 

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Prover.Core.DTOs;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -15,21 +17,23 @@ namespace Prover.Modules.Certificates.Exporter
 {
     public class ExportToCertificateServerManager : IExportTestRun
     {    
-        private readonly ICertificateStore<CertificateInstrument> _instrumentStore;
-
-        public ExportToCertificateServerManager(ICertificateStore<CertificateInstrument> instrumentStore)
+        public ExportToCertificateServerManager()
         {
-            _instrumentStore = instrumentStore;
         }
 
         public async Task<bool> Export(Instrument instrumentForExport)
         {
+            var apiUri = "http://localhost:58508/api/instruments";
+
             if (CheckIfServerAvailable())
                 try
                 {
-                    var instrumentJson = JsonConvert.SerializeObject(instrumentForExport, Formatting.Indented, new JsonSerializerSettings(){ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
-                    var newInstrument = JsonConvert.DeserializeObject<Instrument>(instrumentJson);
-                    await _instrumentStore.UpsertAsync(newInstrument as CertificateInstrument);
+                    using (var webClient = new HttpClient())
+                    {
+                        var dto = instrumentForExport.ToDto();
+                        var instrumentJson = JsonConvert.SerializeObject(instrumentForExport, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                        await webClient.PostAsync(apiUri, new StringContent(instrumentJson, Encoding.UTF8, "application/json"));
+                    }                  
 
                     return true;
                 }

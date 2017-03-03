@@ -109,6 +109,8 @@
   <ItemGroup>
     <Compile Include="EvcCommunicationClient.cs" />
     <Compile Include="Extensions\Task.cs" />
+    <Compile Include="InstrumentType.cs" />
+    <Compile Include="InstrumentTypes\InstrumentTypes.cs" />
     <Compile Include="IO\CommPort.cs" />
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialPort.cs" />

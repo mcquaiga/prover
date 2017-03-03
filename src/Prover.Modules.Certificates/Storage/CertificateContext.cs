@@ -16,8 +16,6 @@ namespace Prover.Modules.Certificates.Storage
         }
 
         public DbSet<Certificate> Certificates { get; set; }
-
-        public DbSet<CertificateInstrument> CertificateInstruments { get; set; }
         public DbSet<VerificationTest> VerificationTests { get; set; }
         public DbSet<VolumeTest> VolumeTests { get; set; }
         public DbSet<TemperatureTest> TemperatureTests { get; set; }

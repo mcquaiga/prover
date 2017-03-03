@@ -24,26 +24,30 @@ namespace Prover.Core.Models.Instruments
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
             VerificationTest = verificationTest;
-            VerificationTestId = VerificationTest.Id;
 
             CreateDriveType();
         }
 
-        [JsonConstructor]
-        public VolumeTest(IEnumerable<ItemValue> items, string testInstrumentData, string driveTypeDiscriminator)
+        public VolumeTest(IEnumerable<ItemValue> beforeTestItems, 
+                            IEnumerable<ItemValue> afterTestItems, 
+                            int pulseACount, 
+                            int pulseBCount, 
+                            decimal appliedInput, 
+                            string volumeDriveTypeDiscriminator)
         {
-            Items = items.ToList();
-            DriveTypeDiscriminator = driveTypeDiscriminator;
-            _testInstrumentData = testInstrumentData;
-
-            OnInitializing();
+            Items = beforeTestItems.ToList();
+            AfterTestItems = afterTestItems;
+            PulseACount = pulseACount;
+            PulseBCount = pulseBCount;
+            AppliedInput = appliedInput;
+            DriveTypeDiscriminator = volumeDriveTypeDiscriminator;
         }
 
         public int PulseACount { get; set; }
         public int PulseBCount { get; set; }
         public decimal AppliedInput { get; set; }
 
-        [JsonIgnore]
+        [NotMapped, JsonIgnore]
         public IDriveType DriveType { get; private set; }
 
         public string TestInstrumentData
@@ -202,12 +206,14 @@ namespace Prover.Core.Models.Instruments
 
         private void CreateDriveType()
         {
+            if (DriveType != null) return;
+
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
                 DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
                     ? "Rotary"
                     : "Mechanical";
 
-            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && Instrument != null)
+            if (!string.IsNullOrEmpty(DriveTypeDiscriminator) && Instrument != null)
                 switch (DriveTypeDiscriminator.ToLower())
                 {
                     case "rotary":
@@ -229,7 +235,7 @@ namespace Prover.Core.Models.Instruments
 
             CreateDriveType();
 
-            if (!string.IsNullOrEmpty(_testInstrumentData))
+            if (!string.IsNullOrEmpty(_testInstrumentData) && AfterTestItems == null)
             {
                 var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
                 AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);

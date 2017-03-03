@@ -108,7 +108,6 @@
     <Compile Include="Exporter\ExportToCertificateServerManager.cs" />
     <Compile Include="ICertificateStore.cs" />
     <Compile Include="Models\Certificate.cs" />
-    <Compile Include="Models\CertificateInstrument.cs" />
     <Compile Include="Reports\CertificateGenerator.cs" />
     <Compile Include="Reports\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
@@ -118,7 +117,6 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Storage\CertificateContext.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
-    <Compile Include="Storage\InstrumentStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">

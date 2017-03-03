@@ -37,6 +37,43 @@ namespace Prover.Core.Models.Instruments
             CreateVerificationTests();
         }
 
+        public Instrument(IEnumerable<ItemValue> items, DateTime testDateTime, DateTime? archivedDateTime, InstrumentType instrumentType, Guid? clientId, Client client, string employeeId, string jobId, DateTime? exportedDateTime, bool? eventLogPassed, bool? commPortsPassed, List<VerificationTest> verificationTests)
+        {
+            Items = items.ToList();
+            TestDateTime = testDateTime;
+            ArchivedDateTime = archivedDateTime;
+            InstrumentType = instrumentType;
+            ClientId = clientId;
+            Client = client;
+            EmployeeId = employeeId;
+            JobId = jobId;
+            ExportedDateTime = exportedDateTime;
+            EventLogPassed = eventLogPassed;
+            CommPortsPassed = commPortsPassed;
+            VerificationTests = verificationTests;
+        }
+
+        public Instrument(IEnumerable<ItemValue> items, DateTime testDateTime, DateTime? archivedDateTime, DateTime? exportedDateTime, InstrumentType instrumentType, string employeeId, string jobId, bool? eventLogPassed, bool? commPortsPassed, Client client, List<VerificationTest> verificationTests)
+        {
+            Items = items.ToList();
+            TestDateTime = testDateTime;
+            ArchivedDateTime = archivedDateTime;
+            ExportedDateTime = exportedDateTime;
+            InstrumentType = instrumentType;
+            EmployeeId = employeeId;
+            JobId = jobId;
+            EventLogPassed = eventLogPassed;
+            CommPortsPassed = commPortsPassed;
+            Client = client;
+
+            VerificationTests = verificationTests;
+            VerificationTests.ForEach(x =>
+            {
+                x.Instrument = this;
+                x.OnInitializing();
+            });
+        }
+
         public DateTime TestDateTime { get; set; }
 
         public DateTime? ArchivedDateTime { get; set; }
@@ -147,7 +184,7 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
-                if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
+                if (InstrumentType == CommProtocol.Common.InstrumentTypes.Instruments.MiniAt)
                     return verificationTestsPassed && EventLogPassed != null && EventLogPassed.Value &&
                            CommPortsPassed != null && CommPortsPassed.Value;
 

@@ -15,7 +15,31 @@ namespace Prover.Core.Models.Instruments
         {
             TestNumber = testNumber;
             Instrument = instrument;
-            InstrumentId = Instrument?.Id ?? Guid.Empty;
+        }
+
+        public VerificationTest(int testNumber, PressureTest pressureTest, TemperatureTest temperatureTest, VolumeTest volumeTest)
+        {
+            TestNumber = testNumber;
+
+            PressureTest = pressureTest;
+            if (PressureTest != null)
+            {
+                PressureTest.VerificationTest = this;
+                PressureTest.OnInitializing();
+            }
+
+            TemperatureTest = temperatureTest;
+            if (TemperatureTest != null)
+            {
+                TemperatureTest.VerificationTest = this;
+            }
+
+            VolumeTest = volumeTest;
+            if (VolumeTest != null)
+            {
+                VolumeTest.VerificationTest = this;
+            }
+
         }
 
         public VerificationTest(int testNumber, Instrument instrument, PressureTest pressureTest,
@@ -49,13 +73,13 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Instrument.CompositionType == CorrectorType.T && TemperatureTest != null)
+                if (Instrument?.CompositionType == CorrectorType.T && TemperatureTest != null)
                     return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.P && PressureTest != null)
+                if (Instrument?.CompositionType == CorrectorType.P && PressureTest != null)
                     return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if (Instrument.CompositionType == CorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
+                if (Instrument?.CompositionType == CorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
                     return TemperatureTest.HasPassed && PressureTest.HasPassed &&
                            (VolumeTest == null || VolumeTest.HasPassed);
 
@@ -66,9 +90,17 @@ namespace Prover.Core.Models.Instruments
         public override void OnInitializing()
         {
             base.OnInitializing();
+            Initialize();
+        }
 
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+        private void Initialize()
+        {
+            if (TemperatureTest != null && PressureTest != null)
                 SuperFactorTest = new SuperFactorTest(this);
+
+            TemperatureTest?.OnInitializing();
+            PressureTest?.OnInitializing();
+            VolumeTest?.OnInitializing();
         }
     }
 }

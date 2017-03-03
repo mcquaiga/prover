@@ -26,10 +26,11 @@ namespace Prover.Core.Models.Instruments
             AtmosphericGauge = 0; // decimal.Round(DefaultAtmGauge, 2);
         }
 
-        [JsonConstructor]
-        public PressureTest(IEnumerable<ItemValue> items)
+        public PressureTest(IEnumerable<ItemValue> items, decimal? gasGauge, decimal? atmosphericGauge)
         {
-            Items = items.Where(i => i.Metadata.IsPressureTest == true).ToList();
+            Items = items.ToList();
+            GasGauge = gasGauge;
+            AtmosphericGauge = atmosphericGauge;
         }
 
         public Guid VerificationTestId { get; set; }

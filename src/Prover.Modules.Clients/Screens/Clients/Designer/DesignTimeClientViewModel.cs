@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Prover.GUI.Common.Screens;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.InstrumentTypes;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 

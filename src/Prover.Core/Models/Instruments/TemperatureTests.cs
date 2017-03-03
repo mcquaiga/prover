@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Prover.CommProtocol.Common;
@@ -23,6 +24,12 @@ namespace Prover.Core.Models.Instruments
             VerificationTestId = VerificationTest.Id;
 
             Gauge = (double) gauge;
+        }
+
+        public TemperatureTest(IEnumerable<ItemValue> temperatureTestItems, double temperatureTestGauge)
+        {
+            Items = temperatureTestItems.ToList();
+            Gauge = temperatureTestGauge;
         }
 
         public Guid VerificationTestId { get; set; }

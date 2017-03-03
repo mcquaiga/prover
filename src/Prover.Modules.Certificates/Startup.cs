@@ -13,10 +13,6 @@ namespace Prover.Modules.Certificates
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            builder.RegisterType<CertificateContext>();
-            builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
-            builder.RegisterType<CertificateInstrumentStore>().As<ICertificateStore<CertificateInstrument>>();
-
             builder.RegisterType<ExportToCertificateServerManager>().As<IExportTestRun>();
         }
     }
