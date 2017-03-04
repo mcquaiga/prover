@@ -17,7 +17,7 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.3.0" />
+    <PackageReference Include="Autofac" Version="4.4.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.0.3" />
@@ -35,10 +35,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.Core.Domain\Prover.Core.Domain.csproj" />
-    <ProjectReference Include="..\Prover.Core.Logic\Prover.Core.Logic.csproj" />
-    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj" />
-    <ProjectReference Include="..\Prover.Modules.Certificates\Prover.Modules.Certificates.csproj" />
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac">

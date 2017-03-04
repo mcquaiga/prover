@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Prover.Core.Startup;
-using Prover.Web.API.Storage;
+using Prover.Domain;
 
 namespace Prover.Web.API
 {
@@ -34,15 +29,13 @@ namespace Prover.Web.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var builder = new CoreBootstrapper(initializeDatabase: false).Builder;
+            var builder = new ContainerBuilder();
 
             // Add framework services.
             services.AddMvc();
-            //services.AddDbContext<DataContext>(); //options => options.UseSqlServer(Configuration.GetConnectionString("Defa‌​ultConnection")));
-            //services.AddDbContext<ProverNextContext>();
             builder.Populate(services);
 
-            var logic = new Core.Logic.Startup();
+            new ProverDomain().Initialize(builder);
 
             ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(ApplicationContainer);

@@ -53,9 +53,9 @@
       <Project>{823c7d3a-483f-4eb3-be29-b282225a37f3}</Project>
       <Name>Prover.Core.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Core.Domain\Prover.Core.Domain.csproj">
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Services.csproj">
       <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
-      <Name>Prover.Core.Domain</Name>
+      <Name>Prover.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -17,10 +17,10 @@ namespace Prover.Core.Logic.Services
             _qaTestRunRepository = qaTestRunRepository;
         }
 
-        public async Task<IEnumerable<QaTestRunDto>> GetAllTestRuns()
-        {
-            return await _qaTestRunRepository.GetAllAsync(access => access.ExportedDateTime == null);
-        }
+        //public async Task<IEnumerable<QaTestRunDto>> GetAllTestRuns()
+        //{
+        //    return await _qaTestRunRepository.GetAllAsync(access => access.ExportedDateTime == null);
+        //}
 
     }
 }
