@@ -1,6 +1,6 @@
-﻿namespace Prover.Shared.DTO.Instrument
+﻿namespace Prover.Shared
 {
-    public class InstrumentTypeDto
+    public class InstrumentType
     {
         public int AccessCode { get; set; }
         public string Name { get; set; }

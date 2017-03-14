@@ -44,11 +44,10 @@
     <Compile Include="Common\AggregateRoot.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\IDomainEvent.cs" />
-    <Compile Include="DTO\Instrument\EvcItemValueDto.cs" />
-    <Compile Include="DTO\Instrument\InstrumentTypeDto.cs" />
     <Compile Include="DTO\TestRuns\TestPointDto.cs" />
     <Compile Include="DTO\TestRuns\TestRunDto.cs" />
     <Compile Include="Enums\EnumTypes.cs" />
+    <Compile Include="InstrumentType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\IRepository.cs" />
   </ItemGroup>

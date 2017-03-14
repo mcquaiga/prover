@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.Items;
+﻿using Prover.CommProtocol.Common.Items;
 using Prover.Domain.DriveTypes;
-using Prover.Shared.DTO.Instrument;
+using Prover.Shared;
 using Prover.Shared.DTO.TestRuns;
 using Prover.Shared.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.Domain.Models.TestRuns
 {
@@ -46,7 +42,12 @@ namespace Prover.Domain.Models.TestRuns
 
         public VolumeTestPoint VolumeTest => TestPoints.FirstOrDefault(t => t.Volume != null)?.Volume;
 
-        public IItemFinder Items { get; private set; }
+        public TestRun Create(InstrumentType instrumentType, Dictionary<string, string> itemValues)
+        {
+            var test = new TestRun();
+
+            ItemValues = instrumentType..LoadItems(InstrumentType, itemValues).ToList();
+        }
     }
 
     public class TestPoint

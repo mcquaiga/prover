@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoney
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoneywell.Console", "Prover.CommProtocol.MiHoneywell.Console\Prover.CommProtocol.MiHoneywell.Console.csproj", "{7A630399-E7B2-4227-A6D9-B492E911DB1E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{2A28EC01-0F71-4788-9A69-9620A0CDD436}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{2A28EC01-0F71-4788-9A69-9620A0CDD436}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI.Common", "Prover.GUI.Common\Prover.GUI.Common.csproj", "{904F99E1-2E5B-4C16-B900-7559D2E11553}"
 EndProject

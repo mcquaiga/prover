@@ -29,9 +29,9 @@ namespace Prover.Tests.Domain.Services
 
         private TestRunDto CreateTestRun()
         {
-            return new TestRunDto(EvcCorrectorType.PTZ,
-                ArchivedDateTime = null,
-                CommPortsPassed = true,
+            var items = 
+
+            return new TestRunDto(EvcCorrectorType.PTZ, null, null, true, true, string.Empty, string.Empty, 
                 EmployeeId = string.Empty,
                 EventLogPassed = true,
                 ExportedDateTime = null,
