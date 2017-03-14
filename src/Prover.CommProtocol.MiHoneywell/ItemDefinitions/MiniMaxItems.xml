@@ -144,6 +144,7 @@
   <item number="113" code="HIGH_RES_CORRECTED" shortDescription="High Res COR"
         description="High Resolution Corrected Volume" isVolume="true" isVolumeTest="true" />
   <item number="122" code="FIRMWARE" shortDescription="Firm. Ver." description="Firmware Version" />
+  <item number="127" code="INSTRUMENT_TYPE" shortDescription="Instrument Type" description="Instrument Type" />
   <item number="137" code="PRESS_RANGE" shortDescription="Pressure Range" description="Pressure Range"
         isPressure="true" />
   <item number="140" code="ENERGY" shortDescription="Energy" description="Energy" isVolume="true" />
