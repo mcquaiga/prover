@@ -1,18 +1,21 @@
 ﻿using System;
+using Prover.CommProtocol.Common.Items;
+using Prover.Domain.Models.TestRuns;
+using Prover.Shared.DTO.TestRuns;
 
 namespace Prover.Domain.DriveTypes
 {
     public class MechanicalDrive : IDriveType
     {
-        public MechanicalDrive(Instrument instrument)
+        public MechanicalDrive(TestRun testRun)
         {
-            Instrument = instrument;
-            Energy = new Energy(instrument);
+            TestRun = testRun;
+            Energy = new Energy(testRun);
         }
 
         public Energy Energy { get; set; }
 
-        public Instrument Instrument { get; }
+        public TestRun TestRun { get; }
 
         public string Discriminator => "Mechanical";
 
@@ -20,15 +23,15 @@ namespace Prover.Domain.DriveTypes
 
         public int MaxUncorrectedPulses()
         {
-            var uncorPulseTable = SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits;
-            var uncorUnitValue = (int) Instrument.Items.GetItem(98).NumericValue;
+            //var uncorPulseTable = SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits;
+            var uncorUnitValue = (int) TestRun.ItemValues.GetItem(98).NumericValue;
 
-            return uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
+            return 10; // uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
-            return appliedInput * Instrument.DriveRate();
+            return appliedInput * TestRun.ItemValues.GetItem(98).NumericValue;
         }
     }
 
@@ -41,11 +44,11 @@ namespace Prover.Domain.DriveTypes
         private const string KiloCals = "KiloCals";
         private const string KiloWattHours = "KiloWattHours";
 
-        private readonly Instrument _instrument;
+        private readonly TestRun _testRun;
 
-        public Energy(Instrument instrument)
+        public Energy(TestRun testRun)
         {
-            _instrument = instrument;
+            _testRun = testRun;
         }
 
         public bool HasPassed => PercentError < 1 && PercentError > -1;
@@ -65,8 +68,8 @@ namespace Prover.Domain.DriveTypes
         {
             get
             {
-                var startEnergy = _instrument.VolumeTest.Items?.GetItem(140)?.NumericValue;
-                var endEnergy = _instrument.VolumeTest.AfterTestItems?.GetItem(140)?.NumericValue;
+                var startEnergy = _testRun.VolumeTest.PreTestValues.GetItem(140)?.NumericValue;
+                var endEnergy = _testRun.VolumeTest.PostTestValues?.GetItem(140)?.NumericValue;
                 if (endEnergy != null && startEnergy != null)
                     return endEnergy.Value - startEnergy.Value;
 
@@ -74,18 +77,18 @@ namespace Prover.Domain.DriveTypes
             }
         }
 
-        public string EnergyUnits => _instrument.Items.GetItem(141).Description;
+        public string EnergyUnits => _testRun.ItemValues.GetItem(141).Description;
 
         public decimal? ActualEnergy
         {
             get
             {
-                var energyValue = _instrument.Items.GetItem(142).NumericValue;
+                var energyValue = _testRun.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {
                     case Therms:
-                        if (_instrument.VolumeTest.EvcCorrected.HasValue)
-                            return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
+                        if (_testRun.VolumeTest.EvcCorrected.HasValue)
+                            return Math.Round(energyValue * _testRun.VolumeTest.EvcCorrected.Value) / 100000;
                         break;
                     case Dktherms:
 

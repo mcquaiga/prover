@@ -18,7 +18,7 @@ namespace Prover.Data.SQL.Storage
     {
         private readonly TestRunSqlContext _dataContext;
 
-        public TestRunSqlRepository(TestRunSqlContext dataContext)
+        internal TestRunSqlRepository(TestRunSqlContext dataContext)
         {
             _dataContext = dataContext;
 
@@ -36,9 +36,21 @@ namespace Prover.Data.SQL.Storage
             return Mapper.Map<TestRunDto>(result);
         }
 
-        public Task<TestRunDto> UpsertAsync(TestRunDto entity)
+        public async Task<TestRunDto> UpsertAsync(TestRunDto entity)
         {
-            throw new NotImplementedException();
+            var testRun = Mapper.Map<TestRunDao>(entity);
+
+            if (await Get(testRun.Id) != null)
+            {
+                _dataContext.TestRuns.Attach(testRun);
+                _dataContext.Entry(testRun).State = EntityState.Modified;
+            }
+            else
+            {
+                _dataContext.TestRuns.Add(testRun);
+            }
+            await _dataContext.SaveChangesAsync();
+            return entity;
         }
 
         public Task Delete(TestRunDto entity)

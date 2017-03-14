@@ -26,10 +26,7 @@ namespace Prover.Shared.DTO.TestRuns
     public class TestRunDto : Entity, ITestRun
     {
         public EvcCorrectorType CorrectorType { get; set; }
-        public InstrumentTypeDto InstrumentType { get; set; }
-        public string SerialNumber { get; set; }
-        public string InventoryNumber { get; set; }
-
+        public InstrumentType InstrumentType { get; set; }
         public DateTime TestDateTime { get; set; }
         public DateTime? ExportedDateTime { get; set; }
         public DateTime? ArchivedDateTime { get; set; }
@@ -51,8 +48,6 @@ namespace Prover.Shared.DTO.TestRuns
         {
             CorrectorType = correctorType;
             InstrumentType = instrumentType;
-            SerialNumber = serialNumber;
-            InventoryNumber = inventoryNumber;
             TestDateTime = testDateTime;
             ExportedDateTime = exportedDateTime;
             ArchivedDateTime = archivedDateTime;

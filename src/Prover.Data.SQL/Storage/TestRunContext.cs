@@ -9,8 +9,14 @@ using Prover.Data.SQL.Models;
 
 namespace Prover.Data.SQL.Storage
 {
-    public class TestRunSqlContext : SqlDataContext
+    internal class TestRunSqlContext : SqlDataContext
     {
         public virtual DbSet<TestRunDao> TestRuns { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+        }
     }
 }

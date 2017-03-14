@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DriveTypes\IDriveType.cs" />
+    <Compile Include="InstrumentType.cs" />
+    <Compile Include="Mappings\TestRunMapping.cs" />
+    <Compile Include="Models\IItemFinder.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Models\TestRuns\TestRun.cs" />

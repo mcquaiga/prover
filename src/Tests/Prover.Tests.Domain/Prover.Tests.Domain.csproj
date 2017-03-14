@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
+      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
+      <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Prover.Core.Domain\Prover.Domain.csproj">
       <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
       <Name>Prover.Domain</Name>

@@ -8,6 +8,7 @@ namespace Prover.Shared.Common
         {
             Id = Guid.NewGuid();
         }
-        public Guid Id { get; protected set; }
+
+        public Guid Id { get; set; }
     }
 }

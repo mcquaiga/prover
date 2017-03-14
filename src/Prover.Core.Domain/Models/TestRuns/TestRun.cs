@@ -27,7 +27,6 @@ namespace Prover.Domain.Models.TestRuns
         }
     }
 
-
     public class TestRun
     {
         public EvcCorrectorType CorrectorType { get; set; }
@@ -44,6 +43,10 @@ namespace Prover.Domain.Models.TestRuns
 
         public ICollection<ItemValue> ItemValues { get; set; }
         public ICollection<TestPoint> TestPoints { get; set; }
+
+        public VolumeTestPoint VolumeTest => TestPoints.FirstOrDefault(t => t.Volume != null)?.Volume;
+
+        public IItemFinder Items { get; private set; }
     }
 
     public class TestPoint

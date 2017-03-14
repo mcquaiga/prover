@@ -13,7 +13,7 @@ using Prover.Shared.Enums;
 namespace Prover.Data.SQL.Models
 {
     [Table("QA_TestRuns")]
-    public class TestRunDao : AggregateRoot
+    internal class TestRunDao : AggregateRoot
     {
         public string CorrectorType { get; set; }
         public string InstrumentType { get; set; }
@@ -34,7 +34,7 @@ namespace Prover.Data.SQL.Models
     }
 
     [Table("QA_TestPoints")]
-    public class TestPointDao : Entity
+    internal class TestPointDao : Entity
     {
         public int Level { get; set; }
 
@@ -53,7 +53,7 @@ namespace Prover.Data.SQL.Models
     }
 
     [Table("QA_PressureTests")]
-    public class PressureTestDao : Entity
+    internal class PressureTestDao : Entity
     {
         public virtual TestPointDao TestPoint { get; protected set; }
 
@@ -63,7 +63,7 @@ namespace Prover.Data.SQL.Models
     }
 
     [Table("QA_TemperatureTests")]
-    public class TemperatureTestDao : Entity
+    internal class TemperatureTestDao : Entity
     {
         public virtual TestPointDao TestPoint { get; protected set; }
         public decimal Gauge { get; set; }
@@ -71,7 +71,7 @@ namespace Prover.Data.SQL.Models
     }
 
     [Table("QA_VolumeTests")]
-    public class VolumeTestDao : Entity
+    internal class VolumeTestDao : Entity
     {
         public virtual TestPointDao TestPoint { get; protected set; }
 
