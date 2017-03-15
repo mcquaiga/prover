@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Prover.Core.Domain.Models.QaTestRuns;
-using Prover.Core.Models.Instruments;
 using Prover.Modules.Certificates.Models;
 
 namespace Prover.Web.API.Storage

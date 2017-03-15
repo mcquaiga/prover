@@ -109,6 +109,8 @@
   <ItemGroup>
     <Compile Include="EvcCommunicationClient.cs" />
     <Compile Include="Extensions\Task.cs" />
+    <Compile Include="Instruments\IInstrument.cs" />
+    <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="InstrumentType.cs" />
     <Compile Include="InstrumentTypes\InstrumentTypes.cs" />
     <Compile Include="IO\CommPort.cs" />
@@ -132,6 +134,12 @@
   <ItemGroup>
     <Folder Include="Events\" />
     <Folder Include="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
+      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
+      <Name>Prover.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

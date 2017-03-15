@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 

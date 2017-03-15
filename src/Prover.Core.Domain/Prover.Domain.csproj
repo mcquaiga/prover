@@ -51,11 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DriveTypes\IDriveType.cs" />
+    <Compile Include="DriveTypes\MeterIndexes.cs" />
     <Compile Include="Mappings\TestRunMapping.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Models\InstrumentType.cs" />
+    <Compile Include="Models\TestRuns\PressureTestPoint.cs" />
+    <Compile Include="Models\TestRuns\SuperFactorTestPoint.cs" />
+    <Compile Include="Models\TestRuns\TemperatureTestPoint.cs" />
+    <Compile Include="Models\TestRuns\TestPoint.cs" />
     <Compile Include="Models\TestRuns\TestRun.cs" />
+    <Compile Include="Models\TestRuns\TestRunFactory.cs" />
+    <Compile Include="Models\TestRuns\VolumeTestPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProverDomain.cs" />
     <Compile Include="Services\TestRunService.cs" />

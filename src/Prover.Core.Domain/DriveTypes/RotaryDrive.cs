@@ -1,17 +1,23 @@
 ﻿using System;
+using Prover.CommProtocol.Common;
+using Prover.Domain.Models.TestRuns;
+using Prover.Shared.Extensions;
 
 namespace Prover.Domain.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
-        public RotaryDrive(Instrument instrument)
+        public RotaryDrive(int evcMeterIndex, decimal evcMeterDisplacement, int uncorrectedMultiplier)
         {
-            Instrument = instrument;
-            Meter = new MeterTest(Instrument);
+            UncorrectedMultiplier = uncorrectedMultiplier;
+
+            var meterIndex = MeterIndexInfo.Get(evcMeterIndex);
+            Meter = new MeterTest(meterIndex, evcMeterDisplacement);
         }
 
-        public Instrument Instrument { get; set; }
-        public MeterTest Meter { get; set; }
+        public int UncorrectedMultiplier { get; }
+
+        public MeterTest Meter { get; }
 
         public string Discriminator => "Rotary";
 
@@ -24,11 +30,11 @@ namespace Prover.Domain.DriveTypes
 
         public int MaxUncorrectedPulses()
         {
-            if (Instrument.UnCorrectedMultiplier() == 10)
-                return Meter.MeterIndex.UnCorPulsesX10;
+            if (UncorrectedMultiplier == 10)
+                return Meter.MeterIndexInfo.UnCorPulsesX10;
 
-            if (Instrument.UnCorrectedMultiplier() == 100)
-                return Meter.MeterIndex.UnCorPulsesX100;
+            if (UncorrectedMultiplier == 100)
+                return Meter.MeterIndexInfo.UnCorPulsesX100;
 
             return 10; //Low standard number if we can't find anything
         }
@@ -36,62 +42,34 @@ namespace Prover.Domain.DriveTypes
 
     public class MeterTest
     {
-        private readonly Instrument _instrument;
-
-        public MeterTest(Instrument instrument)
+        public MeterTest(MeterIndexInfo meterIndex, decimal evcMeterDisplacement)
         {
-            _instrument = instrument;
-            MeterIndex = MeterIndexInfo.Get((int) _instrument.Items.GetItem(432).NumericValue);
+            MeterIndexInfo = meterIndex; // MeterIndexInfo.Get((int) _instrument.Items.GetItem(432).NumericValue);
+            EvcMeterDisplacement = evcMeterDisplacement;
         }
 
-        public bool MeterDisplacementHasPassed
-        {
-            get { return MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD); }
-        }
+        public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(1);
 
-        public decimal MeterDisplacement
-        {
-            get
-            {
-                if (MeterIndex != null)
-                    return MeterIndex.MeterDisplacement.Value;
+        public decimal MeterDisplacement => MeterIndexInfo?.MeterDisplacement ?? 0;
 
-                return 0;
-            }
-        }
-
-        public decimal? EvcMeterDisplacement
-        {
-            get { return _instrument.Items.GetItem(439).NumericValue; }
-        }
+        public decimal EvcMeterDisplacement { get; set; }
 
         public decimal MeterDisplacementPercentError
         {
             get
             {
                 if (MeterDisplacement != 0)
-                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100),
-                        2);
+                    return Math.Round((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100, 2);
                 return 0;
             }
         }
 
-        public MeterIndexInfo MeterIndex { get; }
+        public MeterIndexInfo MeterIndexInfo { get; }
 
-        public string MeterTypeDescription
-        {
-            get { return MeterIndex.Description; }
-        }
+        public string MeterTypeDescription => MeterIndexInfo.Description;
 
-        public string MeterType
-        {
-            get { return _instrument.Items.GetItem(432).Description; }
-        }
+        public string MeterType => MeterIndexInfo.Description;
 
-
-        public int MeterTypeId
-        {
-            get { return (int) _instrument.Items.GetItem(432).NumericValue; }
-        }
+        public int MeterTypeId => (int) MeterIndexInfo.Id;
     }
 }

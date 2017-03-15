@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Enums.cs" />
     <Compile Include="HoneywellClient.cs" />
+    <Compile Include="Instruments\HoneywellInstrument.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
     <Compile Include="Messaging\Response\MiResponseCodes.cs" />
@@ -107,6 +108,10 @@
     <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell.CRC\Prover.CommProtocol.MiHoneywell.CRC.vbproj">
       <Project>{8eeb9315-56e0-4a4f-9a36-3b9e8ccd47a1}</Project>
       <Name>Prover.CommProtocol.MiHoneywell.CRC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
+      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
+      <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

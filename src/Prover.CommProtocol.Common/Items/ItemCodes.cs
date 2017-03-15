@@ -1,5 +1,27 @@
 namespace Prover.CommProtocol.Common.Items
 {
+    public enum ItemName
+    {
+        //Site Information
+        SerialNumber,
+        InventoryNumber,
+        FirmwareVersion,
+
+        //Pressure
+        PressureFactorFixed,
+        PressureBase,
+        PressureGas,
+        PressureAtm,
+        PressureTransducerType,
+        PressureRange,
+
+        //Temperature
+        TemperatureFactorFixed,
+
+        //SuperFactor
+        SuperFactorFixed
+    }
+
     public static class ItemCodes
     {
         public static class SiteInfo

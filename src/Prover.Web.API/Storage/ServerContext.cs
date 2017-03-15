@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.Modules.Certificates.Models;
 using Microsoft.EntityFrameworkCore.Infrastructure;
