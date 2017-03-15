@@ -54,6 +54,7 @@
     <Compile Include="Mappings\TestRunMapping.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
+    <Compile Include="Models\InstrumentType.cs" />
     <Compile Include="Models\TestRuns\TestRun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProverDomain.cs" />

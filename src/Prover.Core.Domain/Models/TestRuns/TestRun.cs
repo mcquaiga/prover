@@ -46,7 +46,7 @@ namespace Prover.Domain.Models.TestRuns
         {
             var test = new TestRun();
 
-            ItemValues = instrumentType..LoadItems(InstrumentType, itemValues).ToList();
+            //ItemValues = instrumentType..LoadItems(InstrumentType, itemValues).ToList();
         }
     }
 
