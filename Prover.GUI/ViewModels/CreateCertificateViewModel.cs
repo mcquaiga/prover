@@ -40,7 +40,7 @@ namespace Prover.GUI.ViewModels
 
         public InstrumentsListViewModel InstrumentsListViewModel { get; private set; }
 
-        public Certificate Certificate { get; set; }
+        //public Certificate Certificate { get; set; }
 
         public string CreatedDateTime { get; set; }
         public string VerificationType { get; set; }
@@ -94,13 +94,41 @@ namespace Prover.GUI.ViewModels
             }
 
             var instruments = InstrumentsListViewModel.InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
-            Certificate = Certificate.CreateCertificate(_container, TestedBy, VerificationType, instruments);
+            var certificate = Certificate.CreateCertificate(_container, TestedBy, VerificationType, instruments);
             
             InstrumentsListViewModel.GetInstrumentsByCertificateId(null);
 
+            GenerateReport(certificate);
+        }
+
+        public long? ExistingCertificateNumber { get; set; }
+        public void PrintExistingCertificate()
+        {
+            LoadCertificate(ExistingCertificateNumber);
+        }
+
+        private void LoadCertificate(long? certificateId)
+        {
+            if (!certificateId.HasValue) return;
+
+            var cert = Certificate.FindCertificate(_container, certificateId.Value);
+
+            if (cert != null)
+            {
+                GenerateReport(cert);
+            }
+
+            ExistingCertificateNumber = null;
+            NotifyOfPropertyChange(() => ExistingCertificateNumber);
+        }
+
+        private void GenerateReport(Certificate certificate)
+        {
             //Set up the WPF Control to be printed
-            var controlToPrint = new CertificateReportView();
-            controlToPrint.DataContext = new CertificateReportViewModel(_container, Certificate);
+            var controlToPrint = new CertificateReportView
+            {
+                DataContext = new CertificateReportViewModel(_container, certificate)
+            };
 
             FixedDocument fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
@@ -111,7 +139,7 @@ namespace Prover.GUI.ViewModels
 
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);
-            ((System.Windows.Markup.IAddChild)pageContent).AddChild(fixedPage);
+            ((System.Windows.Markup.IAddChild) pageContent).AddChild(fixedPage);
             fixedDoc.Pages.Add(pageContent);
             //Create any other required pages here
 
@@ -121,15 +149,16 @@ namespace Prover.GUI.ViewModels
             //// Process save file dialog box results
             //if (result == true)
             //{
-                // Save document
+            // Save document
             var path = Directory.GetCurrentDirectory();
-            string filename = "certificate_" + Certificate.Number + ".xps";
-                //dlg.FileName;
-
-            //View the document
+            string filename = "certificate_" + certificate.Number + ".xps";
             var filePath = Path.Combine(path, "Certificates");
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
             filePath = Path.Combine(filePath, filename);
+
+            if (File.Exists(filePath)) File.Delete(filePath);
+
+            //View the document
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
             xw.Write(fixedDoc);

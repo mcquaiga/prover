@@ -65,5 +65,11 @@ namespace Prover.Core.Models.Certificates
             certificateStore.Upsert(certificate);
             return certificate;
         }
+
+        public static Certificate FindCertificate(IUnityContainer container, long certificateId)
+        {
+            var certStore = new CertificateStore(container);
+            return certStore.Query().FirstOrDefault(c => c.Number == certificateId);
+        }
     }
 }

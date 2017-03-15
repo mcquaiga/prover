@@ -44,9 +44,9 @@
 
     <Grid Background="{DynamicResource MainBackgroundColour}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="9*" />
-
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
@@ -108,8 +108,8 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>
-                    
-                    
+
+
                     <!--<StackPanel>
                         <TextBlock FontSize="24">No. Selected:</TextBlock>
                         <StackPanel Orientation="Horizontal">
@@ -120,5 +120,23 @@
                 </StackPanel>
             </Grid>
         </Grid>
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0 1 0 0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock FontSize="18">Print Existing Certificate</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBox FontSize="16" x:Name="ExistingCertificateNumber" Width="100"/>
+                    <Button Content="Print" Margin="5 0" FontSize="16" Width="75">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="PrintExistingCertificate" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+                
+
+            </StackPanel>
+        </Border>
+        
     </Grid>
 </UserControl>
