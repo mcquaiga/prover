@@ -30,6 +30,8 @@ namespace Prover.GUI.ViewModels.CertificateReport
 
         public Certificate Certificate { get; set; }
 
+        public string CertificateDate { get { return Certificate.CreatedDateTime.ToShortDateString(); } }
+
         public InstrumentsListViewModel InstrumentsView { get; set; }
 
         private void LoadCertificate(Certificate certificate)

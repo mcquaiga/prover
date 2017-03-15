@@ -296,6 +296,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+
+
         [NotMapped]
         public double? UnCorrectedPercentError
         {
@@ -324,9 +326,28 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public double? MeterDisplacementPercentError
+        {
+            get
+            {
+                if (MeterDisplacement != null && MeterDisplacement != 0)
+                {
+                    return Math.Round((double)(((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement) * 100), 2);
+                }
+                return null;
+            }
+        }
+
+        [NotMapped]
         public bool HasPassed
         {
-            get { return (CorrectedPercentError < 1 && CorrectedPercentError > -1) && (UnCorrectedPercentError < 1 && UnCorrectedPercentError > -1); }
+            get 
+            { 
+                return 
+                        (CorrectedPercentError < 1.5 && CorrectedPercentError > -1.5) 
+                   &&   (UnCorrectedPercentError < 0.1 && UnCorrectedPercentError > -0.1)
+                   &&   (MeterDisplacementPercentError < 1.0 && MeterDisplacementPercentError > -1.0); 
+            }
         }
     }
 
