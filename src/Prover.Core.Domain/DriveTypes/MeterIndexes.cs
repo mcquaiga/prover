@@ -7,6 +7,15 @@ namespace Prover.Domain.DriveTypes
 {
     public class MeterIndexInfo
     {
+        public MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100, decimal? meterDisplacement)
+        {
+            Id = id;
+            Description = description;
+            UnCorPulsesX10 = unCorPulsesX10;
+            UnCorPulsesX100 = unCorPulsesX100;
+            MeterDisplacement = meterDisplacement;
+        }
+
         private MeterIndexInfo() { }
 
         public int Id { get; set; }

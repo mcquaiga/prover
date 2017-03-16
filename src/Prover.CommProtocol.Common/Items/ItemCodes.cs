@@ -49,11 +49,18 @@ namespace Prover.CommProtocol.Common.Items
             public static string FixedFactor = "FIXED_TEMP_FACTOR";
             public static string Factor = "TEMP_FACTOR";
             public static string GasTemperature = "GAS_TEMP";
+            public static string Base = "BASE_TEMP";
+            public const string Units = "TEMP_UNITS";
         }
 
         public static class Super
         {
             public static string FixedFactor = "FIXED_SUPER_FACTOR";
+            public static string SpecGr = "SPEC_GR";
+            public static string Co2 = "CO2";
+            public static string N2 = "N2";
+            public static string SuperTable = "SUPER_TABLE";
+            public static string UnsqrFactor = "UNSQRD_SUPER_FACTOR";
             //private int CO2_NUMBER = 55;
             //private int N2_NUMBER = 54;
             //private int SPEC_GR_NUMBER = 53;

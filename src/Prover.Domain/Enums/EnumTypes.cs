@@ -12,9 +12,9 @@ namespace Prover.Shared.Enums
 
     public enum TestLevel
     {
-        High = 0,
-        Medium = 1,
-        Low = 2
+        Level1 = 0,
+        Level2 = 1,
+        Level3 = 2
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]

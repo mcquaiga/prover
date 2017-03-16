@@ -65,7 +65,7 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType, CancellationToken ct, Client client = null)
         {
-            _communicationClient.Initialize(instrumentType);
+            //_communicationClient.Initialize(instrumentType);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
             await _communicationClient.Connect(ct);

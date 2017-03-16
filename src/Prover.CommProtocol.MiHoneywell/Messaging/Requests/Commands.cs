@@ -42,17 +42,17 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// <summary>
         ///     Creates the Sign On command to the instrument
         /// </summary>
-        /// <param name="instrument">Instrument Type</param>
+        /// <param name="instrumentId"></param>
         /// <param name="accessCode">Password for access to the instrument</param>
         /// <returns>
         ///     A response code is expected in return
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(InstrumentType instrument, string accessCode = null)
+            SignOn(int instrumentId, string accessCode = null)
         {
-            if (accessCode == null) accessCode = instrument.AccessCode.ToString();
-            var code = instrument.Id < 10 ? string.Concat("0", instrument.Id) : instrument.ToString();
+            if (accessCode == null) accessCode = DefaultAccessCode;
+            var code = instrumentId < 10 ? string.Concat("0", instrumentId) : instrumentId.ToString();
             var cmd = $"SN,{accessCode}{ControlCharacters.STX}vq{code}";
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }

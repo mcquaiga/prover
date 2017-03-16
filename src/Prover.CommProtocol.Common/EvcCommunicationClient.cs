@@ -4,21 +4,20 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Prover.CommProtocol.Common.Instruments;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
 
 namespace Prover.CommProtocol.Common
 {
-    public abstract class EvcCommunicationClient : IDisposable
+    public abstract class EvcCommunicationClient : IDisposable, IEvcCommunicationClient
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
         private readonly IDisposable _receivedObservable;
         private readonly IDisposable _sentObservable;
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        private CancellationToken _cancellationToken;
 
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
@@ -37,27 +36,12 @@ namespace Prover.CommProtocol.Common
         }
 
         protected CommPort CommPort { get; set; }
-
-        public virtual InstrumentType InstrumentType { get; set; }
-
-        /// <summary>
-        ///     Contains all the item numbers and meta data for a specific instrument type
-        /// </summary>
-        public virtual IEnumerable<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
+        public IInstrument Instrument { get; set; }
 
         /// <summary>
         ///     Is this client already connected to an instrument
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
-
-        public virtual void Dispose()
-        {
-            Disconnect().Wait();
-
-            _receivedObservable.Dispose();
-            _sentObservable.Dispose();
-            CommPort.Dispose();
-        }
 
         private async Task ExecuteCommand(string command)
         {
@@ -84,11 +68,6 @@ namespace Prover.CommProtocol.Common
                 var result = await response;
                 return result;
             }
-        }
-
-        public void Initialize(InstrumentType instrumentType)
-        {
-            InstrumentType = instrumentType;
         }
 
         /// <summary>
@@ -219,5 +198,14 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumber">Item number to live read</param>
         /// <returns></returns>
         public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
+
+        public virtual void Dispose()
+        {
+            Disconnect().Wait();
+
+            _receivedObservable.Dispose();
+            _sentObservable.Dispose();
+            CommPort.Dispose();
+        }
     }
 }

@@ -23,14 +23,16 @@ namespace Prover.Domain.Models.TestRuns
         public string EmployeeId { get; set; }
         public string JobId { get; set; }
 
-        public Dictionary<string, string> ItemValues { get; set; }
+        public ICollection<ItemValue> ItemValues { get; set; }
         public ICollection<TestPoint> TestPoints { get; set; }
 
-        public static TestRun Create(IInstrument instrument, Dictionary<string, string> itemValues)
+        public static TestRun Create(IInstrument instrument, List<ItemValue> itemValues)
         {
-            var testRun = new TestRun()
+            var testRun = new TestRun
             {
                 TestDateTime = DateTime.Now,
+                ExportedDateTime = null,
+                ArchivedDateTime = null,
 
                 Instrument = instrument,
                 ItemValues = itemValues,
@@ -45,30 +47,10 @@ namespace Prover.Domain.Models.TestRuns
 
             for (var i = 0; i < 3; i++)
             {
-                var testPoint = new TestPoint();
-                switch (testRun.CorrectorType)
-                {
-                    case EvcCorrectorType.T:
-                        testPoint.Temperature = new TemperatureTestPoint();
-                        break;
-                    case EvcCorrectorType.P:
-                        testPoint.Pressure =  new PressureTestPoint();
-                        break;
-                    case EvcCorrectorType.PTZ:
-                        testPoint.Pressure = new PressureTestPoint();
-                        testPoint.Temperature = new TemperatureTestPoint();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                if (i == 0)
-                {
-                    testPoint.Volume = new VolumeTestPoint(testRun.CorrectorType);
-                }
+                var testLevel = (TestLevel) i;
+                var testPoint = TestPoint.Create(testLevel, instrument, itemValues);
                 testRun.TestPoints.Add(testPoint);
             }
-            
 
             return testRun;
         }

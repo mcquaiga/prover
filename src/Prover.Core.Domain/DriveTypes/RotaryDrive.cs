@@ -7,12 +7,10 @@ namespace Prover.Domain.DriveTypes
 {
     public class RotaryDrive : IDriveType
     {
-        public RotaryDrive(int evcMeterIndex, decimal evcMeterDisplacement, int uncorrectedMultiplier)
+        public RotaryDrive(MeterIndexInfo meterIndexInfo, decimal evcMeterDisplacement, int uncorrectedMultiplier)
         {
             UncorrectedMultiplier = uncorrectedMultiplier;
-
-            var meterIndex = MeterIndexInfo.Get(evcMeterIndex);
-            Meter = new MeterTest(meterIndex, evcMeterDisplacement);
+            Meter = new MeterTest(meterIndexInfo, evcMeterDisplacement);
         }
 
         public int UncorrectedMultiplier { get; }
@@ -21,22 +19,25 @@ namespace Prover.Domain.DriveTypes
 
         public string Discriminator => "Rotary";
 
-        public bool HasPassed => Meter.MeterDisplacementHasPassed;
+        public bool HasPassed => Meter.HasPassed;
 
-        public decimal? UnCorrectedInputVolume(decimal appliedInput)
+        public decimal UnCorrectedInputVolume(decimal appliedInput)
         {
             return Meter.MeterDisplacement * appliedInput;
         }
 
-        public int MaxUncorrectedPulses()
+        public int MaxUncorrectedPulses
         {
-            if (UncorrectedMultiplier == 10)
-                return Meter.MeterIndexInfo.UnCorPulsesX10;
+            get
+            {
+                if (UncorrectedMultiplier == 10)
+                    return Meter.MeterIndexInfo.UnCorPulsesX10;
 
-            if (UncorrectedMultiplier == 100)
-                return Meter.MeterIndexInfo.UnCorPulsesX100;
+                if (UncorrectedMultiplier == 100)
+                    return Meter.MeterIndexInfo.UnCorPulsesX100;
 
-            return 10; //Low standard number if we can't find anything
+                return 10; //Low standard number if we can't find anything    
+            }
         }
     }
 
@@ -48,21 +49,14 @@ namespace Prover.Domain.DriveTypes
             EvcMeterDisplacement = evcMeterDisplacement;
         }
 
-        public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(1);
+        public bool HasPassed => PercentError.IsBetween(1);
 
         public decimal MeterDisplacement => MeterIndexInfo?.MeterDisplacement ?? 0;
 
         public decimal EvcMeterDisplacement { get; set; }
 
-        public decimal MeterDisplacementPercentError
-        {
-            get
-            {
-                if (MeterDisplacement != 0)
-                    return Math.Round((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100, 2);
-                return 0;
-            }
-        }
+        public decimal? PercentError 
+            => MeterDisplacement != 0 ? Math.Round((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100, 2) : default(decimal?);
 
         public MeterIndexInfo MeterIndexInfo { get; }
 

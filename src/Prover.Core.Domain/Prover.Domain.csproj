@@ -55,7 +55,6 @@
     <Compile Include="Mappings\TestRunMapping.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
-    <Compile Include="Models\InstrumentType.cs" />
     <Compile Include="Models\TestRuns\PressureTestPoint.cs" />
     <Compile Include="Models\TestRuns\SuperFactorTestPoint.cs" />
     <Compile Include="Models\TestRuns\TemperatureTestPoint.cs" />
@@ -76,13 +75,13 @@
       <Project>{07FACEC7-67D1-49A8-BB19-DDC7B636C689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Data.SQL\Prover.Data.SQL.csproj">
-      <Project>{6dc1582c-28be-4bdb-acc9-1d0332ad0ea7}</Project>
-      <Name>Prover.Data.SQL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
       <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
       <Name>Prover.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
+      <Project>{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}</Project>
+      <Name>Prover.SuperFactorCalculations</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prover.Shared.Common;
-using Prover.Shared.DTO.Instrument;
-using Prover.Shared.DTO.TestRuns;
-using Prover.Shared.Enums;
 
 namespace Prover.Data.SQL.Models
 {
@@ -17,7 +11,7 @@ namespace Prover.Data.SQL.Models
     {
         public string CorrectorType { get; set; }
         public string InstrumentType { get; set; }
-        
+
         public DateTime TestDateTime { get; set; }
         public DateTime? ExportedDateTime { get; set; }
         public DateTime? ArchivedDateTime { get; set; }
@@ -40,6 +34,7 @@ namespace Prover.Data.SQL.Models
 
         [Required]
         public Guid TestRunId { get; set; }
+
         public virtual TestRunDao TestRun { get; set; }
 
         public Guid? PressureId { get; set; }

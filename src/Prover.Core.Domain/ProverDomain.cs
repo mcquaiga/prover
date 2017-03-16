@@ -13,7 +13,7 @@ namespace Prover.Domain
         public void Initialize(ContainerBuilder builder)
         {
             //Use SQL data project
-            var data = new Prover.Data.SQL.Startup(builder);
+            //var data = new Prover.Data.SQL.Startup(builder);
 
             builder.RegisterType<TestRunService>().SingleInstance();
         }

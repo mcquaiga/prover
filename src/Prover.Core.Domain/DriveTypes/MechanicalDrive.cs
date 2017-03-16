@@ -1,37 +1,28 @@
 ﻿using System;
-using Prover.CommProtocol.Common.Items;
-using Prover.Domain.Models.TestRuns;
-using Prover.Shared.DTO.TestRuns;
 
 namespace Prover.Domain.DriveTypes
 {
     public class MechanicalDrive : IDriveType
     {
-        public MechanicalDrive(TestRun testRun)
+        public MechanicalDrive(Energy energy, decimal meterIndexRate, int maxUncorrectedPulses)
         {
-            TestRun = testRun;
-            Energy = new Energy(testRun);
+            MeterIndexRate = meterIndexRate;
+            MaxUncorrectedPulses = maxUncorrectedPulses;
+            Energy = energy;
         }
 
-        public Energy Energy { get; set; }
+        public decimal MeterIndexRate { get; }
+        public int MaxUncorrectedPulses { get; }
 
-        public TestRun TestRun { get; }
+        public Energy Energy { get; set; }
 
         public string Discriminator => "Mechanical";
 
         public bool HasPassed => Energy.HasPassed;
 
-        public int MaxUncorrectedPulses()
+        public decimal UnCorrectedInputVolume(decimal appliedInput)
         {
-            //var uncorPulseTable = SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits;
-            var uncorUnitValue = (int) TestRun.ItemValues.GetItem(98).NumericValue;
-
-            return 10; // uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
-        }
-
-        public decimal? UnCorrectedInputVolume(decimal appliedInput)
-        {
-            return appliedInput * TestRun.ItemValues.GetItem(98).NumericValue;
+            return appliedInput * MeterIndexRate;
         }
     }
 
@@ -44,60 +35,39 @@ namespace Prover.Domain.DriveTypes
         private const string KiloCals = "KiloCals";
         private const string KiloWattHours = "KiloWattHours";
 
-        private readonly TestRun _testRun;
-
-        public Energy(TestRun testRun)
-        {
-            _testRun = testRun;
-        }
-
         public bool HasPassed => PercentError < 1 && PercentError > -1;
 
-        public decimal? PercentError
+        public decimal? PercentError 
+            => EnergyCalculated != 0 ? (EnergyTotal - EnergyCalculated) / EnergyCalculated * 100 
+                : default(decimal?);
+
+        public decimal CorrectedVolume { get; set; }
+        public decimal EnergyStart { get; set; }
+        public decimal EnergyEnd { get; set; }
+
+        public decimal EnergyTotal
+            => EnergyEnd - EnergyStart;
+
+        public string EnergyUnits { get; set; }
+
+        public decimal EnergyCalculated
         {
             get
             {
-                var error = (EvcEnergy - ActualEnergy) / ActualEnergy * 100;
-                if (error != null)
-                    return decimal.Round(error.Value, 2);
-                return null;
-            }
-        }
-
-        public decimal? EvcEnergy
-        {
-            get
-            {
-                var startEnergy = _testRun.VolumeTest.PreTestValues.GetItem(140)?.NumericValue;
-                var endEnergy = _testRun.VolumeTest.PostTestValues?.GetItem(140)?.NumericValue;
-                if (endEnergy != null && startEnergy != null)
-                    return endEnergy.Value - startEnergy.Value;
-
-                return null;
-            }
-        }
-
-        public string EnergyUnits => _testRun.ItemValues.GetItem(141).Description;
-
-        public decimal? ActualEnergy
-        {
-            get
-            {
-                var energyValue = _testRun.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {
                     case Therms:
-                        if (_testRun.VolumeTest.EvcCorrected.HasValue)
-                            return Math.Round(energyValue * _testRun.VolumeTest.EvcCorrected.Value) / 100000;
-                        break;
+                        return Math.Round(GasEnergyValue * CorrectedVolume) / 100000;
                     case Dktherms:
-
+                        throw new NotSupportedException("DKTherms energy calculations not supported.");
                     case GigaJoules:
-                        break;
+                        throw new NotSupportedException("GigaJoules energy calculations not supported.");
                 }
 
-                return null;
+                return 0m;
             }
         }
+
+        public decimal GasEnergyValue { get; set; }
     }
 }

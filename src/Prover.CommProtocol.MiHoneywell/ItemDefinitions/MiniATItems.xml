@@ -15,7 +15,7 @@
         isTemperatureTest="true" />
   <item number="27" shortDescription="Gas Temp Lo" description="Gas Temp Lo" isTemperature="true" />
   <item number="28" shortDescription="Gas Temp Hi" description="Gas Temp Hi" isTemperature="true" />
-  <item number="34" shortDescription="Base Temp" description="Base Temperature" isTemperature="true" />
+  <item number="34" code="BASE_TEMP" shortDescription="Base Temp" description="Base Temperature" isTemperature="true" />
   <item number="35" shortDescription="Temperature" description="EVC Temperature" isTemperatureTest="true" />
   <item number="44" code="PRESS_FACTOR" shortDescription="Press Factor" description="Pressure Factor"
         isPressureTest="true" />

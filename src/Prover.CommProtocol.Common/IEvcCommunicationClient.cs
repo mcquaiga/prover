@@ -1,0 +1,95 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Prover.CommProtocol.Common.Instruments;
+using Prover.CommProtocol.Common.Items;
+
+namespace Prover.CommProtocol.Common
+{
+    public interface IEvcCommunicationClient
+    {
+        IInstrument Instrument { get; set; }
+
+        /// <summary>
+        ///     Is this client already connected to an instrument
+        /// </summary>
+        bool IsConnected { get; }
+
+        /// <summary>
+        ///     Establish a link with an instrument
+        ///     Handles retries for failed connections
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        /// <param name="retryAttempts"></param>
+        /// <returns></returns>
+        Task Connect(CancellationToken ct, int retryAttempts = EvcCommunicationClient.MaxConnectionAttempts);
+
+        /// <summary>
+        ///     Disconnect the current link with the EVC, if one exists
+        /// </summary>
+        Task Disconnect();
+
+        /// <summary>
+        ///     Read item value from instrument
+        /// </summary>
+        /// <param name="itemNumber">Item number for the value to request</param>
+        /// <returns></returns>
+        Task<ItemValue> GetItemValue(int itemNumber);
+
+        /// <summary>
+        ///     Read a group of items from instrument
+        /// </summary>
+        /// <param name="itemNumbers">Item numbers for the values to request</param>
+        /// <returns></returns>
+        Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
+
+        /// <summary>
+        ///     Read a group of items from instrument
+        /// </summary>
+        /// <param name="itemNumbers">Item numbers for the values to request</param>
+        /// <returns></returns>
+        Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
+        ///     Write a value to an item
+        /// </summary>
+        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="value">Value to write</param>
+        /// <returns>True - Successful, False - Failed to write</returns>
+        Task<bool> SetItemValue(int itemNumber, string value);
+
+        /// <summary>
+        ///     Write a value to an item
+        /// </summary>
+        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="value">Value to write</param>
+        /// <returns>True - Successful, False - Failed to write</returns>
+        Task<bool> SetItemValue(int itemNumber, decimal value);
+
+        /// <summary>
+        ///     Write a value to an item
+        /// </summary>
+        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="value">Value to write</param>
+        /// <returns>True - Successful, False - Failed to write</returns>
+        Task<bool> SetItemValue(int itemNumber, long value);
+
+        /// <summary>
+        ///     Write a value to an item
+        /// </summary>
+        /// <param name="itemCode"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        Task<bool> SetItemValue(string itemCode, long value);
+
+        /// <summary>
+        ///     Live read item values
+        ///     Gas Temp / Gas Pressure
+        /// </summary>
+        /// <param name="itemNumber">Item number to live read</param>
+        /// <returns></returns>
+        Task<ItemValue> LiveReadItemValue(int itemNumber);
+
+        void Dispose();
+    }
+}

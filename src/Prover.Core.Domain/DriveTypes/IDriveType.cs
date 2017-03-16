@@ -4,7 +4,7 @@
     {
         string Discriminator { get; }
         bool HasPassed { get; }
-        decimal? UnCorrectedInputVolume(decimal appliedInput);
-        int MaxUncorrectedPulses();
+        decimal UnCorrectedInputVolume(decimal appliedInput);
+        int MaxUncorrectedPulses { get; }
     }
 }

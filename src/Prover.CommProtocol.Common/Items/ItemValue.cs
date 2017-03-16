@@ -10,12 +10,6 @@ namespace Prover.CommProtocol.Common.Items
     {
         public ItemValue(ItemMetadata metadata, string value)
         {
-            //if (string.IsNullOrEmpty(value))
-            //    throw new ArgumentNullException(nameof(value));
-
-            //if (metadata == null)
-            //    throw new ArgumentNullException(nameof(metadata));
-
             RawValue = value;
             Metadata = metadata;
         }
@@ -26,19 +20,17 @@ namespace Prover.CommProtocol.Common.Items
         public virtual decimal NumericValue
             => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
 
-        public virtual string Description => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+        public virtual string Description
+            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
         private ItemMetadata.ItemDescription ItemDescription
         {
             get
             {
-                if ((Metadata?.ItemDescriptions != null) && Metadata.ItemDescriptions.Any())
-                {
-                    var intValue = Convert.ToInt32(RawValue);
-                    return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
-                }
+                if (Metadata?.ItemDescriptions == null || !Metadata.ItemDescriptions.Any()) return null;
 
-                return null;
+                var intValue = Convert.ToInt32(RawValue);
+                return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
             }
         }
 
