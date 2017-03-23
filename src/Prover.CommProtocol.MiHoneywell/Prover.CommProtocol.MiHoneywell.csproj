@@ -91,10 +91,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
-    <Compile Include="HoneywellClient.cs" />
+    <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="Instruments\HoneywellInstrument.cs" />
-    <Compile Include="Instruments\ItemFileLoader.cs" />
-    <Compile Include="Items\ItemHelpers.cs" />
+    <Compile Include="Instruments\Items.cs" />
+    <Compile Include="Instruments\MiniAtInstrument.cs" />
+    <Compile Include="Instruments\MiniMaxInstrument.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
     <Compile Include="Messaging\Response\MiResponseCodes.cs" />
     <Compile Include="Messaging\Response\ResponseMessage.cs" />
@@ -110,7 +111,7 @@
       <Project>{8eeb9315-56e0-4a4f-9a36-3b9e8ccd47a1}</Project>
       <Name>Prover.CommProtocol.MiHoneywell.CRC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
@@ -131,9 +132,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommClients\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

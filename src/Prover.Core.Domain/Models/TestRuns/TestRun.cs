@@ -23,10 +23,10 @@ namespace Prover.Domain.Models.TestRuns
         public string EmployeeId { get; set; }
         public string JobId { get; set; }
 
-        public ICollection<ItemValue> ItemValues { get; set; }
-        public ICollection<TestPoint> TestPoints { get; set; }
+        public Dictionary<string, string> ItemData { get; set; }
+        public Dictionary<TestLevel, TestPoint> TestPoints { get; set; }
 
-        public static TestRun Create(IInstrument instrument, List<ItemValue> itemValues)
+        public static TestRun Create(IInstrument instrument)
         {
             var testRun = new TestRun
             {
@@ -35,21 +35,21 @@ namespace Prover.Domain.Models.TestRuns
                 ArchivedDateTime = null,
 
                 Instrument = instrument,
-                ItemValues = itemValues,
+                ItemData = instrument.ItemData,
 
-                SerialNumber = instrument.GetItemValue(ItemCodes.SiteInfo.SerialNumber, itemValues).Description,
-                InventoryNumber = instrument.GetItemValue(ItemCodes.SiteInfo.CompanyNumber, itemValues).Description,
-                FirmwareVersion = instrument.GetItemValue(ItemCodes.SiteInfo.Firmware, itemValues).RawValue,
+                SerialNumber = instrument.SiteInformationItems.SerialNumber,
+                InventoryNumber = instrument.SiteInformationItems.CompanyNumber,
+                FirmwareVersion = instrument.SiteInformationItems.FirmwareVersion,
 
-                CorrectorType = instrument.CorrectorType(itemValues),
-                TestPoints = new List<TestPoint>(),
+                CorrectorType = instrument.CorrectorType(),
+                TestPoints = new Dictionary<TestLevel, TestPoint>()
             };
 
             for (var i = 0; i < 3; i++)
             {
                 var testLevel = (TestLevel) i;
-                var testPoint = TestPoint.Create(testLevel, instrument, itemValues);
-                testRun.TestPoints.Add(testPoint);
+                var testPoint = TestPoint.Create(testLevel, instrument);
+                testRun.TestPoints.Add(testLevel, testPoint);
             }
 
             return testRun;

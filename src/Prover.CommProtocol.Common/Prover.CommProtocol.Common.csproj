@@ -110,7 +110,6 @@
     <Compile Include="EvcCommunicationClient.cs" />
     <Compile Include="Extensions\Task.cs" />
     <Compile Include="IEvcCommunicationClient.cs" />
-    <Compile Include="Instruments\EvcInstrument.cs" />
     <Compile Include="Instruments\IInstrument.cs" />
     <Compile Include="InstrumentType.cs" />
     <Compile Include="InstrumentTypes\InstrumentTypes.cs" />
@@ -137,7 +136,7 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>

@@ -22,7 +22,7 @@ namespace Prover.CommProtocol.Common
         /// <param name="ct">Cancellation token</param>
         /// <param name="retryAttempts"></param>
         /// <returns></returns>
-        Task Connect(CancellationToken ct, int retryAttempts = EvcCommunicationClient.MaxConnectionAttempts);
+        Task Connect(CancellationToken ct, int retryAttempts = 0);
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists

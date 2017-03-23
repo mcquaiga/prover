@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Core.Domain\Prover.Domain.csproj", "{C8E463CD-6263-4789-A919-AED09E03B16C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Shared", "Prover.Shared\Prover.Shared.csproj", "{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommunicationsProtocols", "CommunicationsProtocols", "{2838BE11-01CA-435B-80F6-1D0E4C1D080D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Common", "Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj", "{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.MiHoneywell", "Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj", "{07FACEC7-67D1-49A8-BB19-DDC7B636C689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Debugger", "Prover.CommProtocol.Debugger\Prover.CommProtocol.Debugger.csproj", "{3ADF2BF6-9D6A-4082-8928-4F60F5869940}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Prover.SuperFactorCalculations", "Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj", "{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		MiProtocolConsole|Any CPU = MiProtocolConsole|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8E463CD-6263-4789-A919-AED09E03B16C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B} = {2838BE11-01CA-435B-80F6-1D0E4C1D080D}
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689} = {2838BE11-01CA-435B-80F6-1D0E4C1D080D}
+		{3ADF2BF6-9D6A-4082-8928-4F60F5869940} = {2838BE11-01CA-435B-80F6-1D0E4C1D080D}
+	EndGlobalSection
+EndGlobal

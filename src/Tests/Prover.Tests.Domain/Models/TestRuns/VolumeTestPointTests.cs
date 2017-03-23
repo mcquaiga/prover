@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Domain.DriveTypes;
+using Prover.CommProtocol.Common.DriveTypes;
 using Prover.Domain.Models.TestRuns;
 using Prover.Shared.Enums;
 
@@ -43,17 +43,17 @@ namespace Prover.Tests.Domain.Models.TestRuns
 
             return new VolumeTestPoint(correctorType)
             {
-                AppliedInput = 10410,
-                CorrectedStart = 271.5214m,
-                CorrectedEnd = 278.3972m,
-                UncorrectedStart = 2667.8001m,
-                UncorrectedEnd = 2732.8001m,
-                PulseACount = 7,
-                PulseBCount = 65,
-                TemperatureFactor = 1.0568m,
-                DriveType = drive,
-                UnCorrectedMultiplier = 10,
-                CorrectedMultiplier = 100
+                //AppliedInput = 10410,
+                //CorrectedStart = 271.5214m,
+                //CorrectedEnd = 278.3972m,
+                //UncorrectedStart = 2667.8001m,
+                //UncorrectedEnd = 2732.8001m,
+                //PulseACount = 7,
+                //PulseBCount = 65,
+                //TemperatureFactor = 1.0568m,
+                //DriveType = drive,
+                //UnCorrectedMultiplier = 10,
+                //CorrectedMultiplier = 100
             };
         }
     }

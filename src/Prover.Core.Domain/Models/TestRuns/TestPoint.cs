@@ -29,9 +29,9 @@ namespace Prover.Domain.Models.TestRuns
         public SuperFactorTestPoint SuperFactor { get; protected set; }
         public VolumeTestPoint Volume { get; set; }
 
-        public static TestPoint Create(TestLevel level, IInstrument instrument, List<ItemValue> itemValues)
+        public static TestPoint Create(TestLevel level, IInstrument instrument)
         {
-            var correctorType = instrument.CorrectorType(itemValues);
+            var correctorType = instrument.CorrectorType();
 
             var testPoint = new TestPoint()
             {
@@ -40,19 +40,16 @@ namespace Prover.Domain.Models.TestRuns
 
             if (correctorType == EvcCorrectorType.T || correctorType == EvcCorrectorType.PTZ)
             {
-                testPoint.Temperature = new TemperatureTestPoint(
-                        instrument.GetItemValue(ItemCodes.Temperature.Base, itemValues).NumericValue,
-                        (TemperatureUnits)Enum.Parse(typeof(TemperatureUnits), instrument.GetItemValue(ItemCodes.Temperature.Units, itemValues).Description),
-                        TempGauges[level]);
+                testPoint.Temperature = new TemperatureTestPoint(instrument.TemperatureItems.Base, instrument.TemperatureItems.Units, TempGauges[level]);
             }
 
             if (correctorType == EvcCorrectorType.P || correctorType == EvcCorrectorType.PTZ)
             {
                 testPoint.Pressure = new PressureTestPoint(
-                    PressureGauges[level],
-                    (int)instrument.GetItemValue(ItemCodes.Pressure.Range, itemValues).NumericValue,
-                    instrument.GetItemValue(ItemCodes.Pressure.TransducerType, itemValues).Description,
-                    instrument.GetItemValue(ItemCodes.Pressure.Base, itemValues).NumericValue);
+                    PressureGauges[level] * instrument.PressureItems.Range, 
+                    instrument.PressureItems.Range, 
+                    instrument.PressureItems.TransducerType, 
+                    instrument.PressureItems.Base);
             }
 
             if (correctorType == EvcCorrectorType.PTZ)
@@ -61,15 +58,19 @@ namespace Prover.Domain.Models.TestRuns
                 {
                     TemperatureTest = testPoint.Temperature,
                     PressureTest = testPoint.Pressure,
-                    SpecGr = instrument.GetItemValue(ItemCodes.Super.SpecGr, itemValues).NumericValue,
-                    Co2 = instrument.GetItemValue(ItemCodes.Super.Co2, itemValues).NumericValue,
-                    N2 = instrument.GetItemValue(ItemCodes.Super.N2, itemValues).NumericValue
+                    SpecGr = instrument.SuperFactorItems.SpecGr,
+                    Co2 = instrument.SuperFactorItems.Co2,
+                    N2 = instrument.SuperFactorItems.N2
                 };
             }
 
             if (level == TestLevel.Level1)
             {
-                testPoint.Volume = new VolumeTestPoint(correctorType);
+                testPoint.Volume = new VolumeTestPoint(
+                    correctorType, 
+                    testPoint.Temperature, 
+                    testPoint.Pressure,
+                    testPoint.SuperFactor);
             }
 
             return testPoint;

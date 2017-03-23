@@ -1,6 +1,6 @@
 ﻿namespace Prover.CommProtocol.MiHoneywell
 {
-    public enum InstrumentTypes
+    internal enum InstrumentTypes
     {
         Mini = 2,
         ECAT = 0,
@@ -18,7 +18,7 @@
         AutoDetect = 99
     }
 
-    public enum ResponseCode
+    internal enum ResponseCode
     {
         NoData = -1,
         NoError = 0,
