@@ -4,6 +4,7 @@ using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
@@ -17,7 +18,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             eventAggregator.Subscribe(this);
         }
 
-        public T TestRun { get; set; }
+        private T _testRun;
+
+        public T TestRun
+        {
+            get { return _testRun; }
+            set { this.RaiseAndSetIfChanged(ref _testRun, value); }
+        }
 
         public decimal? PercentError => TestRun?.PercentError;
 

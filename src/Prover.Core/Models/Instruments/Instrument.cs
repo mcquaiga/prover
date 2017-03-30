@@ -185,6 +185,10 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        [NotMapped]
+        public TransducerType Transducer
+            => (TransducerType) Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
+
         #endregion
     }
 }
