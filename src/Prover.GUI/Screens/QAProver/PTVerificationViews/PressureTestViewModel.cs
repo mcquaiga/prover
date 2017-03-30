@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Reactive.Linq;
+using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
 using Prover.GUI.Common;
@@ -12,33 +13,33 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
-            GasGauge = TestRun.GasGauge ?? 0;
             AtmosphericGauge = TestRun.AtmosphericGauge ?? 0;
 
             this.WhenAnyValue(x => x.TestRun.AtmosphericGauge);
             this.WhenAnyValue(x => x.TestRun.GasGauge);
         }
 
-        public bool ShowAtmValues => 
-            TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
+        public bool ShowAtmValues => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
 
-        private decimal _gasGauge;
-        public decimal GasGauge
-        {
-            get { return _gasGauge; }
-            set { this.RaiseAndSetIfChanged(ref _gasGauge, value); }
-        }
+        public decimal GasGauge => TestRun.GasGauge ?? 0;
 
-        public decimal GasGaugeCal
-        {
-            get
-            {
-                if (TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute)
-                    return (TestRun.GasGauge ?? 0) - (AtmosphericGauge ?? 0);
+        //private ObservableAsPropertyHelper<decimal> _gasGauge;
+        //public ObservableAsPropertyHelper<decimal> GasGauge
+        //{
+        //    get { return _gasGauge; }
+        //    set { this.RaiseAndSetIfChanged(ref _gasGauge, value); }
+        //}
 
-                return TestRun.GasGauge ?? 0;
-            }
-        }
+        //public decimal GasGaugeCal
+        //{
+        //    get
+        //    {
+        //        if (TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute)
+        //            return (TestRun.GasGauge ?? 0) - (AtmosphericGauge ?? 0);
+
+        //        return TestRun.GasGauge ?? 0;
+        //    }
+        //}
 
         private decimal? _atmosphericGauge;
         public decimal? AtmosphericGauge
