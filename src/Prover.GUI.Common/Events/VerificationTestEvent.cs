@@ -1,14 +1,27 @@
-﻿namespace Prover.GUI.Common.Events
+﻿using System;
+using Prover.Core.Models.Instruments;
+
+namespace Prover.GUI.Common.Events
 {
     public class VerificationTestEvent
     {
-        private VerificationTestEvent()
+        public VerificationTest VerificationTest { get; }
+
+        private VerificationTestEvent(VerificationTest verificationTest)
         {
+            VerificationTest = verificationTest;
+        }
+
+        
+
+        public static VerificationTestEvent Raise(VerificationTest verificationTest)
+        {
+            return new VerificationTestEvent(verificationTest);
         }
 
         public static VerificationTestEvent Raise()
         {
-            return new VerificationTestEvent();
+            return new VerificationTestEvent(null);
         }
     }
 }

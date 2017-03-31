@@ -1,5 +1,9 @@
-﻿using System.Reactive.Linq;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reactive.Linq;
+using System.Windows.Input;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
 using Prover.GUI.Common;
@@ -13,15 +17,32 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
-            AtmosphericGauge = TestRun.AtmosphericGauge ?? 0;
+            var atmChange = this.WhenAnyValue(x => x.AtmosphericGauge);
+            atmChange.Subscribe(atm =>
+            {
+                TestRun.AtmosphericGauge = atm;
+            });
 
-            this.WhenAnyValue(x => x.TestRun.AtmosphericGauge);
-            this.WhenAnyValue(x => x.TestRun.GasGauge);
+            _gaugePressure = atmChange
+                .Where(x => ShowAtmValues)
+                .Select(x => TestRun.TotalGauge - x ?? 0)
+                .ToProperty(this, x => x.GaugePressure);
+
+            _gaugePressure = atmChange
+                .Where(x => !ShowAtmValues)
+                .Select(x => TestRun.TotalGauge)
+                .ToProperty(this, x => x.GaugePressure);
+
+            var gaugeChange = this.WhenAnyValue(x => x.GaugePressure);
+
+            AtmosphericGauge = TestRun.AtmosphericGauge;
         }
 
-        public bool ShowAtmValues => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
+        private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
+        public decimal GaugePressure => _gaugePressure.Value;
 
-        public decimal GasGauge => TestRun.GasGauge ?? 0;
+        public bool ShowAtmValues => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
+        public bool IsAtmGaugeReadOnly => !ShowAtmValues;        
 
         //private ObservableAsPropertyHelper<decimal> _gasGauge;
         //public ObservableAsPropertyHelper<decimal> GasGauge
@@ -47,10 +68,19 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             get { return _atmosphericGauge; }
             set
             {
-                this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
-                TestRun.AtmosphericGauge = value;
-                RaisePropertyChangeEvents();
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+                this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);                
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+            }
+        }
+
+        private decimal? _gauge;
+        public decimal? Gauge
+        {
+            get { return _gauge; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _gauge, value);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 
@@ -66,23 +96,16 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 TestRun.VerificationTest.Instrument.Items.GetItem(
                     ItemCodes.Pressure.Atm).NumericValue;
 
-
-        private void RaisePropertyChangeEvents()
+        protected override void RaisePropertyChangeEvents()
         {
             NotifyOfPropertyChange(() => TestRun);
             NotifyOfPropertyChange(() => TestRun.PercentError);
             NotifyOfPropertyChange(() => TestRun.HasPassed);
             NotifyOfPropertyChange(() => EvcGasPressure);
-            NotifyOfPropertyChange(() => GasGauge);
             NotifyOfPropertyChange(() => EvcFactor);
             NotifyOfPropertyChange(() => EvcAtmPressure);
             NotifyOfPropertyChange(() => AtmosphericGauge);
             NotifyOfPropertyChange(() => PercentColour);
-        }
-
-        public override void Handle(VerificationTestEvent message)
-        {
-            RaisePropertyChangeEvents();
         }
     }
 }

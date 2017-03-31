@@ -32,8 +32,8 @@
                             Margin="0 2"
                             FontSize="{Binding ValueFontSize}"
                             BorderThickness="0"
+                            IsReadOnly="{Binding Path=IsReadOnly}"
                             Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
-                    <!--IsReadOnly="{Binding Path=IsReadOnly}"-->
                     <TextBlock Text="{Binding Path=Label}"
                                HorizontalAlignment="Left"
                                FontSize="{Binding LabelFontSize}"

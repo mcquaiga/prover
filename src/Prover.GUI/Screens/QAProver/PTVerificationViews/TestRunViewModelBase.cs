@@ -38,6 +38,15 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         public string PassStatusIcon => (TestRun != null) && TestRun.HasPassed ? "pass" : "fail";
 
-        public abstract void Handle(VerificationTestEvent message);
+        public virtual void Handle(VerificationTestEvent message)
+        {
+            if (message.VerificationTest == null ||
+                message.VerificationTest == TestRun.VerificationTest)
+            {
+                RaisePropertyChangeEvents();
+            }
+        }
+
+        protected abstract void RaisePropertyChangeEvents();
     }
 }

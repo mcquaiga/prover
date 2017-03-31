@@ -25,11 +25,6 @@ namespace Prover.Core.Models.Instruments
             Gauge = (double) gauge;
         }
 
-        public Guid VerificationTestId { get; set; }
-
-        [Required]
-        public VerificationTest VerificationTest { get; set; }
-
         public double Gauge { get; set; }
 
         public override decimal? PercentError
