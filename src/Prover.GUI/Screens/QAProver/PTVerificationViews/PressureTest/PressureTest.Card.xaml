@@ -33,7 +33,7 @@
             <UniformGrid Columns="2" 
                          Margin="0">
                 <controls1:ValueDescriptionControl Label="Gauge"
-                                                   IsReadOnly="False"
+                                                   IsReadOnly="True"
                                                    Value="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}" />
                 
                 <controls1:ValueDescriptionControl Label="EVC Reading"

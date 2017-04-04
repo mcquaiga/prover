@@ -27,17 +27,18 @@ namespace Prover.Core.Models.Instruments
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
-            GasGauge = decimal.Round(gauge, 2);
+            TotalGauge = decimal.Round(gauge, 2);
             AtmosphericGauge = default(decimal?);
 
             switch (VerificationTest?.Instrument?.Transducer)
             {
                 case TransducerType.Gauge:
+                    GasGauge = TotalGauge;
                     AtmosphericGauge = VerificationTest.Instrument.Items.GetItem(14).NumericValue;
                     break;
                 case TransducerType.Absolute:
                     AtmosphericGauge = DefaultAtmGauge;
-                    GasGauge = GasGauge - AtmosphericGauge;
+                    GasGauge = TotalGauge - AtmosphericGauge;
                     break;
             }
         }

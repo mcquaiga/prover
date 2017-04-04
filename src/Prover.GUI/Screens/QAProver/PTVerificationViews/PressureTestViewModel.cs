@@ -17,25 +17,32 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
+            AtmosphericGauge = TestRun.AtmosphericGauge;
+
             var atmChange = this.WhenAnyValue(x => x.AtmosphericGauge);
             atmChange.Subscribe(atm =>
             {
                 TestRun.AtmosphericGauge = atm;
             });
 
-            _gaugePressure = atmChange
-                .Where(x => ShowAtmValues)
-                .Select(x => TestRun.TotalGauge - x ?? 0)
-                .ToProperty(this, x => x.GaugePressure);
-
-            _gaugePressure = atmChange
-                .Where(x => !ShowAtmValues)
-                .Select(x => TestRun.TotalGauge)
-                .ToProperty(this, x => x.GaugePressure);
+            if (ShowAtmValues)
+            {
+                _gaugePressure = atmChange
+                    .Where(x => ShowAtmValues)
+                    .Select(x => TestRun.TotalGauge - x.Value)
+                    .ToProperty(this, x => x.GaugePressure);
+            }
+            else
+            {
+                _gaugePressure = atmChange
+                    .Where(x => !ShowAtmValues)
+                    .Select(x => TestRun.TotalGauge)
+                    .ToProperty(this, x => x.GaugePressure);
+            }
 
             var gaugeChange = this.WhenAnyValue(x => x.GaugePressure);
 
-            AtmosphericGauge = TestRun.AtmosphericGauge;
+
         }
 
         private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
