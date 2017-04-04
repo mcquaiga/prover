@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common.Events;
@@ -15,7 +14,7 @@ namespace Prover.GUI.Common
     public interface IScreenManager
     {
         Task GoHome();
-        
+
         T ResolveViewModel<T>()
             where T : ViewModelBase;
 
@@ -35,11 +34,10 @@ namespace Prover.GUI.Common
             where T : ViewModelBase;
 
         void ShowWindow(ViewModelBase dialogViewModel);
-
     }
 
     public class ScreenManager : IScreenManager, IScreen
-    {        
+    {
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
 
@@ -56,7 +54,7 @@ namespace Prover.GUI.Common
 
         public async Task GoHome()
         {
-            var main = (MainMenuViewModel)Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
+            var main = (MainMenuViewModel) Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
             await ChangeScreen(main);
         }
 

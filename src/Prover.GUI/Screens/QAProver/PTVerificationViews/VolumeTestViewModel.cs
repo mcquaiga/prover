@@ -37,7 +37,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             set
             {
                 Volume.AppliedInput = value;
-                RaisePropertyChanges();
+                RaisePropertyChangeEvents();
             }
         }
 
@@ -91,7 +91,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
         }
 
-        private void RaisePropertyChanges()
+        protected override void RaisePropertyChangeEvents()
         {
             NotifyOfPropertyChange(() => AppliedInput);
             NotifyOfPropertyChange(() => TrueCorrected);
@@ -108,11 +108,6 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
-        }
-
-        public override void Handle(VerificationTestEvent message)
-        {
-            RaisePropertyChanges();
         }
     }
 }
