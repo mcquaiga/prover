@@ -36,13 +36,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             {
                 _gaugePressure = atmChange
                     .Where(x => !ShowAtmValues)
-                    .Select(x => TestRun.TotalGauge)
+                    .Select(x => TestRun.GasGauge ?? 0)
                     .ToProperty(this, x => x.GaugePressure);
             }
 
             var gaugeChange = this.WhenAnyValue(x => x.GaugePressure);
-
-
         }
 
         private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
