@@ -56,11 +56,8 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                                   select new ItemMetadata.ItemDescription
                                   {
                                       Id = Convert.ToInt32(y.Attribute("id").Value),
-                                      Description = y.Attribute("description").Value,
-                                      Value =
-                                 y.Attribute("numericvalue") == null
-                                     ? (decimal?)null
-                                     : Convert.ToDecimal(y.Attribute("numericvalue").Value)
+                                      Description = y.Attribute("description") == null ? string.Empty : y.Attribute("description").Value,
+                                      Value = y.Attribute("numericvalue") == null ? (decimal?)null : Convert.ToDecimal(y.Attribute("numericvalue").Value)
                                   })
                                      .ToList()
                          }

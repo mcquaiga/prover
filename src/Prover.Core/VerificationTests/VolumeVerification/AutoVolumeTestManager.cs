@@ -10,12 +10,12 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
+    public sealed class AutoVolumeTestManager : VolumeTestManagerBase
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, TachometerService tachComm)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
             : base(eventAggregator)
         {
             _tachometerCommunicator = tachComm;
@@ -29,6 +29,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await commClient.Disconnect();
 
                 Log.Info("Running volume sync test...");
+
+                FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+                FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
 
                 await Task.Run(() =>
                 {
