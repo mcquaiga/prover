@@ -28,8 +28,6 @@ namespace Prover.Domain.Mappings
 
             cfg.CreateMap<TestPoint, TestPointDto>();
             cfg.CreateMap<TestPointDto, TestPoint>();
-
-
             
         }
     }

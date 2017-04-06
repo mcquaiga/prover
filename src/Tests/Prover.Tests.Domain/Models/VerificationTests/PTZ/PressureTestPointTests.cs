@@ -48,8 +48,6 @@ namespace Prover.Tests.Domain.Models.VerificationTests.PTZ
             var pressureTestPoint = CreatePressureTestPoint(pressure, 0.8m * 1000);
             pressureTestPoint.SetGaugeValues(800m, 0m);
 
-
-
             Assert.AreEqual(0.00m, pressureTestPoint.PercentError ?? -100);
         }
 
