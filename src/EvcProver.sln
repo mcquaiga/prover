@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -59,8 +59,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Web.API", "Prover.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Core.Domain\Prover.Domain.csproj", "{C8E463CD-6263-4789-A919-AED09E03B16C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Shared", "Prover.Domain\Prover.Shared.csproj", "{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Data.SQL", "Prover.Data.SQL\Prover.Data.SQL.csproj", "{6DC1582C-28BE-4BDB-ACC9-1D0332AD0EA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{6AE47A72-2C62-4240-93E0-D18C6BD6E938}"
@@ -72,6 +70,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Tests.Data.Sql", "Tests\Prover.Tests.Data.Sql\Prover.Tests.Data.Sql.csproj", "{FAABD550-E705-4283-BEA7-3D500D2E6070}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Console", "Prover.CommProtocol.Console\Prover.CommProtocol.Console.csproj", "{1B6C6942-20E3-4A50-951E-E0CC06ECCB69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Shared", "Prover.Shared\Prover.Shared.csproj", "{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -298,24 +298,6 @@ Global
 		{C8E463CD-6263-4789-A919-AED09E03B16C}.Release|x64.Build.0 = Release|Any CPU
 		{C8E463CD-6263-4789-A919-AED09E03B16C}.Release|x86.ActiveCfg = Release|Any CPU
 		{C8E463CD-6263-4789-A919-AED09E03B16C}.Release|x86.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x64.Build.0 = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x86.Build.0 = Debug|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x64.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x64.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x64.Build.0 = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x86.ActiveCfg = Release|Any CPU
-		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x86.Build.0 = Release|Any CPU
 		{6DC1582C-28BE-4BDB-ACC9-1D0332AD0EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DC1582C-28BE-4BDB-ACC9-1D0332AD0EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DC1582C-28BE-4BDB-ACC9-1D0332AD0EA7}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -388,6 +370,24 @@ Global
 		{1B6C6942-20E3-4A50-951E-E0CC06ECCB69}.Release|x64.Build.0 = Release|Any CPU
 		{1B6C6942-20E3-4A50-951E-E0CC06ECCB69}.Release|x86.ActiveCfg = Release|Any CPU
 		{1B6C6942-20E3-4A50-951E-E0CC06ECCB69}.Release|x86.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x64.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x64.Build.0 = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

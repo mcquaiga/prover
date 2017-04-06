@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Prover.CommProtocol.Common.Instruments;
 using Prover.CommProtocol.Common.Items;
+using Prover.Domain.Models.Instruments;
 
 namespace Prover.CommProtocol.Common
 {
     public interface IEvcCommunicationClient
     {
-        IInstrument Instrument { get; set; }
-
         /// <summary>
         ///     Is this client already connected to an instrument
         /// </summary>
@@ -86,9 +84,9 @@ namespace Prover.CommProtocol.Common
         ///     Live read item values
         ///     Gas Temp / Gas Pressure
         /// </summary>
-        /// <param name="itemNumber">Item number to live read</param>
+        /// <param name="item">Item number to live read</param>
         /// <returns></returns>
-        Task<ItemValue> LiveReadItemValue(int itemNumber);
+        Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 
         void Dispose();
     }

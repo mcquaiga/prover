@@ -6,19 +6,29 @@ using Prover.CommProtocol.Common.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Instruments
 {
-    internal static class Items
+    internal static class HoneywellItemDefinitions
     {
         private const string ItemDefinitionsFolder = "ItemDefinitions";
 
         private static readonly Dictionary<string, IEnumerable<ItemMetadata>> ItemFileCache =
             new Dictionary<string, IEnumerable<ItemMetadata>>();
 
-        public static IEnumerable<ItemMetadata> LoadItems(HoneywellInstrument instrument)
+        internal static IEnumerable<ItemMetadata> Load(HoneywellInstrument instrument)
         {
             var cacheKey = instrument.Name;
 
-            if (ItemFileCache.ContainsKey(cacheKey)) return ItemFileCache[cacheKey];
+            if (ItemFileCache.ContainsKey(cacheKey))
+                return ItemFileCache[cacheKey];
 
+            var items = LoadFromFile(instrument).ToList();
+
+            ItemFileCache.Add(cacheKey, items);
+
+            return items;
+        }
+
+        internal static IEnumerable<ItemMetadata> LoadFromFile(HoneywellInstrument instrument)
+        {
             var path = $@"{Environment.CurrentDirectory}\{ItemDefinitionsFolder}\{instrument.ItemFilePath}";
             var xDoc = XDocument.Load(path);
 
@@ -60,7 +70,7 @@ namespace Prover.CommProtocol.MiHoneywell.Instruments
                 }
             ).ToList();
 
-            ItemFileCache.Add(cacheKey, items);
+            
 
             return items;
         }

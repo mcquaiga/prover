@@ -4,14 +4,14 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using Prover.CommProtocol.Common.Instruments;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
+using Prover.Domain.Models.Instruments;
 
 namespace Prover.CommProtocol.Common
 {
-    public abstract class EvcCommunicationClient : IDisposable, IEvcCommunicationClient
+    public abstract class EvcCommunicationClient : IDisposable
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
@@ -36,7 +36,6 @@ namespace Prover.CommProtocol.Common
         }
 
         protected CommPort CommPort { get; set; }
-        public IInstrument Instrument { get; set; }
 
         /// <summary>
         ///     Is this client already connected to an instrument
@@ -74,10 +73,12 @@ namespace Prover.CommProtocol.Common
         ///     Establish a link with an instrument
         ///     Handles retries for failed connections
         /// </summary>
+        /// <param name="instrument"></param>
         /// <param name="ct">Cancellation token</param>
         /// <param name="retryAttempts"></param>
         /// <returns></returns>
-        public async Task Connect(CancellationToken ct, int retryAttempts = MaxConnectionAttempts)
+        public async Task Connect<T>(T instrument, CancellationToken ct, int retryAttempts = MaxConnectionAttempts)
+            where T : IInstrument
         {
             var connectionAttempts = 0;
 
@@ -97,7 +98,7 @@ namespace Prover.CommProtocol.Common
                         if (!CommPort.IsOpen())
                             await CommPort.Open();
 
-                        await ConnectToInstrument();
+                        await ConnectToInstrument(instrument);
                     }
                     catch (Exception ex)
                     {
@@ -131,7 +132,7 @@ namespace Prover.CommProtocol.Common
         ///     Handles retries for failed connections
         /// </summary>
         /// <returns></returns>
-        protected abstract Task ConnectToInstrument();
+        protected abstract Task ConnectToInstrument<T>(T instrument) where T : IInstrument;
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists
@@ -141,16 +142,9 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Read item value from instrument
         /// </summary>
-        /// <param name="itemNumber">Item number for the value to request</param>
+        /// <param name="item">Item to request</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> GetItemValue(int itemNumber);
-
-        /// <summary>
-        ///     Read a group of items from instrument
-        /// </summary>
-        /// <param name="itemNumbers">Item numbers for the values to request</param>
-        /// <returns></returns>
-        public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata item);      
 
         /// <summary>
         ///     Read a group of items from instrument
@@ -162,42 +156,34 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Write a value to an item
         /// </summary>
-        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="item">Item number to write value</param>
         /// <param name="value">Value to write</param>
         /// <returns>True - Successful, False - Failed to write</returns>
-        public abstract Task<bool> SetItemValue(int itemNumber, string value);
+        public abstract Task<bool> SetItemValue(ItemMetadata item, string value);
 
         /// <summary>
         ///     Write a value to an item
         /// </summary>
-        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="item">Item number to write value</param>
         /// <param name="value">Value to write</param>
         /// <returns>True - Successful, False - Failed to write</returns>
-        public abstract Task<bool> SetItemValue(int itemNumber, decimal value);
+        public abstract Task<bool> SetItemValue(ItemMetadata item, decimal value);
 
         /// <summary>
         ///     Write a value to an item
         /// </summary>
-        /// <param name="itemNumber">Item number to write value</param>
+        /// <param name="item">Item number to write value</param>
         /// <param name="value">Value to write</param>
         /// <returns>True - Successful, False - Failed to write</returns>
-        public abstract Task<bool> SetItemValue(int itemNumber, long value);
-
-        /// <summary>
-        ///     Write a value to an item
-        /// </summary>
-        /// <param name="itemCode"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public abstract Task<bool> SetItemValue(string itemCode, long value);
+        public abstract Task<bool> SetItemValue(ItemMetadata item, long value);
 
         /// <summary>
         ///     Live read item values
         ///     Gas Temp / Gas Pressure
         /// </summary>
-        /// <param name="itemNumber">Item number to live read</param>
+        /// <param name="item">Item number to live read</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
+        public abstract Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 
         public virtual void Dispose()
         {

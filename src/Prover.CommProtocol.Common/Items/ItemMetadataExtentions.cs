@@ -56,12 +56,12 @@ namespace Prover.CommProtocol.Common.Items
         }
 
         public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
-            => items.Where(i => i.IsVolumeTest == true);
+            => items.Where(i => i.IsVolumeTest == true || i.IsVolume == true).Distinct();
 
         public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
-            => items.Where(i => i.IsPressureTest == true);
+            => items.Where(i => i.IsPressureTest == true || i.IsPressure == true).Distinct();
 
         public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
-            => items.Where(i => i.IsTemperatureTest == true);
+            => items.Where(i => i.IsTemperatureTest == true || i.IsTemperature == true).Distinct();
     }
 }

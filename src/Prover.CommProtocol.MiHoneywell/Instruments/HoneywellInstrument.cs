@@ -4,10 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Prover.CommProtocol.Common.Instruments;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.CommClients;
+using Prover.Domain.Models.Instruments;
+using Prover.Domain.Models.Instruments.Items;
 using Prover.Shared.Enums;
 
 namespace Prover.CommProtocol.MiHoneywell.Instruments
@@ -18,9 +19,9 @@ namespace Prover.CommProtocol.MiHoneywell.Instruments
         MiniMax
     }
 
-    public static class HoneywellInstruments
+    public static class HoneywellInstrumentFactory
     {
-        public static async Task<IInstrument> CreateInstrument(CommPort commPort, HoneywellInstrumentType instrumentType)
+        public static async Task<IInstrument> Create(CommPort commPort, HoneywellInstrumentType instrumentType)
         {
             var commClient = new HoneywellClient(commPort);
 
@@ -30,7 +31,7 @@ namespace Prover.CommProtocol.MiHoneywell.Instruments
             else
                 instrument = new MiniAtInstrument(commClient);
 
-            await instrument.DownloadItemFile();
+            await instrument.GetAllItems();
             return instrument;
         }
     }
@@ -48,72 +49,90 @@ namespace Prover.CommProtocol.MiHoneywell.Instruments
             ItemFilePath = itemFilePath;
 
             CommClient = commClient;
-            CommClient.Instrument = this;
-            ItemDefinitions = Items.LoadItems(this);
+            ItemDefinitions = HoneywellItemDefinitions.Load(this);
         }
-
-        public int AccessCode { get; protected set; }
-        public string ItemFilePath { get; protected set; }
-        public IEnumerable<ItemValue> ItemValues { get; protected set; }
 
         public int Id { get; protected set; }
         public string Name { get; protected set; }
-        public IEnumerable<ItemMetadata> ItemDefinitions { get; }
-
-        public EvcCorrectorType CorrectorType()
-        {
-            var live = "Live";
-            var pressureLive = GetItemValue(ItemCodes.Pressure.FixedFactor, ItemValues).Description == live;
-            var tempLive = GetItemValue(ItemCodes.Temperature.FixedFactor, ItemValues).Description == live;
-            var superLive = GetItemValue(ItemCodes.Super.FixedFactor, ItemValues).Description == live;
-
-            if (pressureLive && tempLive && superLive)
-                return EvcCorrectorType.PTZ;
-
-            if (pressureLive)
-                return EvcCorrectorType.P;
-
-            if (tempLive)
-                return EvcCorrectorType.T;
-
-            throw new NotSupportedException("Could not determine the corrector type.");
-        }
-
+        public int AccessCode { get; protected set; }
+        public string ItemFilePath { get; protected set; }
+        public IEnumerable<ItemValue> ItemValues { get; protected set; }
+        protected IEnumerable<ItemMetadata> ItemDefinitions { get; }
+        
         public Dictionary<string, string> ItemData
             => ItemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
 
-        public ISiteInformationItems SiteInformationItems => new SiteInformation(this);
+        public virtual ISiteInformationItems SiteInformationItems
+            => new SiteInformationEvcItems(this);
 
-        public virtual ITemperatureItems TemperatureItems => new Temperature(this);
+        public virtual ITemperatureItems TemperatureItems
+            => new TemperatureEvcItems(this);
 
-        public virtual IPressureItems PressureItems => new Pressure(this);
+        public virtual IPressureItems PressureItems
+            => new PressureEvcItems(this);
 
-        public virtual ISuperFactorItems SuperFactorItems => new SuperFactor(this);
+        public virtual ISuperFactorItems SuperFactorItems
+            => new SuperFactorEvcItems(this);
 
-        public abstract IVolumeItems VolumeItems { get; }
+        public virtual IVolumeItems VolumeItems => new VolumeEvcItems(this);
 
-        public async Task<ITemperatureItems> DownloadTemperatureItems()
+        public async Task<ITemperatureItems> GetTemperatureItems()
         {
-            var items = await CommClient.GetItemValues(ItemDefinitions.TemperatureItems());
-            return new Temperature(items);
+            var items = await GetItems(ItemDefinitions.TemperatureItems());
+            return new TemperatureEvcItems(items);
         }
 
-        public async Task<IPressureItems> DownloadPressureItems()
+        public async Task<IPressureItems> GetPressureItems()
         {
-            var items = await CommClient.GetItemValues(ItemDefinitions.PressureItems());
-            return new Pressure(items);
+            var items = await GetItems(ItemDefinitions.PressureItems());
+            return new PressureEvcItems(items);
         }
 
-        public abstract Task<IVolumeItems> DownloadVolumeItems();
+        public abstract Task<IVolumeItems> GetVolumeItems();
 
-        public DriveTypeDescripter DriveType
-            => GetItemValue(98).Description == "Rotary" ? DriveTypeDescripter.Rotary : DriveTypeDescripter.Mechanical;
-
-        public async Task DownloadItemFile()
+        public EvcCorrectorType CorrectorType
         {
-            await CommClient.Connect(CancellationToken.None);
-            ItemValues = await CommClient.GetItemValues(ItemDefinitions.GetAllItemNumbers());
+            get
+            {
+                var live = "Live";
+                var pressureLive = GetItemValue(109).Description == live;
+                var tempLive = GetItemValue(111).Description == live;
+                var superLive = GetItemValue(110).Description == live;
+
+                if (pressureLive && tempLive && superLive)
+                    return EvcCorrectorType.PTZ;
+
+                if (pressureLive)
+                    return EvcCorrectorType.P;
+
+                if (tempLive)
+                    return EvcCorrectorType.T;
+
+                throw new NotSupportedException("Could not determine the corrector type.");
+            }
+        }
+
+        public Task<T> GetItemsByGroup<T>(T itemGroup)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal async Task GetAllItems()
+        {
+            ItemValues = await GetItems();
+        }
+
+        private async Task<IEnumerable<ItemValue>> GetItems(IEnumerable<ItemMetadata> items = null)
+        {
+            var itemMetadatas = items?.ToList();
+            if (itemMetadatas == null || !itemMetadatas.Any())
+                itemMetadatas = ItemDefinitions.ToList();
+
+            await CommClient.Connect(this, CancellationToken.None);
+            var itemValues = await CommClient.GetItemValues(itemMetadatas);
             await CommClient.Disconnect();
+
+            return itemValues;
         }
 
         private ItemValue GetItemValue(string itemCode, IEnumerable<ItemValue> itemValues)
@@ -131,99 +150,144 @@ namespace Prover.CommProtocol.MiHoneywell.Instruments
             return new ItemValue(itemInfo, string.Empty);
         }
 
-        private ItemValue GetItemValue(int itemNumber)
+        internal ItemValue GetItemValue(int itemNumber)
         {
             var item = ItemValues.ToList().FirstOrDefault(i => i.Metadata.Number == itemNumber);
             return item;
         }
+    }
 
-        public abstract IRotaryMeterItems RotaryItems { get; }
-        public abstract IEnergyItems EnergyItems { get; }
+    internal class SiteInformationEvcItems : ISiteInformationItems
+    {
+        private const int SerialNumberItemNumber = 62;
+        private const int SiteId1ItemNumber = 200;
+        private const int SiteId2ItemNumber = 201;
+        private const int FirmwareVersionItemNumber = 122;
 
-        internal class SiteInformation : ISiteInformationItems
+        private readonly HoneywellInstrument _instrument;
+
+        public SiteInformationEvcItems(HoneywellInstrument instrument)
         {
-            private readonly HoneywellInstrument _instrument;
-
-            public SiteInformation(HoneywellInstrument instrument)
-            {
-                _instrument = instrument;
-            }
-
-            public string SerialNumber => _instrument.GetItemValue(62).Description;
-            public string CompanyNumber => _instrument.GetItemValue(201).Description;
-            public string FirmwareVersion => _instrument.GetItemValue(122).Description;
+            _instrument = instrument;
         }
 
-        internal class Temperature : ITemperatureItems
+        public string SerialNumber => _instrument.GetItemValue(SerialNumberItemNumber).Description;
+        public string FirmwareVersion => _instrument.GetItemValue(FirmwareVersionItemNumber).Description;
+        public string SiteId1 => _instrument.GetItemValue(SiteId1ItemNumber).Description;
+        public string SiteId2 => _instrument.GetItemValue(SiteId2ItemNumber).Description;
+    }
+
+    internal class TemperatureEvcItems : ITemperatureItems
+    {
+        private const int BaseItemNumber = 34;
+        private const int GasTempItemNumber = 26;
+        private const int UnitsItemNumber = 89;
+        private const int TempFactorItemNumber = 45;
+        private readonly IEnumerable<ItemValue> _itemValues;
+
+        internal TemperatureEvcItems(IEnumerable<ItemValue> itemValues)
         {
-            private readonly IEnumerable<ItemValue> _itemValues;
-
-            public Temperature(IEnumerable<ItemValue> itemValues)
-            {
-                _itemValues = itemValues;
-            }
-
-            public Temperature(HoneywellInstrument instrument) : this(instrument.ItemValues)
-            {
-            }
-
-            public decimal Base => _itemValues.GetItem(34).NumericValue;
-
-            public TemperatureUnits Units
-                => (TemperatureUnits) Enum.Parse(typeof(TemperatureUnits), _itemValues.GetItem(89).Description);
-
-            public decimal GasTemperature => _itemValues.GetItem(26).NumericValue;
-            public decimal Factor => _itemValues.GetItem(45).NumericValue;
-
-            public void Update(ITemperatureItems temperatureItems)
-            {
-                throw new NotImplementedException();
-            }
+            _itemValues = itemValues.Where(i => i.Metadata.IsTemperature == true || i.Metadata.IsTemperatureTest == true);
         }
 
-        internal class Pressure : IPressureItems
+        internal TemperatureEvcItems(HoneywellInstrument instrument) : this(instrument.ItemValues)
         {
-            private readonly IEnumerable<ItemValue> _itemValues;
-
-            public Pressure(IEnumerable<ItemValue> itemValues)
-            {
-                _itemValues = itemValues;
-            }
-
-            public Pressure(HoneywellInstrument instrument) : this(instrument.ItemValues)
-            {
-            }
-
-            public int Range => (int) _itemValues.GetItem(137).NumericValue;
-            public string TransducerType => _itemValues.GetItem(112).Description;
-            public decimal Base => _itemValues.GetItem(13).NumericValue;
-            public decimal GasPressure => _itemValues.GetItem(8).NumericValue;
-            public decimal AtmPressure => _itemValues.GetItem(14).NumericValue;
-            public decimal Factor => _itemValues.GetItem(44).NumericValue;
-
-            public void Update(IPressureItems pressureItems)
-            {
-                throw new NotImplementedException();
-            }
         }
 
-        internal class SuperFactor : ISuperFactorItems
+        public decimal Base => _itemValues.GetItem(BaseItemNumber).NumericValue;
+
+        public TemperatureUnits Units
+            => (TemperatureUnits) Enum.Parse(typeof(TemperatureUnits), _itemValues.GetItem(UnitsItemNumber).Description)
+        ;
+
+        public decimal GasTemperature => _itemValues.GetItem(GasTempItemNumber).NumericValue;
+        public decimal Factor => _itemValues.GetItem(TempFactorItemNumber).NumericValue;
+    }
+
+    internal class PressureEvcItems : IPressureItems
+    {
+        private readonly IEnumerable<ItemValue> _itemValues;
+
+        public int Range { get; set; }
+        public string TransducerType { get; set; }
+        public decimal Base { get; set; }
+        public decimal GasPressure { get; set; }
+        public decimal AtmPressure { get; set; }
+        public decimal Factor { get; set; }
+        public decimal UnsqrFactor { get; set; }
+
+        public Dictionary<string, string> ItemData =>
+            _itemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
+
+        internal PressureEvcItems(IEnumerable<ItemValue> itemValues)
         {
-            private readonly IEnumerable<ItemValue> _itemValues;
+            _itemValues = itemValues.Where(i => i.Metadata.IsPressure == true || i.Metadata.IsPressureTest == true).ToList();
 
-            public SuperFactor(IEnumerable<ItemValue> itemValues)
-            {
-                _itemValues = itemValues;
-            }
-
-            public SuperFactor(HoneywellInstrument instrument) : this(instrument.ItemValues)
-            {
-            }
-
-            public decimal SpecGr => _itemValues.GetItem(53).NumericValue;
-            public decimal N2 => _itemValues.GetItem(54).NumericValue;
-            public decimal Co2 => _itemValues.GetItem(55).NumericValue;
+            Range = (int)_itemValues.GetItem(137).NumericValue;
+            TransducerType = _itemValues.GetItem(112).Description;
+            Base = _itemValues.GetItem(13).NumericValue;
+            GasPressure = _itemValues.GetItem(8).NumericValue;
+            AtmPressure = _itemValues.GetItem(14).NumericValue;
+            Factor = _itemValues.GetItem(44).NumericValue;
+            UnsqrFactor = _itemValues.GetItem(47).NumericValue;
         }
+
+        internal PressureEvcItems(HoneywellInstrument instrument) : this(instrument.ItemValues)
+        {
+        }
+    }
+
+    internal class SuperFactorEvcItems : ISuperFactorItems
+    {
+        private readonly IEnumerable<ItemValue> _itemValues;
+
+        internal SuperFactorEvcItems(IEnumerable<ItemValue> itemValues)
+        {
+            _itemValues = itemValues.Where(i => i.Metadata.IsSuperFactor == true);
+        }
+
+        internal SuperFactorEvcItems(HoneywellInstrument instrument) : this(instrument.ItemValues)
+        {
+        }
+
+        public decimal SpecGr => _itemValues.GetItem(53).NumericValue;
+        public decimal N2 => _itemValues.GetItem(54).NumericValue;
+        public decimal Co2 => _itemValues.GetItem(55).NumericValue;
+    }
+
+    internal class VolumeEvcItems : IVolumeItems
+    {
+        protected readonly IEnumerable<ItemValue> ItemValues;
+
+        public VolumeEvcItems(IEnumerable<ItemValue> itemValues)
+        {
+            ItemValues = itemValues.Where(i => i.Metadata.IsVolume == true || i.Metadata.IsVolumeTest == true);
+        }
+
+        public VolumeEvcItems(HoneywellInstrument instrument) : this(instrument.ItemValues)
+        {
+        }
+
+        public virtual string EnergyUnits => ItemValues.GetItem(141).Description;
+        public virtual decimal EnergyGasValue => ItemValues.GetItem(142).NumericValue;
+        public virtual decimal Energy => ItemValues.GetItem(140).NumericValue;
+
+        public virtual decimal UncorrectedReading => ItemValues.GetItem(2).NumericValue;
+        public virtual decimal UncorrectedMultiplier => ItemValues.GetItem(92).NumericValue;
+        public virtual string UncorrectedUnits => ItemValues.GetItem(92).Description;
+
+        public virtual decimal CorrectedReading => ItemValues.GetHighResolutionValue(0, 113);
+        public virtual decimal CorrectedMultiplier => ItemValues.GetItem(90).NumericValue;
+        public virtual string CorrectedUnits => ItemValues.GetItem(90).Description;
+
+        public virtual decimal DriveRate => ItemValues.GetItem(98).NumericValue;
+        public virtual string DriveRateDescription => ItemValues.GetItem(98).Description;
+
+        public virtual DriveTypeDescripter DriveType => DriveRateDescription == "Rotary" ? DriveTypeDescripter.Rotary : DriveTypeDescripter.Mechanical;
+
+        public virtual int MeterModelId => 0;
+        public virtual string MeterModel => string.Empty;
+        public virtual decimal MeterDisplacement => 0.0m;  
     }
 
     internal static class HighResVolumeHelpers

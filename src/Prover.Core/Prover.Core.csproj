@@ -332,10 +332,6 @@
       <Project>{6dc1582c-28be-4bdb-acc9-1d0332ad0ea7}</Project>
       <Name>Prover.Data.SQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
-      <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
-      <Name>Prover.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>

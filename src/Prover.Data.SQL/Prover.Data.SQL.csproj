@@ -194,6 +194,10 @@
     <Compile Include="Storage\TestRunSqlRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
+      <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
+      <Name>Prover.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
       <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
       <Name>Prover.Shared</Name>

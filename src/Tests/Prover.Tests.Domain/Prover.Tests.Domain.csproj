@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\TestRuns\VolumeTestPointTests.cs" />
+    <Compile Include="Models\VerificationTests\PTZ\PressureTestPointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +72,8 @@
       <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Prover.Domain\Prover.Shared.csproj">
-      <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>

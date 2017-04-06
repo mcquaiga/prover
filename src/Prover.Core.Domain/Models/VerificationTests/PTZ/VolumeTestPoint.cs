@@ -1,31 +1,23 @@
-using Prover.CommProtocol.Common.Instruments;
-using Prover.Domain.Models.TestRuns.DriveTypes;
+using Prover.Domain.Models.Instruments;
+using Prover.Domain.Models.Instruments.Items;
+using Prover.Domain.Models.VerificationTests.DriveTypes;
 using Prover.Shared.Enums;
 
-namespace Prover.Domain.Models.TestRuns
+namespace Prover.Domain.Models.VerificationTests.PTZ
 {
     public class VolumeTestPoint : IPulseOutputItems
     {
-        private decimal _pressureFactor;
-        private decimal _temperatureFactor;
-        private decimal _superFactor;
-        private readonly TemperatureTestPoint _temperatureTest;
         private readonly PressureTestPoint _pressureTest;
         private readonly SuperFactorTestPoint _superTest;
+        private readonly TemperatureTestPoint _temperatureTest;
+        private decimal _pressureFactor;
+        private decimal _superFactor;
+        private decimal _temperatureFactor;
 
-        public static VolumeTestPoint Factory(IInstrument instrument, TestPoint testPoint)
-        {
-            return new VolumeTestPoint()
-            {
-                CorrectorType = instrument.CorrectorType(),      
-                _pressureTest 
-            }
-        }
-
-        public VolumeTestPoint(EvcCorrectorType correctorType, 
-                                TemperatureTestPoint temperatureTest, 
-                                PressureTestPoint pressureTest, 
-                                SuperFactorTestPoint superTest)
+        private VolumeTestPoint(EvcCorrectorType correctorType,
+            TemperatureTestPoint temperatureTest,
+            PressureTestPoint pressureTest,
+            SuperFactorTestPoint superTest)
         {
             CorrectorType = correctorType;
 
@@ -37,17 +29,17 @@ namespace Prover.Domain.Models.TestRuns
             PressureFactor = 1;
             SuperFactor = 1;
 
-            AppliedInput = 0;           
+            AppliedInput = 0;
             PulseACount = 0;
             PulseBCount = 0;
             PulseCCount = 0;
-        }      
+        }
 
         public EvcCorrectorType CorrectorType { get; protected set; }
-        public IDriveType DriveType { get; }
+        public IDriveType DriveType { get; protected set; }
         public decimal AppliedInput { get; set; }
 
-        public IVolumeItems PreTestItems { get; set; }  
+        public IVolumeItems PreTestItems { get; set; }
         public IVolumeItems PostTestItems { get; set; }
 
         public int PulseACount { get; set; }
@@ -55,22 +47,23 @@ namespace Prover.Domain.Models.TestRuns
         public int PulseCCount { get; set; }
 
         /// <summary>
-        /// Temperature factor
-        /// Returns 1 if the Corrector type isn't T or PTZ
+        ///     Temperature factor
+        ///     Returns 1 if the Corrector type isn't T or PTZ
         /// </summary>
         public decimal TemperatureFactor
         {
             get
             {
-                return CorrectorType == EvcCorrectorType.T || CorrectorType == EvcCorrectorType.PTZ
-                    ? _temperatureTest?.ActualFactor ?? _temperatureFactor
-                    : 1.0m;
+                if (_temperatureTest != null &&
+                    (CorrectorType == EvcCorrectorType.T || CorrectorType == EvcCorrectorType.PTZ))
+                    return _temperatureTest.ActualFactor;
+
+                return _temperatureFactor;
             }
             set { _temperatureFactor = value; }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public decimal PressureFactor
         {
@@ -87,45 +80,52 @@ namespace Prover.Domain.Models.TestRuns
         {
             get
             {
-                return CorrectorType == EvcCorrectorType.PTZ 
-                    ? _superTest?.ActualFactor ?? _superFactor 
+                return CorrectorType == EvcCorrectorType.PTZ
+                    ? _superTest?.ActualFactor ?? _superFactor
                     : 1.0m;
             }
             set { _superFactor = value; }
         }
 
         /// <summary>
-        /// EVC Corrected volume
-        /// End Corrected - Start Corrected x Corrected Multiplier
+        ///     EVC Corrected volume
+        ///     End Corrected - Start Corrected x Corrected Multiplier
         /// </summary>
-        public virtual decimal CorrectedTotal 
+        public virtual decimal CorrectedEvcTotal
             => (PostTestItems.CorrectedReading - PreTestItems.CorrectedReading) * PreTestItems.CorrectedMultiplier;
 
         /// <summary>
-        /// Corrected volume variance percent error
+        ///     Corrected volume variance percent error
         /// </summary>
         public virtual decimal? CorrectedPercentError
-            => CorrectedCalculated != 0 ? (CorrectedTotal - CorrectedCalculated) / CorrectedCalculated * 100 : default(decimal?);
+            =>
+                CorrectedCalculated != 0
+                    ? (CorrectedEvcTotal - CorrectedCalculated) / CorrectedCalculated * 100
+                    : default(decimal?);
 
         /// <summary>
-        /// True Corrected volume
-        /// TempFactor x PressFactor x SuperFactor x UncorrectedCalculated
+        ///     True Corrected volume
+        ///     TempFactor x PressFactor x SuperFactor x UncorrectedCalculated
         /// </summary>
         public virtual decimal CorrectedCalculated
             => TemperatureFactor * PressureFactor * SuperFactor * UncorrectedCalculated;
 
         /// <summary>
-        /// EVC Uncorrected calculated volume
-        /// End Uncorrected - Start Uncorrected x Uncorrected Multiplier
+        ///     EVC Uncorrected calculated volume
+        ///     End Uncorrected - Start Uncorrected x Uncorrected Multiplier
         /// </summary>
-        public virtual decimal UncorrectedTotal
-            => (PostTestItems.UncorrectedReading - PreTestItems.UncorrectedReading) * PreTestItems.UncorrectedMultiplier;
+        public virtual decimal UncorrectedEvcTotal
+            => (PostTestItems.UncorrectedReading - PreTestItems.UncorrectedReading) * PreTestItems.UncorrectedMultiplier
+        ;
 
         /// <summary>
-        /// Uncorrected volume variance percent error
+        ///     Uncorrected volume variance percent error
         /// </summary>
         public virtual decimal? UncorrectedPercentError
-            => UncorrectedCalculated != 0 ? (UncorrectedTotal - UncorrectedCalculated) / UncorrectedCalculated * 100 : default(decimal?);
+            =>
+                UncorrectedCalculated != 0
+                    ? (UncorrectedEvcTotal - UncorrectedCalculated) / UncorrectedCalculated * 100
+                    : default(decimal?);
 
         public virtual decimal UncorrectedCalculated => DriveType.UnCorrectedInputVolume(AppliedInput);
 
@@ -142,5 +142,18 @@ namespace Prover.Domain.Models.TestRuns
         public decimal PulserAScaling { get; }
         public string PulserBUnits { get; }
         public decimal PulseBScaling { get; }
+
+        public static VolumeTestPoint Create(IInstrument instrument, TestPoint testPoint)
+        {
+            var volumeTest = new VolumeTestPoint(instrument.CorrectorType, testPoint.Temperature, testPoint.Pressure,
+                testPoint.SuperFactor);
+
+            if (instrument.VolumeItems.DriveType == DriveTypeDescripter.Rotary)
+                volumeTest.DriveType = new RotaryDrive(instrument.VolumeItems);
+            else
+                volumeTest.DriveType = new MechanicalDrive(volumeTest);
+
+            return volumeTest;
+        }
     }
 }

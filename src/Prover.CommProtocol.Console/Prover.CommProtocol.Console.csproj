@@ -58,6 +58,14 @@
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
+      <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
+      <Name>Prover.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
+      <Name>Prover.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

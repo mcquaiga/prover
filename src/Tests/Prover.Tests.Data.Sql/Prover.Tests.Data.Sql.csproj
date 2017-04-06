@@ -163,10 +163,6 @@
       <Project>{6dc1582c-28be-4bdb-acc9-1d0332ad0ea7}</Project>
       <Name>Prover.Data.SQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Prover.Domain\Prover.Shared.csproj">
-      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
-      <Name>Prover.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

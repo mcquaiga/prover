@@ -49,12 +49,11 @@
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.1\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.5\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
@@ -110,6 +109,10 @@
     <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell.CRC\Prover.CommProtocol.MiHoneywell.CRC.vbproj">
       <Project>{8eeb9315-56e0-4a4f-9a36-3b9e8ccd47a1}</Project>
       <Name>Prover.CommProtocol.MiHoneywell.CRC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
+      <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
+      <Name>Prover.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>

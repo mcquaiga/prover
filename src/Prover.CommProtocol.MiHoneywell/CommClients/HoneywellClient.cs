@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.Instruments;
 using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient
+    internal class HoneywellClient : EvcCommunicationClient
     {
         public HoneywellClient(CommPort commPort) : base(commPort)
         {
@@ -23,18 +24,18 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        protected override async Task ConnectToInstrument()
+        protected override async Task ConnectToInstrument<T>(T instrument)
         {            
             await WakeUpInstrument();
 
             if (IsAwake)
             {
-                var response = await ExecuteCommand(Commands.SignOn(Instrument.Id));
+                var response = await ExecuteCommand(Commands.SignOn(instrument.Id));
 
                 if (response.IsSuccess)
                 {
                     IsConnected = true;
-                    Log.Info($"[{CommPort.Name}] Connected to {Instrument.Name}!");
+                    Log.Info($"[{CommPort.Name}] Connected to {instrument.Name}!");
                 }
                 else
                 {
@@ -57,24 +58,27 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
         }
 
-        public override async Task<ItemValue> GetItemValue(int itemNumber)
+        public override async Task<ItemValue> GetItemValue(ItemMetadata item)
         {
-            var itemDetails = Instrument.ItemDefinitions.GetItem(itemNumber);
-            var response = await ExecuteCommand(Commands.ReadItem(itemNumber));
-            return new ItemValue(itemDetails, response.RawValue);
+            var response = await ExecuteCommand(Commands.ReadItem(item.Number));
+            return new ItemValue(item, response.RawValue);
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers)
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> items)
         {
             var results = new List<ItemValue>();
-            var items = itemNumbers.ToArray();
-            items = items.OrderBy(x => x).ToArray();
+            
+            items = items.OrderBy(x => x.Number).ToList();
 
             var y = 0;
 
             while (true)
             {
-                var set = items.Skip(y).Take(15).ToList();
+                var set = items
+                            .Skip(y)
+                            .Take(15)
+                            .Select(i => i.Number)
+                            .ToList();
 
                 if (!set.Any())
                     break;
@@ -82,7 +86,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
                 var response = await ExecuteCommand(Commands.ReadGroup(set));
                 foreach (var item in response.ItemValues)
                 {
-                    var metadata = Instrument.ItemDefinitions.FirstOrDefault(x => x.Number == item.Key);
+                    var metadata = items.FirstOrDefault(x => x.Number == item.Key);
                     results.Add(new ItemValue(metadata, item.Value));
                 }
 
@@ -92,30 +96,22 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             return results;
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
-            => await GetItemValues(itemNumbers.GetAllItemNumbers());
-
-        public override async Task<bool> SetItemValue(int itemNumber, string value)
+        public override async Task<bool> SetItemValue(ItemMetadata item, string value)
         {
-            var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
-
+            var result = await ExecuteCommand(Commands.WriteItem(item.Number, value));
             return result.IsSuccess;
         }
 
-        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
-            => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
+        public override async Task<bool> SetItemValue(ItemMetadata item, decimal value)
+            => await SetItemValue(item, value.ToString(CultureInfo.InvariantCulture));
 
-        public override async Task<bool> SetItemValue(int itemNumber, long value)
-            => await SetItemValue(itemNumber, value.ToString());
+        public override async Task<bool> SetItemValue(ItemMetadata item, long value)
+            => await SetItemValue(item, value.ToString());
 
-        public override async Task<bool> SetItemValue(string itemCode, long value)
-            => await SetItemValue(Instrument.ItemDefinitions.GetItem(itemCode), value);
-
-        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        public override async Task<ItemValue> LiveReadItemValue(ItemMetadata item)
         {
-            var itemDetails = Instrument.ItemDefinitions.GetItem(itemNumber);
-            var response = await ExecuteCommand(Commands.LiveReadItem(itemNumber));
-            return new ItemValue(itemDetails, response.RawValue);
+            var response = await ExecuteCommand(Commands.LiveReadItem(item.Number));
+            return new ItemValue(item, response.RawValue);
         }
 
         private async Task<bool> WakeUpInstrument()
@@ -135,6 +131,6 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
 
             return IsAwake;
-        }
+        }      
     }
 }

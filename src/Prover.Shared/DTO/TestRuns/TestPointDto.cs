@@ -1,4 +1,5 @@
-﻿using Prover.Shared.Common;
+﻿using System.Collections.Generic;
+using Prover.Shared.Common;
 using Prover.Shared.Enums;
 
 namespace Prover.Shared.DTO.TestRuns
@@ -14,27 +15,15 @@ namespace Prover.Shared.DTO.TestRuns
 
     public class PressureTestDto : Entity
     {
-        public PressureUnits Units { get; set; }
-
-        public decimal EvcPressure { get; set; }
-        public decimal EvcFactor { get; set; }
-        public decimal EvcBasePressure { get; set; }
+        public Dictionary<string, string> ItemsData { get; set; }
         public decimal Gauge { get; set; }
         public decimal AtmosphericGauge { get; set; }
 
-        public PressureTestDto(PressureUnits units, decimal evcPressure, decimal evcFactor, decimal evcBasePressure,
-            decimal gauge, decimal atmosphericGauge)
+        public PressureTestDto(Dictionary<string, string> itemsData, decimal gauge, decimal atmosphericGauge)
         {
-            Units = units;
-            EvcPressure = evcPressure;
-            EvcFactor = evcFactor;
-            EvcBasePressure = evcBasePressure;
+            ItemsData = itemsData;
             Gauge = gauge;
             AtmosphericGauge = atmosphericGauge;
-        }
-
-        protected PressureTestDto()
-        {
         }
     }
 
