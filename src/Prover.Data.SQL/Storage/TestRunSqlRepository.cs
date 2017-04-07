@@ -16,9 +16,9 @@ namespace Prover.Data.SQL.Storage
 {
     public class TestRunSqlRepository : IRepository<TestRunDto>
     {
-        private readonly TestRunSqlContext _dataContext;
+        private readonly ProverDbContext _dataContext;
 
-        internal TestRunSqlRepository(TestRunSqlContext dataContext)
+        internal TestRunSqlRepository(ProverDbContext dataContext)
         {
             _dataContext = dataContext;
 

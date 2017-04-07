@@ -6,16 +6,6 @@ using NLog;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public interface ICommPort
-    {
-        string Name { get; }
-        IObservable<char> DataReceived();
-        bool IsOpen();
-        Task Open();
-        Task Close();
-        Task Send(string data);
-    }
-
     public abstract class CommPort : IDisposable, ICommPort
     {
         protected const int OpenPortTimeoutMs = 5000;
@@ -25,28 +15,28 @@ namespace Prover.CommProtocol.Common.IO
         public abstract ISubject<string> DataSentObservable { get; protected set; }
 
         public abstract string Name { get; }
+        public abstract Task Close();
 
         public abstract IObservable<char> DataReceived();
-        public abstract bool IsOpen();
-        public abstract Task Open();
-        public abstract Task Close();
-        public abstract Task Send(string data);
 
         public abstract void Dispose();
+        public abstract bool IsOpen();
+        public abstract Task Open();
+        public abstract Task Send(string data);
     }
 
     public static class ControlCharacters
     {
-        public const char SOH = (char) 1;
-        public const char STX = (char) 2;
-        public const char ETX = (char) 3;
-        public const char EOT = (char) 4;
-        public const char ENQ = (char) 5;
         public const char ACK = (char) 6;
+        public const char Comma = (char) 44;
         public const char CR = (char) 13;
+        public const char ENQ = (char) 5;
+        public const char EOT = (char) 4;
+        public const char ETX = (char) 3;
         public const char NAK = (char) 21;
         public const char RS = (char) 30;
-        public const char Comma = (char) 44;
+        public const char SOH = (char) 1;
+        public const char STX = (char) 2;
 
         public static List<char> All => new List<char>
         {
@@ -80,6 +70,9 @@ namespace Prover.CommProtocol.Common.IO
 
     public static class ControlCharacterExtensions
     {
+        public static bool IsAcknowledgement(this char c) => c == ControlCharacters.ACK;
+
+        public static bool IsEndOfText(this char c) => c == ControlCharacters.ETX;
         public static bool IsEndOfTransmission(this char c) => c == ControlCharacters.EOT;
 
         /// <summary>
@@ -90,9 +83,5 @@ namespace Prover.CommProtocol.Common.IO
         public static bool IsStartOfHandshake(this char c) => c == ControlCharacters.SOH;
 
         public static bool IsStartOfText(this char c) => c == ControlCharacters.STX;
-
-        public static bool IsEndOfText(this char c) => c == ControlCharacters.ETX;
-
-        public static bool IsAcknowledgement(this char c) => c == ControlCharacters.ACK;
     }
 }

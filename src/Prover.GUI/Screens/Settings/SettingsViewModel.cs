@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Prover.CommProtocol.Common.IO;
 using Prover.Core.Events;
 using Prover.Core.Settings;
 using Prover.GUI.Common;
@@ -17,20 +14,16 @@ namespace Prover.GUI.Screens.Settings
 {
     public class SettingsViewModel : ViewModelBase, IWindowSettings
     {
+        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits =
+            new ReactiveList<MechanicalUncorrectedTestLimit>();
+
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        { 
-            MechanicalUncorrectedTestLimits.AddRange(SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits.ToList());            
-        }
-
-        public async Task SaveSettings()
         {
-            SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits =
-                        MechanicalUncorrectedTestLimits.ToList();
-            await SettingsManager.Save();
+            MechanicalUncorrectedTestLimits.AddRange(
+                SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits.ToList());
         }
 
-        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits = new ReactiveList<MechanicalUncorrectedTestLimit>();
         public ReactiveList<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
         {
             get { return _mechanicalUncorrectedTestLimits; }
@@ -55,6 +48,13 @@ namespace Prover.GUI.Screens.Settings
             Task.Run(async () => await SaveSettings());
             EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
-        }      
+        }
+
+        public async Task SaveSettings()
+        {
+            SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits =
+                MechanicalUncorrectedTestLimits.ToList();
+            await SettingsManager.Save();
+        }
     }
 }

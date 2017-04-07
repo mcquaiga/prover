@@ -13,12 +13,12 @@ namespace Prover.GUI.Common.Screens.MainMenu
             InitializeComponent();
         }
 
+        public MainMenuViewModel ViewModel { get; set; }
+
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
             set { ViewModel = (MainMenuViewModel) value; }
         }
-
-        public MainMenuViewModel ViewModel { get; set; }
     }
 }

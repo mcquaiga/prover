@@ -70,7 +70,8 @@
     <value id="13" description="m3x1000" numericvalue="1000" />
     <value id="14" description="CFx10000" numericvalue="10000" />
   </item>
-  <item number="92" code="Uncorr Volume Units" shortDescription="Uncorr Volume Units" description="UnCorrected Volume Units" isVolume="true">
+  <item number="92" code="Uncorr Volume Units" shortDescription="Uncorr Volume Units"
+        description="UnCorrected Volume Units" isVolume="true">
     <value id="0" description="CuFT" numericvalue="1" />
     <value id="1" description="CuFTx10" numericvalue="10" />
     <value id="2" description="CuFTx100" numericvalue="100" />

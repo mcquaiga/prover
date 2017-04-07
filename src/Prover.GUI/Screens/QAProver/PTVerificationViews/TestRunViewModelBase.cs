@@ -17,19 +17,19 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             eventAggregator.Subscribe(this);
         }
 
-        public T TestRun { get; set; }
+        public Brush PassColour => TestRun != null && TestRun.HasPassed ? Brushes.ForestGreen : Brushes.IndianRed;
 
-        public decimal? PercentError => TestRun?.PercentError;
+        public string PassStatusIcon => TestRun != null && TestRun.HasPassed ? "pass" : "fail";
 
         public Brush PercentColour
             =>
-            (TestRun == null) || TestRun.HasPassed
-                ? Brushes.White
-                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+                TestRun == null || TestRun.HasPassed
+                    ? Brushes.White
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
-        public Brush PassColour => (TestRun != null) && TestRun.HasPassed ? Brushes.ForestGreen : Brushes.IndianRed;
+        public decimal? PercentError => TestRun?.PercentError;
 
-        public string PassStatusIcon => (TestRun != null) && TestRun.HasPassed ? "pass" : "fail";
+        public T TestRun { get; set; }
 
         public abstract void Handle(VerificationTestEvent message);
     }

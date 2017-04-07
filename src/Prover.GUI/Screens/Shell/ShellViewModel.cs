@@ -1,23 +1,23 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Caliburn.Micro;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
 using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Screens.Settings;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Prover.GUI.Screens.Shell
 {
     public class ShellViewModel : Conductor<object>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
     {
-        public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
         private readonly IEventAggregator _eventAggregator;
         private readonly ScreenManager _screenManager;
         private object _currentView;
 
-        public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IEnumerable<IToolbarItem> toolbarItems)
+        public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IEnumerable<IToolbarItem> toolbarItems)
         {
             ToolbarItems = toolbarItems;
             _screenManager = screenManager;
@@ -26,6 +26,7 @@ namespace Prover.GUI.Screens.Shell
         }
 
         public string Title => "EVC Prover";
+        public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
 
         public void Handle(ScreenChangeEvent message)
         {

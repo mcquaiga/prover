@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
-using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 
@@ -34,9 +33,9 @@ namespace Prover.GUI.Reports
             controlToPrint.DataContext = reportViewModel;
 
             var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
             var pageContent = new PageContent();
-            var fixedPage = new FixedPage {Width = 96*11, Height = 96*8.5};
+            var fixedPage = new FixedPage {Width = 96 * 11, Height = 96 * 8.5};
 
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);

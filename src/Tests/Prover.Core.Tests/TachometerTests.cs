@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.Core.Communication;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Prover.Core.Tests
 {

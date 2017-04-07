@@ -35,17 +35,10 @@ namespace Prover.CommProtocol.Common.Items
             return (T) items.FirstOrDefault(i => i.Code == code);
         }
 
-        public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
-            string code)
-        {
-            var result = items.GetItemString(itemValues, code);
-            return decimal.Parse(result);
-        }
-
         public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
             string code)
         {
-            if ((itemValues == null) || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
+            if (itemValues == null || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
 
             var itemNumber = items.GetItem(code);
 
@@ -55,13 +48,20 @@ namespace Prover.CommProtocol.Common.Items
             return result;
         }
 
-        public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
-            => items.Where(i => i.IsVolumeTest == true || i.IsVolume == true).Distinct();
+        public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
+            string code)
+        {
+            var result = items.GetItemString(itemValues, code);
+            return decimal.Parse(result);
+        }
 
         public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsPressureTest == true || i.IsPressure == true).Distinct();
 
         public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsTemperatureTest == true || i.IsTemperature == true).Distinct();
+
+        public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.IsVolumeTest == true || i.IsVolume == true).Distinct();
     }
 }

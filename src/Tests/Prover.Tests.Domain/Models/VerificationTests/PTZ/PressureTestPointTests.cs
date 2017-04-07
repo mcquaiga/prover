@@ -1,25 +1,24 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Domain.Models.Instruments.Items;
-using Prover.Domain.Models.VerificationTests.PTZ;
+using Prover.Domain.Instrument.Items;
+using Prover.Domain.Verification.TestPoints.Pressure;
 
 namespace Prover.Tests.Domain.Models.VerificationTests.PTZ
 {
     [TestClass]
     public class PressureTestPointTests
     {
-        private MockRepository _mockRepo = new MockRepository(MockBehavior.Default);
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            
-        }
+        private readonly MockRepository _mockRepo = new MockRepository(MockBehavior.Default);
 
         [TestCleanup]
         public void TestCleanup()
         {
             _mockRepo.VerifyAll();
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
         }
 
         [TestMethod]

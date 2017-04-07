@@ -19,7 +19,7 @@
             <RadioButton Content="{Binding Path=Instrument.Name}"
                          GroupName="Instruments"
                          IsChecked="{Binding Path=IsSelected}"
-                         FontSize="16"/>
+                         FontSize="16" />
         </DataTemplate>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="15 10">
@@ -49,14 +49,14 @@
 
                 <Grid Grid.Row="0" Grid.Column="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" 
-                              BorderThickness="1" 
-                              Header="Instrument Type" >
+                    <GroupBox Grid.Row="0"
+                              BorderThickness="1"
+                              Header="Instrument Type">
                         <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
-                                        ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
+                                      ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" Margin="4" />
@@ -68,34 +68,36 @@
                               Header="Client"
                               BorderThickness="1">
                         <StackPanel>
-                            <ComboBox x:Name="Clients"/>
+                            <ComboBox x:Name="Clients" />
                         </StackPanel>
                     </GroupBox>
                 </Grid>
-               
+
                 <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
                     <StackPanel>
-                        <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-                        <ComboBox x:Name="BaudRate" materialDesign:HintAssist.Hint="Baud Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                        <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        <ComboBox x:Name="BaudRate" materialDesign:HintAssist.Hint="Baud Rate"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Grid.Row="0" Grid.Column="2" Header="Tach. Settings">
-                    <ComboBox x:Name="TachCommPort" materialDesign:HintAssist.Hint="Port" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                    <ComboBox x:Name="TachCommPort" materialDesign:HintAssist.Hint="Port"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                 </GroupBox>
             </Grid>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                     Margin="0 16 20 0">
-            <Button Margin="25 0" 
+            <Button Margin="25 0"
                     Command="{Binding CancelCommand}"
                     HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
                 CANCEL
             </Button>
             <Button HorizontalAlignment="Right"
                     Command="{Binding StartTestCommand}"
-                    Content="START">
-            </Button>
+                    Content="START" />
         </StackPanel>
 
     </StackPanel>

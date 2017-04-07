@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Prover.Data.SQL.Common;
-using Prover.Shared.Common;
-using Prover.Shared.Storage;
+using Prover.Shared.Domain;
 
 namespace Prover.Data.SQL.Storage
 {
-    public class SqlRepository<TDto, TDao> : IRepository<TDto> 
-        where TDto : Entity
-        where TDao : class
+    public class SqlRepository<TDto, TId, TDao> : IRepository<TDto, TId> 
+        where TDto : Entity<TId> where TDao : class
     {
         private readonly DbContext _dataContext;
 
@@ -50,6 +45,31 @@ namespace Prover.Data.SQL.Storage
         }
 
         public Task Delete(TDto entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IRepository<TDto, TId>.Delete(TDto aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(TDto aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TDto aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TDto> FindAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TDto FindBy(TId id)
         {
             throw new NotImplementedException();
         }

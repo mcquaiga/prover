@@ -6,6 +6,13 @@ namespace Prover.Core.Tests
     public class Items
     {
         [TestMethod]
+        public void DownloadItems()
+        {
+            //var instr = new Instrument();
+            //instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
+        }
+
+        [TestMethod]
         public void LoadItems()
         {
             //var mylist = ItemLoader.LoadItems(InstrumentType.MiniMax);
@@ -27,13 +34,5 @@ namespace Prover.Core.Tests
             //    Console.WriteLine(i.SerialNumber);
             //}
         }
-
-        [TestMethod]
-        public void DownloadItems()
-        {
-            //var instr = new Instrument();
-            //instr.InstrumentValues = await InstrumentCommunication.DownloadItemsAsync(new SerialPort("COM3", BaudRateEnum.b38400), instr, ItemsBase.Item.LoadItems(InstrumentType.MiniMax));
-        }
-
     }
 }

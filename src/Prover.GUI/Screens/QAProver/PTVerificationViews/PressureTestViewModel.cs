@@ -13,17 +13,36 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         {
         }
 
-        public bool ShowATMValues
-            =>
-            (TransducerType)
-            TestRun.VerificationTest.Instrument.Items.GetItem(
-                ItemCodes.Pressure.TransducerType).NumericValue != TransducerType.Absolute;
+        public decimal? AtmosphericGauge
+        {
+            get { return TestRun.AtmosphericGauge; }
+            set
+            {
+                TestRun.AtmosphericGauge = value;
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+            }
+        }
 
-        public bool ShowATMGaugeInput
+        public decimal? EvcATMPressure
             =>
-            (TransducerType)
-            TestRun.VerificationTest.Instrument.Items.GetItem(
-                ItemCodes.Pressure.TransducerType).NumericValue == TransducerType.Absolute;
+                TestRun.VerificationTest.Instrument.Items.GetItem(
+                    ItemCodes.Pressure.Atm).NumericValue;
+
+        public decimal? EvcFactor
+            => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
+
+        public decimal? EvcGasPressure
+            => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue
+        ;
+
+        public decimal GasPressure
+        {
+            get
+            {
+                if (TestRun.GasPressure != null) return TestRun.GasPressure.Value;
+                return decimal.Zero;
+            }
+        }
 
         public decimal Gauge
         {
@@ -35,36 +54,17 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
         }
 
-        public decimal GasPressure
-        {
-            get
-            {
-                if (TestRun.GasPressure != null) return TestRun.GasPressure.Value;
-                return decimal.Zero;
-            }
-        }
-
-        public decimal? AtmosphericGauge
-        {
-            get { return TestRun.AtmosphericGauge; }
-            set
-            {
-                TestRun.AtmosphericGauge = value;
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
-            }
-        }
-
-        public decimal? EvcGasPressure
-            => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue
-            ;
-
-        public decimal? EvcFactor
-            => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
-
-        public decimal? EvcATMPressure
+        public bool ShowATMGaugeInput
             =>
-            TestRun.VerificationTest.Instrument.Items.GetItem(
-                ItemCodes.Pressure.Atm).NumericValue;
+                (TransducerType)
+                TestRun.VerificationTest.Instrument.Items.GetItem(
+                    ItemCodes.Pressure.TransducerType).NumericValue == TransducerType.Absolute;
+
+        public bool ShowATMValues
+            =>
+                (TransducerType)
+                TestRun.VerificationTest.Instrument.Items.GetItem(
+                    ItemCodes.Pressure.TransducerType).NumericValue != TransducerType.Absolute;
 
         public override void Handle(VerificationTestEvent message)
         {

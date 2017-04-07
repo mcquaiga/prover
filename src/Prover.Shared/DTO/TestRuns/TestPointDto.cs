@@ -1,33 +1,39 @@
-﻿using System.Collections.Generic;
-using Prover.Shared.Common;
+﻿using System;
+using System.Collections.Generic;
+using Prover.Shared.Domain;
 using Prover.Shared.Enums;
 
 namespace Prover.Shared.DTO.TestRuns
 {
-    public class TestPointDto : Entity
+    public class TestPointDto : Entity<Guid>
     {
         public TestLevel Level { get; set; }
         public PressureTestDto Pressure { get; set; }
+        public SuperFactorTestDto SuperFactor { get; set; }
         public TemperatureTestDto Temperature { get; set; }
         public VolumeTestDto Volume { get; set; }
-        public SuperFactorTestDto SuperFactor { get; set; }
+
+        protected override void Validate()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public class PressureTestDto : Entity
+    public class PressureTestDto
     {
-        public Dictionary<string, string> ItemsData { get; set; }
-        public decimal Gauge { get; set; }
-        public decimal AtmosphericGauge { get; set; }
-
         public PressureTestDto(Dictionary<string, string> itemsData, decimal gauge, decimal atmosphericGauge)
         {
             ItemsData = itemsData;
             Gauge = gauge;
             AtmosphericGauge = atmosphericGauge;
         }
+
+        public decimal AtmosphericGauge { get; set; }
+        public decimal Gauge { get; set; }
+        public Dictionary<string, string> ItemsData { get; set; }
     }
 
-    public class SuperFactorTestDto : Entity
+    public class SuperFactorTestDto
     {
         public SuperFactorTestDto(decimal gaugeTemp, decimal gaugePressure, decimal evcUnsqrFactor, decimal actualFactor,
             decimal superFactorSquared)
@@ -39,24 +45,18 @@ namespace Prover.Shared.DTO.TestRuns
             SuperFactorSquared = superFactorSquared;
         }
 
-        public decimal GaugeTemp { get; set; }
-        public decimal GaugePressure { get; set; }
-        public decimal EvcUnsqrFactor { get; set; }
         public decimal ActualFactor { get; set; }
+        public decimal EvcUnsqrFactor { get; set; }
+        public decimal GaugePressure { get; set; }
+
+        public decimal GaugeTemp { get; set; }
         public decimal SuperFactorSquared { get; protected set; }
     }
 
-    public class TemperatureTestDto : Entity
+    public class TemperatureTestDto
     {
-        public TemperatureUnits Units { get; set; }
-        public decimal EvcTemperature { get; set; }
-        public decimal EvcFactor { get; set; }
-        public decimal EvcBaseTemperature { get; set; }
-
-        public decimal GaugeTemperature { get; set; }
-        public decimal ActualFactor { get; set; }
-
-        public TemperatureTestDto(TemperatureUnits units, decimal evcTemperature, decimal evcFactor, decimal evcBaseTemperature,
+        public TemperatureTestDto(TemperatureUnits units, decimal evcTemperature, decimal evcFactor,
+            decimal evcBaseTemperature,
             decimal gaugeTemperature, decimal actualFactor)
         {
             Units = units;
@@ -70,25 +70,18 @@ namespace Prover.Shared.DTO.TestRuns
         protected TemperatureTestDto()
         {
         }
+
+        public decimal ActualFactor { get; set; }
+        public decimal EvcBaseTemperature { get; set; }
+        public decimal EvcFactor { get; set; }
+        public decimal EvcTemperature { get; set; }
+
+        public decimal GaugeTemperature { get; set; }
+        public TemperatureUnits Units { get; set; }
     }
 
-    public class VolumeTestDto : Entity
+    public class VolumeTestDto
     {
-        public int PulseACount { get; set; }
-        public int PulseBCount { get; set; }
-        public decimal AppliedInput { get; set; }
-        public string DriveTypeDiscriminator { get; set; }
-
-        //UnCorrected
-        public decimal TrueUncorrected { get; set; }
-        public decimal EvcStartUncorrected { get; set; }
-        public decimal EvcEndUncorrected { get; set; }
-
-        //Corrected
-        public decimal TrueCorrected { get; set; }
-        public decimal EvcStartCorrected { get; set; }
-        public decimal EvcEndCorrected { get; set; }
-
         public VolumeTestDto(int pulseACount, int pulseBCount, decimal appliedInput, string driveTypeDiscriminator,
             decimal trueUncorrected, decimal evcStartUncorrected, decimal evcEndUncorrected, decimal trueCorrected,
             decimal evcStartCorrected, decimal evcEndCorrected)
@@ -108,5 +101,20 @@ namespace Prover.Shared.DTO.TestRuns
         protected VolumeTestDto()
         {
         }
+
+        public decimal AppliedInput { get; set; }
+        public string DriveTypeDiscriminator { get; set; }
+        public decimal EvcEndCorrected { get; set; }
+        public decimal EvcEndUncorrected { get; set; }
+        public decimal EvcStartCorrected { get; set; }
+        public decimal EvcStartUncorrected { get; set; }
+        public int PulseACount { get; set; }
+        public int PulseBCount { get; set; }
+
+        //Corrected
+        public decimal TrueCorrected { get; set; }
+
+        //UnCorrected
+        public decimal TrueUncorrected { get; set; }
     }
 }

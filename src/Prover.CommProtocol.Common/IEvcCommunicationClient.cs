@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common.Items;
-using Prover.Domain.Models.Instruments;
 
 namespace Prover.CommProtocol.Common
 {
@@ -27,6 +26,8 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         Task Disconnect();
 
+        void Dispose();
+
         /// <summary>
         ///     Read item value from instrument
         /// </summary>
@@ -47,6 +48,14 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumbers">Item numbers for the values to request</param>
         /// <returns></returns>
         Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
+        ///     Live read item values
+        ///     Gas Temp / Gas Pressure
+        /// </summary>
+        /// <param name="item">Item number to live read</param>
+        /// <returns></returns>
+        Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 
         /// <summary>
         ///     Write a value to an item
@@ -79,15 +88,5 @@ namespace Prover.CommProtocol.Common
         /// <param name="value"></param>
         /// <returns></returns>
         Task<bool> SetItemValue(string itemCode, long value);
-
-        /// <summary>
-        ///     Live read item values
-        ///     Gas Temp / Gas Pressure
-        /// </summary>
-        /// <param name="item">Item number to live read</param>
-        /// <returns></returns>
-        Task<ItemValue> LiveReadItemValue(ItemMetadata item);
-
-        void Dispose();
     }
 }

@@ -31,26 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.1\lib\net45\NLog.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,26 +47,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Instruments\IInstrument.cs" />
-    <Compile Include="Mappings\TestRunMapping.cs" />
-    <Compile Include="Models\Instruments\Items\IPressureItems.cs" />
-    <Compile Include="Models\Instruments\Items\IPulseOutputItems.cs" />
-    <Compile Include="Models\Instruments\Items\ISiteInformationItems.cs" />
-    <Compile Include="Models\Instruments\Items\ISuperFactorItems.cs" />
-    <Compile Include="Models\Instruments\Items\ITemperatureItems.cs" />
-    <Compile Include="Models\Instruments\Items\IVolumeItems.cs" />
-    <Compile Include="Models\Instruments\MeterIndexes.cs" />
-    <Compile Include="Models\VerificationTests\DriveTypes\IDriveType.cs" />
-    <Compile Include="Models\VerificationTests\DriveTypes\MechanicalDrive.cs" />
-    <Compile Include="Models\VerificationTests\DriveTypes\RotaryDrive.cs" />
-    <Compile Include="Models\VerificationTests\PTZ\PressureTestPoint.cs" />
-    <Compile Include="Models\VerificationTests\PTZ\SuperFactorTestPoint.cs" />
-    <Compile Include="Models\VerificationTests\PTZ\TemperatureTestPoint.cs" />
-    <Compile Include="Models\VerificationTests\TestPoint.cs" />
-    <Compile Include="Models\VerificationTests\TestRun.cs" />
-    <Compile Include="Models\VerificationTests\PTZ\VolumeTestPoint.cs" />
+    <Compile Include="Instrument\IInstrument.cs" />
+    <Compile Include="Verification\TestRun\ITestRunRepository.cs" />
+    <Compile Include="Verification\TestRun\TestRunMapping.cs" />
+    <Compile Include="Instrument\Items\IPressureItems.cs" />
+    <Compile Include="Instrument\Items\IPulseOutputItems.cs" />
+    <Compile Include="Instrument\Items\ISiteInformationItems.cs" />
+    <Compile Include="Instrument\Items\ISuperFactorItems.cs" />
+    <Compile Include="Instrument\Items\ITemperatureItems.cs" />
+    <Compile Include="Instrument\Items\IVolumeItems.cs" />
+    <Compile Include="Instrument\Items\Meters\MeterIndexes.cs" />
+    <Compile Include="Verification\TestPoints\Volume\DriveTypes\IDriveType.cs" />
+    <Compile Include="Verification\TestPoints\Volume\DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="Verification\TestPoints\Volume\DriveTypes\RotaryDrive.cs" />
+    <Compile Include="Instrument\IInstrumentFactory.cs" />
+    <Compile Include="Verification\TestPoints\Pressure\PressureTestPoint.cs" />
+    <Compile Include="Verification\TestPoints\SuperFactor\SuperFactorTestPoint.cs" />
+    <Compile Include="Verification\TestPoints\Temperature\TemperatureTestPoint.cs" />
+    <Compile Include="Verification\TestPoints\TestPoint.cs" />
+    <Compile Include="Verification\TestRun\TestRun.cs" />
+    <Compile Include="Verification\TestPoints\Volume\VolumeTestPoint.cs" />
+    <Compile Include="Verification\TestRun\TestRunFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\TestRunService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
@@ -94,11 +84,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Startup\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MeterIndexes.xml">
+    <Content Include="Instrument\Items\Meters\MeterIndexes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

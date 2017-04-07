@@ -12,11 +12,11 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
         public static ResponseProcessor<StatusResponseMessage>
             ResponseCode = new ResponseCodeProcessor();
 
-        public static ResponseProcessor<ItemValueResponseMessage>
-            ItemValue(int itemNumber) => new ItemValueProcessor(itemNumber);
-
         public static ResponseProcessor<ItemGroupResponseMessage>
             ItemGroup(IEnumerable<int> itemNumbers) => new ItemGroupValuesProcessor(itemNumbers);
+
+        public static ResponseProcessor<ItemValueResponseMessage>
+            ItemValue(int itemNumber) => new ItemValueProcessor(itemNumber);
     }
 
     internal class ItemValueProcessor : ResponseProcessor<ItemValueResponseMessage>

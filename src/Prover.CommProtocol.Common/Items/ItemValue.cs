@@ -14,14 +14,15 @@ namespace Prover.CommProtocol.Common.Items
             Metadata = metadata;
         }
 
-        public string RawValue { get; set; }
+        public virtual string Description
+            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+
         public ItemMetadata Metadata { get; }
 
         public virtual decimal NumericValue
             => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
 
-        public virtual string Description
-            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+        public string RawValue { get; set; }
 
         private ItemMetadata.ItemDescription ItemDescription
         {
@@ -62,16 +63,16 @@ namespace Prover.CommProtocol.Common.Items
             return result;
         }
 
-        public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
-        {
-            if (items == null) return new Dictionary<int, string>();
-            return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
-        }
-
         public static string Serialize(this IEnumerable<ItemValue> items)
         {
             if (items == null) return string.Empty;
             return JsonConvert.SerializeObject(items.ToDictionary());
+        }
+
+        public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
+        {
+            if (items == null) return new Dictionary<int, string>();
+            return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
         }
     }
 }

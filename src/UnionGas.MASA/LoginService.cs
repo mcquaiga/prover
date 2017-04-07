@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using NLog;
-using NLog.Fluent;
 using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
-using UnionGas.MASA.Dialogs.LoginDialog;
+using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA
 {
     public class LoginService : ILoginService<EmployeeDTO>
     {
-        private readonly Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly IScreenManager _screenManager;
         private readonly DCRWebServiceSoap _webService;
         private IEventAggregator _eventAggregator;
@@ -27,19 +26,13 @@ namespace UnionGas.MASA
             _webService = webService;
         }
 
-        public bool Logout()
-        {
-            User = null;
-            return true;
-        }
-        
         public EmployeeDTO User { get; private set; }
 
         public async Task<bool> Login(string username, string password = null)
         {
             User = null;
 
-            var cts = new CancellationTokenSource(new TimeSpan(0, 0,3));
+            var cts = new CancellationTokenSource(new TimeSpan(0, 0, 3));
             var ct = cts.Token;
             ct.ThrowIfCancellationRequested();
 
@@ -47,7 +40,7 @@ namespace UnionGas.MASA
             try
             {
                 var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-                var response = 
+                var response =
                     await Task.Run(async () => await _webService.GetEmployeeAsync(employeeRequest), ct);
 
                 User = response.Body.GetEmployeeResult;
@@ -62,6 +55,12 @@ namespace UnionGas.MASA
             }
 
             return User?.Id != null;
+        }
+
+        public bool Logout()
+        {
+            User = null;
+            return true;
         }
     }
 }

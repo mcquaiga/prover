@@ -4,16 +4,18 @@ using Caliburn.Micro;
 using Action = System.Action;
 
 //taken from http://caliburnmicro.codeplex.com/discussions/391929
+
 namespace Prover.GUI.Common.BackgroundWork
 {
     public class BackgroundWork : IResult
     {
-        private readonly Action _work;
-        private readonly Action _onSuccess;
         private readonly Action<Exception> _onFail;
+        private readonly Action _onSuccess;
+        private readonly Action _work;
 
-        public BackgroundWork(Action work) : this(work, () => { }, (e) => { })
-        { }
+        public BackgroundWork(Action work) : this(work, () => { }, e => { })
+        {
+        }
 
         public BackgroundWork(Action work, Action onSuccess, Action<Exception> onFail)
         {
@@ -22,7 +24,7 @@ namespace Prover.GUI.Common.BackgroundWork
             _onFail = onFail;
         }
 
-        #region Implementation of IResult
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
         public void Execute(CoroutineExecutionContext context)
         {
@@ -47,18 +49,11 @@ namespace Prover.GUI.Common.BackgroundWork
                     _onSuccess.OnUIThread();
 
                 if (error != null && _onFail != null)
-                {
                     Caliburn.Micro.Execute.OnUIThread(() => _onFail(error));
-                }
 
-                Completed(this, new ResultCompletionEventArgs { Error = error });
+                Completed(this, new ResultCompletionEventArgs {Error = error});
             };
             worker.RunWorkerAsync();
         }
-
-        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
-
-        #endregion
     }
-
 }

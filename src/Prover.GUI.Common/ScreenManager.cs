@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common.Events;
@@ -14,11 +13,6 @@ namespace Prover.GUI.Common
 {
     public interface IScreenManager
     {
-        Task GoHome();
-        
-        T ResolveViewModel<T>()
-            where T : ViewModelBase;
-
         /// <summary>
         ///     Changes screen or page in the ShellView
         /// </summary>
@@ -29,17 +23,21 @@ namespace Prover.GUI.Common
         Task ChangeScreen<T>(string key = null)
             where T : ViewModelBase;
 
+        Task GoHome();
+
+        T ResolveViewModel<T>()
+            where T : ViewModelBase;
+
         bool? ShowDialog(ViewModelBase dialogViewModel);
 
         bool? ShowDialog<T>(string key = null)
             where T : ViewModelBase;
 
         void ShowWindow(ViewModelBase dialogViewModel);
-
     }
 
     public class ScreenManager : IScreenManager, IScreen
-    {        
+    {
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
 
@@ -52,18 +50,6 @@ namespace Prover.GUI.Common
         public RoutingState Router
         {
             get { throw new NotImplementedException(); }
-        }
-
-        public async Task GoHome()
-        {
-            var main = (MainMenuViewModel)Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
-            await ChangeScreen(main);
-        }
-
-        public T ResolveViewModel<T>()
-            where T : ViewModelBase
-        {
-            return IoC.Get<T>();
         }
 
         /// <summary>
@@ -88,6 +74,18 @@ namespace Prover.GUI.Common
                 throw new InvalidCastException($"{viewModel} is of {viewModel.GetType()}.");
 
             await ChangeScreen(viewModel);
+        }
+
+        public async Task GoHome()
+        {
+            var main = (MainMenuViewModel) Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
+            await ChangeScreen(main);
+        }
+
+        public T ResolveViewModel<T>()
+            where T : ViewModelBase
+        {
+            return IoC.Get<T>();
         }
 
         public bool? ShowDialog(ViewModelBase dialogViewModel)

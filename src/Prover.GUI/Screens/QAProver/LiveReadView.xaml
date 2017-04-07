@@ -45,8 +45,7 @@
 
         <Button Content="Cancel" Grid.Row="1"
                 Command="{Binding CloseCommand}"
-                HorizontalAlignment="Right">
-        </Button>
+                HorizontalAlignment="Right" />
         <!--<ListView ItemsSource="{Binding LiveReadItems}" HorizontalContentAlignment="Stretch" >
             <ListView.ItemTemplate >
                 <DataTemplate>

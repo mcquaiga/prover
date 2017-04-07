@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
@@ -25,13 +25,15 @@
                     Passed="{Binding EnergyTest.HasPassed}" />
                 <StackPanel Margin="5">
                     <TextBlock HorizontalAlignment="Center"
-                        Text="{Binding EnergyTest.EnergyUnits}"
-                               FontSize="16"/>
+                               Text="{Binding EnergyTest.EnergyUnits}"
+                               FontSize="16" />
                     <UniformGrid Columns="2" HorizontalAlignment="Center">
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
-                        <controls1:ValueDescriptionControl Label="True Calculated" Value="{Binding EnergyTest.ActualEnergy}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated"
+                                                           Value="{Binding EnergyTest.EvcEnergy}" />
+                        <controls1:ValueDescriptionControl Label="True Calculated"
+                                                           Value="{Binding EnergyTest.ActualEnergy}" />
                     </UniformGrid>
-                    
+
                 </StackPanel>
             </StackPanel>
         </materialDesign:Card>

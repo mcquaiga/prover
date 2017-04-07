@@ -18,7 +18,23 @@ namespace Prover.GUI.Screens.QAProver
             eventAggregator.Subscribe(this);
         }
 
-        public Instrument Instrument { get; set; }
+        public string BasePressure
+            =>
+                $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
+        ;
+
+        public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
+
+        public bool CommPortChecked
+        {
+            get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
+            set
+            {
+                Instrument.CommPortsPassed = value;
+                Task.Run(() => QaTestManager?.SaveAsync());
+                NotifyOfPropertyChange(() => Instrument);
+            }
+        }
 
         public string CorrectorType
         {
@@ -36,17 +52,6 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        public string BasePressure
-            =>
-            $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
-            ;
-
-        public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
-
-        public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
-
-        public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
-
         public bool EventLogChecked
         {
             get { return Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value; }
@@ -58,18 +63,15 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        public bool CommPortChecked
-        {
-            get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
-            set
-            {
-                Instrument.CommPortsPassed = value;
-                Task.Run(() => QaTestManager?.SaveAsync());
-                NotifyOfPropertyChange(() => Instrument);
-            }
-        }
+        public Instrument Instrument { get; set; }
+
+        public string JobIdDisplay
+            => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
         public IQaRunTestManager QaTestManager { get; set; }
+
+        public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+
         public void Handle(VerificationTestEvent message)
         {
             NotifyOfPropertyChange(() => Instrument);

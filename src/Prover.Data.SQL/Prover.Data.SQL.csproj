@@ -185,12 +185,15 @@
       <DependentUpon>20170304010909_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataContextModelSnapshot.cs" />
+    <Compile Include="Models\PressureTestDao.cs" />
+    <Compile Include="Models\TemperatureTestDao.cs" />
+    <Compile Include="Models\TestPointDao.cs" />
     <Compile Include="Models\TestRunDao.cs" />
+    <Compile Include="Models\VolumeTestDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
     <Compile Include="Common\SqlDataContext.cs" />
     <Compile Include="Storage\SqlRepository.cs" />
-    <Compile Include="Storage\TestRunContext.cs" />
+    <Compile Include="Storage\DbContext.cs" />
     <Compile Include="Storage\TestRunSqlRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -198,7 +201,7 @@
       <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Domain\Prover.Shared.csproj">
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>

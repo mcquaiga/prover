@@ -24,9 +24,10 @@ namespace Prover.GUI.Common.Controls
             }
         }
 
-        public bool Passed { get; set; }
         public decimal DisplayValue { get; set; }
-        public BitmapImage IconSource { get; set; }
         public Brush IconBackground { get; set; }
+        public BitmapImage IconSource { get; set; }
+
+        public bool Passed { get; set; }
     }
 }

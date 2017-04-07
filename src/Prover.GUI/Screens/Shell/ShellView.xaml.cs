@@ -12,15 +12,15 @@ namespace Prover.GUI.Screens.Shell
         {
             InitializeComponent();
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
-            Style = (Style)FindResource(typeof(Window));
+            Style = (Style) FindResource(typeof(Window));
         }
+
+        public ShellViewModel ViewModel { get; set; }
 
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
             set { ViewModel = (ShellViewModel) value; }
         }
-
-        public ShellViewModel ViewModel { get; set; }
     }
 }

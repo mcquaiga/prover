@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
@@ -13,22 +12,12 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         public const string DefaultAccessCode = "33333";
 
         /// <summary>
-        ///     Creates an EOT request for the instrument
-        ///     Initiates the first part of the handshake
-        ///     Waking the instrument up
+        ///     Creates a Live Read command
         /// </summary>
-        /// <returns>No response is expected from the instrument</returns>
-        public static MiCommandDefinition<StatusResponseMessage>
-            WakeupOne() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.EOT);
-
-        /// <summary>
-        ///     Creates an ENQ request for the instrument
-        ///     Second sequence of the handshake
-        /// </summary>
-        /// <returns>A response code is expected in return - ACK if successful</returns>
-        public static MiCommandDefinition<StatusResponseMessage>
-            WakeupTwo()
-            => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
+        /// <param name="itemNumber">Item number to live read</param>
+        /// <returns></returns>
+        public static MiCommandDefinition<ItemValueResponseMessage>
+            LiveReadItem(int itemNumber) => new LiveReadItemCommand(itemNumber);
 
         /// <summary>
         ///     Creates an NAK request
@@ -38,6 +27,33 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         /// <returns>No response is expected</returns>
         public static MiCommandDefinition<StatusResponseMessage>
             OkayToSend() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.NAK);
+
+        /// <summary>
+        ///     Creates a Read Group command to get a group of values
+        /// </summary>
+        /// <param name="itemNumbers">A collection of 15 item numbers maximum</param>
+        /// <returns></returns>
+        /// <exception cref=""></exception>
+        public static MiCommandDefinition<ItemGroupResponseMessage>
+            ReadGroup(IEnumerable<int> itemNumbers) => new ReadGroupCommand(itemNumbers);
+
+        /// <summary>
+        ///     Creates a Read Item command to get a single value
+        /// </summary>
+        /// <param name="itemNumber">Item number to request</param>
+        /// <returns></returns>
+        public static MiCommandDefinition<ItemValueResponseMessage>
+            ReadItem(int itemNumber) => new ReadItemCommand(itemNumber);
+
+        /// <summary>
+        ///     Creates a Sign Off command
+        /// </summary>
+        /// <returns>
+        ///     Expects a response code in return
+        ///     NoError indicates we're disconnected cleanly
+        /// </returns>
+        public static MiCommandDefinition<StatusResponseMessage>
+            SignOffCommand() => new MiCommandDefinition<StatusResponseMessage>("SF", ResponseProcessors.ResponseCode);
 
         /// <summary>
         ///     Creates the Sign On command to the instrument
@@ -58,31 +74,22 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         }
 
         /// <summary>
-        ///     Creates a Sign Off command
+        ///     Creates an EOT request for the instrument
+        ///     Initiates the first part of the handshake
+        ///     Waking the instrument up
         /// </summary>
-        /// <returns>
-        ///     Expects a response code in return
-        ///     NoError indicates we're disconnected cleanly
-        /// </returns>
+        /// <returns>No response is expected from the instrument</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOffCommand() => new MiCommandDefinition<StatusResponseMessage>("SF", ResponseProcessors.ResponseCode);
+            WakeupOne() => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.EOT);
 
         /// <summary>
-        ///     Creates a Read Item command to get a single value
+        ///     Creates an ENQ request for the instrument
+        ///     Second sequence of the handshake
         /// </summary>
-        /// <param name="itemNumber">Item number to request</param>
-        /// <returns></returns>
-        public static MiCommandDefinition<ItemValueResponseMessage>
-            ReadItem(int itemNumber) => new ReadItemCommand(itemNumber);
-
-        /// <summary>
-        ///     Creates a Read Group command to get a group of values
-        /// </summary>
-        /// <param name="itemNumbers">A collection of 15 item numbers maximum</param>
-        /// <returns></returns>
-        /// <exception cref=""></exception>
-        public static MiCommandDefinition<ItemGroupResponseMessage>
-            ReadGroup(IEnumerable<int> itemNumbers) => new ReadGroupCommand(itemNumbers);
+        /// <returns>A response code is expected in return - ACK if successful</returns>
+        public static MiCommandDefinition<StatusResponseMessage>
+            WakeupTwo()
+            => new MiCommandDefinition<StatusResponseMessage>(ControlCharacters.ENQ, ResponseProcessors.ResponseCode);
 
         /// <summary>
         ///     Creates a Write Item command to set a value
@@ -94,23 +101,11 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         public static MiCommandDefinition<StatusResponseMessage>
             WriteItem(int itemNumber, string value, string accessCode = DefaultAccessCode)
             => new WriteItemCommand(itemNumber, value, accessCode);
-
-        /// <summary>
-        ///     Creates a Live Read command
-        /// </summary>
-        /// <param name="itemNumber">Item number to live read</param>
-        /// <returns></returns>
-        public static MiCommandDefinition<ItemValueResponseMessage>
-            LiveReadItem(int itemNumber) => new LiveReadItemCommand(itemNumber);
     }
 
     internal class MiCommandDefinition<TResponse> : CommandDefinition<TResponse>
         where TResponse : ResponseMessage
     {
-        protected MiCommandDefinition()
-        {
-        }
-
         public MiCommandDefinition(char controlChar, ResponseProcessor<TResponse> processor = null)
         {
             Command = new string(new[] {controlChar});
@@ -121,6 +116,10 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         {
             Command = BuildCommand(body);
             ResponseProcessor = processor;
+        }
+
+        protected MiCommandDefinition()
+        {
         }
 
         public override ResponseProcessor<TResponse> ResponseProcessor { get; }
@@ -200,9 +199,9 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         }
 
         public int Number { get; }
-        public string Value { get; }
 
         public override ResponseProcessor<StatusResponseMessage> ResponseProcessor => ResponseProcessors.ResponseCode;
+        public string Value { get; }
     }
 
     internal class LiveReadItemCommand : MiCommandDefinition<ItemValueResponseMessage>

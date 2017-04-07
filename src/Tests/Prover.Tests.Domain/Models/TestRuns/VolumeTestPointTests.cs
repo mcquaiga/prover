@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Domain.Models.VerificationTests.PTZ;
+using Prover.Domain.Verification.TestPoints.Volume;
 using Prover.Shared.Enums;
 
 namespace Prover.Tests.Domain.Models.TestRuns
@@ -10,23 +10,23 @@ namespace Prover.Tests.Domain.Models.TestRuns
     {
         private MockRepository mockRepository;
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.mockRepository = new MockRepository(MockBehavior.Strict);
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            this.mockRepository.VerifyAll();
-        }
-
         [TestMethod]
         public void Rotary_Temperature_Only_Volume_Test()
         {
             var volume = CreateRotaryVolumeTestPoint(EvcCorrectorType.T);
             Assert.IsTrue(volume.Passed);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            mockRepository.VerifyAll();
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            mockRepository = new MockRepository(MockBehavior.Strict);
         }
 
         private VolumeTestPoint CreateRotaryVolumeTestPoint(EvcCorrectorType correctorType)

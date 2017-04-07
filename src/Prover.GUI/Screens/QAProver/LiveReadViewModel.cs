@@ -31,6 +31,29 @@ namespace Prover.GUI.Screens.QAProver
         public ObservableCollection<LiveReadDisplay> LiveReadItems { get; set; } =
             new ObservableCollection<LiveReadDisplay>();
 
+        public dynamic WindowSettings
+        {
+            get
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.MinWidth = 450;
+                settings.Title = "Live Read";
+                return settings;
+            }
+        }
+
+        public override void CanClose(Action<bool> callback)
+        {
+            base.CanClose(callback);
+        }
+
+        public async Task CloseCommand()
+        {
+            TryClose();
+        }
+
         public void Handle(InstrumentUpdateEvent message)
         {
             //_instrumentManager = message.InstrumentManager;
@@ -55,41 +78,13 @@ namespace Prover.GUI.Screens.QAProver
             });
         }
 
-        public dynamic WindowSettings
-        {
-            get
-            {
-                dynamic settings = new ExpandoObject();
-                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                settings.ResizeMode = ResizeMode.NoResize;
-                settings.MinWidth = 450;
-                settings.Title = "Live Read";
-                return settings;
-            }
-        }
-
         private async Task DoLiveRead()
         {
-        }
-
-        public async Task CloseCommand()
-        {
-            TryClose();
-        }
-
-        public override void CanClose(Action<bool> callback)
-        {
-            base.CanClose(callback);
         }
 
         public class LiveReadDisplay : ReactiveScreen
         {
             private decimal _readValue;
-
-            public string Title
-            {
-                get { return string.Format("Live Item #{0}", ItemNumber); }
-            }
 
             public int ItemNumber { get; set; }
 
@@ -101,6 +96,11 @@ namespace Prover.GUI.Screens.QAProver
                     _readValue = value;
                     NotifyOfPropertyChange(() => LiveReadValue);
                 }
+            }
+
+            public string Title
+            {
+                get { return string.Format("Live Item #{0}", ItemNumber); }
             }
         }
     }

@@ -16,12 +16,12 @@ namespace Prover.GUI
         {
         }
 
-        public override ImageSource IconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/clipboard-check.png"));
-
         public override string AppTitle => "New QA Test Run";
 
         public override Action ClickAction
             => async () => await ScreenManager.ChangeScreen<TestRunViewModel>();
+
+        public override ImageSource IconSource
+            => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/clipboard-check.png"));
     }
 }

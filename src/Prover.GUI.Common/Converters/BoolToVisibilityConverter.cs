@@ -15,8 +15,9 @@ namespace Prover.GUI.Common.Converters
             FalseValue = Visibility.Collapsed;
         }
 
-        public Visibility TrueValue { get; set; }
         public Visibility FalseValue { get; set; }
+
+        public Visibility TrueValue { get; set; }
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)

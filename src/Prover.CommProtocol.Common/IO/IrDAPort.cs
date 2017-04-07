@@ -40,12 +40,17 @@ namespace Prover.CommProtocol.Common.IO
             DataSentObservable = new Subject<string>();
         }
 
-        public int RetryCount { get; } = 10;
+        public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
+        public override ISubject<string> DataSentObservable { get; protected set; }
 
         public override string Name => "IrDA";
 
-        public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
-        public override ISubject<string> DataSentObservable { get; protected set; }
+        public int RetryCount { get; } = 10;
+
+        public override async Task Close()
+        {
+            await Task.Run(() => _client.Close());
+        }
 
         public sealed override IObservable<char> DataReceived()
         {
@@ -58,6 +63,11 @@ namespace Prover.CommProtocol.Common.IO
                 var chars = Encoding.ASCII.GetChars(buffer);
                 return chars.Take(readBytes).ToObservable();
             });
+        }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
         }
 
         public override bool IsOpen()
@@ -73,11 +83,6 @@ namespace Prover.CommProtocol.Common.IO
             tokenSource.CancelAfter(OpenPortTimeoutMs);
 
             await Task.Run(() => { _client.Connect(_endPoint); }, tokenSource.Token);
-        }
-
-        public override async Task Close()
-        {
-            await Task.Run(() => _client.Close());
         }
 
         public override async Task Send(string data)
@@ -104,11 +109,6 @@ namespace Prover.CommProtocol.Common.IO
                     }
                 }
             });
-        }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
         }
 
         private void LoadDevice()

@@ -25,7 +25,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Background="{Binding Path=IconBackground, ElementName=PercentUserControl}">
-                <Image x:Name="Icon" Source="{Binding Path=IconSource, ElementName=PercentUserControl}" Width="36" Height="36" />
+                <Image x:Name="Icon" Source="{Binding Path=IconSource, ElementName=PercentUserControl}" Width="36"
+                       Height="36" />
             </Grid>
             <Grid Grid.Column="1" Margin="6 0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">

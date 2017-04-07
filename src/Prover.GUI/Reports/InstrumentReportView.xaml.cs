@@ -13,12 +13,12 @@ namespace Prover.GUI.Reports
             InitializeComponent();
         }
 
+        public InstrumentReportViewModel ViewModel { get; set; }
+
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
             set { ViewModel = (InstrumentReportViewModel) value; }
         }
-
-        public InstrumentReportViewModel ViewModel { get; set; }
     }
 }

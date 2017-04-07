@@ -13,7 +13,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Window.Resources>
         <DataTemplate x:Key="ToolbarItem">
-            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="{Binding Path=ViewContext}"></ContentControl>
+            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="{Binding Path=ViewContext}" />
         </DataTemplate>
     </Window.Resources>
     <materialDesign:DialogHost Identifier="RootDialog">
@@ -21,37 +21,39 @@
             <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                       Mode="PrimaryDark" DockPanel.Dock="Top">
                 <DockPanel>
-      
+
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                        <Button x:Name="HomeButton" 
-                                Width="64" 
-                                Height="64" 
+                        <Button x:Name="HomeButton"
+                                Width="64"
+                                Height="64"
                                 DockPanel.Dock="Left" Grid.Column="0">
                             <StackPanel>
                                 <Image Source="..\..\Resources/Home.png" />
                             </StackPanel>
                         </Button>
                         <Button x:Name="SettingsButton" Width="64" Height="64" Grid.Column="1"
-                            HorizontalAlignment="Right">
+                                HorizontalAlignment="Right">
                             <Image Source="..\..\Resources/settings-light.png" />
                         </Button>
                     </StackPanel>
-   
+
                     <StackPanel DockPanel.Dock="Right">
                         <ItemsControl
-                                  ItemsSource="{Binding Path=ToolbarItems}"
-                                    ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
+                            ItemsSource="{Binding Path=ToolbarItems}"
+                            ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
+                                    <StackPanel Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </StackPanel>
-                    
+
                     <Grid DockPanel.Dock="Top">
-                        <TextBlock HorizontalAlignment="Center" 
-                               VerticalAlignment="Center" FontSize="22">EVC Prover</TextBlock>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" FontSize="22">
+                            EVC Prover
+                        </TextBlock>
                     </Grid>
                 </DockPanel>
             </materialDesign:ColorZone>

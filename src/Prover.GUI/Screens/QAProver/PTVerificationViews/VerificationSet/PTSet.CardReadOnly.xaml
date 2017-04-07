@@ -68,7 +68,7 @@
                         <TextBlock Margin="5" VerticalAlignment="Center">Run Test</TextBlock>
                     </StackPanel>
 
-                    
+
                 </Button>
             </Grid>
         </StackPanel>

@@ -18,18 +18,13 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
             if (Volume?.DriveType is MechanicalDrive)
                 EnergyTestItem =
-                    new EnergyTestViewModel(EventAggregator, (MechanicalDrive)Volume.DriveType);
+                    new EnergyTestViewModel(EventAggregator, (MechanicalDrive) Volume.DriveType);
 
             if (Volume?.DriveType is RotaryDrive)
                 MeterDisplacementItem =
                     new RotaryMeterTestViewModel(
-                        (RotaryDrive)Volume.DriveType);
+                        (RotaryDrive) Volume.DriveType);
         }
-
-        public QaRunTestManager InstrumentManager { get; set; }
-        public Instrument Instrument => Volume.Instrument;
-
-        public Core.Models.Instruments.VolumeTest Volume { get; }
 
         public decimal AppliedInput
         {
@@ -41,14 +36,40 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
         }
 
-        public EnergyTestViewModel EnergyTestItem { get; set; }
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-
-        public string DriveRateDescription => Instrument.DriveRateDescription();
-        public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
 
-        public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
+        public Brush CorrectedPercentColour
+            =>
+                Volume?.CorrectedHasPassed == true
+                    ? Brushes.White
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+
+        public int CorrectedPulseCount => Volume.CorPulseCount;
+
+        public string DriveRateDescription => Instrument.DriveRateDescription();
+        public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
+        public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
+
+        public EnergyTestViewModel EnergyTestItem { get; set; }
+        public decimal? EvcCorrected => Volume.EvcCorrected;
+        public decimal? EvcUncorrected => Volume.EvcUncorrected;
+        public Instrument Instrument => Volume.Instrument;
+
+        public QaRunTestManager InstrumentManager { get; set; }
+        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
+
+        public Brush MeterDisplacementPercentColour
+        {
+            get
+            {
+                var rotaryDrive = Volume?.DriveType as RotaryDrive;
+                return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+            }
+        }
+
+        public decimal? StartCorrected => Volume.Items?.Corrected();
+
+        public decimal? StartUncorrected => Volume.Items?.Uncorrected();
 
         public decimal? TrueCorrected
         {
@@ -60,35 +81,22 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
         }
 
-        public decimal? StartUncorrected => Volume.Items?.Uncorrected();
-        public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
-        public decimal? StartCorrected => Volume.Items?.Corrected();
-        public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
-        public decimal? EvcUncorrected => Volume.EvcUncorrected;
-        public decimal? EvcCorrected => Volume.EvcCorrected;
-
-        public int UncorrectedPulseCount => Volume.UncPulseCount;
-        public int CorrectedPulseCount => Volume.CorPulseCount;
+        public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
+        public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
 
         public Brush UnCorrectedPercentColour
             =>
-            Volume?.UnCorrectedHasPassed == true
-                ? Brushes.White
-                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+                Volume?.UnCorrectedHasPassed == true
+                    ? Brushes.White
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
-        public Brush CorrectedPercentColour
-            =>
-            Volume?.CorrectedHasPassed == true
-                ? Brushes.White
-                : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
+        public int UncorrectedPulseCount => Volume.UncPulseCount;
 
-        public Brush MeterDisplacementPercentColour
+        public Core.Models.Instruments.VolumeTest Volume { get; }
+
+        public override void Handle(VerificationTestEvent message)
         {
-            get
-            {
-                var rotaryDrive = Volume?.DriveType as RotaryDrive;
-                return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
-            }
+            RaisePropertyChanges();
         }
 
         private void RaisePropertyChanges()
@@ -108,11 +116,6 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
-        }
-
-        public override void Handle(VerificationTestEvent message)
-        {
-            RaisePropertyChanges();
         }
     }
 }

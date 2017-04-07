@@ -9,26 +9,29 @@ namespace Prover.GUI.Common.Controls
     /// </summary>
     public partial class PercentageControl : UserControl
     {
-        // Using a DependencyProperty as the backing store for IconSource.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IconSourceProperty =
-            DependencyProperty.Register(nameof(IconSource), typeof(ImageSource), typeof(PercentageControl),
-                new FrameworkPropertyMetadata(null));
-
-        // Using a DependencyProperty as the backing store for IconBackground.  This enables animation, styling, binding, etc...
+        // Using a DependencyProperty as the backing store for DisplayValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IconBackgroundProperty =
             DependencyProperty.Register(nameof(IconBackground), typeof(Brush), typeof(PercentageControl),
                 new FrameworkPropertyMetadata(null));
 
+        public static readonly DependencyProperty IconSourceProperty =
+            DependencyProperty.Register(nameof(IconSource), typeof(ImageSource), typeof(PercentageControl),
+                new FrameworkPropertyMetadata(null));
 
-        // Using a DependencyProperty as the backing store for Passed.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PassedProperty =
             DependencyProperty.Register(nameof(Passed), typeof(bool), typeof(PercentageControl),
-                    new FrameworkPropertyMetadata(PassedPropertyChanged));
+                new FrameworkPropertyMetadata(PassedPropertyChanged));
 
-        // Using a DependencyProperty as the backing store for DisplayValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DisplayValueProperty =
             DependencyProperty.Register(nameof(DisplayValue), typeof(decimal?), typeof(PercentageControl),
                 new PropertyMetadata(0.0m));
+
+        // Using a DependencyProperty as the backing store for IconBackground.  This enables animation, styling, binding, etc...
+
+        // Using a DependencyProperty as the backing store for IconSource.  This enables animation, styling, binding, etc...
+
+
+        // Using a DependencyProperty as the backing store for Passed.  This enables animation, styling, binding, etc...
 
 
         public PercentageControl()
@@ -37,16 +40,10 @@ namespace Prover.GUI.Common.Controls
             UpdateIcon(this);
         }
 
-        public bool Passed
+        public decimal? DisplayValue
         {
-            get { return (bool) GetValue(PassedProperty); }
-            set { SetValue(PassedProperty, value); }
-        }
-
-        public ImageSource IconSource
-        {
-            get { return (ImageSource) GetValue(IconSourceProperty); }
-            set { SetValue(IconSourceProperty, value); }
+            get { return (decimal?) GetValue(DisplayValueProperty); }
+            set { SetValue(DisplayValueProperty, value); }
         }
 
         public Brush IconBackground
@@ -55,10 +52,16 @@ namespace Prover.GUI.Common.Controls
             set { SetValue(IconBackgroundProperty, value); }
         }
 
-        public decimal? DisplayValue
+        public ImageSource IconSource
         {
-            get { return (decimal?) GetValue(DisplayValueProperty); }
-            set { SetValue(DisplayValueProperty, value); }
+            get { return (ImageSource) GetValue(IconSourceProperty); }
+            set { SetValue(IconSourceProperty, value); }
+        }
+
+        public bool Passed
+        {
+            get { return (bool) GetValue(PassedProperty); }
+            set { SetValue(PassedProperty, value); }
         }
 
         public static void PassedPropertyChanged(DependencyObject dependencyObject,

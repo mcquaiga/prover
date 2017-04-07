@@ -1,26 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell.Instruments;
-using Prover.Domain.Models.VerificationTests;
+using Prover.Domain.Instrument;
 
 namespace Prover.CommProtocol.Console
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var commPort = new SerialPort("COM3", 38400);
-            var instrument = HoneywellInstrumentFactory.Create(commPort, HoneywellInstrumentType.MiniMax).Result;
 
-            var test = TestRunFactory.Create(instrument);
+            //var comm = Assembly.LoadFrom($@"{dir}\\Prover.CommProtocol.MiHoneywell.dll");
 
-            var testDto = TestRunFactory.Create(test);
+            //var type = typeof(IInstrumentFactory);
+            //var types = comm.GetTypes().Where(p => type.IsAssignableFrom(p)).ToList();
 
-            var test2 = TestRunFactory.Create(testDto);
+            //var test = TestRunFactory.Create(instrument);
+
+            //var testDto = TestRunFactory.Create(test);
+
+            //var test2 = TestRunFactory.Create(testDto);
             System.Console.ReadLine();
         }
     }

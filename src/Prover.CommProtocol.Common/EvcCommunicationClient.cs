@@ -7,7 +7,7 @@ using NLog;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
-using Prover.Domain.Models.Instruments;
+using Prover.Domain.Instrument;
 
 namespace Prover.CommProtocol.Common
 {
@@ -15,9 +15,9 @@ namespace Prover.CommProtocol.Common
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
+        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IDisposable _receivedObservable;
         private readonly IDisposable _sentObservable;
-        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
@@ -35,39 +35,12 @@ namespace Prover.CommProtocol.Common
                     msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
         }
 
-        protected CommPort CommPort { get; set; }
-
         /// <summary>
         ///     Is this client already connected to an instrument
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
 
-        private async Task ExecuteCommand(string command)
-        {
-            await Task.Run(() => CommPort.Send(command));
-        }
-
-        protected virtual async Task<T> ExecuteCommand<T>(CommandDefinition<T> command) where T : ResponseMessage
-        {
-            if (command.ResponseProcessor == null)
-            {
-                await ExecuteCommand(command.Command);
-                return default(T);
-            }
-
-            var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Timeout(TimeSpan.FromSeconds(3))
-                .FirstAsync()
-                .PublishLast();
-
-            using (response.Connect())
-            {
-                await CommPort.Send(command.Command);
-
-                var result = await response;
-                return result;
-            }
-        }
+        protected CommPort CommPort { get; set; }
 
         /// <summary>
         ///     Establish a link with an instrument
@@ -128,23 +101,25 @@ namespace Prover.CommProtocol.Common
         }
 
         /// <summary>
-        ///     Establish a link with an instrument
-        ///     Handles retries for failed connections
-        /// </summary>
-        /// <returns></returns>
-        protected abstract Task ConnectToInstrument<T>(T instrument) where T : IInstrument;
-
-        /// <summary>
         ///     Disconnect the current link with the EVC, if one exists
         /// </summary>
         public abstract Task Disconnect();
+
+        public virtual void Dispose()
+        {
+            Disconnect().Wait();
+
+            _receivedObservable.Dispose();
+            _sentObservable.Dispose();
+            CommPort.Dispose();
+        }
 
         /// <summary>
         ///     Read item value from instrument
         /// </summary>
         /// <param name="item">Item to request</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> GetItemValue(ItemMetadata item);      
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata item);
 
         /// <summary>
         ///     Read a group of items from instrument
@@ -152,6 +127,14 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumbers">Item numbers for the values to request</param>
         /// <returns></returns>
         public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
+        ///     Live read item values
+        ///     Gas Temp / Gas Pressure
+        /// </summary>
+        /// <param name="item">Item number to live read</param>
+        /// <returns></returns>
+        public abstract Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 
         /// <summary>
         ///     Write a value to an item
@@ -178,20 +161,37 @@ namespace Prover.CommProtocol.Common
         public abstract Task<bool> SetItemValue(ItemMetadata item, long value);
 
         /// <summary>
-        ///     Live read item values
-        ///     Gas Temp / Gas Pressure
+        ///     Establish a link with an instrument
+        ///     Handles retries for failed connections
         /// </summary>
-        /// <param name="item">Item number to live read</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> LiveReadItemValue(ItemMetadata item);
+        protected abstract Task ConnectToInstrument<T>(T instrument) where T : IInstrument;
 
-        public virtual void Dispose()
+        protected virtual async Task<T> ExecuteCommand<T>(CommandDefinition<T> command) where T : ResponseMessage
         {
-            Disconnect().Wait();
+            if (command.ResponseProcessor == null)
+            {
+                await ExecuteCommand(command.Command);
+                return default(T);
+            }
 
-            _receivedObservable.Dispose();
-            _sentObservable.Dispose();
-            CommPort.Dispose();
+            var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceivedObservable)
+                .Timeout(TimeSpan.FromSeconds(3))
+                .FirstAsync()
+                .PublishLast();
+
+            using (response.Connect())
+            {
+                await CommPort.Send(command.Command);
+
+                var result = await response;
+                return result;
+            }
+        }
+
+        private async Task ExecuteCommand(string command)
+        {
+            await Task.Run(() => CommPort.Send(command));
         }
     }
 }

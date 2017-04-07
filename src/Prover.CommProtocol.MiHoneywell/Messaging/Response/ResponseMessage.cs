@@ -51,10 +51,10 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
             Log.Debug($"Instrument Response - {ResponseCode}");
         }
 
-        public ResponseCode ResponseCode { get; }
-
         public bool IsSuccess
             => ResponseCode == ResponseCode.NoError;
+
+        public ResponseCode ResponseCode { get; }
 
         public override string ToString()
         {

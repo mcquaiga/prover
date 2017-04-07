@@ -23,24 +23,24 @@
     </UserControl.Resources>
     <Grid Background="{DynamicResource MaterialDesignBackground}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55"/>
-            <ColumnDefinition Width="1.25*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="55" />
+            <ColumnDefinition Width="1.25*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
             <controls1:PercentageControl DisplayValue="0" Passed="{Binding Instrument.HasPassed}"
-                                         HorizontalAlignment="Center" Margin="2 2"/>
+                                         HorizontalAlignment="Center" Margin="2 2" />
         </StackPanel>
         <StackPanel Margin="10 5 5 5" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock FontSize="16" Margin="0 0 0 2"  Text="{Binding TestDatePretty}"/>
-            <TextBlock FontSize="38" Text="{Binding Instrument.InstrumentType.Name}"/>
+            <TextBlock FontSize="16" Margin="0 0 0 2" Text="{Binding TestDatePretty}" />
+            <TextBlock FontSize="38" Text="{Binding Instrument.InstrumentType.Name}" />
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding CorrectorType}"/>
-                <TextBlock FontWeight="UltraLight" Text=" | "/>
-                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}"/>
+                <TextBlock Text="{Binding CorrectorType}" />
+                <TextBlock FontWeight="UltraLight" Text=" | " />
+                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}" />
             </StackPanel>
             <TextBlock FontSize="16" Text="{Binding JobIdDisplay}" />
         </StackPanel>
@@ -49,7 +49,7 @@
             <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber2}" />
             <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
             <controls1:ValueDescriptionControl Label="Firmware Version"
-                                                       Value="{Binding Instrument.FirmwareVersion}" />
+                                               Value="{Binding Instrument.FirmwareVersion}" />
         </StackPanel>
 
         <StackPanel Grid.Column="3">
@@ -59,17 +59,17 @@
 
         <StackPanel Grid.Column="4">
             <controls1:ValueDescriptionControl Label="Pulser A Select"
-                                                       Value="{Binding Instrument.PulseASelect}" />
+                                               Value="{Binding Instrument.PulseASelect}" />
             <controls1:ValueDescriptionControl Label="Pulser A Scaling"
-                                                       Value="{Binding Instrument.PulseAScaling}" />
+                                               Value="{Binding Instrument.PulseAScaling}" />
         </StackPanel>
         <StackPanel Grid.Column="5">
             <controls1:ValueDescriptionControl Label="Pulser B Select"
-                                                       Value="{Binding Instrument.PulseBSelect}" />
+                                               Value="{Binding Instrument.PulseBSelect}" />
             <controls1:ValueDescriptionControl Label="Pulser B Scaling"
-                                                       Value="{Binding Instrument.PulseBScaling}" />    
+                                               Value="{Binding Instrument.PulseBScaling}" />
         </StackPanel>
-        
+
         <!--<StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">
                     <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.InstrumentType.Name}" />

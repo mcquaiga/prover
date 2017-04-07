@@ -11,24 +11,18 @@ namespace Prover.GUI.Common.Controls
     /// </summary>
     public partial class MainMenuButton : UserControl
     {
-        public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
-            "IconSource", typeof(ImageSource), typeof(MainMenuButton), new PropertyMetadata(default(ImageSource)));
-
         public static readonly DependencyProperty AppTitleProperty = DependencyProperty.Register(
             "AppTitle", typeof(string), typeof(MainMenuButton), new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty ClickActionProperty = DependencyProperty.Register(
             "ClickAction", typeof(Action), typeof(MainMenuButton), new PropertyMetadata(default(Action)));
 
+        public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
+            "IconSource", typeof(ImageSource), typeof(MainMenuButton), new PropertyMetadata(default(ImageSource)));
+
         public MainMenuButton()
         {
             InitializeComponent();
-        }
-
-        public ImageSource IconSource
-        {
-            get { return (ImageSource) GetValue(IconSourceProperty); }
-            set { SetValue(IconSourceProperty, value); }
         }
 
         public string AppTitle
@@ -37,13 +31,19 @@ namespace Prover.GUI.Common.Controls
             set { SetValue(AppTitleProperty, value); }
         }
 
+        public string ButtonName => $"{AppTitle}Button";
+
         public Action ClickAction
         {
             get { return (Action) GetValue(ClickActionProperty); }
             set { SetValue(ClickActionProperty, value); }
         }
 
-        public string ButtonName => $"{AppTitle}Button";
+        public ImageSource IconSource
+        {
+            get { return (ImageSource) GetValue(IconSourceProperty); }
+            set { SetValue(IconSourceProperty, value); }
+        }
 
         public void ActionCommand()
         {

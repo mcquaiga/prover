@@ -13,9 +13,19 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase
     {
+        public IQaRunTestManager QaRunTestManager;
         private CancellationTokenSource _cancellationTokenSource;
 
-        public IQaRunTestManager QaRunTestManager;
+        private ReactiveCommand _cancelTestCommand;
+
+        private ReactiveCommand _runTestCommand;
+
+        private bool _showDownloadButton;
+
+        private bool _showProgressDialog;
+
+        private string _testStatusMessage;
+        private IDisposable _testStatusSubscription;
 
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -24,14 +34,50 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             RunTestCommand = ReactiveCommand.CreateFromTask(RunTest);
         }
 
+        public ReactiveCommand CancelTestCommand
+        {
+            get { return _cancelTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _cancelTestCommand, value); }
+        }
+
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
-        public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
-        public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
         public PressureTestViewModel PressureTestViewModel { get; private set; }
+
+        public ReactiveCommand RunTestCommand
+        {
+            get { return _runTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
+        }
+
+        public bool ShowDownloadButton
+        {
+            get { return _showDownloadButton; }
+            set { this.RaiseAndSetIfChanged(ref _showDownloadButton, value); }
+        }
+
+        public bool ShowProgressDialog
+        {
+            get { return _showProgressDialog; }
+            set { this.RaiseAndSetIfChanged(ref _showProgressDialog, value); }
+        }
+
+        public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
         public SuperFactorTestViewModel SuperFactorTestViewModel { get; private set; }
-        public VolumeTestViewModel VolumeTestViewModel { get; private set; }
+        public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
+
+        public string TestStatusMessage
+        {
+            get { return _testStatusMessage; }
+            set { this.RaiseAndSetIfChanged(ref _testStatusMessage, value); }
+        }
 
         public VerificationTest VerificationTest { get; set; }
+        public VolumeTestViewModel VolumeTestViewModel { get; private set; }
+
+        public void CancelTest()
+        {
+            _cancellationTokenSource?.Cancel();
+        }
 
         public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
         {
@@ -64,53 +110,6 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                     VerificationTest.VolumeTest);
         }
 
-        private bool _showDownloadButton;
-        public bool ShowDownloadButton
-        {
-            get { return _showDownloadButton; }
-            set { this.RaiseAndSetIfChanged(ref _showDownloadButton, value); }
-        }
-
-        private bool _showProgressDialog;
-        public bool ShowProgressDialog
-        {
-            get { return _showProgressDialog; }
-            set { this.RaiseAndSetIfChanged(ref _showProgressDialog, value); }
-        }
-
-        private ReactiveCommand _cancelTestCommand;
-        private IDisposable _testStatusSubscription;
-
-        private void OnTestStatusChange(string status)
-        {
-            TestStatusMessage = status;
-        }
-
-        private string _testStatusMessage;
-        public string TestStatusMessage
-        {
-            get { return _testStatusMessage; }
-            set { this.RaiseAndSetIfChanged(ref _testStatusMessage, value); }
-        }
-
-        public ReactiveCommand CancelTestCommand
-        {
-            get { return _cancelTestCommand; }
-            set { this.RaiseAndSetIfChanged(ref _cancelTestCommand, value); }
-        }
-
-        public void CancelTest()
-        {
-            _cancellationTokenSource?.Cancel();
-        }
-
-        private ReactiveCommand _runTestCommand;
-        public ReactiveCommand RunTestCommand
-        {
-            get { return _runTestCommand; }
-            set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
-        }
-
         public async Task RunTest()
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -129,6 +128,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
                 _cancellationTokenSource.Dispose();
             }
+        }
+
+        private void OnTestStatusChange(string status)
+        {
+            TestStatusMessage = status;
         }
     }
 }

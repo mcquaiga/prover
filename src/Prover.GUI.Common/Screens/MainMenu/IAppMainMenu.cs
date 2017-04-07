@@ -6,9 +6,9 @@ namespace Prover.GUI.Common.Screens.MainMenu
 {
     public interface IAppMainMenu
     {
-        ImageSource IconSource { get; }
         string AppTitle { get; }
         Action ClickAction { get; }
+        ImageSource IconSource { get; }
     }
 
     public abstract class AppMainMenuBase : IAppMainMenu
@@ -22,8 +22,9 @@ namespace Prover.GUI.Common.Screens.MainMenu
             EventAggregator = eventAggregator;
         }
 
-        public abstract ImageSource IconSource { get; }
         public abstract string AppTitle { get; }
         public abstract Action ClickAction { get; }
+
+        public abstract ImageSource IconSource { get; }
     }
 }

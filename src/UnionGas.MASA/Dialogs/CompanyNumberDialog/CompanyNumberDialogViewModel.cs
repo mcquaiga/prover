@@ -14,14 +14,14 @@ namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 
         public string CompanyNumber { get; set; }
 
-        public void Close()
-        {
-            TryClose(true);
-        }
-
         public void Cancel()
         {
             TryClose(false);
+        }
+
+        public void Close()
+        {
+            TryClose(true);
         }
     }
 }

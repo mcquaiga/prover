@@ -7,7 +7,6 @@ using System.Windows;
 using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
 using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Exporter
@@ -22,6 +21,11 @@ namespace UnionGas.MASA.Exporter
         {
             _instrumentStore = instrumentStore;
             _dcrWebService = dcrWebService;
+        }
+
+        public bool CanExport(Instrument instrument)
+        {
+            return !string.IsNullOrEmpty(instrument.JobId) && !string.IsNullOrEmpty(instrument.EmployeeId);
         }
 
         public async Task<bool> Export(Instrument instrumentForExport)
@@ -83,11 +87,6 @@ namespace UnionGas.MASA.Exporter
             }
 
             return false;
-        }
-
-        public bool CanExport(Instrument instrument)
-        {
-            return !string.IsNullOrEmpty(instrument.JobId) && !string.IsNullOrEmpty(instrument.EmployeeId);
         }
     }
 }

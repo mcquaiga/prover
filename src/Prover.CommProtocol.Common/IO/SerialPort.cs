@@ -11,9 +11,9 @@ namespace Prover.CommProtocol.Common.IO
 {
     public class SerialPort : CommPort
     {
-        public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
-
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
+
+        private static List<string> _commPorts;
         private readonly SerialPortStream _serialStream;
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
@@ -45,9 +45,33 @@ namespace Prover.CommProtocol.Common.IO
             DataSentObservable = new Subject<string>();
         }
 
+        public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
+
         public sealed override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
         public sealed override ISubject<string> DataSentObservable { get; protected set; }
         public override string Name => _serialStream.PortName;
+
+        public static IObservable<string> PortsWatcherObservable()
+        {
+            return Observable.Create<string>(observer =>
+            {
+                _commPorts = System.IO.Ports.SerialPort.GetPortNames().ToList();
+                return Observable
+                    .Interval(TimeSpan.FromSeconds(1))
+                    .Subscribe(
+                        _ =>
+                        {
+                            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
+                            if (!_commPorts.SequenceEqual(ports))
+                                ports.ForEach(observer.OnNext);
+                        });
+            });
+        }
+
+        public override async Task Close()
+        {
+            await Task.Run(() => _serialStream.Close());
+        }
 
         public sealed override IObservable<char> DataReceived()
         {
@@ -65,6 +89,11 @@ namespace Prover.CommProtocol.Common.IO
                 });
         }
 
+        public override void Dispose()
+        {
+            _serialStream.Dispose();
+        }
+
         public override bool IsOpen() => _serialStream.IsOpen;
 
         public override async Task Open()
@@ -72,11 +101,6 @@ namespace Prover.CommProtocol.Common.IO
             if (_serialStream.IsOpen) return;
 
             await Task.Run(() => _serialStream.Open());
-        }
-
-        public override async Task Close()
-        {
-            await Task.Run(() => _serialStream.Close());
         }
 
         public override async Task Send(string data)
@@ -93,29 +117,6 @@ namespace Prover.CommProtocol.Common.IO
                 _serialStream.Write(buffer, 0, buffer.Length);
 
                 DataSentObservable.OnNext(data);
-            });
-        }
-
-        public override void Dispose()
-        {
-            _serialStream.Dispose();
-        }
-
-        private static List<string> _commPorts;
-        public static IObservable<string> PortsWatcherObservable()
-        {
-            return Observable.Create<string>(observer =>
-            {
-                _commPorts = System.IO.Ports.SerialPort.GetPortNames().ToList();
-                return Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(
-                        _ =>
-                        {
-                            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-                            if (!_commPorts.SequenceEqual(ports))
-                                ports.ForEach(observer.OnNext);
-                        });
             });
         }
     }

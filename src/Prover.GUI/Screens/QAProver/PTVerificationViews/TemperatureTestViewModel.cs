@@ -14,6 +14,10 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         {
         }
 
+        public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
+
+        public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
+
         public double Gauge
         {
             get { return TestRun.Gauge; }
@@ -23,9 +27,6 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
-
-        public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
-        public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
 
         public override void Handle(VerificationTestEvent @event)
         {

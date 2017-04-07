@@ -1,15 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
 using Prover.Core.ExternalIntegrations;
-using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
-using Prover.Core.VerificationTests.TestActions;
-using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Common.Screens.Toolbar;
-using ReactiveUI.Autofac;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
-using UnionGas.MASA.Screens.Toolbars;
 using UnionGas.MASA.Validators.CompanyNumber;
 
 namespace UnionGas.MASA

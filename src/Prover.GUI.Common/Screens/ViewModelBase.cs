@@ -13,7 +13,6 @@ namespace Prover.GUI.Common.Screens
 
         public ViewModelBase()
         {
-            
         }
 
         public ViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator)

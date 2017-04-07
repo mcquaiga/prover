@@ -89,12 +89,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Instrument\HoneywellReadOnlyInstrument.cs" />
+    <Compile Include="Domain\Instrument\MiniAT\MiniAtFactory.cs" />
+    <Compile Include="Domain\Instrument\MiniMax\MiniMaxFactory.cs" />
+    <Compile Include="Domain\Instrument\MiniMax\MiniMaxVolume.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
-    <Compile Include="Instruments\HoneywellInstrument.cs" />
-    <Compile Include="Instruments\Items.cs" />
-    <Compile Include="Instruments\MiniAtInstrument.cs" />
-    <Compile Include="Instruments\MiniMaxInstrument.cs" />
+    <Compile Include="Domain\Instrument\HoneywellInstrument.cs" />
+    <Compile Include="Domain\Instrument\HoneywellInstrumentFactoryBase.cs" />
+    <Compile Include="Domain\Items\HoneywellItemDefinitions.cs" />
+    <Compile Include="Domain\Instrument\MiniMax\MiniMaxInstrument.cs" />
+    <Compile Include="Domain\Items\PressureEvcItems.cs" />
+    <Compile Include="Domain\Items\SiteInformationEvcItems.cs" />
+    <Compile Include="Domain\Items\SuperFactorEvcItems.cs" />
+    <Compile Include="Domain\Items\TemperatureEvcItems.cs" />
+    <Compile Include="Domain\Items\VolumeEvcItems.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
     <Compile Include="Messaging\Response\MiResponseCodes.cs" />
     <Compile Include="Messaging\Response\ResponseMessage.cs" />

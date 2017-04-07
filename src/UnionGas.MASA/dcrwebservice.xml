@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
@@ -115,7 +121,8 @@
       <s:element name="GetValidatedAcceptanceSampleMeterByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByInventoryCodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByInventoryCodeResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -168,7 +175,8 @@
       <s:element name="GetValidatedAcceptanceSampleMeterByBarcodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByBarcodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedAcceptanceSampleMeterByBarcodeResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -182,7 +190,8 @@
       <s:element name="GetValidatedComplianceSampleMeterByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByInventoryCodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByInventoryCodeResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -196,7 +205,8 @@
       <s:element name="GetValidatedComplianceSampleMeterByBarcodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByBarcodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedComplianceSampleMeterByBarcodeResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -210,7 +220,8 @@
       <s:element name="GetValidatedEvcDeviceByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -239,7 +250,8 @@
       <s:element name="GetMeterDataByInventoryCodeAndSerialNumberResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMeterDataByInventoryCodeAndSerialNumberResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetMeterDataByInventoryCodeAndSerialNumberResult"
+                       type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -384,7 +396,8 @@
       </s:complexType>
       <s:complexType name="ArrayOfTurbineReading">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="TurbineReading" nillable="true" type="tns:TurbineReading" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TurbineReading" nillable="true"
+                     type="tns:TurbineReading" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="TurbineReading">
@@ -497,7 +510,8 @@
               <s:element minOccurs="0" maxOccurs="1" name="MeterOutputDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="TestSetupDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="SpanTestResult" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="RotaryTestResultDetails" type="tns:ArrayOfQARunRotaryTestResultDetail" />
+              <s:element minOccurs="0" maxOccurs="1" name="RotaryTestResultDetails"
+                         type="tns:ArrayOfQARunRotaryTestResultDetail" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -518,7 +532,8 @@
       </s:complexType>
       <s:complexType name="ArrayOfQARunRotaryTestResultDetail">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunRotaryTestResultDetail" nillable="true" type="tns:QARunRotaryTestResultDetail" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunRotaryTestResultDetail" nillable="true"
+                     type="tns:QARunRotaryTestResultDetail" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunRotaryTestResultDetail">
@@ -599,7 +614,8 @@
               <s:element minOccurs="0" maxOccurs="1" name="MainRotorMinSpinUomCode" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="SensorRotorMinSpinQty" nillable="true" type="s:double" />
               <s:element minOccurs="0" maxOccurs="1" name="SensorRotorMinSpinUomCode" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="AvgRelativeAdjustmentPercentage" nillable="true" type="s:double" />
+              <s:element minOccurs="1" maxOccurs="1" name="AvgRelativeAdjustmentPercentage" nillable="true"
+                         type="s:double" />
               <s:element minOccurs="1" maxOccurs="1" name="OrderNumber" nillable="true" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="MeterConstructionDescription" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="QmaxDescription" type="s:string" />
@@ -608,14 +624,16 @@
               <s:element minOccurs="1" maxOccurs="1" name="SlotsCount" nillable="true" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="FiftyPercentTestIndicator" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="DriveRateTemperature" nillable="true" type="s:double" />
-              <s:element minOccurs="0" maxOccurs="1" name="TurbineTestResultDetails" type="tns:ArrayOfQARunTurbineTestResultDetail" />
+              <s:element minOccurs="0" maxOccurs="1" name="TurbineTestResultDetails"
+                         type="tns:ArrayOfQARunTurbineTestResultDetail" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ArrayOfQARunTurbineTestResultDetail">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunTurbineTestResultDetail" nillable="true" type="tns:QARunTurbineTestResultDetail" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunTurbineTestResultDetail" nillable="true"
+                     type="tns:QARunTurbineTestResultDetail" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunTurbineTestResultDetail">
@@ -684,7 +702,8 @@
       </s:element>
       <s:complexType name="ArrayOfQARunEvcTestResult">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunEvcTestResult" nillable="true" type="tns:QARunEvcTestResult" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QARunEvcTestResult" nillable="true"
+                     type="tns:QARunEvcTestResult" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="QARunEvcTestResult">
@@ -748,7 +767,8 @@
       </s:complexType>
       <s:complexType name="ArrayOfVerificationTest">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="VerificationTest" nillable="true" type="tns:VerificationTest" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VerificationTest" nillable="true"
+                     type="tns:VerificationTest" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="VerificationTest">
@@ -1293,7 +1313,8 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByInventoryCode">
-      <soap12:operation soapAction="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode" style="document" />
+      <soap12:operation soapAction="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode"
+                        style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1311,7 +1332,8 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByInventoryCode">
-      <soap12:operation soapAction="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode" style="document" />
+      <soap12:operation soapAction="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode"
+                        style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Prover.Data.SQL.Common;
-using Prover.Data.SQL.Models;
-using Prover.Data.SQL.Storage;
-using Prover.Shared.DTO.TestRuns;
 
 namespace Prover.Tests.Data.Sql.Storage
 {
