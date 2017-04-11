@@ -48,8 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Instrument\IInstrument.cs" />
+    <Compile Include="Instrument\Items\IItemsGroup.cs" />
+    <Compile Include="Verification\TestPoints\TestPointBase.cs" />
+    <Compile Include="Verification\TestPoints\Volume\VolumeCalculations.cs" />
+    <Compile Include="Instrument\InstrumentMappingProfile.cs" />
+    <Compile Include="Instrument\InstrumentObjectConverter.cs" />
+    <Compile Include="Instrument\Items\ItemGroupResolver.cs" />
     <Compile Include="Verification\TestRun\ITestRunRepository.cs" />
-    <Compile Include="Verification\TestRun\TestRunMapping.cs" />
     <Compile Include="Instrument\Items\IPressureItems.cs" />
     <Compile Include="Instrument\Items\IPulseOutputItems.cs" />
     <Compile Include="Instrument\Items\ISiteInformationItems.cs" />
@@ -65,14 +70,21 @@
     <Compile Include="Verification\TestPoints\SuperFactor\SuperFactorTestPoint.cs" />
     <Compile Include="Verification\TestPoints\Temperature\TemperatureTestPoint.cs" />
     <Compile Include="Verification\TestPoints\TestPoint.cs" />
+    <Compile Include="MappingConfiguration.cs" />
+    <Compile Include="Verification\TestPoints\Pressure\PressureTestMappingProfile.cs" />
+    <Compile Include="Verification\TestPoints\SuperFactor\SuperFactorTestMappingProfile.cs" />
+    <Compile Include="Verification\TestPoints\Temperature\TemperatureTestMappingProfile.cs" />
+    <Compile Include="Verification\TestPoints\TestPointMappingProfile.cs" />
     <Compile Include="Verification\TestRun\TestRun.cs" />
     <Compile Include="Verification\TestPoints\Volume\VolumeTestPoint.cs" />
     <Compile Include="Verification\TestRun\TestRunFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Verification\TestRun\TestRunMappingProfile.cs" />
+    <Compile Include="Verification\TestPoints\Volume\VolumeTestMappingProfile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
-      <Project>{7dbb07b6-6375-497f-8ed8-3d0dad4f01ef}</Project>
+    <ProjectReference Include="..\Prover.SharedPortable\Prover.Shared.csproj">
+      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">

@@ -89,7 +89,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Instrument\HoneywellReadOnlyInstrument.cs" />
     <Compile Include="Domain\Instrument\MiniAT\MiniAtFactory.cs" />
     <Compile Include="Domain\Instrument\MiniMax\MiniMaxFactory.cs" />
     <Compile Include="Domain\Instrument\MiniMax\MiniMaxVolume.cs" />
@@ -123,8 +122,8 @@
       <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
-      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
+    <ProjectReference Include="..\Prover.SharedPortable\Prover.Shared.csproj">
+      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>

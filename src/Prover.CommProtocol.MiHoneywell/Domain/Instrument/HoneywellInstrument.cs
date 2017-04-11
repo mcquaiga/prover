@@ -16,7 +16,7 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
     {
         protected readonly HoneywellClient CommClient;
 
-        public HoneywellInstrument(int id, int accessCode, string name, string itemFilePath)
+        private HoneywellInstrument(int id, int accessCode, string name, string itemFilePath)
         {
             Id = id;
             AccessCode = accessCode;
@@ -26,8 +26,13 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
             ItemDefinitions = HoneywellItemDefinitions.Load(this);
         }
 
-        public HoneywellInstrument(HoneywellClient commClient, int id, int accessCode, string name,
-            string itemFilePath)
+        internal HoneywellInstrument(int id, int accessCode, string name, string itemFilePath, Dictionary<string, string> itemData)
+            : this(id, accessCode, name, itemFilePath)
+        {
+            ItemValues = SetupItemValues(ItemDefinitions, itemData);
+        }
+
+        internal HoneywellInstrument(HoneywellClient commClient, int id, int accessCode, string name, string itemFilePath)
             : this(id, accessCode, name, itemFilePath)
         {
             CommClient = commClient;
@@ -39,10 +44,10 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
         {
             get
             {
-                var live = "Live";
-                var pressureLive = GetItemValue(109).Description == live;
-                var tempLive = GetItemValue(111).Description == live;
-                var superLive = GetItemValue(110).Description == live;
+                var live = "live";
+                var pressureLive = ItemValues.GetItem(109)?.Description.ToLower() == live;
+                var tempLive = ItemValues.GetItem(111)?.Description.ToLower() == live;
+                var superLive = ItemValues.GetItem(110)?.Description.ToLower() == live;
 
                 if (pressureLive && tempLive && superLive)
                     return EvcCorrectorType.PTZ;
@@ -58,6 +63,10 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
         }
 
         public int Id { get; protected set; }
+
+        public IInstrumentFactory InstrumentFactory { get; set; }
+
+        public bool IsReadOnly => CommClient == null;
 
         public Dictionary<string, string> ItemData
             => ItemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
@@ -83,37 +92,57 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
 
         protected IEnumerable<ItemMetadata> ItemDefinitions { get; }
 
+        public async Task GetAllItems()
+        {
+            ItemValues = await DownloadItemValues();
+        }
+
+        public ItemValue GetItemValue(int itemNumber)
+        {
+            var item = GetItemValue(itemNumber, ItemValues);
+            return item;
+        }
+
         public virtual async Task<IPressureItems> GetPressureItems()
         {
-            var items = await GetItems(ItemDefinitions.PressureItems());
+            var items = await DownloadItemValues(ItemDefinitions.PressureItems());
             return new PressureEvcItems(items);
+        }
+
+        public virtual IPressureItems GetPressureItems(Dictionary<string, string> itemData)
+        {
+            var itemValues = SetupItemValues(this.ItemDefinitions, itemData);
+            return new PressureEvcItems(itemValues);
         }
 
         public virtual async Task<ITemperatureItems> GetTemperatureItems()
         {
-            var items = await GetItems(ItemDefinitions.TemperatureItems());
+            var items = await DownloadItemValues(ItemDefinitions.TemperatureItems());
             return new TemperatureEvcItems(items);
+        }
+
+        public virtual ITemperatureItems GetTemperatureItems(Dictionary<string, string> itemData)
+        {
+            var itemValues = SetupItemValues(this.ItemDefinitions, itemData);
+            return new TemperatureEvcItems(itemValues);
         }
 
         public virtual async Task<IVolumeItems> GetVolumeItems()
         {
-            var items = await GetItems(ItemDefinitions.VolumeItems());
+            var items = await DownloadItemValues(ItemDefinitions.VolumeItems());
             return new VolumeEvcItems(items);
         }
 
-        internal async Task GetAllItems()
+        public virtual IVolumeItems GetVolumeItems(Dictionary<string, string> itemData)
         {
-            ItemValues = await GetItems();
+            var itemValues = SetupItemValues(this.ItemDefinitions, itemData);
+            return new VolumeEvcItems(itemValues);
         }
 
-        internal ItemValue GetItemValue(int itemNumber)
+        protected async Task<IEnumerable<ItemValue>> DownloadItemValues(IEnumerable<ItemMetadata> items = null)
         {
-            var item = ItemValues.ToList().FirstOrDefault(i => i.Metadata.Number == itemNumber);
-            return item;
-        }
+            if (IsReadOnly) return new List<ItemValue>();
 
-        private async Task<IEnumerable<ItemValue>> GetItems(IEnumerable<ItemMetadata> items = null)
-        {
             var itemMetadatas = items?.ToList();
             if (itemMetadatas == null || !itemMetadatas.Any())
                 itemMetadatas = ItemDefinitions.ToList();
@@ -125,19 +154,36 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
             return itemValues;
         }
 
-        private ItemValue GetItemValue(string itemCode, IEnumerable<ItemValue> itemValues)
+        protected ItemValue GetItemValue(int itemNumber, IEnumerable<ItemValue> itemValues)
         {
-            if (string.IsNullOrEmpty(itemCode)) return null;
-
-            var itemInfo = ItemDefinitions.FirstOrDefault(i => i.Code == itemCode);
+            var itemInfo = ItemDefinitions.FirstOrDefault(i => i.Number == itemNumber);
             if (itemInfo == null) return null;
 
-            var item = itemValues.ToList().FirstOrDefault(i => i.Metadata.Code == itemCode);
+            var item = itemValues.ToList().FirstOrDefault(i => i.Metadata.Number == itemNumber);
 
             if (item != null)
                 return item;
 
             return new ItemValue(itemInfo, string.Empty);
         }
+
+        protected IEnumerable<ItemValue> SetupItemValues(IEnumerable<ItemMetadata> itemsMetadata, Dictionary<string, string> itemData)
+        {
+            var result = new List<ItemValue>();
+            var metadataList = itemsMetadata.ToList();
+
+            foreach (var itemKeyValue in itemData)
+            {
+                int itemNumber;
+                if (int.TryParse(itemKeyValue.Key, out itemNumber))
+                {
+                    var metadata = metadataList.FirstOrDefault(x => x.Number == itemNumber);
+                    if (metadata != null)
+                        result.Add(new ItemValue(metadata, itemKeyValue.Value));
+                }
+            }
+
+            return result;
+        } 
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Prover.Domain.Instrument;
+using Prover.Domain.Instrument.Items;
 using Prover.Domain.Verification.TestPoints.Pressure;
 using Prover.Domain.Verification.TestPoints.SuperFactor;
 using Prover.Domain.Verification.TestPoints.Temperature;
@@ -10,14 +11,15 @@ using Prover.Shared.Enums;
 
 namespace Prover.Domain.Verification.TestPoints
 {
-    public class TestPoint
+    public class TestPoint : Entity<Guid>
     {
-        private static readonly Dictionary<TestLevel, decimal> PressureGauges = new Dictionary<TestLevel, decimal>
+        private static readonly Dictionary<TestLevel, double> PressureGauges = new Dictionary<TestLevel, double>
         {
-            {TestLevel.Level1, 0.80m},
-            {TestLevel.Level2, 0.50m},
-            {TestLevel.Level3, 0.20m}
+            {TestLevel.Level1, 0.80},
+            {TestLevel.Level2, 0.50},
+            {TestLevel.Level3, 0.20}
         };
+
         private static readonly Dictionary<TestLevel, int> TempGauges = new Dictionary<TestLevel, int>
         {
             {TestLevel.Level1, 32},
@@ -25,52 +27,77 @@ namespace Prover.Domain.Verification.TestPoints
             {TestLevel.Level3, 90}
         };
 
-        public TestLevel Level { get; protected set; }
-        public PressureTestPoint Pressure { get; protected set; }
-        public SuperFactorTestPoint SuperFactor { get; protected set; }
-        public TemperatureTestPoint Temperature { get; protected set; }
-        public VolumeTestPoint Volume { get; set; }
+        public IInstrument Instrument { get; }
 
-        public TestPoint(TestLevel level, PressureTestPoint pressure, SuperFactorTestPoint superFactor, TemperatureTestPoint temperature, VolumeTestPoint volume)
+        private TestPoint(Guid id, IInstrument instrument, TestLevel level)
+            : base(id)
         {
+            Instrument = instrument;
             Level = level;
+        }
+
+        public TestPoint() : base(Guid.NewGuid())
+        {
+        }
+
+        public TestPoint(Guid id, IInstrument instrument, TestLevel level, PressureTestPoint pressure, TemperatureTestPoint temperature, VolumeTestPoint volume)
+            : this(id, instrument, level)
+        {
             Pressure = pressure;
-            SuperFactor = superFactor;
             Temperature = temperature;
             Volume = volume;
         }
 
-        public static TestPoint Create(TestLevel level, IInstrument instrument)
+        public TestPoint(IInstrument instrument, TestLevel level)
+            : this(Guid.NewGuid(), instrument, level)
         {
-            var temperature = CreateTemperatureTest(level, instrument);
-            var pressure = CreatePressureTest(level, instrument);
-            var superFactor = CreateSuperFactor(instrument, temperature, pressure);
-            var volume = CreateVolumeTest(level, instrument, temperature, pressure, superFactor);
+            Pressure = CreatePressureTest(level, instrument);
+            Temperature = CreateTemperatureTest(level, instrument);
+            Volume = CreateVolumeTest(level, instrument);
+        }
 
-            return new TestPoint(level, pressure, superFactor, temperature, volume);
+        public TestRun.TestRun TestRun { get; set; }
+        public TestLevel Level { get; protected set; }
+        public PressureTestPoint Pressure { get; protected set; }
+        public SuperFactorTestPoint SuperFactor
+        {
+            get
+            {
+                if (Instrument.CorrectorType != EvcCorrectorType.PTZ) return null;
+
+                return new SuperFactorTestPoint(Instrument.SuperFactorItems, Temperature.GaugeTemperature,
+                    Pressure.GasPressure, Pressure.EvcItems.UnsqrFactor);
+            }
+        }
+        public TemperatureTestPoint Temperature { get; protected set; }
+        public VolumeTestPoint Volume { get; set; }
+
+        public void Update(IPressureItems pressureTestItems, ITemperatureItems temperatureTestItems, IVolumeItems volumePreTestItems, IVolumeItems volumePostTestItems)
+        {
+            if (Pressure != null)
+                Pressure.EvcItems = pressureTestItems;
+
+            if (Temperature != null)
+                Temperature.EvcItems = temperatureTestItems;
+
+            if (Volume != null)
+                Volume.Update(volumePreTestItems, volumePostTestItems, Volume.AppliedInput, Temperature.ActualFactor, Pressure.ActualFactor, SuperFactor.ActualFactor);
         }
 
         private static PressureTestPoint CreatePressureTest(TestLevel level, IInstrument instrument)
         {
             PressureTestPoint pressure = null;
             if (instrument.CorrectorType == EvcCorrectorType.P || instrument.CorrectorType == EvcCorrectorType.PTZ)
-                pressure = new PressureTestPoint(
-                    PressureGauges[level] * instrument.PressureItems.Range,
-                    instrument.PressureItems);
+            {
+                pressure = new PressureTestPoint()
+                {
+                    EvcItems = instrument.PressureItems
+                };
+
+                pressure.SetGaugeValues(PressureGauges[level] * instrument.PressureItems.Range, 0);
+            }
+
             return pressure;
-        }
-
-        private static SuperFactorTestPoint CreateSuperFactor(IInstrument instrument, TemperatureTestPoint temperature,
-            PressureTestPoint pressure)
-        {
-            SuperFactorTestPoint superFactor = null;
-            if (instrument.CorrectorType == EvcCorrectorType.PTZ)
-                superFactor = new SuperFactorTestPoint(
-                    instrument.SuperFactorItems,
-                    pressure,
-                    temperature);
-
-            return superFactor;
         }
 
         private static TemperatureTestPoint CreateTemperatureTest(TestLevel level, IInstrument instrument)
@@ -83,12 +110,11 @@ namespace Prover.Domain.Verification.TestPoints
             return temperature;
         }
 
-        private static VolumeTestPoint CreateVolumeTest(TestLevel level, IInstrument instrument,
-            TemperatureTestPoint temperature, PressureTestPoint pressure, SuperFactorTestPoint superFactor)
+        private static VolumeTestPoint CreateVolumeTest(TestLevel level, IInstrument instrument)
         {
             VolumeTestPoint volume = null;
             if (level == TestLevel.Level1)
-                volume = VolumeTestPoint.Create(instrument, temperature, pressure, superFactor);
+                volume = new VolumeTestPoint(instrument.VolumeItems);
 
             return volume;
         }

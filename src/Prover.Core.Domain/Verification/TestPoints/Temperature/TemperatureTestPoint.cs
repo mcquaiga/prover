@@ -5,36 +5,47 @@ using Prover.Shared.Enums;
 
 namespace Prover.Domain.Verification.TestPoints.Temperature
 {
-    public class TemperatureTestPoint : Entity<Guid>
+    public class TemperatureTestPoint : TestPointBase<ITemperatureItems>
     {
-        private const decimal MetericTempCorrection = 273.15m;
-        private const decimal TempCorrection = 459.67m;
+        private const double MetericTempCorrection = 273.15d;
+        private const double TempCorrection = 459.67d;
     
-        public ITemperatureItems EvcItems { get; set; }
-        public decimal GaugeTemperature { get; set; }
+        public double GaugeTemperature { get; set; }
 
-        public TemperatureTestPoint(decimal gaugeTemperature, ITemperatureItems temperatureItems)
-            : base(Guid.NewGuid())
+        public TemperatureTestPoint() : base(Guid.NewGuid(), null)
         {
-            GaugeTemperature = gaugeTemperature;
-            EvcItems = temperatureItems;
+            
         }
 
-        public TemperatureTestPoint(Guid id, ITemperatureItems evcItems, decimal gaugeTemperature)
-            : base(id)
+        public TemperatureTestPoint(double gaugeTemperature, ITemperatureItems evcItems)
+            : base(Guid.NewGuid(), evcItems)
+        {
+            GaugeTemperature = gaugeTemperature;
+            EvcItems = evcItems;
+        }
+
+        public TemperatureTestPoint(Guid id, ITemperatureItems evcItems, double gaugeTemperature)
+            : base(id, evcItems)
         {
             EvcItems = evcItems;
             GaugeTemperature = gaugeTemperature;
         }
 
-        public decimal? PercentError 
-            => ActualFactor != 0 ? Math.Round((EvcItems.Factor - ActualFactor) / ActualFactor * 100, 2) : default(decimal?);
-
-        public decimal ActualFactor
+        public double? PercentError
         {
             get
             {
-                decimal result;
+                if (ActualFactor == 0) return default(double?);
+
+                return Math.Round((EvcItems.Factor - ActualFactor) / ActualFactor * 100, 2);
+            }
+        }
+
+        public double ActualFactor
+        {
+            get
+            {
+                double result;
                 switch (EvcItems.Units)
                 {
                     case TemperatureUnits.C:
@@ -48,16 +59,13 @@ namespace Prover.Domain.Verification.TestPoints.Temperature
                     case TemperatureUnits.R:
                         throw new NotImplementedException("Rankine units");
                     default:
-                        result = 0m;
+                        result = 0d;
                         break;
                 }
 
                 return Math.Round(result, 4);
             }
         }
-        protected override void Validate()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

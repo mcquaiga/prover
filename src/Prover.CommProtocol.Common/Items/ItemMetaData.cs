@@ -24,7 +24,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             public string Description { get; set; } //Human displayed description
             public int Id { get; set; } //Maps to the Id that the instrument uses
-            public decimal? Value { get; set; } // Numeric value used for calculations, etc.
+            public double? Value { get; set; } // Numeric value used for calculations, etc.
         }
     }
 }

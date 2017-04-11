@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Prover.CommProtocol.Common.IO;
 using Prover.Domain.Instrument;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
 {
-    public abstract class HoneywellInstrumentFactoryBase : IInstrumentFactory
+    public abstract class HoneywellInstrumentFactoryBase : InstrumentFactoryBase
     {
         protected CommPort CommPort;
 
@@ -15,20 +17,29 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
 
         protected HoneywellInstrumentFactoryBase(CommPort commPort)
         {
-            CommPort = commPort;
+            CommPort = commPort ?? throw new ArgumentNullException(nameof(commPort));
         }
 
-        public abstract string Description { get; }
-
-        public async Task<IInstrument> Create(bool isReadOnly = false)
+        public override async Task<IInstrument> Create()
         {
-            if (CommPort == null) isReadOnly = true;
+            if (CommPort == null) return await Create(new Dictionary<string, string>());
 
-            var instrument = CreateType(isReadOnly);
+            var instrument = CreateType();
+            instrument.InstrumentFactory = this;
+
             await instrument.GetAllItems();
+            
             return instrument;
         }
 
-        internal abstract HoneywellInstrument CreateType(bool isReadOnly);
+        public override async Task<IInstrument> Create(Dictionary<string, string> itemData)
+        {
+            var instrument = CreateType(itemData);
+            instrument.InstrumentFactory = this;
+            return instrument;
+        }
+
+        internal abstract HoneywellInstrument CreateType();
+        internal abstract HoneywellInstrument CreateType(Dictionary<string, string> itemData);
     }
 }

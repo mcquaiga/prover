@@ -26,11 +26,11 @@ namespace Prover.Tests.Domain.Models.VerificationTests.PTZ
         {
             var pressure = _mockRepo.Create<IPressureItems>();
             pressure.Setup(p => p.TransducerType).Returns("Absolute");
-            pressure.Setup(p => p.Base).Returns(14.73m);
-            pressure.Setup(p => p.Factor).Returns(54.2813m);
+            pressure.Setup(p => p.Base).Returns(14.73);
+            pressure.Setup(p => p.Factor).Returns(54.2813);
 
-            var pressureTestPoint = CreatePressureTestPoint(pressure, 0.8m * 1000);
-            pressureTestPoint.SetGaugeValues(785.9m, 14.10m);
+            var pressureTestPoint = CreatePressureTestPoint(pressure, 0.8 * 1000);
+            pressureTestPoint.SetGaugeValues(785.9, 14.10);
 
             Assert.AreEqual(-0.05m, pressureTestPoint.PercentError ?? -100);
         }
@@ -39,18 +39,18 @@ namespace Prover.Tests.Domain.Models.VerificationTests.PTZ
         public void Verify_Pressure_PSIG()
         {
             var pressure = _mockRepo.Create<IPressureItems>();
-            pressure.Setup(p => p.AtmPressure).Returns(14.7m);
+            pressure.Setup(p => p.AtmPressure).Returns(14.7);
             pressure.Setup(p => p.TransducerType).Returns("Gauge");
-            pressure.Setup(p => p.Base).Returns(14.73m);
-            pressure.Setup(p => p.Factor).Returns(55.308893m);
+            pressure.Setup(p => p.Base).Returns(14.73);
+            pressure.Setup(p => p.Factor).Returns(55.308893);
 
-            var pressureTestPoint = CreatePressureTestPoint(pressure, 0.8m * 1000);
-            pressureTestPoint.SetGaugeValues(800m, 0m);
+            var pressureTestPoint = CreatePressureTestPoint(pressure, 0.8 * 1000);
+            pressureTestPoint.SetGaugeValues(800, 0);
 
             Assert.AreEqual(0.00m, pressureTestPoint.PercentError ?? -100);
         }
 
-        private PressureTestPoint CreatePressureTestPoint(Mock<IPressureItems> pressureMock, decimal gasGauge)
+        private PressureTestPoint CreatePressureTestPoint(Mock<IPressureItems> pressureMock, double gasGauge)
         {
             return new PressureTestPoint(
                 gasGauge,

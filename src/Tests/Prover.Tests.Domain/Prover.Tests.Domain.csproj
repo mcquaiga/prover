@@ -72,8 +72,8 @@
       <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj">
-      <Project>{7DBB07B6-6375-497F-8ED8-3D0DAD4F01EF}</Project>
+    <ProjectReference Include="..\..\Prover.SharedPortable\Prover.Shared.csproj">
+      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>

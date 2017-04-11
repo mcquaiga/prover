@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.Data.EF.Models.TestPoint;
 
-namespace Prover.Data.SQL.Models
+namespace Prover.Data.EF.Models
 {
     [Table("QA_VolumeTests")]
     internal class VolumeTestDao

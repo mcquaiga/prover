@@ -1,9 +1,9 @@
 namespace Prover.Domain.Instrument.Items
 {
-    public interface ISuperFactorItems
+    public interface ISuperFactorItems : IItemsGroup
     {
-        decimal Co2 { get; }
-        decimal N2 { get; }
-        decimal SpecGr { get; }
+        double Co2 { get; }
+        double N2 { get; }
+        double SpecGr { get; }
     }
 }

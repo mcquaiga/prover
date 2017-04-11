@@ -2,25 +2,26 @@
 
 namespace Prover.Domain.Instrument.Items
 {
-    public interface IVolumeItems
+    public interface IVolumeItems : IItemsGroup
     {
-        decimal CorrectedMultiplier { get; }
-        decimal CorrectedReading { get; }
-        string CorrectedUnits { get; }
-        decimal DriveRate { get; }
+        DriveTypeDescripter DriveType { get; }
+        double DriveRate { get; }
         string DriveRateDescription { get; }
 
-        DriveTypeDescripter DriveType { get; }
-        decimal Energy { get; }
-        decimal EnergyGasValue { get; }
-
+        double CorrectedMultiplier { get; }
+        double CorrectedReading { get; }
+        string CorrectedUnits { get; }
+        
+        double Energy { get; }
+        double EnergyGasValue { get; }
         string EnergyUnits { get; }
-        decimal MeterDisplacement { get; }
-        string MeterModel { get; }
 
+        double MeterDisplacement { get; }
+        string MeterModel { get; }
         int MeterModelId { get; }
-        decimal UncorrectedMultiplier { get; }
-        decimal UncorrectedReading { get; }
+
+        double UncorrectedMultiplier { get; }
+        double UncorrectedReading { get; }
         string UncorrectedUnits { get; }
     }
 }

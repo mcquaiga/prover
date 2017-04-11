@@ -328,9 +328,9 @@
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Data.SQL\Prover.Data.SQL.csproj">
+    <ProjectReference Include="..\Prover.Data.SQL\Prover.Data.EF.csproj">
       <Project>{6dc1582c-28be-4bdb-acc9-1d0332ad0ea7}</Project>
-      <Name>Prover.Data.SQL</Name>
+      <Name>Prover.Data.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>

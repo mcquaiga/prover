@@ -2,11 +2,11 @@ using Prover.Shared.Enums;
 
 namespace Prover.Domain.Instrument.Items
 {
-    public interface ITemperatureItems
+    public interface ITemperatureItems : IItemsGroup
     {
-        decimal Base { get; }
-        decimal Factor { get; }
-        decimal GasTemperature { get; }
+        double Base { get; }
+        double Factor { get; }
+        double GasTemperature { get; }
         TemperatureUnits Units { get; }
     }
 }

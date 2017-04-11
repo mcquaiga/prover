@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniAT
@@ -11,13 +12,15 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniAT
         public string ItemFilePath => "MiniATItems.xml";
         public string Name => "Mini-AT";
 
-        internal override HoneywellInstrument CreateType(bool isReadOnly)
+        internal override HoneywellInstrument CreateType()
         {
-            if (isReadOnly)
-                return new HoneywellReadOnlyInstrument(Id, AccessCode, Name, ItemFilePath);
-
             var commClient = new HoneywellClient(CommPort);
             return new HoneywellInstrument(commClient, Id, AccessCode, Name, ItemFilePath);
+        }
+
+        internal override HoneywellInstrument CreateType(Dictionary<string, string> itemData)
+        {
+            return new HoneywellInstrument(Id, AccessCode, Name, ItemFilePath, itemData);
         }
     }
 }

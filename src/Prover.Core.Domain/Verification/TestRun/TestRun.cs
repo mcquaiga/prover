@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using Prover.Domain.Instrument;
 using Prover.Domain.Verification.TestPoints;
 using Prover.Shared.Domain;
+using Prover.Shared.DTO.TestRuns;
 using Prover.Shared.Enums;
 
 namespace Prover.Domain.Verification.TestRun
@@ -12,10 +14,11 @@ namespace Prover.Domain.Verification.TestRun
         public TestRun(IInstrument instrument) : base(Guid.NewGuid())
         {
             Instrument = instrument;
+            TestDateTime = DateTime.UtcNow;
 
             TestPoints = new List<TestPoint>();
             foreach (TestLevel testLevel in Enum.GetValues(typeof(TestLevel)))
-                TestPoints.Add(TestPoint.Create(testLevel, instrument));
+                TestPoints.Add(new TestPoint(instrument, testLevel));
         }
 
         public TestRun(Guid id, IInstrument instrument, IList<TestPoint> testPoints, DateTime? archivedDateTime, DateTime? exportedDateTime, DateTime testDateTime)
@@ -35,9 +38,14 @@ namespace Prover.Domain.Verification.TestRun
         public DateTime? ExportedDateTime { get; set; }
         public DateTime TestDateTime { get; set; }
 
-        protected override void Validate()
+        public virtual TestRunDto ConvertToDto()
         {
-            throw new NotImplementedException();
+            return Mapper.Map<TestRunDto>(this);
+        }
+
+        public static TestRun ConvertToDomain(TestRunDto testRunDto)
+        {
+            return Mapper.Map<TestRun>(testRunDto);
         }
     }
 }

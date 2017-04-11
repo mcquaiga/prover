@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument;
@@ -30,7 +31,7 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
 
         internal static IEnumerable<ItemMetadata> LoadFromFile(HoneywellInstrument instrument)
         {
-            var path = $@"{Environment.CurrentDirectory}\{ItemDefinitionsFolder}\{instrument.ItemFilePath}";
+            var path = $@"{AppDomain.CurrentDomain.BaseDirectory}\{ItemDefinitionsFolder}\{instrument.ItemFilePath}";
             var xDoc = XDocument.Load(path);
 
             var items = (from x in xDoc.Descendants("item")
@@ -64,8 +65,8 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
                                 Description = y.Attribute("description").Value,
                                 Value =
                                     y.Attribute("numericvalue") == null
-                                        ? (decimal?) null
-                                        : Convert.ToDecimal(y.Attribute("numericvalue").Value)
+                                        ? (double?) null
+                                        : Convert.ToDouble(y.Attribute("numericvalue").Value)
                             })
                         .ToList()
                 }

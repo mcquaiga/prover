@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Prover.Data.SQL.Models;
 
-namespace Prover.Data.SQL.Common
+namespace Prover.Data.EF.Common
 {
     public class SqlDataContext : DbContext
     {

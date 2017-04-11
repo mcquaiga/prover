@@ -10,17 +10,23 @@ namespace Prover.Domain.Instrument
         EvcCorrectorType CorrectorType { get; }
         int Id { get; }
 
+        IInstrumentFactory InstrumentFactory { get; }
         Dictionary<string, string> ItemData { get; }
         string Name { get; }
-        IPressureItems PressureItems { get; }
 
+        IPressureItems PressureItems { get; }
         ISiteInformationItems SiteInformationItems { get; }
         ISuperFactorItems SuperFactorItems { get; }
         ITemperatureItems TemperatureItems { get; }
         IVolumeItems VolumeItems { get; }
+
         Task<IPressureItems> GetPressureItems();
+        IPressureItems GetPressureItems(Dictionary<string, string> itemData);
 
         Task<ITemperatureItems> GetTemperatureItems();
+        ITemperatureItems GetTemperatureItems(Dictionary<string, string> itemData);
+
         Task<IVolumeItems> GetVolumeItems();
+        IVolumeItems GetVolumeItems(Dictionary<string, string> itemData);
     }
 }

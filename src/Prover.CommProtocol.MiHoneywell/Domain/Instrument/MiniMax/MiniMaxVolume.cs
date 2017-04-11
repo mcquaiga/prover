@@ -14,12 +14,12 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax
         {
         }
 
-        public override decimal CorrectedReading => ItemValues.GetHighResolutionValue(0, 113);
+        public override double CorrectedReading => ItemValues.GetHighResolutionValue(0, 113);
 
-        public override decimal MeterDisplacement => ItemValues.GetItem(439).NumericValue;
+        public override double MeterDisplacement => ItemValues.GetItem(439).NumericValue;
         public override string MeterModel => ItemValues.GetItem(432).Description;
         public override int MeterModelId => (int) ItemValues.GetItem(432).NumericValue;
 
-        public override decimal UncorrectedReading => ItemValues.GetHighResolutionValue(2, 892);
+        public override double UncorrectedReading => ItemValues.GetHighResolutionValue(2, 892);
     }
 }

@@ -6,29 +6,46 @@ using SuperFactorCalculations;
 
 namespace Prover.Domain.Verification.TestPoints.SuperFactor
 {
-    public class SuperFactorTestPoint
+    public class SuperFactorTestPoint : TestPointBase<ISuperFactorItems>
     {
-        private readonly PressureTestPoint _pressureTest;
-        private readonly TemperatureTestPoint _temperatureTest;
+        public SuperFactorTestPoint() : base(Guid.Empty) { }
 
-        public SuperFactorTestPoint(ISuperFactorItems superFactorItems, PressureTestPoint pressureTest, TemperatureTestPoint temperatureTest)
+        public SuperFactorTestPoint(ISuperFactorItems evcItems)
+            : base(Guid.Empty, evcItems)
         {
-            EvcItems = superFactorItems;
-            _pressureTest = pressureTest;
-            _temperatureTest = temperatureTest;
+            EvcItems = evcItems;
         }
 
-        public decimal ActualFactor => decimal.Round((decimal) CalculateFpv(), 4);
+        public SuperFactorTestPoint(ISuperFactorItems evcItems, double gaugeTemperature, double gaugePressure, double unsquaredFactor)
+            : this(evcItems)
+        {
+            GaugeTemperature = gaugeTemperature;
+            GaugePressure = gaugePressure;
+            UnsquaredFactor = unsquaredFactor;
+        }
 
-        public ISuperFactorItems EvcItems { get; set; }
+        public double GaugeTemperature { get; private set; }
+        public double GaugePressure { get; private set; }
+        public double UnsquaredFactor { get; private set; }
 
-        public decimal? PercentError
-            =>
-                ActualFactor != 0
-                    ? decimal.Round((_pressureTest.EvcItems.UnsqrFactor - ActualFactor) / ActualFactor * 100, 2)
-                    : default(decimal?);
+        public SuperFactorTestPoint Update(double gaugeTemperature, double gaugePressure, double unsqrFactor)
+        {
+            return new SuperFactorTestPoint(EvcItems, gaugeTemperature, gaugePressure, unsqrFactor);
+        }
 
-        public decimal SquaredFactor => (decimal) Math.Pow((double) ActualFactor, 2);
+        public double ActualFactor => Math.Round(CalculateFpv(), 4);
+
+        public double? PercentError
+        {
+            get
+            {
+                if (ActualFactor == 0) return default(double?);
+
+                return Math.Round((UnsquaredFactor - ActualFactor) / ActualFactor * 100, 2);
+            }
+        }
+
+        public double SquaredFactor => (double) Math.Pow((double) ActualFactor, 2);
 
         private double CalculateFpv()
         {
@@ -36,9 +53,10 @@ namespace Prover.Domain.Verification.TestPoints.SuperFactor
                 (double) EvcItems.SpecGr,
                 (double) EvcItems.Co2,
                 (double) EvcItems.N2,
-                (double) _temperatureTest.GaugeTemperature,
-                (double) _pressureTest.GaugePressure);
-            return super.SuperFactor;
+                GaugeTemperature,
+                GaugePressure);
+
+            return (double)super.SuperFactor;
         }
     }
 }

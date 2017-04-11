@@ -30,7 +30,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
             //return uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
 
-        decimal IDriveType.UnCorrectedInputVolume(decimal appliedInput)
+        double IDriveType.UnCorrectedInputVolume(double appliedInput)
         {
             return appliedInput * Instrument.VolumeItems.DriveRate;
         }
@@ -51,7 +51,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
             _volumeTest = volumeTest;
         }
 
-        public decimal? ActualEnergy
+        public double? ActualEnergy
         {
             get
             {
@@ -59,9 +59,9 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
                 switch (EnergyUnits)
                 {
                     case Therms:
-                        return Math.Round(energyValue * _volumeTest.CorrectedEvcTotal) / 100000;
+                        return Math.Round(energyValue * _volumeTest.CorrectedCalculator.EvcTotal) / 100000;
                     case Dktherms:
-                        return Math.Round(energyValue * _volumeTest.CorrectedEvcTotal) / 1000000;
+                        return Math.Round(energyValue * _volumeTest.CorrectedCalculator.EvcTotal) / 1000000;
                     case GigaJoules:
                         break;
                 }
@@ -72,7 +72,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
 
         public string EnergyUnits => _volumeTest.PreTestItems.EnergyUnits;
 
-        public decimal? EvcEnergy
+        public double? EvcEnergy
         {
             get
             {
@@ -85,13 +85,13 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
 
         public bool HasPassed => PercentError < 1 && PercentError > -1;
 
-        public decimal? PercentError
+        public double? PercentError
         {
             get
             {
                 var error = (EvcEnergy - ActualEnergy) / ActualEnergy * 100;
                 if (error != null)
-                    return decimal.Round(error.Value, 2);
+                    return Math.Round(error.Value, 2);
                 return null;
             }
         }

@@ -5,6 +5,6 @@
         string Discriminator { get; }
         bool HasPassed { get; }
         int MaxUncorrectedPulses();
-        decimal UnCorrectedInputVolume(decimal appliedInput);
+        double UnCorrectedInputVolume(double appliedInput);
     }
 }

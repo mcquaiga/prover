@@ -15,7 +15,7 @@ namespace Prover.Domain.Verification.TestRun
         {
             var instrument = await instrumentFactory.Create();
 
-            var testRun = new TestRun(instrument, null);
+            var testRun = new TestRun(instrument);
 
             return testRun;
         }

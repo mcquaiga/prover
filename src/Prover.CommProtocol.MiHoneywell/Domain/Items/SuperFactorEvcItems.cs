@@ -19,9 +19,11 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
         {
         }
 
-        public decimal Co2 => _itemValues.GetItem(55).NumericValue;
-        public decimal N2 => _itemValues.GetItem(54).NumericValue;
+        public double Co2 => _itemValues.GetItem(55).NumericValue;
+        public double N2 => _itemValues.GetItem(54).NumericValue;
 
-        public decimal SpecGr => _itemValues.GetItem(53).NumericValue;
+        public double SpecGr => _itemValues.GetItem(53).NumericValue;
+
+        public Dictionary<string, string> ItemData => _itemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
     }
 }

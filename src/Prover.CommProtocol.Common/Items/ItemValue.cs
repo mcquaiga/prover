@@ -19,8 +19,8 @@ namespace Prover.CommProtocol.Common.Items
 
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue
-            => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
+        public virtual double NumericValue
+            => RawValue != "!Unsupported" ? ItemDescription?.Value ?? double.Parse(RawValue) : 0;
 
         public string RawValue { get; set; }
 

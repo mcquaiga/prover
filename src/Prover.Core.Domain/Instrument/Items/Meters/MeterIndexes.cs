@@ -12,7 +12,7 @@ namespace Prover.Domain.Instrument.Items.Meters
         }
 
         private MeterIndexInfo(int id, string description, int unCorPulsesX10, int unCorPulsesX100,
-            decimal? meterDisplacement)
+            double? meterDisplacement)
         {
             Id = id;
             Description = description;
@@ -24,7 +24,7 @@ namespace Prover.Domain.Instrument.Items.Meters
         public string Description { get; set; }
 
         public int Id { get; set; }
-        public decimal? MeterDisplacement { get; set; }
+        public double? MeterDisplacement { get; set; }
         public int UnCorPulsesX10 { get; set; }
         public int UnCorPulsesX100 { get; set; }
 
@@ -40,7 +40,7 @@ namespace Prover.Domain.Instrument.Items.Meters
                     Description = x.Attribute("description").Value,
                     UnCorPulsesX10 = Convert.ToInt32(x.Attribute("UnCorPulsesX10").Value),
                     UnCorPulsesX100 = Convert.ToInt32(x.Attribute("UnCorPulsesX100").Value),
-                    MeterDisplacement = Convert.ToDecimal(x.Attribute("MeterDisplacement").Value)
+                    MeterDisplacement = Convert.ToDouble(x.Attribute("MeterDisplacement").Value)
                 };
 
             if (indexes == null || !indexes.Any())

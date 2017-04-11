@@ -2,8 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax;
 using Prover.Domain.Instrument;
+using Prover.Domain.Verification.TestRun;
 
 namespace Prover.CommProtocol.Console
 {
@@ -13,16 +16,9 @@ namespace Prover.CommProtocol.Console
         {
             var commPort = new SerialPort("COM3", 38400);
 
-            //var comm = Assembly.LoadFrom($@"{dir}\\Prover.CommProtocol.MiHoneywell.dll");
-
-            //var type = typeof(IInstrumentFactory);
-            //var types = comm.GetTypes().Where(p => type.IsAssignableFrom(p)).ToList();
-
-            //var test = TestRunFactory.Create(instrument);
-
-            //var testDto = TestRunFactory.Create(test);
-
-            //var test2 = TestRunFactory.Create(testDto);
+            var factory = new MiniMaxFactory(commPort);
+            var instrument = factory.Create().Result;
+            var itemData = JsonConvert.SerializeObject(instrument.ItemData);
             System.Console.ReadLine();
         }
     }

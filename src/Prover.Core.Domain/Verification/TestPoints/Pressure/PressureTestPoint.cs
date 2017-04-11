@@ -4,31 +4,24 @@ using Prover.Shared.Domain;
 
 namespace Prover.Domain.Verification.TestPoints.Pressure
 {
-    public class PressureTestPoint : Entity<Guid>
+    public class PressureTestPoint : TestPointBase<IPressureItems>
     {
-        public decimal GaugePressure { get; private set; }
-        public decimal AtmosphericGauge { get; private set; }
-        public IPressureItems EvcItems { get; set; }
+        public double GaugePressure { get; private set; }
+        public double AtmosphericGauge { get; private set; }
 
-        public PressureTestPoint(decimal gasGauge, IPressureItems pressureItems)
-            : base(Guid.NewGuid())
-        {
-            EvcItems = pressureItems;
-            GaugePressure = gasGauge;
-            AtmosphericGauge = 0;
-        }
+        public PressureTestPoint() : base(Guid.NewGuid()) { }
 
-        public PressureTestPoint(Guid id, decimal gaugePressure, decimal atmosphericGauge, IPressureItems evcItems)
-            : base(id)
+        public PressureTestPoint(Guid id, IPressureItems evcItems, double gaugePressure, double? atmosphericGauge)
+            : base(id, evcItems)
         {
             GaugePressure = gaugePressure;
-            AtmosphericGauge = atmosphericGauge;
+            AtmosphericGauge = atmosphericGauge ?? 0;
             EvcItems = evcItems;
         }
 
-        public decimal ActualFactor => EvcItems.Base != 0 ? decimal.Round(GasPressure / EvcItems.Base, 4) : 0.0m;
+        public double ActualFactor => EvcItems.Base != 0 ? Math.Round(GasPressure / EvcItems.Base, 4) : 0.0d;
 
-        public decimal GasPressure
+        public double GasPressure
         {
             get
             {
@@ -38,20 +31,15 @@ namespace Prover.Domain.Verification.TestPoints.Pressure
             }
         }
 
-        public decimal? PercentError
+        public double? PercentError
             => ActualFactor != 0
                 ? Math.Round((EvcItems.Factor - ActualFactor) / ActualFactor * 100, 2)
-                : default(decimal?);
+                : default(double?);
 
-        public void SetGaugeValues(decimal gasGauge, decimal atmGauge)
+        public void SetGaugeValues(double gasGauge, double atmGauge)
         {
             GaugePressure = gasGauge;
             AtmosphericGauge = atmGauge;
-        }
-
-        protected override void Validate()
-        {
-            throw new NotImplementedException();
         }
     }
 }

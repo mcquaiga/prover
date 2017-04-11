@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.Domain.Instrument.Items;
@@ -7,8 +8,8 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax
 {
     internal class MiniMaxInstrument : HoneywellInstrument
     {
-        public MiniMaxInstrument(int id, int accessCode, string name, string itemFilePath)
-            : base(id, accessCode, name, itemFilePath)
+        public MiniMaxInstrument(int id, int accessCode, string name, string itemFilePath, Dictionary<string, string> itemData)
+            : base(id, accessCode, name, itemFilePath, itemData)
         {
         }
 
@@ -24,15 +25,11 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax
             var items = await CommClient.GetItemValues(ItemDefinitions.VolumeItems());
             return new MiniMaxVolume(items);
         }
-    }
 
-    internal class MiniMaxReadOnlyInstrument : HoneywellReadOnlyInstrument
-    {
-        public MiniMaxReadOnlyInstrument(int id, int accessCode, string name, string itemFilePath)
-            : base(id, accessCode, name, itemFilePath)
+        public override IVolumeItems GetVolumeItems(Dictionary<string, string> itemData)
         {
+            var itemValues = SetupItemValues(ItemDefinitions, itemData);
+            return new MiniMaxVolume(itemValues);
         }
-
-        public override IVolumeItems VolumeItems => new MiniMaxVolume(this);
     }
 }

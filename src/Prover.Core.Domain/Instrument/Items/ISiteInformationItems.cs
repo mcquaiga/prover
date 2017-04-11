@@ -1,6 +1,6 @@
 namespace Prover.Domain.Instrument.Items
 {
-    public interface ISiteInformationItems
+    public interface ISiteInformationItems : IItemsGroup
     {
         string FirmwareVersion { get; }
         string SerialNumber { get; }

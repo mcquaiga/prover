@@ -25,13 +25,15 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
         {
         }
 
-        public decimal Base => _itemValues.GetItem(BaseItemNumber).NumericValue;
-        public decimal Factor => _itemValues.GetItem(TempFactorItemNumber).NumericValue;
+        public double Base => _itemValues.GetItem(BaseItemNumber).NumericValue;
+        public double Factor => _itemValues.GetItem(TempFactorItemNumber).NumericValue;
 
-        public decimal GasTemperature => _itemValues.GetItem(GasTempItemNumber).NumericValue;
+        public double GasTemperature => _itemValues.GetItem(GasTempItemNumber).NumericValue;
 
         public TemperatureUnits Units
             => (TemperatureUnits) Enum.Parse(typeof(TemperatureUnits), _itemValues.GetItem(UnitsItemNumber).Description)
         ;
+
+        public Dictionary<string, string> ItemData => _itemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
     }
 }

@@ -31,7 +31,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
             return 10; //Low standard number if we can't find anything
         }
 
-        public decimal UnCorrectedInputVolume(decimal appliedInput)
+        public double UnCorrectedInputVolume(double appliedInput)
         {
             return Meter.MeterDisplacement * appliedInput;
         }
@@ -47,7 +47,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
             MeterIndex = MeterIndexInfo.Get(_volumeItems.MeterModelId);
         }
 
-        public decimal MeterDisplacement
+        public double MeterDisplacement
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Prover.Domain.Verification.TestPoints.Volume.DriveTypes
             }
         }
 
-        public decimal MeterDisplacementPercentError
+        public double MeterDisplacementPercentError
         {
             get
             {

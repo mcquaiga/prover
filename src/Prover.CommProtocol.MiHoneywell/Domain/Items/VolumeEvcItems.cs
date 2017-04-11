@@ -22,34 +22,35 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
         {
         }
 
-        public virtual decimal CorrectedMultiplier => ItemValues.GetItem(90).NumericValue;
+        public virtual double CorrectedMultiplier => ItemValues.GetItem(90).NumericValue;
 
-        public virtual decimal CorrectedReading => ItemValues.GetHighResolutionValue(0, 113);
+        public virtual double CorrectedReading => ItemValues.GetHighResolutionValue(0, 113);
         public virtual string CorrectedUnits => ItemValues.GetItem(90).Description;
 
-        public virtual decimal DriveRate => ItemValues.GetItem(98).NumericValue;
+        public virtual double DriveRate => ItemValues.GetItem(98).NumericValue;
         public virtual string DriveRateDescription => ItemValues.GetItem(98).Description;
 
         public virtual DriveTypeDescripter DriveType
             => DriveRateDescription == "Rotary" ? DriveTypeDescripter.Rotary : DriveTypeDescripter.Mechanical;
 
-        public virtual decimal Energy => ItemValues.GetItem(140).NumericValue;
-        public virtual decimal EnergyGasValue => ItemValues.GetItem(142).NumericValue;
+        public virtual double Energy => ItemValues.GetItem(140).NumericValue;
+        public virtual double EnergyGasValue => ItemValues.GetItem(142).NumericValue;
 
         public virtual string EnergyUnits => ItemValues.GetItem(141).Description;
-        public virtual decimal MeterDisplacement => 0.0m;
+        public virtual double MeterDisplacement => 0.0d;
         public virtual string MeterModel => string.Empty;
 
         public virtual int MeterModelId => 0;
-        public virtual decimal UncorrectedMultiplier => ItemValues.GetItem(92).NumericValue;
+        public virtual double UncorrectedMultiplier => ItemValues.GetItem(92).NumericValue;
 
-        public virtual decimal UncorrectedReading => ItemValues.GetItem(2).NumericValue;
+        public virtual double UncorrectedReading => ItemValues.GetItem(2).NumericValue;
         public virtual string UncorrectedUnits => ItemValues.GetItem(92).Description;
+        public Dictionary<string, string> ItemData => ItemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
     }
 
     internal static class HighResVolumeHelpers
     {
-        public static decimal GetHighResFractionalValue(decimal highResValue)
+        public static double GetHighResFractionalValue(double highResValue)
         {
             if (highResValue == 0) return 0;
 
@@ -60,31 +61,31 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
             {
                 var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
 
-                return Convert.ToDecimal(result);
+                return Convert.ToDouble(result);
             }
 
             return 0;
         }
 
-        public static decimal GetHighResolutionItemValue(int lowResValue, decimal highResValue)
+        public static double GetHighResolutionItemValue(int lowResValue, double highResValue)
         {
             var fractional = GetHighResFractionalValue(highResValue);
             return lowResValue + fractional;
         }
 
-        public static decimal GetHighResolutionValue(this IEnumerable<ItemValue> itemValues, int lowResItemNumber,
+        public static double GetHighResolutionValue(this IEnumerable<ItemValue> itemValues, int lowResItemNumber,
             int highResItemNumber)
         {
-            if (itemValues == null) return 0.0m;
+            if (itemValues == null) return 0.0d;
 
             var items = itemValues as ItemValue[] ?? itemValues.ToArray();
-            decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
-            decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
+            double? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
+            double? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
 
             return JoinLowResHighResReading(lowResValue, highResValue);
         }
 
-        public static decimal JoinLowResHighResReading(decimal? lowResValue, decimal? highResValue)
+        public static double JoinLowResHighResReading(double? lowResValue, double? highResValue)
         {
             if (!lowResValue.HasValue || !highResValue.HasValue)
                 throw new ArgumentNullException(nameof(lowResValue) + " & " + nameof(highResValue));
