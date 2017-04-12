@@ -122,10 +122,6 @@
       <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.SharedPortable\Prover.Shared.csproj">
-      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
-      <Name>Prover.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">

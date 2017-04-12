@@ -176,33 +176,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mappers\MapperConfiguration.cs" />
+    <Compile Include="Mappers\EfMapperConfiguration.cs" />
     <Compile Include="Mappers\Resolvers\DeserializeResolver.cs" />
-    <Compile Include="Models\PressureTest\PressureTestDao.cs" />
-    <Compile Include="Models\TemperatureTestDao.cs" />
-    <Compile Include="Models\TestPoint\TestPointDao.cs" />
-    <Compile Include="Models\TestPoint\TestPointMapping.cs" />
+    <Compile Include="Mappers\JsonConverter.cs" />
+    <Compile Include="Models\PressureTestDatabase.cs" />
     <Compile Include="Mappers\Resolvers\SerializeResolver.cs" />
-    <Compile Include="Models\TestRun\TestRunDao.cs" />
-    <Compile Include="Models\TestRun\TestRunMapping.cs" />
-    <Compile Include="Models\VolumeTestDao.cs" />
+    <Compile Include="Mappers\Resolvers\InstrumentDtoResolver.cs" />
+    <Compile Include="Models\TemperatureTestDatabase.cs" />
+    <Compile Include="Models\TestPoint\TestPointDatabase.cs" />
+    <Compile Include="Models\TestPoint\TestPointMappingProfile.cs" />
+    <Compile Include="Models\TestRun\TestRunDatabase.cs" />
+    <Compile Include="Models\TestRun\TestRunMappingProfile.cs" />
+    <Compile Include="Models\VolumeTestDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SqlDataContext.cs" />
-    <Compile Include="Models\TestRun\TestRunStore.cs" />
-    <Compile Include="Storage\IDataStore.cs" />
-    <Compile Include="Common\DbContext.cs" />
     <Compile Include="Storage\TestRunSqlRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Prover.SharedPortable\Prover.Shared.csproj">
-      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
-      <Name>Prover.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{187FDEA3-FFEB-464E-B59D-DD022E624D8D}</Project>
+      <Name>Prover.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

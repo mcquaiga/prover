@@ -72,10 +72,6 @@
       <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
       <Name>Prover.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.SharedPortable\Prover.Shared.csproj">
-      <Project>{187FDEA3-FFEB-464E-B59D-DD022E624D8D}</Project>
-      <Name>Prover.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
