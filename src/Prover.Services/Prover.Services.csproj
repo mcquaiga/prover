@@ -55,6 +55,8 @@
     <Compile Include="Mappings\Profiles\TestPointMappingProfile.cs" />
     <Compile Include="Mappings\Profiles\TestRunMappingProfile.cs" />
     <Compile Include="Mappings\Profiles\VolumeTestMappingProfile.cs" />
+    <Compile Include="ServiceClients\IProverTestRunFactory.cs" />
+    <Compile Include="ServiceClients\ProverTestRunService.cs" />
     <Compile Include="ServiceClients\TestRunService.cs" />
   </ItemGroup>
   <ItemGroup>

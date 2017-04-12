@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Prover\ProverPressureTestPoint.cs" />
+    <Compile Include="Models\Prover\ProverTemperatureTestPoint.cs" />
+    <Compile Include="Models\Prover\ProverVolumeTestPoint.cs" />
+    <Compile Include="Models\Instrument\EvcInstrument.cs" />
     <Compile Include="Instrument\IInstrument.cs" />
     <Compile Include="Instrument\Items\IItemsGroup.cs" />
     <Compile Include="Verification\TestPoints\TestPointBase.cs" />
@@ -67,6 +71,8 @@
     <Compile Include="Verification\TestPoints\Temperature\TemperatureTestPoint.cs" />
     <Compile Include="Verification\TestPoints\TestPoint.cs" />
     <Compile Include="Verification\TestRun\ITestRunService.cs" />
+    <Compile Include="Models\Prover\ProverTestRun.cs" />
+    <Compile Include="Models\Prover\ProverTestPoint.cs" />
     <Compile Include="Verification\TestRun\TestRun.cs" />
     <Compile Include="Verification\TestPoints\Volume\VolumeTestPoint.cs" />
     <Compile Include="Verification\TestRun\TestRunFactory.cs" />

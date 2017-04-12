@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Prover.Data.EF.Common;
 using Prover.Data.EF.Mappers;
 using Prover.Data.EF.Models.TestRun;
 using Prover.Shared.DTO.TestRuns;
@@ -40,18 +39,18 @@ namespace Prover.Data.EF.Storage
 
         public async Task<TestRunDto> UpsertAsync(TestRunDto entity)
         {
-            var testRun = Mapper.Map<TestRunDatabase>(entity);
+        //    var testRun = Mapper.Map<TestRunDatabase>(entity);
 
-            if (await GetByIdAsync(testRun.Id) != null)
-            {
-                _dataContext.TestRuns.Attach(testRun);
-                _dataContext.Entry(testRun).State = EntityState.Modified;
-            }
-            else
-            {
-                _dataContext.TestRuns.Add(testRun);
-            }
-            await _dataContext.SaveChangesAsync();
+        //    if (await GetByIdAsync(testRun.Id) != null)
+        //    {
+        //        _dataContext.TestRuns.Attach(testRun);
+        //        _dataContext.Entry(testRun).State = EntityState.Modified;
+        //    }
+        //    else
+        //    {
+        //        _dataContext.TestRuns.Add(testRun);
+        //    }
+        //    await _dataContext.SaveChangesAsync();
             return entity;
         }
 

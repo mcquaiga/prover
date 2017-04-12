@@ -21,32 +21,12 @@ namespace Prover.Domain.Verification.TestRun
                 TestPoints.Add(new TestPoint(instrument, testLevel));
         }
 
-        public TestRun(Guid id, IInstrument instrument, IList<TestPoint> testPoints, DateTime? archivedDateTime, DateTime? exportedDateTime, DateTime testDateTime)
-            : base(id)
-        {
-            Instrument = instrument;
-            TestPoints = testPoints;
-            ArchivedDateTime = archivedDateTime;
-            ExportedDateTime = exportedDateTime;
-            TestDateTime = testDateTime;
-        }
-
         public IInstrument Instrument { get; set; }
         public IList<TestPoint> TestPoints { get; set; }
 
         public DateTime? ArchivedDateTime { get; set; }
         public DateTime? ExportedDateTime { get; set; }
         public DateTime TestDateTime { get; set; }
-
-        public virtual TestRunDto ConvertToDto()
-        {
-            return Mapper.Map<TestRunDto>(this);
-        }
-
-        public static TestRun ConvertToDomain(TestRunDto testRunDto)
-        {
-            return Mapper.Map<TestRun>(testRunDto);
-        }
     }
 }
 

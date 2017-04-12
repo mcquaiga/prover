@@ -11,14 +11,6 @@ namespace Prover.Domain.Verification.TestPoints.Pressure
 
         public PressureTestPoint() : base(Guid.NewGuid()) { }
 
-        public PressureTestPoint(Guid id, IPressureItems evcItems, double gaugePressure, double? atmosphericGauge)
-            : base(id, evcItems)
-        {
-            GaugePressure = gaugePressure;
-            AtmosphericGauge = atmosphericGauge ?? 0;
-            EvcItems = evcItems;
-        }
-
         public double ActualFactor => EvcItems.Base != 0 ? Math.Round(GasPressure / EvcItems.Base, 4) : 0.0d;
 
         public double GasPressure

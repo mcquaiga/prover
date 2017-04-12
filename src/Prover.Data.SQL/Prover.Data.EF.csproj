@@ -34,6 +34,10 @@
     <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Hosting.Abstractions.1.1.1\lib\net451\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
     </Reference>
@@ -179,17 +183,20 @@
     <Compile Include="Mappers\EfMapperConfiguration.cs" />
     <Compile Include="Mappers\Resolvers\DeserializeResolver.cs" />
     <Compile Include="Mappers\JsonConverter.cs" />
-    <Compile Include="Models\PressureTestDatabase.cs" />
+    <Compile Include="Models\Prover\ProverTestRunDatabase.cs" />
+    <Compile Include="Models\Verification\PressureTestDatabase.cs" />
     <Compile Include="Mappers\Resolvers\SerializeResolver.cs" />
     <Compile Include="Mappers\Resolvers\InstrumentDtoResolver.cs" />
-    <Compile Include="Models\TemperatureTestDatabase.cs" />
-    <Compile Include="Models\TestPoint\TestPointDatabase.cs" />
-    <Compile Include="Models\TestPoint\TestPointMappingProfile.cs" />
-    <Compile Include="Models\TestRun\TestRunDatabase.cs" />
-    <Compile Include="Models\TestRun\TestRunMappingProfile.cs" />
-    <Compile Include="Models\VolumeTestDatabase.cs" />
+    <Compile Include="Models\Verification\TemperatureTestDatabase.cs" />
+    <Compile Include="Models\Verification\TestPoint\TestPointDatabase.cs" />
+    <Compile Include="Models\Verification\TestPoint\TestPointMappingProfile.cs" />
+    <Compile Include="Models\Verification\TestRun\TestRunDatabase.cs" />
+    <Compile Include="Models\Verification\TestRun\TestRunMappingProfile.cs" />
+    <Compile Include="Models\Verification\VolumeTestDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\SqlDataContext.cs" />
+    <Compile Include="Repositories\EfRepositoryBase.cs" />
+    <Compile Include="Repositories\ProverTestRunRepository.cs" />
+    <Compile Include="Storage\SqlDataContext.cs" />
     <Compile Include="Storage\TestRunSqlRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -197,10 +204,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
+      <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
+      <Name>Prover.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{187FDEA3-FFEB-464E-B59D-DD022E624D8D}</Project>
       <Name>Prover.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
