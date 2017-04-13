@@ -22,11 +22,13 @@ namespace Prover.Domain.Verification.TestRun
         }
 
         public IInstrument Instrument { get; set; }
-        public IList<TestPoint> TestPoints { get; set; }
+        public ICollection<TestPoint> TestPoints { get; set; }
 
         public DateTime? ArchivedDateTime { get; set; }
         public DateTime? ExportedDateTime { get; set; }
         public DateTime TestDateTime { get; set; }
+
+        public void UpdateTestPoint()
     }
 }
 

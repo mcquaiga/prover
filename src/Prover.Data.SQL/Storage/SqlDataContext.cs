@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Prover.Data.EF.Models.Prover;
+using Prover.Data.EF.Models.TestRun;
 
 namespace Prover.Data.EF.Storage
 {
     public class SqlDataContext : DbContext
     {
-        internal DbSet<ProverTestRunDatabase> TestRuns { get; set; }
+        internal DbSet<TestRunDatabase> TestRuns { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

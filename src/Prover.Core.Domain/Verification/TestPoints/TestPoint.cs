@@ -26,31 +26,14 @@ namespace Prover.Domain.Verification.TestPoints
             {TestLevel.Level2, 60},
             {TestLevel.Level3, 90}
         };
-
-        public IInstrument Instrument { get; }
-
-        private TestPoint(Guid id, IInstrument instrument, TestLevel level)
-            : base(id)
-        {
-            Instrument = instrument;
-            Level = level;
-        }
-
+        
         public TestPoint() : base(Guid.NewGuid())
         {
         }
 
-        public TestPoint(Guid id, IInstrument instrument, TestLevel level, PressureTestPoint pressure, TemperatureTestPoint temperature, VolumeTestPoint volume)
-            : this(id, instrument, level)
+        public TestPoint(IInstrument instrument, TestLevel level) : base(Guid.NewGuid())
         {
-            Pressure = pressure;
-            Temperature = temperature;
-            Volume = volume;
-        }
-
-        public TestPoint(IInstrument instrument, TestLevel level)
-            : this(Guid.NewGuid(), instrument, level)
-        {
+            Level = level;
             Pressure = CreatePressureTest(level, instrument);
             Temperature = CreateTemperatureTest(level, instrument);
             Volume = CreateVolumeTest(level, instrument);
@@ -59,20 +42,11 @@ namespace Prover.Domain.Verification.TestPoints
         public TestRun.TestRun TestRun { get; set; }
         public TestLevel Level { get; protected set; }
         public PressureTestPoint Pressure { get; protected set; }
-        public SuperFactorTestPoint SuperFactor
-        {
-            get
-            {
-                if (Instrument.CorrectorType != EvcCorrectorType.PTZ) return null;
-
-                return new SuperFactorTestPoint(Instrument.SuperFactorItems, Temperature.GaugeTemperature,
-                    Pressure.GasPressure, Pressure.EvcItems.UnsqrFactor);
-            }
-        }
+        public SuperFactorTestPoint SuperFactor { get; protected set; }
         public TemperatureTestPoint Temperature { get; protected set; }
         public VolumeTestPoint Volume { get; set; }
 
-        public void Update(IPressureItems pressureTestItems, ITemperatureItems temperatureTestItems, IVolumeItems volumePreTestItems, IVolumeItems volumePostTestItems)
+        internal void Update(IInstrument instrument, IPressureItems pressureTestItems, ITemperatureItems temperatureTestItems, IVolumeItems volumePreTestItems, IVolumeItems volumePostTestItems)
         {
             if (Pressure != null)
                 Pressure.EvcItems = pressureTestItems;
@@ -81,7 +55,10 @@ namespace Prover.Domain.Verification.TestPoints
                 Temperature.EvcItems = temperatureTestItems;
 
             if (Volume != null)
-                Volume.Update(volumePreTestItems, volumePostTestItems, Volume.AppliedInput, Temperature.ActualFactor, Pressure.ActualFactor, SuperFactor.ActualFactor);
+                Volume.Update(volumePreTestItems, volumePostTestItems, Volume.AppliedInput, Temperature?.ActualFactor, Pressure?.ActualFactor, SuperFactor?.ActualFactor);
+
+            if (instrument.CorrectorType == EvcCorrectorType.PTZ) 
+                SuperFactor = new SuperFactorTestPoint(instrument.SuperFactorItems, Temperature.GaugeTemperature, Pressure.GasPressure, Pressure.EvcItems.UnsqrFactor);
         }
 
         private static PressureTestPoint CreatePressureTest(TestLevel level, IInstrument instrument)

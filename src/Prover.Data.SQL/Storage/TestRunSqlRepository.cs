@@ -6,12 +6,13 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Prover.Data.EF.Mappers;
 using Prover.Data.EF.Models.TestRun;
+using Prover.Domain.Verification.TestRun;
 using Prover.Shared.DTO.TestRuns;
 using Prover.Shared.Storage;
 
 namespace Prover.Data.EF.Storage
 {
-    public class TestRunSqlRepository : IRepository<TestRunDto>
+    public class TestRunSqlRepository : IRepository<TestRun>
     {
         private readonly SqlDataContext _dataContext;
 
@@ -22,39 +23,39 @@ namespace Prover.Data.EF.Storage
             Mapper.Initialize(EfMapperConfiguration.Configure);
         }
 
-        public async Task<TestRunDto> GetByIdAsync<TId>(TId id)
+        public async Task<TestRun> GetByIdAsync<TId>(TId id)
         {
             var result = await _dataContext.TestRuns.FindAsync(id);
-            return Mapper.Map<TestRunDto>(result);
+            return Mapper.Map<TestRun>(result);
         }
 
-        public IQueryable<TestRunDto> Query()
+        public IQueryable<TestRun> Query()
         {
             return _dataContext.TestRuns
                 .Include(v => v.TestPoints.Select(t => t.Pressure))
                 .Include(v => v.TestPoints.Select(t => t.Temperature))
                 .Include(v => v.TestPoints.Select(t => t.Volume))
-                .AsQueryable().ProjectTo<TestRunDto>();
+                .AsQueryable().ProjectTo<TestRun>();
         }
 
-        public async Task<TestRunDto> UpsertAsync(TestRunDto entity)
+        public async Task<TestRun> UpsertAsync(TestRun entity)
         {
-        //    var testRun = Mapper.Map<TestRunDatabase>(entity);
+            var testRunDb = Mapper.Map<TestRunDatabase>(entity);
 
-        //    if (await GetByIdAsync(testRun.Id) != null)
-        //    {
-        //        _dataContext.TestRuns.Attach(testRun);
-        //        _dataContext.Entry(testRun).State = EntityState.Modified;
-        //    }
-        //    else
-        //    {
-        //        _dataContext.TestRuns.Add(testRun);
-        //    }
-        //    await _dataContext.SaveChangesAsync();
+            if (await GetByIdAsync(testRunDb.Id) != null)
+            {
+                _dataContext.TestRuns.Attach(testRunDb);
+                _dataContext.Entry(testRunDb).State = EntityState.Modified;
+            }
+            else
+            {
+                _dataContext.TestRuns.Add(testRunDb);
+            }
+            await _dataContext.SaveChangesAsync();
             return entity;
         }
 
-        public Task DeleteAsync(TestRunDto entity)
+        public Task DeleteAsync(TestRun entity)
         {
             throw new NotImplementedException();
         }

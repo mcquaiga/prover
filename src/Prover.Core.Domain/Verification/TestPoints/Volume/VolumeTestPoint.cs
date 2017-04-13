@@ -7,11 +7,9 @@ using Prover.Shared.Enums;
 
 namespace Prover.Domain.Verification.TestPoints.Volume
 {
-    public class VolumeTestPoint : TestPointBase<IVolumeItems>
+    public partial class VolumeTestPoint : TestPointBase<IVolumeItems>
     {
-        private CorrectedVolumeCalculator _correctedCalculator;
-        private UncorrectedVolumeCalculator _uncorrectedCalculator;
-
+        
         public VolumeTestPoint() : base(Guid.NewGuid())
         {
         }
@@ -34,30 +32,9 @@ namespace Prover.Domain.Verification.TestPoints.Volume
 
         public double AppliedInput { get; private set; }
 
-        public IVolumeCalculator CorrectedCalculator => _correctedCalculator;
-
         public IDriveType DriveType { get; private set; }
-        public IVolumeItems PostTestItems { get; set; }
-
         public IVolumeItems PreTestItems { get; set; }
-        public IVolumeCalculator UncorrectedCalculator => _uncorrectedCalculator;
-
-        public void BeginTest(IVolumeItems startTestVolumeItems)
-        {
-            PreTestItems = startTestVolumeItems;
-            PostTestItems = null;
-
-            _uncorrectedCalculator = null;
-            _correctedCalculator = null;
-            AppliedInput = 0;
-        }
-
-        public void CompleteTest(IVolumeItems endTestVolumeItems, double appliedInput,
-            double? temperatureFactor, double? pressureFactor, double? superFactor)
-        {
-            PostTestItems = endTestVolumeItems;
-            Update(appliedInput, temperatureFactor, pressureFactor, superFactor);
-        }
+        public IVolumeItems PostTestItems { get; set; }
 
         public void SetDriveType()
         {
@@ -65,32 +42,6 @@ namespace Prover.Domain.Verification.TestPoints.Volume
                 DriveType = new RotaryDrive(EvcItems);
             else
                 DriveType = new MechanicalDrive(this);
-        }
-
-        public void Update(double appliedInput, double? temperatureFactor, double? pressureFactor, double? superFactor)
-        {
-            if (PreTestItems == null || PostTestItems == null) return;
-
-            AppliedInput = appliedInput;
-
-            _uncorrectedCalculator = new UncorrectedVolumeCalculator(DriveType,
-                EvcItems.UncorrectedMultiplier,
-                AppliedInput,
-                PreTestItems.UncorrectedReading,
-                PostTestItems.UncorrectedReading);
-
-            _correctedCalculator = new CorrectedVolumeCalculator(EvcItems.CorrectedMultiplier, _uncorrectedCalculator.Calculated,
-                PreTestItems.CorrectedReading, PostTestItems.CorrectedReading,
-                temperatureFactor, pressureFactor, superFactor);
-        }
-
-        public void Update(IVolumeItems preTestItems, IVolumeItems postTestItems, double? appliedInput,
-            double? temperatureFactor, double? pressureFactor, double? superFactor)
-        {
-            PreTestItems = preTestItems;
-            PostTestItems = postTestItems;
-
-            Update(appliedInput ?? AppliedInput, temperatureFactor, pressureFactor, superFactor);
         }
     }
 }

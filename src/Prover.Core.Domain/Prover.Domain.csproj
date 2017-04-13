@@ -70,6 +70,7 @@
     <Compile Include="Verification\TestPoints\SuperFactor\SuperFactorTestPoint.cs" />
     <Compile Include="Verification\TestPoints\Temperature\TemperatureTestPoint.cs" />
     <Compile Include="Verification\TestPoints\TestPoint.cs" />
+    <Compile Include="Verification\TestPoints\Volume\VolumeTestPointLogic.cs" />
     <Compile Include="Verification\TestRun\ITestRunService.cs" />
     <Compile Include="Models\Prover\ProverTestRun.cs" />
     <Compile Include="Models\Prover\ProverTestPoint.cs" />
