@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Prover.CommProtocol.MiHoneywell.Debugger.Properties {
+namespace Prover.Modules.Certificates.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Prover.CommProtocol.MiHoneywell.Debugger.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Prover.CommProtocol.MiHoneywell.Debugger.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Prover.Modules.Certificates.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

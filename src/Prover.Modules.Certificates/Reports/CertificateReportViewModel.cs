@@ -1,18 +1,23 @@
 ﻿using Autofac;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
+using Prover.GUI.ViewModels.InstrumentsList;
+using Prover.Modules.CertificatesUi.Screens.Certificates;
 
-namespace Prover.GUI.Reports
+namespace Prover.Modules.CertificatesUi.Reports
 {
     public class CertificateReportViewModel : ReactiveScreen
     {
-        private readonly IContainer _container;
+        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Certificate> _certificateStore;
 
-        public CertificateReportViewModel(IContainer container, Certificate certificate)
+        public CertificateReportViewModel(IProverStore<Instrument> instrumentStore, IProverStore<Certificate> certificateStore )
         {
-            _container = container;
-
-            //LoadCertificate(certificate);
+            _instrumentStore = instrumentStore;
+            _certificateStore = certificateStore;
+            LoadCertificate(certificate);
         }
 
         public Certificate Certificate { get; set; }
@@ -22,15 +27,15 @@ namespace Prover.GUI.Reports
             get { return Certificate.CreatedDateTime.ToShortDateString(); }
         }
 
-        //public InstrumentsListViewModel InstrumentsView { get; set; }
+        public InstrumentsListViewModel InstrumentsView { get; set; }
 
-        //private void LoadCertificate(Certificate certificate)
-        //{
-        //    InstrumentsView = new InstrumentsListViewModel(_container);
-        //    InstrumentsView.GetInstrumentsByCertificateId(certificate.Id);
-        //    Certificate = certificate;
-        //    NotifyOfPropertyChange(() => Certificate);
-        //}
+        public void LoadCertificate(Certificate certificate)
+        {
+            InstrumentsView = new InstrumentsListViewModel(_instrumentStore);
+            InstrumentsView.GetInstrumentsByCertificateId(certificate.Id);
+            Certificate = certificate;
+            NotifyOfPropertyChange(() => Certificate);
+        }
 
         private void SaveCertificate()
         {

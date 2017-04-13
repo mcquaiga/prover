@@ -1,16 +1,19 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
-using System.Windows.Xps.Packaging;
 using Autofac;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Instruments;
+using Prover.Modules.CertificatesUi.Reports;
 
-namespace Prover.GUI.Reports
+namespace Prover.Modules.CertificatesUi
 {
-    public class CertificateGenerator
+    public class CertificateGenerator : IExportTestRun
     {
         private readonly Certificate _certificate;
         private readonly IContainer _container;
@@ -30,7 +33,7 @@ namespace Prover.GUI.Reports
         {
             //Set up the WPF Control to be printed
             var controlToPrint = new CertificateReportView();
-            controlToPrint.DataContext = new CertificateReportViewModel(_container, _certificate);
+            controlToPrint.DataContext = new CertificateReportViewModel(_certificate);
 
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
@@ -66,6 +69,16 @@ namespace Prover.GUI.Reports
             xpsWriter.Close();
 
             return filePath;
+        }
+
+        public Task<bool> Export(Instrument instrumentForExport)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
