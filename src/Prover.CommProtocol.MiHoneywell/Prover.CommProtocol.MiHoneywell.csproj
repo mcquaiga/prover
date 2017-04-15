@@ -118,9 +118,9 @@
       <Project>{8eeb9315-56e0-4a4f-9a36-3b9e8ccd47a1}</Project>
       <Name>Prover.CommProtocol.MiHoneywell.CRC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
-      <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
-      <Name>Prover.Domain</Name>
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
+      <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

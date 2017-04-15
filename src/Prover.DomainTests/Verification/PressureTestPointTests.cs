@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using AutoMapper;
 using Moq;
 using NUnit.Framework;
-using Prover.Domain.Instrument.Items;
-using Prover.Domain.Verification.TestPoints.Pressure;
-using Prover.Shared.DTO.TestRuns;
 using Prover.Shared.Enums;
 
 namespace Prover.Domain.Tests.Verification
@@ -23,45 +18,56 @@ namespace Prover.Domain.Tests.Verification
         [SetUp]
         public void TestInitialize()
         {
-            Mapper.Initialize(MappingConfiguration.Configure);
+            //Mapper.Initialize(MappingConfiguration.Configure);
         }
 
         [Test()]
         public void Verify_Pressure_PSIA()
         {
-            var pressure = _mockRepo.Create<IPressureItems>();
-            pressure.Setup(p => p.TransducerType).Returns("Absolute");
-            pressure.Setup(p => p.Base).Returns(14.73);
-            pressure.Setup(p => p.Factor).Returns(54.2813);
+            var pressureTestPoint = CreatePSIATest();
 
-            var pressureTestPoint = CreatePressureTestPoint(pressure);
-            pressureTestPoint.SetGaugeValues(785.9, 14.10);
-
-            Assert.AreEqual(54.3109, pressureTestPoint.ActualFactor, 0.001);
-            Assert.AreEqual(-0.05m, pressureTestPoint.PercentError ?? -100);
+            Assert.AreEqual(54.3109, pressureTestPoint.CalculatedFactor(), 0.001);
+            Assert.AreEqual(-0.05m, pressureTestPoint.PercentError() ?? -100);
         }
 
         [Test]
         public void Verify_Pressure_PSIG()
         {
-            var pressure = _mockRepo.Create<IPressureItems>();
-            pressure.Setup(p => p.AtmPressure).Returns(14.7);
-            pressure.Setup(p => p.TransducerType).Returns("Gauge");
-            pressure.Setup(p => p.Base).Returns(14.73);
-            pressure.Setup(p => p.Factor).Returns(55.3088);
+            var pressureTestPoint = CreatePressureTestPoint();
 
-            var pressureTestPoint = CreatePressureTestPoint(pressure);
-            pressureTestPoint.SetGaugeValues(800, 0);
-
-            Assert.AreEqual(55.3088, pressureTestPoint.ActualFactor, 0.001);
-            Assert.AreEqual(0.00m, pressureTestPoint.PercentError ?? -100);
+            Assert.AreEqual(55.3088, pressureTestPoint.CalculatedFactor(), 0.001);
+            Assert.AreEqual(0.00m, pressureTestPoint.PercentError() ?? -100);
         }
       
-        private PressureTestPoint CreatePressureTestPoint(Mock<IPressureItems> pressureMock)
+        private PressureTest CreatePressureTestPoint()
         {
-            return new PressureTestPoint()
+            return new PressureTest()
             {
-                EvcItems = pressureMock.Object
+                AtmosphericPressure = 14.73,
+                Base = 14.73,
+                Factor = 55.3088,
+                GasPressure = 800,
+                GaugePressure = 800,
+                TransducerType = PressureTransducerType.Gauge,
+                Units = PressureUnits.PSIG,
+                Range = 1000,
+                UnsqrFactor = 1
+            };
+        }
+
+        private PressureTest CreatePSIATest()
+        {
+            return new PressureTest()
+            {
+                AtmosphericPressure = 14.73,
+                Base = 14.73,
+                Factor = 54.3109,
+                GasPressure = 800,
+                GaugePressure = 785.27,
+                TransducerType = PressureTransducerType.Absolute,
+                Units = PressureUnits.PSIA,
+                Range = 1000,
+                UnsqrFactor = 1
             };
         }
     }

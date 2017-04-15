@@ -55,17 +55,28 @@
     <Compile Include="Mappings\Profiles\TestPointMappingProfile.cs" />
     <Compile Include="Mappings\Profiles\TestRunMappingProfile.cs" />
     <Compile Include="Mappings\Profiles\VolumeTestMappingProfile.cs" />
-    <Compile Include="ServiceClients\IProverTestRunFactory.cs" />
-    <Compile Include="ServiceClients\ProverTestRunService.cs" />
-    <Compile Include="ServiceClients\TestRunService.cs" />
+    <Compile Include="Verification\Pressure\PressureCalculationService.cs" />
+    <Compile Include="Verification\Temperature\TemperatureCalculationService.cs" />
+    <Compile Include="Verification\VerificationRunFactory.cs" />
+    <Compile Include="Verification\VerificationCoordinatorService.cs" />
+    <Compile Include="Verification\VerificationRunProviderService.cs" />
+    <Compile Include="Verification\IVerificationRunProviderService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ServiceClients\Verification\" />
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
-      <Project>{c8e463cd-6263-4789-a919-aed09e03b16c}</Project>
-      <Name>Prover.Domain</Name>
+    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
+      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
+      <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Data.SQL\Prover.Data.EF.csproj">
+      <Project>{6dc1582c-28be-4bdb-acc9-1d0332ad0ea7}</Project>
+      <Name>Prover.Data.EF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Domain.Model\Prover.Domain.Model.csproj">
+      <Project>{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}</Project>
+      <Name>Prover.Domain.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
       <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using AutoMapper;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax;
-using Prover.Domain;
-using Prover.Domain.Instrument;
-using Prover.Domain.Verification.TestRun;
 using Prover.Shared.DTO.Instrument;
 
 namespace Prover.CommProtocol.MiHoneywell.Tests.Domain.Instrument

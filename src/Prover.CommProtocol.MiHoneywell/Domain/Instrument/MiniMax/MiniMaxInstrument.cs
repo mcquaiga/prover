@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.CommProtocol.MiHoneywell.CommClients;
-using Prover.Domain.Instrument.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax
 {

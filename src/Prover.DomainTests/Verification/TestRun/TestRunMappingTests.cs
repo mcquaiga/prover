@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Moq;
 using NUnit.Framework;
-using Prover.Domain.Instrument;
-using Prover.Domain.Instrument.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.Shared.Enums;
 
 namespace Prover.Domain.Tests.Verification.TestRun
@@ -15,7 +15,7 @@ namespace Prover.Domain.Tests.Verification.TestRun
         [SetUp]
         public void Setup()
         {
-            Mapper.Initialize(MappingConfiguration.Configure);
+            //Mapper.Initialize(MappingConfiguration.Configure);
         }
 
         [PostTest]
@@ -27,14 +27,14 @@ namespace Prover.Domain.Tests.Verification.TestRun
         [Test()]
         public void Test_Mapping_Configuration_IsValid()
         {
-            Mapper.Configuration.AssertConfigurationIsValid();
+            //Mapper.Configuration.AssertConfigurationIsValid();
         }
 
         [Test]
         public void Verify_TestRun_Mapping()
         {
             var instrument = StubInstrument();
-            var testRun = new Domain.Verification.TestRun.TestRun(instrument.Object);
+            //var testRun = new Domain.Verification.TestRun.TestRun(instrument.Object);
         }
 
         public Mock<IInstrument> StubInstrument()

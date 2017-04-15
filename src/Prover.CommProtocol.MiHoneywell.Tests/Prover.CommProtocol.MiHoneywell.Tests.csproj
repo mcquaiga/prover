@@ -64,13 +64,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
+      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
+      <Name>Prover.CommProtocol.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
       <Project>{07FACEC7-67D1-49A8-BB19-DDC7B636C689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prover.Core.Domain\Prover.Domain.csproj">
-      <Project>{C8E463CD-6263-4789-A919-AED09E03B16C}</Project>
-      <Name>Prover.Domain</Name>
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{187fdea3-ffeb-464e-b59d-dd022e624d8d}</Project>
+      <Name>Prover.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -1,4 +1,5 @@
-﻿using Prover.Services.Mappings.Profiles;
+﻿using AutoMapper;
+using Prover.Services.Mappings.Profiles;
 
 namespace Prover.Services.Mappings
 {
@@ -6,13 +7,13 @@ namespace Prover.Services.Mappings
     {
         public static void Configure(IMapperConfigurationExpression cfg)
         {
-            cfg.AddProfile<InstrumentMappingProfile>();
-            cfg.AddProfile<TestRunMappingProfile>();
-            cfg.AddProfile<TestPointMappingProfile>();
-            cfg.AddProfile<PressureTestMappingProfile>();
-            cfg.AddProfile<TemperatureTestMappingProfile>();
-            cfg.AddProfile<SuperFactorTestMappingProfile>();
-            cfg.AddProfile<VolumeTestMappingProfile>();
+            //cfg.AddProfile<InstrumentMappingProfile>();
+            //cfg.AddProfile<TestRunMappingProfile>();
+            //cfg.AddProfile<TestPointMappingProfile>();
+            //cfg.AddProfile<PressureTestMappingProfile>();
+            //cfg.AddProfile<TemperatureTestMappingProfile>();
+            //cfg.AddProfile<SuperFactorTestMappingProfile>();
+            //cfg.AddProfile<VolumeTestMappingProfile>();
         }
     }
 

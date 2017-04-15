@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument;
-using Prover.Domain.Instrument.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Items
 {
@@ -19,10 +19,23 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
         {
         }
 
-        public double Co2 => _itemValues.GetItem(55).NumericValue;
-        public double N2 => _itemValues.GetItem(54).NumericValue;
+        public double Co2
+        {
+            get { return _itemValues.GetItem(55).NumericValue; }
+            set { throw new System.NotImplementedException(); }
+        }
 
-        public double SpecGr => _itemValues.GetItem(53).NumericValue;
+        public double N2
+        {
+            get { return _itemValues.GetItem(54).NumericValue; }
+            set { throw new System.NotImplementedException(); }
+        }
+
+        public double SpecGr
+        {
+            get { return _itemValues.GetItem(53).NumericValue; }
+            set { throw new System.NotImplementedException(); }
+        }
 
         public Dictionary<string, string> ItemData => _itemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
     }

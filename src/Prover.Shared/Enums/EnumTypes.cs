@@ -46,4 +46,10 @@ namespace Prover.Shared.Enums
         inHG,
         mmHG
     }
+
+    public enum PressureTransducerType
+    {
+        Absolute,
+        Gauge
+    }
 }

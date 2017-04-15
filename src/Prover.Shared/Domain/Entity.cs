@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 
 namespace Prover.Shared.Domain
 {
@@ -17,9 +18,9 @@ namespace Prover.Shared.Domain
     /// <typeparam name="TId">
     ///     Id type
     /// </typeparam>
-    public abstract class Entity<TId>
+    public abstract class Entity
     {
-        protected Entity(TId id)
+        protected Entity(Guid id)
         {
             Id = id;
         }
@@ -27,76 +28,59 @@ namespace Prover.Shared.Domain
         /// <summary>
         ///     Gets or sets the id.
         /// </summary>
-        public TId Id { get; set; }
+        public Guid Id { get; set; }
 
-        /// <summary>
-        ///     The ==.
-        /// </summary>
-        /// <param name="entity1">
-        ///     The entity 1.
-        /// </param>
-        /// <param name="entity2">
-        ///     The entity 2.
-        /// </param>
-        /// <returns>
-        ///     True if the entity are equal
-        /// </returns>
-        public static bool operator ==(Entity<TId> entity1, Entity<TId> entity2)
-        {
-            if ((object) entity1 == null && (object) entity2 == null)
-                return true;
+        //public override bool Equals(object obj)
+        //{
+        //    return Equals(obj as Entity<TId>);
+        //}
 
-            if ((object) entity1 == null || (object) entity2 == null)
-                return false;
+        //private static bool IsTransient(Entity<TId> obj)
+        //{
+        //    return obj != null && Equals(obj.Id, default(int));
+        //}
 
-            if (entity1.Id.ToString() == entity2.Id.ToString())
-                return true;
+        //private Type GetUnproxiedType()
+        //{
+        //    return GetType();
+        //}
 
-            return false;
-        }
+        //public virtual bool Equals(Entity<TId> other)
+        //{
+        //    if (other == null)
+        //        return false;
 
-        /// <summary>
-        ///     The !=.
-        /// </summary>
-        /// <param name="entity1">
-        ///     The entity 1.
-        /// </param>
-        /// <param name="entity2">
-        ///     The entity 2.
-        /// </param>
-        /// <returns>
-        ///     Returns true is they are not equal
-        /// </returns>
-        public static bool operator !=(Entity<TId> entity1, Entity<TId> entity2)
-        {
-            return !(entity1 == entity2);
-        }
+        //    if (ReferenceEquals(this, other))
+        //        return true;
 
-        /// <summary>
-        ///     The equals.
-        /// </summary>
-        /// <param name="entity">
-        ///     The entity.
-        /// </param>
-        /// <returns>
-        ///     The <see cref="bool" />.
-        /// </returns>
-        public override bool Equals(object entity)
-        {
-            return entity != null
-                   && entity is Entity<TId>
-                   && this == (Entity<TId>) entity;
-        }
+        //    if (!IsTransient(this) &&
+        //        !IsTransient(other) &&
+        //        Equals(Id, other.Id))
+        //    {
+        //        var otherType = other.GetUnproxiedType();
+        //        var thisType = GetUnproxiedType();
+        //        return thisType.IsAssignableFrom(otherType) ||
+        //                otherType.IsAssignableFrom(thisType);
+        //    }
 
-        /// <summary>
-        ///     The get hash code.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="int" />.
-        /// </returns>
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        //    return false;
+        //}
+
+        //public override int GetHashCode()
+        //{
+        //    if (Equals(Id, default(int)))
+        //        return base.GetHashCode();
+        //    return Id.GetHashCode();
+        //}
+
+        //public static bool operator ==(Entity<TId> x, Entity<TId> y)
+        //{
+        //    return Equals(x, y);
+        //}
+
+        //public static bool operator !=(Entity<TId> x, Entity<TId> y)
+        //{
+        //    return !(x == y);
+        //}
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument;
-using Prover.Domain.Instrument.Items;
 using Prover.Shared.Enums;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Items

@@ -5,7 +5,7 @@ using Prover.Shared.DTO.Instrument;
 
 namespace Prover.Shared.DTO.TestRuns
 {
-    public class TestRunDto : Entity<Guid>
+    public class TestRunDto : Entity
     {
         public InstrumentDto Instrument { get; set; }
         public DateTime TestDateTime { get; set; }

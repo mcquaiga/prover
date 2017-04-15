@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument;
-using Prover.Domain.Instrument.Items;
 using Prover.Shared.Enums;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Items
@@ -43,10 +43,12 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
 
             Units = (PressureUnits) _itemValues.GetItem(UnitsItemNumber).NumericValue;
             Range = (int) _itemValues.GetItem(RangeItemNumber).NumericValue;
-            TransducerType = _itemValues.GetItem(TransducerTypeItemNumber).Description;
+
+            TransducerType = (PressureTransducerType)Enum.Parse(typeof(PressureTransducerType), _itemValues.GetItem(TransducerTypeItemNumber).Description);
+
             Base = _itemValues.GetItem(BaseItemNumber).NumericValue;
             GasPressure = _itemValues.GetItem(GasPressureItemNumber).NumericValue;
-            AtmPressure = _itemValues.GetItem(AtmPressureItemNumber).NumericValue;
+            AtmosphericPressure = _itemValues.GetItem(AtmPressureItemNumber).NumericValue;
             Factor = _itemValues.GetItem(FactorItemNumber).NumericValue;
             UnsqrFactor = _itemValues.GetItem(UnsqrFactorItemNumber).NumericValue;
         }
@@ -55,7 +57,7 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
         {
         }
 
-        public double AtmPressure { get; set; }
+        public double AtmosphericPressure { get; set; }
         public double Base { get; set; }
         public double Factor { get; set; }
         public double GasPressure { get; set; }
@@ -64,7 +66,7 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Items
             => _itemValues.ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue);
 
         public int Range { get; set; }
-        public string TransducerType { get; set; }
+        public PressureTransducerType TransducerType { get; set; }
 
         public PressureUnits Units { get; set; }
         public double UnsqrFactor { get; set; }

@@ -4,7 +4,7 @@ using Prover.Shared.Domain;
 
 namespace Prover.Shared.DTO.TestRuns
 {
-    public abstract class TestDtoBase : Entity<Guid>
+    public abstract class TestDtoBase : Entity
     {
         protected TestDtoBase() : base(Guid.NewGuid())
         {

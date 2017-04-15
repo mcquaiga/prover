@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Prover.Data.EF.Models.PressureTest;
-using Prover.Data.EF.Models.TestPoint;
-using Prover.Data.EF.Models.TestRun;
+﻿using AutoMapper;
 
 namespace Prover.Data.EF.Mappers
 {
@@ -14,11 +6,11 @@ namespace Prover.Data.EF.Mappers
     {
         public static void Configure(IMapperConfigurationExpression cfg)
         {
-            cfg.AddProfile<TestRunMappingProfile>();
-            cfg.AddProfile<TestPointMappingProfile>();
-            cfg.AddProfile<PressureTestMappingProfile>();
-            cfg.AddProfile<TemperatureTestMappingProfile>();
-            cfg.AddProfile<VolumeTestMappingProfile>();
+            //cfg.AddProfile<TestRunMappingProfile>();
+            //cfg.AddProfile<TestPointMappingProfile>();
+            //cfg.AddProfile<PressureTestMappingProfile>();
+            //cfg.AddProfile<TemperatureTestMappingProfile>();
+            //cfg.AddProfile<VolumeTestMappingProfile>();
         }
     }
 }

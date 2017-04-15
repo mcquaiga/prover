@@ -38,13 +38,13 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\BusinessRule.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\IAggregateRoot.cs" />
     <Compile Include="Domain\IDomainEvent.cs" />
-    <Compile Include="Storage\IReadOnlyRepository.cs" />
-    <Compile Include="Storage\IRepository.cs" />
+    <Compile Include="Data\IRepository.cs" />
     <Compile Include="Domain\ValueObjectBase.cs" />
     <Compile Include="Domain\ValueObjectIsInvalidException.cs" />
     <Compile Include="DTO\Instrument\InstrumentDto.cs" />
@@ -59,8 +59,10 @@
     <Compile Include="Extensions\ExpressionHelpers.cs" />
     <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Extensions\Lists.cs" />
+    <Compile Include="Helpers\CalculationHelpers.cs" />
+    <Compile Include="Infrastructure\IStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\IDataContextFactory.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

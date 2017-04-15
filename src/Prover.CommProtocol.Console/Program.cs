@@ -5,8 +5,6 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell.Domain.Instrument.MiniMax;
-using Prover.Domain.Instrument;
-using Prover.Domain.Verification.TestRun;
 
 namespace Prover.CommProtocol.Console
 {

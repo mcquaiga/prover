@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Domain.Items;
-using Prover.Domain.Instrument;
-using Prover.Domain.Instrument.Items;
 using Prover.Shared.Enums;
 
 namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
@@ -184,6 +184,8 @@ namespace Prover.CommProtocol.MiHoneywell.Domain.Instrument
             }
 
             return result;
-        } 
+        }
+
+        public virtual string TypeIdentifier => this.GetType().AssemblyQualifiedName;
     }
 }

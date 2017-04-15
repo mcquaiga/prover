@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Prover.Shared.Domain
 {
-    public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
+    public abstract class AggregateRoot : Entity, IAggregateRoot
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
 
-        protected AggregateRoot(TId id) : base(id)
+        protected AggregateRoot(Guid id) : base(id)
         {
         }
 

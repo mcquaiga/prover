@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using AutoMapper;
 using Newtonsoft.Json;
-using Prover.Data.EF.Models.TestRun;
 using Prover.Shared.DTO.TestRuns;
 using Prover.Shared.Extensions;
 
