@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace ProtocolMonitor.ViewModel
+namespace Prover.ProtocolMonitor.ViewModel
 {
     public class RelayCommand : ICommand
     {

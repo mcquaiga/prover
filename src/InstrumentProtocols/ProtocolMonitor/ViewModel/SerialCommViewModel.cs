@@ -15,22 +15,23 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NLog;
-using ProtocolMonitor.Model;
+using Prover.Client.Framework.Screens;
 using Prover.InstrumentProtocol.Core.Factories;
 using Prover.InstrumentProtocol.Core.IO;
 using Prover.InstrumentProtocol.Core.Models.Instrument;
 using Prover.InstrumentProtocol.Honeywell.Factories;
+using Prover.ProtocolMonitor.Model;
 using ReactiveUI;
 using RJCP.IO.Ports;
 
-namespace ProtocolMonitor.ViewModel
+namespace Prover.ProtocolMonitor.ViewModel
 {
     public class SerialCommViewModel : ViewModelBase
     {
         #region Private Fields
 
         private static readonly string AppTitle = "SerialComm Monitor V2";
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        
         private ICommand _changeFileLocation;
         private ICommand _clear;
         private ICommand _exportTxtFile;
@@ -169,12 +170,16 @@ namespace ProtocolMonitor.ViewModel
             set
             {
                 _fileName = value;
-                OnPropertyChanged("ExportFile");
+         
             }
         }
 
-        public List<IInstrumentFactory> Instruments { get; set; }
-
+        private List<IInstrumentFactory> _instruments;
+        public List<IInstrumentFactory> Instruments
+        {
+            get { return _instruments; }
+            set { this.RaiseAndSetIfChanged(ref _instruments, value); }
+        }
 
         public bool IsAutoscrollChecked
         {
@@ -187,9 +192,7 @@ namespace ProtocolMonitor.ViewModel
                 else
                     ScrollOnTextChanged = false;
 
-                OnPropertyChanged("IsAutoscrollChecked");
-                OnPropertyChanged("ScrollOnTextChanged");
-                OnPropertyChanged("ScrollConfirm");
+          
             }
         }
 
@@ -326,7 +329,6 @@ namespace ProtocolMonitor.ViewModel
                 var folder = dlg.FileName;
                 // Do something with selected folder string
                 FileLocation = folder;
-                OnPropertyChanged("FileLocation");
             }
         }
 
@@ -352,10 +354,9 @@ namespace ProtocolMonitor.ViewModel
                         Logger.Log(LogLevel.Debug,
                             "Output data is saved and exported into " + FileLocation + @"\" + FileName +
                             SelectedFileExtension);
+
                         ExportStatus = "Done.";
-                        OnPropertyChanged("ExportStatus");
                         ExportStatusSuccess = true;
-                        OnPropertyChanged("ExportStatusSuccess");
                         StartTimer(10);
                     }
                     else if (msgBoxResult == MessageBoxResult.No)
@@ -367,9 +368,9 @@ namespace ProtocolMonitor.ViewModel
                             "Output data is saved and exported into " + FileLocation + @"\" + FileName +
                             DateTime.Now.ToString("-yyyyMMddHHmmss") + SelectedFileExtension);
                         ExportStatus = "Done.";
-                        OnPropertyChanged("ExportStatus");
+                       
                         ExportStatusSuccess = true;
-                        OnPropertyChanged("ExportStatusSuccess");
+                        
                         StartTimer(10);
                     }
                 }
@@ -380,18 +381,18 @@ namespace ProtocolMonitor.ViewModel
                         "Output data is saved and exported into " + FileLocation + @"\" + FileName +
                         SelectedFileExtension);
                     ExportStatus = "Done.";
-                    OnPropertyChanged("ExportStatus");
+                    
                     ExportStatusSuccess = true;
-                    OnPropertyChanged("ExportStatusSuccess");
+           
                     StartTimer(10);
                 }
             }
             catch (Exception ex)
             {
                 ExportStatus = "Error exporting a file!";
-                OnPropertyChanged("ExportStatus");
+                
                 ExportStatusSuccess = false;
-                OnPropertyChanged("ExportStatusSuccess");
+          
                 StartTimer(10);
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Logger.Log(LogLevel.Error, "EXCEPTION raised: " + ex);
@@ -450,9 +451,9 @@ namespace ProtocolMonitor.ViewModel
             try
             {
                 CommPorts = SerialPortSettingsModel.Instance.GetCommPorts();
-                OnPropertyChanged("CommPorts");
+      
                 SelectedCommPort = CommPorts.FirstOrDefault();
-                OnPropertyChanged("SelectedCommPort");
+      
                 Logger.Log(LogLevel.Debug, "New list of COM* ports are repopulated.");
             }
             catch (Exception ex)
@@ -510,7 +511,7 @@ namespace ProtocolMonitor.ViewModel
                     stopWatch.Stop();
 
                     EnableDisableSettings = false;
-                    OnPropertyChanged("EnableDisableSettings");
+                    
 
                     CommWindowSubject.OnNext(
                         $"Connected to {ConnectedInstrument.Name}: {SelectedCommPort.DeviceId}, {SelectedBaudRate} baud, Parity.{SelectedParity}, {SelectedDataBits}, StopBits.{SelectedStopBits}, RTS={IsRTS}, DTR={IsDTR}");
@@ -523,9 +524,7 @@ namespace ProtocolMonitor.ViewModel
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Logger.Log(LogLevel.Error, "EXCEPTION raised: " + ex);
             }
-
-            WindowTitle = AppTitle + " (" + GetConnectionStatus() + ")";
-            OnPropertyChanged("WindowTitle");
+            
         }
 
         public CancellationTokenSource ConnectionCancellationToken { get; set; }
@@ -569,7 +568,7 @@ namespace ProtocolMonitor.ViewModel
             {
                 _timer.Stop();
                 ExportStatus = "";
-                OnPropertyChanged("ExportStatus");
+              
             }
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(duration);
@@ -592,16 +591,13 @@ namespace ProtocolMonitor.ViewModel
                     ConnectedInstrument = null;
 
                     EnableDisableSettings = true;
-                    OnPropertyChanged("EnableDisableSettings");
+                    
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Logger.Log(LogLevel.Error, "EXCEPTION raised: " + ex);
                 }
-
-            WindowTitle = AppTitle + " (" + GetConnectionStatus() + ")";
-            OnPropertyChanged("WindowTitle");
         }
 
         private void TimerTick(object send, EventArgs e)
@@ -611,7 +607,7 @@ namespace ProtocolMonitor.ViewModel
                 _timer.Stop();
                 _timer = null;
                 ExportStatus = "";
-                OnPropertyChanged("ExportStatus");
+               
             }
         }
     }

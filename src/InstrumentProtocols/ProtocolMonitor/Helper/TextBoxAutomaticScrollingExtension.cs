@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ProtocolMonitor.Helper
+namespace Prover.ProtocolMonitor.Helper
 {
     public class TextBoxAutomaticScrollingExtension
     {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Prover.Shared.Domain;
 
-namespace Prover.Data.EF.Tests
+namespace Prover.Storage.EF.Tests
 {
     public static class TestExtensions
     {

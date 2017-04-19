@@ -22,7 +22,7 @@ namespace Prover.Storage.EF.Repositories
         ///     Ctor
         /// </summary>
         /// <param name="context">Object context</param>
-        public EfRepository(DbContext context)
+        public EfRepository(EfProverContext context)
         {
             Context = context;
         }

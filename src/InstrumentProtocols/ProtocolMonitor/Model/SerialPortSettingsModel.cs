@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RJCP.IO.Ports;
 
-namespace ProtocolMonitor.Model
+namespace Prover.ProtocolMonitor.Model
 {
     [Serializable]
     public class SerialPortSettingsModel : SingletonBase<SerialPortSettingsModel>

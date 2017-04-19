@@ -1,7 +1,7 @@
 ﻿using System.Windows.Data;
 using System.Windows.Media;
 
-namespace ProtocolMonitor.Converter
+namespace Prover.ProtocolMonitor.Converter
 {
     public class BrushColorConverter : IValueConverter
     {

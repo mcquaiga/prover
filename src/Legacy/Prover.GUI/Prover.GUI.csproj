@@ -203,37 +203,6 @@
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
-    <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
-      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
-      <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
-      <DependentUpon>TestRunView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\TestRunViewModel.cs" />
-    <Compile Include="Screens\QAProver\TestRun\EditTestView.xaml.cs">
-      <DependentUpon>EditTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\TestRun\NewTestView.xaml.cs">
-      <DependentUpon>NewTestView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfoViewModel.cs" />
-    <Compile Include="Screens\QAProver\LiveReadView.xaml.cs">
-      <DependentUpon>LiveReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\LiveReadViewModel.cs" />
-    <Compile Include="Screens\QAProver\InstrumentInfo\PressureInfo.Card.xaml.cs">
-      <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfo\SiteInformation.Card.xaml.cs">
-      <DependentUpon>SiteInformation.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
-      <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Screens\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -242,49 +211,6 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Shell\ShellViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
-      <DependentUpon>PressureTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
-      <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
-      <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Card.xaml.cs">
-      <DependentUpon>PTSet.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml.cs">
-      <DependentUpon>PTSet.CardReadOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Grid.xaml.cs">
-      <DependentUpon>PTSet.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
-      <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml.cs">
-      <DependentUpon>SuperTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml.cs">
-      <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
-      <DependentUpon>TempTest.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
-      <DependentUpon>TempTest.Grid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
-      <DependentUpon>Volume.Card.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TestRunViewModelBase.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\RotaryMeterTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSetViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTestViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -298,95 +224,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\QAProver\LiveReadView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\TestRunView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\QAProver\TestRun\EditTestView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\TestRun\NewTestView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\PressureInfo.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\SiteInformation.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\TemperatureInfo.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Screens\Settings\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\Shell\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Grid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -457,7 +299,17 @@
       <Name>Prover.SuperFactorCalculations</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Screens\QAProver\InstrumentInfo\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\EnergyTest\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\PressureTest\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\RotaryMeterTest\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\TemperatureTest\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\VerificationSet\" />
+    <Folder Include="Screens\QAProver\PTVerificationViews\VolumeTest\" />
+    <Folder Include="Screens\QAProver\TestRun\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

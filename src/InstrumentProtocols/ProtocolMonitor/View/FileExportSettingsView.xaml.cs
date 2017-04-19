@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ProtocolMonitor.View
+namespace Prover.ProtocolMonitor.View
 {
     /// <summary>
     ///     Interaction logic for FileExportSettingsView.xaml

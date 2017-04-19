@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Prover.Client.Framework.Controls.ValueDescriptionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Name="ValueUserControl"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}">
+    <Grid>
+        <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
+            <Grid>
+                <StackPanel Margin="4 0">
+                    <TextBlock Text="{Binding Path=Value, ElementName=ValueUserControl}"
+                               FontSize="{Binding ValueFontSize, ElementName=ValueUserControl}"
+                               HorizontalAlignment="Left"
+                               Foreground="{DynamicResource PrimaryHueDarkBrush}" />
+
+                    <TextBlock Text="{Binding Path=Label, ElementName=ValueUserControl}"
+                               HorizontalAlignment="Left"
+                               FontSize="{Binding LabelFontSize, ElementName=ValueUserControl}"
+                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+
+                </StackPanel>
+            </Grid>
+
+        </Border>
+    </Grid>
+</UserControl>

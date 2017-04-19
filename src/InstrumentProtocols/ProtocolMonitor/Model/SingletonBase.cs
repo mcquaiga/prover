@@ -5,7 +5,7 @@
 
 using System;
 
-namespace ProtocolMonitor.Model
+namespace Prover.ProtocolMonitor.Model
 {
     public abstract class SingletonBase<T> where T : class
     {

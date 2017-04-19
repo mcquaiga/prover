@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProtocolMonitor.Model
+namespace Prover.ProtocolMonitor.Model
 {
     [Serializable]
     public class FileExportSettingsModel : SingletonBase<FileExportSettingsModel>

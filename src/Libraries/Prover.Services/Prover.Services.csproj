@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Login\ILoginService.cs" />
     <Compile Include="Mappings\Profiles\InstrumentMappingProfile.cs" />
     <Compile Include="Mappings\Convertors\InstrumentObjectConverter.cs" />
     <Compile Include="Mappings\Resolvers\ItemGroupResolver.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Verification\VerificationCoordinatorService.cs" />
     <Compile Include="Verification\VerificationRunProviderService.cs" />
     <Compile Include="Verification\IVerificationRunProviderService.cs" />
+    <Compile Include="Verification\Volume\VolumeCalculationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

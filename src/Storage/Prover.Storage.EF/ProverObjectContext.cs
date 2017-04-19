@@ -1,48 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentModelBuilder.Configuration;
 using FluentModelBuilder.Extensions;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Prover.Domain.Model.Verifications;
 using Prover.Shared.Domain;
+using Prover.Storage.EF.Mappers;
 using Prover.Storage.EF.Storage;
 
 namespace Prover.Storage.EF
 {
-    public static class DataContextFactory
+    public class EfProverContext : DbContext, IDbContext
     {
-        public static ProverObjectContext CreateWithSqlite(string connString)
-        {
-            var connection = new SqliteConnection(connString);
-            connection.Open();
+        private readonly string SqliteFilePath = @"Data Source = prover_data.db";
+        const string SqliteInMemoryConnection = "DataSource=:memory:";
 
-            var options = new DbContextOptionsBuilder<ProverObjectContext>()
-                .UseSqlite(connection)
-                .Options;
-
-            return new ProverObjectContext(options);
-        }
-
-        public static ProverObjectContext CreateWithSqlServer(string connString)
-        {
-            var connection = new SqlConnection(connString);
-
-            var options = new DbContextOptionsBuilder<ProverObjectContext>()
-                .UseSqlServer(connection)
-                .Options;
-
-            return new ProverObjectContext(options);
-        }
-    }
-
-
-    public class ProverObjectContext : DbContext, IDbContext
-    {
-        public ProverObjectContext(DbContextOptions options) : base(options)
+        public EfProverContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -85,11 +60,11 @@ namespace Prover.Storage.EF
             base.OnConfiguring(optionsBuilder);
 
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlServer(@"Server=.\sqlexpress;Database=Prover_New;Trusted_Connection=True;");
-
+                optionsBuilder.UseSqlite(SqliteFilePath);
+                
             optionsBuilder.Configure(
-                From.AssemblyOf<VerificationRun>(new ProverEntityAutoConfiguration())
-                    .UseOverridesFromAssemblyOf<ProverObjectContext>());
+                From.AssemblyOf<VerificationRun>(new EntityAutoConfiguration())
+                    .UseOverridesFromAssemblyOf<EfProverContext>());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,24 +74,4 @@ namespace Prover.Storage.EF
     }
 
     // Pick up all concrete types that inherit from Entity
-    public class ProverEntityAutoConfiguration : DefaultEntityAutoConfiguration
-    {
-        public override bool ShouldMap(Type type)
-        {
-            var isMap = IsSubclassOfRawGeneric(typeof(Entity), type);
-            return base.ShouldMap(type) && isMap;
-        }
-
-        private static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
-        {
-            while (toCheck != null && toCheck != typeof(object))
-            {
-                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
-                if (generic == cur)
-                    return true;
-                toCheck = toCheck.BaseType;
-            }
-            return false;
-        }
-    }
 }

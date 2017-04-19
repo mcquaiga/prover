@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
-using ProtocolMonitor.ViewModel;
+using Prover.ProtocolMonitor.ViewModel;
 using ReactiveUI;
 
-namespace ProtocolMonitor.View
+namespace Prover.ProtocolMonitor.View
 {
     /// <summary>
     ///     Interaction logic for WriteDataView.xaml

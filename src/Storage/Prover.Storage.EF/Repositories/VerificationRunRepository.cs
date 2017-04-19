@@ -6,7 +6,7 @@ namespace Prover.Storage.EF.Repositories
 {
     public class VerificationRunRepository : EfRepository<VerificationRun>
     {
-        public VerificationRunRepository(DbContext context) : base(context)
+        public VerificationRunRepository(EfProverContext context) : base(context)
         {
         }
 
