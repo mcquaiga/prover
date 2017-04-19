@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Prover.Modules.CertificatesUi.Screens.Certificates;
+using Caliburn.Micro;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Modules.Certificates.Screens;
+using Prover.Modules.Certificates.Screens.Certificates;
 using Action = System.Action;
 
-namespace Prover.Modules.CertificatesUi
+namespace Prover.Modules.Certificates
 {  
     public class CertificatesApp : AppMainMenuBase
     {
@@ -14,7 +18,7 @@ namespace Prover.Modules.CertificatesUi
         }
 
         public override ImageSource IconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover.Modules.Certificates;component/Resources/group.png"));
+            => new BitmapImage(new Uri("pack://application:,,,/Prover.Modules.Certificates;component/Resources/certificate.png"));
 
         public override string AppTitle => "Create Certificates";
         public override Action ClickAction => async () => await ScreenManager.ChangeScreen<CertificateViewModel>();

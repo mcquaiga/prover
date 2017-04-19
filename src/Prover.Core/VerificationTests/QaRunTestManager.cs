@@ -77,6 +77,7 @@ namespace Prover.Core.VerificationTests
             Instrument = new Instrument(instrumentType, items, client);
 
             await RunVerifiers();
+            await SaveAsync();
         }
 
         public async Task RunTest(int level, CancellationToken ct)

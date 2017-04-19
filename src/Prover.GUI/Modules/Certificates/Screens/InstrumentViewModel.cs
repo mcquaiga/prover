@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments;
 
-namespace Prover.GUI.ViewModels.InstrumentsList
+namespace Prover.GUI.Modules.Certificates.Screens
 {
     public class InstrumentViewModel : ReactiveScreen
-    {       
+    {
         public Instrument Instrument { get; set; }
 
         public int? RowNumber { get; set; }
@@ -23,10 +20,11 @@ namespace Prover.GUI.ViewModels.InstrumentsList
             RowNumber = rowNumber;
         }
 
-        public InstrumentTempViewModel TemperatureItem
-        {
-            get { return new InstrumentTempViewModel(Instrument.Temperature); }
-        }
+        public string TemperatureViewContext => "TempView";
+        //public InstrumentTempViewModel TemperatureItem
+        //{
+        //    get { return new InstrumentTempViewModel(Instrument.Temperature); }
+        //}
 
         public string HasPassed
         {

@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="Prover.GUI.Views.InstrumentsList.InstrumentView"
+﻿<UserControl x:Class="Prover.GUI.Modules.Certificates.Screens.InstrumentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="73" d:DesignWidth="816">
 
@@ -80,11 +80,15 @@
                     </StackPanel>
                 </Grid>
 
-                <ContentControl Name="TemperatureItem" Grid.Column="5"></ContentControl>
 
-                <Grid Grid.Column="6">
+                <!--<ContentControl cal:View.Context="{Binding TemperatureViewContext, Mode=TwoWay}" 
+                                Grid.Column="5"
+			                    cal:View.Model="{Binding}" />-->
 
-                </Grid>
+                <!--<ContentControl cal:View.Context="{Binding PressureViewContext, Mode=TwoWay}" 
+                                Grid.Column="6"
+			                    cal:View.Model="{Binding}" />-->
+                <Grid Grid.Column="6" />
 
                 <Grid Grid.Column="7" Margin="2">
                     <Grid.ColumnDefinitions>

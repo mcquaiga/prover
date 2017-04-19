@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.Core.Storage
 {
-    public interface ICertificateStore<T> : IDisposable where T : class
+    public interface ICertificateStore
     {
         IQueryable<Certificate> Query();
         Certificate GetCertificate(Guid id);
-        void Upsert(Certificate entity);
+        Task UpsertAsync(Certificate entity);
     }
 
-    public class CertificateStore : ICertificateStore<Certificate>
+    public class CertificateStore : ICertificateStore
     {
         private readonly ProverContext _proverContext;
 
@@ -30,14 +31,10 @@ namespace Prover.Core.Storage
             return _proverContext.Certificates.Find(id);
         }
 
-        public void Upsert(Certificate entity)
+        public async Task UpsertAsync(Certificate entity)
         {
             _proverContext.Certificates.Add(entity);
-            _proverContext.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-        }
+            await _proverContext.SaveChangesAsync();
+        }     
     }
 }

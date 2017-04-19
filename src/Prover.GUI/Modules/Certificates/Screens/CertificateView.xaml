@@ -1,26 +1,27 @@
-﻿<UserControl x:Class="Prover.GUI.Views.InstrumentsList.InstrumentsListView"
+﻿<UserControl x:Class="Prover.GUI.Modules.Certificates.Screens.CertificateView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cal="http://www.caliburnproject.org"
-             mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <UserControl.Resources>
+
         <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
-            <!--<Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Style.Triggers>
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
                         <Condition Property="ItemsControl.AlternationIndex" Value="1" />
-                        --><!--<Condition Property="IsSelected" Value="False" />--><!--
+                        <Condition Property="IsSelected" Value="False" />
                         <Condition Property="IsMouseOver" Value="False" />
                     </MultiTrigger.Conditions>
                     <Setter Property="Background" Value="#EEEEEEEE" />
                 </MultiTrigger>
-            </Style.Triggers>-->
+            </Style.Triggers>
         </Style>
         <Style x:Key="Flat">
             <Setter Property="Control.Background" Value="{x:Null}" />
@@ -36,23 +37,39 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <!--<Style TargetType="{x:Type ListBoxItem}">
+        <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>-->
+        </Style>
     </UserControl.Resources>
 
+    <DockPanel Margin="5">
+       <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="73*" />
+                <ColumnDefinition Width="25*" />
+            </Grid.ColumnDefinitions>
 
-    <Grid>
-        <ListBox x:Name="InstrumentItems"
-                     Grid.Column="0"
-                     Margin="5,0,5,0"
-                     HorizontalContentAlignment="Stretch"
-                     VerticalContentAlignment="Stretch"
-                     Background="{DynamicResource MainBackgroundColour}"
-                     SelectionMode="Multiple"
-                     BorderThickness="0">
-       
-        </ListBox>
+            <ListBox
+                Grid.Column="1"
+                Margin="5"
+                SelectionMode="Multiple"
+                x:Name="InstrumentItems"
+                HorizontalContentAlignment="Stretch" />
 
-    </Grid>
+            <!--  Certificate Information  -->
+            <StackPanel Grid.Column="2">
+                <StackPanel>
+                    <Label>Tested By:</Label>
+                    <TextBox x:Name="TestedBy"/>
+                </StackPanel>
+                <StackPanel>
+                    <Label>Verification Type:</Label>
+                    <ComboBox x:Name="VerificationType"/>
+                </StackPanel>
+                <Button Command="{Binding CreateCertificateCommand}"
+                        Content="Create Certificate" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </UserControl>

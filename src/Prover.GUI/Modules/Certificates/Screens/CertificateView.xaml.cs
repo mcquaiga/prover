@@ -1,4 +1,6 @@
-﻿namespace Prover.Modules.CertificatesUi.Screens.Certificates
+﻿using ReactiveUI;
+
+namespace Prover.GUI.Modules.Certificates.Screens
 {
     /// <summary>
     ///     Interaction logic for CreateCertificateView.xaml

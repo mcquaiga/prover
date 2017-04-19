@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -52,8 +52,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Modules.Clients", "Prover.Modules.Clients\Prover.Modules.Clients.csproj", "{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Modules.Exporter", "Prover.Modules.Exporter\Prover.Modules.Exporter.csproj", "{6032CDBC-9BC1-41A6-B988-24D03D4C87EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Modules.Certificates", "Prover.Modules.Certificates\Prover.Modules.Certificates.csproj", "{5787013D-D155-448F-A8B5-25DEC135148B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -238,24 +236,6 @@ Global
 		{6032CDBC-9BC1-41A6-B988-24D03D4C87EA}.Release|x64.Build.0 = Release|Any CPU
 		{6032CDBC-9BC1-41A6-B988-24D03D4C87EA}.Release|x86.ActiveCfg = Release|Any CPU
 		{6032CDBC-9BC1-41A6-B988-24D03D4C87EA}.Release|x86.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|x64.Build.0 = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Debug|x86.Build.0 = Debug|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|x64.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|x64.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|x64.Build.0 = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|x86.ActiveCfg = Release|Any CPU
-		{5787013D-D155-448F-A8B5-25DEC135148B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,6 +253,5 @@ Global
 		{904F99E1-2E5B-4C16-B900-7559D2E11553} = {2A28EC01-0F71-4788-9A69-9620A0CDD436}
 		{F1CC677E-BB0A-461C-BAAB-4FA696EA5D8B} = {ED11E7E8-BD81-4306-87E5-67E64BDBB588}
 		{6032CDBC-9BC1-41A6-B988-24D03D4C87EA} = {ED11E7E8-BD81-4306-87E5-67E64BDBB588}
-		{5787013D-D155-448F-A8B5-25DEC135148B} = {ED11E7E8-BD81-4306-87E5-67E64BDBB588}
 	EndGlobalSection
 EndGlobal

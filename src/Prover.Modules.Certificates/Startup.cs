@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace Prover.Modules.CertificatesUi
+namespace Prover.Modules.Certificates
 {
     public static class Startup
     {

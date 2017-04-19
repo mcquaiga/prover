@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.Modules.CertificatesUi.Reports
+namespace Prover.GUI.Modules.Certificates.Reports
 {
     /// <summary>
     ///     Interaction logic for CertificateView.xaml

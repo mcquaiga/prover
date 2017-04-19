@@ -25,9 +25,9 @@ namespace Prover.Core.Startup
             BlobCache.ApplicationName = "EvcProver";
 
             //Database registrations
-            Builder.RegisterInstance(new ProverContext());
-            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>();
-            Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
+            Builder.RegisterInstance(new ProverContext()).SingleInstance();
+            Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>().InstancePerLifetimeScope();
+            Builder.RegisterType<CertificateStore>().As<ICertificateStore>().InstancePerLifetimeScope();
             Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 

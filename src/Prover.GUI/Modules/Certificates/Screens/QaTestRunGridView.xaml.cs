@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.Modules.CertificatesUi.Screens.Certificates
+namespace Prover.GUI.Modules.Certificates.Screens
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml
@@ -14,7 +14,6 @@ namespace Prover.Modules.CertificatesUi.Screens.Certificates
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
         }
     }
 }
