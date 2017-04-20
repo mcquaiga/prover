@@ -15,14 +15,14 @@
         <DataTemplate x:Key="AppButton">
             <Button Width="128" Height="150">
                 <StackPanel>
-                    <Image Source="{Binding Path=IconSource}" Width="48" Height="48" />
+                    <Image Source="{Binding Path=MenuIconSource}" Width="48" Height="48" />
                     <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow"
-                               Text="{Binding Path=AppTitle}" />
+                               Text="{Binding Path=MenuTitle}" />
                 </StackPanel>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ActionCommand">
-                            <cal:Parameter Value="{Binding Path=ClickAction}" />
+                            <cal:Parameter Value="{Binding Path=MenuStartAction}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>

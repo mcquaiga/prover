@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Prover.GUI.Common.Screens;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 
-namespace Prover.Modules.Clients.Screens.Clients.Designer
+namespace Prover.GUI.Modules.Clients.Screens.Clients.Designer
 {
     public class DesignTimeClientViewModel
     {

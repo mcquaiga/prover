@@ -10,38 +10,34 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
-using Prover.GUI.Common;
-using Prover.Modules.Clients.Screens.ItemValidation;
 
-namespace Prover.Modules.Clients.TestActions
+namespace Prover.Core.Modules.Clients.VerificationTestActions
 {
-    public class ItemVerificationManager : PreTestValidationBase
+    public class ItemVerificationManager : IPreTestValidation
     {
+        private readonly IHandleInvalidItemVerification _invalidItemHandler;
         private readonly IProverStore<Client> _clientStore;
         private readonly IProverStore<Instrument> _instrumentStore;
-        private readonly ScreenManager _screenManager;
         private List<ItemValue> _clientValidationItems = new List<ItemValue>();
 
-        public ItemVerificationManager(IProverStore<Client> clientStore, IProverStore<Instrument> instrumentStore, ScreenManager screenManager)
+        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, IProverStore<Client> clientStore, IProverStore<Instrument> instrumentStore)
         {
+            _invalidItemHandler = invalidItemHandler;
             _clientStore = clientStore;
             _instrumentStore = instrumentStore;
-            _screenManager = screenManager;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        public async Task Validate(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
-            if (!await Validate(commClient, instrument))
+            if (!await IsValid(instrument))
             {
-                var result = await ShowItemDialog();
+                var result = _invalidItemHandler.ShouldInvalidItemsBeChanged(InvalidInstrumentValues);
 
-                var ctSource = new CancellationTokenSource();
-                var ct = ctSource.Token;
-                if (result) await Update(commClient, instrument, ct);
+                if (result) await Update(commClient, instrument);
             }
         }
 
-        public async Task<bool> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
+        private async Task<bool> IsValid(Instrument instrument)
         {
             return await Task.Run(() =>
             {
@@ -72,21 +68,6 @@ namespace Prover.Modules.Clients.TestActions
             });
         }
 
-        private async Task<bool> ShowItemDialog()
-        {
-            if (InvalidInstrumentValues.Any())
-            {
-                //show dialog
-                var dialog = _screenManager.ResolveViewModel<ItemValidationViewModel>();
-                dialog.ItemVerificationManager = this;
-
-                var result = _screenManager.ShowDialog(dialog);
-                return result.HasValue && result.Value;
-            }
-
-            return true;
-        }
-
         /// <summary>
         /// Contains the ItemMetada and the valid & invalid value for that item
         /// T1 = Client value
@@ -95,8 +76,9 @@ namespace Prover.Modules.Clients.TestActions
         public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidInstrumentValues = new Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>>();
         public List<ItemValue> ValidationItems => _clientValidationItems;
 
-        public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
+        private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
+            var ct = new CancellationToken();
             await evcCommunicationClient.Connect(ct);
             foreach (var invalidItem in InvalidInstrumentValues)
             {
@@ -110,6 +92,5 @@ namespace Prover.Modules.Clients.TestActions
             return true;
         }
 
-        
     }
 }

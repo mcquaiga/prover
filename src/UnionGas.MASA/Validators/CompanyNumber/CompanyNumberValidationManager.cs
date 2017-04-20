@@ -19,7 +19,7 @@ using LogManager = NLog.LogManager;
 
 namespace UnionGas.MASA.Validators.CompanyNumber
 {
-    public class CompanyNumberValidationManager : PreTestValidationBase
+    public class CompanyNumberValidationManager : IPreTestValidation
     {
         private readonly ScreenManager _screenManager;
         private readonly IProverStore<Instrument> _instrumentStore;
@@ -35,12 +35,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             _loginService = loginService;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
-        {
-            await Validate(commClient, instrument);
-        }
-
-        public async Task<object> Validate(EvcCommunicationClient commClient, Instrument instrument)
+        public async Task Validate(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.RawValue.TrimStart('0');
@@ -71,8 +66,6 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             
             if (meterDto != null)
                 await UpdateInstrumentValues(instrument, meterDto);
-
-            return meterDto;
         }
 
         private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)

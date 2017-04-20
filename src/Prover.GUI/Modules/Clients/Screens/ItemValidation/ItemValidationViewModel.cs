@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
+using Prover.Core.Modules.Clients.VerificationTestActions;
+using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.Modules.Clients.TestActions;
 using ReactiveUI;
 
-namespace Prover.Modules.Clients.Screens.ItemValidation
+namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
 {
-    public class ItemValidationViewModel : ViewModelBase
+    public class ItemValidationViewModel : ViewModelBase, IHandleInvalidItemVerification
     {
-        public ItemVerificationManager ItemVerificationManager { get; set; }
 
         public ItemValidationViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
@@ -26,7 +28,7 @@ namespace Prover.Modules.Clients.Screens.ItemValidation
             });
         }
 
-        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems => ItemVerificationManager.InvalidInstrumentValues;
+        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems { get; set; }
 
         #region Commands
         private ReactiveCommand _skipCommand;
@@ -41,6 +43,16 @@ namespace Prover.Modules.Clients.Screens.ItemValidation
         {
             get { return _updateCommand; }
             set { this.RaiseAndSetIfChanged(ref _updateCommand, value); }
+        }
+
+        public bool ShouldInvalidItemsBeChanged(Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> invalidItems)
+        {
+            if (invalidItems == null || !invalidItems.Any()) return false;
+           
+            //show dialog
+            var result = ScreenManager.ShowDialog(this);
+            return result.HasValue && result.Value;
+           
         }
 
         #endregion

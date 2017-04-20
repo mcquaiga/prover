@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="Prover.Modules.Clients.Screens.Clients.ClientView"
+﻿<UserControl x:Class="Prover.GUI.Modules.Clients.Screens.Clients.ClientView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:designer="clr-namespace:Prover.Modules.Clients.Screens.Clients.Designer"
+             xmlns:designer="clr-namespace:Prover.GUI.Modules.Clients.Screens.Clients.Designer"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance designer:DesignTimeClientViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="800" d:DesignWidth="800">
@@ -191,7 +191,7 @@
                                     <DataTemplate>
                                         <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
                                                     Path=DataContext.DeleteRowCommand}"
-                                                CommandParameter="{Binding .}">
+                                                CommandParameter="{Binding }">
                                             <materialDesign:PackIcon Kind="Delete" Height="24" Width="24" Foreground="White" />
                                         </Button>
                                     </DataTemplate>

@@ -1,7 +1,6 @@
-﻿using System;
-using ReactiveUI;
+﻿using ReactiveUI;
 
-namespace Prover.Modules.Clients.Screens.Clients.Designer
+namespace Prover.GUI.Modules.Clients.Screens.Clients.Designer
 {
     public class DesignTimeClientManagerViewModel
     {

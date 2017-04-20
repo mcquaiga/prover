@@ -156,10 +156,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ScreenManager.cs" />
-    <Compile Include="Screens\MainMenu\IAppMainMenu.cs" />
+    <Compile Include="Screens\MainMenu\IHaveMainMenuItem.cs" />
     <Compile Include="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\MainMenu\IModule.cs" />
     <Compile Include="Screens\MainMenu\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>

@@ -179,9 +179,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Apps.cs" />
+    <Compile Include="Screens\VerificationRunnerModule.cs" />
     <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="Modules\Certificates\CertificatesApp.cs" />
+    <Compile Include="Modules\Certificates\CertificateManagerModule.cs" />
     <Compile Include="Modules\Certificates\Common\Verification\VolumeView.xaml.cs">
       <DependentUpon>VolumeView.xaml</DependentUpon>
     </Compile>
@@ -202,6 +202,25 @@
     <Compile Include="Modules\Certificates\Screens\CreateVerificationView.xaml.cs">
       <DependentUpon>CreateVerificationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Clients\ClientManagerModule.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml.cs">
+      <DependentUpon>ClientManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\ClientView.xaml.cs">
+      <DependentUpon>ClientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml.cs">
+      <DependentUpon>Client.CardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml.cs">
+      <DependentUpon>ItemValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationViewModel.cs" />
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -313,6 +332,22 @@
     <Page Include="Modules\Certificates\Screens\CreateVerificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ClientView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
@@ -450,6 +485,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\group.png" />
     <Resource Include="Resources\certificate.png" />
     <Resource Include="Resources\clipboard-error.png" />
     <Resource Include="Resources\success.png" />

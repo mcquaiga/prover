@@ -36,16 +36,16 @@ namespace Prover.Core.VerificationTests
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
-        private readonly IEnumerable<PreTestValidationBase> _validators;
-        private readonly IEnumerable<PostTestResetBase> _postTestCommands;
+        private readonly IEnumerable<IPreTestValidation> _validators;
+        private readonly IEnumerable<IPostTestAction> _postTestCommands;
 
         public QaRunTestManager(
             IProverStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
-            IEnumerable<PreTestValidationBase> validators = null,
-            IEnumerable<PostTestResetBase> postTestCommands = null)
+            IEnumerable<IPreTestValidation> validators = null,
+            IEnumerable<IPostTestAction> postTestCommands = null)
         {
             VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;
@@ -129,7 +129,7 @@ namespace Prover.Core.VerificationTests
                 foreach (var validator in _validators)
                 {
                     _testStatus.OnNext($"Verifying items...");
-                    await validator.Execute(_communicationClient, Instrument);
+                    await validator.Validate(_communicationClient, Instrument);
                 }
         }
 

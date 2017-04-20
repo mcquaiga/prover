@@ -9,7 +9,6 @@ using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
-using LogManager = Caliburn.Micro.LogManager;
 
 namespace Prover.Core.VerificationTests
 {

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prover.CommProtocol.Common.Items;
 
-namespace Prover.Modules.Clients.Screens.ItemValidation.Designer
+namespace Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer
 {
     public class DesignTimeItemValidationViewModel
     {

@@ -13,9 +13,9 @@ namespace Prover.GUI.Screens.Shell
     public class ShellViewModel : Conductor<object>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
-        private readonly IEventAggregator _eventAggregator;
-        private readonly ScreenManager _screenManager;
-        private object _currentView;
+        readonly IEventAggregator _eventAggregator;
+        readonly ScreenManager _screenManager;
+        object _currentView;
 
         public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IEnumerable<IToolbarItem> toolbarItems)
         {

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using ReactiveUI;
 
-namespace Prover.Modules.Clients.Screens.Clients
+namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     /// <summary>
     /// Interaction logic for ClientManager.xaml

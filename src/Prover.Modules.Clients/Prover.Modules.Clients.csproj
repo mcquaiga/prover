@@ -104,50 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps.cs" />
-    <Compile Include="Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
-    <Compile Include="Screens\ItemValidation\ItemValidationView.xaml.cs">
-      <DependentUpon>ItemValidationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\ItemValidation\ItemValidationViewModel.cs" />
-    <Compile Include="TestActions\ClientPostTestResetManager.cs" />
-    <Compile Include="TestActions\ItemVerificationManager.cs" />
-    <Compile Include="Screens\Clients\ClientManagerView.xaml.cs">
-      <DependentUpon>ClientManagerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\ClientManagerViewModel.cs" />
-    <Compile Include="Screens\Clients\ClientView.xaml.cs">
-      <DependentUpon>ClientView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\ClientViewModel.cs" />
-    <Compile Include="Screens\Clients\Client\Client.CardView.xaml.cs">
-      <DependentUpon>Client.CardView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
-    <Compile Include="Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Screens\Clients\ClientManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Clients\ClientView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Clients\Client\Client.CardView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\ItemValidation\ItemValidationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
@@ -174,6 +136,10 @@
   <ItemGroup>
     <Resource Include="Resources\group.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Screens\Clients\Client\" />
+    <Folder Include="Screens\Clients\Designer\" />
+    <Folder Include="Screens\ItemValidation\Designer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

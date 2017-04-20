@@ -1,15 +1,11 @@
 ﻿using System.Data.Entity;
-using Akavache;
 using Autofac;
-using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
-using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
@@ -22,13 +18,10 @@ namespace Prover.Core.Startup
     {
         public CoreBootstrapper()
         {
-            BlobCache.ApplicationName = "EvcProver";
-
             //Database registrations
             Builder.RegisterInstance(new ProverContext()).SingleInstance();
             Builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>().InstancePerLifetimeScope();
-            Builder.RegisterType<CertificateStore>().As<ICertificateStore>().InstancePerLifetimeScope();
-            Builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
+            
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
             //EVC Communcation
