@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Modules.Certificates.Screens
+namespace Prover.GUI.Modules.Certificates.Common
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml
     /// </summary>
-    public partial class QaTestRunGridView : UserControl
+    public partial class VerificationView : UserControl
     {
-        public QaTestRunGridView()
+        public VerificationView()
         {
             InitializeComponent();
         }

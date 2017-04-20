@@ -20,6 +20,6 @@ namespace Prover.GUI.Modules.Certificates
             => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/certificate.png"));
 
         public override string AppTitle => "Create Certificates";
-        public override Action ClickAction => async () => await ScreenManager.ChangeScreen<CertificateViewModel>();
+        public override Action ClickAction => async () => await ScreenManager.ChangeScreen<CertificateCreatorViewModel>();
     }
 }

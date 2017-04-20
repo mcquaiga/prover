@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Prover.GUI.Modules.Certificates.Screens.CreateVerificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ContentControl cal:View.Model="{Binding VerificationView}"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">
+
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    Command="{Binding AddTestToCertificate}"
+                    ToolTip="Export">
+                <materialDesign:PackIcon Kind="Export"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        Height="48"
+                        Command="{Binding ViewQaTestReportCommand}"
+                        ToolTip="View QA Test Report">
+
+                <materialDesign:PackIcon Kind="Printer"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="15 0 0 0"
+                    Height="48"
+                    Command="{Binding ArchiveTestCommand}"
+                    ToolTip="Archive Test">
+                <materialDesign:PackIcon Kind="Archive"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="White" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

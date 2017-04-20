@@ -2,29 +2,39 @@
 using System.Linq;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Certificates;
+using Prover.GUI.Common.Screens;
+using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Modules.Certificates.Screens;
+using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Reports
 {
-    public class CertificateReportViewModel : ReactiveScreen
+    public class CertificateReportViewModel : ViewModelBase
     {
         public CertificateReportViewModel(Certificate certificate)
         {
             Certificate = certificate;
 
-            Instruments = new List<InstrumentViewModel>();
+            Instruments = new List<VerificationViewModel>();
             var row = 1;
             foreach (var instr in Certificate.Instruments.OrderBy(x => x.TestDateTime))
             {
-                Instruments.Add(new InstrumentViewModel(instr, row));
+                Instruments.Add(new VerificationViewModel(instr, row));
                 row++;
             }
+            
         }
 
         public Certificate Certificate { get; set; }
 
         public string CertificateDate => Certificate.CreatedDateTime.ToShortDateString();
 
-        public List<InstrumentViewModel> Instruments { get; set; }
+        private List<VerificationViewModel> _instruments;
+        public List<VerificationViewModel> Instruments
+        {
+            get { return _instruments; }
+            set { this.RaiseAndSetIfChanged(ref _instruments, value); }
+        }
+        
     }
 }

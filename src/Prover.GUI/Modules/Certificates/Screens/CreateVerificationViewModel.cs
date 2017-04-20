@@ -1,24 +1,24 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Reports;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
-    public class QaTestRunGridViewModel : ViewModelBase
+    public class CreateVerificationViewModel : ViewModelBase
     {
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public QaTestRunGridViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore,
-            InstrumentReportGenerator instrumentReportGenerator) : base(screenManager, eventAggregator)
+        public CreateVerificationViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IProverStore<Instrument> instrumentStore, InstrumentReportGenerator instrumentReportGenerator)
+            : base(screenManager, eventAggregator)
         {
             _instrumentStore = instrumentStore;
             _instrumentReportGenerator = instrumentReportGenerator;
@@ -26,17 +26,25 @@ namespace Prover.GUI.Modules.Certificates.Screens
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
 
             ViewQaTestReportCommand = ReactiveCommand.CreateFromTask(DisplayInstrumentReport);
+
+            AddTestToCertificate = ReactiveCommand.Create(() => IsSelected = true);
         }
 
-        private Instrument _instrument;
+        private ReactiveCommand _addTestToCertificate;
 
-        public Instrument Instrument
+        public ReactiveCommand AddTestToCertificate
         {
-            get { return _instrument; }
-            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
+            get { return _addTestToCertificate; }
+            set { this.RaiseAndSetIfChanged(ref _addTestToCertificate, value); }
         }
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
+        private VerificationViewModel _verificationViewModel;
+
+        public VerificationViewModel VerificationView
+        {
+            get { return _verificationViewModel; }
+            set { this.RaiseAndSetIfChanged(ref _verificationViewModel, value); }
+        }
 
         public bool IsSelected { get; set; }
 
@@ -50,7 +58,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public async Task DisplayInstrumentReport()
         {
-            await _instrumentReportGenerator.GenerateAndViewReport(Instrument);
+            await _instrumentReportGenerator.GenerateAndViewReport(VerificationView.Instrument);
         }
 
         private ReactiveCommand _archiveTestCommand;
@@ -63,10 +71,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public async Task ArchiveTest()
         {
-            await _instrumentStore.Delete(Instrument);
+            await _instrumentStore.Delete(VerificationView.Instrument);
             await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
         }
-
-     
     }
 }

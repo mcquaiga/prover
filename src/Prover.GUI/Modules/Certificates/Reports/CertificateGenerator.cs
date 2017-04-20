@@ -87,7 +87,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
         {
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
-            xw.WriteAsync(fixedDoc);
+            xw.Write(fixedDoc);
             xpsWriter.Close();
         }
     }

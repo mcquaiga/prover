@@ -6,7 +6,23 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
              d:DesignHeight="816" d:DesignWidth="1056">
-    <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
+    <UserControl.Resources>
+
+        <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="ItemsControl.AlternationIndex" Value="1" />
+                        <Condition Property="IsSelected" Value="False" />
+                        <Condition Property="IsMouseOver" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#EEEEEEEE" />
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+        <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
         <Grid
             MinWidth="1056" MaxWidth="1056"
             MinHeight="816" MaxHeight="816">
@@ -29,7 +45,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="305"
-                           Source="../../Resources/uglogo.jpg" Stretch="Fill" Margin="10,5,5,5" Grid.RowSpan="4" />
+                           Source="../../../Resources/certificate.png" Stretch="Fill" Margin="10,5,5,5" Grid.RowSpan="4" />
 
                     <StackPanel Grid.Row="0" Grid.Column="1">
                         <TextBlock FontSize="24" HorizontalAlignment="Center">Measurement Device</TextBlock>
@@ -71,9 +87,15 @@
                     </StackPanel>
                 </Grid>
             </Border>
+            
             <ListBox Grid.Row="1"
-                      ItemsSource="{Binding Instruments}"
-                      Margin="0,0,0,-5" />
+                     ItemsSource="{Binding Instruments}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cal:View.Model="{Binding}" Margin="0,0,0,-5"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <Border Grid.Row="2" BorderThickness="0,2,0,0" BorderBrush="Black" Margin="2,0,2,8">
                 <Grid VerticalAlignment="Center" Margin="0">
                     <Grid.ColumnDefinitions>

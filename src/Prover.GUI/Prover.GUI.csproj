@@ -182,29 +182,38 @@
     <Compile Include="Apps.cs" />
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Modules\Certificates\CertificatesApp.cs" />
+    <Compile Include="Modules\Certificates\Common\Verification\VolumeView.xaml.cs">
+      <DependentUpon>VolumeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Common\Verification\PressureView.xaml.cs">
+      <DependentUpon>PressureView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Certificates\Reports\CertificateGenerator.cs" />
     <Compile Include="Modules\Certificates\Reports\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Certificates\Reports\CertificateReportViewModel.cs" />
-    <Compile Include="Modules\Certificates\Screens\InstrumentView.xaml.cs">
+    <Compile Include="Modules\Certificates\Reports\InstrumentView.xaml.cs">
       <DependentUpon>InstrumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Screens\CertificateCreatorView.xaml.cs">
+      <DependentUpon>CertificateCreatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Screens\CreateVerificationView.xaml.cs">
+      <DependentUpon>CreateVerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
-    <Compile Include="Modules\Certificates\Screens\CertificateView.xaml.cs">
-      <DependentUpon>CertificateView.xaml</DependentUpon>
+    <Compile Include="Modules\Certificates\Screens\CertificateCreatorViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\VerificationViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\VerificationView.xaml.cs">
+      <DependentUpon>VerificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Certificates\Screens\CertificateViewModel.cs" />
-    <Compile Include="Modules\Certificates\Screens\InstrumentViewModel.cs" />
-    <Compile Include="Modules\Certificates\Screens\QaTestRunGridView.xaml.cs">
-      <DependentUpon>QaTestRunGridView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Certificates\Screens\QaTestRunGridViewModel.cs" />
-    <Compile Include="Modules\Certificates\Screens\TempView.xaml.cs">
+    <Compile Include="Modules\Certificates\Screens\CreateVerificationViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\Verification\TempView.xaml.cs">
       <DependentUpon>TempView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
@@ -293,6 +302,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Modules\Certificates\Common\Verification\VolumeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Certificates\Common\Verification\PressureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Certificates\Screens\CreateVerificationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -306,19 +327,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Screens\CertificateView.xaml">
+    <Page Include="Modules\Certificates\Screens\CertificateCreatorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Screens\InstrumentView.xaml">
+    <Page Include="Modules\Certificates\Reports\InstrumentView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Screens\QaTestRunGridView.xaml">
+    <Page Include="Modules\Certificates\Common\VerificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Screens\TempView.xaml">
+    <Page Include="Modules\Certificates\Common\Verification\TempView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

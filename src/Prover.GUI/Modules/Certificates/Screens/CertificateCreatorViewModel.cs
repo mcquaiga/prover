@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.Core.Events;
-using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Modules.Certificates.Reports;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
-    public class CertificateViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
+    public class CertificateCreatorViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
     {
         private readonly IProverStore<Instrument> _instrumentStore;
         private readonly ICertificateStore _certificateStore;
 
-        public CertificateViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+        public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IProverStore<Instrument> instrumentStore, ICertificateStore certificateStore) : base(screenManager, eventAggregator)
         {
             _instrumentStore = instrumentStore;
@@ -35,23 +35,26 @@ namespace Prover.GUI.Modules.Certificates.Screens
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
         }
 
-        public ObservableCollection<QaTestRunGridViewModel> InstrumentItems { get; set; } =
-            new ObservableCollection<QaTestRunGridViewModel>();
-
-        private ReactiveList<QaTestRunGridViewModel> _selectedInstrumentItems;
-
-        public ReactiveList<QaTestRunGridViewModel> SelectedInstrumentItems
+        private ReactiveList<CreateVerificationViewModel> _instruments = new ReactiveList<CreateVerificationViewModel>();
+        public ReactiveList<CreateVerificationViewModel> Instruments
         {
-            get { return _selectedInstrumentItems; }
-            set { this.RaiseAndSetIfChanged(ref _selectedInstrumentItems, value); }
+            get { return _instruments; }
+            set { this.RaiseAndSetIfChanged(ref _instruments, value); }
         }
 
-        public IEnumerable<Instrument> PassedInstrumentTests =>
-            InstrumentItems.Where(
-                    x =>
-                        x.Instrument.HasPassed && !string.IsNullOrEmpty(x.Instrument.JobId) &&
-                        !string.IsNullOrEmpty(x.Instrument.EmployeeId))
-                .Select(i => i.Instrument);
+        private ReactiveList<CreateVerificationViewModel> _selectedInstruments;
+        public ReactiveList<CreateVerificationViewModel> SelectedInstruments
+        {
+            get { return _selectedInstruments; }
+            set { this.RaiseAndSetIfChanged(ref _selectedInstruments, value); }
+        }
+
+        //public IEnumerable<Instrument> PassedInstrumentTests =>
+        //    Instruments.Where(
+        //            x =>
+        //                x.Pas && !string.IsNullOrEmpty(x.Instrument.JobId) &&
+        //                !string.IsNullOrEmpty(x.Instrument.EmployeeId))
+        //        .Select(i => i.Instrument);
 
         public ReactiveCommand CreateCertificateCommand { get; set; }
 
@@ -84,7 +87,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)
         {
-            InstrumentItems.Clear();
+            Instruments.Clear();
 
             var instruments = _instrumentStore.Query()
                 .Where(whereFunc)
@@ -93,17 +96,16 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             foreach (var i in instruments)
             {
-                var item = ScreenManager.ResolveViewModel<QaTestRunGridViewModel>();
-                item.Instrument = i;
-                InstrumentItems.Add(item);
+                var vvm = new VerificationViewModel(i);
+                var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
+                item.VerificationView = vvm;
+                Instruments.Add(item);
             }
-
-            NotifyOfPropertyChange(() => InstrumentItems);
         }
 
         private async Task CreateCertificate()
         {
-            var instruments = InstrumentItems.Where(x => x.IsSelected).Select(i => i.Instrument).ToList();
+            var instruments = Instruments.Where(x => x.IsSelected).Select(i => i.VerificationView.Instrument).ToList();
 
             if (instruments.Count() > 8)
             {
@@ -119,8 +121,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
 
             var certificate = await CreateCertificate(TestedBy, SelectedVerificationType, instruments);
-
-            GetInstrumentsWithNoCertificate();
 
             CertificateGenerator.GenerateXps(certificate);
         }
