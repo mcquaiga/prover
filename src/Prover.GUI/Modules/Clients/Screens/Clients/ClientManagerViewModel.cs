@@ -11,10 +11,11 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     public class ClientManagerViewModel : ViewModelBase, IDisposable
     {
-        readonly IProverStore<Prover.Core.Models.Clients.Client> _clientStore;
-        const string ClientListViewContext = "ClientListView";
+        private readonly IProverStore<Core.Models.Clients.Client> _clientStore;
+        private const string ClientListViewContext = "ClientListView";
 
-        public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IProverStore<Core.Models.Clients.Client> clientStore) : base(screenManager, eventAggregator)
+        public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IProverStore<Core.Models.Clients.Client> clientStore) : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
             ViewContext = ClientListViewContext;
@@ -34,11 +35,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         private async Task AddClient()
         {
-            var newClientVm = new ClientViewModel(ScreenManager, EventAggregator, _clientStore, new Prover.Core.Models.Clients.Client());
+            var newClientVm = new ClientViewModel(ScreenManager, EventAggregator, _clientStore,
+                new Core.Models.Clients.Client());
             await newClientVm.Edit();
         }
 
         private ReactiveCommand _addClientCommand;
+
         public ReactiveCommand AddClientCommand
         {
             get { return _addClientCommand; }
@@ -46,6 +49,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private ReactiveList<ClientViewModel> _clientList = new ReactiveList<ClientViewModel>();
+
         public ReactiveList<ClientViewModel> ClientList
         {
             get { return _clientList; }
@@ -53,6 +57,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private string _viewContext;
+
         public string ViewContext
         {
             get { return _viewContext; }

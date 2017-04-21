@@ -1,52 +1,50 @@
 ﻿<UserControl x:Class="Prover.GUI.Modules.Clients.Screens.ItemValidation.ItemValidationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:designer="clr-namespace:Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer"           
+             xmlns:designer="clr-namespace:Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer"
              d:DataContext="{d:DesignInstance designer:DesignTimeItemValidationViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                </ResourceDictionary.MergedDictionaries>
-            </ResourceDictionary>
-        </UserControl.Resources>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="15">
             <TextBlock>Clients item file did not match item values in the instrument.</TextBlock>
         </StackPanel>
         <DataGrid Grid.Row="1" ScrollViewer.CanContentScroll="True" FontSize="18"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible"
-                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                              materialDesign:DataGridAssist.CellPadding="5" 
-                              materialDesign:DataGridAssist.ColumnHeaderPadding="5"
-                              ItemsSource="{Binding InvalidItems}" 
-                              CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False"            
-                              AutoGenerateColumns="False">
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  materialDesign:DataGridAssist.CellPadding="5"
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="5"
+                  ItemsSource="{Binding InvalidItems}"
+                  CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False"
+                  AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Key.Number}"
-                                            Header="Item #"/>
+                                    Header="Item #" />
 
                 <materialDesign:MaterialDataGridTextColumn Binding="{Binding Key.ShortDescription}"
-                                            Header="Description"
-                                            />
+                                                           Header="Description" />
                 <materialDesign:MaterialDataGridTextColumn Binding="{Binding Value.Item1.Description}"
-                                                        Header="Client Value"                                                                                    
-                                                        />
+                                                           Header="Client Value" />
 
                 <materialDesign:MaterialDataGridTextColumn Binding="{Binding Value.Item2.Description}"
-                                                        Header="Instrument Value"                                                                                    
-                                                        />
+                                                           Header="Instrument Value" />
             </DataGrid.Columns>
 
         </DataGrid>
@@ -61,6 +59,6 @@
                 UPDATE
             </Button>
         </StackPanel>
-       
+
     </Grid>
 </UserControl>

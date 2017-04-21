@@ -22,7 +22,7 @@
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ActionCommand">
-                            <cal:Parameter Value="{Binding Path=MenuStartAction}" />
+                            <cal:Parameter Value="{Binding Path=OpenAction}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>

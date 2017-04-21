@@ -10,6 +10,6 @@ namespace Prover.GUI.Common.Screens.MainMenu
     {
         ImageSource MenuIconSource { get; }
         string MenuTitle { get; }
-        Func<IContainer, Action> OpenModule { get; }
+        Action OpenAction { get; }
     }
 }

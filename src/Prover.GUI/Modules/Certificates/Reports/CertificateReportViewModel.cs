@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Certificates;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
-using Prover.GUI.Modules.Certificates.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Reports
@@ -22,7 +20,6 @@ namespace Prover.GUI.Modules.Certificates.Reports
                 Instruments.Add(new VerificationViewModel(instr, row));
                 row++;
             }
-            
         }
 
         public Certificate Certificate { get; set; }
@@ -30,11 +27,11 @@ namespace Prover.GUI.Modules.Certificates.Reports
         public string CertificateDate => Certificate.CreatedDateTime.ToShortDateString();
 
         private List<VerificationViewModel> _instruments;
+
         public List<VerificationViewModel> Instruments
         {
             get { return _instruments; }
             set { this.RaiseAndSetIfChanged(ref _instruments, value); }
         }
-        
     }
 }

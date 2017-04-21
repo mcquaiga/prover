@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Modules.Clients.VerificationTestActions;
-using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
@@ -14,24 +12,20 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
 {
     public class ItemValidationViewModel : ViewModelBase, IHandleInvalidItemVerification
     {
-
-        public ItemValidationViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public ItemValidationViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+            : base(screenManager, eventAggregator)
         {
-            SkipCommand = ReactiveCommand.Create(() =>
-            {
-                TryClose(false);
-            });
+            SkipCommand = ReactiveCommand.Create(() => { TryClose(false); });
 
-            UpdateCommand = ReactiveCommand.Create(() =>
-            {
-                TryClose(true);
-            });
+            UpdateCommand = ReactiveCommand.Create(() => { TryClose(true); });
         }
 
         public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems { get; set; }
 
         #region Commands
+
         private ReactiveCommand _skipCommand;
+
         public ReactiveCommand SkipCommand
         {
             get { return _skipCommand; }
@@ -39,6 +33,7 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
         }
 
         private ReactiveCommand _updateCommand;
+
         public ReactiveCommand UpdateCommand
         {
             get { return _updateCommand; }
@@ -48,11 +43,10 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
         public bool ShouldInvalidItemsBeChanged(Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> invalidItems)
         {
             if (invalidItems == null || !invalidItems.Any()) return false;
-           
+
             //show dialog
             var result = ScreenManager.ShowDialog(this);
             return result.HasValue && result.Value;
-           
         }
 
         #endregion

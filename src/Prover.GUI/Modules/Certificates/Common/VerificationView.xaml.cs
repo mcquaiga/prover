@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Prover.GUI.Modules.Certificates.Common
 {
@@ -12,7 +13,7 @@ namespace Prover.GUI.Modules.Certificates.Common
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
         }
     }

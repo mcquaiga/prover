@@ -5,7 +5,7 @@ using ReactiveUI;
 namespace Prover.GUI.Modules.Certificates.Reports
 {
     /// <summary>
-    /// Interaction logic for InstrumentView.xaml
+    ///     Interaction logic for InstrumentView.xaml
     /// </summary>
     public partial class InstrumentView : UserControl, IViewFor<VerificationViewModel>
     {

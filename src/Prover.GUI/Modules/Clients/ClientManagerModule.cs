@@ -14,29 +14,25 @@ namespace Prover.GUI.Modules.Clients
 {
     public class ClientManagerModule : Module, IHaveMainMenuItem
     {
-        readonly IScreenManager _screenManager;
-
-        public ClientManagerModule() { }
-
-        public ClientManagerModule(IScreenManager screenManager)
-        {
-            _screenManager = screenManager;
-        }
+        protected ScreenManager ScreenManager { get; private set; }
 
         public ImageSource MenuIconSource
             => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/group.png"));
 
         public string MenuTitle => "Manage Clients";
 
-        public Action MenuStartAction => () => _screenManager.ChangeScreen<ClientManagerViewModel>();
-
-       
+        public Action OpenAction => async () => await ScreenManager.ChangeScreen<ClientManagerViewModel>();
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new ClientManagerModule(c.Resolve<ScreenManager>()))
+            builder.Register(c =>
+                {
+                    ScreenManager = c.Resolve<ScreenManager>();
+                    return this;
+                })
                 .As<IHaveMainMenuItem>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();

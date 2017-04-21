@@ -56,10 +56,10 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
             this.WhenAnyValue(x => x.SelectedItem)
                 .Subscribe(_ =>
-            {
-                SelectedItemDescription = null;
-                ItemValue = null;
-            });
+                {
+                    SelectedItemDescription = null;
+                    ItemValue = null;
+                });
 
             //Toggle Item Descriptions combo box
             itemSelected.Select(x => x.ItemDescriptions.Any())

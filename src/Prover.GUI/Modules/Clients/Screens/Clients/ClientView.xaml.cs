@@ -4,7 +4,7 @@ using ReactiveUI;
 namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     /// <summary>
-    /// Interaction logic for Client.xaml
+    ///     Interaction logic for Client.xaml
     /// </summary>
     public partial class ClientView : UserControl, IViewFor<ClientViewModel>
     {
@@ -23,7 +23,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
     }
 }

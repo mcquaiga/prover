@@ -37,18 +37,6 @@ namespace Prover.GUI
         {
             base.Configure();
 
-            //// Add the configuration to the ConfigurationBuilder.
-            //var config = new ConfigurationBuilder();
-            //// config.AddJsonFile comes from Microsoft.Extensions.Configuration.Json
-            //// config.AddXmlFile comes from Microsoft.Extensions.Configuration.Xml
-            //config.AddJsonFile("autofac.json");
-
-            //// Register the ConfigurationModule with Autofac.
-            //var module = new ConfigurationModule(config.Build());
-            //var builder = new ContainerBuilder();
-            //builder.RegisterModule(module);
-
-
             Builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
             Builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             Builder.RegisterType<ScreenManager>().SingleInstance();

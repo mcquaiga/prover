@@ -3,7 +3,7 @@
 namespace Prover.GUI.Modules.Clients.Screens.Clients.Client
 {
     /// <summary>
-    /// Interaction logic for Client.xaml
+    ///     Interaction logic for Client.xaml
     /// </summary>
     public partial class CardView : UserControl
     {

@@ -22,7 +22,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-        <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
+    <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
         <Grid
             MinWidth="1056" MaxWidth="1056"
             MinHeight="816" MaxHeight="816">
@@ -45,7 +45,8 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="305"
-                           Source="../../../Resources/certificate.png" Stretch="Fill" Margin="10,5,5,5" Grid.RowSpan="4" />
+                           Source="../../../Resources/certificate.png" Stretch="Fill" Margin="10,5,5,5"
+                           Grid.RowSpan="4" />
 
                     <StackPanel Grid.Row="0" Grid.Column="1">
                         <TextBlock FontSize="24" HorizontalAlignment="Center">Measurement Device</TextBlock>
@@ -87,12 +88,12 @@
                     </StackPanel>
                 </Grid>
             </Border>
-            
+
             <ListBox Grid.Row="1"
                      ItemsSource="{Binding Instruments}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <ContentControl cal:View.Model="{Binding}" Margin="0,0,0,-5"/>
+                        <ContentControl cal:View.Model="{Binding}" Margin="0,0,0,-5" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

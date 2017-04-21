@@ -17,14 +17,17 @@ namespace Prover.Modules.Exporter
     {
         protected override void Load(ContainerBuilder builder)
         {
-            MenuStartAction = () => builder.Register(c => c.Resolve<IScreenManager>().ChangeScreen<ExportTestsViewModel>());
-            builder.RegisterInstance(this).As<IHaveMainMenuItem>();
+            builder.Register(c => { ScreenManager = c.Resolve<ScreenManager>(); return this; })
+               .As<IHaveMainMenuItem>()
+               .InstancePerLifetimeScope();
         }
+
+        public ScreenManager ScreenManager { get; set; }
 
         public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover.Modules.Exporter;component/Resources/cloud-upload.png"));
 
         public string MenuTitle => "Export Test Runs";
-        public Action MenuStartAction { get; private set; }
 
+        public Action OpenAction => async () => await ScreenManager.ChangeScreen<ExportTestsViewModel>();
     }
 }

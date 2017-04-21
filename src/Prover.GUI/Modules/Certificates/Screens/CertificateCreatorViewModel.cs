@@ -23,19 +23,21 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private readonly ICertificateStore _certificateStore;
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, ICertificateStore certificateStore) : base(screenManager, eventAggregator)
+            IProverStore<Instrument> instrumentStore, ICertificateStore certificateStore)
+            : base(screenManager, eventAggregator)
         {
             _instrumentStore = instrumentStore;
             _certificateStore = certificateStore;
             GetInstrumentsWithNoCertificate();
 
             var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType,
-                ((testedBy, vt) => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType)));
+                (testedBy, vt) => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType));
 
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
         }
 
         private ReactiveList<CreateVerificationViewModel> _instruments = new ReactiveList<CreateVerificationViewModel>();
+
         public ReactiveList<CreateVerificationViewModel> Instruments
         {
             get { return _instruments; }
@@ -43,6 +45,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private ReactiveList<CreateVerificationViewModel> _selectedInstruments;
+
         public ReactiveList<CreateVerificationViewModel> SelectedInstruments
         {
             get { return _selectedInstruments; }

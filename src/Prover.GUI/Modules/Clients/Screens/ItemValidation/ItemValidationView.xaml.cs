@@ -3,7 +3,7 @@
 namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
 {
     /// <summary>
-    /// Interaction logic for ItemValidationView.xaml
+    ///     Interaction logic for ItemValidationView.xaml
     /// </summary>
     public partial class ItemValidationView : UserControl
     {

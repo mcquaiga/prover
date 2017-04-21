@@ -4,7 +4,7 @@ using ReactiveUI;
 namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     /// <summary>
-    /// Interaction logic for ClientManager.xaml
+    ///     Interaction logic for ClientManager.xaml
     /// </summary>
     public partial class ClientManagerView : UserControl, IViewFor<ClientManagerViewModel>
     {

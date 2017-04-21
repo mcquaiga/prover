@@ -4,39 +4,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="http://www.caliburnproject.org"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="73" d:DesignWidth="816">
 
     <Grid Height="73">
         <Border BorderBrush="Black" BorderThickness="0,0,0,0.25">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.1*"/>
-                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Margin="15" Grid.Column="0" x:Name="RowNumber" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Margin="15"  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                               x:Name="HasPassed" FontSize="20"/>
+                <TextBlock Margin="15" Grid.Column="0" x:Name="RowNumber" FontSize="18" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+                <TextBlock Margin="15" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                           x:Name="HasPassed" FontSize="20" />
 
                 <StackPanel Orientation="Vertical" Grid.Column="2">
                     <TextBlock Width="125"
-                                   Foreground="Black"
-                                    FontSize="22"
-                                   x:Name="Instrument_TypeString" />
+                               Foreground="Black"
+                               FontSize="22"
+                               x:Name="Instrument_TypeString" />
                     <TextBlock Width="125"
-                                   Margin="2"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22"
-                                   Foreground="Black"
-                                   x:Name="Instrument_SerialNumber" />
+                               Margin="2"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="22"
+                               Foreground="Black"
+                               x:Name="Instrument_SerialNumber" />
                 </StackPanel>
                 <Grid Height="50" Margin="2" Grid.Column="3">
                     <Grid.RowDefinitions>
@@ -48,15 +49,15 @@
                     <StackPanel Grid.Row="0" Orientation="Horizontal" />
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <TextBlock Foreground="Black" Text="MFG.: " FontWeight="Bold" />
-                        <TextBlock Foreground="Black" x:Name="Instrument_SiteNumber1"  HorizontalAlignment="Right" />
+                        <TextBlock Foreground="Black" x:Name="Instrument_SiteNumber1" HorizontalAlignment="Right" />
                     </StackPanel>
                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <TextBlock Foreground="Black" Text="CO.: " FontWeight="Bold" />
-                        <TextBlock Foreground="Black" x:Name="Instrument_SiteNumber2" HorizontalAlignment="Right"/>
+                        <TextBlock Foreground="Black" x:Name="Instrument_SiteNumber2" HorizontalAlignment="Right" />
                     </StackPanel>
                     <StackPanel Grid.Row="3" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="Firm. Ver.: " FontWeight="Bold"/>
-                        <TextBlock Foreground="Black" x:Name="Instrument_FirmwareVersion"  HorizontalAlignment="Right"/>
+                        <TextBlock Foreground="Black" Text="Firm. Ver.: " FontWeight="Bold" />
+                        <TextBlock Foreground="Black" x:Name="Instrument_FirmwareVersion" HorizontalAlignment="Right" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Column="4" Margin="5">
@@ -67,7 +68,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="Meter Type: " FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Foreground="Black" Text="Meter Type: " FontWeight="Bold" FontSize="16" />
                         <TextBlock Foreground="Black" x:Name="Instrument_Volume_MeterType" FontSize="16" />
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -80,8 +81,6 @@
                     </StackPanel>
                 </Grid>
 
-
-              
 
                 <!--<ContentControl cal:View.Context="{Binding PressureViewContext, Mode=TwoWay}" 
                                 Grid.Column="6"
@@ -98,15 +97,17 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <!--Row 1 - SiteInformation-->
-                    <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Vertical">
-                        <TextBlock Foreground="Black" FontSize="14" x:Name="Instrument_Volume_UnCorrectedMultiplierDescription" />
-                        <TextBlock Foreground="Black"  Text="UnCor. Multi." FontWeight="Bold"/>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                        <TextBlock Foreground="Black" FontSize="14"
+                                   x:Name="Instrument_Volume_UnCorrectedMultiplierDescription" />
+                        <TextBlock Foreground="Black" Text="UnCor. Multi." FontWeight="Bold" />
                     </StackPanel>
 
                     <!--Row 2-->
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-                        <TextBlock Foreground="Black"  FontSize="14" x:Name="Instrument_Volume_CorrectedMultiplierDescription" />
-                        <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" FontSize="14"
+                                   x:Name="Instrument_Volume_CorrectedMultiplierDescription" />
+                        <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Column="8" Margin="2">
@@ -118,14 +119,14 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0"  Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" Margin="10,0,0,0">
                         <TextBlock Foreground="Black" FontSize="14" x:Name="Instrument_Volume_UnCorrectedPercentError" />
-                        <TextBlock Foreground="Black" Text="UnCor.%" FontWeight="Bold"  />
+                        <TextBlock Foreground="Black" Text="UnCor.%" FontWeight="Bold" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" Margin="10,0,0,0">
                         <TextBlock Foreground="Black" FontSize="14" x:Name="Instrument_Volume_CorrectedPercentError" />
-                        <TextBlock Foreground="Black" Text="Cor.%"  FontWeight="Bold"/>
+                        <TextBlock Foreground="Black" Text="Cor.%" FontWeight="Bold" />
                     </StackPanel>
                 </Grid>
             </Grid>

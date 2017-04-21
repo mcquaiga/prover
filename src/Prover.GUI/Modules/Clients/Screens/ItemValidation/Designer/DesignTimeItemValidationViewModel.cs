@@ -8,7 +8,7 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer
     {
         public DesignTimeItemValidationViewModel()
         {
-            var itemMetadata = new ItemMetadata()
+            var itemMetadata = new ItemMetadata
             {
                 Number = 34,
                 Code = "Base Pressure",
@@ -22,16 +22,16 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer
 
             InvalidItems.Add(itemMetadata, values);
 
-            itemMetadata = new ItemMetadata()
+            itemMetadata = new ItemMetadata
             {
                 Number = 87,
                 Code = "P Units ",
                 ShortDescription = "P. Units",
                 LongDescription = "Pressure Units",
-                ItemDescriptions = new List<ItemMetadata.ItemDescription>()
+                ItemDescriptions = new List<ItemMetadata.ItemDescription>
                 {
-                    new ItemMetadata.ItemDescription(){ Id=0, Description="PSIG", Value=0},
-                    new ItemMetadata.ItemDescription() { Id=1, Description="PSIA", Value=1}
+                    new ItemMetadata.ItemDescription {Id = 0, Description = "PSIG", Value = 0},
+                    new ItemMetadata.ItemDescription {Id = 1, Description = "PSIA", Value = 1}
                 }
             };
 
@@ -42,6 +42,7 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer
             InvalidItems.Add(itemMetadata, values);
         }
 
-        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems { get; private set; } = new Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>>();
+        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems { get; } =
+            new Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>>();
     }
 }

@@ -43,7 +43,7 @@
     </UserControl.Resources>
 
     <DockPanel Margin="5">
-       <Grid>
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="73*" />
@@ -54,19 +54,17 @@
                 Grid.Column="1"
                 Margin="5"
                 x:Name="Instruments"
-                HorizontalContentAlignment="Stretch">
-             
-            </ListBox>
+                HorizontalContentAlignment="Stretch" />
 
             <!--  Certificate Information  -->
             <StackPanel Grid.Column="2">
                 <StackPanel>
                     <Label>Tested By:</Label>
-                    <TextBox x:Name="TestedBy"/>
+                    <TextBox x:Name="TestedBy" />
                 </StackPanel>
                 <StackPanel>
                     <Label>Verification Type:</Label>
-                    <ComboBox x:Name="VerificationType"/>
+                    <ComboBox x:Name="VerificationType" />
                 </StackPanel>
                 <Button Command="{Binding CreateCertificateCommand}"
                         Content="Create Certificate" />
