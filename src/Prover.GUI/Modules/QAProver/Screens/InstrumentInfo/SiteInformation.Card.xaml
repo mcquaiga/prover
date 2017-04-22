@@ -42,6 +42,7 @@
                 <TextBlock FontWeight="UltraLight" Text=" | " />
                 <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}" />
             </StackPanel>
+            <TextBlock FontSize="18" Text="{Binding Instrument.Client.Name}" />
             <TextBlock FontSize="16" Text="{Binding JobIdDisplay}" />
         </StackPanel>
 

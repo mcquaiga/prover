@@ -6,7 +6,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
-             TextElement.Foreground="White"
              d:DesignHeight="100" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -23,11 +22,11 @@
                 <Setter Property="Foreground" Value="DarkBlue"></Setter>
             </Style>
             
-            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="Black" />
                 <Setter Property="FontSize" Value="22" />
             </Style>
-            <Style x:Key="ColourGridStyle" TargetType="{x:Type Grid}">
+            <!--<Style TargetType="{x:Type Grid}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
                         <Setter Property="Background" Value="{StaticResource PassColour}" />
@@ -36,7 +35,7 @@
                         <Setter Property="Background" Value="{StaticResource FailColour}" />
                     </DataTrigger>
                 </Style.Triggers>
-            </Style>
+            </Style>-->
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -44,26 +43,30 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <CheckBox IsChecked="{Binding Path=IsSelected}" 
                   Margin="8"
+                  VerticalAlignment="Center"
                   Grid.Column="0"/>
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Margin="5 0">
+            <TextBlock Text="Client"
+                       FontSize="14"
+                       Margin="5 0"/>
+            <TextBlock Text="{Binding Instrument.Client.Name, FallbackValue=C.R. Wall}"
+                   Margin="5 0"/>
+        </StackPanel>
+       
         <ContentControl 
-            Grid.Column="1"
+            Grid.Column="2"
             cal:View.Model="{Binding VerificationView}" />
-        <StackPanel Grid.Column="2" Orientation="Horizontal" 
+        <StackPanel Grid.Column="3" Orientation="Horizontal" 
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Center"
                     Margin="5">
-
-            <!--<Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{Binding AddTestToCertificate}"
-                    ToolTip="Export">
-                <materialDesign:PackIcon Kind="Export"
-                                         Height="24"
-                                         Width="24"/>
-            </Button>-->
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding ViewQaTestReportCommand}"
                     ToolTip="View QA Test Report">

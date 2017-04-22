@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common.Screens;
 
@@ -40,5 +41,7 @@ namespace Prover.GUI.Modules.Certificates.Common
 
         public VolumeTest VolumeTest => 
             VerificationTests.FirstOrDefault(v => v.VolumeTest != null)?.VolumeTest;
+
+        public Client Client => Instrument.Client;
     }
 }

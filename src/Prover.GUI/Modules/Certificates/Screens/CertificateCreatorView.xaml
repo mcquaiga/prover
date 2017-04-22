@@ -5,10 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+       
 
         <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
@@ -40,34 +47,43 @@
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <DockPanel Margin="5">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="73*" />
-                <ColumnDefinition Width="25*" />
             </Grid.ColumnDefinitions>
-
+    
+            <ComboBox x:Name="Clients" DisplayMemberPath="Name" Grid.Column="0"/>
+                
             <ListBox
-                Grid.Column="1"
+                Grid.Column="0"
+                Grid.Row="1"
                 Margin="5"
                 SelectionMode="Multiple"
                 x:Name="Instruments"
                 HorizontalContentAlignment="Stretch" />
 
             <!--  Certificate Information  -->
-            <StackPanel Grid.Column="2">
-                <StackPanel>
-                    <Label>Tested By:</Label>
-                    <TextBox x:Name="TestedBy" />
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <StackPanel Orientation="Horizontal" >
+                    <materialDesign:PackIcon Kind="Account" 
+                                             Foreground="{Binding ElementName=TestedBy, Path=BorderBrush}"
+                                             VerticalAlignment="Center"/>
+                    <TextBox x:Name="TestedBy" materialDesign:HintAssist.Hint="Tested By" />
                 </StackPanel>
                 <StackPanel>
-                    <Label>Verification Type:</Label>
-                    <ComboBox x:Name="VerificationType" />
+                    <ComboBox x:Name="VerificationType" materialDesign:HintAssist.Hint="Verification Type"/>
                 </StackPanel>
                 <Button Command="{Binding CreateCertificateCommand}"
+                        Margin="10"
                         Content="Create Certificate" />
             </StackPanel>
         </Grid>

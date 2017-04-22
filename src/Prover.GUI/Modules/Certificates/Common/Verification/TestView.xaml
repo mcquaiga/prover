@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              FontWeight="Regular"
              FontSize="14"
@@ -41,7 +42,29 @@
                 <TextBlock Text="Base T"/>
             </StackPanel>-->
         </Grid>
-        <ItemsControl
+        <DataGrid Grid.Column="1" Margin="5" 
+                  ItemsSource="{Binding VerificationTests}" 
+                  CanUserSortColumns="False" 
+                  CanUserAddRows="False" 
+                  AutoGenerateColumns="False"
+                  materialDesign:DataGridAssist.CellPadding="5 1" 
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="3">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding TestNumber}"
+                                    IsReadOnly="True">
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding PressureTest.PercentError}"
+                                    Header="P"
+                                    IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding TemperatureTest.PercentError}"
+                                        Header="T"
+                                        IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding SuperFactorTest.PercentError}"
+                                        Header="Z"
+                                        IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<ItemsControl
             Width="Auto"
             Height="Auto"
             Grid.Column="1"
@@ -110,7 +133,7 @@
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        </ItemsControl>-->
         <Grid Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
