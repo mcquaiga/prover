@@ -110,7 +110,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             var instruments = Instruments.Where(x => x.IsSelected).Select(i => i.VerificationView.Instrument).ToList();
 
-            if (instruments.Count() > 8)
+            if (instruments.Count > 8)
             {
                 MessageBox.Show("Maximum 8 instruments allowed per certificate.");
                 return;

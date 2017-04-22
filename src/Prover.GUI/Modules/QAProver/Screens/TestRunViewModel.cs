@@ -25,7 +25,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
     public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
-        private const string EditQaTestViewContext = "EditTestView";
+        private const string EditQaTestViewContext = "EditTestView"; //"EditTestViewNew";
 
         private string _connectionStatusMessage;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
@@ -118,24 +118,13 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
 
+        public VolumeTestViewModel VolumeTestView => TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
+
+        public List<VerificationSetViewModel> PTTestViews => TestViews.ToList();
+
         public VolumeTestViewModel VolumeInformationItem { get; set; }
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
-
-        //public override void CanClose(Action<bool> callback)
-        //{
-        //    base.CanClose(callback);
-        //    if (_qaRunTestManager != null)
-        //    {
-        //        if (!_qaRunTestManager.Instrument.HasPassed)
-        //        {
-        //            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
-        //                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-        //            if (result == MessageBoxResult.No)
-        //                callback(false);
-        //        }
-        //    }
-        //}
 
         public void Dispose()
         {

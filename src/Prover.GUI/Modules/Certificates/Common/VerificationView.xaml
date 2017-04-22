@@ -7,60 +7,40 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             TextElement.Foreground="White"
+             TextElement.Foreground="Black"
              TextElement.FontWeight="Light"
              TextElement.FontSize="18"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="100">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-            </ResourceDictionary.MergedDictionaries>
 
-            <ImageSource x:Key="PassIcon">pack://application:,,,/Resources/success.png</ImageSource>
-            <ImageSource x:Key="FailIcon">pack://application:,,,/Resources/error_36.png</ImageSource>
-            <SolidColorBrush x:Key="FontColour" Color="White" />
-            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
-            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
-            <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
-            <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
             <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
             <DataTemplate x:Key="TestTemplate">
                 <ContentControl cal:View.Model="{Binding}" cal:View.Context="Grid" />
             </DataTemplate>
 
-            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="WhiteSmoke" />
-                <Setter Property="FontSize" Value="22" />
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="DockPanelStyle" TargetType="{x:Type DockPanel}">
+            <Style x:Key="PassFailIcon" TargetType="{x:Type materialDesign:PackIcon}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Background" Value="{StaticResource PassColour}" />
+                        <Setter Property="Kind" Value="Check" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Background" Value="{StaticResource FailColour}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style x:Key="PassFailIcon" TargetType="{x:Type Image}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Source" Value="{StaticResource PassIcon}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Source" Value="{StaticResource FailIcon}" />
+                        <Setter Property="Kind" Value="AlertCircleOutline" />
+                        <Setter Property="Foreground" Value="DarkRed"></Setter>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Style="{StaticResource DockPanelStyle}">
+    <DockPanel>
+        <Border>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -71,14 +51,14 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Image x:Name="Icon"
+            <materialDesign:PackIcon x:Name="Icon"
                    Grid.Column="0"
                    Style="{StaticResource PassFailIcon}"
                    Margin="15"
                    Width="36" Height="36" />
             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
-                <TextBlock Text="{Binding DateTimePretty}" />
-                <TextBlock FontSize="32" Text="{Binding Instrument.InstrumentType.Name}" />
+                <TextBlock FontSize="14" Text="{Binding DateTimePretty}" />
+                <TextBlock FontSize="24" Text="{Binding Instrument.InstrumentType.Name}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Instrument.CompositionType}" />
                     <TextBlock Text=" | " />
@@ -100,21 +80,16 @@
                 </StackPanel>
             </StackPanel>
 
-            <ContentControl cal:View.Context="TempView"
+            <ContentControl cal:View.Context="TestView"
                             Grid.Column="4"
-                            cal:View.Model="{Binding}"
-                            Visibility="{Binding ShowTemperature, Converter={StaticResource VisibilityOfBool}}" />
+                            cal:View.Model="{Binding}"/>
 
-            <ContentControl cal:View.Context="PressureView"
-                            Grid.Column="5"
-                            cal:View.Model="{Binding}"
-                            Visibility="{Binding ShowPressure, Converter={StaticResource VisibilityOfBool}}" />
-
-            <ContentControl cal:View.Context="VolumeView"
+            <!--<ContentControl cal:View.Context="VolumeView"
                             Grid.Column="6"
-                            cal:View.Model="{Binding}" />
+                            cal:View.Model="{Binding}" />-->
 
         </Grid>
+        </Border>
     </DockPanel>
 
 </UserControl>

@@ -55,9 +55,6 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.1.3.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.3\lib\net45\Akka.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -185,9 +182,6 @@
     <Compile Include="Modules\Certificates\Common\Verification\VolumeView.xaml.cs">
       <DependentUpon>VolumeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Certificates\Common\Verification\PressureView.xaml.cs">
-      <DependentUpon>PressureView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\Certificates\Reports\CertificateGenerator.cs" />
     <Compile Include="Modules\Certificates\Reports\CertificateReportView.xaml.cs">
       <DependentUpon>CertificateReportView.xaml</DependentUpon>
@@ -221,6 +215,12 @@
       <DependentUpon>ItemValidationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
+      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
+      <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -228,24 +228,35 @@
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
     <Compile Include="Modules\Certificates\Screens\CertificateCreatorViewModel.cs" />
     <Compile Include="Modules\Certificates\Common\VerificationViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\Designer\TestRunViewModelDesignTime.cs" />
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\Designer\DesignTimeInstrumentInfoViewModel.cs" />
     <Compile Include="Modules\Certificates\Common\VerificationView.xaml.cs">
       <DependentUpon>VerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Certificates\Screens\CreateVerificationViewModel.cs" />
-    <Compile Include="Modules\Certificates\Common\Verification\TempView.xaml.cs">
-      <DependentUpon>TempView.xaml</DependentUpon>
+    <Compile Include="Modules\Certificates\Common\Verification\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
-      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml.cs">
+      <DependentUpon>SiteInformation.CardNew.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTestViewModel.cs" />
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
       <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml.cs">
+      <DependentUpon>PTSet.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml.cs">
+      <DependentUpon>Volume.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\QAProver\Screens\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\QAProver\Screens\TestRunViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\TestRun\EditTestView.New.xaml.cs">
+      <DependentUpon>EditTestView.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\QAProver\Screens\TestRun\EditTestView.xaml.cs">
       <DependentUpon>EditTestView.xaml</DependentUpon>
     </Compile>
@@ -325,10 +336,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Common\Verification\PressureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Modules\Certificates\Screens\CreateVerificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -346,6 +353,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -370,17 +385,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Certificates\Common\Verification\TestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\Certificates\Common\VerificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Common\Verification\TempView.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\TestRun\EditTestView.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\QAProver\Screens\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -487,6 +514,10 @@
     </Compile>
     <Resource Include="Resources\group.png" />
     <Resource Include="Resources\certificate.png" />
+    <Resource Include="Resources\ic_info_black_48dp_1x.png" />
+    <Resource Include="Modules\QAProver\Screens\Designer\sample_instrument.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\clipboard-error.png" />
     <Resource Include="Resources\success.png" />
     <Resource Include="Resources\error_36.png" />
@@ -499,6 +530,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

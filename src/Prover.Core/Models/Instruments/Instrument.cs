@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.DriveTypes;
@@ -19,7 +20,8 @@ namespace Prover.Core.Models.Instruments
         PTZ
     }
 
-    public class Instrument : ProverTable
+    public class 
+        Instrument : ProverTable
     {
         public Instrument()
         {
@@ -194,5 +196,11 @@ namespace Prover.Core.Models.Instruments
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return $@"{JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+                    { ReferenceLoopHandling = ReferenceLoopHandling.Ignore})}";
+        }
     }
 }

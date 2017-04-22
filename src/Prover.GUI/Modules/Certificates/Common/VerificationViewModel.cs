@@ -1,4 +1,6 @@
-﻿using Prover.Core.Models.Instruments;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Prover.Core.Models.Instruments;
 using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Modules.Certificates.Common
@@ -20,19 +22,23 @@ namespace Prover.GUI.Modules.Certificates.Common
             RowNumber = rowNumber;
         }
 
-        public string HasPassed
-        {
-            get { return Instrument.HasPassed ? "PASS" : "FAIL"; }
-        }
+        public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
 
-        public bool IsSelected { get; set; }
+        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy}";
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
+        public List<VerificationTest> VerificationTests => 
+            Instrument.VerificationTests.OrderBy(v => v.TestNumber).ToList(); 
 
         public bool ShowTemperature
             => Instrument.CompositionType == CorrectorType.PTZ || Instrument.CompositionType == CorrectorType.T;
 
         public bool ShowPressure
             => Instrument.CompositionType == CorrectorType.PTZ || Instrument.CompositionType == CorrectorType.P;
+
+        public bool ShowSuperFactor
+            => Instrument.CompositionType == CorrectorType.PTZ;
+
+        public VolumeTest VolumeTest => 
+            VerificationTests.FirstOrDefault(v => v.VolumeTest != null)?.VolumeTest;
     }
 }

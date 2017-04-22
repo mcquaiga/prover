@@ -5,9 +5,9 @@ namespace Prover.GUI.Modules.Certificates.Common.Verification
     /// <summary>
     ///     Interaction logic for InstrumentTempTestView.xaml
     /// </summary>
-    public partial class TempView : UserControl
+    public partial class TestView : UserControl
     {
-        public TempView()
+        public TestView()
         {
             InitializeComponent();
         }

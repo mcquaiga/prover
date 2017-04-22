@@ -22,6 +22,7 @@ namespace Prover.GUI.Modules.Clients
         public string MenuTitle => "Manage Clients";
 
         public Action OpenAction => async () => await ScreenManager.ChangeScreen<ClientManagerViewModel>();
+        public int Order => 2;
 
         protected override void Load(ContainerBuilder builder)
         {

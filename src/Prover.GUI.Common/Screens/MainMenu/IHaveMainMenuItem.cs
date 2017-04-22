@@ -11,5 +11,6 @@ namespace Prover.GUI.Common.Screens.MainMenu
         ImageSource MenuIconSource { get; }
         string MenuTitle { get; }
         Action OpenAction { get; }
+        int Order { get; }
     }
 }

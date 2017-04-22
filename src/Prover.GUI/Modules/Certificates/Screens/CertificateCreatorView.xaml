@@ -53,6 +53,7 @@
             <ListBox
                 Grid.Column="1"
                 Margin="5"
+                SelectionMode="Multiple"
                 x:Name="Instruments"
                 HorizontalContentAlignment="Stretch" />
 

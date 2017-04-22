@@ -9,7 +9,7 @@ namespace Prover.GUI.Reports
 {
     public class InstrumentReportViewModel : ViewModelBase
     {
-        public string ReportViewContext => "EditTestView";
+        public string ReportViewContext => "EditTestViewNew";
 
         public InstrumentReportViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)

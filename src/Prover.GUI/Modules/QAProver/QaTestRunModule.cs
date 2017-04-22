@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
@@ -24,5 +25,6 @@ namespace Prover.GUI.Modules.QAProver
         public ScreenManager ScreenManager { get; set; }
 
         public Action OpenAction => () => ScreenManager?.ChangeScreen<TestRunViewModel>();
+        public int Order => 1;
     }
 }

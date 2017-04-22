@@ -29,5 +29,6 @@ namespace Prover.Modules.Exporter
         public string MenuTitle => "Export Test Runs";
 
         public Action OpenAction => async () => await ScreenManager.ChangeScreen<ExportTestsViewModel>();
+        public int Order => 3;
     }
 }

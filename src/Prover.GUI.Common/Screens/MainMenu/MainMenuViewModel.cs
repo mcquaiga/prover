@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Caliburn.Micro;
@@ -12,12 +13,11 @@ namespace Prover.GUI.Common.Screens.MainMenu
     {
         private readonly ScreenManager _screenManager;
 
-
         public MainMenuViewModel(IEnumerable<IHaveMainMenuItem> appMainMenus, ScreenManager screenManager,
             IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
             _screenManager = screenManager;
-            AppMainMenus = appMainMenus;
+            AppMainMenus = appMainMenus.OrderBy(x => x.Order);
         }
 
         public IEnumerable<IHaveMainMenuItem> AppMainMenus { get; }

@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Prover.GUI.Common.Controls.PercentageControlNew"
+             x:Name="PercentUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ImageSource x:Key="PassIcon">..\Resources\success.png</ImageSource>
+            <ImageSource x:Key="FailIcon">..\Resources\error_36.png</ImageSource>
+            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
+            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--"-->
+    <Grid DataContext="{Binding ElementName=PercentUserControl}">
+        <Grid Height="42">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="42" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <!--<materialDesign:PackIcon Kind=""
+                                          Width="36" Height="36"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>-->
+                <materialDesign:PackIcon 
+                            Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}" 
+                            Foreground="{Binding Path=IconBackground, ElementName=PercentUserControl}"
+                            Width="36" Height="36"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                <!--<Image x:Name="Icon" 
+                       Source="{Binding Path=IconSource, ElementName=PercentUserControl}" 
+                       Width="36" Height="36"/>-->
+            </Grid>
+            <Grid Grid.Column="1" Margin="6 0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl}"
+                               FontSize="30"
+                               VerticalAlignment="Bottom" />
+                    <TextBlock Text="%"
+                               VerticalAlignment="Bottom"
+                               FontSize="20"
+                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

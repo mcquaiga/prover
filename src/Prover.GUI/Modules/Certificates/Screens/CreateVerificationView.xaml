@@ -6,43 +6,79 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             TextElement.Foreground="White"
+             d:DesignHeight="100" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+            
+            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
+            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
+            
+            <Style TargetType="materialDesign:PackIcon">
+                <Setter Property="Foreground" Value="DarkBlue"></Setter>
+            </Style>
+            
+            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="WhiteSmoke" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+            <Style x:Key="ColourGridStyle" TargetType="{x:Type Grid}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                        <Setter Property="Background" Value="{StaticResource PassColour}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                        <Setter Property="Background" Value="{StaticResource FailColour}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ContentControl cal:View.Model="{Binding VerificationView}" />
-        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+        <CheckBox IsChecked="{Binding Path=IsSelected}" 
+                  Margin="8"
+                  Grid.Column="0"/>
+        <ContentControl 
+            Grid.Column="1"
+            cal:View.Model="{Binding VerificationView}" />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"
                     Margin="5">
 
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Height="48"
+            <!--<Button Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding AddTestToCertificate}"
                     ToolTip="Export">
                 <materialDesign:PackIcon Kind="Export"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
-            </Button>
+                                         Height="24"
+                                         Width="24"/>
+            </Button>-->
             <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Height="48"
                     Command="{Binding ViewQaTestReportCommand}"
                     ToolTip="View QA Test Report">
 
                 <materialDesign:PackIcon Kind="Printer"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
+                                         Height="24"
+                                         Width="24"
+                                          />
             </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="15 0 0 0"
-                    Height="48"
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding ArchiveTestCommand}"
                     ToolTip="Archive Test">
                 <materialDesign:PackIcon Kind="Archive"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
+                                         Height="24"
+                                         Width="24"/>
             </Button>
         </StackPanel>
     </Grid>

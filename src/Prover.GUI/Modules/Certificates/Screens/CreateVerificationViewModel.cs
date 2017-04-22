@@ -31,7 +31,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private ReactiveCommand _addTestToCertificate;
-
         public ReactiveCommand AddTestToCertificate
         {
             get { return _addTestToCertificate; }
@@ -39,14 +38,30 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private VerificationViewModel _verificationViewModel;
-
         public VerificationViewModel VerificationView
         {
             get { return _verificationViewModel; }
-            set { this.RaiseAndSetIfChanged(ref _verificationViewModel, value); }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _verificationViewModel, value);
+                Instrument = _verificationViewModel.Instrument;
+            }
         }
 
-        public bool IsSelected { get; set; }
+        private Instrument _instrument;
+        public Instrument Instrument
+        {
+            get { return _instrument; }
+            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
+        }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { this.RaiseAndSetIfChanged(ref _isSelected, value); }
+        }              
 
         private ReactiveCommand _viewQaTestReportCommand;
 

@@ -1,0 +1,244 @@
+﻿<UserControl x:Class="Prover.GUI.Modules.Certificates.Common.Verification.TestView"
+             x:Name="TestCertificateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             mc:Ignorable="d"
+             FontWeight="Regular"
+             FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             d:DesignHeight="100"  d:DesignWidth="350">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
+            TrueValue="Visible" FalseValue="Collapsed" />
+            
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="Black" />
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="PercentErrorStyle">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <!--<StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="Instrument_Temperature_EvcBase" />
+                    <TextBlock x:Name="Instrument_Temperature_Units" />
+                </StackPanel>
+                <TextBlock Text="Base T"/>
+            </StackPanel>-->
+        </Grid>
+        <ItemsControl
+            Width="Auto"
+            Height="Auto"
+            Grid.Column="1"
+            ItemsSource="{Binding VerificationTests}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="5 0" IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid DataContext="{Binding}"
+                          Margin="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="LightGray"
+                                Grid.Row="0"
+                                BorderThickness="0 0 0 1" 
+                                Margin="1">
+                            <StackPanel Margin="0 3" 
+                                        Orientation="Horizontal">
+                                <TextBlock Text="level "
+                                           FontSize="11"/>
+                                <TextBlock Text="{Binding Path=TestNumber, FallbackValue='1'}"
+                                           FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <UniformGrid Grid.Row="1" Columns="3">
+                            <StackPanel Margin="3"                                        
+                                        Visibility="{Binding Path=DataContext.ShowPressure, ElementName=TestCertificateView, Converter={StaticResource BoolToVisible}}">
+                                <TextBlock Text="{Binding Path=PressureTest.PercentError, FallbackValue=0.05}"
+                                           Style="{StaticResource PercentErrorStyle}"/>
+                                <TextBlock Text="P"
+                                           FontSize="10"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Border BorderThickness="1 0" BorderBrush="LightGray" >
+                            <StackPanel Margin="3"
+                                        
+                                        Visibility="{Binding Path=DataContext.ShowTemperature, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource BoolToVisible}}">
+                                <TextBlock Text="{Binding Path=TemperatureTest.PercentError, FallbackValue=0.02}"
+                                            Style="{StaticResource PercentErrorStyle}"/>
+                                <TextBlock Text="T"
+                                            FontSize="10"
+                                            HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            </Border>
+
+                            <StackPanel Margin="3"
+                                        
+                                        Visibility="{Binding Path=DataContext.ShowSuperFactor, ElementName=TestCertificateView, Converter={StaticResource BoolToVisible}}">
+                               
+                                <TextBlock Text="{Binding Path=SuperFactorTest.PercentError, FallbackValue=0.07}"
+                                           Style="{StaticResource PercentErrorStyle}"/>
+                                <TextBlock Text="Z"
+                                           FontSize="10"
+                                           HorizontalAlignment="Center"/>
+
+                            </StackPanel>
+                        </UniformGrid>
+
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Margin="2" 
+                  Grid.Column="0"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!--Row 1 - SiteInformation-->
+                <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Vertical">
+                    <TextBlock Foreground="Black" FontSize="14" x:Name="VolumeTest_UnCorrectedMultiplierDescription" />
+                    <TextBlock Foreground="Black"  Text="UnCor. Multi." FontWeight="Bold"/>
+                </StackPanel>
+
+                <!--Row 2-->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                    <TextBlock Foreground="Black"  FontSize="14" x:Name="VolumeTest_CorrectedMultiplierDescription" />
+                    <TextBlock Foreground="Black" Text="Cor. Multi." FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1" 
+                  Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0"  Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                    <TextBlock Foreground="Black" FontSize="14" Text="{Binding VolumeTest.UnCorrectedPercentError}" />
+                    <TextBlock Foreground="Black" Text="UnCor.%" FontWeight="Bold"  />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="Vertical" Margin="10,0,0,0">
+                    <TextBlock Foreground="Black" FontSize="14" Text="{Binding VolumeTest.CorrectedPercentError}" />
+                    <TextBlock Foreground="Black" Text="Cor.%"  FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
+
+
+
+<!--<Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Grid.Row="0"
+                       Text=""/>
+            <TextBlock Grid.Column="0" 
+                       Grid.Row="1"
+                       Text="T"/>
+            <TextBlock Grid.Column="0" 
+                       Grid.Row="2"
+                       Text="P"/>
+            <TextBlock Grid.Column="0" 
+                       Grid.Row="3"
+                       Text="S"/>
+         
+            -->
+<!--<StackPanel Grid.Column="1"  
+                        Orientation="Vertical" 
+                        DataContext="{Binding}" 
+                        Margin="0">
+               
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" 
+                               VerticalAlignment="Center"
+                         
+                               Text="level 1"
+                               Foreground="Gray"/>
+
+                    <Grid Grid.Column="1"
+                        Margin="5 0" HorizontalAlignment="Center">
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="Auto"/>
+                         <ColumnDefinition/>
+                         <ColumnDefinition/>
+                     </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0" 
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                         
+                        </StackPanel>-->
+
+<!--<UniformGrid Grid.Column="1" Columns="2" Margin="0 1">
+                            <StackPanel>
+                                <TextBlock Text="32"/>
+                                <TextBlock Text="gauge" 
+                                           Foreground="Gray"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="3 0 0 0">
+                                <TextBlock VerticalAlignment="Bottom"
+                                           Text="33.2" />
+                                <TextBlock Text="evc"
+                                           Foreground="Gray"/>
+                            </StackPanel>
+
+                        </UniformGrid>-->
+<!--
+                    </Grid>
+                </Grid>-->
+<!--</StackPanel>-->
+<!--
+        </Grid>-->

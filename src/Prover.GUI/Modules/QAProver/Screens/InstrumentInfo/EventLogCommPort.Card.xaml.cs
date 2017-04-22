@@ -3,7 +3,7 @@
 namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo
 {
     /// <summary>
-    ///     Interaction logic for MiniATInfo.xaml
+    /// Interaction logic for MiniATInfo.xaml
     /// </summary>
     public partial class EventLogCommPortCard : UserControl
     {

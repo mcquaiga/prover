@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
@@ -24,6 +26,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             RunTestCommand = ReactiveCommand.CreateFromTask(RunTest);
         }
 
+        public ColorZoneMode HeaderZoneColor
+            => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
+
+        public Brush HeaderColour
+            => VerificationTest.TestNumber == 0 ? new SolidColorBrush(Colors.DarkRed) : new SolidColorBrush(Colors.Orange);
+
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
         public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
         public TemperatureTestViewModel TemperatureTestViewModel { get; private set; }
@@ -37,6 +45,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
+
             ShowDownloadButton = QaRunTestManager != null;
 
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);

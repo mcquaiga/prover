@@ -32,5 +32,6 @@ namespace Prover.GUI.Modules.Certificates
         }
 
         public Action OpenAction => () => ScreenManager.ChangeScreen<CertificateCreatorViewModel>();
+        public int Order => 4;
     }
 }
