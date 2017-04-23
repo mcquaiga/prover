@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Prover.Domain.Model.Domain
+#endregion
+
+namespace Prover.Core.Shared.Domain
 {
     public abstract class ValueObjectBase
     {

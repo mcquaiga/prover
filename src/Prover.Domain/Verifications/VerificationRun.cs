@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Prover.Domain.Model.Domain;
+using Prover.Core.Shared.Domain;
 using Prover.Domain.Model.Instrument;
 
 namespace Prover.Domain.Model.Verifications

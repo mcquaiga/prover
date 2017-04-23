@@ -1,7 +1,7 @@
 ﻿using System;
-using Prover.Domain.Model.Domain;
-using Prover.InstrumentProtocol.Core.Models.Instrument.Items;
-using Prover.Shared.Enums;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
+using Prover.Core.Shared.Domain;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Domain.Model.Verifications
 {

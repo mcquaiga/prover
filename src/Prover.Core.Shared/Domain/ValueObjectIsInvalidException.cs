@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
 
-namespace Prover.Domain.Model.Domain
+using System;
+
+#endregion
+
+namespace Prover.Core.Shared.Domain
 {
     public class ValueObjectIsInvalidException : Exception
     {

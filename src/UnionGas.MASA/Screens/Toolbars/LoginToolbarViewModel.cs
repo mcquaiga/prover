@@ -1,15 +1,11 @@
-﻿using System.ServiceModel.Security.Tokens;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Login;
 using Prover.GUI.Common;
-using Prover.GUI.Common.BackgroundWork;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Toolbar;
-using ReactiveUI;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.LoginDialog;
-using UnionGas.MASA.Screens.Toolbars.LoginToolbar;
 
 namespace UnionGas.MASA.Screens.Toolbars
 {

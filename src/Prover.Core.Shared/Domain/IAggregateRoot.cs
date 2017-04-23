@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#region
 
-namespace Prover.Domain.Model.Domain
+using System.Collections.Generic;
+
+#endregion
+
+namespace Prover.Core.Shared.Domain
 {
     public interface IAggregateRoot
     {

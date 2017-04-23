@@ -54,9 +54,8 @@
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.1\lib\net45\NLog.dll</HintPath>
@@ -118,6 +117,15 @@
     <Compile Include="Messaging\ResponseCode.cs" />
     <Compile Include="Messaging\ResponseMessage.cs" />
     <Compile Include="Messaging\ResponseProcessor.cs" />
+    <Compile Include="Models\Instrument\IInstrument.cs" />
+    <Compile Include="Models\Instrument\Items\IItemsGroup.cs" />
+    <Compile Include="Models\Instrument\Items\IPressureItems.cs" />
+    <Compile Include="Models\Instrument\Items\IPulseOutputItems.cs" />
+    <Compile Include="Models\Instrument\Items\ISiteInformationItems.cs" />
+    <Compile Include="Models\Instrument\Items\ISuperFactorItems.cs" />
+    <Compile Include="Models\Instrument\Items\ITemperatureItems.cs" />
+    <Compile Include="Models\Instrument\Items\IVolumeItems.cs" />
+    <Compile Include="Models\Instrument\Items\Meters\MeterIndexes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +135,15 @@
   <ItemGroup>
     <Folder Include="Events\" />
     <Folder Include="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\Instrument\Items\Meters\MeterIndexes.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
+      <Project>{35fe4429-b8f5-4761-b401-a215d1b4eba2}</Project>
+      <Name>Prover.Core.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

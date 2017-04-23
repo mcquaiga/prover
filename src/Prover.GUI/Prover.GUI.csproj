@@ -95,9 +95,8 @@
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.1\lib\net45\NLog.dll</HintPath>
@@ -264,10 +263,6 @@
       <DependentUpon>NewTestView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\QAProver\Screens\InstrumentInfoViewModel.cs" />
-    <Compile Include="Modules\QAProver\Screens\LiveReadView.xaml.cs">
-      <DependentUpon>LiveReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\QAProver\Screens\LiveReadViewModel.cs" />
     <Compile Include="Modules\QAProver\Screens\InstrumentInfo\PressureInfo.Card.xaml.cs">
       <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
     </Compile>
@@ -406,10 +401,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\QAProver\Screens\TestRun\EditTestView.New.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\QAProver\Screens\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

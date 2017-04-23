@@ -9,6 +9,7 @@ using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Reports;
 using ReactiveUI;
 
+
 namespace Prover.GUI.Modules.Certificates.Screens
 {
     public class CreateVerificationViewModel : ViewModelBase

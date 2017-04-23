@@ -1,7 +1,7 @@
 using System;
-using Prover.Domain.Model.Domain;
-using Prover.InstrumentProtocol.Core.Models.Instrument.Items;
-using Prover.Shared.Helpers;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
+using Prover.Core.Shared.Domain;
+using Prover.Domain.Model.Helpers;
 
 namespace Prover.Domain.Model.Verifications
 {

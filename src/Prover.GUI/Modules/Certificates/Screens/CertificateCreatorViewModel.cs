@@ -25,7 +25,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private readonly IProverStore<Client> _clientStore;
         private readonly ICertificateStore _certificateStore;
 
-        public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+        public CertificateCreatorViewModel(ScreenManager screenManager, Caliburn.Micro.IEventAggregator eventAggregator,
             IProverStore<Instrument> instrumentStore, IProverStore<Client> clientStore, ICertificateStore certificateStore)
             : base(screenManager, eventAggregator)
         {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Data;
 using Caliburn.Micro;
 using Autofac;
-using Autofac.Core;
 using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Common.Design

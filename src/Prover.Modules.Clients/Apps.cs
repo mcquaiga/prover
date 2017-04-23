@@ -2,11 +2,8 @@
 using System.Windows.Media;
 using Caliburn.Micro;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Screens.MainMenu;
-using Prover.Modules.Clients.Screens.Clients;
 using Action = System.Action;
 using System.Windows.Media.Imaging;
-using Prover.GUI.Modules.Clients.Screens.Clients;
 
 namespace Prover.Modules.Clients
 {  

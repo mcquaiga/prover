@@ -11,6 +11,7 @@ using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 
+
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase

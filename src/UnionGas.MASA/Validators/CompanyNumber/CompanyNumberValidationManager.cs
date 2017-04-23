@@ -3,19 +3,17 @@ using System.Reactive.Subjects;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using NLog;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations.Validators;
-using Prover.Core.Login;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 using LogManager = NLog.LogManager;
+using Prover.Core.VerificationTests.TestActions;
+using Prover.Core.Models.Instruments;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.Core.Storage;
+using Prover.Core.Login;
 
 namespace UnionGas.MASA.Validators.CompanyNumber
 {

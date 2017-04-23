@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Media;
-using Autofac;
-using Caliburn.Micro;
+﻿using System.Windows.Media;
 using Action = System.Action;
 
 namespace Prover.GUI.Common.Screens.MainMenu

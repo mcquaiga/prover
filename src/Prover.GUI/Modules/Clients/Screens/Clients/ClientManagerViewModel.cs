@@ -7,6 +7,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 
+
 namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     public class ClientManagerViewModel : ViewModelBase, IDisposable

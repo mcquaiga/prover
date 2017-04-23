@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Prover.Domain.Model.Domain;
+using Prover.Core.Shared.Domain;
 
 namespace Prover.Domain.Model.Instrument
 {

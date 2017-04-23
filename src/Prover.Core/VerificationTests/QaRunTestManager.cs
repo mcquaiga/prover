@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
+using Caliburn.Micro;
 
 namespace Prover.Core.VerificationTests
 {

@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Prover.Modules.Exporter.Screens.Exporter
 {

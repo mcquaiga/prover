@@ -1,15 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Entity.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Entity base class for domain objects
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿#region
 
 using System;
 
-namespace Prover.Domain.Model.Domain
+#endregion
+
+namespace Prover.Core.Shared.Domain
 {
     /// <summary>
     ///     Entity base class for domain objects

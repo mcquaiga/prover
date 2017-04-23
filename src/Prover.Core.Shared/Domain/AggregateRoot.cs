@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 
-namespace Prover.Domain.Model.Domain
+#endregion
+
+namespace Prover.Core.Shared.Domain
 {
     public abstract class AggregateRoot : Entity, IAggregateRoot
     {

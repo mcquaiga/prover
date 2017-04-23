@@ -2,6 +2,7 @@
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 
+
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class SuperFactorTestViewModel : TestRunViewModelBase<Core.Models.Instruments.SuperFactorTest>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common.Events;

@@ -1,4 +1,4 @@
-﻿namespace Prover.Domain.Model.Domain
+﻿namespace Prover.Core.Shared.Domain
 {
     public interface IDomainEvent
     {

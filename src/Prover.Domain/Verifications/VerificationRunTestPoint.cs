@@ -1,6 +1,6 @@
 using System;
-using Prover.Domain.Model.Domain;
-using Prover.Shared.Enums;
+using Prover.Core.Shared.Domain;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Domain.Model.Verifications
 {
