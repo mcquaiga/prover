@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.Core.Events;
+using Prover.Core.ExternalIntegrations;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using ReactiveUI;
-using Prover.Core.Models.Instruments;
 using Prover.GUI.Reports;
-using Prover.Core.ExternalIntegrations;
-using Prover.Core.Storage;
-using Prover.Core.Events;
+using ReactiveUI;
 
-namespace Prover.Modules.Exporter.Screens.Exporter
+namespace Prover.GUI.Modules.Exporter.Screens.Exporter
 {
     public class QaTestRunGridViewModel : ViewModelBase
     {

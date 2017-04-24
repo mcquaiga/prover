@@ -7,7 +7,7 @@ using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Modules.Exporter.Screens.Exporter;
 using Action = System.Action;
 
-namespace Prover.Modules.Exporter
+namespace Prover.GUI.Modules.Exporter
 {
     public class ExportManagerModule : Module, IHaveMainMenuItem
     {
@@ -20,7 +20,7 @@ namespace Prover.Modules.Exporter
 
         public ScreenManager ScreenManager { get; set; }
 
-        public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover.Modules.Exporter;component/Resources/cloud-upload.png"));
+        public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/cloud-upload.png"));
 
         public string MenuTitle => "Export Test Runs";
 

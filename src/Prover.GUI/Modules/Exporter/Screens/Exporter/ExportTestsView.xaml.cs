@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Prover.Modules.Exporter.Screens.Exporter
+namespace Prover.GUI.Modules.Exporter.Screens.Exporter
 {
     /// <summary>
     ///     Interaction logic for CreateCertificateView.xaml

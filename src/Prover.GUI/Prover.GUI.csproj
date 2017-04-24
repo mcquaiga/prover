@@ -29,7 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -175,6 +175,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Modules\Exporter\ExportManagerModule.cs" />
+    <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml.cs">
+      <DependentUpon>ExportTestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsViewModel.cs" />
+    <Compile Include="Modules\Exporter\Screens\Exporter\QaTestRunGridView.xaml.cs">
+      <DependentUpon>QaTestRunGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Exporter\Screens\Exporter\QaTestRunGridViewModel.cs" />
     <Compile Include="Modules\QAProver\QaTestRunModule.cs" />
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Modules\Certificates\CertificateManagerModule.cs" />
@@ -348,6 +357,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Exporter\Screens\Exporter\QaTestRunGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
