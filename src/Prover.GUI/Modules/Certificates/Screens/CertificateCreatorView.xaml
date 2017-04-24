@@ -61,14 +61,17 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
     
-            <ComboBox x:Name="Clients" DisplayMemberPath="Name" Grid.Column="0"/>
+            <ComboBox x:Name="Clients" 
+                      DisplayMemberPath="Name" 
+                      Grid.Column="0"
+                      Margin="10"/>
                 
             <ListBox
                 Grid.Column="0"
                 Grid.Row="1"
                 Margin="5"
                 SelectionMode="Multiple"
-                x:Name="Instruments"
+                x:Name="SearchResults"
                 HorizontalContentAlignment="Stretch" />
 
             <!--  Certificate Information  -->

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Core.Storage
 {
-    public interface IProverStore<T> : IDisposable where T : class
+    public interface IProverStore<T> where T : class
     {
         IQueryable<T> Query();
         T Get(Guid id);

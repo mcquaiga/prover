@@ -48,11 +48,6 @@ namespace Prover.Core.Storage
             entity.ArchivedDateTime = DateTime.UtcNow;
             await UpsertAsync(entity);
         }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }

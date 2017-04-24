@@ -40,49 +40,64 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <CheckBox IsChecked="{Binding Path=IsSelected}" 
-                  Margin="8"
-                  VerticalAlignment="Center"
-                  Grid.Column="0"/>
-        <StackPanel Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Margin="5 0">
-            <TextBlock Text="Client"
-                       FontSize="14"
-                       Margin="5 0"/>
-            <TextBlock Text="{Binding Instrument.Client.Name, FallbackValue=C.R. Wall}"
-                   Margin="5 0"/>
-        </StackPanel>
-       
-        <ContentControl 
-            Grid.Column="2"
-            cal:View.Model="{Binding VerificationView}" />
-        <StackPanel Grid.Column="3" Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    VerticalAlignment="Center"
-                    Margin="5">
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{Binding ViewQaTestReportCommand}"
-                    ToolTip="View QA Test Report">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <CheckBox IsChecked="{Binding Path=IsSelected}" 
+                      Grid.Column="0"
+                      Grid.Row="0" Grid.RowSpan="2"
+                      Margin="8"
+                      VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Grid.ColumnSpan="3"
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="5 0">
+                <TextBlock Text="Client"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Foreground="Gray"
+                           Margin="5 0"/>
+                <TextBlock Text="{Binding Instrument.Client.Name}"
+                           VerticalAlignment="Center"
+                           Margin="5 0"/>
+            </StackPanel>
 
-                <materialDesign:PackIcon Kind="Printer"
-                                         Height="24"
-                                         Width="24"
-                                          />
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Command="{Binding ArchiveTestCommand}"
-                    ToolTip="Archive Test">
-                <materialDesign:PackIcon Kind="Archive"
-                                         Height="24"
-                                         Width="24"/>
-            </Button>
-        </StackPanel>
+            <ContentControl Grid.Row="1"
+                Grid.Column="2"
+                cal:View.Model="{Binding VerificationView}" />
+            <StackPanel Grid.Column="3"
+                        Grid.Row="1"
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"
+                        Margin="5">
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{Binding ViewQaTestReportCommand}"
+                        ToolTip="View QA Test Report">
+
+                    <materialDesign:PackIcon Kind="Printer"
+                                             Height="24"
+                                             Width="24"
+                    />
+                </Button>
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{Binding ArchiveTestCommand}"
+                        ToolTip="Archive Test">
+                    <materialDesign:PackIcon Kind="Archive"
+                                             Height="24"
+                                             Width="24"/>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
+    
 </UserControl>
