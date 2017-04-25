@@ -15,6 +15,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using ReactiveUI;
@@ -235,6 +236,7 @@ namespace Prover.GUI.Screens.QAProver
             _qaRunTestManager?.Dispose();
         }
 
+     
     }
 }
 

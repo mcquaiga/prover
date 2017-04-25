@@ -86,7 +86,6 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunTest(int level, CancellationToken ct)
         {
-
             try
             {
                 if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
