@@ -146,6 +146,15 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public bool IsLiveTemperature => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.T;
+
+        [NotMapped]
+        public bool IsLivePressure => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.P;
+
+        [NotMapped]
+        public bool IsLiveSuper => CompositionType == CorrectorType.PTZ;
+
+        [NotMapped]
         public bool HasPassed
         {
             get

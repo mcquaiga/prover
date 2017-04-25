@@ -54,20 +54,20 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="0.75*" />
+                <ColumnDefinition Width="0.25*" />
             </Grid.ColumnDefinitions>
-    
+
             <ComboBox x:Name="Clients" 
                       DisplayMemberPath="Name" 
                       Grid.Column="0"
                       Margin="10"/>
-                
             <ListBox
                 Grid.Column="0"
+                VerticalContentAlignment="Stretch"
                 Grid.Row="1"
                 Margin="5"
                 SelectionMode="Multiple"
