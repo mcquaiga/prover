@@ -43,7 +43,7 @@ namespace Prover.Core.Startup
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
-            Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
+            Builder.RegisterType<AutoVolumeTestManager>().As<VolumeTestManagerBase>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
