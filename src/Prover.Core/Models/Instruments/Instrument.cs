@@ -165,9 +165,6 @@ namespace Prover.Core.Models.Instruments
         public string PulseBSelect => Items.GetItem(94).Description;
 
         [NotMapped]
-        public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
-
-        [NotMapped]
         public decimal SiteNumber1 => Items.GetItem(200).NumericValue;
 
         [NotMapped]

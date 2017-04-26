@@ -142,13 +142,6 @@
   </item>
   <item number="113" code="HIGH_RES_CORRECTED" shortDescription="High Res COR"
         description="High Resolution Corrected Volume" isVolume="true" isVolumeTest="true" />
-  <item number="115" code="PULSE_OUTPUT_WAITING" shortDescription="Pulse Output Waiting" description="Pulse Output Waiting" isVolume="true">
-    <value id="0" numericvalue="0.0625"/>
-    <value id="1" numericvalue="0.500"/>
-    <value id="2" numericvalue="1.000"/>
-    <value id="3" numericvalue="0.125"/>
-    <value id="4" numericvalue="0.250"/>
-  </item>
   <item number="122" code="FIRMwARE" shortDescription="Firm. Ver." description="Firmware Version" />
   <item number="137" code="PRESS_RANGE" shortDescription="Pressure Range" description="Pressure Range"
         isPressure="true" />
