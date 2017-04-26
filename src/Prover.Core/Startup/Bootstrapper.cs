@@ -1,7 +1,5 @@
 ﻿using System.Data.Entity;
-using Akavache;
 using Autofac;
-using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
@@ -21,7 +19,7 @@ namespace Prover.Core.Startup
     {
         public CoreBootstrapper()
         {
-            BlobCache.ApplicationName = "EvcProver";
+            //BlobCache.ApplicationName = "EvcProver";
 
             //Database registrations
             Builder.RegisterInstance(new ProverContext());

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Settings;
 
