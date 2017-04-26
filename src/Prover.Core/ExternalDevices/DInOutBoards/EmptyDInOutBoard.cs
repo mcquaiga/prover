@@ -21,7 +21,5 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         public void StopMotor()
         {
         }
-
-        public decimal PulseTiming { get; set; }
     }
 }
