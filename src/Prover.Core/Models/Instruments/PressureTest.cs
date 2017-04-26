@@ -47,12 +47,13 @@ namespace Prover.Core.Models.Instruments
         
         private readonly decimal? _totalGauge;
         [NotMapped]
-        public decimal TotalGauge => _totalGauge ?? GasGauge ?? 0;
+        public decimal TotalGauge => _totalGauge ?? 0;
 
         public decimal GasPressure
         {
             get
             {
+
                 var result = 0m;
                 switch (VerificationTest?.Instrument?.Transducer)
                 {

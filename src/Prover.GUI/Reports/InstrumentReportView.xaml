@@ -12,16 +12,10 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d"
-             Height="795" Width="1040">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-
-        <DataTemplate x:Key="TestTemplate">
-            <ContentControl Margin="5" cal:View.Model="{Binding .}" cal:View.Context="CardReadOnly" />
-        </DataTemplate>
-    </UserControl.Resources>
+             Height="816" Width="1056">
+   
     <Viewbox Width="1056" Height="816" Stretch="Uniform">
         <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
-                        Margin="2" />
+                        Margin="3" />
     </Viewbox>
 </UserControl>

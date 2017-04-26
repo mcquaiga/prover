@@ -17,7 +17,7 @@
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
-    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1">
+    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone
                             Padding="2"
