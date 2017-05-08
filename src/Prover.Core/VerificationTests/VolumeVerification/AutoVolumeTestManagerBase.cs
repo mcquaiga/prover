@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;

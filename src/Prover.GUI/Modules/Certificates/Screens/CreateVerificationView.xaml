@@ -21,22 +21,11 @@
             <Style TargetType="materialDesign:PackIcon">
                 <Setter Property="Foreground" Value="DarkBlue"></Setter>
             </Style>
-            
+
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="Foreground" Value="Black" />
                 <Setter Property="FontSize" Value="22" />
             </Style>
-            <!--<Style TargetType="{x:Type Grid}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Background" Value="{StaticResource PassColour}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Background" Value="{StaticResource FailColour}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>-->
-
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -48,12 +37,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <CheckBox IsChecked="{Binding Path=IsSelected}" 
                       Grid.Column="0"
-                      Grid.Row="0" Grid.RowSpan="2"
+                      Grid.Row="1"
                       Margin="8"
                       VerticalAlignment="Center"/>
             <StackPanel Grid.Column="1" Grid.ColumnSpan="3"
@@ -72,8 +61,9 @@
             </StackPanel>
 
             <ContentControl Grid.Row="1"
-                Grid.Column="2"
-                cal:View.Model="{Binding VerificationView}" />
+                            Grid.Column="2"
+                            cal:View.Model="{Binding VerificationView}" />
+            
             <StackPanel Grid.Column="3"
                         Grid.Row="1"
                         Orientation="Horizontal" 

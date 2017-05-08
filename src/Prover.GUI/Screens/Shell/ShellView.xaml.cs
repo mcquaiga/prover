@@ -11,6 +11,7 @@ namespace Prover.GUI.Screens.Shell
         public ShellView()
         {
             InitializeComponent();
+            
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
             Style = (Style)FindResource(typeof(Window));
         }

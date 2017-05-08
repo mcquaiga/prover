@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="http://www.caliburnproject.org"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              mc:Ignorable="d"
+             Background="White"
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
@@ -14,39 +14,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
-       
-
-        <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
-            <Style.Triggers>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="ItemsControl.AlternationIndex" Value="1" />
-                        <Condition Property="IsSelected" Value="False" />
-                        <Condition Property="IsMouseOver" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background" Value="#EEEEEEEE" />
-                </MultiTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="Flat">
-            <Setter Property="Control.Background" Value="{x:Null}" />
-            <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="Control.IsMouseOver" Value="True">
-                    <Setter Property="Control.Background" Value="{x:Null}" />
-                    <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-                <Trigger Property="Control.IsFocused" Value="True">
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisible" TrueValue="Visible" FalseValue="Collapsed" />
+                       
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -63,14 +37,34 @@
 
             <ComboBox x:Name="Clients" 
                       DisplayMemberPath="Name" 
+                      materialDesign:HintAssist.Hint="Customer"
                       Grid.Column="0"
                       Margin="10"/>
+            
+            <TextBlock Grid.Column="0"
+                       Grid.Row="1"
+                       FontSize="24"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="Select a customer from the dropdown."
+                       Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}"/>
+
+            <ProgressBar Grid.Row="1"
+                         Grid.Column="0"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}}"
+                         Value="0"
+                         IsIndeterminate="True"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"/>
             <ListBox
                 Grid.Column="0"
                 VerticalContentAlignment="Stretch"
                 Grid.Row="1"
                 Margin="5"
                 SelectionMode="Multiple"
+                Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}}"
                 x:Name="SearchResults"
                 HorizontalContentAlignment="Stretch" />
 

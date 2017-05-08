@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="816" d:DesignWidth="1056">
+             FontSize="10"
+             FontWeight="Light"
+             Background="White"
+             Height="816" Width="1056">
     <UserControl.Resources>
 
         <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
@@ -22,15 +26,18 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Viewbox Width="1040" Height="795" Stretch="UniformToFill">
-        <Grid
-            MinWidth="1056" MaxWidth="1056"
-            MinHeight="816" MaxHeight="816">
+
+    <Canvas Width="1056"
+            Height="816">
+        <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="665" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1050"/>
+            </Grid.ColumnDefinitions>
             <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" Margin="2,5,0,2">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -40,60 +47,72 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.25*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.5*" />
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="305"
+                    <!--<Image Grid.Column="0" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="305"
                            Source="../../../Resources/certificate.png" Stretch="Fill" Margin="10,5,5,5"
-                           Grid.RowSpan="4" />
+                           Grid.RowSpan="4" />-->
 
                     <StackPanel Grid.Row="0" Grid.Column="1">
                         <TextBlock FontSize="24" HorizontalAlignment="Center">Measurement Device</TextBlock>
                         <TextBlock FontSize="24" HorizontalAlignment="Center">Inspection Certificate</TextBlock>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock FontSize="15">
-                                Test Date: <TextBlock Text="{Binding Path=CertificateDate}" />
-                            </TextBlock>
-                        </StackPanel>
+                        <TextBlock FontSize="16" 
+                                   Text="{Binding Path=CertificateDate, FallbackValue=1900-01-01}"
+                                   HorizontalAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0" FontSize="10" Grid.ColumnSpan="2" FontWeight="Bold">Accredited Meter Verifier</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="10" FontWeight="Bold" Grid.ColumnSpan="2">MC Accredited Org.: Union Gas Limited</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="2" FontSize="10">36 Charles St.</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10">North Bay, Ontario</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="4" FontSize="10">P1B 8K7</TextBlock>
+                    <materialDesign:Card Grid.Column="2"
+                                         HorizontalAlignment="Right"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                         Grid.Row="0">
 
-                            <TextBlock Grid.Column="1" Grid.Row="2" FontSize="10">P: (705) 474-8483</TextBlock>
-                            <TextBlock Grid.Column="1" Grid.Row="3" FontSize="10">F: (705) 475-7926</TextBlock>
-                        </Grid>
-                        <TextBlock Margin="0,0,0,0" FontSize="9">Accreditation Certificate: A0049 || MC Registration #: 60394</TextBlock>
-                        <TextBlock FontSize="10">
-                            Certificate Number: UGMI-
-                            <TextBlock FontSize="10" Text="{Binding Path=Certificate.Number}" />
-                        </TextBlock>
-                    </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="2">
+                            <materialDesign:ColorZone Background="LightGray" Padding="2">
+                                <TextBlock FontSize="10">Accredited Meter Verifier</TextBlock>
+                            </materialDesign:ColorZone>
+
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical"
+                                            Margin="2 2"
+                                            HorizontalAlignment="Left">
+                                    <TextBlock VerticalAlignment="Bottom" FontSize="10" Text="Certificate Number: ">
+                                        <TextBlock FontSize="10" Text="{Binding Path=Certificate.Number}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,0,0,0" FontSize="10">Accreditation Certificate: XXXXX</TextBlock>
+                                    <TextBlock FontSize="10"> MC Registration #: XXXXX</TextBlock>
+                                  
+                                </StackPanel>
+
+                                <StackPanel Orientation="Vertical"
+                                            HorizontalAlignment="Right"
+                                            Margin="10 2">
+                                    <TextBlock>
+                                        C.R. Wall and Co. Inc. <LineBreak />
+                                        55 Thompson Dr. <LineBreak />
+                                        Cambridge, Ontario<LineBreak />
+                                        N1T 2E4<LineBreak />
+                                        T 1 877 427 9255
+                                    </TextBlock>
+                                </StackPanel>
+
+
+                            </StackPanel></StackPanel>
+                    </materialDesign:Card>
                 </Grid>
             </Border>
 
             <ListBox Grid.Row="1"
+                     HorizontalContentAlignment="Stretch"
                      ItemsSource="{Binding Instruments}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <ContentControl cal:View.Model="{Binding}" Margin="0,0,0,-5" />
+                        <Border BorderThickness="0 0 0 1"
+                                BorderBrush="Gray">
+                            <ContentControl cal:View.Model="{Binding}"
+                                            Width="Auto"/>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -153,5 +172,5 @@
                 </Grid>
             </Border>
         </Grid>
-    </Viewbox>
+    </Canvas>
 </UserControl>

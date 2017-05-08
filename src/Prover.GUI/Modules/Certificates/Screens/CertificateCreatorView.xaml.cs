@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using ReactiveUI;
 
@@ -14,6 +12,14 @@ namespace Prover.GUI.Modules.Certificates.Screens
         public CertificateCreatorView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                ViewModel = (CertificateCreatorViewModel)DataContext;
+                d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
+            });
         }
 
         object IViewFor.ViewModel

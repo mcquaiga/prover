@@ -50,6 +50,7 @@ namespace Prover.GUI
 
             Container = Builder.Build();
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
+
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
