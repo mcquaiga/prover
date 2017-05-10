@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 
-#endregion
-
 namespace Prover.Core.Shared.Infrastructure
 {
     /// <summary>
@@ -84,3 +82,5 @@ namespace Prover.Core.Shared.Infrastructure
         public new static IList<T> Instance => Singleton<IList<T>>.Instance;
     }
 }
+
+#endregion
