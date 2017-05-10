@@ -85,17 +85,17 @@ namespace Prover.Core.DriveTypes
         {
             get
             {
-                var energyValue = _instrument.Items.GetItem(142).NumericValue;
+                if (!_instrument.VolumeTest.EvcCorrected.HasValue) return null;
+
+                    var energyValue = _instrument.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {
                     case Therms:
-                        if (_instrument.VolumeTest.EvcCorrected.HasValue)
-                            return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
-                        break;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
                     case Dktherms:
-
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000000;
                     case GigaJoules:
-                        break;
+                        return Math.Round(energyValue * 0.028317m * _instrument.VolumeTest.EvcCorrected.Value) / 1000000;
                 }
 
                 return null;

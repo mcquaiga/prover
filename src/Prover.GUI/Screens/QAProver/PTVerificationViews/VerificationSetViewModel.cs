@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -41,27 +42,24 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)            
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
+
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.T || VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
+
+            if (VerificationTest.Instrument.CompositionType == CorrectorType.P ||
+                VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
             {
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.TemperatureTest);
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.PressureTest);
-                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.SuperFactorTest);
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+
+                this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge)
+                    .Where(x => QaRunTestManager != null)
+                    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
             }
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.T)
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.TemperatureTest);
-
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.P)
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.PressureTest);
-
             if (VerificationTest.VolumeTest != null)
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator,
-                    VerificationTest.VolumeTest);
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
         }
 
         private bool _showDownloadButton;

@@ -36,7 +36,7 @@
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
             
-            <materialDesign:Card BorderBrush="Red" BorderThickness="5" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <StackPanel Orientation="Vertical">
                     <materialDesign:ColorZone Padding="2" Margin="2"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth1"

@@ -97,15 +97,12 @@ namespace Prover.Core.Models.Instruments
 
         public decimal GetGaugeTemp(int testNumber)
         {
-            return
-                SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)
-                    .Value;
+            return SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber).Value;
         }
 
         public decimal GetGaugePressure(int testNumber)
         {
-            var value =
-                SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
+            var value = SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
 
             if (value > 1)
                 value = value/100;
@@ -192,6 +189,10 @@ namespace Prover.Core.Models.Instruments
                 return null;
             }
         }
+
+        [NotMapped]
+        public TransducerType Transducer
+            => (TransducerType) Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
         #endregion
     }
