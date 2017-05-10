@@ -8,7 +8,7 @@ namespace Prover.GUI.Common.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool) value)
+            if (value is bool && (bool) value)
                 return "P";
 
             return "F";

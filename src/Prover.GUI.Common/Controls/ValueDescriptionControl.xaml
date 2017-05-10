@@ -6,9 +6,10 @@
              mc:Ignorable="d"
              x:Name="ValueUserControl"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}">
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             Background="Transparent">
     <Grid>
-        <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
+        <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0">
             <Grid>
                 <StackPanel Margin="4 0">
                     <TextBlock Text="{Binding Path=Value, ElementName=ValueUserControl}"

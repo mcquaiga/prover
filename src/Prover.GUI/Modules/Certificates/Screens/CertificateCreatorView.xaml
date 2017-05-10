@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              mc:Ignorable="d"
              Background="White"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -37,7 +37,7 @@
 
             <ComboBox x:Name="Clients" 
                       DisplayMemberPath="Name" 
-                      materialDesign:HintAssist.Hint="Customer"
+                      materialDesign:HintAssist.Hint="Select a Client"
                       Grid.Column="0"
                       Margin="10"/>
             
@@ -69,20 +69,46 @@
                 HorizontalContentAlignment="Stretch" />
 
             <!--  Certificate Information  -->
-            <StackPanel Grid.Column="1" Grid.Row="1">
-                <StackPanel Orientation="Horizontal" >
+            <Grid Grid.Column="1" 
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        Margin="5 5 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+                <TextBlock Text="Certificate #"
+                           Grid.Row="0"
+                           Margin="5">
+                    <TextBlock Text="{Binding NextCertificateNumber}" />
+                </TextBlock>
+                <WrapPanel Grid.Row="1">
                     <materialDesign:PackIcon Kind="Account" 
                                              Foreground="{Binding ElementName=TestedBy, Path=BorderBrush}"
                                              VerticalAlignment="Center"/>
-                    <TextBox x:Name="TestedBy" materialDesign:HintAssist.Hint="Tested By" />
+                    <TextBox x:Name="TestedBy" 
+                             materialDesign:HintAssist.Hint="Tested By"
+                             Margin="2"/>
+                </WrapPanel>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="2"
+                            HorizontalAlignment="Stretch">
+                    <materialDesign:PackIcon Kind="Verified"
+                                             Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}"
+                                             VerticalAlignment="Center" />
+                    <ComboBox x:Name="VerificationType"
+                              materialDesign:HintAssist.Hint="Verification Type"
+                              Margin="2"/>
                 </StackPanel>
-                <StackPanel>
-                    <ComboBox x:Name="VerificationType" materialDesign:HintAssist.Hint="Verification Type"/>
-                </StackPanel>
+               
                 <Button Command="{Binding CreateCertificateCommand}"
+                        Grid.Row="3"
                         Margin="10"
-                        Content="Create Certificate" />
-            </StackPanel>
+                        Content="Create" />
+            </Grid>
         </Grid>
     </DockPanel>
 </UserControl>

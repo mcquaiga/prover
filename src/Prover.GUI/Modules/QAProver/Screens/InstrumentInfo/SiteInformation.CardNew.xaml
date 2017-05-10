@@ -13,11 +13,14 @@
              d:DesignHeight="600" d:DesignWidth="315.5">
     <UserControl.Resources>
 
-        <!--<Style TargetType="{x:Type materialDesign:PackIcon}">
-            --><!--<Setter Property="Foreground" Value="Gray"/>
+        <Style TargetType="materialDesign:PackIcon">
+            <Setter Property="Foreground" Value="Gray"/>
             <Setter Property="Width" Value="48"/>
-            <Setter Property="Height" Value="48"/>--><!--
-        </Style>-->
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Margin" Value="0 0 2 0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
         
         <Style TargetType="{x:Type Border}" x:Key="InfoSection">
             <Setter Property="Margin" Value="4 8"></Setter>
@@ -60,10 +63,9 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <!--<Image Grid.Column="0" Source="{StaticResource InfoIcon}" Width="48" Height="48"/>-->
-                        <materialDesign:PackIcon 
-                            Foreground="Gray"
+                        <materialDesign:PackIcon                            
                             Kind="InformationOutline"
-                            Width="48" Height="48" Grid.Column="0"
+                            Grid.Column="0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"/>
                         <UniformGrid Columns="2" Grid.Column="1" 
@@ -84,12 +86,11 @@
 
                     </Grid>
                 </Border>
-                <StackPanel Orientation="Vertical"
-                            >
+                <StackPanel Orientation="Vertical">
                     <Border  BorderThickness="0 0 0 1" 
                              Style="{StaticResource InfoSection}"
                              BorderBrush="LightGray">
-                        <Grid >
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="1*"/>
@@ -101,7 +102,7 @@
                             <UniformGrid Grid.Column="1" Columns="2" 
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Stretch">
-                                <StackPanel  >
+                                <StackPanel>
                                     <TextBlock  Text="{Binding BaseTemperature, FallbackValue='60.0 F'}" HorizontalAlignment="Center"/>
                                     <TextBlock FontSize="12" Text="Base T." HorizontalAlignment="Center" />
                                 </StackPanel>
@@ -122,10 +123,8 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <materialDesign:PackIcon Kind="Gauge" 
-                                                         Width="48" Height="48" 
                                                          Grid.Column="0"
-                                                         VerticalAlignment="Center"
-                                                         HorizontalAlignment="Center"/>  
+                                                         />  
                                 <UniformGrid Grid.Column="1" 
                                      Columns="2" 
                                      VerticalAlignment="Center"
@@ -146,16 +145,14 @@
                     
                     <Border BorderThickness="0 0 0 0" 
                             Style="{StaticResource InfoSection}"
-                             BorderBrush="LightGray">
+                            BorderBrush="LightGray">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <materialDesign:PackIcon 
-                                Kind="Pulse" Width="48" Height="48" Grid.Column="0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"/>
+                                Kind="Pulse" Grid.Column="0"/>
                             <UniformGrid Grid.Column="1" 
                                      Columns="3"
                                      VerticalAlignment="Center"

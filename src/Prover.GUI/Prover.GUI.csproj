@@ -222,6 +222,12 @@
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
       <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.New.xaml.cs">
+      <DependentUpon>SuperTest.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml.cs">
+      <DependentUpon>TempTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -370,6 +376,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

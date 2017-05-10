@@ -25,7 +25,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
     public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
-        private const string EditQaTestViewContext = "EditTestView"; //"EditTestViewNew";
+        private const string EditQaTestViewContext = "EditTestViewNew"; //"EditTestViewNew";
 
         private string _connectionStatusMessage;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;

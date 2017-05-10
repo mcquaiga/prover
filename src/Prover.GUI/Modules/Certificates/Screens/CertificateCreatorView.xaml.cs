@@ -19,6 +19,10 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
+
+                d(this.WhenAnyValue(x => x.ViewModel.FetchNextCertificateNumberCommand)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
             });
         }
 
