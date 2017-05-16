@@ -15,6 +15,7 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
 using ReactiveUI;
@@ -36,10 +37,10 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private string _selectedCommPort;
         private string _selectedTachCommPort;
         private bool _showConnectionDialog;
-        private string _viewContext;
         private CancellationTokenSource _cancellationTokenSource;
 
         private IDisposable _testStatusSubscription;
+        private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IClientStore clientStore)
@@ -94,8 +95,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
                 x => x.SelectedTachCommPort,
                 (baud, instrumentPort, tachPort) =>
-                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
-                    !string.IsNullOrEmpty(tachPort));
+                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
             CancelCommand = ReactiveCommand.Create(Cancel);
@@ -126,102 +126,17 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
-        public void Dispose()
-        {
-            _testStatusSubscription?.Dispose();
-            _qaRunTestManager?.Dispose();
-        }
-
-        public async Task Cancel()
-        {
-            await ScreenManager.GoHome();
-        }
-
-        private async Task StartNewQaTest()
-        {
-            ShowConnectionDialog = true;
-
-            if (SelectedInstrument != null)
-            {
-                _cancellationTokenSource = new CancellationTokenSource();
-
-                try
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-                    await SettingsManager.Save();
-
-                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
-
-                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
-                    ViewContext = EditQaTestViewContext;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    throw;
-                }
-                finally
-                {
-                    ShowConnectionDialog = false;
-                }
-            }
-        }
-
-        public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
-        {
-            await Task.Run(() =>
-            {
-                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-                SiteInformationItem.QaTestManager = qaTestRunTestManager;
-                SiteInformationItem.Instrument = instrument;
-
-                foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
-                {
-                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                    item.InitializeViews(x, qaTestRunTestManager);
-                    item.VerificationTest = x;
-
-                    TestViews.Add(item);
-                }
-
-                if (instrument.InstrumentType == Instruments.MiniAt)
-                    EventLogCommPortItem = SiteInformationItem;
-            });
-        }
-
         public string ViewContext
         {
             get { return _viewContext; }
             set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
         }
-
         public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
         public ReactiveList<SelectableInstrumentType> InstrumentTypes
         {
             get { return _instrumentTypes; }
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
-        }
-
-
-        private string _selectedClient;
-        private Client _client;
-        private readonly List<Client> _clientList;
-
-        private ReactiveList<string> _clients;
-
-        public ReactiveList<string> Clients
-        {
-            get { return _clients; }
-            set { this.RaiseAndSetIfChanged(ref _clients, value); }
-        }
-
-        public string SelectedClient
-        {
-            get { return _selectedClient; }
-            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
@@ -260,15 +175,114 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set { this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value); }
         }
 
-        public class SelectableInstrumentType
+        public async Task Cancel()
         {
-            public InstrumentType Instrument { get; set; }
-            public bool IsSelected { get; set; }
+            await ScreenManager.GoHome();
+        }
+
+        private async Task StartNewQaTest()
+        {
+            ShowConnectionDialog = true;
+
+            if (SelectedInstrument != null)
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                try
+                {
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                    await SettingsManager.Save();
+
+                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
+                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+
+                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+                    ViewContext = EditQaTestViewContext;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    throw;
+                }
+                finally
+                {
+                    ShowConnectionDialog = false;
+                }
+        }
+
+        public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
+        {
+            await Task.Run(() =>
+            {
+                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                SiteInformationItem.QaTestManager = qaTestRunTestManager;
+                SiteInformationItem.Instrument = instrument;
+
+                foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                {
+                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                    item.InitializeViews(x, qaTestRunTestManager);
+                    item.VerificationTest = x;
+
+                    TestViews.Add(item);
+                }
+
+                if (instrument.InstrumentType == Instruments.MiniAt)
+                    EventLogCommPortItem = SiteInformationItem;
+            });
         }
 
         private void OnTestStatusChange(string status)
         {
             ConnectionStatusMessage = status;
         }
+
+
+        private string _selectedClient;
+        private Client _client;
+        private readonly List<Client> _clientList;
+
+        private ReactiveList<string> _clients;
+
+        public ReactiveList<string> Clients
+        {
+            get { return _clients; }
+            set { this.RaiseAndSetIfChanged(ref _clients, value); }
+        }
+
+        public string SelectedClient
+        {
+            get { return _selectedClient; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
+        }
+
+        public class SelectableInstrumentType
+        {
+            public InstrumentType Instrument { get; set; }
+            public bool IsSelected { get; set; }
+        }
+
+        public void Dispose()
+        {
+            _testStatusSubscription?.Dispose();
+            _qaRunTestManager?.Dispose();
+        }
+
+     
     }
 }
+
+//public override void CanClose(Action<bool> callback)
+//{
+//    base.CanClose(callback);
+//    if (_qaRunTestManager != null)
+//    {
+//        if (!_qaRunTestManager.Instrument.HasPassed)
+//        {
+//            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+//                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+//            if (result == MessageBoxResult.No)
+//                callback(false);
+//        }
+//    }
+//}

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
@@ -24,19 +26,34 @@ namespace Prover.GUI.Modules.Exporter.Screens.Exporter
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
-            GetInstrumentsWithNoExportDate();
-            
-            var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, 
-                (passed) => passed.Any());          
-            ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns, canExportAllPassed);
+
+            ExecuteTestSearch = ReactiveCommand.CreateFromTask(GetInstrumentsWithNoExportDate);
+            _searchResults = ExecuteTestSearch.ToProperty(this, x => x.InstrumentItems, new List<QaTestRunGridViewModel>());
+
+            //this.WhenAnyValue(x => x.InstrumentItems, (vm, list) =>
+            //    {
+            //        return .InstrumentItems.Select(x => x.Select(y => y.Instrument)
+            //                .Where(i => i.HasPassed && !string.IsNullOrEmpty(i.JobId) &&
+            //                            !string.IsNullOrEmpty(i.EmployeeId))
+            //                .ToList());
+            //    });
+                            
+               // .ToProperty(this, x => x.PassedInstrumentTests, new List<Instrument>());               
+               
+           // var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, (passed) => passed.Any());
+
+            ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
         }
 
-        public ObservableCollection<QaTestRunGridViewModel> InstrumentItems { get; set; } =
-            new ObservableCollection<QaTestRunGridViewModel>();
+        private ObservableAsPropertyHelper<List<QaTestRunGridViewModel>> _searchResults;
+        public List<QaTestRunGridViewModel> InstrumentItems => _searchResults.Value;
+        public ReactiveCommand<Unit, List<QaTestRunGridViewModel>> ExecuteTestSearch { get; protected set; }
 
-        public IEnumerable<Instrument> PassedInstrumentTests => 
+        
+        public IEnumerable<Instrument> PassedInstrumentTests =>
             InstrumentItems.Where(x => x.Instrument.HasPassed && !string.IsNullOrEmpty(x.Instrument.JobId) && !string.IsNullOrEmpty(x.Instrument.EmployeeId))
                 .Select(i => i.Instrument);
+
 
         public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
         public async Task ExportAllPassedQaRuns()
@@ -44,9 +61,27 @@ namespace Prover.GUI.Modules.Exporter.Screens.Exporter
             await _exportTestRun.Export(PassedInstrumentTests);
         }
 
-        private void GetInstrumentsWithNoExportDate()
+        private async Task<List<QaTestRunGridViewModel>> GetInstrumentsWithNoExportDate()
         {
-            GetInstrumentVerificationTests(x => x.ExportedDateTime == null && x.ArchivedDateTime == null);
+            return await Task.Run(() =>
+            {
+                var results = new List<QaTestRunGridViewModel>();
+                var instruments = GetInstruments(x => x.CertificateId == null && x.ArchivedDateTime == null).ToList();
+
+                foreach (var i in instruments)
+                {
+                    var item = ScreenManager.ResolveViewModel<QaTestRunGridViewModel>();
+                    item.Instrument = i;
+                    results.Add(item);
+                }
+                return results;
+            });
+        }
+
+
+        private IEnumerable<Instrument> GetInstruments(Func<Instrument, bool> whereFunc)
+        {
+            return _instrumentStore.Query().Where(whereFunc).OrderBy(i => i.TestDateTime);
         }
 
         private void GetInstrumentVerificationTests(Func<Instrument, bool> whereFunc)

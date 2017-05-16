@@ -21,14 +21,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             set
             {
                 TestRun.Gauge = value;
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+                //EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 
         public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
         public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
 
-        public override void Handle(VerificationTestEvent @event)
+        protected override void RaisePropertyChangeEvents()
         {
             NotifyOfPropertyChange(() => TestRun);
             NotifyOfPropertyChange(() => PercentError);

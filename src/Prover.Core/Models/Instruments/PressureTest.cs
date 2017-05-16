@@ -7,8 +7,15 @@ using Prover.CommProtocol.Common.Items;
 
 namespace Prover.Core.Models.Instruments
 {
+    /**
+     * 
+     * Transducer type = PSIA 
+     * 
+     **/
+
     public sealed class PressureTest : BaseVerificationTest
     {
+        
         private const decimal DefaultAtmGauge = 14.0m;
 
         public PressureTest()
@@ -20,30 +27,40 @@ namespace Prover.Core.Models.Instruments
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
-            GasGauge = decimal.Round(gauge, 2);
-            AtmosphericGauge = 0; // decimal.Round(DefaultAtmGauge, 2);
+
+            _totalGauge  = decimal.Round(gauge, 2);
+            AtmosphericGauge = default(decimal?);
+
+            switch (VerificationTest?.Instrument?.Transducer)
+            {
+                case TransducerType.Gauge:
+                    GasGauge = TotalGauge;
+                    AtmosphericGauge = VerificationTest.Instrument.Items.GetItem(14).NumericValue;
+                    break;
+                case TransducerType.Absolute:
+                    AtmosphericGauge = DefaultAtmGauge;
+                    GasGauge = TotalGauge - AtmosphericGauge;
+                    break;
+            }
         }
 
-        public Guid VerificationTestId { get; set; }
+        
+        private readonly decimal? _totalGauge;
+        [NotMapped]
+        public decimal TotalGauge => _totalGauge ?? 0;
 
-        [Required]
-        public VerificationTest VerificationTest { get; set; }
-
-        public decimal? GasPressure
+        public decimal GasPressure
         {
             get
             {
-                if (VerificationTest == null) return null;
 
-                var result = 0.0m;
-                switch (
-                    (TransducerType)
-                    VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue)
+                var result = 0m;
+                switch (VerificationTest?.Instrument?.Transducer)
                 {
                     case TransducerType.Gauge:
                         result = GasGauge.GetValueOrDefault(0);
                         break;
-                    default:
+                    case TransducerType.Absolute:
                         result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
                         break;
                 }
@@ -59,23 +76,27 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.GetItem(ItemCodes.Pressure.Factor) == null) return null;
-                if ((ActualFactor == 0) || (ActualFactor == null)) return null;
-                return
-                    Math.Round(
-                        (decimal) ((Items.GetItem(ItemCodes.Pressure.Factor).NumericValue - ActualFactor)/ActualFactor)*
-                        100, 2);
+                if ((ActualFactor ?? 0) == 0) return null;
+
+                var result = (EvcFactor - ActualFactor) / ActualFactor * 100;
+                return decimal.Round(result ?? 0, 2);
             }
         }
+
+        [NotMapped]
+        public decimal EvcFactor => Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue ?? 0;
 
         [NotMapped]
         public override decimal? ActualFactor
         {
             get
             {
-                if (VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue == 0) return 0;
-                var result = GasPressure/VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
-                return result.HasValue ? decimal.Round(result.Value, 4) : 0;
+                var basePressure = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
+                if (basePressure == 0) return 0;
+
+                var gasPressure = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
+
+                return decimal.Round(gasPressure / basePressure, 4);
             }
         }
 

@@ -43,11 +43,6 @@ namespace Prover.Core.Models.Instruments
 
         public Instrument Instrument => VerificationTest.Instrument;
 
-        public Guid VerificationTestId { get; set; }
-
-        [Required]
-        public VerificationTest VerificationTest { get; set; }
-
         [NotMapped]
         public IEnumerable<ItemValue> AfterTestItems { get; set; }
 
