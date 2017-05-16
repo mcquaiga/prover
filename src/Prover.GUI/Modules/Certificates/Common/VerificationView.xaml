@@ -222,6 +222,12 @@
                             <TextBlock Text="transducer"
                                        Style="{StaticResource LabelStyle}" />
                         </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Pressure.Range, FallbackValue=[N]}"
+                                       Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="range"
+                                       Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
                     </StackPanel>
 
 

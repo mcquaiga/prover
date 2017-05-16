@@ -40,6 +40,7 @@ namespace Prover.Core.Storage
         public async Task<Certificate> GetCertificate(long number)
         {
             var cert = await Query().FirstOrDefaultAsync(x => x.Number == number);
+            if (cert == null) return null;
 
             var instruments = cert.Instruments
                 .Select(i => _instrumentStore.Get(i.Id)).ToList();

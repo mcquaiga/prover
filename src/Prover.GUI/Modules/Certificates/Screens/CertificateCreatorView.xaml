@@ -89,6 +89,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -131,37 +132,40 @@
                         Grid.Row="3"
                         Margin="10"
                         Content="Create" />
+
+
+                <Grid Grid.Column="0"
+                      Margin="5 15"
+                      Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Print Existing Certificate" />
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                Grid.Row="1">
+                        <TextBlock Text="Certificate #:" />
+                        <TextBox Text="{Binding ExistingCertificateNumber, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="10 0 0 0"
+                                 Width="100" />
+                    </StackPanel>
+                    <Button x:Name="PrintExistingCertificateButton"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Margin="10"
+                            Grid.Column="1"
+                            Content="Print" />
+                </Grid>
             </Grid>
 
-            <Grid Grid.Column="0"
-                  Margin="10 4"
-                  Grid.Row="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0"
-                           Text="Print Existing Certificate" />
-                <StackPanel Grid.Column="0"
-                            Orientation="Horizontal"
-                            Grid.Row="1">
-                    <TextBlock Text="Certificate #:" />
-                    <TextBox Text="{Binding ExistingCertificateNumber, UpdateSourceTrigger=PropertyChanged}" 
-                             Margin="10 0 0 0"
-                             Width="100"/>
-                </StackPanel>
-                <Button x:Name="PrintExistingCertificateButton"
-                    Grid.Row="0" 
-                        Grid.RowSpan="2"
-                        Margin="10"
-                        Grid.Column="1"
-                        Content="Print"/>
-            </Grid>
+            
         </Grid>
     </DockPanel>
 </UserControl>

@@ -84,6 +84,8 @@ namespace Prover.GUI.Modules.Certificates.Common
             public decimal Base => decimal.Round(_instrument.Items.GetItem(13).NumericValue, 2);
 
             public string TransducerType => _instrument.Items.GetItem(112).Description;
+
+            public string Range => $"0 - {_instrument.Items.GetItem(137).Description}";
         }
 
         public class TemperatureInfoViewModel

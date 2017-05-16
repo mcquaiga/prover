@@ -117,7 +117,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             var cert = await _certificateStore.GetCertificate(certificateNumber.Value);
 
-            if (cert == null) return;
+            if (cert == null)
+            {
+                MessageBox.Show("No certificate found.", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             CertificateGenerator.GenerateXps(cert);
         }
