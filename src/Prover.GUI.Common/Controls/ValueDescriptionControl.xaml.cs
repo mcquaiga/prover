@@ -61,11 +61,36 @@ namespace Prover.GUI.Common.Controls
             set { SetValue(ValueFontSizeProperty, value); }
         }
 
-
         public Brush ControlBackground
         {
             get { return (Brush) GetValue(ControlBackgroundProperty); }
             set { SetValue(ControlBackgroundProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register(
+            "IsEditable", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(false));
+
+        public bool IsEditable
+        {
+            get { return (bool) GetValue(IsEditableProperty); }
+            set
+            {
+                SetValue(IsEditableProperty, value);
+                IsReadOnly = !value;
+            }
+        }
+
+        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
+            "IsReadOnly", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(true));
+
+        public bool IsReadOnly
+        {
+            get { return (bool) GetValue(IsReadOnlyProperty); }
+            set
+            {
+                SetValue(IsReadOnlyProperty, value);
+                IsEditable = !value;
+            }
         }
     }
 }

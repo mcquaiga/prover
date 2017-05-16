@@ -13,8 +13,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         public decimal? EVCUnsqrFactor => TestRun.EvcUnsqrFactor;
-
-        public override void Handle(VerificationTestEvent message)
+  
+        protected override void RaisePropertyChangeEvents()
         {
             NotifyOfPropertyChange(() => TestRun);
             NotifyOfPropertyChange(() => PercentError);

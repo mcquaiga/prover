@@ -4,6 +4,7 @@ using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -17,7 +18,13 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             eventAggregator.Subscribe(this);
         }
 
-        public T TestRun { get; set; }
+        private T _testRun;
+
+        public T TestRun
+        {
+            get { return _testRun; }
+            set { this.RaiseAndSetIfChanged(ref _testRun, value); }
+        }
 
         public decimal? PercentError => TestRun?.PercentError;
 
@@ -31,6 +38,15 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public string PassStatusIcon => TestRun != null && TestRun.HasPassed ? "pass" : "fail";
 
-        public abstract void Handle(VerificationTestEvent message);
+        public virtual void Handle(VerificationTestEvent message)
+        {
+            if (message.VerificationTest == null ||
+                message.VerificationTest == TestRun.VerificationTest)
+            {
+                RaisePropertyChangeEvents();
+            }
+        }
+
+        protected abstract void RaisePropertyChangeEvents();
     }
 }

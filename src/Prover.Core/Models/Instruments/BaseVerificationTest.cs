@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -9,5 +11,10 @@ namespace Prover.Core.Models.Instruments
 
         public abstract decimal? PercentError { get; }
         public abstract decimal? ActualFactor { get; }
+
+        public virtual Guid VerificationTestId { get; set; }
+
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
     }
 }

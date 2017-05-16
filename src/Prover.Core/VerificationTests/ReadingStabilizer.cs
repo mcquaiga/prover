@@ -15,15 +15,11 @@ namespace Prover.Core.VerificationTests
     public interface IReadingStabilizer
     {
         Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct);
-        void CancelLiveReading();
     }
 
     public class AverageReadingStabilizer : IReadingStabilizer
     {
         private Logger _log = NLog.LogManager.GetCurrentClassLogger();
-
-        private bool _cancelStabilize;
-        private bool _isLiveReading;
 
         public AverageReadingStabilizer(IEventAggregator eventAggregator)
         {
@@ -41,7 +37,6 @@ namespace Prover.Core.VerificationTests
                 ct.ThrowIfCancellationRequested();
                 do
                 {
-                    _isLiveReading = true;
                     foreach (var item in liveReadItems)
                     {
                         var liveValue = await commClient.LiveReadItemValue(item.Key);
@@ -59,39 +54,29 @@ namespace Prover.Core.VerificationTests
             }
             finally
             {
-                _isLiveReading = false;
-                _cancelStabilize = false;
-
                 if (commClient != null)
                     await commClient.Disconnect();
             }
         }
 
-        public void CancelLiveReading()
-        {
-            if (_isLiveReading)
-                _cancelStabilize = true;
-        }
-
         private Dictionary<int, AveragedReadingStabilizer> GetLiveReadItemNumbers(Instrument instrument, int level)
         {
-            var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();
-            if (instrument.CompositionType == CorrectorType.PTZ)
-            {
-                liveReadItems.Add(8, new AveragedReadingStabilizer(instrument.GetGaugePressure(level)));
-                liveReadItems.Add(26, new AveragedReadingStabilizer(instrument.GetGaugeTemp(level)));
-            }
+            var test = instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
+            var pressure = test?.PressureTest?.GasPressure ?? 0m;
+            var temperature = ((decimal?) test?.TemperatureTest?.Gauge) ?? 0m;
 
-            if (instrument.CompositionType == CorrectorType.T)
-                liveReadItems.Add(26, new AveragedReadingStabilizer(instrument.GetGaugeTemp(level)));
+            var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();   
+            
+            if (instrument.CompositionType == CorrectorType.T || instrument.CompositionType == CorrectorType.PTZ)
+                liveReadItems.Add(26, new AveragedReadingStabilizer(temperature));
 
-            if (instrument.CompositionType == CorrectorType.P)
-                liveReadItems.Add(8, new AveragedReadingStabilizer(instrument.GetGaugePressure(level)));
+            if (instrument.CompositionType == CorrectorType.P || instrument.CompositionType == CorrectorType.PTZ)
+                liveReadItems.Add(8, new AveragedReadingStabilizer(pressure));
             return liveReadItems;
         }
     }
 
-    public class AveragedReadingStabilizer
+    internal class AveragedReadingStabilizer
     {
         private const decimal AverageThreshold = 1.0m;
         private const int FixedQueueSize = 20;
