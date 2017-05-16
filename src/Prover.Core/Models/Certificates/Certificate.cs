@@ -40,30 +40,6 @@ namespace Prover.Core.Models.Certificates
             get { return Instruments.Count(); }
         }
 
-        public static Certificate CreateCertificate(string testedBy, string verificationType,
-            List<Instrument> instruments)
-        {
-            //var certificateStore = new CertificateStore(container);
-            //var number = certificateStore.Query().DefaultIfEmpty().Max(x => x.Number) + 1;
-
-            //var certificate = new Certificate
-            //{
-            //    CreatedDateTime = DateTime.Now,
-            //    VerificationType = verificationType,
-            //    TestedBy = testedBy,
-            //    Number = number,
-            //    Instruments = new Collection<Instrument>()
-            //};
-
-            //instruments.ForEach(i =>
-            //{
-            //    i.CertificateId = certificate.Id;
-            //    i.Certificate = certificate;
-            //    certificate.Instruments.Add(i);
-            //});
-
-            //certificateStore.Upsert(certificate);
-            return new Certificate();
-        }
+        
     }
 }

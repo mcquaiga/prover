@@ -21,8 +21,12 @@ namespace Prover.GUI.Common.Converters
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return FalseValue;
+
             if (!(value is bool))
-                return null;
+                return TrueValue;
+
             return (bool) value ? TrueValue : FalseValue;
         }
 

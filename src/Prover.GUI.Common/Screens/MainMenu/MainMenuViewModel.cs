@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using ReactiveUI;
 using Action = System.Action;
 
 namespace Prover.GUI.Common.Screens.MainMenu
@@ -9,18 +11,20 @@ namespace Prover.GUI.Common.Screens.MainMenu
     {
         private readonly ScreenManager _screenManager;
 
-        public MainMenuViewModel(IEnumerable<IAppMainMenu> appMainMenus, ScreenManager screenManager,
+        public MainMenuViewModel(IEnumerable<IHaveMainMenuItem> appMainMenus, ScreenManager screenManager,
             IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
             _screenManager = screenManager;
-            AppMainMenus = appMainMenus;
+            AppMainMenus = appMainMenus.OrderBy(x => x.Order);
         }
 
-        public IEnumerable<IAppMainMenu> AppMainMenus { get; }
+        public IEnumerable<IHaveMainMenuItem> AppMainMenus { get; }
 
-        public async Task ActionCommand(Action startupAction)
+        public ReactiveCommand OpenModuleCommand { get; set; }
+
+        public async Task ActionCommand(Action openAction)
         {
-            await Task.Run(startupAction);
+            await Task.Run(openAction);
         }
     }
 }

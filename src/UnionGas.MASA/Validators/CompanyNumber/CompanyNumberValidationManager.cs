@@ -3,23 +3,21 @@ using System.Reactive.Subjects;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using NLog;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalIntegrations.Validators;
-using Prover.Core.Login;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.CompanyNumberDialog;
 using LogManager = NLog.LogManager;
+using Prover.Core.VerificationTests.TestActions;
+using Prover.Core.Models.Instruments;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.Core.Storage;
+using Prover.Core.Login;
 
 namespace UnionGas.MASA.Validators.CompanyNumber
 {
-    public class CompanyNumberValidationManager : PreTestValidationBase
+    public class CompanyNumberValidationManager : IPreTestValidation
     {
         private readonly ScreenManager _screenManager;
         private readonly IProverStore<Instrument> _instrumentStore;
@@ -35,12 +33,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             _loginService = loginService;
         }
 
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
-        {
-            await Validate(commClient, instrument);
-        }
-
-        public async Task<object> Validate(EvcCommunicationClient commClient, Instrument instrument)
+        public async Task Validate(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
             var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             var companyNumber = companyNumberItem.RawValue.TrimStart('0');
@@ -71,8 +64,6 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             
             if (meterDto != null)
                 await UpdateInstrumentValues(instrument, meterDto);
-
-            return meterDto;
         }
 
         private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)

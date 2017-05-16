@@ -3,13 +3,13 @@ using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
-using Prover.GUI.Screens.QAProver;
+using Prover.GUI.Modules.QAProver.Screens;
 
 namespace Prover.GUI.Reports
 {
     public class InstrumentReportViewModel : ViewModelBase
     {
-        public string ReportViewContext => "EditTestView";
+        public string ReportViewContext => "EditTestViewNew";
 
         public InstrumentReportViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)

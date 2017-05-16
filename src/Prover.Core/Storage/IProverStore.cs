@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
-    public interface IProverStore<T> : IDisposable where T : class
+    public interface IProverStore<T> where T : class
     {
         IQueryable<T> Query();
         T Get(Guid id);

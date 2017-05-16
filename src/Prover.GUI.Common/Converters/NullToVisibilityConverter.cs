@@ -5,7 +5,8 @@ using System.Windows.Data;
 
 namespace Prover.GUI.Common.Converters
 {
-    public class NullToVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(object), typeof(Visibility))]
+    public sealed class NullToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

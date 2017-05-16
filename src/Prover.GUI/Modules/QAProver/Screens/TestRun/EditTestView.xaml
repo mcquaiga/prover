@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Prover.GUI.Modules.QAProver.Screens.TestRun.EditTestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             Background="{DynamicResource MaterialDesignPaper}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+
+        <DataTemplate x:Key="TestTemplate">
+            <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}"
+                                cal:View.Context="SiteInfoCard" />
+                <ContentControl Margin="2" cal:View.Model="{Binding EventLogCommPortItem}"
+                                cal:View.Context="EventLogCommPortCard" />
+            </StackPanel>
+
+            <ItemsControl HorizontalAlignment="Center"
+                          ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                          ItemsSource="{Binding TestViews}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

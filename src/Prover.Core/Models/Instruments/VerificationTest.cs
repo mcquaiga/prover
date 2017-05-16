@@ -39,6 +39,9 @@ namespace Prover.Core.Models.Instruments
         public VolumeTest VolumeTest { get; set; }
 
         [NotMapped]
+        public string TestLevel => $"L{TestNumber + 1}";
+
+        [NotMapped]
         public SuperFactorTest SuperFactorTest { get; set; }
 
         [NotMapped]

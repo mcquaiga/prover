@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.GUI</RootNamespace>
     <AssemblyName>Prover.GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -18,7 +17,8 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>9f111b68</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,11 +55,8 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.1.3.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.3\lib\net45\Akka.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.0.3\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -72,7 +69,6 @@
     </Reference>
     <Reference Include="Caliburn.Micro.ReactiveUI, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.3.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -86,58 +82,32 @@
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="JsonConfig, Version=1.0.5359.16918, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JsonConfig.1.0.0\lib\JsonConfig.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
-      <HintPath>..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="MccDaq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a" />
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.5\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ReachFramework" />
-    <Reference Include="Reactive.EventAggregator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Reactive.EventAggregator.2.0.0\lib\net45\Reactive.EventAggregator.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ReactiveUI, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-core.7.2.0\lib\Net45\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.7.3.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI.Autofac, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.Autofac.6.5.0\lib\net452\ReactiveUI.Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ReactiveUI.Blend, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-blend.7.2.0\lib\Net45\ReactiveUI.Blend.dll</HintPath>
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -157,25 +127,27 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
-    <Reference Include="System.Reactive.Core, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces">
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Linq">
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
-      
-      <Private>True</Private>
+    <Reference Include="System.Reactive.Windows.Threading, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.3\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -194,42 +166,119 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Apps.cs" />
+    <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
+      <DependentUpon>ValueLabelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Exporter\ExportManagerModule.cs" />
+    <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml.cs">
+      <DependentUpon>ExportTestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsViewModel.cs" />
+    <Compile Include="Modules\Exporter\Screens\Exporter\QaTestRunGridView.xaml.cs">
+      <DependentUpon>QaTestRunGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Exporter\Screens\Exporter\QaTestRunGridViewModel.cs" />
+    <Compile Include="Modules\QAProver\QaTestRunModule.cs" />
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Modules\Certificates\CertificateManagerModule.cs" />
+    <Compile Include="Modules\Certificates\Common\Verification\VolumeView.xaml.cs">
+      <DependentUpon>VolumeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Reports\CertificateGenerator.cs" />
+    <Compile Include="Modules\Certificates\Reports\CertificateReportView.xaml.cs">
+      <DependentUpon>CertificateReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Reports\CertificateReportViewModel.cs" />
+    <Compile Include="Modules\Certificates\Reports\InstrumentView.xaml.cs">
+      <DependentUpon>InstrumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Screens\CertificateCreatorView.xaml.cs">
+      <DependentUpon>CertificateCreatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Certificates\Screens\CreateVerificationView.xaml.cs">
+      <DependentUpon>CreateVerificationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\ClientManagerModule.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml.cs">
+      <DependentUpon>ClientManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\ClientView.xaml.cs">
+      <DependentUpon>ClientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml.cs">
+      <DependentUpon>Client.CardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
+    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml.cs">
+      <DependentUpon>ItemValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
+      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
+      <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.New.xaml.cs">
+      <DependentUpon>SuperTest.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml.cs">
+      <DependentUpon>TempTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Reports\InstrumentReportViewModel.cs" />
-    <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
-      <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
+    <Compile Include="Modules\Certificates\Screens\CertificateCreatorViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\VerificationViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\Designer\TestRunViewModelDesignTime.cs" />
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\Designer\DesignTimeInstrumentInfoViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\VerificationView.xaml.cs">
+      <DependentUpon>VerificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
+    <Compile Include="Modules\Certificates\Screens\CreateVerificationViewModel.cs" />
+    <Compile Include="Modules\Certificates\Common\Verification\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml.cs">
+      <DependentUpon>SiteInformation.CardNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
       <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml.cs">
+      <DependentUpon>PTSet.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml.cs">
+      <DependentUpon>Volume.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\TestRunViewModel.cs" />
-    <Compile Include="Screens\QAProver\TestRun\EditTestView.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\TestRunViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\TestRun\EditTestView.New.xaml.cs">
+      <DependentUpon>EditTestView.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\TestRun\EditTestView.xaml.cs">
       <DependentUpon>EditTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\TestRun\NewTestView.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\TestRun\NewTestView.xaml.cs">
       <DependentUpon>NewTestView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfoViewModel.cs" />
-    <Compile Include="Screens\QAProver\LiveReadView.xaml.cs">
-      <DependentUpon>LiveReadView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\QAProver\LiveReadViewModel.cs" />
-    <Compile Include="Screens\QAProver\InstrumentInfo\PressureInfo.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfoViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\PressureInfo.Card.xaml.cs">
       <DependentUpon>PressureInfo.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfo\SiteInformation.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.Card.xaml.cs">
       <DependentUpon>SiteInformation.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
       <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Settings\SettingsView.xaml.cs">
@@ -240,95 +289,175 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Shell\ShellViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.xaml.cs">
       <DependentUpon>PressureTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml.cs">
       <DependentUpon>PressureTest.CardReadOnly.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Grid.xaml.cs">
       <DependentUpon>PressureTest.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.xaml.cs">
       <DependentUpon>PTSet.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml.cs">
       <DependentUpon>PTSet.CardReadOnly.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Grid.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Grid.xaml.cs">
       <DependentUpon>PTSet.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml.cs">
       <DependentUpon>RotaryMeterTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml.cs">
       <DependentUpon>SuperTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml.cs">
       <DependentUpon>SuperTest.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.xaml.cs">
       <DependentUpon>TempTest.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml.cs">
       <DependentUpon>TempTest.Grid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.xaml.cs">
       <DependentUpon>Volume.Card.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\QAProver\PTVerificationViews\TestRunViewModelBase.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\RotaryMeterTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\PressureTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\VerificationSetViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\SuperFactorTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\TemperatureTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TestRunViewModelBase.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSetViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTestViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Modules\Certificates\Common\ValueLabelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Certificates\Common\Verification\VolumeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Certificates\Screens\CreateVerificationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ClientView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Exporter\Screens\Exporter\QaTestRunGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
+    <Page Include="Modules\Certificates\Reports\CertificateReportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Reports\InstrumentReportView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\QAProver\LiveReadView.xaml">
+    <Page Include="Modules\Certificates\Screens\CertificateCreatorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
+    <Page Include="Modules\Certificates\Reports\InstrumentView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\TestRunView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\QAProver\TestRun\EditTestView.xaml">
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\TestRun\NewTestView.xaml">
+    <Page Include="Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\PressureInfo.Card.xaml">
+    <Page Include="Modules\Certificates\Common\VerificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\SiteInformation.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\InstrumentInfo\TemperatureInfo.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\TestRun\EditTestView.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\TestRunView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\TestRun\EditTestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\TestRun\NewTestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\PressureInfo.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\SiteInformation.Card.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\InstrumentInfo\TemperatureInfo.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -340,51 +469,51 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.CardReadOnly.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VerificationSet\PTSet.Grid.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Grid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Card.xaml">
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -403,6 +532,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\group.png" />
+    <Resource Include="Resources\certificate.png" />
+    <Resource Include="Resources\ic_info_black_48dp_1x.png" />
+    <Resource Include="Modules\QAProver\Screens\Designer\sample_instrument.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\clipboard-error.png" />
     <Resource Include="Resources\success.png" />
     <Resource Include="Resources\error_36.png" />
@@ -415,13 +550,14 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="modules.json">
+    <Content Include="modules.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -446,6 +582,10 @@
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
+      <Project>{35fe4429-b8f5-4761-b401-a215d1b4eba2}</Project>
+      <Name>Prover.Core.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
@@ -453,10 +593,6 @@
     <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
       <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
       <Name>Prover.GUI.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
-      <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
-      <Name>Prover.SuperFactorCalculations</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
@@ -474,7 +610,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

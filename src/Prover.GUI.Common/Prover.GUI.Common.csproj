@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.GUI.Common</RootNamespace>
     <AssemblyName>Prover.GUI.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -33,11 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.1.3.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.3\lib\net45\Akka.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.0.3\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -67,10 +64,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.5\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
@@ -79,8 +76,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ReachFramework" />
-    <Reference Include="ReactiveUI, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-core.7.2.0\lib\Net45\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.7.3.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI.Autofac, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.Autofac.6.5.0\lib\net452\ReactiveUI.Autofac.dll</HintPath>
@@ -100,24 +97,20 @@
     <Reference Include="System.Printing" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Windows.Threading, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
-      <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.0.3\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -138,6 +131,9 @@
     <Compile Include="Controls\LabelValueControl.xaml.cs">
       <DependentUpon>LabelValueControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PercentageControlNew.xaml.cs">
+      <DependentUpon>PercentageControlNew.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PercentageControl.xaml.cs">
       <DependentUpon>PercentageControl.xaml</DependentUpon>
     </Compile>
@@ -147,7 +143,7 @@
     <Compile Include="Converters\BooleanToPassConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
-    <Compile Include="Events\InstrumentUpdateEvent.cs" />
+    <Compile Include="Design\DesignTimeViewModelLocator.cs" />
     <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Events\ShowDialogEvent.cs" />
@@ -161,7 +157,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ScreenManager.cs" />
-    <Compile Include="Screens\MainMenu\IAppMainMenu.cs" />
+    <Compile Include="Screens\MainMenu\IHaveMainMenuItem.cs" />
     <Compile Include="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
     </Compile>
@@ -176,6 +172,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\LabelValueControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PercentageControlNew.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -209,12 +209,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
-      <Project>{DE48160F-095D-40B1-8790-6CB560024CE5}</Project>
-      <Name>Prover.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cert-icon.png" />
@@ -263,6 +257,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Screens\QAProver\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
+      <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
+      <Name>Prover.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

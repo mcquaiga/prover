@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Prover.Core.Models.Clients;
 
 namespace Prover.Core.Storage
 {
-    public class ClientStore : IProverStore<Client>
+    public interface IClientStore : IProverStore<Client>
+    {
+        Task<List<Client>> GetAll();
+    }
+
+    public class ClientStore : IClientStore
     {
         private readonly ProverContext _context;
 
@@ -27,6 +31,13 @@ namespace Prover.Core.Storage
         public Client Get(Guid id)
         {
             return Query().FirstOrDefault(x => x.Id == id);
+        }
+
+        public async Task<List<Client>> GetAll()
+        {
+            return await Query()
+                .OrderBy(c => c.Name)
+                .ToListAsync();
         }
 
         public async Task<Client> UpsertAsync(Client entity)
@@ -49,11 +60,6 @@ namespace Prover.Core.Storage
         {
             entity.ArchivedDateTime = DateTime.UtcNow;
             await UpsertAsync(entity);
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 

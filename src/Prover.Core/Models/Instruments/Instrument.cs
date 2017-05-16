@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
+using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -19,7 +19,8 @@ namespace Prover.Core.Models.Instruments
         PTZ
     }
 
-    public class Instrument : ProverTable
+    public class 
+        Instrument : ProverTable
     {
         public Instrument()
         {
@@ -142,6 +143,15 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
+        public bool IsLiveTemperature => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.T;
+
+        [NotMapped]
+        public bool IsLivePressure => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.P;
+
+        [NotMapped]
+        public bool IsLiveSuper => CompositionType == CorrectorType.PTZ;
+
+        [NotMapped]
         public bool HasPassed
         {
             get
@@ -195,5 +205,11 @@ namespace Prover.Core.Models.Instruments
             => (TransducerType) Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
         #endregion
+
+        public override string ToString()
+        {
+            return $@"{JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+                    { ReferenceLoopHandling = ReferenceLoopHandling.Ignore})}";
+        }
     }
 }

@@ -1,71 +1,103 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Packaging;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
+using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
-using Autofac;
+using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Instruments;
+using Prover.GUI.Modules.Certificates.Reports;
+using Prover.GUI.Reports;
+using Prover.Modules.Certificates.Reports;
+using CertificateReportView = Prover.GUI.Modules.Certificates.Reports.CertificateReportView;
 
-namespace Prover.GUI.Reports
+namespace Prover.Modules.Certificates
 {
-    public class CertificateGenerator
+    public static class CertificateGenerator
     {
-        private readonly Certificate _certificate;
-        private readonly IContainer _container;
-        private string _filePath;
-
-        public CertificateGenerator(Certificate certificate, IContainer container)
+        private static string FileName(long certNumber)
         {
-            _certificate = certificate;
-            _container = container;
-            CreateFileName();
+            return $"certificate_{certNumber}.xps";
         }
 
-        public string FileName => "certificate_" + _certificate.Number + ".xps";
-        public string CertificateFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "Certificates");
+        public static string CertificateFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "Certificates");
 
-        public void Generate()
+        public static void GenerateXps(Certificate certificate)
+        {
+            var filePath = CreateFileName(certificate);
+
+            var fixedDoc = CreateFixedDocument(certificate);
+
+            // Save document
+            WriteDocumentToFile(fixedDoc, filePath);
+
+            //View the document
+            Process.Start(filePath);
+        }
+
+        public static void GeneratePdf()
+        {
+            //var fixedDoc = CreateFixedDocument();
+            //var memStream = WriteDocumentToMemoryStream(fixedDoc);         
+            //var pdfXpsDoc = PdfSharp.Xps.XpsModel.XpsDocument.Open(memStream);
+            //PdfSharp.Xps.XpsConverter.Convert(pdfXpsDoc, _filePath, 0);
+        }
+
+        private static FixedDocument CreateFixedDocument(Certificate certificate)
         {
             //Set up the WPF Control to be printed
-            var controlToPrint = new CertificateReportView();
-            controlToPrint.DataContext = new CertificateReportViewModel(_container, _certificate);
+            var controlToPrint = new CertificateReportView
+            {
+                DataContext = new CertificateReportViewModel(certificate)
+            };
 
             var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
             var pageContent = new PageContent();
-            var fixedPage = new FixedPage {Width = 96*11, Height = 96*8.5};
+            var fixedPage = new FixedPage {Width = 96 * 11, Height = 96 * 8.5};
 
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);
             ((IAddChild) pageContent).AddChild(fixedPage);
             fixedDoc.Pages.Add(pageContent);
-
-            // Save document
-            WriteDocument(fixedDoc, _filePath);
-
-            //View the document
-            Process.Start(_filePath);
+            return fixedDoc;
         }
-
-        private void CreateFileName()
+     
+        private static string CreateFileName(Certificate certificate)
         {
-            _filePath = Path.Combine(CertificateFolderPath, FileName);
+            var filePath = Path.Combine(CertificateFolderPath, FileName(certificate.Number));
 
             //Create the directory if it doesn't exist
             if (!Directory.Exists(CertificateFolderPath))
                 Directory.CreateDirectory(CertificateFolderPath);
+
+            return filePath;
         }
 
-        private string WriteDocument(FixedDocument fixedDoc, string filePath)
+        private static MemoryStream WriteDocumentToMemoryStream(FixedDocument fixedDoc)
+        {
+            var memoryStream = new MemoryStream();
+            var package = Package.Open(memoryStream, FileMode.Create);
+            var doc = new XpsDocument(package);
+            var writer = XpsDocument.CreateXpsDocumentWriter(doc);
+            writer.Write(fixedDoc);
+            doc.Close();
+            package.Close();
+
+            return memoryStream;
+        }
+
+        private static void WriteDocumentToFile(FixedDocument fixedDoc, string filePath)
         {
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
-            xw.Write(fixedDoc);
+            xw.WriteAsync(fixedDoc);
             xpsWriter.Close();
-
-            return filePath;
         }
     }
 }

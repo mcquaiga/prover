@@ -1,21 +1,25 @@
 ﻿using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
 using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Screens.Settings;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : Conductor<object>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
+    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
-        private readonly IEventAggregator _eventAggregator;
-        private readonly ScreenManager _screenManager;
-        private object _currentView;
+        readonly IEventAggregator _eventAggregator;
+        readonly ScreenManager _screenManager;
+        ReactiveObject _currentView;
 
         public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IEnumerable<IToolbarItem> toolbarItems)
         {
@@ -23,6 +27,8 @@ namespace Prover.GUI.Screens.Shell
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
+
+            RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
         public string Title => "EVC Prover";

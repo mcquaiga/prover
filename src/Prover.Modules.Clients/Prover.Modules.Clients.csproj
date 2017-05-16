@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.4.0\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.0.3\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -52,8 +52,8 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.2.1.750, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.2.1.750\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -104,50 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apps.cs" />
-    <Compile Include="Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
-    <Compile Include="Screens\ItemValidation\ItemValidationView.xaml.cs">
-      <DependentUpon>ItemValidationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\ItemValidation\ItemValidationViewModel.cs" />
-    <Compile Include="TestActions\ClientPostTestResetManager.cs" />
-    <Compile Include="TestActions\ItemVerificationManager.cs" />
-    <Compile Include="Screens\Clients\ClientManagerView.xaml.cs">
-      <DependentUpon>ClientManagerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\ClientManagerViewModel.cs" />
-    <Compile Include="Screens\Clients\ClientView.xaml.cs">
-      <DependentUpon>ClientView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\ClientViewModel.cs" />
-    <Compile Include="Screens\Clients\Client\Client.CardView.xaml.cs">
-      <DependentUpon>Client.CardView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
-    <Compile Include="Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Screens\Clients\ClientManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Clients\ClientView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Clients\Client\Client.CardView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\ItemValidation\ItemValidationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
@@ -174,6 +136,10 @@
   <ItemGroup>
     <Resource Include="Resources\group.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Screens\Clients\Client\" />
+    <Folder Include="Screens\Clients\Designer\" />
+    <Folder Include="Screens\ItemValidation\Designer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Text;
+﻿using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.TestActions
 {
-    public abstract class TestActionBase
+    public interface IPostTestAction
     {
-        public abstract Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null);
+        Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null);
     }
 
-    public abstract class PostTestResetBase : TestActionBase
+    public interface IPreTestValidation
     {
-        
-    }
-
-    public abstract class PreTestValidationBase : TestActionBase
-    {      
+        Task Validate(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null);
     }
 }

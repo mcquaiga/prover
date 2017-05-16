@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Newtonsoft.Json;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
+using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
 
 namespace Prover.Core.Models.Instruments
 {

@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using NLog;
-using NLog.Fluent;
 using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
-using UnionGas.MASA.Dialogs.LoginDialog;
 
 namespace UnionGas.MASA
 {
