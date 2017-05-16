@@ -13,9 +13,17 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="245">
     <UserControl.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                              TrueValue="Visible"
-                                              FalseValue="Collapsed" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+        </ResourceDictionary>
+
     </UserControl.Resources>
 
     <Grid>
@@ -66,7 +74,7 @@
                             Content="Run Test"
                             Margin="8"
                             Grid.Row="2"
-                            Style="{StaticResource MaterialDesignFlatButtonClick}"
+                            Style="{StaticResource MaterialDesignFlatButton}"
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">

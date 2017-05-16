@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -24,17 +25,17 @@ namespace Prover.GUI.Modules.Certificates.Screens
     {
         public List<string> VerificationType => new List<string>
         {
-            "Verification",
-            "Re-verification"
+            "New",
+            "Re-Verified"
         };
 
         private readonly IProverStore<Instrument> _instrumentStore;
-        private readonly IProverStore<Client> _clientStore;
+        private readonly IClientStore _clientStore;
         private readonly ICertificateStore _certificateStore;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, IProverStore<Client> clientStore,
+            IProverStore<Instrument> instrumentStore, IClientStore clientStore,
             ICertificateStore certificateStore)
             : base(screenManager, eventAggregator)
         {
@@ -81,6 +82,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 .Select(x => !x)
                 .ToProperty(this, x => x.ShowTestViewListBox);
 
+            var canExecutePrintCommand = this.WhenAnyValue(x => x.ExistingCertificateNumber, s => s.HasValue);
+
+            PrintExistingCertificateCommand = ReactiveCommand.CreateFromTask<long?>(PrintExistingCerificate, canExecutePrintCommand);
+
+           
 
             #region unused code
 
@@ -107,19 +113,24 @@ namespace Prover.GUI.Modules.Certificates.Screens
             #endregion
         }
 
+        private async Task PrintExistingCerificate(long? certificateNumber)
+        {
+            var cert = await _certificateStore.GetCertificate(certificateNumber.Value);
+
+            if (cert == null) return;
+
+            CertificateGenerator.GenerateXps(cert);
+        }
+
+        public ReactiveCommand<long?, Unit> PrintExistingCertificateCommand { get; set; }
+
         public ReactiveCommand<Unit, long> FetchNextCertificateNumberCommand { get; set; }
 
         private async Task<List<Client>> LoadClients()
         {
-            return await Task.Run(() =>
-            {
-                var clients = new List<Client> {_allClient};
-
-                clients.AddRange(_clientStore.Query()
-                    .OrderBy(c => c.Name)
-                    .ToList());
-                return clients;
-            });
+            var clients = new List<Client> { _allClient };
+            clients.AddRange(await _clientStore.GetAll());
+            return clients;
         }
 
         private readonly ObservableAsPropertyHelper<IEnumerable<CreateVerificationViewModel>> _searchResults;
@@ -142,6 +153,13 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
         public long NextCertificateNumber => _nextCertificateNumber.Value;
+
+        private long? _existingCertificateNumber;
+        public long? ExistingCertificateNumber
+        {
+            get { return _existingCertificateNumber; }
+            set { this.RaiseAndSetIfChanged(ref _existingCertificateNumber, value); }
+        }
 
         private Client _selectedClient;
         public Client SelectedClient
@@ -204,7 +222,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             if (instruments.Count > 8)
             {
-                MessageBox.Show("Maximum 8 instruments allowed per certificate.");
+                MessageBox.Show("Maximum 5 instruments allowed per certificate.");
                 return;
             }
 

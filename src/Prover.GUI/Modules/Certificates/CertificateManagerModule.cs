@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
@@ -16,7 +17,7 @@ namespace Prover.GUI.Modules.Certificates
         public ImageSource MenuIconSource
             => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/certificate.png"));
 
-        public string MenuTitle => "Create Certificates";
+        public string MenuTitle => "Certificates";
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -26,9 +27,9 @@ namespace Prover.GUI.Modules.Certificates
                     return this;
                 })
                 .As<IHaveMainMenuItem>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
 
-            builder.RegisterType<CertificateStore>().As<ICertificateStore>().InstancePerLifetimeScope();
+            builder.Register(c => new CertificateStore(c.Resolve<ProverContext>(), c.Resolve<IProverStore<Instrument>>())).As<ICertificateStore>().SingleInstance();
         }
 
         public Action OpenAction => () => ScreenManager.ChangeScreen<CertificateCreatorViewModel>();

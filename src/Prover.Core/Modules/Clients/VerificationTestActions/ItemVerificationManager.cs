@@ -16,11 +16,11 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
     public class ItemVerificationManager : IPreTestValidation
     {
         private readonly IHandleInvalidItemVerification _invalidItemHandler;
-        private readonly IProverStore<Client> _clientStore;
+        private readonly IClientStore _clientStore;
         private readonly IProverStore<Instrument> _instrumentStore;
         private List<ItemValue> _clientValidationItems = new List<ItemValue>();
 
-        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, IProverStore<Client> clientStore, IProverStore<Instrument> instrumentStore)
+        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, IClientStore clientStore, IProverStore<Instrument> instrumentStore)
         {
             _invalidItemHandler = invalidItemHandler;
             _clientStore = clientStore;

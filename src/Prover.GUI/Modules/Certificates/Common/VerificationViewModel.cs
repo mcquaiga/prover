@@ -66,10 +66,10 @@ namespace Prover.GUI.Modules.Certificates.Common
 
         public bool IsMechanicalDrive => !IsRotaryDrive;
         public MechanicalDrive MechanicalDriveInfo =>
-            (MechanicalDrive) (Instrument.VolumeTest.DriveType is MechanicalDrive ? Instrument.VolumeTest.DriveType : null);
+            (MechanicalDrive) (Instrument?.VolumeTest?.DriveType is MechanicalDrive ? Instrument.VolumeTest.DriveType : null);
 
         public bool IsRotaryDrive => Instrument.DriveRateDescription().ToLower() == "rotary";
-        public RotaryDrive RotaryMeterInfo => (RotaryDrive) (Instrument.VolumeTest.DriveType is RotaryDrive ? Instrument.VolumeTest.DriveType : null);
+        public RotaryDrive RotaryMeterInfo => (RotaryDrive) (Instrument?.VolumeTest?.DriveType is RotaryDrive ? Instrument.VolumeTest.DriveType : null);
 
         public class PressureInfoViewModel
         {

@@ -167,6 +167,7 @@
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
+    <Compile Include="Services\ClientService.cs" />
     <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />

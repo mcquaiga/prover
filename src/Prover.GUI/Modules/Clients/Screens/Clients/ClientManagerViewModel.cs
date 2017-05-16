@@ -12,11 +12,11 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 {
     public class ClientManagerViewModel : ViewModelBase, IDisposable
     {
-        private readonly IProverStore<Core.Models.Clients.Client> _clientStore;
+        private readonly IClientStore _clientStore;
         private const string ClientListViewContext = "ClientListView";
 
         public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Core.Models.Clients.Client> clientStore) : base(screenManager, eventAggregator)
+            IClientStore clientStore) : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
             ViewContext = ClientListViewContext;

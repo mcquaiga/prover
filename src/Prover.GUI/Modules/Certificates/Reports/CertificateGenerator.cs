@@ -67,6 +67,11 @@ namespace Prover.GUI.Modules.Certificates.Reports
             if (!Directory.Exists(CertificateFolderPath))
                 Directory.CreateDirectory(CertificateFolderPath);
 
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
             return filePath;
         }
 

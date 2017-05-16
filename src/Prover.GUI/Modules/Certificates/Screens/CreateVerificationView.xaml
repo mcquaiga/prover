@@ -45,20 +45,17 @@
                       Grid.Row="1"
                       Margin="8"
                       VerticalAlignment="Center"/>
-            <StackPanel Grid.Column="1" Grid.ColumnSpan="3"
+            <!--<StackPanel Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         Grid.Row="0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
                         Margin="5 0">
-                <TextBlock Text="Client"
-                           FontSize="12"
-                           VerticalAlignment="Center"
-                           Foreground="Gray"
-                           Margin="5 0"/>
-                <TextBlock Text="{Binding Instrument.Client.Name}"
+                <TextBlock Text="{Binding Instrument.Client.Name, FallbackValue='(No Client)'}"
+                           FontWeight="DemiBold"
                            VerticalAlignment="Center"
                            Margin="5 0"/>
-            </StackPanel>
+            </StackPanel>-->
 
             <ContentControl Grid.Row="1"
                             Grid.Column="2"

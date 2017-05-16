@@ -13,10 +13,10 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 {
     public class ClientPostTestResetManager : IPostTestAction
     {
-        private IProverStore<Client> _clientStore;
+        private IClientStore _clientStore;
         private IProverStore<Instrument> _instrumentStore;
       
-        public ClientPostTestResetManager(IProverStore<Client> clientStore, IProverStore<Instrument> instrumentStore)
+        public ClientPostTestResetManager(IClientStore clientStore, IProverStore<Instrument> instrumentStore)
         {
             _clientStore = clientStore;
             _instrumentStore = instrumentStore;

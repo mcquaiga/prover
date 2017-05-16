@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using ReactiveUI;
@@ -22,10 +23,16 @@ namespace Prover.GUI.Modules.Certificates.Reports
             }
         }
 
+        public Client Client => Instruments.First().Client;
+
         public Certificate Certificate { get; set; }
 
         public string CertificateDate => Certificate.CreatedDateTime.ToShortDateString();
 
+        public long NumberOfTestsPassed => Certificate.Instruments.Count(i => i.HasPassed);
+
+        public long NumberOfTestsFailed => Certificate.Instruments.Count(i => !i.HasPassed);
+        
         private List<VerificationViewModel> _instruments;
 
         public List<VerificationViewModel> Instruments

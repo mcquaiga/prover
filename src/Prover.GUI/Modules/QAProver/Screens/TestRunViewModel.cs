@@ -42,7 +42,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private IDisposable _testStatusSubscription;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Client> clientStore)
+            IClientStore clientStore)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);

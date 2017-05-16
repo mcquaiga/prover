@@ -34,7 +34,7 @@ namespace Prover.GUI.Modules.Clients
                 .As<IHaveMainMenuItem>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<ClientStore>().As<IProverStore<Client>>();
+            builder.Register(c => new ClientStore(c.Resolve<ProverContext>())).As<IClientStore>();
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
         }
