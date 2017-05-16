@@ -165,15 +165,15 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private Client _selectedClient;
         public Client SelectedClient
         {
-            get => _selectedClient;
-            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
+            get { return _selectedClient; }
+            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
         }
 
         private string _testedBy;
         public string TestedBy
         {
-            get => _testedBy;
-            set => this.RaiseAndSetIfChanged(ref _testedBy, value);
+            get { return _testedBy; }
+            set { this.RaiseAndSetIfChanged(ref _testedBy, value); }
         }
 
         private readonly ObservableAsPropertyHelper<IEnumerable<Client>> _clientsList;
@@ -182,8 +182,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private string _selectedVerificationType;
         public string SelectedVerificationType
         {
-            get => _selectedVerificationType;
-            set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
+            get { return _selectedVerificationType; }
+            set { this.RaiseAndSetIfChanged(ref _selectedVerificationType, value); }
         }
 
         private async Task<IEnumerable<CreateVerificationViewModel>> GetInstrumentsWithNoCertificate(
