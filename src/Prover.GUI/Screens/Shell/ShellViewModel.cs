@@ -1,16 +1,16 @@
 ﻿using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
 using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Screens.Settings;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using System.Windows;
-using Caliburn.Micro.ReactiveUI;
-using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell
 {
