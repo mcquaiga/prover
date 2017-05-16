@@ -20,7 +20,7 @@ namespace Prover.Core.Shared.Infrastructure
         /// </summary>
         public static T Instance
         {
-            get => instance;
+            get { return instance; }
             set
             {
                 instance = value;
