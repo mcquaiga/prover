@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Prover.Core.Shared.Infrastructure
@@ -82,5 +80,3 @@ namespace Prover.Core.Shared.Infrastructure
         public new static IList<T> Instance => Singleton<IList<T>>.Instance;
     }
 }
-
-#endregion
