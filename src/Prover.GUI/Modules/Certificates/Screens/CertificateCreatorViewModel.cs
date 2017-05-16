@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Caliburn.Micro;
-using Prover.Core.Events;
-using Prover.Core.Models.Certificates;
+﻿using Caliburn.Micro;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -18,6 +7,13 @@ using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Modules.Certificates.Reports;
 using ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
