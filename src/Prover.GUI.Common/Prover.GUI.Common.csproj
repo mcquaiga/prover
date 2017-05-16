@@ -258,6 +258,12 @@
   <ItemGroup>
     <Folder Include="Screens\QAProver\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
+      <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
+      <Name>Prover.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
