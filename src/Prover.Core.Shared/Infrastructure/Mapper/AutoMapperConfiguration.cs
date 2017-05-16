@@ -1,10 +1,6 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-
-#endregion
 
 namespace Prover.Core.Shared.Infrastructure.Mapper
 {
