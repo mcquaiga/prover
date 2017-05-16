@@ -13,13 +13,17 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-            
-            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
-            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
-            
             <Style TargetType="materialDesign:PackIcon">
-                <Setter Property="Foreground" Value="DarkBlue"></Setter>
+                <Setter Property="Foreground" Value="DarkBlue" />
+                <Setter Property="Width"
+                        Value="32" />
+                <Setter Property="Height"
+                        Value="32" />
+            </Style>
+
+            <Style TargetType="Button"
+                   BasedOn="{StaticResource MaterialDesignFlatButton}">
+                <Setter Property="Height" Value="48"/>
             </Style>
 
             <Style TargetType="{x:Type TextBlock}">
@@ -44,19 +48,7 @@
                       Grid.Column="0"
                       Grid.Row="1"
                       Margin="8"
-                      VerticalAlignment="Center"/>
-            <!--<StackPanel Grid.Column="1"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Margin="5 0">
-                <TextBlock Text="{Binding Instrument.Client.Name, FallbackValue='(No Client)'}"
-                           FontWeight="DemiBold"
-                           VerticalAlignment="Center"
-                           Margin="5 0"/>
-            </StackPanel>-->
-
+                      VerticalAlignment="Center"/>          
             <ContentControl Grid.Row="1"
                             Grid.Column="2"
                             cal:View.Model="{Binding VerificationView}" />
@@ -67,21 +59,13 @@
                         HorizontalAlignment="Right" 
                         VerticalAlignment="Center"
                         Margin="5">
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
-                        Command="{Binding ViewQaTestReportCommand}"
+                <Button Command="{Binding ViewQaTestReportCommand}"
                         ToolTip="View QA Test Report">
-
-                    <materialDesign:PackIcon Kind="Printer"
-                                             Height="24"
-                                             Width="24"
-                    />
+                    <materialDesign:PackIcon Kind="Printer"/>
                 </Button>
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
-                        Command="{Binding ArchiveTestCommand}"
+                <Button Command="{Binding ArchiveTestCommand}"
                         ToolTip="Archive Test">
-                    <materialDesign:PackIcon Kind="Archive"
-                                             Height="24"
-                                             Width="24"/>
+                    <materialDesign:PackIcon Kind="Archive"/>
                 </Button>
             </StackPanel>
         </Grid>

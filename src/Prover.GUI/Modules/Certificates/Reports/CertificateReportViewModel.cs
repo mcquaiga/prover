@@ -27,7 +27,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
 
         public Certificate Certificate { get; set; }
 
-        public string CertificateDate => Certificate.CreatedDateTime.ToShortDateString();
+        public string CertificateDate => $"{Certificate.CreatedDateTime:D}";
 
         public long NumberOfTestsPassed => Certificate.Instruments.Count(i => i.HasPassed);
 

@@ -12,7 +12,8 @@
     <DockPanel>
         <materialDesign:DialogHost Identifier="ClientDialogHost">
             <ScrollViewer>
-                <Grid DockPanel.Dock="Top">
+                <Grid DockPanel.Dock="Top"
+                      HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -31,7 +32,7 @@
                             Height="64"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
-                            Margin="32"
+                            Margin="15"
                             Grid.Row="1">
                         <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
                     </Button>

@@ -21,7 +21,12 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
             UpdateCommand = ReactiveCommand.Create(() => { TryClose(true); });
         }
 
-        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems { get; set; }
+        private Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> _invalidItems;
+        public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems
+        {
+            get { return _invalidItems; }
+            set { this.RaiseAndSetIfChanged(ref _invalidItems, value); }
+        }
 
         #region Commands
 
@@ -44,6 +49,7 @@ namespace Prover.GUI.Modules.Clients.Screens.ItemValidation
         public bool ShouldInvalidItemsBeChanged(Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> invalidItems)
         {
             if (invalidItems == null || !invalidItems.Any()) return false;
+            InvalidItems = invalidItems.OrderBy(i => i.Key.Number).ToDictionary(x => x.Key, y => y.Value);
 
             //show dialog
             var result = ScreenManager.ShowDialog(this);

@@ -10,35 +10,30 @@
              FontWeight="Light"
              Background="White"
              Height="816" Width="1056">
-    <UserControl.Resources>
-
-     
-    </UserControl.Resources>
 
     <Viewbox Stretch="Uniform"
              Width="1056"
              Height="816">
-        <Grid >
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="665" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1050"/>
+                <ColumnDefinition Width="1050" />
             </Grid.ColumnDefinitions>
             <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" Margin="2,5,0,2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <!--<RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />-->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*" />
-                        <ColumnDefinition Width="0.25*" />
-                        <ColumnDefinition Width="0.25*" />
+                        <ColumnDefinition Width="0.5*" />
                         <ColumnDefinition Width="0.25*" />
                     </Grid.ColumnDefinitions>
 
@@ -47,42 +42,55 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="2">
                             <materialDesign:ColorZone Background="LightGray"
-                                                      
+
                                                       Padding="2">
                                 <TextBlock FontSize="10">Owner</TextBlock>
                             </materialDesign:ColorZone>
                             <TextBlock Text="{Binding Client.Name}"
-                                       FontSize="10"/>
+                                       FontSize="10" />
                             <TextBlock Text="{Binding Client.Address}"
-                                       FontSize="10"/>
+                                       FontSize="10" />
                         </StackPanel>
                     </materialDesign:Card>
 
+                    <Grid Grid.Row="0"
+                          Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Row="0"
+                                    HorizontalAlignment="Center">
+                            <TextBlock FontSize="16" HorizontalAlignment="Center">Inspection Certificate</TextBlock>
+                            <TextBlock FontSize="16" HorizontalAlignment="Center">Gas Meters</TextBlock>
 
-                    <StackPanel Grid.Row="0"
-                                HorizontalAlignment="Stretch"
-                                Grid.Column="1">
-                        <TextBlock FontSize="24" HorizontalAlignment="Center">Inspection Certificate</TextBlock>
-                        <TextBlock FontSize="24" HorizontalAlignment="Center">Gas Meters</TextBlock>
-                       
-                    </StackPanel>
-                    <StackPanel Grid.Row="0"
-                                HorizontalAlignment="Stretch"
-                                Grid.Column="2">
-                        <TextBlock FontSize="24"
-                                   HorizontalAlignment="Center">Certificate d'Inspection</TextBlock>
-                        <TextBlock FontSize="24"
-                                   HorizontalAlignment="Center">Compteurs de Gaz</TextBlock>
-                        <!--<TextBlock FontSize="16"
+                        </StackPanel>
+                        <StackPanel Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="1">
+                            <TextBlock FontSize="16"
+                                       HorizontalAlignment="Center">
+                                Certificate d'Inspection
+                            </TextBlock>
+                            <TextBlock FontSize="16"
+                                       HorizontalAlignment="Center">
+                                Compteurs de Gaz
+                            </TextBlock>
+
+                        </StackPanel>
+                        <TextBlock FontSize="16"
+                                   Grid.Row="1"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
                                    Text="{Binding Path=CertificateDate, FallbackValue=1900-01-01}"
-                                   HorizontalAlignment="Center" />-->
-                    </StackPanel>
-                    <TextBlock FontSize="16"
-                               Grid.Row="1"
-                               Grid.Column="1"
-                               Grid.ColumnSpan="2"
-                               Text="{Binding Path=CertificateDate, FallbackValue=1900-01-01}"
-                               HorizontalAlignment="Center" />
+                                   HorizontalAlignment="Center" />
+                    </Grid>
 
                     <materialDesign:Card Grid.Column="3"
                                          HorizontalAlignment="Right"
@@ -104,12 +112,12 @@
 
                                     <TextBlock FontSize="10"
                                                Text="Accreditation Certificate: ">
-                                        <TextBlock FontSize="10" Text="XXXXX"/>
+                                        <TextBlock FontSize="10" Text="XXXXX" />
                                     </TextBlock>
                                     <TextBlock FontSize="10"
                                                Text="MC Registration #: ">
                                         <TextBlock FontSize="10"
-                                                   Text="XXXXX"/>
+                                                   Text="XXXXX" />
                                     </TextBlock>
                                     <TextBlock FontSize="10"
                                                Text="Measuring app. #: ">
@@ -118,7 +126,7 @@
                                     </TextBlock>
                                     <TextBlock FontSize="10"
                                                Text="District: ">
-                                        <TextBlock Text="London"/>
+                                        <TextBlock Text="London" />
                                     </TextBlock>
 
                                 </StackPanel>
@@ -136,7 +144,8 @@
                                 </StackPanel>
 
 
-                            </StackPanel></StackPanel>
+                            </StackPanel>
+                        </StackPanel>
                     </materialDesign:Card>
                 </Grid>
             </Border>
@@ -171,7 +180,7 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
             </Viewbox>
-            
+
             <Border Grid.Row="2" BorderThickness="0,2,0,0" BorderBrush="Black" Margin="2,0,2,8">
                 <Grid VerticalAlignment="Center" Margin="0">
                     <Grid.ColumnDefinitions>
@@ -194,7 +203,7 @@
                             </TextBlock>
 
                         </StackPanel>
-                         <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock FontWeight="Bold">
                                 Seal Expiration Date:
                                 <TextBlock FontWeight="Normal" Text="{Binding Path=Certificate.SealExpirationDate}" />
@@ -205,7 +214,7 @@
                         <UniformGrid Columns="3">
                             <StackPanel Orientation="Vertical"
                                         HorizontalAlignment="Center">
-                                <TextBlock Text="Insp."/>
+                                <TextBlock Text="Insp." />
                                 <TextBlock FontWeight="Normal"
                                            Text="{Binding Path=Certificate.InstrumentCount}" />
                             </StackPanel>
@@ -228,7 +237,10 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     Margin="0 2">
-                            <TextBlock>Signed By: <TextBlock>_________________________________________________________________________</TextBlock></TextBlock>
+                            <TextBlock>
+                                Signed By:
+                                <TextBlock>_________________________________________________________________________</TextBlock>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">

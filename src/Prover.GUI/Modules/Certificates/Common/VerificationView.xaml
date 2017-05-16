@@ -10,7 +10,7 @@
              FontWeight="Light"
              FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="125">
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="100">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -53,7 +53,7 @@
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" x:Key="LabelStyle">
-                <Setter Property="Margin" Value="0 0 0 4" />
+                <Setter Property="Margin" Value="0 0 0 2" />
                 <Setter Property="Foreground" Value="Black" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
                 <Setter Property="FontSize" Value="10" />
@@ -105,7 +105,7 @@
     <Viewbox>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="110" />
                 <ColumnDefinition Width="1*" />
@@ -119,8 +119,8 @@
             <materialDesign:PackIcon x:Name="Icon"
                                      Grid.Column="0"
                                      VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
                                      Style="{StaticResource PassFailIcon}"
-                                     Margin="5"
                                      Width="32" Height="32" />
 
             <StackPanel Grid.Column="1"
@@ -292,24 +292,20 @@
                 <materialDesign:Card x:Name="PtzTestResults"
                                      Grid.Column="1"
                                      Margin="4 0"
-                                     VerticalAlignment="Stretch"
                                      Background="Transparent"
                                      materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                    <Grid VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch">
+                    <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
                             <TextBlock Text="test results"
                                        Style="{StaticResource HeaderOneStyle}" />
                         </materialDesign:ColorZone>
 
-                        <DataGrid Margin="5 1 0 0"
-                                  Grid.Row="1"
+                        <DataGrid Grid.Row="1"
                                   HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
                                   ItemsSource="{Binding VerificationTests}"
                                   IsReadOnly="True"
                                   IsEnabled="False"
@@ -320,8 +316,7 @@
                                   CanUserResizeColumns="False"
                                   CanUserResizeRows="False"
                                   AutoGenerateColumns="False"
-                                  materialDesign:DataGridAssist.CellPadding="25 2"
-                                  VerticalContentAlignment="Stretch"
+                                  materialDesign:DataGridAssist.CellPadding="4 2"
                                   Background="Transparent"
                                   materialDesign:DataGridAssist.ColumnHeaderPadding="0 5">
                             <DataGrid.CellStyle>
@@ -370,7 +365,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="100" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <materialDesign:ColorZone Grid.Column="0"
                                                   Grid.ColumnSpan="2"
@@ -396,7 +391,7 @@
 
                                 <StackPanel Orientation="Vertical"
                                             Grid.Row="1"
-                                            Margin="0 2">
+                                            Margin="0 1">
                                     <StackPanel>
                                         <TextBlock
                                             Text="{Binding RotaryMeterInfo.Meter.MeterType, FallbackValue=[NULL]}"
@@ -425,7 +420,7 @@
                                            HorizontalAlignment="Left"
                                            Style="{StaticResource HeaderTwoStyle}" />
                                 <UniformGrid Grid.Row="1"
-                                             Margin="0 2">
+                                             Margin="0 1">
                                     <StackPanel>
                                         <TextBlock Text="{Binding Volume.DriveRateDescription, FallbackValue=[NULL]}"
                                                    Style="{StaticResource ValueStyle}" />
@@ -476,7 +471,7 @@
                                            Style="{StaticResource HeaderTwoStyle}" />
                                 <StackPanel Orientation="Vertical"
                                             HorizontalAlignment="Right"
-                                            Margin="0 2">
+                                            Margin="0 1">
                                     <StackPanel Orientation="Vertical"
                                                 Margin="8 0 0 0">
                                         <StackPanel Orientation="Horizontal"
@@ -505,7 +500,7 @@
                                            Style="{StaticResource HeaderTwoStyle}" />
                                 <StackPanel Orientation="Vertical"
                                             HorizontalAlignment="Right"
-                                            Margin="0 2">
+                                            Margin="0 1">
                                     <StackPanel Orientation="Vertical"
                                                 Margin="8 0 0 0">
                                         <StackPanel Orientation="Horizontal"

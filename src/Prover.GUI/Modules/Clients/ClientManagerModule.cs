@@ -19,7 +19,7 @@ namespace Prover.GUI.Modules.Clients
         public ImageSource MenuIconSource
             => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/group.png"));
 
-        public string MenuTitle => "Manage Clients";
+        public string MenuTitle => "Clients";
 
         public Action OpenAction => async () => await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         public int Order => 2;
