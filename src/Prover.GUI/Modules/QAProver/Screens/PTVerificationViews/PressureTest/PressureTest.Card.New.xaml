@@ -6,7 +6,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
@@ -23,7 +22,7 @@
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
                          Margin="5"
                          VerticalAlignment="Center"
-                         HorizontalAlignment="Left">
+                         HorizontalAlignment="Stretch">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -57,17 +56,19 @@
                         Margin="5 0">
                 <UniformGrid Columns="2">
                     <controls:ValueDescriptionControl Label="Gauge"
-                                                      Value="{Binding GasPressure}" />
+                                                      IsReadOnly="True"
+                                                      Value="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:ValueDescriptionControl Label="EVC Reading"
                                                       Value="{Binding EvcGasPressure}" />
                 </UniformGrid>
                 <UniformGrid Columns="2"
                              Margin="0"
-                             Visibility="{Binding ShowATMValues, Converter={StaticResource BoolToHiddenConverter}}">
+                             Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}">
                     <controls:ValueDescriptionControl Label="ATM Gauge"
-                                                      Value="{Binding AtmosphericGauge}" />
+                                                       IsReadOnly="{Binding IsAtmGaugeReadOnly}"
+                                                       Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:ValueDescriptionControl Label="EVC ATM Reading"
-                                                      Value="{Binding EvcATMPressure}" />
+                                                      Value="{Binding EvcAtmPressure}" />
                 </UniformGrid>
                 <UniformGrid Columns="2"
                              Margin="0">

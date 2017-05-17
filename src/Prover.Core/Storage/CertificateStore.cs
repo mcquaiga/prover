@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
@@ -13,6 +14,7 @@ namespace Prover.Core.Storage
     {
         IQueryable<Certificate> Query();
         Certificate GetCertificate(Guid id);
+        Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null);
         Task<Certificate> GetCertificate(long number);
         Task UpsertAsync(Certificate entity);
         Task<long> GetNextCertificateNumber();
@@ -69,6 +71,18 @@ namespace Prover.Core.Storage
                 .FirstOrDefaultAsync();
 
             return last + 1;
+        }
+
+        public async Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null)
+        {
+            clientId = clientId == Guid.Empty ? null : clientId;
+
+            return await _instrumentStore.Query()
+                .Where(x => x.CertificateId == null && x.ArchivedDateTime == null && x.ClientId == clientId)
+                .OrderBy(x => x.TestDateTime)
+                .ToListAsync();
+
+
         }
 
         public async Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments)
