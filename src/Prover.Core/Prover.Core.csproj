@@ -105,6 +105,7 @@
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
+    <Compile Include="Exports\ExportToCsvManager.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
