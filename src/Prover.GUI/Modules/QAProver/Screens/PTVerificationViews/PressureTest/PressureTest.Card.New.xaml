@@ -23,30 +23,39 @@
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
                          Margin="5"
                          VerticalAlignment="Center"
-                         HorizontalAlignment="Center">
+                         HorizontalAlignment="Left">
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
-                       Margin="0"
-                       FontWeight="Regular"
+                       Grid.RowSpan="2"
+                       Grid.Column="0"
+                       Margin="5 0 15 0"
+                       FontWeight="Light"
                        Foreground="SlateGray"
+                       VerticalAlignment="Center"
                        FontSize="36"
                        Text="P" />
 
             <controls:PercentageControlNew HorizontalAlignment="Center"
-                                           Grid.Row="1"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Grid.Row="0"
                                            DisplayValue="{Binding TestRun.PercentError}"
                                            Passed="{Binding TestRun.HasPassed}"
                                             />
-            <StackPanel Grid.Row="2"
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
                         Margin="5 0">
-                <UniformGrid Columns="2"
-                             Margin="0">
+                <UniformGrid Columns="2">
                     <controls:ValueDescriptionControl Label="Gauge"
                                                       Value="{Binding GasPressure}" />
                     <controls:ValueDescriptionControl Label="EVC Reading"

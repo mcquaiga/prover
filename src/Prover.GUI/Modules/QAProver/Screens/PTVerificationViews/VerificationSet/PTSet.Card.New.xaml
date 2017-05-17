@@ -6,8 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
+             Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -74,7 +73,7 @@
                             Content="Run Test"
                             Margin="8"
                             Grid.Row="2"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">

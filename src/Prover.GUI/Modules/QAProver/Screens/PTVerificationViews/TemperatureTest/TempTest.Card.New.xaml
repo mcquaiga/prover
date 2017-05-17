@@ -7,7 +7,7 @@
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
+             Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -33,30 +33,39 @@
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
                          VerticalAlignment="Center"
                          Margin="5"
-                         HorizontalAlignment="Center">
+                         HorizontalAlignment="Left">
         <Grid>
-          
+
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0"
-                       Margin="0"
-                       FontWeight="SemiBold"
+                       Grid.RowSpan="2"
+                       Grid.Column="0"
+                       Margin="5 0 15 0"
+                       FontWeight="Light"
                        Foreground="SlateGray"
+                       VerticalAlignment="Center"
                        FontSize="36"
                        Text="T" />
-            
+
             <controls1:PercentageControlNew DisplayValue="{Binding PercentError}"
-                                            Grid.Row="1"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
                                             Passed="{Binding TestRun.HasPassed}"
-                                            HorizontalAlignment="Center"
-                                            Margin="2 2" />
+                                            HorizontalAlignment="Center" />
             <UniformGrid Columns="2"
                          Rows="2"
-                         Grid.Row="2"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         HorizontalAlignment="Stretch"
                          Margin="5 0">
                 <!--INstrument Report , Text display instead of the decimal control -->
                 <controls1:ValueDescriptionControl Label="Gauge"

@@ -17,7 +17,7 @@
                 <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" BorderThickness="0 0 1 0" BorderBrush="LightGray" Margin="0 0 4 0">
+            <Border Grid.Column="0" BorderThickness="0 0 1 0" BorderBrush="SlateGray" Margin="0 0 4 0">
                 <StackPanel Orientation="Vertical"  Margin="5">
                     <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}" cal:View.Context="SiteInfoCardNew" />
                     <ContentControl Margin="2" cal:View.Model="{Binding EventLogCommPortItem}" cal:View.Context="EventLogCommPortCard" />
@@ -38,10 +38,9 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="0 0 1 0" BorderBrush="LightGray" Margin="0 0 5 0">
+                            <Border BorderThickness="0 0 1 0" BorderBrush="SlateGray" Margin="0 0 5 0">
                                 <ContentControl  cal:View.Model="{Binding }" cal:View.Context="CardNew" />
                             </Border>
-                            
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

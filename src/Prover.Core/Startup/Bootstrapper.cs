@@ -19,7 +19,7 @@ namespace Prover.Core.Startup
         public CoreBootstrapper()
         {
             //Database registrations
-            Builder.RegisterType<ProverContext>().SingleInstance();
+            Builder.RegisterInstance(new ProverContext()).SingleInstance();
             Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().SingleInstance();
             
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());

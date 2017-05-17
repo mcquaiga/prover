@@ -6,40 +6,47 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
+             Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="157">
     <!--**** START SUPER **** -->
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                         HorizontalAlignment="Center"
+                         HorizontalAlignment="Left"
                          VerticalAlignment="Center"
                          Margin="5">
         <Grid>
-          
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0"
-                       Margin="0"
-                       FontWeight="SemiBold"
+                       Grid.RowSpan="2"
+                       Grid.Column="0"
+                       Margin="5 0 15 0"
+                       FontWeight="Light"
                        Foreground="SlateGray"
+                       VerticalAlignment="Center"
                        FontSize="36"
                        Text="Z" />
 
             <controls1:PercentageControlNew HorizontalAlignment="Center"
-                                            Margin="0 5"
-                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Grid.Row="0"
                                             DisplayValue="{Binding PercentError}"
                                             Passed="{Binding TestRun.HasPassed}" />
 
             <UniformGrid Columns="2"
-                         Grid.Row="2"
-                         HorizontalAlignment="Center"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         HorizontalAlignment="Stretch"
                          Margin="5 0">
                 <controls1:ValueDescriptionControl Label="Actual Factor"
                                                    Value="{Binding TestRun.ActualFactor}" />
