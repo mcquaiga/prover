@@ -15,6 +15,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.Core.Shared.Extensions;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
@@ -49,7 +50,10 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             ExecuteTestSearch = ReactiveCommand.CreateFromTask<Guid?, IEnumerable<CreateVerificationViewModel>>(GetInstrumentsWithNoCertificate);
 
-            _searchResults = ExecuteTestSearch                
+            var searchIsExecuting = this.WhenAnyObservable(x => x.ExecuteTestSearch.IsExecuting);
+
+            _searchResults = ExecuteTestSearch               
+                .Delay(TimeSpan.FromMilliseconds(150))
                 .ToProperty(this, x => x.SearchResults, new List<CreateVerificationViewModel>());
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
@@ -60,31 +64,37 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient);
 
+            _showLoadingIndicator = selectedClientChange
+                .Select(c => c != null)
+                .ToProperty(this, x => x.ShowLoadingIndicator);
+            
+            _showTestViewListBox = selectedClientChange
+                .Select(c => false)
+                .ToProperty(this, x => x.ShowTestViewListBox);
+            
+            _displayHelpBlankState = selectedClientChange
+                .Select( c=> false)
+                .ToProperty(this, x => x.DisplayHelpBlankState);
+
             selectedClientChange
                 .Where(c => c != null)
                 .Select(x => x.Id)
                 .Delay(TimeSpan.FromMilliseconds(100))
-                .InvokeCommand(ExecuteTestSearch);          
+                .InvokeCommand(ExecuteTestSearch);
 
-            _showTestViewListBox = selectedClientChange
-                .Select(x => x != null)
+            _showLoadingIndicator = selectedClientChange
+                .CombineLatest(searchIsExecuting, (client, search) => client != null && search)
+                .ToProperty(this, x => x.ShowLoadingIndicator);
+
+            _showTestViewListBox = this.WhenAnyValue(x => x.SearchResults)
+                .CombineLatest(searchIsExecuting, (results, exec) => results.Any() && !exec)
                 .ToProperty(this, x => x.ShowTestViewListBox);
 
-            selectedClientChange
-                .Select(c => c == null)
-                .ToProperty(this, x => x.DisplayHelpBlankState, out _displayHelpBlankState, true);
-
-            _displayHelpBlankState = ExecuteTestSearch.IsExecuting
-                .Select(y => !y && !SearchResults.Any())
-                .ToProperty(this, x => x.DisplayHelpBlankState);
-
-            _showLoadingIndicator = ExecuteTestSearch.IsExecuting
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, x => x.ShowLoadingIndicator);           
-
-            
-
-            
+            _displayHelpBlankState = searchIsExecuting
+                .Where(x => !x)
+                .CombineLatest(this.WhenAnyValue(x => x.SearchResults, results => !results.Any()), 
+                    (searchExecuting, clients) => clients && !searchExecuting)
+                .ToProperty(this, x => x.DisplayHelpBlankState, true);
 
             var canExecutePrintCommand = this.WhenAnyValue(x => x.ExistingCertificateNumber, s => s.HasValue);
 

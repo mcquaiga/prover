@@ -15,7 +15,7 @@ namespace Prover.GUI.Modules.Certificates
         protected ScreenManager ScreenManager;
 
         public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/certificate.png"));
+            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/certificate.png"));
 
         public string MenuTitle => "Certificates";
 

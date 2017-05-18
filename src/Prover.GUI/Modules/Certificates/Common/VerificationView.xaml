@@ -30,13 +30,14 @@
             <converters:BooleanToPassConverter x:Key="BooleanToPass" />
 
             <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
+                <Setter Property="Foreground" Value="SlateGray" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
                         <Setter Property="Kind" Value="Check" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Kind" Value="AlertCircleOutline" />
-                        <Setter Property="Foreground" Value="DarkRed" />
+                        <Setter Property="Kind"
+                                Value="AlertCircleOutline" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

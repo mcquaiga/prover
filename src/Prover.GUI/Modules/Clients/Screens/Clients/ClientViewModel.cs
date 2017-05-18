@@ -36,6 +36,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             UpdateItemListCommand = ReactiveCommand.CreateFromTask<Tuple<InstrumentType, ClientItemType>>(UpdateItemList);
             this.WhenAnyValue(x => x.SelectedInstrumentType, x => x.SelectedItemFileType)
                 .Where(x => x.Item1 != null)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(UpdateItemListCommand);
 
             var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue, x => x.SelectedItemDescription,
@@ -108,21 +109,28 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         {
             using (CurrentItemData.SuppressChangeNotifications())
             {
+                var newItems = new List<ItemMetadata>();
+
                 CurrentItemData.Clear();
-
                 Items.Clear();
-                Items.AddRange(ItemHelpers.LoadItems(SelectedInstrumentType));
 
-                if (GetItemList(SelectedInstrumentType, SelectedItemFileType) == null)
+                await Task.Run(() =>
                 {
-                    var items = new ClientItems(Client)
+                    newItems.AddRange(ItemHelpers.LoadItems(SelectedInstrumentType));
+
+                    if (GetItemList(SelectedInstrumentType, SelectedItemFileType) == null)
                     {
-                        InstrumentType = SelectedInstrumentType,
-                        ItemFileType = SelectedItemFileType,
-                        Items = new List<ItemValue>()
-                    };
-                    _client.Items.Add(items);
-                }
+                        var items = new ClientItems(Client)
+                        {
+                            InstrumentType = SelectedInstrumentType,
+                            ItemFileType = SelectedItemFileType,
+                            Items = new List<ItemValue>()
+                        };
+                        _client.Items.Add(items);
+                    }
+                });
+
+                Items.AddRange(newItems);
                 CurrentClientItems = GetItemList(SelectedInstrumentType, SelectedItemFileType);
                 CurrentItemData.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
             }

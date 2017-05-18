@@ -17,7 +17,7 @@ namespace Prover.GUI.Modules.Clients
         protected ScreenManager ScreenManager { get; private set; }
 
         public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/group.png"));
+            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/group.png"));
 
         public string MenuTitle => "Clients";
 
