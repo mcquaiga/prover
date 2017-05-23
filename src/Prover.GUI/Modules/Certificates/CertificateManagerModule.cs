@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
+using Prover.Core.Exports;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
@@ -28,8 +29,13 @@ namespace Prover.GUI.Modules.Certificates
                 })
                 .As<IHaveMainMenuItem>()
                 .SingleInstance();
+           
+            builder.Register(c => new CertificateStore(c.Resolve<ProverContext>(), c.Resolve<IProverStore<Instrument>>(), c.Resolve<IClientStore>()))
+                .As<ICertificateStore>()
+                .SingleInstance();
 
-            builder.Register(c => new CertificateStore(c.Resolve<ProverContext>(), c.Resolve<IProverStore<Instrument>>())).As<ICertificateStore>().SingleInstance();
+            builder.Register(c => new ExportToCsvManager(c.Resolve<ICertificateStore>()))
+                .As<IExportCertificate>();
         }
 
         public Action OpenAction => () => ScreenManager.ChangeScreen<CertificateCreatorViewModel>();

@@ -29,7 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -220,8 +220,14 @@
     <Compile Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
       <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.New.xaml.cs">
+      <DependentUpon>EnergyTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
       <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.New.xaml.cs">
+      <DependentUpon>RotaryMeterTest.Card.New.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\SuperFactorTest\SuperTest.Card.New.xaml.cs">
       <DependentUpon>SuperTest.Card.New.xaml</DependentUpon>
@@ -376,7 +382,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

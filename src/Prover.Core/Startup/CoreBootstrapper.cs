@@ -19,10 +19,9 @@ namespace Prover.Core.Startup
         public CoreBootstrapper()
         {
             //Database registrations
-            Builder.RegisterType<ProverContext>().SingleInstance();
-            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().SingleInstance();
-            
+            Builder.RegisterInstance(new ProverContext()).As<ProverContext>().SingleInstance();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().SingleInstance();
 
             //EVC Communcation
             Builder.Register(

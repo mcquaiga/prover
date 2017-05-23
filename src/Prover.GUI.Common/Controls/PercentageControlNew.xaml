@@ -40,13 +40,15 @@
                        Width="36" Height="36"/>-->
             </Grid>
             <Grid Grid.Column="1" Margin="6 0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
                     <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl}"
                                FontSize="30"
-                               VerticalAlignment="Bottom" />
+                               VerticalAlignment="Center" />
                     <TextBlock Text="%"
-                               VerticalAlignment="Bottom"
-                               FontSize="20"
+                               VerticalAlignment="Center"
+                               FontSize="24"
                                Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
                 </StackPanel>
             </Grid>

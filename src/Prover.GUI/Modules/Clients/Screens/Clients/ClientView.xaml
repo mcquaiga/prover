@@ -23,7 +23,7 @@
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
                 <Setter Property="Margin" Value="8" />
             </Style>
-            <Style TargetType="{x:Type materialDesign:PackIcon}"
+            <Style TargetType="materialDesign:PackIcon"
                    BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -72,6 +72,20 @@
                          TextWrapping="Wrap" VerticalAlignment="Stretch"
                          AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" />
+
+                <materialDesign:PackIcon Grid.Column="2"
+                                         Grid.Row="0"
+                                         Kind="FileDelimited"
+                                         Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
+                <CheckBox x:Name="ExportCsvCheckbox"
+                         Grid.Column="3"
+                         Grid.Row="0"
+                          IsChecked="{Binding Client.CreateCertificateCsvFile}"
+                          Margin="5 0"
+                          Content="Export Certificate to CSV"
+                         materialDesign:HintAssist.Hint="Export CSV on Certificate Create"
+                         VerticalAlignment="Stretch"
+                         />
             </Grid>
 
             <Grid Margin="10" Grid.Row="2">

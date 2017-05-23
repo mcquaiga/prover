@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 
@@ -12,7 +13,7 @@ namespace Prover.Core.Storage
     public interface ICertificateStore
     {
         IQueryable<Certificate> Query();
-        Certificate GetCertificate(Guid id);
+        Task<Certificate> GetCertificate(Guid id);
         Task<Certificate> GetCertificate(long number);
         Task UpsertAsync(Certificate entity);
         Task<long> GetNextCertificateNumber();
@@ -23,11 +24,15 @@ namespace Prover.Core.Storage
     {
         private readonly ProverContext _proverContext;
         private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly IClientStore _clientStore;
+        private readonly IExportCertificate _certificateExporter;
 
-        public CertificateStore(ProverContext proverContext, IProverStore<Instrument> instrumentStore)
+        public CertificateStore(ProverContext proverContext, IProverStore<Instrument> instrumentStore, IClientStore clientStore, IExportCertificate certificateExporter = null)
         {
             _proverContext = proverContext;
             _instrumentStore = instrumentStore;
+            _clientStore = clientStore;
+            _certificateExporter = certificateExporter;
         }
 
         public IQueryable<Certificate> Query()
@@ -50,9 +55,9 @@ namespace Prover.Core.Storage
             return cert;
         }
 
-        public Certificate GetCertificate(Guid id)
+        public async Task<Certificate> GetCertificate(Guid id)
         {
-            return _proverContext.Certificates.Find(id);
+            return await _proverContext.Certificates.FindAsync(id);
         }
 
         public async Task UpsertAsync(Certificate entity)
@@ -90,6 +95,7 @@ namespace Prover.Core.Storage
             });
 
             await UpsertAsync(certificate);
+
             return certificate;
         }
     }

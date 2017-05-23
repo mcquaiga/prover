@@ -49,32 +49,33 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="15">
+                    <Grid Grid.Row="0" Margin="2 8 2 4">
                         <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
-                                   FontSize="24"
+                                   FontSize="32"
+                                   Foreground="SlateGray"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left" />
                     </Grid>
-                    <StackPanel Orientation="Vertical" Grid.Row="1" Margin="10">
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Margin="15 0">
                         <!-- Row 1 - PTZ Verification -->
                         <StackPanel Orientation="Vertical">
                             <ContentControl cal:View.Model="{Binding PressureTestViewModel}"
-                                            cal:View.Context="CardNew" />
+                                            cal:View.Context="CardNew"/>
 
                             <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}"
-                                            cal:View.Context="CardNew" />
+                                            cal:View.Context="CardNew"/>
 
 
                             <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"
-                                            cal:View.Context="CardNew" />
+                                            cal:View.Context="CardNew"/>
 
                         </StackPanel>
                     </StackPanel>
                     <Button Command="{Binding RunTestCommand}"
                             Content="Run Test"
-                            Margin="8"
+                            Margin="0 4 10 4"
                             Grid.Row="2"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">
