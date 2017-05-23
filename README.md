@@ -1,8 +1,10 @@
 # Prover
-Approve and test Honeywell natural gas correctors with Measurement Canada's accreditation program
+Verify and approve Electronic Volume Correctors for Measurement Canada accreditation sealing.
 
 Supports:
-* Mini Max Rotary
+* Mini-Max (Rotary and Mechanical)
+* Mini-AT
+* EC-350 (Coming soon...)
 
 ## Install Belkin USB-Serial adapter - Windows 10
 As of Windows 10, drivers must be digitally signed. Unfortunately, there's no easy way around this.
