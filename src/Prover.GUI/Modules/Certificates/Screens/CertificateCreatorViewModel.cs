@@ -15,9 +15,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Prover.Core.Exports;
+using Prover.Core.Services;
 using Prover.Core.Shared.Extensions;
-using Prover.Core.Models.Certificates;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
@@ -28,22 +27,17 @@ namespace Prover.GUI.Modules.Certificates.Screens
             "New",
             "Re-Verified"
         };
-
-        private readonly IProverStore<Instrument> _instrumentStore;
+     
         private readonly IClientStore _clientStore;
-        private readonly ICertificateStore _certificateStore;
-        private readonly IExportCertificate _certificateExporter;
+        private readonly ICertificateService _certificateService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, IClientStore clientStore,
-            ICertificateStore certificateStore, IExportCertificate certificateExporter)
+             IClientStore clientStore, ICertificateService certificateService)
             : base(screenManager, eventAggregator)
         {
-            _instrumentStore = instrumentStore;
             _clientStore = clientStore;
-            _certificateStore = certificateStore;
-            _certificateExporter = certificateExporter;
+            _certificateService = certificateService;
 
             var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType,
                 x => x.SelectedClient,
@@ -63,23 +57,22 @@ namespace Prover.GUI.Modules.Certificates.Screens
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             _clientsList = LoadClientsCommand.ToProperty(this, x => x.Clients, new List<Client>());
 
-            FetchNextCertificateNumberCommand =
-                ReactiveCommand.CreateFromTask(_certificateStore.GetNextCertificateNumber);
+            FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
             _nextCertificateNumber = FetchNextCertificateNumberCommand.ToProperty(this, x => x.NextCertificateNumber);
 
             var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient);
 
-            _showLoadingIndicator = selectedClientChange
-                .Select(c => c != null)
-                .ToProperty(this, x => x.ShowLoadingIndicator);
+            //_showLoadingIndicator = selectedClientChange
+            //    .Select(c => c != null)
+            //    .ToProperty(this, x => x.ShowLoadingIndicator);
             
-            _showTestViewListBox = selectedClientChange
-                .Select(c => false)
-                .ToProperty(this, x => x.ShowTestViewListBox);
+            //_showTestViewListBox = selectedClientChange
+            //    .Select(c => false)
+            //    .ToProperty(this, x => x.ShowTestViewListBox);
             
-            _displayHelpBlankState = selectedClientChange
-                .Select( c=> false)
-                .ToProperty(this, x => x.DisplayHelpBlankState);
+            //_displayHelpBlankState = selectedClientChange
+            //    .Select( c=> false)
+            //    .ToProperty(this, x => x.DisplayHelpBlankState);
 
             selectedClientChange
                 .Where(c => c != null)
@@ -136,7 +129,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             if (!certificateNumber.HasValue) return;
 
-            var cert = await _certificateStore.GetCertificate(certificateNumber.Value);
+            var cert = await _certificateService.GetCertificate(certificateNumber.Value);
 
             if (cert == null)
             {
@@ -222,7 +215,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             Guid? clientId = null)
         {
             var results = new List<CreateVerificationViewModel>();
-            var instruments = await _certificateStore.GetInstrumentsWithNoCertificate(clientId);
+            var instruments = await _certificateService.GetInstrumentsWithNoCertificate(clientId);
 
             return await Task.Run(() =>
             {
@@ -246,7 +239,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             if (instruments.Count > 8)
             {
-                MessageBox.Show("Maximum 5 instruments allowed per certificate.");
+                MessageBox.Show("Maximum 8 instruments allowed per certificate.");
                 return;
             }
 
@@ -259,25 +252,14 @@ namespace Prover.GUI.Modules.Certificates.Screens
             if (instruments.Select(x => x.ClientId).Distinct().Count() > 1)
                 MessageBox.Show("Cannot have multiple clients on the same certificate.");
 
-            var certificate = await _certificateStore.CreateCertificate(TestedBy, SelectedVerificationType, instruments);
-            await ExportCertificate(certificate);
+            var certificate =
+                await _certificateService.CreateCertificate(TestedBy, SelectedVerificationType, instruments);
 
             var search = ExecuteTestSearch.Execute(SelectedClient?.Id);
 
             CertificateGenerator.GenerateXps(certificate);
             await FetchNextCertificateNumberCommand.Execute();
             await search;
-        }
-
-        private async Task ExportCertificate(Certificate certificate)
-        {
-            var instruments = certificate.Instruments;
-            var client = instruments.First().Client;
-
-            if (client.CreateCertificateCsvFile)
-            {
-                await _certificateExporter.Export(instruments);
-            }
         }
 
         public void Dispose()

@@ -70,48 +70,37 @@ namespace Prover.Core.Exports
         
     }
 
-    public interface IExportCertificate : IExportTestRun
+    public interface IExportCertificate
     {
-        
+        Task<bool> Export(Certificate certificate);
     }
 
     public class ExportToCsvManager : IExportCertificate
-    {
-        private readonly ICertificateStore _certificateStore;
-
-        public ExportToCsvManager(ICertificateStore certificateStore)
+    {             
+        public async Task<bool> Export(Certificate certificate)
         {
-            _certificateStore = certificateStore;
-        }
-
-        public async Task<bool> Export(Instrument instrumentForExport)
-        {
-            var instrumentList = new List<Instrument> { instrumentForExport };
-            return await Export(instrumentList);
-        }
-
-        public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
-        {
-            var instrs = instrumentsForExport.ToList();
-            
-            var certificateId = instrs.FirstOrDefault()?.CertificateId;
-            if (certificateId == null) return false;
-
-            var cert = await _certificateStore.GetCertificate(certificateId.Value);
-
-            using (var file = File.OpenWrite($"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\certificate_{cert.Number}.csv"))
+            return await Task.Run(async () =>
             {
-                using (var fs = new StreamWriter(file))
+                var instrs = certificate.Instruments.ToList();
+
+                var certificateId = instrs.FirstOrDefault()?.CertificateId;
+                if (certificateId == null) return false;
+
+                using (var file = File.OpenWrite($"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\certificate_{certificate.Number}.csv"))
                 {
-                    using (var csv = new CsvWriter(fs))
+                    using (var writer = new StreamWriter(file))
                     {
-                        csv.WriteHeader(typeof(CsvExportFormat));
-                        csv.WriteRecords(TranslateToCsv.Translate(cert, instrs));
+                        using (var csv = new CsvWriter(writer))
+                        {
+                            csv.WriteHeader(typeof(CsvExportFormat));
+                            csv.WriteRecords(TranslateToCsv.Translate(certificate, instrs));
+                            await writer.FlushAsync();
+                        }
                     }
                 }
-            }
-            
-            return true;
+
+                return true;
+            });
         }
     }
 

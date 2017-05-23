@@ -154,6 +154,7 @@
             </Border>
 
             <Viewbox Grid.Row="1"
+                     Stretch="Uniform"
                      VerticalAlignment="Top">
                 <ListBox HorizontalContentAlignment="Stretch"
                          VerticalContentAlignment="Top"
