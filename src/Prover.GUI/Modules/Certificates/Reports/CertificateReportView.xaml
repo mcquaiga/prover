@@ -10,6 +10,9 @@
              FontWeight="Light"
              Background="White"
              Height="816" Width="1056">
+    <UserControl.Resources>
+       
+    </UserControl.Resources>
 
     <Viewbox Stretch="Uniform"
              Width="1056"
@@ -92,7 +95,7 @@
                                    HorizontalAlignment="Center" />
                     </Grid>
 
-                    <materialDesign:Card Grid.Column="3"
+                    <materialDesign:Card Grid.Column="2"
                                          HorizontalAlignment="Right"
                                          materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                          Grid.Row="0">
@@ -158,9 +161,8 @@
                          ItemsSource="{Binding Instruments}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-
                             <ContentControl cal:View.Model="{Binding}"
-                                            Width="Auto" />
+                                            Width="Auto"/>
 
                         </DataTemplate>
                     </ListBox.ItemTemplate>

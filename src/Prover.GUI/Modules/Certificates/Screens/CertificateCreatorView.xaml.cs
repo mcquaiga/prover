@@ -15,13 +15,13 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             this.WhenActivated(d =>
             {
-                ViewModel = (CertificateCreatorViewModel)DataContext;
+                d(ViewModel = (CertificateCreatorViewModel)DataContext);
 
-                this.BindCommand(
-                    this.ViewModel,
+                d(this.BindCommand(
+                    ViewModel,
                     x => x.PrintExistingCertificateCommand,
                     x => x.PrintExistingCertificateButton,
-                    x => x.ExistingCertificateNumber);
+                    x => x.ExistingCertificateNumber));
 
                 d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
                     .SelectMany(x => x.Execute())

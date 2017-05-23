@@ -12,7 +12,7 @@ namespace Prover.GUI.Modules.QAProver
     public class QaTestRunModule : Module, IHaveMainMenuItem
     {
         public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/clipboard-check.png"));
+            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/clipboard-check.png"));
 
         public string MenuTitle => "New QA Test Run";
 

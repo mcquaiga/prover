@@ -4,8 +4,6 @@
         xmlns:cal="http://www.caliburnproject.org"
         Title="{Binding Title}"
         Height="600" Width="600"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Light"
         TextElement.FontSize="16"
         Icon="pack://application:,,,/../Resources/clipboard-check.png"

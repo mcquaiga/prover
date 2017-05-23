@@ -20,7 +20,7 @@ namespace Prover.GUI.Modules.Exporter
 
         public ScreenManager ScreenManager { get; set; }
 
-        public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover.GUI;component/Resources/cloud-upload.png"));
+        public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/cloud-upload.png"));
 
         public string MenuTitle => "Export Test Runs";
 
