@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Prover.CommProtocol.Common.Items;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
@@ -14,38 +14,31 @@ using Prover.Core.Storage;
 
 namespace Prover.Core.Exports
 {
-    public enum InspectionTypEnum
+    public enum VerificationTypEnum
     {
         New,
         Reverified
     }
 
-    public class CsvExportFormat
-    {    
-        public string InstrumentNumber { get; set; }
-        public string MakerNumber { get; set; }
-        public long CorrectedIndex { get; set; }
-        public long UncorrectedIndex { get; set; }
-        public string LotNumber { get; set; }
-        public string RepairClass { get; set; }
+    public class CsvExportFields
+    {
+        public static IList<string> GetPropertyNames()
+        {
+            return typeof(CsvExportFields).GetProperties()
+                .Select(t => t.Name)
+                .ToList();
+        }
 
-        // Verification Type = new && reverification
-        public decimal GiHighTemperatureError { get; set; }
+        public VerificationTypEnum VerificationType { get; set; }
+        public DateTime TestedDate { get; set; }
 
-        public decimal GiMediumTemperatureError { get; set; }
-        public decimal GiLowTemperatureError { get; set; }
+        public CorrectorType CorrectorType { get; set; }
+        public string CompanyNumber { get; set; }
+        public string SerialNumber { get; set; }
 
-        public decimal GiHighPressureError { get; set; }
-        public decimal GiMediumPressureError { get; set; }
-        public decimal GiLowPressureError { get; set; }
-
-        public decimal GiHighSuperError { get; set; }
-        public decimal GiMediumSuperError { get; set; }
-        public decimal GiLowSuperError { get; set; }
-
-        public decimal GiCorrectedVolumeError { get; set; }
-
-        // Verification Type = blank for new, same as the Gi's reverified
+        public long CorrectedMultiplier { get; set; }
+        public long UncorrectMultiplier{ get; set; }        
+       
         public decimal? HighTemperatureError { get; set; }
         public decimal? MediumTemperatureError { get; set; }
         public decimal? LowTemperatureError { get; set; }
@@ -59,15 +52,7 @@ namespace Prover.Core.Exports
         public decimal? LowSuperError { get; set; }
 
         public decimal? CorrectedVolumeError { get; set; }
-
-        //Test Information
-        public string TestedDate { get; set; }
-        public int OperatorNumber { get; set; }
-        public string InspectionType { get; set; }
-        public string RepairDate { get; set; }
-        public string PlanAndOption { get; set; }
-        public long ProverNumber { get; set; }
-        
+        public decimal? UncorrectedVolumeError { get; set; }
     }
 
     public interface IExportCertificate
@@ -79,6 +64,11 @@ namespace Prover.Core.Exports
     {             
         public async Task<bool> Export(Certificate certificate)
         {
+            var client = certificate.Client;
+
+
+            
+
             return await Task.Run(async () =>
             {
                 var instrs = certificate.Instruments.ToList();
@@ -87,116 +77,16 @@ namespace Prover.Core.Exports
                 if (certificateId == null) return false;
 
                 using (var file = File.OpenWrite($"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\certificate_{certificate.Number}.csv"))
-                {
                     using (var writer = new StreamWriter(file))
-                    {
                         using (var csv = new CsvWriter(writer))
                         {
-                            csv.WriteHeader(typeof(CsvExportFormat));
-                            csv.WriteRecords(TranslateToCsv.Translate(certificate, instrs));
+                            csv.WriteHeader(typeof(CsvExportFields));
+                            csv.WriteRecords(TranslateToEnbridgeCsv.Translate(certificate, instrs));
                             await writer.FlushAsync();
                         }
-                    }
-                }
 
                 return true;
             });
-        }
-    }
-
-    internal static class TranslateToCsv
-    {
-        private const int HighTestNumber = 2;
-        private const int MidTestNumber = 1;
-        private const int LowTestNumber = 0;
-
-        private const string NewVerificationType = "New";
-
-        public static IList<CsvExportFormat> Translate(Certificate certificate, IEnumerable<Instrument> instruments)
-        {
-            return instruments.ToList()
-                .Select(x => Translate(certificate, x))
-                .ToList();
-        }
-
-        public static CsvExportFormat Translate(Certificate certificate, Instrument instrument)
-        {
-            var isNewVerification = certificate.VerificationType == NewVerificationType;
-
-            var csvFormat = new CsvExportFormat()
-            {
-                InstrumentNumber = instrument.InventoryNumber,
-                MakerNumber = instrument.SerialNumber.ToString(),
-                LotNumber = string.Empty,
-                InspectionType = "N",
-                TestedDate = instrument.TestDateTime.ToString("yyyyMMdd"),
-                RepairDate = string.Empty,
-                RepairClass = string.Empty,
-                CorrectedIndex = 0,
-                UncorrectedIndex = 0,
-
-                OperatorNumber = 74,
-                PlanAndOption = "S3",
-                ProverNumber = 74,
-
-                GiHighTemperatureError = GetTempTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                GiMediumTemperatureError = GetTempTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                GiLowTemperatureError = GetTempTestPercentError(instrument, LowTestNumber) ?? 0.0m,
-
-                GiHighPressureError = GetPressureTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                GiMediumPressureError = GetPressureTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                GiLowPressureError = GetPressureTestPercentError(instrument, LowTestNumber) ?? 0.0m,
-
-                GiHighSuperError = GetSuperTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                GiMediumSuperError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                GiLowSuperError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m
-            };
-
-            // Reverified add extra error columns
-            if (!isNewVerification)
-            {
-                csvFormat.InspectionType = "R";
-                csvFormat.RepairClass = "1";
-                csvFormat.RepairDate = instrument.TestDateTime.ToString("yyyyMMdd");
-
-                csvFormat.CorrectedIndex = (long) instrument.Items.GetItem(90).NumericValue;
-                csvFormat.UncorrectedIndex = (long) instrument.Items.GetItem(92).NumericValue;
-
-                csvFormat.HighTemperatureError = csvFormat.GiHighTemperatureError;
-                csvFormat.MediumTemperatureError = csvFormat.GiMediumTemperatureError;
-                csvFormat.LowTemperatureError = csvFormat.GiLowTemperatureError;
-
-                csvFormat.HighPressureError = csvFormat.GiHighPressureError;
-                csvFormat.MediumPressureError = csvFormat.GiMediumPressureError;
-                csvFormat.LowPressureError = csvFormat.GiLowPressureError;
-
-                csvFormat.HighSuperError = csvFormat.GiHighSuperError;
-                csvFormat.MediumSuperError = csvFormat.GiMediumSuperError;
-                csvFormat.LowSuperError = csvFormat.GiLowSuperError;
-            }
-
-            return csvFormat;
-        }
-
-        private static decimal? GetTempTestPercentError(Instrument instrument, int testLevel)
-        {
-            var test = instrument.VerificationTests.FirstOrDefault(vt => vt.TestNumber == testLevel)?.TemperatureTest;
-
-            return test?.PercentError;
-        }
-
-        private static decimal? GetPressureTestPercentError(Instrument instrument, int testLevel)
-        {
-            var test = instrument.VerificationTests.FirstOrDefault(vt => vt.TestNumber == testLevel)?.PressureTest;
-
-            return test?.PercentError;
-        }
-
-        private static decimal? GetSuperTestPercentError(Instrument instrument, int testLevel)
-        {
-            var test = instrument.VerificationTests.FirstOrDefault(vt => vt.TestNumber == testLevel)?.SuperFactorTest;
-
-            return test?.PercentError;
         }
     }
 }
@@ -270,5 +160,55 @@ namespace Prover.Core.Exports
 //           $"{RepairDate}," +
 //           $"{PlanAndOption}," +
 //           $"{ProverNumber}";
+
+//}
+
+//public class CsvExportFormat
+//{    
+//    public string InstrumentNumber { get; set; }
+//    public string MakerNumber { get; set; }
+//    public long CorrectedIndex { get; set; }
+//    public long UncorrectedIndex { get; set; }
+//    public string LotNumber { get; set; }
+//    public string RepairClass { get; set; }
+
+//    // Verification Type = new && reverification
+//    public decimal GiHighTemperatureError { get; set; }
+
+//    public decimal GiMediumTemperatureError { get; set; }
+//    public decimal GiLowTemperatureError { get; set; }
+
+//    public decimal GiHighPressureError { get; set; }
+//    public decimal GiMediumPressureError { get; set; }
+//    public decimal GiLowPressureError { get; set; }
+
+//    public decimal GiHighSuperError { get; set; }
+//    public decimal GiMediumSuperError { get; set; }
+//    public decimal GiLowSuperError { get; set; }
+
+//    public decimal GiCorrectedVolumeError { get; set; }
+
+//    // Verification Type = blank for new, same as the Gi's reverified
+//    public decimal? HighTemperatureError { get; set; }
+//    public decimal? MediumTemperatureError { get; set; }
+//    public decimal? LowTemperatureError { get; set; }
+
+//    public decimal? HighPressureError { get; set; }
+//    public decimal? MediumPressureError { get; set; }
+//    public decimal? LowPressureError { get; set; }
+
+//    public decimal? HighSuperError { get; set; }
+//    public decimal? MediumSuperError { get; set; }
+//    public decimal? LowSuperError { get; set; }
+
+//    public decimal? CorrectedVolumeError { get; set; }
+
+//    //Test Information
+//    public string TestedDate { get; set; }
+//    public int OperatorNumber { get; set; }
+//    public string InspectionType { get; set; }
+//    public string RepairDate { get; set; }
+//    public string PlanAndOption { get; set; }
+//    public long ProverNumber { get; set; }
 
 //}

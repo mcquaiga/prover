@@ -1,22 +1,19 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using Caliburn.Micro;
 using Prover.Core.Models.Clients;
-using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Modules.Certificates.Reports;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Prover.Core.Services;
-using Prover.Core.Shared.Extensions;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
@@ -27,13 +24,13 @@ namespace Prover.GUI.Modules.Certificates.Screens
             "New",
             "Re-Verified"
         };
-     
+
         private readonly IClientStore _clientStore;
         private readonly ICertificateService _certificateService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-             IClientStore clientStore, ICertificateService certificateService)
+            IClientStore clientStore, ICertificateService certificateService)
             : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
@@ -43,21 +40,24 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 x => x.SelectedClient,
                 (testedBy, vt, client)
                     => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType) &&
-                       (client != null && client.Id != Guid.Empty));
+                       client != null && client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
 
-            ExecuteTestSearch = ReactiveCommand.CreateFromTask<Guid?, IEnumerable<CreateVerificationViewModel>>(GetInstrumentsWithNoCertificate);
+            ExecuteTestSearch =
+                ReactiveCommand.CreateFromTask<Guid?, IEnumerable<CreateVerificationViewModel>>(
+                    GetInstrumentsWithNoCertificate);
 
             var searchIsExecuting = this.WhenAnyObservable(x => x.ExecuteTestSearch.IsExecuting);
 
-            _searchResults = ExecuteTestSearch               
+            _searchResults = ExecuteTestSearch
                 .Delay(TimeSpan.FromMilliseconds(150))
                 .ToProperty(this, x => x.SearchResults, new List<CreateVerificationViewModel>());
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             _clientsList = LoadClientsCommand.ToProperty(this, x => x.Clients, new List<Client>());
 
-            FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
+            FetchNextCertificateNumberCommand =
+                ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
             _nextCertificateNumber = FetchNextCertificateNumberCommand.ToProperty(this, x => x.NextCertificateNumber);
 
             var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient);
@@ -65,11 +65,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
             //_showLoadingIndicator = selectedClientChange
             //    .Select(c => c != null)
             //    .ToProperty(this, x => x.ShowLoadingIndicator);
-            
+
             //_showTestViewListBox = selectedClientChange
             //    .Select(c => false)
             //    .ToProperty(this, x => x.ShowTestViewListBox);
-            
+
             //_displayHelpBlankState = selectedClientChange
             //    .Select( c=> false)
             //    .ToProperty(this, x => x.DisplayHelpBlankState);
@@ -90,7 +90,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             _displayHelpBlankState = searchIsExecuting
                 .Where(x => !x)
-                .CombineLatest(this.WhenAnyValue(x => x.SearchResults, results => !results.Any()), 
+                .CombineLatest(this.WhenAnyValue(x => x.SearchResults, results => !results.Any()),
                     (searchExecuting, clients) => clients && !searchExecuting)
                 .ToProperty(this, x => x.DisplayHelpBlankState, true);
 
@@ -98,7 +98,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             PrintExistingCertificateCommand =
                 ReactiveCommand.CreateFromTask<long?>(PrintExistingCerificate, canExecutePrintCommand);
-
 
             #region unused code
 
@@ -125,34 +124,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
             #endregion
         }
 
-        private async Task PrintExistingCerificate(long? certificateNumber)
-        {
-            if (!certificateNumber.HasValue) return;
-
-            var cert = await _certificateService.GetCertificate(certificateNumber.Value);
-
-            if (cert == null)
-            {
-                MessageBox.Show("No certificate found.", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            CertificateGenerator.GenerateXps(cert);
-        }
+        #region Commands
 
         public ReactiveCommand<long?, Unit> PrintExistingCertificateCommand { get; set; }
 
         public ReactiveCommand<Unit, long> FetchNextCertificateNumberCommand { get; set; }
-
-        private async Task<List<Client>> LoadClients()
-        {
-            var clients = new List<Client> {_allClient};
-            clients.AddRange(await _clientStore.GetAll());
-            return clients;
-        }
-
-        private readonly ObservableAsPropertyHelper<IEnumerable<CreateVerificationViewModel>> _searchResults;
-        public IEnumerable<CreateVerificationViewModel> SearchResults => _searchResults.Value;
 
         public ReactiveCommand<Unit, List<Client>> LoadClientsCommand { get; protected set; }
 
@@ -164,6 +140,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public ReactiveCommand CreateCertificateCommand { get; set; }
 
+        #endregion
+
+        #region Properties
+        private readonly ObservableAsPropertyHelper<IEnumerable<CreateVerificationViewModel>> _searchResults;
+        public IEnumerable<CreateVerificationViewModel> SearchResults => _searchResults.Value;
+        
         private readonly ObservableAsPropertyHelper<bool> _displayHelpBlankState;
         public bool DisplayHelpBlankState => _displayHelpBlankState.Value;
 
@@ -180,24 +162,24 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public long? ExistingCertificateNumber
         {
-            get { return _existingCertificateNumber; }
-            set { this.RaiseAndSetIfChanged(ref _existingCertificateNumber, value); }
+            get => _existingCertificateNumber;
+            set => this.RaiseAndSetIfChanged(ref _existingCertificateNumber, value);
         }
 
         private Client _selectedClient;
 
         public Client SelectedClient
         {
-            get { return _selectedClient; }
-            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
+            get => _selectedClient;
+            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
         }
 
         private string _testedBy;
 
         public string TestedBy
         {
-            get { return _testedBy; }
-            set { this.RaiseAndSetIfChanged(ref _testedBy, value); }
+            get => _testedBy;
+            set => this.RaiseAndSetIfChanged(ref _testedBy, value);
         }
 
         private readonly ObservableAsPropertyHelper<IEnumerable<Client>> _clientsList;
@@ -207,10 +189,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public string SelectedVerificationType
         {
-            get { return _selectedVerificationType; }
-            set { this.RaiseAndSetIfChanged(ref _selectedVerificationType, value); }
+            get => _selectedVerificationType;
+            set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
         }
+        #endregion
 
+        #region Private Functions
         private async Task<IEnumerable<CreateVerificationViewModel>> GetInstrumentsWithNoCertificate(
             Guid? clientId = null)
         {
@@ -227,10 +211,16 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     results.Add(item);
                 }
                 return results;
-            });            
+            });
         }
 
-     
+        private async Task<List<Client>> LoadClients()
+        {
+            var clients = new List<Client> { _allClient };
+            clients.AddRange(await _clientStore.GetAll());
+            return clients;
+        }
+
         private async Task CreateCertificate()
         {
             var instruments = SearchResults.Where(x => x.IsSelected)
@@ -261,6 +251,22 @@ namespace Prover.GUI.Modules.Certificates.Screens
             await FetchNextCertificateNumberCommand.Execute();
             await search;
         }
+
+        private async Task PrintExistingCerificate(long? certificateNumber)
+        {
+            if (!certificateNumber.HasValue) return;
+
+            var cert = await _certificateService.GetCertificate(certificateNumber.Value);
+
+            if (cert == null)
+            {
+                MessageBox.Show("No certificate found.", "Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            CertificateGenerator.GenerateXps(cert);
+        }
+        #endregion
 
         public void Dispose()
         {

@@ -19,5 +19,7 @@ namespace Prover.Core.Models.Clients
         public bool CreateCertificateCsvFile { get; set; }
 
         public virtual List<ClientItems> Items { get; set; } = new List<ClientItems>();
+
+        public virtual List<ClientCsvTemplatescs> CsvTemplates { get; set; } = new List<ClientCsvTemplatescs>();
     }
 }

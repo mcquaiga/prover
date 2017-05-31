@@ -107,13 +107,12 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         private async Task UpdateItemList(Tuple<InstrumentType, ClientItemType> values)
         {
-            using (CurrentItemData.SuppressChangeNotifications())
+            using (ResetItems.SuppressChangeNotifications())
+            using (VerifyItems.SuppressChangeNotifications())
             {
+                ResetItems.Clear();
+                VerifyItems.Clear();          
                 var newItems = new List<ItemMetadata>();
-
-                CurrentItemData.Clear();
-                Items.Clear();
-
                 await Task.Run(() =>
                 {
                     newItems.AddRange(ItemHelpers.LoadItems(SelectedInstrumentType));
@@ -134,6 +133,8 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
                 CurrentClientItems = GetItemList(SelectedInstrumentType, SelectedItemFileType);
                 CurrentItemData.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
             }
+                
+            
         }
 
         private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
@@ -192,6 +193,14 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _addItemCommand, value); }
         }
 
+        private ReactiveCommand _goToCsvExporter;
+
+        public ReactiveCommand GoToCsvExporter
+        {
+            get { return _goToCsvExporter; }
+            set { this.RaiseAndSetIfChanged(ref _goToCsvExporter, value); }
+        }
+
         #endregion
 
         #region Properties   
@@ -231,12 +240,20 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private ReactiveList<ItemValue> _currentItemValues = new ReactiveList<ItemValue>();
+        private ReactiveList<ItemValue> _resetItems = new ReactiveList<ItemValue>();
 
-        public ReactiveList<ItemValue> CurrentItemData
+        public ReactiveList<ItemValue> ResetItems
         {
-            get { return _currentItemValues; }
-            set { this.RaiseAndSetIfChanged(ref _currentItemValues, value); }
+            get { return _resetItems; }
+            set { this.RaiseAndSetIfChanged(ref _resetItems, value); }
+        }
+
+        private ReactiveList<ItemValue> _verifyItems = new ReactiveList<ItemValue>();
+
+        public ReactiveList<ItemValue> VerifyItems
+        {
+            get { return _verifyItems; }
+            set { this.RaiseAndSetIfChanged(ref _verifyItems, value); }
         }
 
         private ReactiveList<ItemMetadata> _items = new ReactiveList<ItemMetadata>();

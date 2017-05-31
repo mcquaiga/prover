@@ -109,6 +109,7 @@
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\ExportToCsvManager.cs" />
+    <Compile Include="Exports\TranslateToCsv.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
@@ -171,7 +172,16 @@
     <Compile Include="Migrations\201705220833519_AddCsvExportToClient.Designer.cs">
       <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.cs" />
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.Designer.cs">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705292236565_AddCsvTemplates.cs" />
+    <Compile Include="Migrations\201705292236565_AddCsvTemplates.Designer.cs">
+      <DependentUpon>201705292236565_AddCsvTemplates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
+    <Compile Include="Models\Clients\ClientCsvTemplatescs.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
@@ -310,6 +320,15 @@
     <EmbeddedResource Include="Migrations\201705220833519_AddCsvExportToClient.resx">
       <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705292156266_AddClientsToCertificate.resx">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705292236565_AddCsvTemplates.resx">
+      <DependentUpon>201705292236565_AddCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exports\CsvTemplates\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

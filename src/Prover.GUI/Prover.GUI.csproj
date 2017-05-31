@@ -172,6 +172,10 @@
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ExportToCsvView.xaml.cs">
+      <DependentUpon>ExportToCsvView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ExportToCsvViewModel.cs" />
     <Compile Include="Modules\Exporter\ExportManagerModule.cs" />
     <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml.cs">
       <DependentUpon>ExportTestsView.xaml</DependentUpon>
@@ -368,6 +372,10 @@
     <Page Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ExportToCsvView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
       <Generator>MSBuild:Compile</Generator>

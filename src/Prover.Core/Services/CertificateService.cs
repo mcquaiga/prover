@@ -28,13 +28,11 @@ namespace Prover.Core.Services
     {
         private readonly IProverStore<Certificate> _certificateStore;
         private readonly IProverStore<Instrument> _instrumentStore;
-        private readonly IExportCertificate _certificateExporter;
-
-        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore, IExportCertificate certificateExporter)
+  
+        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
         {
             _certificateStore = certificateStore;
             _instrumentStore = instrumentStore;
-            _certificateExporter = certificateExporter;
         }
 
         public async Task<Certificate> GetCertificate(long number)
@@ -68,11 +66,15 @@ namespace Prover.Core.Services
 
         public async Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments)
         {
+            var client = instruments.First().Client;
+
             var certificate = new Certificate
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
                 TestedBy = testedBy,
+                Client = client,
+                ClientId = client.Id,
                 Number = await GetNextCertificateNumber(),
                 Instruments = new Collection<Instrument>()
             };
@@ -86,11 +88,11 @@ namespace Prover.Core.Services
 
             await _certificateStore.UpsertAsync(certificate);
 
-            var client = instruments.First().Client;
-            if (client.CreateCertificateCsvFile)
-            {
-                await _certificateExporter.Export(certificate);
-            }
+            //var client = instruments.First().Client;
+            //if (client.CreateCertificateCsvFile)
+            //{
+            //    await _certificateExporter.Export(certificate);
+            //}
 
             return certificate;
         }
