@@ -46,7 +46,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
             DeleteRowCommand = ReactiveCommand.Create<ItemValue>(x =>
             {
-                CurrentItemData.Remove(x);
+                //CurrentItemData.Remove(x);
                 CurrentClientItems.Items.Remove(x);
             });
 
@@ -72,7 +72,8 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             itemSelected.Select(x => !x.ItemDescriptions.Any())
                 .ToProperty(this, x => x.ShowItemValueTextBox, out _showItemValueTextBox);
 
-            CurrentItemData.ResetChangeThreshold = 90;
+            ResetItems.ResetChangeThreshold = 90;
+            VerifyItems.ResetChangeThreshold = 90;
         }
 
         private async Task AddItem()
@@ -80,7 +81,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             var value = ItemValue?.ToString() ?? SelectedItemDescription.Id.ToString();
             var itemValue = new ItemValue(SelectedItem, value);
             CurrentClientItems.Items.Add(itemValue);
-            CurrentItemData.Add(itemValue);
+            ResetItems.Add(itemValue);
 
             SelectedItem = null;
             SelectedItemDescription = null;
@@ -131,7 +132,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
                 Items.AddRange(newItems);
                 CurrentClientItems = GetItemList(SelectedInstrumentType, SelectedItemFileType);
-                CurrentItemData.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
+                ResetItems.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
             }
                 
             

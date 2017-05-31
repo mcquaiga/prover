@@ -114,54 +114,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="4*" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox Grid.Column="1"
-                              materialDesign:HintAssist.Hint="Item"
-                              SelectedItem="{Binding SelectedItem}"
-                              ItemsSource="{Binding Items}" Width="200">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Number}" Margin="0 0 5 0" />
-                                    <TextBlock Text="{Binding LongDescription}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <Grid Grid.Column="3" Margin="10 0 0 0">
-                        <TextBox Text="{Binding ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Width="200" Margin="2 5"
-                                 materialDesign:HintAssist.Hint="Value"
-                                 Visibility="{Binding ShowItemValueTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        <ComboBox ItemsSource="{Binding ItemDescriptionsList}"
-                                  SelectedItem="{Binding SelectedItemDescription}"
-                                  materialDesign:HintAssist.Hint="Value"
-                                  Width="200" Margin="2 5"
-                                  Visibility="{Binding ShowItemDescriptions, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Description}" Margin="2" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </Grid>
-
-                    <Button Grid.Column="4"
-                            VerticalAlignment="Center"
-                            Command="{Binding AddItemCommand}"
-                            HorizontalContentAlignment="Left"
-                            Style="{DynamicResource MaterialDesignFlatButton}" Content="ADD" />
-
-                </Grid>
+                
                 <Border Grid.Row="2" Grid.Column="0" Grid.RowSpan="2"
                         BorderBrush="LightGray" BorderThickness="0 0 2 0">
                     <ListBox ItemsSource="{Binding InstrumentTypes}"
@@ -179,13 +132,188 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Border>
-                <StackPanel Grid.Column="1"
+                <UniformGrid Grid.Column="1"
                             Grid.Row="2"
-                            Orientation="Horizontal">
-                    <materialDesign:Card>
-
+                            Columns="2">
+                    <materialDesign:Card Margin="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth1">
                         <StackPanel>
-                            <TextBlock Text="Reset"/>
+                            <TextBlock FontSize="18"
+                                       Margin="0 0 0 5"
+                                       Text="Verify Item File"/>
+                            <TextBlock Text="These items will be compared to the instruments values at the beginning of the test"
+                                       TextWrapping="WrapWithOverflow"/>
+                            <Grid Grid.Row="1"
+                                  Grid.Column="1"
+                                  HorizontalAlignment="Left"
+                                  Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox Grid.Column="1"
+                                          materialDesign:HintAssist.Hint="Item"
+                                          SelectedItem="{Binding SelectedItem}"
+                                          ItemsSource="{Binding Items}"
+                                          Width="Auto">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Number}"
+                                                           Margin="0 0 5 0" />
+                                                <TextBlock Text="{Binding LongDescription}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <Grid Grid.Column="3"
+                                      Margin="10 0 0 0">
+                                    <TextBox Text="{Binding ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Width="Auto"
+                                             Margin="2 5"
+                                             materialDesign:HintAssist.Hint="Value"
+                                             Visibility="{Binding ShowItemValueTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <ComboBox ItemsSource="{Binding ItemDescriptionsList}"
+                                              SelectedItem="{Binding SelectedItemDescription}"
+                                              materialDesign:HintAssist.Hint="Value"
+                                              Width="Auto"
+                                              Margin="2 5"
+                                              Visibility="{Binding ShowItemDescriptions, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Description}"
+                                                           Margin="2" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Button Grid.Column="4"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding AddItemCommand}"
+                                        HorizontalContentAlignment="Left"
+                                        Style="{DynamicResource MaterialDesignFlatButton}"
+                                        Content="ADD" />
+
+                            </Grid>
+                            <DataGrid ScrollViewer.CanContentScroll="True"
+                                      FontSize="18"
+                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                                      materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                                      Margin="4"
+                                      ItemsSource="{Binding VerifyItems}"
+                                      CanUserSortColumns="True"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      CanUserDeleteRows="True"
+                                      AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Binding="{Binding Metadata.Number}"
+                                                        Header="Item #" />
+
+                                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Metadata.ShortDescription}"
+                                                                               Header="Description" />
+                                    <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
+                                                                               Header="Value" />
+                                    <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
+                                    <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        
+                                                            SelectedValueBinding="{Binding Food}"                                                            
+                                                            ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.DeleteRowCommand}"
+                                                        CommandParameter="{Binding }">
+                                                    <materialDesign:PackIcon Kind="Delete"
+                                                                             Height="24"
+                                                                             Width="24"
+                                                                             Foreground="White" />
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+
+                            </DataGrid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <materialDesign:Card Margin="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                        <StackPanel>
+                            <TextBlock FontSize="18"
+                                       Margin="0 0 0 5"
+                                       Text="Reset Items File" />
+                            <TextBlock Text="These items will be written to the instrument after the volume test is completed."
+                                       TextWrapping="WrapWithOverflow" />
+                            <Grid Grid.Row="1"
+                                  Grid.Column="1"
+                                  HorizontalAlignment="Left"
+                                  Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox Grid.Column="1"
+                                          materialDesign:HintAssist.Hint="Item"
+                                          SelectedItem="{Binding SelectedItem}"
+                                          ItemsSource="{Binding Items}"
+                                          Width="Auto">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Number}"
+                                                           Margin="0 0 5 0" />
+                                                <TextBlock Text="{Binding LongDescription}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <Grid Grid.Column="3"
+                                      Margin="10 0 0 0">
+                                    <TextBox Text="{Binding ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Width="Auto"
+                                             Margin="2 5"
+                                             materialDesign:HintAssist.Hint="Value"
+                                             Visibility="{Binding ShowItemValueTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <ComboBox ItemsSource="{Binding ItemDescriptionsList}"
+                                              SelectedItem="{Binding SelectedItemDescription}"
+                                              materialDesign:HintAssist.Hint="Value"
+                                              Width="Auto"
+                                              Margin="2 5"
+                                              Visibility="{Binding ShowItemDescriptions, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Description}"
+                                                           Margin="2" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Button Grid.Column="4"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding AddItemCommand}"
+                                        HorizontalContentAlignment="Left"
+                                        Style="{DynamicResource MaterialDesignFlatButton}"
+                                        Content="ADD" />
+
+                            </Grid>
                             <DataGrid ScrollViewer.CanContentScroll="True"
                                       FontSize="18"
                                       ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -234,57 +362,8 @@
                             </DataGrid></StackPanel>
                         
                     </materialDesign:Card>
-                    <materialDesign:Card>
-                        <StackPanel>
-                            <TextBlock Text="Verify"/>
-                            <DataGrid ScrollViewer.CanContentScroll="True"
-                                      FontSize="18"
-                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                      materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                                      materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                                      Margin="4"
-                                      ItemsSource="{Binding VerifyItems}"
-                                      CanUserSortColumns="True"
-                                      CanUserAddRows="False"
-                                      IsReadOnly="True"
-                                      CanUserDeleteRows="True"
-                                      AutoGenerateColumns="False">
-                                <DataGrid.Columns>
-
-                                    <DataGridTextColumn Binding="{Binding Metadata.Number}"
-                                                        Header="Item #" />
-
-                                    <materialDesign:MaterialDataGridTextColumn
-                                        Binding="{Binding Metadata.ShortDescription}"
-                                        Header="Description" />
-                                    <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
-                                    <materialDesign:MaterialDataGridTextColumn Binding="{Binding Description}"
-                                                                               Header="Value" />
-                                    <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
-                                    <!--<materialDesign:MaterialDataGridComboBoxColumn Header="Food"        
-                                                            SelectedValueBinding="{Binding Food}"                                                            
-                                                            ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Foods}" />-->
-                                    <DataGridTemplateColumn>
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button
-                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                                    Path=DataContext.DeleteRowCommand}"
-                                                    CommandParameter="{Binding }">
-                                                    <materialDesign:PackIcon Kind="Delete"
-                                                                             Height="24"
-                                                                             Width="24"
-                                                                             Foreground="White" />
-                                                </Button>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-
-                            </DataGrid></StackPanel>
-                    </materialDesign:Card>
-                </StackPanel>
+                   
+                </UniformGrid>
                      
                    
                </Grid>
