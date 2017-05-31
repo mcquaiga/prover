@@ -46,17 +46,18 @@ deploy:
 # Deploy to GitHub Releases
 # RC branch
 - provider: GitHub
-  tag: v$(APPVEYOR_BUILD_VERSION) - RC
-  release: EvcProver - RC - v$(APPVEYOR_BUILD_VERSION)
-  description: 'Release - v$(APPVEYOR_BUILD_VERSION)'
+  tag: v$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
+  release: v$(APPVEYOR_BUILD_VERSION)
+  description: 'v$(APPVEYOR_BUILD_VERSION)'
   auth_token:
     secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
   on:
     branch: RC
 # Master branch
 - provider: GitHub
-  tag: v$(APPVEYOR_BUILD_VERSION)
-  description: 'Pre-release - v$(APPVEYOR_BUILD_VERSION)'
+  tag: v$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
+  release: v$(APPVEYOR_BUILD_VERSION) - Development
+  description: 'v$(APPVEYOR_BUILD_VERSION) - Development'
   prerelease: true
   auth_token:
     secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
