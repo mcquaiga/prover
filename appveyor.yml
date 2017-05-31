@@ -25,7 +25,8 @@ branches:
   # whitelist
   only:
     - master
-    - RC
+    - dev
+    - rc
 
 skip_tags: true
 
