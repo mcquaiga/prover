@@ -18,9 +18,9 @@ namespace Prover.GUI.Controls
         {
             _client = client;        
 
-            var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue, x => x.SelectedItemDescription,
-                (selectedItem, itemValue, selectedItemDescription) =>
-                    selectedItem != null && (itemValue != null || selectedItemDescription != null));
+            var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue, x => x.SelectedItemDescription, 
+                (selectedItem, itemValue, selectedItemDescription) => selectedItem != null && (itemValue != null || selectedItemDescription != null));
+
             AddItemCommand = ReactiveCommand.CreateFromTask(AddItem, canAddItem);
 
             DeleteRowCommand = ReactiveCommand.Create<ItemValue>(x =>
