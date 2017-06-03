@@ -46,7 +46,7 @@ deploy:
 # Deploy to GitHub Releases
 # RC branch
 - provider: GitHub
-  tag: v$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
+  tag: v$(APPVEYOR_BUILD_VERSION)
   release: v$(APPVEYOR_BUILD_VERSION)
   description: 'v$(APPVEYOR_BUILD_VERSION)'
   auth_token:
