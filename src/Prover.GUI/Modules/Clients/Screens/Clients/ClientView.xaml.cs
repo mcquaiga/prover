@@ -21,8 +21,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         public ClientViewModel ViewModel { get; set; }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
+     
     }
 }
