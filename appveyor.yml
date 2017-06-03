@@ -24,8 +24,7 @@ assembly_info:
 branches:
   # whitelist
   only:
-    - master
-    - dev
+    - master   
     - rc
 
 skip_tags: true
@@ -54,14 +53,4 @@ deploy:
     secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
   on:
     branch: rc
-# Master branch
-- provider: GitHub
-  tag: v$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
-  release: v$(APPVEYOR_BUILD_VERSION) - Development
-  description: 'v$(APPVEYOR_BUILD_VERSION) - Development'
-  prerelease: true
-  auth_token:
-    secure: riuun7iAbRmIkLsYhZqe58U99H/PnROepaggimQhrrp8p8gUOCYD2CyrjwvDzPdF
-  on:
-    branch: dev
 
