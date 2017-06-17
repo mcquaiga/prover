@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -10,7 +11,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     public static class ItemHelpers
     {
         private const string ItemDefinitionsFolder = "ItemDefinitions";
-        private static readonly Dictionary<InstrumentType, IEnumerable<ItemMetadata>> ItemFileCache = new Dictionary<InstrumentType, IEnumerable<ItemMetadata>>();
+        private static readonly ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>> ItemFileCache = new ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>>();
 
         public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
         {
@@ -65,7 +66,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                          }
             ).ToList();
 
-            ItemFileCache.Add(type, items);
+            ItemFileCache.GetOrAdd(type, items);
 
             return items;
         }

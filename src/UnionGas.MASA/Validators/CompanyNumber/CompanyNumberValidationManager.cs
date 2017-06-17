@@ -129,17 +129,24 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                     Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
                 };
 
-                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), tokenSource.Token);
+                var response =
+                    await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request),
+                        tokenSource.Token);
                 return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
             }
             catch (OperationCanceledException)
             {
-                _log.Warn($"Timed out contacting the web service.");
+                _log.Warn($"Timed out contacting the web service. Skipping company number verification.");
                 return null;
             }
             catch (EndpointNotFoundException)
             {
                 _log.Warn($"Web service not available. Skipping company number verification.");
+                return null;
+            }            
+            catch (Exception ex)
+            {
+                _log.Error(ex, $"An error occured contacting the web service. Skipping company number verification.");
                 return null;
             }
         }

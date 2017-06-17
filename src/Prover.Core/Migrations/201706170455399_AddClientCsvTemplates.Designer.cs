@@ -7,13 +7,13 @@ namespace Prover.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddCsvTemplates : IMigrationMetadata
+    public sealed partial class AddClientCsvTemplates : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddCsvTemplates));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddClientCsvTemplates));
         
         string IMigrationMetadata.Id
         {
-            get { return "201705292236565_AddCsvTemplates"; }
+            get { return "201706170455399_AddClientCsvTemplates"; }
         }
         
         string IMigrationMetadata.Source

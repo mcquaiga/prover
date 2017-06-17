@@ -3,12 +3,12 @@ namespace Prover.Core.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddCsvTemplates : DbMigration
+    public partial class AddClientCsvTemplates : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.ClientCsvTemplatescs",
+                "dbo.ClientCsvTemplates",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
@@ -25,9 +25,9 @@ namespace Prover.Core.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.ClientCsvTemplatescs", "ClientId", "dbo.Clients");
-            DropIndex("dbo.ClientCsvTemplatescs", new[] { "ClientId" });
-            DropTable("dbo.ClientCsvTemplatescs");
+            DropForeignKey("dbo.ClientCsvTemplates", "ClientId", "dbo.Clients");
+            DropIndex("dbo.ClientCsvTemplates", new[] { "ClientId" });
+            DropTable("dbo.ClientCsvTemplates");
         }
     }
 }

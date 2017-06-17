@@ -14,18 +14,18 @@ namespace Prover.Core.Exports
 
         private const string NewVerificationType = "New";
 
-        public static IList<CsvExportFields> Translate(Certificate certificate, IEnumerable<Instrument> instruments)
+        public static IList<ExportFields> Translate(Certificate certificate, IEnumerable<Instrument> instruments)
         {
             return instruments.ToList()
                 .Select(x => Translate(certificate, x))
                 .ToList();
         }
 
-        public static CsvExportFields Translate(Certificate certificate, Instrument instrument)
+        public static ExportFields Translate(Certificate certificate, Instrument instrument)
         {
             var isNewVerification = certificate.VerificationType == NewVerificationType;
 
-            var csvFormat = new CsvExportFields()
+            var csvFormat = new ExportFields()
             {
                 CompanyNumber = instrument.InventoryNumber,
                 SerialNumber = instrument.SerialNumber.ToString(),

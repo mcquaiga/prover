@@ -187,27 +187,27 @@ namespace Prover.GUI.Modules.QAProver.Screens
             if (SelectedInstrument != null)
                 _cancellationTokenSource = new CancellationTokenSource();
 
-                try
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-                    await SettingsManager.Save();
+            try
+            {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                await SettingsManager.Save();
 
-                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+                _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
+                await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
 
-                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
-                    ViewContext = EditQaTestViewContext;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    throw;
-                }
-                finally
-                {
-                    ShowConnectionDialog = false;
-                }
+                await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+                ViewContext = EditQaTestViewContext;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+            finally
+            {
+                ShowConnectionDialog = false;
+            }
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)

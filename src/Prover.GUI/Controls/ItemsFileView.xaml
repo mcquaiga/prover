@@ -10,9 +10,10 @@
                          materialDesign:ShadowAssist.ShadowDepth="Depth1">
         <StackPanel>
             <TextBlock FontSize="18"
-                       Margin="0 0 0 5"
+                       Margin="4"
                        Text="{Binding Path=HeaderText}" />
             <TextBlock Text="{Binding Path=DescriptionText}"
+                       Margin="6 0"
                        TextWrapping="WrapWithOverflow" />
             <Grid HorizontalAlignment="Left"
                   Margin="10">
@@ -27,7 +28,7 @@
                 <ComboBox Grid.Column="1"
                           materialDesign:HintAssist.Hint="Item"
                           SelectedItem="{Binding SelectedItem}"
-                          ItemsSource="{Binding Path=Items}"
+                          ItemsSource="{Binding Path=AvailableItems}"
                           Width="Auto">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -77,7 +78,7 @@
                       materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                       materialDesign:DataGridAssist.ColumnHeaderPadding="8"
                       Margin="4"
-                      ItemsSource="{Binding VerifyItems}"
+                      ItemsSource="{Binding ActiveItems}"
                       CanUserSortColumns="True"
                       CanUserAddRows="False"
                       IsReadOnly="True"

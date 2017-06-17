@@ -12,6 +12,7 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Controls;
 using ReactiveUI;
 
 
@@ -32,61 +33,20 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             SaveCommand = ReactiveCommand.CreateFromTask(Save);
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
-            InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());
-            UpdateItemListCommand = ReactiveCommand.CreateFromTask<Tuple<InstrumentType, ClientItemType>>(UpdateItemList);
-            this.WhenAnyValue(x => x.SelectedInstrumentType, x => x.SelectedItemFileType)
-                .Where(x => x.Item1 != null)
+            InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());                         
+
+            VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify, "These items will be compared to the instruments values at the beginning of the test");
+            this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Where(x => x != null)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(UpdateItemListCommand);
+                .InvokeCommand(VerifyItemList.UpdateListItems);
 
-            var canAddItem = this.WhenAnyValue(x => x.SelectedItem, x => x.ItemValue, x => x.SelectedItemDescription,
-                (selectedItem, itemValue, selectedItemDescription) =>
-                    selectedItem != null && (itemValue != null || selectedItemDescription != null));
-            AddItemCommand = ReactiveCommand.CreateFromTask(AddItem, canAddItem);
-
-            DeleteRowCommand = ReactiveCommand.Create<ItemValue>(x =>
-            {
-                //CurrentItemData.Remove(x);
-                CurrentClientItems.Items.Remove(x);
-            });
-
-            /*
-             * Item values combobox and textbox functionality
-             */
-            var itemSelected = this.WhenAnyValue(x => x.SelectedItem)
-                .Where(x => x != null);
-
-            this.WhenAnyValue(x => x.SelectedItem)
-                .Subscribe(_ =>
-                {
-                    SelectedItemDescription = null;
-                    ItemValue = null;
-                });
-
-            //Toggle Item Descriptions combo box
-            itemSelected.Select(x => x.ItemDescriptions.Any())
-                .ToProperty(this, x => x.ShowItemDescriptions, out _showItemDescriptions);
-            itemSelected.Select(x => x.ItemDescriptions?.ToList())
-                .ToProperty(this, x => x.ItemDescriptionsList, out _itemDescriptionsList);
-            //Toggle Item value text box
-            itemSelected.Select(x => !x.ItemDescriptions.Any())
-                .ToProperty(this, x => x.ShowItemValueTextBox, out _showItemValueTextBox);
-
-            ResetItems.ResetChangeThreshold = 90;
-            VerifyItems.ResetChangeThreshold = 90;
-        }
-
-        private async Task AddItem()
-        {
-            var value = ItemValue?.ToString() ?? SelectedItemDescription.Id.ToString();
-            var itemValue = new ItemValue(SelectedItem, value);
-            CurrentClientItems.Items.Add(itemValue);
-            ResetItems.Add(itemValue);
-
-            SelectedItem = null;
-            SelectedItemDescription = null;
-            ItemValue = null;
-        }
+            ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset, "These items will be written to the instrument after the volume test is completed.");
+            this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Where(x => x != null)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .InvokeCommand(ResetItemList.UpdateListItems);
+        }   
 
         public async Task Edit()
         {
@@ -97,51 +57,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         private async Task GoBack()
         {
+            await Save();
             await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
         private async Task Save()
         {
-            await _clientStore.UpsertAsync(Client);
-            await GoBack();
-        }
-
-        private async Task UpdateItemList(Tuple<InstrumentType, ClientItemType> values)
-        {
-            using (ResetItems.SuppressChangeNotifications())
-            using (VerifyItems.SuppressChangeNotifications())
-            {
-                ResetItems.Clear();
-                VerifyItems.Clear();          
-                var newItems = new List<ItemMetadata>();
-                await Task.Run(() =>
-                {
-                    newItems.AddRange(ItemHelpers.LoadItems(SelectedInstrumentType));
-
-                    if (GetItemList(SelectedInstrumentType, SelectedItemFileType) == null)
-                    {
-                        var items = new ClientItems(Client)
-                        {
-                            InstrumentType = SelectedInstrumentType,
-                            ItemFileType = SelectedItemFileType,
-                            Items = new List<ItemValue>()
-                        };
-                        _client.Items.Add(items);
-                    }
-                });
-
-                Items.AddRange(newItems);
-                CurrentClientItems = GetItemList(SelectedInstrumentType, SelectedItemFileType);
-                ResetItems.AddRange(CurrentClientItems.Items.OrderBy(x => x.Metadata.Number));
-            }
-                
-            
-        }
-
-        private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
-        {
-            return
-                _client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
+            await _clientStore.UpsertAsync(Client);  
         }
 
         #region Commands
@@ -241,79 +163,106 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private ReactiveList<ItemValue> _resetItems = new ReactiveList<ItemValue>();
+        //private ReactiveList<ItemValue> _resetItems = new ReactiveList<ItemValue>();
 
-        public ReactiveList<ItemValue> ResetItems
+        //public ReactiveList<ItemValue> ResetItems
+        //{
+        //    get { return _resetItems; }
+        //    set { this.RaiseAndSetIfChanged(ref _resetItems, value); }
+        //}
+
+        //private ReactiveList<ItemValue> _verifyItems = new ReactiveList<ItemValue>();
+
+        //public ReactiveList<ItemValue> VerifyItems
+        //{
+        //    get { return _verifyItems; }
+        //    set { this.RaiseAndSetIfChanged(ref _verifyItems, value); }
+        //}
+
+        //private ReactiveList<ItemMetadata> _items = new ReactiveList<ItemMetadata>();
+
+        //public ReactiveList<ItemMetadata> Items
+        //{
+        //    get { return _items; }
+        //    set { this.RaiseAndSetIfChanged(ref _items, value); }
+        //}
+
+
+        //private readonly ObservableAsPropertyHelper<bool> _showItemDescriptions;
+        //public bool ShowItemDescriptions => _showItemDescriptions.Value;
+
+        //private readonly ObservableAsPropertyHelper<bool> _showItemValueTextBox;
+        //public bool ShowItemValueTextBox => _showItemValueTextBox.Value;
+
+        //private object _itemValue;
+
+        //public object ItemValue
+        //{
+        //    get { return _itemValue; }
+        //    set { this.RaiseAndSetIfChanged(ref _itemValue, value); }
+        //}
+
+        //private ItemMetadata.ItemDescription _selectedItemDescription;
+
+        //public ItemMetadata.ItemDescription SelectedItemDescription
+        //{
+        //    get { return _selectedItemDescription; }
+        //    set { this.RaiseAndSetIfChanged(ref _selectedItemDescription, value); }
+        //}
+
+        //private readonly ObservableAsPropertyHelper<List<ItemMetadata.ItemDescription>> _itemDescriptionsList;
+        //public List<ItemMetadata.ItemDescription> ItemDescriptionsList => _itemDescriptionsList.Value;
+
+        //private ItemMetadata _selectedItem;
+
+        //public ItemMetadata SelectedItem
+        //{
+        //    get { return _selectedItem; }
+        //    set { this.RaiseAndSetIfChanged(ref _selectedItem, value); }
+        //}
+
+        //private IEnumerable<string> _itemStrings;
+
+        //public IEnumerable<string> ItemStrings
+        //{
+        //    get { return _itemStrings; }
+        //    set { this.RaiseAndSetIfChanged(ref _itemStrings, value); }
+        //}
+
+        //private ClientItems _currentClientItems;
+
+        //public ClientItems CurrentClientItems
+        //{
+        //    get { return _currentClientItems; }
+        //    set { this.RaiseAndSetIfChanged(ref _currentClientItems, value); }
+        //}
+
+        private ItemsFileViewModel _resetItemList;
+
+        public ItemsFileViewModel ResetItemList
         {
-            get { return _resetItems; }
-            set { this.RaiseAndSetIfChanged(ref _resetItems, value); }
+            get { return _resetItemList; }
+            set { this.RaiseAndSetIfChanged(ref _resetItemList, value); }
         }
 
-        private ReactiveList<ItemValue> _verifyItems = new ReactiveList<ItemValue>();
+        private ItemsFileViewModel _verifyItemList;
 
-        public ReactiveList<ItemValue> VerifyItems
+        public ItemsFileViewModel VerifyItemList
         {
-            get { return _verifyItems; }
-            set { this.RaiseAndSetIfChanged(ref _verifyItems, value); }
+            get { return _verifyItemList; }
+            set { this.RaiseAndSetIfChanged(ref _verifyItemList, value); }
         }
 
-        private ReactiveList<ItemMetadata> _items = new ReactiveList<ItemMetadata>();
-
-        public ReactiveList<ItemMetadata> Items
-        {
-            get { return _items; }
-            set { this.RaiseAndSetIfChanged(ref _items, value); }
-        }
-
-        private readonly ObservableAsPropertyHelper<bool> _showItemDescriptions;
-        public bool ShowItemDescriptions => _showItemDescriptions.Value;
-
-        private readonly ObservableAsPropertyHelper<bool> _showItemValueTextBox;
-        public bool ShowItemValueTextBox => _showItemValueTextBox.Value;
-
-        private object _itemValue;
-
-        public object ItemValue
-        {
-            get { return _itemValue; }
-            set { this.RaiseAndSetIfChanged(ref _itemValue, value); }
-        }
-
-        private ItemMetadata.ItemDescription _selectedItemDescription;
-
-        public ItemMetadata.ItemDescription SelectedItemDescription
-        {
-            get { return _selectedItemDescription; }
-            set { this.RaiseAndSetIfChanged(ref _selectedItemDescription, value); }
-        }
-
-        private readonly ObservableAsPropertyHelper<List<ItemMetadata.ItemDescription>> _itemDescriptionsList;
-        public List<ItemMetadata.ItemDescription> ItemDescriptionsList => _itemDescriptionsList.Value;
-
-        private ItemMetadata _selectedItem;
-
-        public ItemMetadata SelectedItem
-        {
-            get { return _selectedItem; }
-            set { this.RaiseAndSetIfChanged(ref _selectedItem, value); }
-        }
-
-        private IEnumerable<string> _itemStrings;
-
-        public IEnumerable<string> ItemStrings
-        {
-            get { return _itemStrings; }
-            set { this.RaiseAndSetIfChanged(ref _itemStrings, value); }
-        }
-
-        private ClientItems _currentClientItems;
-
-        public ClientItems CurrentClientItems
-        {
-            get { return _currentClientItems; }
-            set { this.RaiseAndSetIfChanged(ref _currentClientItems, value); }
-        }
 
         #endregion
+
+        protected override void OnDeactivate(bool close)
+        {
+            Save().ContinueWith(_ =>
+            {
+                base.OnDeactivate(close);
+            });
+            
+        }
     }
 }

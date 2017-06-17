@@ -31,6 +31,7 @@ namespace Prover.Core.Storage
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientItems> ClientItemses { get; set; }
+        public DbSet<ClientCsvTemplate> ClientCsvTemplates { get; set; }
 
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {

@@ -20,13 +20,11 @@ namespace Prover.Core.Exports
         Reverified
     }
 
-    public class CsvExportFields
+    public class ExportFields
     {
-        public static IList<string> GetPropertyNames()
+        public string[] GetPropertyNames()
         {
-            return typeof(CsvExportFields).GetProperties()
-                .Select(t => t.Name)
-                .ToList();
+            return GetType().GetProperties().Select(p => p.Name).ToArray();
         }
 
         public VerificationTypEnum VerificationType { get; set; }
@@ -61,33 +59,40 @@ namespace Prover.Core.Exports
     }
 
     public class ExportToCsvManager : IExportCertificate
-    {             
+    {
+        private readonly IFileWriter _fileWriter;
+
+        public ExportToCsvManager(IFileWriter fileWriter)
+        {
+            _fileWriter = fileWriter;
+        }
+
         public async Task<bool> Export(Certificate certificate)
         {
-            var client = certificate.Client;
-
-
-            
-
             return await Task.Run(async () =>
             {
                 var instrs = certificate.Instruments.ToList();
 
+                var client = certificate.Client;
+                var fileName = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\{client.Name}\\certificate_{certificate.Number}.csv";
+                var csvFormat = client.CsvTemplates
+                    .FirstOrDefault(c => 
+                        c.VerificationType.ToString() == certificate.VerificationType && c.CorrectorType == instrs.First().CompositionType)?
+                    .CsvTemplate;
+
                 var certificateId = instrs.FirstOrDefault()?.CertificateId;
                 if (certificateId == null) return false;
-
-                using (var file = File.OpenWrite($"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\certificate_{certificate.Number}.csv"))
-                    using (var writer = new StreamWriter(file))
-                        using (var csv = new CsvWriter(writer))
-                        {
-                            csv.WriteHeader(typeof(CsvExportFields));
-                            csv.WriteRecords(TranslateToEnbridgeCsv.Translate(certificate, instrs));
-                            await writer.FlushAsync();
-                        }
-
+                
+                await CsvWriter.Write(fileName, csvFormat, certificate.Instruments.ToList());
+                
                 return true;
             });
         }
+    }
+
+    public interface IFileWriter
+    {
+        void Write();
     }
 }
 

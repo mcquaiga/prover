@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prover.Core.Exports;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Models.Clients
 {
-    public class ClientCsvTemplatescs
+    public class ClientCsvTemplate
     {
-        public ClientCsvTemplatescs()
+        public ClientCsvTemplate()
         {
             Id = Guid.NewGuid();
         }
 
-        public ClientCsvTemplatescs(Client client)
+        public ClientCsvTemplate(Client client)
         {
             Client = client;
             ClientId = client.Id;
