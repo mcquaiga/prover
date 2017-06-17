@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -28,9 +29,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         {
             _clientStore = clientStore;
             _client = client;
+            _isDirty = false;           
 
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
-            SaveCommand = ReactiveCommand.CreateFromTask(Save);
+
+            var canSave = this.WhenAnyValue(c => c.Client, c => !string.IsNullOrEmpty(c.Name));
+            SaveCommand = ReactiveCommand.CreateFromTask(Save, canSave);
+
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());                         
@@ -52,12 +57,12 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         {
             await ScreenManager.ChangeScreen(this);
             SelectedInstrumentType = InstrumentTypes.First();
-            SelectedItemFileType = ClientItemType.Reset;
+            //SelectedItemFileType = ClientItemType.Reset;
         }
 
         private async Task GoBack()
         {
-            await Save();
+            //await Save();
             await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
@@ -68,9 +73,9 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         #region Commands
 
-        private ReactiveCommand _saveCommand;
+        private ReactiveCommand<Unit, Unit> _saveCommand;
 
-        public ReactiveCommand SaveCommand
+        public ReactiveCommand<Unit, Unit> SaveCommand
         {
             get { return _saveCommand; }
             set { this.RaiseAndSetIfChanged(ref _saveCommand, value); }
@@ -144,13 +149,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
         }
 
-        private ClientItemType _selectedClientItemFileType;
+        //private ClientItemType _selectedClientItemFileType;
 
-        public ClientItemType SelectedItemFileType
-        {
-            get { return _selectedClientItemFileType; }
-            set { this.RaiseAndSetIfChanged(ref _selectedClientItemFileType, value); }
-        }
+        //public ClientItemType SelectedItemFileType
+        //{
+        //    get { return _selectedClientItemFileType; }
+        //    set { this.RaiseAndSetIfChanged(ref _selectedClientItemFileType, value); }
+        //}
 
         public List<ClientItemType> ItemFileTypesList
             => Enum.GetValues(typeof(ClientItemType)).Cast<ClientItemType>().ToList();
@@ -163,80 +168,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        //private ReactiveList<ItemValue> _resetItems = new ReactiveList<ItemValue>();
-
-        //public ReactiveList<ItemValue> ResetItems
-        //{
-        //    get { return _resetItems; }
-        //    set { this.RaiseAndSetIfChanged(ref _resetItems, value); }
-        //}
-
-        //private ReactiveList<ItemValue> _verifyItems = new ReactiveList<ItemValue>();
-
-        //public ReactiveList<ItemValue> VerifyItems
-        //{
-        //    get { return _verifyItems; }
-        //    set { this.RaiseAndSetIfChanged(ref _verifyItems, value); }
-        //}
-
-        //private ReactiveList<ItemMetadata> _items = new ReactiveList<ItemMetadata>();
-
-        //public ReactiveList<ItemMetadata> Items
-        //{
-        //    get { return _items; }
-        //    set { this.RaiseAndSetIfChanged(ref _items, value); }
-        //}
-
-
-        //private readonly ObservableAsPropertyHelper<bool> _showItemDescriptions;
-        //public bool ShowItemDescriptions => _showItemDescriptions.Value;
-
-        //private readonly ObservableAsPropertyHelper<bool> _showItemValueTextBox;
-        //public bool ShowItemValueTextBox => _showItemValueTextBox.Value;
-
-        //private object _itemValue;
-
-        //public object ItemValue
-        //{
-        //    get { return _itemValue; }
-        //    set { this.RaiseAndSetIfChanged(ref _itemValue, value); }
-        //}
-
-        //private ItemMetadata.ItemDescription _selectedItemDescription;
-
-        //public ItemMetadata.ItemDescription SelectedItemDescription
-        //{
-        //    get { return _selectedItemDescription; }
-        //    set { this.RaiseAndSetIfChanged(ref _selectedItemDescription, value); }
-        //}
-
-        //private readonly ObservableAsPropertyHelper<List<ItemMetadata.ItemDescription>> _itemDescriptionsList;
-        //public List<ItemMetadata.ItemDescription> ItemDescriptionsList => _itemDescriptionsList.Value;
-
-        //private ItemMetadata _selectedItem;
-
-        //public ItemMetadata SelectedItem
-        //{
-        //    get { return _selectedItem; }
-        //    set { this.RaiseAndSetIfChanged(ref _selectedItem, value); }
-        //}
-
-        //private IEnumerable<string> _itemStrings;
-
-        //public IEnumerable<string> ItemStrings
-        //{
-        //    get { return _itemStrings; }
-        //    set { this.RaiseAndSetIfChanged(ref _itemStrings, value); }
-        //}
-
-        //private ClientItems _currentClientItems;
-
-        //public ClientItems CurrentClientItems
-        //{
-        //    get { return _currentClientItems; }
-        //    set { this.RaiseAndSetIfChanged(ref _currentClientItems, value); }
-        //}
-
         private ItemsFileViewModel _resetItemList;
 
         public ItemsFileViewModel ResetItemList
@@ -246,6 +177,7 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private ItemsFileViewModel _verifyItemList;
+        private bool _isDirty;
 
         public ItemsFileViewModel VerifyItemList
         {
