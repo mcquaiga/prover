@@ -37,17 +37,17 @@ namespace Prover.Core.Exports
         public long CorrectedMultiplier { get; set; }
         public long UncorrectMultiplier{ get; set; }        
        
-        public decimal? HighTemperatureError { get; set; }
-        public decimal? MediumTemperatureError { get; set; }
-        public decimal? LowTemperatureError { get; set; }
+        public decimal? TemperatureHighError { get; set; }
+        public decimal? TemperatureMediumError { get; set; }
+        public decimal? TemperatureLowError { get; set; }
 
-        public decimal? HighPressureError { get; set; }
-        public decimal? MediumPressureError { get; set; }
-        public decimal? LowPressureError { get; set; }
+        public decimal? PressureHighError { get; set; }
+        public decimal? PressureMediumError { get; set; }
+        public decimal? PressureLowError { get; set; }
 
-        public decimal? HighSuperError { get; set; }
-        public decimal? MediumSuperError { get; set; }
-        public decimal? LowSuperError { get; set; }
+        public decimal? SuperHighError { get; set; }
+        public decimal? SuperMediumError { get; set; }
+        public decimal? SuperLowError { get; set; }
 
         public decimal? CorrectedVolumeError { get; set; }
         public decimal? UncorrectedVolumeError { get; set; }

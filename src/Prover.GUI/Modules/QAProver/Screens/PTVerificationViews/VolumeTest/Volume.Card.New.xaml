@@ -13,125 +13,129 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type materialDesign:Card}">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
             </Style>
+
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush"
+                        Value="{StaticResource BorderBrushColor}" />
+                <Setter Property="BorderThickness"
+                        Value="{StaticResource BorderBrushThickness}" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Margin" Value="4" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
-        <Border BorderBrush="SlateGray" BorderThickness="0 1 0 0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="Volume"
-                           FontSize="32"
-                           Foreground="SlateGray"
-                           VerticalAlignment="Center"
-                           Margin="5"
-                           HorizontalAlignment="Left" />
-                <!--<materialDesign:ColorZone
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Volume"
+                       FontSize="32"
+                       Foreground="Black"
+                       VerticalAlignment="Center"
+                       Margin="5"
+                       HorizontalAlignment="Left" />
+            <!--<materialDesign:ColorZone
                             Padding="5"
                             Margin="5 5 5 0"
                             Content="Volume"
                             Mode="PrimaryDark"
                             materialDesign:ShadowAssist.ShadowDepth="Depth1"/>-->
-                <!--<WrapPanel HorizontalAlignment="Center" Width="Auto">
+            <!--<WrapPanel HorizontalAlignment="Center" Width="Auto">
                 <controls1:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}"/>
             </WrapPanel>-->
 
-                <UniformGrid Grid.Row="1" Columns="3">
-                    <Border BorderBrush="LightSlateGray"
-                            BorderThickness="0 0 1 0">
-                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                             Margin="4 2">
-                            <StackPanel>
-                                <TextBlock Margin="8 4"
-                                           FontWeight="Light"
-                                           Foreground="SlateGray"
-                                           FontSize="24"
-                                           Text="Uncorrected" />
-                                <!--<materialDesign:ColorZone
+            <UniformGrid Grid.Row="1" 
+                         Columns="3"
+                         Margin="4 0">
+                <StackPanel Margin="4">
+                    <TextBlock Margin="4"
+                               FontWeight="Light"
+                               Foreground="SlateGray"
+                               FontSize="18"
+                               Text="Uncorrected" />
+                    <!--<materialDesign:ColorZone
                                 Padding="5"
                                 Margin="5"
                                 Content="Uncorrected"
                                 Mode="PrimaryLight"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth1" />-->
 
-                                <controls1:PercentageControlNew Margin="5"
-                                                                HorizontalAlignment="Center"
-                                                                DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
-                                                                Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
+                    <controls1:PercentageControlNew Margin="5"
+                                                    HorizontalAlignment="Center"
+                                                    DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
+                                                    Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
 
-                                <UniformGrid Columns="2" Margin="5">
-                                    <controls1:ValueDescriptionControl Label="Start Reading"
-                                                                       Value="{Binding StartUncorrected}" />
-                                    <controls1:ValueDescriptionControl Label="End Reading"
-                                                                       Value="{Binding EndUncorrected}" />
-                                    <controls1:ValueDescriptionControl Label="EVC Calculated"
-                                                                       Value="{Binding EvcUncorrected}" />
-                                    <controls1:ValueDescriptionControl Label="True Calculated"
-                                                                       Value="{Binding TrueUncorrected}" />
-                                    <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                                       Value="{Binding UncorrectedPulseCount}" />
-                                    <controls1:ValueDescriptionControl Label="Multiplier"
-                                                                       Value="{Binding UnCorrectedMultiplierDescription}" />
-                                </UniformGrid>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Border>
-                    <Border BorderBrush="LightSlateGray"
-                            BorderThickness="0 0 1 0">
-                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0" 
-                                         Margin="4 2">
-                        <StackPanel>
-                            <TextBlock Margin="8 4"
-                                       FontWeight="Light"
-                                       Foreground="SlateGray"
-                                       FontSize="24"
-                                       Text="Corrected" />
-                            <!--<materialDesign:ColorZone
+                    <UniformGrid Columns="2" Margin="5">
+                        <controls1:ValueDescriptionControl Label="Start Reading"
+                                                           Value="{Binding StartUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="End Reading"
+                                                           Value="{Binding EndUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated"
+                                                           Value="{Binding EvcUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="True Calculated"
+                                                           Value="{Binding TrueUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="Pulse Count"
+                                                           Value="{Binding UncorrectedPulseCount}" />
+                        <controls1:ValueDescriptionControl Label="Multiplier"
+                                                           Value="{Binding UnCorrectedMultiplierDescription}" />
+                    </UniformGrid>
+                </StackPanel>
+
+                <StackPanel Margin="4">
+                    <TextBlock Margin="4"
+                               FontWeight="Light"
+                               Foreground="SlateGray"
+                               FontSize="18"
+                               Text="Corrected" />
+                    <!--<materialDesign:ColorZone
                                 Padding="5"
                                 Margin="5"
                                 Content="Corrected"
                                 Mode="PrimaryLight"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth1" />-->
 
-                            <controls1:PercentageControlNew Margin="5"
-                                                            HorizontalAlignment="Center"
-                                                            DisplayValue="{Binding Volume.CorrectedPercentError}"
-                                                            Passed="{Binding Volume.CorrectedHasPassed}" />
+                    <controls1:PercentageControlNew Margin="5"
+                                                    HorizontalAlignment="Center"
+                                                    DisplayValue="{Binding Volume.CorrectedPercentError}"
+                                                    Passed="{Binding Volume.CorrectedHasPassed}" />
 
-                            <UniformGrid Columns="2" Margin="2 5">
+                    <UniformGrid Columns="2" Margin="2 5">
 
-                                <controls1:ValueDescriptionControl Label="Start Reading"
-                                                                   Value="{Binding StartCorrected}" />
-                                <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
-                                <controls1:ValueDescriptionControl Label="EVC Calculated"
-                                                                   Value="{Binding EvcCorrected}" />
-                                <controls1:ValueDescriptionControl Label="True Calculated"
-                                                                   Value="{Binding TrueCorrected}" />
-                                <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                                   Value="{Binding CorrectedPulseCount}" />
-                                <controls1:ValueDescriptionControl Label="Multiplier"
-                                                                   Value="{Binding CorrectedMultiplierDescription}" />
+                        <controls1:ValueDescriptionControl Label="Start Reading"
+                                                           Value="{Binding StartCorrected}" />
+                        <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated"
+                                                           Value="{Binding EvcCorrected}" />
+                        <controls1:ValueDescriptionControl Label="True Calculated"
+                                                           Value="{Binding TrueCorrected}" />
+                        <controls1:ValueDescriptionControl Label="Pulse Count"
+                                                           Value="{Binding CorrectedPulseCount}" />
+                        <controls1:ValueDescriptionControl Label="Multiplier"
+                                                           Value="{Binding CorrectedMultiplierDescription}" />
 
-                            </UniformGrid>
+                    </UniformGrid>
 
-                        </StackPanel>
-                    </materialDesign:Card>
-                        </Border>
-                    <Grid>
-                        <ContentControl cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" Margin="2" />
-                        <ContentControl cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="CardNew" />
-                    </Grid>
-                </UniformGrid>
-
-            </Grid>
+                </StackPanel>
 
 
-        </Border>
-    </materialDesign:Card>
+                <Grid Margin="4">
+                    <ContentControl cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" Margin="2" />
+                    <ContentControl cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="CardNew" />
+                </Grid>
+            </UniformGrid>
+
+        </Grid>
+
+
+    </Border>
+
 </UserControl>

@@ -9,6 +9,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.Exports;
 using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
@@ -22,14 +23,12 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
     public class ClientViewModel : ViewModelBase
     {
         private readonly IProverStore<Core.Models.Clients.Client> _clientStore;
-
         public ClientViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IProverStore<Core.Models.Clients.Client> clientStore, Core.Models.Clients.Client client = null)
             : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
-            _client = client;
-            _isDirty = false;           
+            _client = client;                  
 
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
 
@@ -37,6 +36,8 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             SaveCommand = ReactiveCommand.CreateFromTask(Save, canSave);
 
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
+
+            GoToCsvTemplateManager = ReactiveCommand.CreateFromTask(OpenCsvTemplateEditor);
 
             InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());                         
 
@@ -51,7 +52,25 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
                 .Where(x => x != null)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(ResetItemList.UpdateListItems);
-        }   
+        }
+
+        private async Task OpenCsvTemplateEditor()
+        {
+            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
+            var result = ScreenManager.ShowDialog(csvEditorViewModel);
+
+            if (result.HasValue && result.Value)
+            {
+                var csv = new ClientCsvTemplate(_client)
+                {
+                    VerificationType = (VerificationTypEnum) Enum.Parse(typeof(VerificationTypEnum),
+                        csvEditorViewModel.SelectedVerificationType),
+                    CsvTemplate = csvEditorViewModel.CsvTemplate,
+                };
+
+                _client.CsvTemplates.Add(csv);
+            }
+        }
 
         public async Task Edit()
         {
@@ -62,7 +81,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         private async Task GoBack()
         {
-            //await Save();
             await ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
@@ -129,6 +147,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _goToCsvExporter, value); }
         }
 
+        private ReactiveCommand _goToCsvTemplateManager;
+
+        public ReactiveCommand GoToCsvTemplateManager
+        {
+            get { return _goToCsvTemplateManager; }
+            set { this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value); }
+        }
         #endregion
 
         #region Properties   
@@ -149,14 +174,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
         }
 
-        //private ClientItemType _selectedClientItemFileType;
-
-        //public ClientItemType SelectedItemFileType
-        //{
-        //    get { return _selectedClientItemFileType; }
-        //    set { this.RaiseAndSetIfChanged(ref _selectedClientItemFileType, value); }
-        //}
-
         public List<ClientItemType> ItemFileTypesList
             => Enum.GetValues(typeof(ClientItemType)).Cast<ClientItemType>().ToList();
 
@@ -164,25 +181,25 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
         public Core.Models.Clients.Client Client
         {
-            get { return _client; }
-            set { this.RaiseAndSetIfChanged(ref _client, value); }
+            get => _client;
+            set => this.RaiseAndSetIfChanged(ref _client, value);
         }
 
         private ItemsFileViewModel _resetItemList;
 
         public ItemsFileViewModel ResetItemList
         {
-            get { return _resetItemList; }
-            set { this.RaiseAndSetIfChanged(ref _resetItemList, value); }
+            get => _resetItemList;
+            set => this.RaiseAndSetIfChanged(ref _resetItemList, value);
         }
 
         private ItemsFileViewModel _verifyItemList;
-        private bool _isDirty;
+        
 
         public ItemsFileViewModel VerifyItemList
         {
-            get { return _verifyItemList; }
-            set { this.RaiseAndSetIfChanged(ref _verifyItemList, value); }
+            get => _verifyItemList;
+            set => this.RaiseAndSetIfChanged(ref _verifyItemList, value);
         }
 
 

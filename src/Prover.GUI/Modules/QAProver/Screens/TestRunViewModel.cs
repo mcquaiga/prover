@@ -15,7 +15,6 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
 using ReactiveUI;
@@ -92,12 +91,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 });
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
-                x => x.SelectedTachCommPort,
-                (baud, instrumentPort, tachPort) =>
-                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
+                (baud, instrumentPort, tachPort) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
+
             CancelCommand = ReactiveCommand.Create(Cancel);
 
             _clientList = clientStore.Query().ToList();
@@ -111,7 +109,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public ReactiveCommand StartTestCommand { get; }
         public ReactiveCommand CancelCommand { get; }
-
 
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
@@ -128,51 +125,49 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public string ViewContext
         {
-            get { return _viewContext; }
-            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+            get => _viewContext;
+            set => this.RaiseAndSetIfChanged(ref _viewContext, value);
         }
+
         public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
         public ReactiveList<SelectableInstrumentType> InstrumentTypes
         {
-            get { return _instrumentTypes; }
-            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+            get => _instrumentTypes;
+            set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
-
         public string SelectedCommPort
         {
-            get { return _selectedCommPort; }
-            set { this.RaiseAndSetIfChanged(ref _selectedCommPort, value); }
+            get => _selectedCommPort;
+            set => this.RaiseAndSetIfChanged(ref _selectedCommPort, value);
         }
 
         public List<string> TachCommPort => SerialPort.GetPortNames().ToList();
-
         public string SelectedTachCommPort
         {
-            get { return _selectedTachCommPort; }
-            set { this.RaiseAndSetIfChanged(ref _selectedTachCommPort, value); }
+            get => _selectedTachCommPort;
+            set => this.RaiseAndSetIfChanged(ref _selectedTachCommPort, value);
         }
 
         public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
-
         public int SelectedBaudRate
         {
-            get { return _selectedBaudRate; }
-            set { this.RaiseAndSetIfChanged(ref _selectedBaudRate, value); }
+            get => _selectedBaudRate;
+            set => this.RaiseAndSetIfChanged(ref _selectedBaudRate, value);
         }
 
         public bool ShowConnectionDialog
         {
-            get { return _showConnectionDialog; }
-            set { this.RaiseAndSetIfChanged(ref _showConnectionDialog, value); }
+            get => _showConnectionDialog;
+            set => this.RaiseAndSetIfChanged(ref _showConnectionDialog, value);
         }
 
         public string ConnectionStatusMessage
         {
-            get { return _connectionStatusMessage; }
-            set { this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value); }
+            get => _connectionStatusMessage;
+            set => this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value);
         }
 
         public async Task Cancel()
@@ -189,7 +184,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             try
             {
-                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument?.Name;
                 await SettingsManager.Save();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
@@ -246,14 +241,14 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public ReactiveList<string> Clients
         {
-            get { return _clients; }
-            set { this.RaiseAndSetIfChanged(ref _clients, value); }
+            get => _clients;
+            set => this.RaiseAndSetIfChanged(ref _clients, value);
         }
 
         public string SelectedClient
         {
-            get { return _selectedClient; }
-            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
+            get => _selectedClient;
+            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
         }
 
         public class SelectableInstrumentType
@@ -267,8 +262,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
-
-     
     }
 }
 
@@ -286,3 +279,4 @@ namespace Prover.GUI.Modules.QAProver.Screens
 //        }
 //    }
 //}
+

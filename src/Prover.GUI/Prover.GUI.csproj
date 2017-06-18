@@ -176,6 +176,10 @@
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesView.xaml.cs">
+      <DependentUpon>ClientCsvTemplatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesViewModel.cs" />
     <Compile Include="Modules\Clients\Screens\Clients\ExportToCsvView.xaml.cs">
       <DependentUpon>ExportToCsvView.xaml</DependentUpon>
     </Compile>
@@ -369,6 +373,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -420,6 +428,10 @@
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>

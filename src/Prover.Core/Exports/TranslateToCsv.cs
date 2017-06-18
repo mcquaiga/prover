@@ -32,17 +32,17 @@ namespace Prover.Core.Exports
                 //InspectionType = certificate.VerificationType == NewVerificationType ,
                 TestedDate = instrument.TestDateTime,
               
-                HighTemperatureError = GetTempTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                MediumTemperatureError = GetTempTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                LowTemperatureError = GetTempTestPercentError(instrument, LowTestNumber) ?? 0.0m,
+                TemperatureHighError = GetTempTestPercentError(instrument, HighTestNumber) ?? 0.0m,
+                TemperatureMediumError = GetTempTestPercentError(instrument, MidTestNumber) ?? 0.0m,
+                TemperatureLowError = GetTempTestPercentError(instrument, LowTestNumber) ?? 0.0m,
 
-                HighPressureError = GetPressureTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                MediumPressureError = GetPressureTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                LowPressureError = GetPressureTestPercentError(instrument, LowTestNumber) ?? 0.0m,
+                PressureHighError = GetPressureTestPercentError(instrument, HighTestNumber) ?? 0.0m,
+                PressureMediumError = GetPressureTestPercentError(instrument, MidTestNumber) ?? 0.0m,
+                PressureLowError = GetPressureTestPercentError(instrument, LowTestNumber) ?? 0.0m,
 
-                HighSuperError = GetSuperTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                MediumSuperError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                LowSuperError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m
+                SuperHighError = GetSuperTestPercentError(instrument, HighTestNumber) ?? 0.0m,
+                SuperMediumError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
+                SuperLowError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m
             };
      
             return csvFormat;
