@@ -5,9 +5,9 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.ExternalIntegrations.Validators
 {
-    public interface IValidator
+    public interface IGetValue
     {
-        Task<object> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
+        string GetValue();
     }
 
     public interface IUpdater
@@ -15,14 +15,14 @@ namespace Prover.Core.ExternalIntegrations.Validators
         Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct);
     }
 
-    public interface IGetValue
+    public interface IValidator
     {
-        string GetValue();
+        Task<object> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
     }
+    //    private readonly IValidator _validator;
+    //{
 
     //public abstract class ItemValidatorUpdater
-    //{
-    //    private readonly IValidator _validator;
     //    private readonly IUpdater _updater;
     //    private readonly IGetValue _getter;
 
@@ -43,7 +43,7 @@ namespace Prover.Core.ExternalIntegrations.Validators
 
     //            if (!isValid)
     //            {
-                    
+
     //            }
     //        } while (!isValid);
 

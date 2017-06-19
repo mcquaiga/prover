@@ -1,70 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using CsvHelper;
-using CsvHelper.Configuration;
-using Prover.Core.ExternalIntegrations;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Instruments;
+using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Exports
 {
-    public enum VerificationTypEnum
+    public enum VerificationTypeEnum
     {
         New,
         Reverified
     }
 
-    public class ExportFields
+    public interface IFileWriter
     {
-        public string[] GetPropertyNames()
-        {
-            return GetType().GetProperties().Select(p => p.Name).ToArray();
-        }
-
-        public VerificationTypEnum VerificationType { get; set; }
-        public DateTime TestedDate { get; set; }
-
-        public CorrectorType CorrectorType { get; set; }
-        public string CompanyNumber { get; set; }
-        public string SerialNumber { get; set; }
-
-        public long CorrectedMultiplier { get; set; }
-        public long UncorrectMultiplier{ get; set; }        
-       
-        public decimal? TemperatureHighError { get; set; }
-        public decimal? TemperatureMediumError { get; set; }
-        public decimal? TemperatureLowError { get; set; }
-
-        public decimal? PressureHighError { get; set; }
-        public decimal? PressureMediumError { get; set; }
-        public decimal? PressureLowError { get; set; }
-
-        public decimal? SuperHighError { get; set; }
-        public decimal? SuperMediumError { get; set; }
-        public decimal? SuperLowError { get; set; }
-
-        public decimal? CorrectedVolumeError { get; set; }
-        public decimal? UncorrectedVolumeError { get; set; }
-    }
-
-    public interface IExportCertificate
-    {
-        Task<bool> Export(Certificate certificate);
+        void Write();
     }
 
     public class ExportToCsvManager : IExportCertificate
     {
-        private readonly IFileWriter _fileWriter;
+        private readonly IProverStore<Certificate> _certificateStore;
 
-        public ExportToCsvManager(IFileWriter fileWriter)
+        public ExportToCsvManager(IProverStore<Certificate> certificateStore)
         {
-            _fileWriter = fileWriter;
+            _certificateStore = certificateStore;
+        }
+
+        public async Task<bool> Export(Client client, long fromCertificateNumber, long toCertificateNumber)
+        {
+            var certificates = _certificateStore.Query()
+                .Where(c => c.ClientId == client.Id && c.Number.IsBetween(fromCertificateNumber, toCertificateNumber));
+
+            foreach (var cert in certificates)
+            {
+                await Export(cert);
+            }
+
+            return true;
         }
 
         public async Task<bool> Export(Certificate certificate)
@@ -75,24 +49,21 @@ namespace Prover.Core.Exports
 
                 var client = certificate.Client;
                 var fileName = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\{client.Name}\\certificate_{certificate.Number}.csv";
-                var csvFormat = client.CsvTemplates
-                    .FirstOrDefault(c => 
-                        c.VerificationType.ToString() == certificate.VerificationType && c.CorrectorType == instrs.First().CompositionType)?
-                    .CsvTemplate;
+
+                var csvFormat = client.CsvTemplates.FirstOrDefault(
+                    c => c.VerificationTypeString == certificate.VerificationType && c.CorrectorType == instrs.First().CompositionType && c.InstrumentType == instrs.First().InstrumentType)
+                        ?.CsvTemplate;
 
                 var certificateId = instrs.FirstOrDefault()?.CertificateId;
                 if (certificateId == null) return false;
-                
-                await CsvWriter.Write(fileName, csvFormat, certificate.Instruments.ToList());
-                
+
+                var exportInstruments = TranslateToExport.Translate(certificate).ToList();
+
+                await CsvWriter.Write(fileName, csvFormat, exportInstruments);
+
                 return true;
             });
         }
-    }
-
-    public interface IFileWriter
-    {
-        void Write();
     }
 }
 

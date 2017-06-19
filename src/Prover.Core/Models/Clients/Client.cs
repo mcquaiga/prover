@@ -8,7 +8,7 @@ namespace Prover.Core.Models.Clients
     {
         public Client()
         {
-            CreatedDateTime = DateTime.UtcNow;                
+            CreatedDateTime = DateTime.UtcNow;
         }
 
         public string Name { get; set; }

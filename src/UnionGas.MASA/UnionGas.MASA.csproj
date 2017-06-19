@@ -179,6 +179,10 @@
       <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
       <Name>Prover.CommProtocol.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
+      <Project>{35FE4429-B8F5-4761-B401-A215D1B4EBA2}</Project>
+      <Name>Prover.Core.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>

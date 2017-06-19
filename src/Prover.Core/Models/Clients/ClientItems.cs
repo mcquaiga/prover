@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -19,7 +20,6 @@ namespace Prover.Core.Models.Clients
     {
         public ClientItems()
         {
-            
         }
 
         public ClientItems(Client client)
@@ -37,18 +37,21 @@ namespace Prover.Core.Models.Clients
         [Column("ItemFileType")]
         public string ItemFileTypeString
         {
-            get { return ItemFileType.ToString(); }
-            private set { ItemFileType = value.ParseEnum<ClientItemType>(); }
+            get => ItemFileType.ToString();
+            private set => ItemFileType = value.ParseEnum<ClientItemType>();
         }
 
         [NotMapped]
-        public ClientItemType ItemFileType { get; set; }       
+        public ClientItemType ItemFileType { get; set; }
 
         [Column("InstrumentType")]
         public string InstrumentTypeString
         {
-            get { return InstrumentType.Id.ToString(); }
-            private set { InstrumentType = CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == int.Parse(value)); }            
+            get => InstrumentType.Id.ToString();
+            private set
+            {
+                InstrumentType = HoneywellInstrumentTypes.GetAll().FirstOrDefault(i => i.Id == int.Parse(value));
+            }
         }
     }
 }

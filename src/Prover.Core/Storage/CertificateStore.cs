@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Storage
 {
- 
     public class CertificateStore : IProverStore<Certificate>
     {
-        private readonly ProverContext _proverContext;        
+        private readonly ProverContext _proverContext;
 
         public CertificateStore(ProverContext proverContext)
         {

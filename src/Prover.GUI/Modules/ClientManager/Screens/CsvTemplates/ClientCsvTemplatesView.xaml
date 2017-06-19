@@ -1,11 +1,10 @@
-﻿<UserControl x:Class="Prover.GUI.Modules.Clients.Screens.Clients.ClientCsvTemplatesView"
+﻿<UserControl x:Class="Prover.GUI.Modules.ClientManager.Screens.CsvTemplates.ClientCsvTemplatesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Prover.GUI.Modules.Clients.Screens.Clients"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -21,6 +20,10 @@
                       BorderThickness="1">
                 <ComboBox x:Name="InstrumentTypes" DisplayMemberPath="Name" />
             </GroupBox>
+            <GroupBox Header="Corrector Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="CorrectorTypes"/>
+            </GroupBox>
             <GroupBox Header="Verification Type"
                       BorderThickness="1">
                 <ComboBox x:Name="VerificationTypes"/>
@@ -30,7 +33,7 @@
         <StackPanel Grid.Row="1"
                     Margin="5 15">
 
-            <ItemsControl ItemsSource="{Binding Path=FieldList}">
+            <ItemsControl x:Name="FieldButtons" ItemsSource="{Binding Path=FieldList}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--<TextBlock Margin="1">
@@ -38,7 +41,9 @@
                                         FontSize="14" />]
                         </TextBlock>-->
                         <Button Content="{Binding }"
-                                Command="{Binding AddFieldToTemplateCommand}"/>
+                                Command="{Binding Path=DataContext.AddFieldToTemplateCommand,
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding }"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
@@ -49,7 +54,8 @@
             </ItemsControl>
 
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="CSV Template"/>
+                <TextBlock Text="CSV Template"
+                           FontWeight="DemiBold"/>
                 <TextBox x:Name="CsvTemplate"
                          TextWrapping="Wrap"
                          VerticalAlignment="Stretch"

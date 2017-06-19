@@ -1,0 +1,117 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using Caliburn.Micro;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.Exports;
+using Prover.Core.Models.Clients;
+using Prover.Core.Shared.Enums;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
+using ReactiveUI;
+
+namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
+{
+    public class ClientCsvTemplatesViewModel : ViewModelBase, IDisposable
+    {
+        public ClientCsvTemplatesViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(
+            screenManager, eventAggregator)
+        {
+            OkCommand = ReactiveCommand.Create(() => { TryClose(true); });
+            CancelCommand = ReactiveCommand.Create(() => { TryClose(false); });
+
+            AddFieldToTemplateCommand = ReactiveCommand.Create<string>(AddFieldToTemplate);
+
+            this.WhenAnyValue(x => x.ClientCsvTemplate)
+                .Where(c => c != null)
+                .Subscribe(y =>
+                {
+                    SelectedInstrumentType = y.InstrumentType;
+                    SelectedCorrectorType = y.CorrectorTypeString;
+                    SelectedVerificationType = y.VerificationTypeString;
+                    CsvTemplate = y.CsvTemplate;
+                });
+        }
+
+        private void AddFieldToTemplate(string fieldName)
+        {
+            CsvTemplate = string.IsNullOrEmpty(CsvTemplate)
+                ? $"[{fieldName}]"
+                : $"{CsvTemplate},[{fieldName}]";
+        }
+
+        #region Properties
+
+        private ClientCsvTemplate _clientCsvTemplate;
+
+        public ClientCsvTemplate ClientCsvTemplate
+        {
+            get { return _clientCsvTemplate; }
+            set { this.RaiseAndSetIfChanged(ref _clientCsvTemplate, value); }
+        }
+        
+        // Instrument Types      
+
+        public List<InstrumentType> InstrumentTypes => HoneywellInstrumentTypes.GetAll().ToList();
+
+        private InstrumentType _selectedInstrumentType;
+
+        public InstrumentType SelectedInstrumentType
+        {
+            get => _selectedInstrumentType;
+            set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);
+        }
+
+        // Verification Types
+        public List<string> VerificationTypes => Enum.GetNames(typeof(VerificationTypeEnum)).ToList();
+
+        private string _selectedVerificationType;
+
+        public string SelectedVerificationType
+        {
+            get => _selectedVerificationType;
+            set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
+        }
+
+        public List<string> CorrectorTypes => Enum.GetNames(typeof(EvcCorrectorType)).ToList();
+        private string _selectedCorrectorType;
+
+        public string SelectedCorrectorType
+        {
+            get => _selectedCorrectorType;
+            set => this.RaiseAndSetIfChanged(ref _selectedCorrectorType, value);
+        }
+
+        public List<string> FieldList => new ExportFields().GetPropertyNames().OrderBy(x => x).ToList();
+
+        private string _csvTemplate;
+        public string CsvTemplate
+        {
+            get => _csvTemplate;
+            set => this.RaiseAndSetIfChanged(ref _csvTemplate, value);
+        }
+
+        #endregion
+
+        #region Commands
+
+        public ReactiveCommand OkCommand { get; }
+        public ReactiveCommand CancelCommand { get; }
+        public ReactiveCommand<string, Unit> AddFieldToTemplateCommand { get; }
+
+        #endregion
+
+        #region Private       
+
+        #endregion
+
+        public void Dispose()
+        {
+            OkCommand?.Dispose();
+            CancelCommand?.Dispose();
+        }
+    }
+}

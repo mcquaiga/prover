@@ -13,7 +13,7 @@ namespace Prover.Core.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201706170455399_AddClientCsvTemplates"; }
+            get { return "201706181948396_AddClientCsvTemplates"; }
         }
         
         string IMigrationMetadata.Source

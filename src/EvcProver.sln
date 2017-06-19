@@ -45,8 +45,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{2A28EC01-0F7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI.Common", "Prover.GUI.Common\Prover.GUI.Common.csproj", "{904F99E1-2E5B-4C16-B900-7559D2E11553}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{ED11E7E8-BD81-4306-87E5-67E64BDBB588}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Domain\Prover.Domain.csproj", "{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core.Shared", "Prover.Core.Shared\Prover.Core.Shared.csproj", "{35FE4429-B8F5-4761-B401-A215D1B4EBA2}"

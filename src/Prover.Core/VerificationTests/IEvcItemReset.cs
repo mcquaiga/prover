@@ -3,12 +3,12 @@ using Prover.CommProtocol.Common;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IPreTestCommand
+    public interface IPostTestCommand
     {
         Task Execute(EvcCommunicationClient commClient);
     }
 
-    public interface IPostTestCommand
+    public interface IPreTestCommand
     {
         Task Execute(EvcCommunicationClient commClient);
     }

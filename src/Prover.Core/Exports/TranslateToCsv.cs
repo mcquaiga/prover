@@ -1,37 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Prover.CommProtocol.Common.Items;
+using Prover.Core.DriveTypes;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
 {
-    internal static class TranslateToEnbridgeCsv
+    internal static class TranslateToExport
     {
         private const int HighTestNumber = 2;
         private const int MidTestNumber = 1;
         private const int LowTestNumber = 0;
 
-        private const string NewVerificationType = "New";
-
-        public static IList<ExportFields> Translate(Certificate certificate, IEnumerable<Instrument> instruments)
+        public static IList<ExportFields> Translate(Certificate certificate)
         {
-            return instruments.ToList()
+            var instruments = certificate.Instruments.ToList();
+
+            return instruments
                 .Select(x => Translate(certificate, x))
                 .ToList();
         }
 
         public static ExportFields Translate(Certificate certificate, Instrument instrument)
-        {
-            var isNewVerification = certificate.VerificationType == NewVerificationType;
-
-            var csvFormat = new ExportFields()
+        {         
+            var csvFormat = new ExportFields
             {
                 CompanyNumber = instrument.InventoryNumber,
                 SerialNumber = instrument.SerialNumber.ToString(),
-                //InspectionType = certificate.VerificationType == NewVerificationType ,
+                VerificationType = certificate.VerificationType,
                 TestedDate = instrument.TestDateTime,
-              
+
                 TemperatureHighError = GetTempTestPercentError(instrument, HighTestNumber) ?? 0.0m,
                 TemperatureMediumError = GetTempTestPercentError(instrument, MidTestNumber) ?? 0.0m,
                 TemperatureLowError = GetTempTestPercentError(instrument, LowTestNumber) ?? 0.0m,
@@ -42,9 +43,19 @@ namespace Prover.Core.Exports
 
                 SuperHighError = GetSuperTestPercentError(instrument, HighTestNumber) ?? 0.0m,
                 SuperMediumError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                SuperLowError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m
+                SuperLowError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m,
+
+                CorrectedMultiplier = (long)instrument.CorrectedMultiplier(),
+                CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
+                UncorrectMultiplier = (long)instrument.UnCorrectedMultiplier(),
+                UncorrectMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
+                
+                CorrectedVolumeError = instrument.VolumeTest.CorrectedPercentError,
+                UncorrectedVolumeError = instrument.VolumeTest.UnCorrectedPercentError,
+                CorrectorType = Enum.GetName(typeof(EvcCorrectorType), instrument.CompositionType),
+                RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription
             };
-     
+
             return csvFormat;
         }
 

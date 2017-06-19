@@ -53,7 +53,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 ChangeTrackingEnabled = true
             };
 
-            foreach (var x in Instruments.GetAll())
+            foreach (var x in HoneywellInstrumentTypes.GetAll())
                 InstrumentTypes.Add(new SelectableInstrumentType
                 {
                     Instrument = x,
@@ -98,11 +98,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             CancelCommand = ReactiveCommand.Create(Cancel);
 
-            _clientList = clientStore.Query().ToList();
+            var clientList = clientStore.Query().ToList();
 
-            Clients = new ReactiveList<string>(_clientList.Select(x => x.Name).OrderBy(x => x).ToList());
+            Clients = new ReactiveList<string>(clientList.Select(x => x.Name).OrderBy(x => x).ToList());
             this.WhenAnyValue(x => x.SelectedClient)
-                .Subscribe(_ => { _client = _clientList.FirstOrDefault(x => x.Name == SelectedClient); });
+                .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
 
             _viewContext = NewQaTestViewContext;
         }
@@ -222,7 +222,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                     TestViews.Add(item);
                 }
 
-                if (instrument.InstrumentType == Instruments.MiniAt)
+                if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
         }
@@ -235,7 +235,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         private string _selectedClient;
         private Client _client;
-        private readonly List<Client> _clientList;
 
         private ReactiveList<string> _clients;
 

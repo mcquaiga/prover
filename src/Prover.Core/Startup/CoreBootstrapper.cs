@@ -4,6 +4,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
+using Prover.Core.Exports;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
 using Prover.Core.Models.Instruments;
@@ -21,7 +22,8 @@ namespace Prover.Core.Startup
             //Database registrations
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Builder.RegisterInstance(new ProverContext()).As<ProverContext>().SingleInstance();
-            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().SingleInstance();
+            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>()
+                .SingleInstance();
 
             //EVC Communcation
             Builder.Register(
@@ -34,12 +36,15 @@ namespace Prover.Core.Startup
 
             //QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
-            Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort,
+                    c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
             Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
+
+            
 
             SettingsManager.RefreshSettings().Wait();
         }

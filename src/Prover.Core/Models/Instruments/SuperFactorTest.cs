@@ -47,8 +47,8 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((EvcUnsqrFactor == null) || (ActualFactor == 0)) return null;
-                return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor)/ActualFactor*100), 2);
+                if (EvcUnsqrFactor == null || ActualFactor == 0) return null;
+                return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor) / ActualFactor * 100), 2);
             }
         }
 

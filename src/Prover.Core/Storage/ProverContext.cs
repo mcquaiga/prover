@@ -3,7 +3,6 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
-using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -17,7 +16,7 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+            ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.Log = s => Debug.WriteLine(s);
         }

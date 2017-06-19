@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Modules.Clients.Screens.Clients.Client
+namespace Prover.GUI.Modules.ClientManager.Screens.ClientDetails
 {
     /// <summary>
     ///     Interaction logic for Client.xaml

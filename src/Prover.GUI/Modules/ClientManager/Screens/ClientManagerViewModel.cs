@@ -7,8 +7,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 
-
-namespace Prover.GUI.Modules.Clients.Screens.Clients
+namespace Prover.GUI.Modules.ClientManager.Screens
 {
     public class ClientManagerViewModel : ViewModelBase, IDisposable
     {
@@ -26,20 +25,26 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             AddClientCommand = ReactiveCommand.CreateFromTask(AddClient);
         }
 
+        #region Private Functions
+
         private void LoadClients()
         {
             _clientStore.Query()
                 .OrderBy(c => c.Name)
                 .ToList()
-                .ForEach(x => ClientList.Add(new ClientViewModel(ScreenManager, EventAggregator, _clientStore, x)));
+                .ForEach(x => ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore, x)));
         }
 
         private async Task AddClient()
         {
-            var newClientVm = new ClientViewModel(ScreenManager, EventAggregator, _clientStore,
+            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore,
                 new Core.Models.Clients.Client());
             await newClientVm.Edit();
         }
+
+        #endregion
+
+        #region Commands
 
         private ReactiveCommand _addClientCommand;
 
@@ -49,9 +54,13 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _addClientCommand, value); }
         }
 
-        private ReactiveList<ClientViewModel> _clientList = new ReactiveList<ClientViewModel>();
+        #endregion
 
-        public ReactiveList<ClientViewModel> ClientList
+        #region Properties
+
+        private ReactiveList<ClientDetailsViewModel> _clientList = new ReactiveList<ClientDetailsViewModel>();
+
+        public ReactiveList<ClientDetailsViewModel> ClientList
         {
             get { return _clientList; }
             set { this.RaiseAndSetIfChanged(ref _clientList, value); }
@@ -64,6 +73,8 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             get { return _viewContext; }
             set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
         }
+
+        #endregion
 
         public void Dispose()
         {

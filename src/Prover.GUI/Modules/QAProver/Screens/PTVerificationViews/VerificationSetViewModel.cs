@@ -6,6 +6,7 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
@@ -52,14 +53,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)            
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)            
                 SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.T || VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T || VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.P ||
-                VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
+                VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
                 PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
 

@@ -109,7 +109,9 @@
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\CsvWriter.cs" />
+    <Compile Include="Exports\ExportFields.cs" />
     <Compile Include="Exports\ExportToCsvManager.cs" />
+    <Compile Include="Exports\IExportCertificate.cs" />
     <Compile Include="Exports\TranslateToCsv.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
@@ -177,9 +179,9 @@
     <Compile Include="Migrations\201705292156266_AddClientsToCertificate.Designer.cs">
       <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201706170455399_AddClientCsvTemplates.cs" />
-    <Compile Include="Migrations\201706170455399_AddClientCsvTemplates.Designer.cs">
-      <DependentUpon>201706170455399_AddClientCsvTemplates.cs</DependentUpon>
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.cs" />
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.Designer.cs">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
@@ -262,6 +264,10 @@
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
+      <Project>{35FE4429-B8F5-4761-B401-A215D1B4EBA2}</Project>
+      <Name>Prover.Core.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
       <Name>Prover.SuperFactorCalculations</Name>
@@ -324,12 +330,12 @@
     <EmbeddedResource Include="Migrations\201705292156266_AddClientsToCertificate.resx">
       <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706170455399_AddClientCsvTemplates.resx">
-      <DependentUpon>201706170455399_AddClientCsvTemplates.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201706181948396_AddClientCsvTemplates.resx">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Exports\CsvTemplates\" />
+    <Folder Include="Exports\CsvFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

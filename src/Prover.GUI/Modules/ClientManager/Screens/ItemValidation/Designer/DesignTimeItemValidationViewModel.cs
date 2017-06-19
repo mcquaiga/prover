@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Prover.CommProtocol.Common.Items;
 
-namespace Prover.GUI.Modules.Clients.Screens.ItemValidation.Designer
+namespace Prover.GUI.Modules.ClientManager.Screens.ItemValidation.Designer
 {
     public class DesignTimeItemValidationViewModel
     {

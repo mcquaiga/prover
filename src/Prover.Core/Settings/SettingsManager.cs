@@ -10,20 +10,12 @@ namespace Prover.Core.Settings
     {
         private const string SettingsFileName = "settings.conf";
         private static readonly string SettingsPath = Path.Combine(Environment.CurrentDirectory, SettingsFileName);
-        private static Settings _singletonInstance;
 
-        public static Settings SettingsInstance
-        {
-            get
-            {               
-                return _singletonInstance;
-            }
-            set { _singletonInstance = value; }
-        }
+        public static Settings SettingsInstance { get; set; }
 
         public static async Task RefreshSettings()
         {
-            _singletonInstance = await LoadSettings();
+            SettingsInstance = await LoadSettings();
             await Save();
         }
 
@@ -32,21 +24,23 @@ namespace Prover.Core.Settings
             return await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
-                var settings = (fileSystem.FileExists(SettingsPath) ? new SettingsReader(fileSystem).Read(SettingsPath) : null) ?? new Settings();
+                var settings = (fileSystem.FileExists(SettingsPath)
+                                   ? new SettingsReader(fileSystem).Read(SettingsPath)
+                                   : null) ?? new Settings();
                 settings.SetDefaults();
                 return settings;
             });
         }
 
         public static async Task Save()
-        {           
+        {
             await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
 
                 if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
                     fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
-                new SettingsWriter(fileSystem).Write(SettingsPath, _singletonInstance);
+                new SettingsWriter(fileSystem).Write(SettingsPath, SettingsInstance);
             });
         }
     }

@@ -6,24 +6,25 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
-using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Exports;
 using Prover.Core.Models.Clients;
+using Prover.Core.Shared.Enums;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Controls;
+using Prover.GUI.Modules.ClientManager.Screens.CsvExporter;
+using Prover.GUI.Modules.ClientManager.Screens.CsvTemplates;
 using ReactiveUI;
 
-
-namespace Prover.GUI.Modules.Clients.Screens.Clients
+namespace Prover.GUI.Modules.ClientManager.Screens
 {
-    public class ClientViewModel : ViewModelBase
+    public class ClientDetailsViewModel : ViewModelBase
     {
         private readonly IProverStore<Core.Models.Clients.Client> _clientStore;
-        public ClientViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+
+        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IProverStore<Core.Models.Clients.Client> clientStore, Core.Models.Clients.Client client = null)
             : base(screenManager, eventAggregator)
         {
@@ -37,9 +38,10 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
 
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
-            GoToCsvTemplateManager = ReactiveCommand.CreateFromTask(OpenCsvTemplateEditor);
+            GoToCsvExporter = ReactiveCommand.Create<Core.Models.Clients.Client>(OpenCsvExporter);
+            GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
 
-            InstrumentTypes = new List<InstrumentType>(Instruments.GetAll().ToList());                         
+            InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());                         
 
             VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify, "These items will be compared to the instruments values at the beginning of the test");
             this.WhenAnyValue(x => x.SelectedInstrumentType)
@@ -52,24 +54,8 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
                 .Where(x => x != null)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(ResetItemList.UpdateListItems);
-        }
 
-        private async Task OpenCsvTemplateEditor()
-        {
-            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
-            var result = ScreenManager.ShowDialog(csvEditorViewModel);
-
-            if (result.HasValue && result.Value)
-            {
-                var csv = new ClientCsvTemplate(_client)
-                {
-                    VerificationType = (VerificationTypEnum) Enum.Parse(typeof(VerificationTypEnum),
-                        csvEditorViewModel.SelectedVerificationType),
-                    CsvTemplate = csvEditorViewModel.CsvTemplate,
-                };
-
-                _client.CsvTemplates.Add(csv);
-            }
+            ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());
         }
 
         public async Task Edit()
@@ -77,16 +63,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             await ScreenManager.ChangeScreen(this);
             SelectedInstrumentType = InstrumentTypes.First();
             //SelectedItemFileType = ClientItemType.Reset;
-        }
-
-        private async Task GoBack()
-        {
-            await ScreenManager.ChangeScreen<ClientManagerViewModel>();
-        }
-
-        private async Task Save()
-        {
-            await _clientStore.UpsertAsync(Client);  
         }
 
         #region Commands
@@ -139,17 +115,17 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             set { this.RaiseAndSetIfChanged(ref _addItemCommand, value); }
         }
 
-        private ReactiveCommand _goToCsvExporter;
+        private ReactiveCommand<Core.Models.Clients.Client, Unit> _goToCsvExporter;
 
-        public ReactiveCommand GoToCsvExporter
+        public ReactiveCommand<Core.Models.Clients.Client, Unit> GoToCsvExporter
         {
             get { return _goToCsvExporter; }
             set { this.RaiseAndSetIfChanged(ref _goToCsvExporter, value); }
         }
 
-        private ReactiveCommand _goToCsvTemplateManager;
+        private ReactiveCommand<ClientCsvTemplate, Unit> _goToCsvTemplateManager;
 
-        public ReactiveCommand GoToCsvTemplateManager
+        public ReactiveCommand<ClientCsvTemplate, Unit> GoToCsvTemplateManager
         {
             get { return _goToCsvTemplateManager; }
             set { this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value); }
@@ -167,7 +143,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private InstrumentType _selecedInstrumentType;
-
         public InstrumentType SelectedInstrumentType
         {
             get { return _selecedInstrumentType; }
@@ -178,7 +153,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
             => Enum.GetValues(typeof(ClientItemType)).Cast<ClientItemType>().ToList();
 
         private Core.Models.Clients.Client _client;
-
         public Core.Models.Clients.Client Client
         {
             get => _client;
@@ -186,7 +160,6 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private ItemsFileViewModel _resetItemList;
-
         public ItemsFileViewModel ResetItemList
         {
             get => _resetItemList;
@@ -194,17 +167,85 @@ namespace Prover.GUI.Modules.Clients.Screens.Clients
         }
 
         private ItemsFileViewModel _verifyItemList;
-        
-
         public ItemsFileViewModel VerifyItemList
         {
             get => _verifyItemList;
             set => this.RaiseAndSetIfChanged(ref _verifyItemList, value);
         }
 
+        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates = new ReactiveList<ClientCsvTemplate>();
+        public ReactiveList<ClientCsvTemplate> ClientCsvTemplates
+        {
+            get { return _clientCsvTemplates; }
+            set { this.RaiseAndSetIfChanged(ref _clientCsvTemplates, value); }
+        }
 
         #endregion
 
+        #region Private Functions
+        private void OpenCsvTemplateEditor(ClientCsvTemplate clientCsvTemplate = null)
+        {
+            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
+            if (clientCsvTemplate != null)
+                csvEditorViewModel.ClientCsvTemplate = clientCsvTemplate;
+
+            var result = ScreenManager.ShowDialog(csvEditorViewModel);
+
+            if (result.HasValue && result.Value)
+            {
+                if (clientCsvTemplate == null)
+                {
+                    clientCsvTemplate = new ClientCsvTemplate(_client)
+                    {
+                        VerificationType = (VerificationTypeEnum)Enum.Parse(typeof(VerificationTypeEnum), csvEditorViewModel.SelectedVerificationType),
+                        InstrumentType = csvEditorViewModel.SelectedInstrumentType,
+                        CorrectorType = (EvcCorrectorType)Enum.Parse(typeof(EvcCorrectorType), csvEditorViewModel.SelectedCorrectorType),
+                        CsvTemplate = csvEditorViewModel.CsvTemplate
+                    };
+                    _client.CsvTemplates.Add(clientCsvTemplate);
+                }
+                else
+                {
+                    clientCsvTemplate.VerificationType = (VerificationTypeEnum)Enum.Parse(typeof(VerificationTypeEnum),
+                        csvEditorViewModel.SelectedVerificationType);
+                    clientCsvTemplate.InstrumentType = csvEditorViewModel.SelectedInstrumentType;
+                    clientCsvTemplate.CorrectorType = (EvcCorrectorType)Enum.Parse(typeof(EvcCorrectorType),
+                        csvEditorViewModel.SelectedCorrectorType);
+                    clientCsvTemplate.CsvTemplate = csvEditorViewModel.CsvTemplate;
+                }
+
+
+                using (ClientCsvTemplates.SuppressChangeNotifications())
+                {
+                    ClientCsvTemplates.Clear();
+                    ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());
+                }
+            }
+        }
+
+        private void OpenCsvExporter(Core.Models.Clients.Client client)
+        {
+            var exporter = IoC.Get<ExportToCsvViewModel>();
+            exporter.Client = _client;
+
+            var result = ScreenManager.ShowDialog(exporter);
+            if (result.HasValue && result.Value)
+            {
+
+            }
+        }
+
+        private async Task GoBack()
+        {
+            await Save();
+            await ScreenManager.ChangeScreen<ClientManagerViewModel>();
+        }
+
+        private async Task Save()
+        {
+            await _clientStore.UpsertAsync(Client);
+        }
+        #endregion
         protected override void OnDeactivate(bool close)
         {
             Save().ContinueWith(_ =>

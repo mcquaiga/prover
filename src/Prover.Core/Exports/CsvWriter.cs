@@ -7,7 +7,8 @@ namespace Prover.Core.Exports
 {
     public static class CsvWriter
     {
-        public static async Task Write<T>(string fileName, string rowFormat, List<T> recordsList, bool writeHeader = false)
+        public static async Task Write<T>(string fileName, string rowFormat, List<T> recordsList,
+            bool writeHeader = false)
         {
             var fs = new StreamWriter(fileName);
             await Write(fs, rowFormat, recordsList, writeHeader);
@@ -19,9 +20,7 @@ namespace Prover.Core.Exports
             using (streamWriter)
             {
                 foreach (var value in recordsList)
-                {
                     await streamWriter.WriteLineAsync(GetRow(rowFormat, value));
-                }
             }
         }
 
@@ -31,14 +30,12 @@ namespace Prover.Core.Exports
                 .Select(p => p.Name).ToList();
 
             foreach (var property in properties)
-            {
                 if (rowFormat.Contains($"[{property}]"))
                 {
                     var value = record.GetType().GetProperty(property)?.GetValue(record).ToString();
                     if (value != null)
                         rowFormat = rowFormat.Replace($"[{property}]", value);
                 }
-            }
 
             return rowFormat;
         }

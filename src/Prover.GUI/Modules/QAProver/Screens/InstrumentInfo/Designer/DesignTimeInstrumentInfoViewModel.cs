@@ -3,6 +3,7 @@ using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
 {
@@ -17,7 +18,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
                 new ItemValue(new ItemMetadata() {Number = 201}, "300000"),
             };
 
-            Instrument = new Instrument(Instruments.MiniAt, items);
+            Instrument = new Instrument(HoneywellInstrumentTypes.MiniAt, items);
         }
 
         public Instrument Instrument { get; set; }
@@ -28,9 +29,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
             {
                 switch (Instrument.CompositionType)
                 {
-                    case Core.Models.Instruments.CorrectorType.PTZ:
+                    case EvcCorrectorType.PTZ:
                         return "PTZ";
-                    case Core.Models.Instruments.CorrectorType.P:
+                    case EvcCorrectorType.P:
                         return "P";
                     default:
                         return "T";

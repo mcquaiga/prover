@@ -2,24 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
-using Newtonsoft.Json;
-using Prover.CommProtocol.Common;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public enum CorrectorType
-    {
-        T,
-        P,
-        // ReSharper disable once InconsistentNaming
-        PTZ
-    }
-
-    public class 
+    public class
         Instrument : ProverTable
     {
         public Instrument()
@@ -71,18 +65,17 @@ namespace Prover.Core.Models.Instruments
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
-
             for (var i = 0; i < 3; i++)
             {
                 var verificationTest = new VerificationTest(i, this);
 
-                if (CompositionType == CorrectorType.P)
+                if (CompositionType == EvcCorrectorType.P)
                     verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
 
-                if (CompositionType == CorrectorType.T)
+                if (CompositionType == EvcCorrectorType.T)
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
 
-                if (CompositionType == CorrectorType.PTZ)
+                if (CompositionType == EvcCorrectorType.PTZ)
                 {
                     verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
                     verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
@@ -98,18 +91,20 @@ namespace Prover.Core.Models.Instruments
 
         public decimal GetGaugeTemp(int testNumber)
         {
-            return SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber).Value;
+            return SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)
+                .Value;
         }
 
         public decimal GetGaugePressure(int testNumber)
         {
-            var value = SettingsManager.SettingsInstance.PressureGaugeDefaults.FirstOrDefault(p => p.Level == testNumber).Value;
+            var value = SettingsManager.SettingsInstance.PressureGaugeDefaults
+                .FirstOrDefault(p => p.Level == testNumber).Value;
 
             if (value > 1)
-                value = value/100;
+                value = value / 100;
 
             var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return value*evcPressureRange;
+            return value * evcPressureRange;
         }
 
         #region NotMapped Properties
@@ -124,32 +119,33 @@ namespace Prover.Core.Models.Instruments
         public string InstrumentTypeString => InstrumentType.ToString();
 
         [NotMapped]
-        public CorrectorType CompositionType
+        public EvcCorrectorType CompositionType
         {
             get
             {
-                if ((Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
-                    && (Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live"))
-                    return CorrectorType.PTZ;
+                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live"
+                    && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
+                    return EvcCorrectorType.PTZ;
 
                 if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
-                    return CorrectorType.P;
+                    return EvcCorrectorType.P;
 
                 if (Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
-                    return CorrectorType.T;
+                    return EvcCorrectorType.T;
 
-                return CorrectorType.T;
+                return EvcCorrectorType.T;
             }
         }
 
         [NotMapped]
-        public bool IsLiveTemperature => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.T;
+        public bool IsLiveTemperature => CompositionType == EvcCorrectorType.PTZ ||
+                                         CompositionType == EvcCorrectorType.T;
 
         [NotMapped]
-        public bool IsLivePressure => CompositionType == CorrectorType.PTZ || CompositionType == CorrectorType.P;
+        public bool IsLivePressure => CompositionType == EvcCorrectorType.PTZ || CompositionType == EvcCorrectorType.P;
 
         [NotMapped]
-        public bool IsLiveSuper => CompositionType == CorrectorType.PTZ;
+        public bool IsLiveSuper => CompositionType == EvcCorrectorType.PTZ;
 
         [NotMapped]
         public bool HasPassed
@@ -157,15 +153,13 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
-                if (InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
-                {
-                    return verificationTestsPassed && 
-                        (EventLogPassed != null && EventLogPassed.Value) && (CommPortsPassed != null && CommPortsPassed.Value);
-                }
+                if (InstrumentType == HoneywellInstrumentTypes.MiniAt)
+                    return verificationTestsPassed && EventLogPassed != null && EventLogPassed.Value &&
+                           CommPortsPassed != null && CommPortsPassed.Value;
 
                 return verificationTestsPassed;
             }
-        } 
+        }
 
         [NotMapped]
         public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;
@@ -208,8 +202,10 @@ namespace Prover.Core.Models.Instruments
 
         public override string ToString()
         {
-            return $@"{JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-                    { ReferenceLoopHandling = ReferenceLoopHandling.Ignore})}";
+            return $@"{
+                    JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+                        {ReferenceLoopHandling = ReferenceLoopHandling.Ignore})
+                }";
         }
     }
 }

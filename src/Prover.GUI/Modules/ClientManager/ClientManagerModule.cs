@@ -2,15 +2,15 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
-using Prover.Core.Models.Clients;
+using Prover.Core.Exports;
 using Prover.Core.Modules.Clients.VerificationTestActions;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Modules.Clients.Screens.Clients;
+using Prover.GUI.Modules.ClientManager.Screens;
 
-namespace Prover.GUI.Modules.Clients
+namespace Prover.GUI.Modules.ClientManager
 {
     public class ClientManagerModule : Module, IHaveMainMenuItem
     {
@@ -37,6 +37,7 @@ namespace Prover.GUI.Modules.Clients
             builder.Register(c => new ClientStore(c.Resolve<ProverContext>())).As<IClientStore>();
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
+            builder.RegisterType<ExportToCsvManager>().As<IExportCertificate>();
         }
     }
 }

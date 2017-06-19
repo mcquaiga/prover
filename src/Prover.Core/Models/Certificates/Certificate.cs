@@ -16,7 +16,9 @@ namespace Prover.Core.Models.Certificates
 
         public Guid Id { get; set; }
         public DateTime CreatedDateTime { get; set; }
+
         public string VerificationType { get; set; }
+        
         public string TestedBy { get; set; }
 
         public Guid? ClientId { get; set; }
@@ -40,11 +42,6 @@ namespace Prover.Core.Models.Certificates
         }
 
         [NotMapped]
-        public int InstrumentCount
-        {
-            get { return Instruments.Count(); }
-        }
-
-        
+        public int InstrumentCount => Instruments.Count();
     }
 }

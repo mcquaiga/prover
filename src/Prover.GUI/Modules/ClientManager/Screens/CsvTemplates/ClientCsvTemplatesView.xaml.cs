@@ -1,16 +1,20 @@
-﻿using System.Windows.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
-namespace Prover.GUI.Modules.Clients.Screens.Clients
+namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
 {
     /// <summary>
     /// Interaction logic for ClientCsvTemplatesView.xaml
     /// </summary>
-    public partial class ClientCsvTemplatesView : UserControl, IViewFor<ClientCsvTemplatesViewModel>
+    public partial class ClientCsvTemplatesView : IViewFor<ClientCsvTemplatesViewModel>
     {
         public ClientCsvTemplatesView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                d(ViewModel = (ClientCsvTemplatesViewModel) DataContext);                
+            });
         }
 
         object IViewFor.ViewModel

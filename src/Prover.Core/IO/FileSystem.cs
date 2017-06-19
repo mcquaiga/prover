@@ -14,9 +14,12 @@ namespace Prover.Core.IO
         string[] GetFilesInDirRecurrsive(string dir);
         string[] GetFilesInDirMatching(string dir, string pattern, bool recursive);
         string[] GetFilesInDirMatching(string dir, string pattern);
+
         string[] GetSubdirectories(string dir);
+
         //string RequireTempDir(IEngineSettings settings);
         bool FileExists(string path);
+
         long GetFileLength(string path);
         bool DirectoryExists(string path);
         void CreateDirectory(string path);
@@ -61,10 +64,7 @@ namespace Prover.Core.IO
             return Directory.GetDirectories(dir);
         }
 
-        public string AppBaseDirectory
-        {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."); }
-        }
+        public string AppBaseDirectory => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..");
 
         public bool FileExists(string path)
         {

@@ -3,7 +3,7 @@ using Prover.CommProtocol.Common;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
-    public static class Instruments
+    public static class HoneywellInstrumentTypes
     {
         public static InstrumentType MiniAt = new InstrumentType
         {

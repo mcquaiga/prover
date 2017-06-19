@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
@@ -17,18 +15,17 @@ namespace Prover.Core.Services
         Task<Certificate> GetCertificate(Guid id);
         Task<Certificate> GetCertificate(long number);
 
-        Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null);        
-       
+        Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null);
+
         Task<long> GetNextCertificateNumber();
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
-
     }
 
     public class CertificateService : ICertificateService
     {
         private readonly IProverStore<Certificate> _certificateStore;
         private readonly IProverStore<Instrument> _instrumentStore;
-  
+
         public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
         {
             _certificateStore = certificateStore;
@@ -64,7 +61,8 @@ namespace Prover.Core.Services
             return last + 1;
         }
 
-        public async Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments)
+        public async Task<Certificate> CreateCertificate(string testedBy, string verificationType,
+            List<Instrument> instruments)
         {
             var client = instruments.First().Client;
 
@@ -105,6 +103,6 @@ namespace Prover.Core.Services
                 .Where(x => x.CertificateId == null && x.ArchivedDateTime == null && x.ClientId == clientId)
                 .OrderBy(x => x.TestDateTime)
                 .ToListAsync();
-        }       
+        }
     }
 }

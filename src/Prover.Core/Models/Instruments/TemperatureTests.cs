@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
@@ -36,7 +35,7 @@ namespace Prover.Core.Models.Instruments
                 return
                     Math.Round(
                         (decimal)
-                        ((Items.GetItem(ItemCodes.Temperature.Factor).NumericValue - ActualFactor)/ActualFactor)*
+                        ((Items.GetItem(ItemCodes.Temperature.Factor).NumericValue - ActualFactor) / ActualFactor) *
                         100, 2);
             }
         }
@@ -52,13 +51,14 @@ namespace Prover.Core.Models.Instruments
                         return
                             Math.Round(
                                 (MetericTempCorrection +
-                                 VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0))/
+                                 VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0)) /
                                 ((decimal) Gauge + MetericTempCorrection), 4);
                     case "R":
                     case "F":
                         return
                             Math.Round(
-                                (TempCorrection + VerificationTest.Instrument.EvcBaseTemperature().GetValueOrDefault(0))/
+                                (TempCorrection + VerificationTest.Instrument.EvcBaseTemperature()
+                                     .GetValueOrDefault(0)) /
                                 ((decimal) Gauge + TempCorrection), 4);
                 }
 

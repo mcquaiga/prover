@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.Collections;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
-using Caliburn.Micro;
+using Prover.Core.Shared.Enums;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public interface IReadingStabilizer
     {
-        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct);
+        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level,
+            CancellationToken ct);
     }
 
     public class AverageReadingStabilizer : IReadingStabilizer
     {
-        private Logger _log = NLog.LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public AverageReadingStabilizer(IEventAggregator eventAggregator)
         {
@@ -28,7 +31,8 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; set; }
 
-        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct)
+        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument,
+            int level, CancellationToken ct)
         {
             try
             {
@@ -63,14 +67,14 @@ namespace Prover.Core.VerificationTests
         {
             var test = instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
             var pressure = test?.PressureTest?.GasPressure ?? 0m;
-            var temperature = ((decimal?) test?.TemperatureTest?.Gauge) ?? 0m;
+            var temperature = (decimal?) test?.TemperatureTest?.Gauge ?? 0m;
 
-            var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();   
-            
-            if (instrument.CompositionType == CorrectorType.T || instrument.CompositionType == CorrectorType.PTZ)
+            var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();
+
+            if (instrument.CompositionType == EvcCorrectorType.T || instrument.CompositionType == EvcCorrectorType.PTZ)
                 liveReadItems.Add(26, new AveragedReadingStabilizer(temperature));
 
-            if (instrument.CompositionType == CorrectorType.P || instrument.CompositionType == CorrectorType.PTZ)
+            if (instrument.CompositionType == EvcCorrectorType.P || instrument.CompositionType == EvcCorrectorType.PTZ)
                 liveReadItems.Add(8, new AveragedReadingStabilizer(pressure));
             return liveReadItems;
         }
@@ -96,7 +100,7 @@ namespace Prover.Core.VerificationTests
             {
                 if (_valueQueue.Count == FixedQueueSize)
                 {
-                    var average = _valueQueue.Sum()/FixedQueueSize;
+                    var average = _valueQueue.Sum() / FixedQueueSize;
                     var difference = Math.Abs(GaugeValue - average);
 
                     if (difference <= AverageThreshold)

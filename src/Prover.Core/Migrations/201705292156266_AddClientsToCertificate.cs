@@ -1,8 +1,7 @@
+using System.Data.Entity.Migrations;
+
 namespace Prover.Core.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class AddClientsToCertificate : DbMigration
     {
         public override void Up()
@@ -11,11 +10,11 @@ namespace Prover.Core.Migrations
             CreateIndex("dbo.Certificates", "ClientId");
             AddForeignKey("dbo.Certificates", "ClientId", "dbo.Clients", "Id");
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.Certificates", "ClientId", "dbo.Clients");
-            DropIndex("dbo.Certificates", new[] { "ClientId" });
+            DropIndex("dbo.Certificates", new[] {"ClientId"});
             DropColumn("dbo.Certificates", "ClientId");
         }
     }

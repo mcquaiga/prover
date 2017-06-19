@@ -176,14 +176,17 @@
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesView.xaml.cs">
+    <Compile Include="Modules\ClientManager\Screens\CsvTemplates\ClientCsvTemplatesView.xaml.cs">
       <DependentUpon>ClientCsvTemplatesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\Clients\ExportToCsvView.xaml.cs">
+    <Compile Include="Modules\ClientManager\Screens\CsvTemplates\ClientCsvTemplatesViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ClientDetailsView.xaml.cs">
+      <DependentUpon>ClientDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ClientManager\Screens\CsvExporter\ExportToCsvView.xaml.cs">
       <DependentUpon>ExportToCsvView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\ExportToCsvViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\CsvExporter\ExportToCsvViewModel.cs" />
     <Compile Include="Modules\Exporter\ExportManagerModule.cs" />
     <Compile Include="Modules\Exporter\Screens\Exporter\ExportTestsView.xaml.cs">
       <DependentUpon>ExportTestsView.xaml</DependentUpon>
@@ -213,25 +216,20 @@
     <Compile Include="Modules\Certificates\Screens\CreateVerificationView.xaml.cs">
       <DependentUpon>CreateVerificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\ClientManagerModule.cs" />
-    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml.cs">
+    <Compile Include="Modules\ClientManager\ClientManagerModule.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ClientManagerView.xaml.cs">
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\ClientManagerViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\Clients\ClientView.xaml.cs">
-      <DependentUpon>ClientView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\ClientViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml.cs">
+    <Compile Include="Modules\ClientManager\Screens\ClientManagerViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ClientDetailsViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ClientDetails\Client.CardView.xaml.cs">
       <DependentUpon>Client.CardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientManagerViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\Clients\Designer\DesignTimeClientViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
-    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml.cs">
+    <Compile Include="Modules\ClientManager\Screens\ItemValidation\Designer\DesignTimeItemValidationViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ItemValidation\ItemValidationView.xaml.cs">
       <DependentUpon>ItemValidationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Clients\Screens\ItemValidation\ItemValidationViewModel.cs" />
+    <Compile Include="Modules\ClientManager\Screens\ItemValidation\ItemValidationViewModel.cs" />
     <Compile Include="Modules\QAProver\Screens\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
       <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
     </Compile>
@@ -373,27 +371,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Clients\Screens\Clients\ClientCsvTemplatesView.xaml">
+    <Page Include="Modules\ClientManager\Screens\CsvTemplates\ClientCsvTemplatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Clients\Screens\Clients\ClientManagerView.xaml">
+    <Page Include="Modules\ClientManager\Screens\ClientManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Clients\Screens\Clients\ClientView.xaml">
+    <Page Include="Modules\ClientManager\Screens\ClientDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Clients\Screens\Clients\Client\Client.CardView.xaml">
+    <Page Include="Modules\ClientManager\Screens\ClientDetails\Client.CardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Clients\Screens\Clients\ExportToCsvView.xaml">
+    <Page Include="Modules\ClientManager\Screens\CsvExporter\ExportToCsvView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Clients\Screens\ItemValidation\ItemValidationView.xaml">
+    <Page Include="Modules\ClientManager\Screens\ItemValidation\ItemValidationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

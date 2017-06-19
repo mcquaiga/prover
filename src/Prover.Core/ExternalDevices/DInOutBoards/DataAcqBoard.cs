@@ -44,7 +44,6 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
-
                 if (value != 255)
                 {
                     if (_pulseIsCleared)
@@ -78,8 +77,8 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         private void Out(MotorValues outputValue)
         {
             _ulStatErrorInfo = _board.AOut(_channelNum, Range.UniPt05Volts, (short) outputValue);
-            if ((_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors) &&
-                (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard))
+            if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors &&
+                _ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
                 _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo.Message);
         }
 

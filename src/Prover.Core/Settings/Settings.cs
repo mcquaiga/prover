@@ -2,6 +2,18 @@
 
 namespace Prover.Core.Settings
 {
+    public class GaugeDefaults
+    {
+        public int Level { get; set; }
+        public decimal Value { get; set; }
+    }
+
+    public class MechanicalUncorrectedTestLimit
+    {
+        public int CuFtValue { get; set; }
+        public int UncorrectedPulses { get; set; }
+    }
+
     public class Settings
     {
         public string LastInstrumentTypeUsed { get; set; }
@@ -38,23 +50,11 @@ namespace Prover.Core.Settings
             if (MechanicalUncorrectedTestLimits == null)
                 MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
                 {
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 1, UncorrectedPulses = 1000},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 10, UncorrectedPulses = 100},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 100, UncorrectedPulses = 10},
-                    new MechanicalUncorrectedTestLimit { CuFtValue = 1000, UncorrectedPulses = 1}  
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 1, UncorrectedPulses = 1000},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 100},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 100, UncorrectedPulses = 10},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
                 };
         }
-    }
-
-    public class GaugeDefaults
-    {
-        public int Level { get; set; }
-        public decimal Value { get; set; }
-    }
-
-    public class MechanicalUncorrectedTestLimit
-    {
-        public int CuFtValue { get; set; }
-        public int UncorrectedPulses { get; set; }
     }
 }

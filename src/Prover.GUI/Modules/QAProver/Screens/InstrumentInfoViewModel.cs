@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
@@ -26,9 +27,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
             {
                 switch (Instrument.CompositionType)
                 {
-                    case Core.Models.Instruments.CorrectorType.PTZ:
+                    case EvcCorrectorType.PTZ:
                         return "PTZ";
-                    case Core.Models.Instruments.CorrectorType.P:
+                    case EvcCorrectorType.P:
                         return "P";
                     default:
                         return "T";
