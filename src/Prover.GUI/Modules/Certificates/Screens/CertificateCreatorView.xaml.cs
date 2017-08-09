@@ -21,7 +21,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     ViewModel,
                     x => x.PrintExistingCertificateCommand,
                     x => x.PrintExistingCertificateButton,
-                    x => x.ExistingCertificateNumber));
+                    x => x.SelectedExistingClientCertificate));
 
                 d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
                     .SelectMany(x => x.Execute())

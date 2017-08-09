@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -18,87 +21,103 @@ using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
 {
-    public class ExportToCsvViewModel : ViewModelBase
+    public class ExportToCsvViewModel : ViewModelBase, IWindowSettings
     {
         private readonly IExportCertificate _exporter;
-        private readonly IProverStore<Certificate> _certificateStore;
+        private readonly ICertificateService _certificateService;
 
         public ExportToCsvViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, 
-            IExportCertificate exporter, IProverStore<Certificate> certificateStore) : base(screenManager, eventAggregator)
+            IExportCertificate exporter, ICertificateService certificateService) : base(screenManager, eventAggregator)
         {
             _exporter = exporter;
-            _certificateStore = certificateStore;
+            _certificateService = certificateService;
 
-            ExportCommand = ReactiveCommand.CreateFromTask(ExportCertificates);
-            GetCertificateNumbersCommand = ReactiveCommand.CreateFromTask<Client, List<long>>(GetCertificateNumbers);
+            ExportCommand = ReactiveCommand.CreateFromTask<Client>(ExportCertificates);
+
+            GetCertificatesCommand = 
+                ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
 
             this.WhenAnyValue(x => x.Client)
                 .Where(c => c != null)
-                .InvokeCommand(GetCertificateNumbersCommand);
+                .InvokeCommand(GetCertificatesCommand);
 
-            _fromCertificateNumbers = GetCertificateNumbersCommand
-                .ToProperty(this, x => x.FromCertificateNumbers);
-            _toCertificateNumbers = GetCertificateNumbersCommand
-                .ToProperty(this, x => x.ToCertificateNumbers);
+            //GetCertificatesCommand
+            //    .Select(c => c.ToList())
+            //    .Subscribe(certs =>
+            //    {                    
+            //        FromCertificates = certs;
+            //        ToCertificates = certs;
+            //    });
+
+            _fromCertificates = GetCertificatesCommand
+                .ToProperty(this, x => x.FromCertificates, new List<Certificate>());
+            _toCertificates = GetCertificatesCommand
+                .ToProperty(this, x => x.ToCertificates, new List<Certificate>());
         }
 
         #region Properties
-        private Core.Models.Clients.Client _client;
-
-        public Core.Models.Clients.Client Client
+        private Client _client;
+        public Client Client
         {
             get { return _client; }
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private readonly ObservableAsPropertyHelper<List<long>> _fromCertificateNumbers;
-        public List<long> FromCertificateNumbers => _fromCertificateNumbers.Value;        
-
-        private long _selectedFromCertificateNumber;
-
-        public long SelectedFromCertificateNumber
+        private IEnumerable<Certificate> _clientCertificates;
+        public IEnumerable<Certificate> ClientCertificates
         {
-            get { return _selectedFromCertificateNumber; }
-            set { this.RaiseAndSetIfChanged(ref _selectedFromCertificateNumber, value); }
+            get { return _clientCertificates; }
+            set { this.RaiseAndSetIfChanged(ref _clientCertificates, value); }
         }
 
-        private readonly ObservableAsPropertyHelper<List<long>> _toCertificateNumbers;
-        public List<long> ToCertificateNumbers => _toCertificateNumbers.Value;
+        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _fromCertificates;
+        public IEnumerable<Certificate> FromCertificates => _fromCertificates.Value;     
 
-
-        private long _selectedToCertificateNumber;
-
-        public long SelectedToCertificateNumber
+        private Certificate _selectedFromCertificate;
+        public Certificate SelectedFromCertificate
         {
-            get { return _selectedToCertificateNumber; }
-            set { this.RaiseAndSetIfChanged(ref _selectedToCertificateNumber, value); }
+            get { return _selectedFromCertificate; }
+            set { this.RaiseAndSetIfChanged(ref _selectedFromCertificate, value); }
+        }
+
+        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _toCertificates;
+        public IEnumerable<Certificate> ToCertificates => _toCertificates.Value;    
+
+        private Certificate _selectedToCertificate;
+        public Certificate SelectedToCertificate
+        {
+            get { return _selectedToCertificate; }
+            set { this.RaiseAndSetIfChanged(ref _selectedToCertificate, value); }
         }
         #endregion
 
         #region Commands
 
-        public ReactiveCommand ExportCommand { get; }
-
-        public ReactiveCommand<Client, List<long>> GetCertificateNumbersCommand { get; }
+        public ReactiveCommand<Client, Unit> ExportCommand { get; }
+        public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
 
         #endregion
 
         #region Private Functions
-        private async Task ExportCertificates()
+        private async Task ExportCertificates(Client client)
         {
-            await _exporter.Export(Client, SelectedFromCertificateNumber, SelectedToCertificateNumber);
+            await _exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
         }
-
-        private async Task<List<long>> GetCertificateNumbers(Client client)
-        {
-            var results = await _certificateStore.Query()
-                .Where(certs => certs.ClientId == client.Id)
-                .OrderBy(c => c.Number)
-                .Select(c => c.Number)
-                .ToListAsync();
-
-            return results;
-        }
+       
         #endregion
+
+        public dynamic WindowSettings
+        {
+            get
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.MinWidth = 300;
+                settings.Title = "Export Certificates to CSVs";
+                return settings;
+            }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,12 +31,21 @@ namespace Prover.Core.Exports
                 .Select(p => p.Name).ToList();
 
             foreach (var property in properties)
-                if (rowFormat.Contains($"[{property}]"))
+            {
+                try
                 {
-                    var value = record.GetType().GetProperty(property)?.GetValue(record).ToString();
-                    if (value != null)
-                        rowFormat = rowFormat.Replace($"[{property}]", value);
+                    if (rowFormat.Contains($"[{property}]"))
+                    {
+                        var value = record.GetType().GetProperty(property)?.GetValue(record)?.ToString();
+                        if (value != null)
+                            rowFormat = rowFormat.Replace($"[{property}]", value);
+                    }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);                   
+                }               
+            }
 
             return rowFormat;
         }

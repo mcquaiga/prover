@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
+using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Exports
@@ -22,16 +24,19 @@ namespace Prover.Core.Exports
     public class ExportToCsvManager : IExportCertificate
     {
         private readonly IProverStore<Certificate> _certificateStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
 
-        public ExportToCsvManager(IProverStore<Certificate> certificateStore)
+        public ExportToCsvManager(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
         {
             _certificateStore = certificateStore;
+            _instrumentStore = instrumentStore;
         }
 
         public async Task<bool> Export(Client client, long fromCertificateNumber, long toCertificateNumber)
         {
             var certificates = _certificateStore.Query()
-                .Where(c => c.ClientId == client.Id && c.Number.IsBetween(fromCertificateNumber, toCertificateNumber));
+                .Where(c => c.ClientId == client.Id && (c.Number >= fromCertificateNumber && c.Number <= toCertificateNumber))
+                .ToList();
 
             foreach (var cert in certificates)
             {
@@ -45,10 +50,13 @@ namespace Prover.Core.Exports
         {
             return await Task.Run(async () =>
             {
-                var instrs = certificate.Instruments.ToList();
+                var instrs = certificate
+                    .Instruments
+                    .Select(i => _instrumentStore.Get(i.Id))
+                    .ToList();
 
                 var client = certificate.Client;
-                var fileName = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\{client.Name}\\certificate_{certificate.Number}.csv";
+                var fileName = GetFilePath(certificate, client);
 
                 var csvFormat = client.CsvTemplates.FirstOrDefault(
                     c => c.VerificationTypeString == certificate.VerificationType && c.CorrectorType == instrs.First().CompositionType && c.InstrumentType == instrs.First().InstrumentType)
@@ -63,6 +71,16 @@ namespace Prover.Core.Exports
 
                 return true;
             });
+        }
+
+        private static string GetFilePath(Certificate certificate, Client client)
+        {
+            var fileName = $"certificate_{certificate.Number}.csv";
+
+            var filePath = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\{client.Name}";
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+            return $"{filePath}\\{fileName}";
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Prover.Core.Storage
         }
 
         public IQueryable<Certificate> Query()
-        {
+        {           
             return _proverContext.Certificates
                 .Include(c => c.Instruments)
                 .AsQueryable();

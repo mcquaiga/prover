@@ -9,6 +9,7 @@ using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Modules.ClientManager.Screens;
+using Prover.GUI.Modules.ClientManager.Screens.CsvExporter;
 
 namespace Prover.GUI.Modules.ClientManager
 {
@@ -38,6 +39,7 @@ namespace Prover.GUI.Modules.ClientManager
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
             builder.RegisterType<ExportToCsvManager>().As<IExportCertificate>();
+            builder.RegisterType<ExportToCsvViewModel>();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 
@@ -19,6 +20,7 @@ namespace Prover.Core.Services
 
         Task<long> GetNextCertificateNumber();
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
+        Task<IEnumerable<Certificate>> GetAllCertificates(Client client);
     }
 
     public class CertificateService : ICertificateService
@@ -85,14 +87,15 @@ namespace Prover.Core.Services
             });
 
             await _certificateStore.UpsertAsync(certificate);
-
-            //var client = instruments.First().Client;
-            //if (client.CreateCertificateCsvFile)
-            //{
-            //    await _certificateExporter.Export(certificate);
-            //}
-
+            
             return certificate;
+        }
+
+        public async Task<IEnumerable<Certificate>> GetAllCertificates(Client client)
+        {
+            return await _certificateStore.Query()
+                .Where(c => c.ClientId.HasValue && c.ClientId.Value == client.Id)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null)
