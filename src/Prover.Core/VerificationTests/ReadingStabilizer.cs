@@ -66,7 +66,7 @@ namespace Prover.Core.VerificationTests
         private Dictionary<int, AveragedReadingStabilizer> GetLiveReadItemNumbers(Instrument instrument, int level)
         {
             var test = instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
-            var pressure = test?.PressureTest?.GasPressure ?? 0m;
+            var pressure = test?.PressureTest?.GasGauge ?? 0m;
             var temperature = (decimal?) test?.TemperatureTest?.Gauge ?? 0m;
 
             var liveReadItems = new Dictionary<int, AveragedReadingStabilizer>();

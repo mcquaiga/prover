@@ -5,7 +5,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters"
              mc:Ignorable="d"
-             x:Name="ValueUserControl">
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             x:Name="parent"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,21 +17,27 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <converters:BoolToVisibilityConverter
+                x:Key="BoolToHiddenConverter"
+                TrueValue="Visible" FalseValue="Collapsed" />
         </ResourceDictionary>
         
     </UserControl.Resources>
-    <Grid>
+    <Grid DataContext="{Binding ElementName=parent}">
         <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
             <Grid Background="{Binding ControlBackground}">
                 <StackPanel Margin="4 0">
-                    <TextBlock Text="{Binding Path=Value, FallbackValue='1.234', ElementName=ValueUserControl}"
-                               FontSize="{Binding ValueFontSize, ElementName=ValueUserControl}"
-                               HorizontalAlignment="Left"/>
-
-                    <TextBlock Text="{Binding Path=Label, FallbackValue='EVC Gauge', ElementName=ValueUserControl}"
+                    <TextBox Text="{Binding Path=Value}" 
+                            Margin="0 2"
+                            FontSize="{Binding ValueFontSize}"
+                            BorderThickness="0"
+                            IsReadOnly="{Binding Path=IsReadOnly}"
+                            Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
+                    <TextBlock Text="{Binding Path=Label}"
                                HorizontalAlignment="Left"
-                               FontSize="{Binding LabelFontSize, ElementName=ValueUserControl}"
-                               Foreground="SlateGray" />
+                               FontSize="{Binding LabelFontSize}"
+                               Foreground="{DynamicResource PrimaryHueLightForegroundBrush}" />
 
                 </StackPanel>
             </Grid>

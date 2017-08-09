@@ -51,6 +51,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
+
                 var result = 0m;
                 switch (VerificationTest?.Instrument?.Transducer)
                 {

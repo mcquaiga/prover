@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reactive.Linq;
-using System.Windows.Input;
-using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
+﻿using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using ReactiveUI;
-
+using System;
+using System.Reactive.Linq;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -20,21 +16,22 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             _atmosphericGauge = TestRun.AtmosphericGauge;
 
             var atmChange = this.WhenAnyValue(x => x.AtmosphericGauge);
+            _gaugePressure = TestRun.TotalGauge;
 
-            if (ShowAtmValues)
-            {
-                _gaugePressure = atmChange
-                    .Where(x => ShowAtmValues)
-                    .Select(x => TestRun.TotalGauge != 0 ? TestRun.TotalGauge - x.Value : TestRun.GasGauge ?? 0)
-                    .ToProperty(this, x => x.GaugePressure);            
-            }
-            else
-            {
-                _gaugePressure = atmChange
-                    .Where(x => !ShowAtmValues)
-                    .Select(x => TestRun.GasGauge ?? 0)
-                    .ToProperty(this, x => x.GaugePressure);
-            }
+            //if (ShowAtmValues)
+            //{
+            //    _gaugePressure = atmChange
+            //        .Where(x => ShowAtmValues)
+            //        .Select(x => TestRun.TotalGauge != 0 ? TestRun.TotalGauge - x.Value : TestRun.GasGauge ?? 0)
+            //        .ToProperty(this, x => x.GaugePressure);
+            //}
+            //else
+            //{
+            //    _gaugePressure = atmChange
+            //        .Where(x => !ShowAtmValues)
+            //        .Select(x => TestRun.GasGauge ?? 0)
+            //        .ToProperty(this, x => x.GaugePressure);
+            //}
 
             this.WhenAnyValue(x => x.GaugePressure)
                 .Subscribe(x => TestRun.GasGauge = x);
@@ -42,27 +39,35 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 .Subscribe(x => TestRun.AtmosphericGauge = x);
         }
 
-        private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
-        public decimal GaugePressure => _gaugePressure.Value;
+        //private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
+        //public decimal GaugePressure => _gaugePressure.Value;
+
+        private decimal? _gaugePressure;
+        public decimal? GaugePressure
+        {
+            get { return _gaugePressure; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _gaugePressure, value);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+            }
+        }
 
         public bool ShowAtmValues => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
-        public bool IsAtmGaugeReadOnly => !ShowAtmValues;        
+        public bool IsAtmGaugeReadOnly => !ShowAtmValues;
 
-     
         private decimal? _atmosphericGauge;
         public decimal? AtmosphericGauge
         {
             get { return _atmosphericGauge; }
             set
             {
-                this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);                
+                this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 
-        public decimal? EvcGasPressure
-            => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue
-        ;
+        public decimal? EvcGasPressure => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
 
         public decimal? EvcFactor
             => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;

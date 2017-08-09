@@ -49,14 +49,14 @@
             <UniformGrid Columns="2"
                          Margin="0">
                 <controls:ValueDescriptionControl Label="Gauge"
-                                                  IsReadOnly="True"
-                                                  Value="{Binding GasPressure}" />
+                                                  IsReadOnly="False"
+                                                  Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <controls:ValueDescriptionControl Label="EVC Reading"
                                                   Value="{Binding EvcGasPressure}" />
             </UniformGrid>
             <UniformGrid Columns="2"
                          Margin="0"
-                         Visibility="{Binding ShowATMValues, Converter={StaticResource BoolToHiddenConverter}}">
+                         Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}">
                 <controls:ValueDescriptionControl Label="ATM Gauge"
                                                   IsReadOnly="{Binding IsAtmGaugeReadOnly}"
                                                   Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -69,7 +69,7 @@
                                                   Value="{Binding TestRun.ActualFactor}" />
 
                 <controls:ValueDescriptionControl Label="EVC Factor"
-                                                  Value="{Binding EvcFactor}" />
+                                                  Value="{Binding TestRun.EvcFactor}" />
 
             </UniformGrid>
         </StackPanel>

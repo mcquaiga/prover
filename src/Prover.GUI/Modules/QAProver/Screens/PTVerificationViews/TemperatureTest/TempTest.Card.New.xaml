@@ -60,7 +60,8 @@
                      Margin="4">
             <!--INstrument Report , Text display instead of the decimal control -->
             <controls1:ValueDescriptionControl Label="Gauge"
-                                               Value="{Binding Gauge, FallbackValue=32.00}" />
+                                               IsReadOnly="False"
+                                               Value="{Binding Gauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
 
             <controls1:ValueDescriptionControl Label="EVC Reading"
                                                Value="{Binding EvcReading}" />
