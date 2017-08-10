@@ -46,12 +46,19 @@
                 <RowDefinition Height="60" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
-            <materialDesign:ColorZone Mode="PrimaryLight" Padding="10" Grid.Row="0">
-                <Button Command="{Binding GoBackCommand}" HorizontalAlignment="Left" Margin="-15 0 0 0"
+            <materialDesign:ColorZone Mode="PrimaryLight"
+                                      Padding="10"
+                                      Grid.Row="0">
+                <Button Command="{Binding GoBackCommand}"
+                        HorizontalAlignment="Left"
+                        Margin="-15 0 0 0"
                         Style="{DynamicResource MaterialDesignFlatButton}">
-                    <materialDesign:PackIcon Kind="ArrowLeft" Height="48" Width="48" />
+                    <materialDesign:PackIcon Kind="ArrowLeft"
+                                             Height="48"
+                                             Width="48" />
                 </Button>
             </materialDesign:ColorZone>
             <Grid Grid.Row="1">
@@ -66,13 +73,18 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <materialDesign:PackIcon Grid.Column="0" Grid.Row="0"
+                <materialDesign:PackIcon Grid.Column="0"
+                                         Grid.Row="0"
                                          Kind="Account"
                                          Foreground="{Binding ElementName=NameTextBox, Path=BorderBrush}" />
-                <TextBox x:Name="NameTextBox" Grid.Column="1" Grid.Row="0"
-                         Text="{Binding Client.Name}" materialDesign:HintAssist.Hint="Name" />
+                <TextBox x:Name="NameTextBox"
+                         Grid.Column="1"
+                         Grid.Row="0"
+                         Text="{Binding Client.Name}"
+                         materialDesign:HintAssist.Hint="Name" />
 
-                <materialDesign:PackIcon Grid.Column="0" Grid.Row="1"
+                <materialDesign:PackIcon Grid.Column="0"
+                                         Grid.Row="1"
                                          Kind="Home"
                                          Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
                 <TextBox x:Name="AddressTextBox"
@@ -80,7 +92,8 @@
                          Grid.Row="1"
                          Text="{Binding Client.Address}"
                          materialDesign:HintAssist.Hint="Address"
-                         TextWrapping="Wrap" VerticalAlignment="Stretch"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
                          AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" />
 
@@ -95,45 +108,52 @@
                         Command="{Binding GoToCsvExporter}" />
             </Grid>
 
-            <Grid Margin="10" Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <GroupBox Grid.Row="2"
+                      Header="Verify/Reset Items">
+                <Grid Margin="10"
+                      Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <Border Grid.Row="0"
-                        Grid.Column="0"
-                        BorderBrush="LightGray"
-                        BorderThickness="0 0 2 0">
-                    <ListBox ItemsSource="{Binding InstrumentTypes}"
-                             SelectedItem="{Binding SelectedInstrumentType}"
-                             SelectionMode="Single">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}" />
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            BorderBrush="LightGray"
+                            BorderThickness="0 0 2 0">
+                        <ListBox ItemsSource="{Binding InstrumentTypes}"
+                                 SelectedItem="{Binding SelectedInstrumentType}"
+                                 SelectionMode="Single">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
 
-                                <!--<Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                                        HorizontalContentAlignment="Stretch"
-                                        VerticalContentAlignment="Stretch"
-                                        FontSize="18" Content="{Binding Name}"/>-->
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Border>
-                <UniformGrid Grid.Column="1"
-                             Grid.Row="0"
-                             Columns="2">
-                    <ContentControl cal:View.Model="{Binding VerifyItemList}" />
-                    <ContentControl cal:View.Model="{Binding ResetItemList}" />
-                </UniformGrid>
+                                    <!--<Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            FontSize="18" Content="{Binding Name}"/>-->
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                    <UniformGrid Grid.Column="1"
+                                 Grid.Row="0"
+                                 Columns="2">
+                        <ContentControl cal:View.Model="{Binding VerifyItemList}" />
+                        <ContentControl cal:View.Model="{Binding ResetItemList}" />
+                    </UniformGrid>
+                </Grid>
+            </GroupBox>
 
-                <Grid Grid.Row="1"
+            <GroupBox Grid.Row="3"
                       Grid.Column="0"
-                      Grid.ColumnSpan="2">
+                      Grid.ColumnSpan="2"
+                      Header="Certificate Csv Templates">
+                <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
@@ -166,10 +186,9 @@
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
                                                     Path=DataContext.DeleteCsvTemplateCommand}"
-                                            CommandParameter="{Binding }">
+                                                CommandParameter="{Binding }">
                                             <materialDesign:PackIcon Kind="Delete"
                                                                      Height="24"
                                                                      Width="24"
@@ -181,10 +200,9 @@
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button
-                                            Command="{Binding Path=DataContext.GoToCsvTemplateManager,
+                                        <Button Command="{Binding Path=DataContext.GoToCsvTemplateManager,
                                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                                            CommandParameter="{Binding }">
+                                                CommandParameter="{Binding }">
                                             <materialDesign:PackIcon Kind="Pencil"
                                                                      Height="24"
                                                                      Width="24"
@@ -202,9 +220,9 @@
                             Margin="5"
                             Command="{Binding GoToCsvTemplateManager}" />
                 </Grid>
-
-            </Grid>
+            </GroupBox>
 
         </Grid>
+
     </materialDesign:DialogHost>
 </UserControl>
