@@ -52,8 +52,6 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public VerificationTest VerificationTest { get; }
-
         [NotMapped]
         public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 

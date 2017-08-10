@@ -22,8 +22,8 @@ namespace Prover.Core.Startup
             //Database registrations
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
-            Builder.RegisterType<ProverContext>().SingleInstance();
-            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().SingleInstance();
+            Builder.RegisterType<ProverContext>().InstancePerDependency();
+            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().InstancePerDependency();
 
             //EVC Communcation
             Builder.Register(

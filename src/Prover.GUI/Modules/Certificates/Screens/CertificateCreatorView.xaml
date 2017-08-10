@@ -62,6 +62,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />                
             </Grid.RowDefinitions>
@@ -75,15 +76,28 @@
                       materialDesign:HintAssist.Hint="Select a Client"
                       Grid.Column="0"
                       Margin="10" />
+            
+            <StackPanel Grid.Row="1"
+                        Grid.Column="0"                   
+                        Orientation="Horizontal">
+                <Button Content="All"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="All"/>
+                <Button Content="Passed"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="Passed"/>
+                <Button Content="Failed"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="Failed" />
+            </StackPanel>
 
             <TextBlock Grid.Column="0"
-                       Grid.Row="1"
+                       Grid.Row="2"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Text="Select a customer from the dropdown."
                        Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}" />
-
-            <ProgressBar Grid.Row="1"
+            <ProgressBar Grid.Row="2"
                          Grid.Column="0"
                          Style="{StaticResource MaterialDesignCircularProgressBar}"
                          Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}}"
@@ -93,11 +107,11 @@
                          HorizontalAlignment="Center" />
             <ListBox Grid.Column="0"
                      VerticalContentAlignment="Stretch"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Margin="5"
                      SelectionMode="Multiple"
                      Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}}"
-                     x:Name="SearchResults"
+                     x:Name="ResultFilteredItems"
                      HorizontalContentAlignment="Stretch">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -120,7 +134,7 @@
                       Margin="5"
                       Grid.Column="1"
                       Grid.Row="0"
-                      Grid.RowSpan="2">
+                      Grid.RowSpan="3">
                 <Grid HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -182,7 +196,7 @@
 
             <UniformGrid Columns="2"
                         HorizontalAlignment="Stretch"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Grid.Column="0"
                         Grid.ColumnSpan="2">
                 <GroupBox Header="Print Existing Certificate"
