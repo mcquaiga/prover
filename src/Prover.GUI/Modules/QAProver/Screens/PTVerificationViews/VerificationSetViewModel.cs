@@ -62,9 +62,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
 
-                this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge, x => x.PressureTestViewModel.GaugePressure)
-                    .Where(x => QaRunTestManager != null)
-                    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
+                //this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge, x => x.PressureTestViewModel.GaugePressure)
+                //    .Where(x => QaRunTestManager != null)                    
+                //    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
             }
 
             if (VerificationTest.VolumeTest != null)

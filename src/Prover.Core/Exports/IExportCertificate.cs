@@ -6,7 +6,7 @@ namespace Prover.Core.Exports
 {
     public interface IExportCertificate
     {
-        Task<bool> Export(Client client, long fromCertificateNumber, long toCertificateNumber);
-        Task<bool> Export(Certificate certificate);
+        Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber);
+        Task<string> Export(Certificate certificate);
     }
 }

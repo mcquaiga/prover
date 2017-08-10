@@ -18,6 +18,8 @@ using Prover.GUI.Common.Screens;
 using ReactiveUI;
 using ReactiveUI.Legacy;
 using ReactiveCommand = ReactiveUI.ReactiveCommand;
+using System.IO;
+using System.Diagnostics;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
 {
@@ -33,6 +35,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             _certificateService = certificateService;
 
             ExportCommand = ReactiveCommand.CreateFromTask<Client>(ExportCertificates);
+            ExportCommand.ThrownExceptions
+                .Subscribe(ex => MessageBox.Show(ex.Message));
 
             GetCertificatesCommand = 
                 ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
@@ -101,7 +105,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         #region Private Functions
         private async Task ExportCertificates(Client client)
         {
-            await _exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
+            var csvFiles = await _exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
+
+            var fileDir = new FileInfo(csvFiles?.First()).Directory;
+            Process.Start(fileDir.FullName);
         }
        
         #endregion

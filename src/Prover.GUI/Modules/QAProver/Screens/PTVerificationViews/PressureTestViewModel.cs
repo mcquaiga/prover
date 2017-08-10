@@ -16,7 +16,16 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             _atmosphericGauge = TestRun.AtmosphericGauge;
 
             var atmChange = this.WhenAnyValue(x => x.AtmosphericGauge);
-            _gaugePressure = TestRun.TotalGauge;
+            _gaugePressure = TestRun.GasGauge;
+
+            this.WhenAnyValue(x => x.GaugePressure)
+               .Subscribe(x => TestRun.GasGauge = x);
+            this.WhenAnyValue(x => x.AtmosphericGauge)
+                .Subscribe(x => TestRun.AtmosphericGauge = x);
+
+            GaugePressure = TestRun.GasGauge;
+            AtmosphericGauge = TestRun.AtmosphericGauge;
+           
 
             //if (ShowAtmValues)
             //{
@@ -32,11 +41,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             //        .Select(x => TestRun.GasGauge ?? 0)
             //        .ToProperty(this, x => x.GaugePressure);
             //}
-
-            this.WhenAnyValue(x => x.GaugePressure)
-                .Subscribe(x => TestRun.GasGauge = x);
-            this.WhenAnyValue(x => x.AtmosphericGauge)
-                .Subscribe(x => TestRun.AtmosphericGauge = x);
         }
 
         //private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;

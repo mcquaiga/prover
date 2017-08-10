@@ -20,6 +20,8 @@ namespace Prover.Core.Exports
         {
             using (streamWriter)
             {
+                await streamWriter.WriteLineAsync($"//{rowFormat}");
+
                 foreach (var value in recordsList)
                     await streamWriter.WriteLineAsync(GetRow(rowFormat, value));
             }

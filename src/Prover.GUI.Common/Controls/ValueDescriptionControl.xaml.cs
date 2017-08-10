@@ -65,20 +65,7 @@ namespace Prover.GUI.Common.Controls
         {
             get { return (Brush) GetValue(ControlBackgroundProperty); }
             set { SetValue(ControlBackgroundProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register(
-            "IsEditable", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(false));
-
-        public bool IsEditable
-        {
-            get { return (bool) GetValue(IsEditableProperty); }
-            set
-            {
-                SetValue(IsEditableProperty, value);
-                IsReadOnly = !value;
-            }
-        }
+        }      
 
         public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
             "IsReadOnly", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(true));
@@ -89,8 +76,20 @@ namespace Prover.GUI.Common.Controls
             set
             {
                 SetValue(IsReadOnlyProperty, value);
-                IsEditable = !value;
+                ShowEditSymbol = !IsReadOnly;
             }
         }
+
+        public bool ShowEditSymbol
+        {
+            get { return (bool)GetValue(ShowEditSymbolProperty); }
+            set { SetValue(ShowEditSymbolProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowEditSymbol.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowEditSymbolProperty =
+            DependencyProperty.Register("ShowEditSymbol", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(false));
+
+
     }
 }

@@ -1,4 +1,6 @@
 ﻿using ReactiveUI;
+using System;
+using System.Reactive.Linq;
 
 namespace Prover.GUI.Modules.Exporter.Screens.Exporter
 {
@@ -10,12 +12,20 @@ namespace Prover.GUI.Modules.Exporter.Screens.Exporter
         public ExportTestsView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                ViewModel = (ExportTestsViewModel)DataContext;
+                d(this.WhenAnyValue(x => x.ViewModel.ExecuteTestSearch)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
+            });
         }
 
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
-            set { ViewModel = (ExportTestsViewModel) value; }
+            set { ViewModel = (ExportTestsViewModel)value; }
         }
 
         public ExportTestsViewModel ViewModel { get; set; }

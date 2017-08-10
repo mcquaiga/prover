@@ -41,7 +41,6 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-
         private readonly decimal? _totalGauge;
 
         [NotMapped]
@@ -50,19 +49,21 @@ namespace Prover.Core.Models.Instruments
         public decimal GasPressure
         {
             get
-            {
-
+            {                
                 var result = 0m;
-                switch (VerificationTest?.Instrument?.Transducer)
-                {
-                    case TransducerType.Gauge:
-                        result = GasGauge.GetValueOrDefault(0);
-                        break;
-                    case TransducerType.Absolute:
-                        result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
-                        break;
-                }
-                return decimal.Round(result, 2);
+                result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
+                return decimal.Round(result, 4);
+
+                //switch (VerificationTest?.Instrument?.Transducer)
+                //{
+                //    case TransducerType.Gauge:
+                //        result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
+                //        break;
+                //    case TransducerType.Absolute:
+                //        result = GasGauge.GetValueOrDefault(0) - AtmosphericGauge.GetValueOrDefault(0);
+                //        break;
+                //}
+                //return decimal.Round(result, 2);
             }
         }
 
@@ -91,10 +92,8 @@ namespace Prover.Core.Models.Instruments
             {
                 var basePressure = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
                 if (basePressure == 0) return 0;
-
-                var gasPressure = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
-
-                return decimal.Round(gasPressure / basePressure, 4);
+             
+                return decimal.Round(GasPressure / basePressure, 4);
             }
         }
 

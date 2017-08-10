@@ -60,8 +60,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             _clientsList = LoadClientsCommand.ToProperty(this, x => x.Clients, new List<Client>());
 
-            FetchNextCertificateNumberCommand =
-                ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
+            FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
             _nextCertificateNumber = FetchNextCertificateNumberCommand.ToProperty(this, x => x.NextCertificateNumber);
 
             FetchExistingClientCertificatesCommand =

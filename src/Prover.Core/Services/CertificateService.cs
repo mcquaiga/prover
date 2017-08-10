@@ -95,6 +95,7 @@ namespace Prover.Core.Services
         {
             return await _certificateStore.Query()
                 .Where(c => c.ClientId.HasValue && c.ClientId.Value == client.Id)
+                .OrderBy(i => i.Number)
                 .ToListAsync();
         }
 
