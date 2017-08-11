@@ -1,5 +1,3 @@
 ﻿[
-  "Prover.Modules.Exporter",
-  "Prover.GUI.Common",
-  "UnionGas.MASA"
+  "Prover.GUI.Common"
 ]
