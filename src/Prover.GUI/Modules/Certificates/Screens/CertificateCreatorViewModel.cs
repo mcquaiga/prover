@@ -43,24 +43,29 @@ namespace Prover.GUI.Modules.Certificates.Screens
             _clientStore = clientStore;
             _certificateService = certificateService;
 
-            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient, 
-                (testedBy, vt, client) 
+            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient,
+                (testedBy, vt, client)
                     => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
 
-            ExecuteTestSearch = ReactiveCommand.CreateFromTask<Guid?, ReactiveList<CreateVerificationViewModel>>(GetInstrumentsWithNoCertificate);
-            ExecuteTestSearch.ToPropertyEx(this, x => x.RootResults, new ReactiveList<CreateVerificationViewModel>());
+            LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<CreateVerificationViewModel>>(LoadClientInstruments);                 
+            LoadClientInstrumentsCommand
+                .ToPropertyEx(this, x => x.RootResults, new ReactiveList<CreateVerificationViewModel>());           
 
             UpdateFilter = ReactiveCommand.Create<string>(filter =>
-            {
+            {                
                 ResultFilteredItems = RootResults.CreateDerivedCollection(x => x,
                     x => filter == "All" || string.IsNullOrEmpty(filter) || (filter == "Passed" && x.Instrument.HasPassed) || (filter == "Failed" && !x.Instrument.HasPassed),
-                    (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));
+                    (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));       
             });
+
+            this.WhenAnyValue(x => x.ResultFilteredItems)
+                .Select(x => x != null && x.Any())
+                .ToPropertyEx(this, x => x.ShowTestViewListBox);
 
             this.WhenAnyValue(x => x.RootResults)
                 .Select(s => "All")
-                .InvokeCommand(UpdateFilter);
+                .InvokeCommand(UpdateFilter);            
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             LoadClientsCommand
@@ -80,61 +85,25 @@ namespace Prover.GUI.Modules.Certificates.Screens
             PrintExistingCertificateCommand =
                 ReactiveCommand.CreateFromTask<Certificate>(PrintExistingCertificate, canExecutePrintCommand);
 
-            var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient);            
-            selectedClientChange
-                .Where(c => c != null)
-                .Select(x => x.Id)
-                .Delay(TimeSpan.FromMilliseconds(100))
-                .InvokeCommand(ExecuteTestSearch);
+            var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient)
+                .Do(c =>
+                {
+                    if (c == null)
+                    {
+                        RootResults.Clear();                        
+                    }
+                })
+                .Where(c => c != null);
 
             selectedClientChange
-                .Where(c => c != null)
+                .Delay(TimeSpan.FromMilliseconds(25))
+                .InvokeCommand(LoadClientInstrumentsCommand);
+            selectedClientChange
+                .Delay(TimeSpan.FromMilliseconds(150))
                 .InvokeCommand(FetchExistingClientCertificatesCommand);
-
             selectedClientChange
-                .Where(c => c != null)
-                .Subscribe(c => ExportToCsvViewModel.Client = c);
-
-            var searchIsExecuting = this.WhenAnyObservable(x => x.ExecuteTestSearch.IsExecuting);
-            selectedClientChange
-                .CombineLatest(searchIsExecuting, (client, search) => client != null && search)
-                .ToPropertyEx(this, x => x.ShowLoadingIndicator);
-
-            this.WhenAnyValue(x => x.ResultFilteredItems)
-                .CombineLatest(searchIsExecuting, (results, exec) => results != null && results.Any() && !exec)
-                .ToPropertyEx(this, x => x.ShowTestViewListBox);
-
-            searchIsExecuting
-                .Where(x => !x)
-                .CombineLatest(this.WhenAnyValue(x => x.ResultFilteredItems, results => results != null && !results.Any()),
-                    (searchExecuting, clients) => clients && !searchExecuting)
-                .ToPropertyEx(this, x => x.DisplayHelpBlankState, true);
-
-            #region unused code
-
-            //Instruments.ItemChanged
-            //    .Where(x => x.PropertyName == "IsSelected" && (SelectedClient == null || !Instruments.Any(i => i.IsSelected)))
-            //    .Select(v => v.Sender)
-            //    .Subscribe(model =>
-            //    {
-            //        var selectedInstrument = model.Instrument;
-            //        SelectedClient = model.Instrument.Client;
-            //        GetInstrumentsWithNoCertificate(SelectedClient?.Id);
-            //        Instruments.First(x => x.Instrument.Id == selectedInstrument.Id).IsSelected = true;
-            //    });
-
-            //Instruments.ItemChanged
-            //    .Where(x => x.PropertyName == "IsSelected" && !Instruments.Any(i => i.IsSelected))
-            //    .Select(v => v.Sender)
-            //    .Subscribe(async model =>
-            //    {
-            //        SelectedClient = null;
-            //        await GetInstrumentsWithNoCertificate();
-            //    });
-
-            #endregion
+                .Subscribe(c => ExportToCsvViewModel.Client = c);            
         }
-
 
         #region Commands
 
@@ -144,9 +113,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public ReactiveCommand<Unit, List<Client>> LoadClientsCommand { get; protected set; }
 
-        public ReactiveCommand<Guid?, ReactiveList<CreateVerificationViewModel>> ExecuteTestSearch { get; }
-
-        public ReactiveCommand<string, IEnumerable<CreateVerificationViewModel>> FilterResultsCommand { get; private set; }
+        public ReactiveCommand<Client, ReactiveList<CreateVerificationViewModel>> LoadClientInstrumentsCommand { get; }
 
         public ReactiveCommand<Client, IEnumerable<Certificate>> FetchExistingClientCertificatesCommand { get; set; }
 
@@ -156,9 +123,9 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         #endregion
 
-        #region Properties        
+        #region Properties
+        public extern ReactiveList<Instrument> RootClientInstruments { [ObservableAsProperty] get; }
         public extern ReactiveList<CreateVerificationViewModel> RootResults { [ObservableAsProperty] get; }
-        public extern bool DisplayHelpBlankState { [ObservableAsProperty] get; }
         public extern bool ShowLoadingIndicator { [ObservableAsProperty] get; }
         public extern bool ShowTestViewListBox { [ObservableAsProperty] get; }
         public extern long NextCertificateNumber { [ObservableAsProperty] get; }      
@@ -178,29 +145,29 @@ namespace Prover.GUI.Modules.Certificates.Screens
         public string TestedBy { get; set; }
 
         [Reactive]
-        public ExportToCsvViewModel ExportToCsvViewModel { get; set; }           
+        public ExportToCsvViewModel ExportToCsvViewModel { get; set; }      
 
         [Reactive]
         public IReactiveDerivedList<CreateVerificationViewModel> ResultFilteredItems { get; set; }
-       
+
         #endregion
 
         #region Private Functions
-        private async Task<ReactiveList<CreateVerificationViewModel>> GetInstrumentsWithNoCertificate(Guid? clientId = null)
+        private async Task<ReactiveList<CreateVerificationViewModel>> LoadClientInstruments(Client client)
         {
-            var results = new ReactiveList<CreateVerificationViewModel>();
-            var instruments = await _certificateService.GetInstrumentsWithNoCertificate(clientId);
+            var instruments = await _certificateService.GetInstrumentsWithNoCertificate(client.Id);
+            var viewModels = new ReactiveList<CreateVerificationViewModel>(
+                instruments.Select(i =>
+                {
+                    var vvm = new VerificationViewModel(i);
+                    var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
+                    item.VerificationView = vvm;
+                    return item;
+                }));
 
-            foreach (var i in instruments)
-            {
-                var vvm = new VerificationViewModel(i);
-                var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
-                item.VerificationView = vvm;
-                results.Add(item);
-            }
-            return results;
-        }       
-
+            return viewModels;        
+        }
+    
         private async Task<List<Client>> LoadClients()
         {
             var clients = new List<Client> { _allClient };
@@ -232,7 +199,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             var certificate =
                 await _certificateService.CreateCertificate(TestedBy, SelectedVerificationType, instruments);
 
-            var search = ExecuteTestSearch.Execute(SelectedClient?.Id);
+            var search = LoadClientInstrumentsCommand.Execute(SelectedClient);
 
             CertificateGenerator.GenerateXps(certificate);
             await FetchNextCertificateNumberCommand.Execute();
@@ -258,7 +225,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         public void Dispose()
         {
             ResultFilteredItems?.Dispose();
-            ExecuteTestSearch?.Dispose();
+            LoadClientInstrumentsCommand?.Dispose();
             CreateCertificateCommand?.Dispose();
         }
     }
