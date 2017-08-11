@@ -20,7 +20,7 @@ namespace UnionGas.MASA
 
             builder.RegisterType<CompanyNumberValidationManager>().As<IPreTestValidation>();
 
-            builder.RegisterType<ExportManager>().As<IExportTestRun>();
+            builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
            
         }
     }

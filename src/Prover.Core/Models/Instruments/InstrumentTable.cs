@@ -6,6 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.Core.Models.Instruments
@@ -31,8 +32,8 @@ namespace Prover.Core.Models.Instruments
 
         public string InstrumentData
         {
-            get { return Items.Serialize(); }
-            set { _instrumentData = value; }
+            get => Items.Serialize();
+            set => _instrumentData = value;
         }
 
         [NotMapped]
@@ -46,8 +47,8 @@ namespace Prover.Core.Models.Instruments
             base.OnInitializing();
 
             if (this is Instrument)
-                InstrumentType =
-                    CommProtocol.MiHoneywell.Instruments.GetAll().FirstOrDefault(i => i.Id == (this as Instrument).Type);
+                InstrumentType = HoneywellInstrumentTypes.GetAll()
+                    .FirstOrDefault(i => i.Id == (this as Instrument)?.Type);
 
             if (string.IsNullOrEmpty(_instrumentData)) return;
 

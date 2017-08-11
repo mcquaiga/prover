@@ -54,7 +54,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 ChangeTrackingEnabled = true
             };
 
-            foreach (var x in Instruments.GetAll())
+            foreach (var x in HoneywellInstrumentTypes.GetAll())
                 InstrumentTypes.Add(new SelectableInstrumentType
                 {
                     Instrument = x,
@@ -92,26 +92,24 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 });
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
-                x => x.SelectedTachCommPort,
-                (baud, instrumentPort, tachPort) =>
-                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
+                (baud, instrumentPort, tachPort) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
+
             CancelCommand = ReactiveCommand.Create(Cancel);
 
-            _clientList = clientStore.Query().ToList();
+            var clientList = clientStore.Query().ToList();
 
-            Clients = new ReactiveList<string>(_clientList.Select(x => x.Name).OrderBy(x => x).ToList());
+            Clients = new ReactiveList<string>(clientList.Select(x => x.Name).OrderBy(x => x).ToList());
             this.WhenAnyValue(x => x.SelectedClient)
-                .Subscribe(_ => { _client = _clientList.FirstOrDefault(x => x.Name == SelectedClient); });
+                .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
 
             _viewContext = NewQaTestViewContext;
         }
 
         public ReactiveCommand StartTestCommand { get; }
         public ReactiveCommand CancelCommand { get; }
-
 
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
@@ -128,51 +126,49 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public string ViewContext
         {
-            get { return _viewContext; }
-            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+            get => _viewContext;
+            set => this.RaiseAndSetIfChanged(ref _viewContext, value);
         }
+
         public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
 
         public ReactiveList<SelectableInstrumentType> InstrumentTypes
         {
-            get { return _instrumentTypes; }
-            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+            get => _instrumentTypes;
+            set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
-
         public string SelectedCommPort
         {
-            get { return _selectedCommPort; }
-            set { this.RaiseAndSetIfChanged(ref _selectedCommPort, value); }
+            get => _selectedCommPort;
+            set => this.RaiseAndSetIfChanged(ref _selectedCommPort, value);
         }
 
         public List<string> TachCommPort => SerialPort.GetPortNames().ToList();
-
         public string SelectedTachCommPort
         {
-            get { return _selectedTachCommPort; }
-            set { this.RaiseAndSetIfChanged(ref _selectedTachCommPort, value); }
+            get => _selectedTachCommPort;
+            set => this.RaiseAndSetIfChanged(ref _selectedTachCommPort, value);
         }
 
         public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
-
         public int SelectedBaudRate
         {
-            get { return _selectedBaudRate; }
-            set { this.RaiseAndSetIfChanged(ref _selectedBaudRate, value); }
+            get => _selectedBaudRate;
+            set => this.RaiseAndSetIfChanged(ref _selectedBaudRate, value);
         }
 
         public bool ShowConnectionDialog
         {
-            get { return _showConnectionDialog; }
-            set { this.RaiseAndSetIfChanged(ref _showConnectionDialog, value); }
+            get => _showConnectionDialog;
+            set => this.RaiseAndSetIfChanged(ref _showConnectionDialog, value);
         }
 
         public string ConnectionStatusMessage
         {
-            get { return _connectionStatusMessage; }
-            set { this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value); }
+            get => _connectionStatusMessage;
+            set => this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value);
         }
 
         public async Task Cancel()
@@ -187,27 +183,27 @@ namespace Prover.GUI.Modules.QAProver.Screens
             if (SelectedInstrument != null)
                 _cancellationTokenSource = new CancellationTokenSource();
 
-                try
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
-                    await SettingsManager.Save();
+            try
+            {
+                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument?.Name;
+                await SettingsManager.Save();
 
-                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+                _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
+                await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
 
-                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
-                    ViewContext = EditQaTestViewContext;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    throw;
-                }
-                finally
-                {
-                    ShowConnectionDialog = false;
-                }
+                await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+                ViewContext = EditQaTestViewContext;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                throw;
+            }
+            finally
+            {
+                ShowConnectionDialog = false;
+            }
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
@@ -227,7 +223,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                     TestViews.Add(item);
                 }
 
-                if (instrument.InstrumentType == Instruments.MiniAt)
+                if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
         }
@@ -240,20 +236,19 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         private string _selectedClient;
         private Client _client;
-        private readonly List<Client> _clientList;
 
         private ReactiveList<string> _clients;
 
         public ReactiveList<string> Clients
         {
-            get { return _clients; }
-            set { this.RaiseAndSetIfChanged(ref _clients, value); }
+            get => _clients;
+            set => this.RaiseAndSetIfChanged(ref _clients, value);
         }
 
         public string SelectedClient
         {
-            get { return _selectedClient; }
-            set { this.RaiseAndSetIfChanged(ref _selectedClient, value); }
+            get => _selectedClient;
+            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
         }
 
         public class SelectableInstrumentType
@@ -267,7 +262,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             _testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
-
      
     }
 }
@@ -286,3 +280,4 @@ namespace Prover.GUI.Modules.QAProver.Screens
 //        }
 //    }
 //}
+

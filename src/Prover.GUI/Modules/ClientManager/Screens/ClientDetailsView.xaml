@@ -1,0 +1,228 @@
+﻿<UserControl x:Class="Prover.GUI.Modules.ClientManager.Screens.ClientDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+            <Style TargetType="materialDesign:PackIcon"
+                   BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="8 0 8 0" />
+            </Style>
+
+            <DataTemplate x:Key="ItemsLists">
+                <ContentControl Margin="5"
+                                cal:View.Model="{Binding }"
+                                cal:View.Context="Card" />
+            </DataTemplate>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <materialDesign:DialogHost>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <materialDesign:ColorZone Mode="PrimaryLight"
+                                      Padding="10"
+                                      Grid.Row="0">
+                <Button Command="{Binding GoBackCommand}"
+                        HorizontalAlignment="Left"
+                        Margin="-15 0 0 0"
+                        Style="{DynamicResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="ArrowLeft"
+                                             Height="48"
+                                             Width="48" />
+                </Button>
+            </materialDesign:ColorZone>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Grid.Column="0"
+                                         Grid.Row="0"
+                                         Kind="Account"
+                                         Foreground="{Binding ElementName=NameTextBox, Path=BorderBrush}" />
+                <TextBox x:Name="NameTextBox"
+                         Grid.Column="1"
+                         Grid.Row="0"
+                         Text="{Binding Client.Name}"
+                         materialDesign:HintAssist.Hint="Name" />
+
+                <materialDesign:PackIcon Grid.Column="0"
+                                         Grid.Row="1"
+                                         Kind="Home"
+                                         Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
+                <TextBox x:Name="AddressTextBox"
+                         Grid.Column="1"
+                         Grid.Row="1"
+                         Text="{Binding Client.Address}"
+                         materialDesign:HintAssist.Hint="Address"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" />
+
+                <materialDesign:PackIcon Grid.Column="2"
+                                         Grid.Row="0"
+                                         Kind="FileDelimited"
+                                         Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
+
+                <Button Grid.Column="3"
+                        Grid.Row="0"
+                        Content="Export Certificates to CSVs"
+                        Command="{Binding GoToCsvExporter}" />
+            </Grid>
+
+            <GroupBox Grid.Row="2"
+                      Header="Verify/Reset Items">
+                <Grid Margin="10"
+                      Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            BorderBrush="LightGray"
+                            BorderThickness="0 0 2 0">
+                        <ListBox ItemsSource="{Binding InstrumentTypes}"
+                                 SelectedItem="{Binding SelectedInstrumentType}"
+                                 SelectionMode="Single">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+
+                                    <!--<Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            FontSize="18" Content="{Binding Name}"/>-->
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                    <UniformGrid Grid.Column="1"
+                                 Grid.Row="0"
+                                 Columns="2">
+                        <ContentControl cal:View.Model="{Binding VerifyItemList}" />
+                        <ContentControl cal:View.Model="{Binding ResetItemList}" />
+                    </UniformGrid>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="3"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      Header="Certificate Csv Templates">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DataGrid ScrollViewer.CanContentScroll="True"
+                              Grid.Row="0"
+                              FontSize="18"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                              materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                              Margin="4"
+                              ItemsSource="{Binding ClientCsvTemplates}"
+                              CanUserSortColumns="True"
+                              CanUserAddRows="False"
+                              IsReadOnly="True"
+                              CanUserDeleteRows="False"
+                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding InstrumentTypeString}"
+                                                                       Header="Instrument Type" />
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding CorrectorTypeString}"
+                                                                       Header="Corrector Type" />
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding VerificationTypeString}"
+                                                                       Header="Verification Type" />
+                            <materialDesign:MaterialDataGridTextColumn Binding="{Binding CsvTemplate}"
+                                                                       Header="CSV Template" />
+
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                                    Path=DataContext.DeleteCsvTemplateCommand}"
+                                                CommandParameter="{Binding }">
+                                            <materialDesign:PackIcon Kind="Delete"
+                                                                     Height="24"
+                                                                     Width="24"
+                                                                     Foreground="White" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding Path=DataContext.GoToCsvTemplateManager,
+                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                CommandParameter="{Binding }">
+                                            <materialDesign:PackIcon Kind="Pencil"
+                                                                     Height="24"
+                                                                     Width="24"
+                                                                     Foreground="White" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                    <Button Content="New Template"
+                            Grid.Row="1"
+                            HorizontalAlignment="Right"
+                            Margin="5"
+                            Command="{Binding GoToCsvTemplateManager}" />
+                </Grid>
+            </GroupBox>
+
+        </Grid>
+
+    </materialDesign:DialogHost>
+</UserControl>

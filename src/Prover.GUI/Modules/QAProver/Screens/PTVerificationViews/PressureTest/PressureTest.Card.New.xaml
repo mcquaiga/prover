@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
@@ -19,74 +20,61 @@
                                               FalseValue="Collapsed" />
     </UserControl.Resources>
 
-    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                         Margin="5"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Stretch">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="0"
+                   FontWeight="Light"
+                   Foreground="SlateGray"
+                   FontSize="32"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="P" />
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0"
-                       Grid.RowSpan="2"
-                       Grid.Column="0"
-                       Margin="5 0 15 0"
-                       FontWeight="Light"
-                       Foreground="SlateGray"
-                       VerticalAlignment="Center"
-                       FontSize="36"
-                       Text="P" />
+        <controls:PercentageControlNew Grid.Row="0"
+                                       Grid.Column="1"
+                                       Margin="16 0"
+                                       DisplayValue="{Binding TestRun.PercentError}"
+                                       Passed="{Binding TestRun.HasPassed}" />
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="4">
+            <UniformGrid Columns="2"
+                         Margin="0">
+                <controls:ValueDescriptionControl Label="Gauge"
+                                                  IsReadOnly="False"
+                                                  Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:ValueDescriptionControl Label="EVC Reading"
+                                                  Value="{Binding EvcGasPressure}" />
+            </UniformGrid>
+            <UniformGrid Columns="2"
+                         Margin="0"
+                         Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}">
+                <controls:ValueDescriptionControl Label="ATM Gauge"
+                                                  IsReadOnly="{Binding IsAtmGaugeReadOnly}"
+                                                  Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <controls:ValueDescriptionControl Label="EVC ATM Reading"
+                                                  Value="{Binding EvcAtmPressure}" />
+            </UniformGrid>
+            <UniformGrid Columns="2"
+                         Margin="0">
+                <controls:ValueDescriptionControl Label="Actual Factor"
+                                                  Value="{Binding TestRun.ActualFactor}" />
 
-            <controls:PercentageControlNew HorizontalAlignment="Center"
-                                           Grid.Column="0"
-                                           Grid.ColumnSpan="2"
-                                           Grid.Row="0"
-                                           DisplayValue="{Binding TestRun.PercentError}"
-                                           Passed="{Binding TestRun.HasPassed}"
-                                            />
-            <StackPanel Grid.Row="1"
-                        Grid.Column="1"
-                        HorizontalAlignment="Stretch"
-                        Margin="5 0">
-                <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Gauge"
-                                                      IsReadOnly="True"
-                                                      Value="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:ValueDescriptionControl Label="EVC Reading"
-                                                      Value="{Binding EvcGasPressure}" />
-                </UniformGrid>
-                <UniformGrid Columns="2"
-                             Margin="0"
-                             Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}">
-                    <controls:ValueDescriptionControl Label="ATM Gauge"
-                                                       IsReadOnly="{Binding IsAtmGaugeReadOnly}"
-                                                       Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:ValueDescriptionControl Label="EVC ATM Reading"
-                                                      Value="{Binding EvcAtmPressure}" />
-                </UniformGrid>
-                <UniformGrid Columns="2"
-                             Margin="0">
-                    <controls:ValueDescriptionControl LabelFontSize="10"
-                                                      ValueFontSize="20"
-                                                      Label="Actual Factor"
-                                                      Value="{Binding TestRun.ActualFactor}" />
+                <controls:ValueDescriptionControl Label="EVC Factor"
+                                                  Value="{Binding TestRun.EvcFactor}" />
 
-                    <controls:ValueDescriptionControl LabelFontSize="10"
-                                                      ValueFontSize="20"
-                                                      Label="EVC Factor"
-                                                      Value="{Binding EvcFactor}" />
+            </UniformGrid>
+        </StackPanel>
+    </Grid>
 
-                </UniformGrid>
-            </StackPanel>
-        </Grid>
-
-    </materialDesign:Card>
 
     <!--**** END PRESSURE **** -->
 </UserControl>

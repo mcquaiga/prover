@@ -37,7 +37,9 @@ namespace Prover.Core.Storage
                 _proverContext.Entry(instrument).State = EntityState.Modified;
             }
             else
+            {
                 _proverContext.Instruments.Add(instrument);
+            }
 
             await _proverContext.SaveChangesAsync();
             return instrument;

@@ -12,13 +12,13 @@ using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Exporter
 {
-    public class ExportManager : IExportTestRun
+    public class ExportToMasaManager : IExportTestRun
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly DCRWebServiceSoap _dcrWebService;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public ExportManager(IProverStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
+        public ExportToMasaManager(IProverStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
         {
             _instrumentStore = instrumentStore;
             _dcrWebService = dcrWebService;

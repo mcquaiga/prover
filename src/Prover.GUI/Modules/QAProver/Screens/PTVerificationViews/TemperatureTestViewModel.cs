@@ -21,7 +21,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             set
             {
                 TestRun.Gauge = value;
-                //EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 

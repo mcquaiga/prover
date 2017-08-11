@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -49,14 +50,16 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((Instrument.CompositionType == CorrectorType.T) && (TemperatureTest != null))
-                    return TemperatureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
+                if (Instrument.CompositionType == EvcCorrectorType.T && TemperatureTest != null)
+                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if ((Instrument.CompositionType == CorrectorType.P) && (PressureTest != null))
-                    return PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed);
+                if (Instrument.CompositionType == EvcCorrectorType.P && PressureTest != null)
+                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
 
-                if ((Instrument.CompositionType == CorrectorType.PTZ) && (PressureTest != null) && (TemperatureTest != null))
-                    return TemperatureTest.HasPassed && PressureTest.HasPassed && ((VolumeTest == null) || VolumeTest.HasPassed) ;
+                if (Instrument.CompositionType == EvcCorrectorType.PTZ && PressureTest != null &&
+                    TemperatureTest != null)
+                    return TemperatureTest.HasPassed && PressureTest.HasPassed &&
+                           (VolumeTest == null || VolumeTest.HasPassed);
 
                 return false;
             }
@@ -66,7 +69,7 @@ namespace Prover.Core.Models.Instruments
         {
             base.OnInitializing();
 
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+            if (Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTest = new SuperFactorTest(this);
         }
     }

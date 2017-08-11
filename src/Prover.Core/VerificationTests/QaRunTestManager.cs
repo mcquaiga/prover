@@ -10,6 +10,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
@@ -21,7 +22,10 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
 
         IObservable<string> TestStatus { get; }
-        Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(), Client client = null);
+
+        Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(),
+            Client client = null);
+
         Task RunTest(int level, CancellationToken ct = new CancellationToken());
         Task SaveAsync();
         Task RunVerifiers();
@@ -143,16 +147,16 @@ namespace Prover.Core.VerificationTests
             if (!_communicationClient.IsConnected)
                 await _communicationClient.Connect(ct);
 
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+            if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
                 await DownloadTemperatureTestItems(level);
                 await DownloadPressureTestItems(level);
             }
 
-            if (Instrument.CompositionType == CorrectorType.T)
+            if (Instrument.CompositionType == EvcCorrectorType.T)
                 await DownloadTemperatureTestItems(level);
 
-            if (Instrument.CompositionType == CorrectorType.P)
+            if (Instrument.CompositionType == EvcCorrectorType.P)
                 await DownloadPressureTestItems(level);
 
             await _communicationClient.Disconnect();

@@ -1,0 +1,84 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using Prover.Core.Storage;
+using Prover.GUI.Common;
+using Prover.GUI.Common.Screens;
+using ReactiveUI;
+
+namespace Prover.GUI.Modules.ClientManager.Screens
+{
+    public class ClientManagerViewModel : ViewModelBase, IDisposable
+    {
+        private readonly IClientStore _clientStore;
+        private const string ClientListViewContext = "ClientListView";
+
+        public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            IClientStore clientStore) : base(screenManager, eventAggregator)
+        {
+            _clientStore = clientStore;
+            ViewContext = ClientListViewContext;
+
+            LoadClients();
+
+            AddClientCommand = ReactiveCommand.CreateFromTask(AddClient);
+        }
+
+        #region Private Functions
+
+        private void LoadClients()
+        {
+            _clientStore.Query()
+                .OrderBy(c => c.Name)
+                .ToList()
+                .ForEach(x => ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore, x)));
+        }
+
+        private async Task AddClient()
+        {
+            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore,
+                new Core.Models.Clients.Client());
+            await newClientVm.Edit();
+        }
+
+        #endregion
+
+        #region Commands
+
+        private ReactiveCommand _addClientCommand;
+
+        public ReactiveCommand AddClientCommand
+        {
+            get { return _addClientCommand; }
+            set { this.RaiseAndSetIfChanged(ref _addClientCommand, value); }
+        }
+
+        #endregion
+
+        #region Properties
+
+        private ReactiveList<ClientDetailsViewModel> _clientList = new ReactiveList<ClientDetailsViewModel>();
+
+        public ReactiveList<ClientDetailsViewModel> ClientList
+        {
+            get { return _clientList; }
+            set { this.RaiseAndSetIfChanged(ref _clientList, value); }
+        }
+
+        private string _viewContext;
+
+        public string ViewContext
+        {
+            get { return _viewContext; }
+            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+        }
+
+        #endregion
+
+        public void Dispose()
+        {
+            ClientList = null;
+        }
+    }
+}

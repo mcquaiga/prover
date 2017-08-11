@@ -10,7 +10,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="materialDesign:PackIcon">
@@ -23,7 +24,7 @@
 
             <Style TargetType="Button"
                    BasedOn="{StaticResource MaterialDesignFlatButton}">
-                <Setter Property="Height" Value="48"/>
+                <Setter Property="Height" Value="48" />
             </Style>
 
             <Style TargetType="{x:Type TextBlock}">
@@ -33,42 +34,34 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <CheckBox IsChecked="{Binding Path=IsSelected}" 
-                      Grid.Column="0"
-                      Grid.Row="1"
-                      Margin="8"
-                      VerticalAlignment="Center"/>          
-            <ContentControl Grid.Row="1"
-                            Grid.Column="2"
-                            cal:View.Model="{Binding VerificationView}" />
-            
-            <StackPanel Grid.Column="3"
-                        Grid.Row="1"
-                        Orientation="Horizontal" 
-                        HorizontalAlignment="Right" 
-                        VerticalAlignment="Center"
-                        Margin="5">
-                <Button Command="{Binding ViewQaTestReportCommand}"
-                        ToolTip="View QA Test Report">
-                    <materialDesign:PackIcon Kind="Printer"/>
-                </Button>
-                <Button Command="{Binding ArchiveTestCommand}"
-                        ToolTip="Archive Test">
-                    <materialDesign:PackIcon Kind="Archive"/>
-                </Button>
-            </StackPanel>
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="24" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <CheckBox IsChecked="{Binding Path=IsSelected}"
+                  Grid.Column="0"
+                  Grid.Row="0"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center" />
+        <ContentControl Grid.Row="0"
+                        Grid.Column="1"
+                        cal:View.Model="{Binding VerificationView}" />
+
+        <StackPanel Grid.Column="2"
+                    Grid.Row="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Margin="5">
+            <Button Command="{Binding ViewQaTestReportCommand}"
+                    ToolTip="View QA Test Report">
+                <materialDesign:PackIcon Kind="Printer" />
+            </Button>
+            <Button Command="{Binding ArchiveTestCommand}"
+                    ToolTip="Archive Test">
+                <materialDesign:PackIcon Kind="Archive" />
+            </Button>
+        </StackPanel>
     </Grid>
-    
+
 </UserControl>

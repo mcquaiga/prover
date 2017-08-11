@@ -15,7 +15,7 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
     {
         private IClientStore _clientStore;
         private IProverStore<Instrument> _instrumentStore;
-      
+
         public ClientPostTestResetManager(IClientStore clientStore, IProverStore<Instrument> instrumentStore)
         {
             _clientStore = clientStore;
@@ -27,9 +27,12 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
             throw new NotImplementedException();
         }
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates)
+        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument,
+            Subject<string> statusUpdates)
         {
-            var resetItems = instrument.Client.Items.FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset && c.InstrumentType == instrument.InstrumentType)?.Items.ToList();
+            var resetItems = instrument.Client.Items
+                .FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset &&
+                                     c.InstrumentType == instrument.InstrumentType)?.Items.ToList();
 
             if (resetItems == null || !resetItems.Any()) return;
 

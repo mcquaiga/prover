@@ -14,7 +14,7 @@ namespace Prover.Core.Extensions
 
         public static T ParseEnum<T>(this string value)
         {
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (T) Enum.Parse(typeof(T), value, true);
         }
     }
 }

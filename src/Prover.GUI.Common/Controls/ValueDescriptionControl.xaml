@@ -5,8 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters"
              mc:Ignorable="d"
-                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             x:Name="parent"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             x:Name="ValueDescription"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}">
     <UserControl.Resources>
@@ -24,16 +24,29 @@
         </ResourceDictionary>
         
     </UserControl.Resources>
-    <Grid DataContext="{Binding ElementName=parent}">
+    <Grid DataContext="{Binding ElementName=ValueDescription}">
         <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
             <Grid Background="{Binding ControlBackground}">
                 <StackPanel Margin="4 0">
-                    <TextBox Text="{Binding Path=Value}" 
-                            Margin="0 2"
-                            FontSize="{Binding ValueFontSize}"
-                            BorderThickness="0"
-                            IsReadOnly="{Binding Path=IsReadOnly}"
-                            Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="34" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding Path=Value}"
+                                 Grid.Column="0"
+                                 Margin="0 2"
+                                 FontSize="{Binding ValueFontSize}"
+                                 BorderThickness="0"
+                                 IsReadOnly="{Binding Path=IsReadOnly}"
+                                 Foreground="{DynamicResource PrimaryHueDarkBrush}" />
+                        <materialDesign:PackIcon Kind="Pencil"
+                                                 Grid.Column="1"
+                                                 Width="32"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="{Binding Path=ShowEditSymbol, Converter={StaticResource BoolToHiddenConverter}}" />
+                    </Grid>
                     <TextBlock Text="{Binding Path=Label}"
                                HorizontalAlignment="Left"
                                FontSize="{Binding LabelFontSize}"

@@ -62,5 +62,4 @@ namespace Prover.Core.Storage
             await UpsertAsync(entity);
         }
     }
-
 }

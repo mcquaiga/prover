@@ -1,22 +1,22 @@
 ﻿namespace Prover.CommProtocol.MiHoneywell
 {
-    public enum InstrumentTypes
-    {
-        Mini = 2,
-        ECAT = 0,
-        MiniAT = 3,
-        MiniMax = 4,
-        AccuTest = 21,
-        TurboCor = 20,
-        TurboMon = 6,
-        PulseAcc = 8,
-        TCI = 12,
-        EC350 = 13,
-        ER = 1,
-        ERX = 10,
-        PTBoard = 5,
-        AutoDetect = 99
-    }
+    //public enum InstrumentTypes
+    //{
+    //    Mini = 2,
+    //    ECAT = 0,
+    //    MiniAT = 3,
+    //    MiniMax = 4,
+    //    AccuTest = 21,
+    //    TurboCor = 20,
+    //    TurboMon = 6,
+    //    PulseAcc = 8,
+    //    TCI = 12,
+    //    EC350 = 13,
+    //    ER = 1,
+    //    ERX = 10,
+    //    PTBoard = 5,
+    //    AutoDetect = 99
+    //}
 
     public enum ResponseCode
     {

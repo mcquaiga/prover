@@ -54,7 +54,7 @@ namespace Prover.Core.Communication
 
                     Log.Debug($"Read data from Tach: {tachString}");
                     return ParseTachValue(tachString);
-                }                
+                }
                 finally
                 {
                     _serialPort.Close();

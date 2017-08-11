@@ -10,12 +10,19 @@ namespace Prover.Core.Extensions
         private const int TEMP_UNITS = 89;
         private const int BASE_TEMP = 34;
 
-        public static string Range(this Instrument instrument) => "-40 - 150 " + instrument.TemperatureUnits();
+        public static string Range(this Instrument instrument)
+        {
+            return "-40 - 150 " + instrument.TemperatureUnits();
+        }
 
         public static string TemperatureUnits(this Instrument instrument)
-            => instrument.Items.GetItem(TEMP_UNITS).Description;
+        {
+            return instrument.Items.GetItem(TEMP_UNITS).Description;
+        }
 
         public static decimal? EvcBaseTemperature(this Instrument instrument)
-            => instrument.Items.GetItem(BASE_TEMP).NumericValue;
+        {
+            return instrument.Items.GetItem(BASE_TEMP).NumericValue;
+        }
     }
 }

@@ -28,7 +28,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public IObservable<string> StatusMessage => _status.AsObservable();
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+
+        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             try
             {
@@ -60,11 +62,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             await commClient.Connect(ct);
-            
-            volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+
+            volumeTest.Items =
+                (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -91,10 +95,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                         //TODO: Raise events so the UI can respond
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                         volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
+                    } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() &&
+                             !ct.IsCancellationRequested);
                 }, ct);
                 ct.ThrowIfCancellationRequested();
-            }         
+            }
             catch (OperationCanceledException ex)
             {
                 Log.Info("Cancelling volume test.");
@@ -106,7 +111,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            CancellationToken ct)
         {
             await Task.Run(async () =>
             {
@@ -114,7 +120,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     ct.ThrowIfCancellationRequested();
                     await commClient.Connect(ct);
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());                    
+                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
                 }
                 finally
                 {

@@ -42,7 +42,7 @@ namespace Prover.Core.Models.Instruments
                     MeterDisplacement = Convert.ToDecimal(x.Attribute("MeterDisplacement").Value)
                 };
 
-            if ((indexes == null) || !indexes.Any())
+            if (indexes == null || !indexes.Any())
                 throw new KeyNotFoundException(
                     string.Format("Could not find a matching meter index definition for Meter Index Id: {0}",
                         meterIndexId));

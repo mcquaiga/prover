@@ -5,17 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
-             Background="White"
-             d:DesignHeight="300"
-             d:DesignWidth="500">
+             Background="White">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
                                                   TrueValue="Visible"
@@ -29,8 +33,27 @@
                    BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
+                <Setter Property="Margin" Value="4 0 4 0" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource MaterialDesignLightForeground}" />
+            </Style>
+
+            <Style TargetType="{x:Type TextBox}"
+                   BasedOn="{StaticResource MaterialDesignTextBox}">
                 <Setter Property="Margin"
-                        Value="4 0 4 0" />
+                        Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}"
+                   BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+                <Setter Property="Margin"
+                        Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource MaterialDesignBody1TextBlock}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+                <Setter Property="Foreground" Value="{StaticResource MaterialDesignLightForeground}" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -39,8 +62,9 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />                
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.75*" />
@@ -52,31 +76,42 @@
                       materialDesign:HintAssist.Hint="Select a Client"
                       Grid.Column="0"
                       Margin="10" />
+            
+            <StackPanel Grid.Row="1"
+                        Grid.Column="0"                   
+                        Orientation="Horizontal">
+                <Button Content="All"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="All"/>
+                <Button Content="Passed"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="Passed"/>
+                <Button Content="Failed"
+                        Command="{Binding UpdateFilter}"
+                        CommandParameter="Failed" />
+            </StackPanel>
 
-            <TextBlock Grid.Column="0"
-                       Grid.Row="1"
-                       FontSize="24"
-                       TextWrapping="Wrap"
+            <!--<TextBlock Grid.Column="0"
+                       Grid.Row="2"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Text="Select a customer from the dropdown."
-                       Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}" />
-
-            <ProgressBar Grid.Row="1"
+                       Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}" />-->
+            <ProgressBar Grid.Row="2"
                          Grid.Column="0"
-                         Style="{StaticResource MaterialDesignCircularProgressBar}"
-                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}}"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"                         
+                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
                          Value="0"
                          IsIndeterminate="True"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center" />
-            <ListBox Grid.Column="0"
+            <ListBox x:Name="ResultFilteredItems"
+                     Grid.Column="0"
                      VerticalContentAlignment="Stretch"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Margin="5"
                      SelectionMode="Multiple"
                      Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}}"
-                     x:Name="SearchResults"
                      HorizontalContentAlignment="Stretch">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -95,94 +130,105 @@
             </ListBox>
 
             <!--  Certificate Information  -->
-            <Grid Grid.Column="1"
-                  Grid.Row="1"
-                  HorizontalAlignment="Left"
-                  Margin="5 5 0 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="150" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Certificate #"
-                           Grid.Row="0"
-                           Grid.Column="0"
-                           Grid.ColumnSpan="2"
-                           Margin="5">
-                    <TextBlock Text="{Binding NextCertificateNumber}" />
-                </TextBlock>
-
-                <materialDesign:PackIcon Grid.Column="0"
-                                         Grid.Row="1"
-                                         Kind="Account"
-                                         Foreground="{Binding ElementName=TestedBy, Path=BorderBrush}"/>
-                <TextBox x:Name="TestedBy"
-                         Grid.Row="1"
-                         Grid.Column="1"
-                         HorizontalAlignment="Stretch"
-                         materialDesign:HintAssist.Hint="Tested By"
-                         Margin="2" />
-
-
-                <materialDesign:PackIcon Grid.Row="2"
-                                         Grid.Column="0"
-                                         Kind="Verified"
-                                         Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
-                <ComboBox x:Name="VerificationType"
-                          Grid.Row="2"
-                          Grid.Column="1"
-                          HorizontalAlignment="Stretch"
-                          materialDesign:HintAssist.Hint="Inspection Type"
-                          Margin="2" />
-
-
-                <Button Command="{Binding CreateCertificateCommand}"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Grid.Row="3"
-                        Margin="10"
-                        Content="Create" />
-
-
-                <Grid Grid.Column="0"
-                      Grid.ColumnSpan="2"
-                      Margin="5 15"
-                      Grid.Row="4">
+            <GroupBox Header="Create Certificate"
+                      Margin="5"
+                      Grid.Column="1"
+                      Grid.Row="0"
+                      Grid.RowSpan="3">
+                <Grid HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Grid.Column="0"
-                               Text="Print Existing Certificate" />
-                    <StackPanel Grid.Column="0"
-                                Orientation="Horizontal"
-                                Grid.Row="1">
-                        <TextBlock Text="Certificate #:" />
-                        <TextBox Text="{Binding ExistingCertificateNumber, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="10 0 0 0"
-                                 Width="100" />
-                    </StackPanel>
-                    <Button x:Name="PrintExistingCertificateButton"
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
-                            Margin="10"
-                            Grid.Column="1"
-                            Content="Print" />
-                </Grid>
-            </Grid>
 
-            
+                    <materialDesign:PackIcon Grid.Row="0"
+                                             Grid.Column="0"
+                                             Kind="Pound"
+                                             Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
+
+                    <TextBlock x:Name="NextCertificateNumberTextBlock"
+                               Text="{Binding NextCertificateNumber, FallbackValue=5}"
+                               materialDesign:HintAssist.Hint="Next Certificate Number"
+                               Style="{StaticResource MaterialDesignBody1TextBlock}"
+                               HorizontalAlignment="Stretch"
+                               Grid.Row="0"
+                               Margin="4"
+                               Grid.Column="1" />
+                    <materialDesign:PackIcon Grid.Column="0"
+                                             Grid.Row="1"
+                                             Kind="Account"
+                                             Foreground="{Binding ElementName=TestedBy, Path=BorderBrush}" />
+                    <TextBox x:Name="TestedBy"
+                             Grid.Row="1"
+                             Grid.Column="1"
+                             HorizontalAlignment="Stretch"
+                             materialDesign:HintAssist.Hint="Tested By"
+                             Margin="2" />
+
+                    <materialDesign:PackIcon Grid.Row="2"
+                                             Grid.Column="0"
+                                             Kind="Verified"
+                                             Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
+
+                    <ComboBox x:Name="VerificationType"
+                              Grid.Row="2"
+                              Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              Style="{StaticResource MaterialDesignComboBox}"
+                              materialDesign:HintAssist.Hint="Inspection Type"
+                              Margin="2" />
+
+                    <Button Command="{Binding CreateCertificateCommand}"
+                            Grid.Column="1"
+                            Grid.Row="4"
+                            Margin="10"
+                            Content="Create Certificate"
+                            HorizontalAlignment="Right" />
+                </Grid>
+            </GroupBox>
+
+            <UniformGrid Columns="2"
+                        HorizontalAlignment="Stretch"
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                <GroupBox Header="Print Existing Certificate"
+                          Margin="5">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ComboBox x:Name="ExistingClientCertificates"
+                                  DisplayMemberPath="Number"
+                                  materialDesign:HintAssist.Hint="Certificate #"
+                                  Grid.Column="0"
+                                  Grid.Row="1"
+                                  HorizontalAlignment="Stretch" />
+
+                        <Button x:Name="PrintExistingCertificateButton"
+                                Grid.Row="2"
+                                Margin="5"
+                                Grid.Column="0"
+                                HorizontalAlignment="Right"
+                                Content="Print" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Export CSVs"                          
+                          Margin="5">
+                    <ContentControl cal:View.Model="{Binding ExportToCsvViewModel}" />
+                </GroupBox>
+            </UniformGrid>
+
         </Grid>
     </DockPanel>
 </UserControl>

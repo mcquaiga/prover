@@ -44,11 +44,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.5.0\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.6.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.Core.3.0.3\lib\net45\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.Core.3.1.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -67,7 +70,7 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -105,6 +108,11 @@
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
+    <Compile Include="Exports\CsvWriter.cs" />
+    <Compile Include="Exports\ExportFields.cs" />
+    <Compile Include="Exports\ExportToCsvManager.cs" />
+    <Compile Include="Exports\IExportCertificate.cs" />
+    <Compile Include="Exports\TranslateToCsv.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
@@ -163,10 +171,24 @@
     <Compile Include="Migrations\201701021633015_AddClientIdToInstrument.Designer.cs">
       <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705220833519_AddCsvExportToClient.cs" />
+    <Compile Include="Migrations\201705220833519_AddCsvExportToClient.Designer.cs">
+      <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.cs" />
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.Designer.cs">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.cs" />
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.Designer.cs">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
+    <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
+    <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
@@ -209,7 +231,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
-    <Compile Include="Startup\Bootstrapper.cs" />
+    <Compile Include="Startup\CoreBootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\IProverStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
@@ -241,6 +263,10 @@
     <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
+      <Project>{35FE4429-B8F5-4761-B401-A215D1B4EBA2}</Project>
+      <Name>Prover.Core.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
       <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
@@ -298,6 +324,18 @@
     <EmbeddedResource Include="Migrations\201701021633015_AddClientIdToInstrument.resx">
       <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705220833519_AddCsvExportToClient.resx">
+      <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705292156266_AddClientsToCertificate.resx">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706181948396_AddClientCsvTemplates.resx">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exports\CsvFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

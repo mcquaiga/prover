@@ -6,7 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontSize="22"
+             TextElement.FontSize="26"
              TextElement.FontWeight="Light"            
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d"
@@ -23,7 +23,7 @@
         </Style>
         
         <Style TargetType="{x:Type Border}" x:Key="InfoSection">
-            <Setter Property="Margin" Value="4 8"></Setter>
+            <Setter Property="Margin" Value="2"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -35,7 +35,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackPanel  VerticalAlignment="Center" Grid.Row="0" Margin="5">
+            <StackPanel  VerticalAlignment="Center" 
+                         Grid.Row="0"
+                         >
                 <TextBlock FontSize="16" Margin="0" Text="{Binding TestDatePretty, FallbackValue='February 15, 2017'}"/>
                 <TextBlock FontSize="38"
                                Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-AT}" 
@@ -47,11 +49,11 @@
                 </StackPanel>
                 <TextBlock FontSize="16" 
                            Margin="0 5 0 0"
-                           Text="{Binding JobIdDisplay, FallbackValue='Job #12345'}" 
+                           Text="{Binding JobIdDisplay, FallbackValue='Job # Not Found'}" 
                            HorizontalAlignment="Center" />
             </StackPanel>
 
-            <StackPanel Margin="8 4" 
+            <StackPanel Margin="4" 
                         Grid.Row="1"
                         Orientation="Vertical">
                 <Border BorderThickness="0 1 0 1"

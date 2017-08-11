@@ -106,7 +106,8 @@
         
         </ResourceDictionary>
     </UserControl.Resources>
-    <Viewbox>
+    <Viewbox Stretch="Uniform"
+             HorizontalAlignment="Left">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />

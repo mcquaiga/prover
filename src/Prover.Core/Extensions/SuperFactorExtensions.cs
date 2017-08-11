@@ -12,12 +12,23 @@ namespace Prover.Core.Extensions
         private const int SUPER_TABLE_NUMBER = 147;
 
         public static decimal? SpecGr(this Instrument instrument)
-            => instrument.Items.GetItem(SPEC_GR_NUMBER).NumericValue;
+        {
+            return instrument.Items.GetItem(SPEC_GR_NUMBER).NumericValue;
+        }
 
-        public static decimal? CO2(this Instrument instrument) => instrument.Items.GetItem(CO2_NUMBER).NumericValue;
-        public static decimal? N2(this Instrument instrument) => instrument.Items.GetItem(N2_NUMBER).NumericValue;
+        public static decimal? CO2(this Instrument instrument)
+        {
+            return instrument.Items.GetItem(CO2_NUMBER).NumericValue;
+        }
+
+        public static decimal? N2(this Instrument instrument)
+        {
+            return instrument.Items.GetItem(N2_NUMBER).NumericValue;
+        }
 
         public static SuperFactorTable SuperTable(this Instrument instrument)
-            => (SuperFactorTable) instrument.Items.GetItem(SUPER_TABLE_NUMBER).NumericValue;
+        {
+            return (SuperFactorTable) instrument.Items.GetItem(SUPER_TABLE_NUMBER).NumericValue;
+        }
     }
 }

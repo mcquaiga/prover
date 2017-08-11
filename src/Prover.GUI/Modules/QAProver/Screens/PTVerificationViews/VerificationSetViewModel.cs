@@ -6,12 +6,12 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
-
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -52,28 +52,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)            
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.T || VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T || VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
-            if (VerificationTest.Instrument.CompositionType == CorrectorType.P ||
-                VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P || VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
                 PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
 
-                this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge)
-                    .Where(x => QaRunTestManager != null)
-                    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
+                //this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge, x => x.PressureTestViewModel.GaugePressure)
+                //    .Where(x => QaRunTestManager != null)                    
+                //    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
             }
 
             if (VerificationTest.VolumeTest != null)
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);           
         }
-
         private bool _showDownloadButton;
-
         public bool ShowDownloadButton
         {
             get { return _showDownloadButton; }
