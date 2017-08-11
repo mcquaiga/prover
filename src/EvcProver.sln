@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -57,6 +57,9 @@ Global
 		MiProtocolConsole|Any CPU = MiProtocolConsole|Any CPU
 		MiProtocolConsole|x64 = MiProtocolConsole|x64
 		MiProtocolConsole|x86 = MiProtocolConsole|x86
+		Release - Union Gas|Any CPU = Release - Union Gas|Any CPU
+		Release - Union Gas|x64 = Release - Union Gas|x64
+		Release - Union Gas|x86 = Release - Union Gas|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
@@ -69,6 +72,12 @@ Global
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}.Release|x64.ActiveCfg = Release|Any CPU
@@ -80,6 +89,12 @@ Global
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE48160F-095D-40B1-8790-6CB560024CE5}.Release|x64.ActiveCfg = Release|Any CPU
@@ -91,6 +106,12 @@ Global
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D9F9EA0-674A-42EF-A28A-8E8AEA5099FA}.Release|x64.ActiveCfg = Release|Any CPU
@@ -102,6 +123,12 @@ Global
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.MiProtocolConsole|Any CPU.ActiveCfg = MiProtocolConsole|Any CPU
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}.Release|x64.ActiveCfg = Release|Any CPU
@@ -118,6 +145,12 @@ Global
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.MiProtocolConsole|x64.Build.0 = MiProtocolConsole|Any CPU
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.MiProtocolConsole|x86.Build.0 = MiProtocolConsole|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C42434C-8218-44AA-B132-A5A57B9DE8B1}.Release|x64.ActiveCfg = Release|Any CPU
@@ -132,6 +165,12 @@ Global
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.ActiveCfg = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.Build.0 = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x64.ActiveCfg = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x64.Build.0 = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x86.ActiveCfg = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x86.Build.0 = Release - Union Gas|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release|x64.ActiveCfg = Release|Any CPU
@@ -144,6 +183,12 @@ Global
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07FACEC7-67D1-49A8-BB19-DDC7B636C689}.Release|x64.ActiveCfg = Release|Any CPU
@@ -156,6 +201,12 @@ Global
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1}.Release|x64.ActiveCfg = Release|Any CPU
@@ -168,6 +219,12 @@ Global
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E}.Release|x64.ActiveCfg = Release|Any CPU
@@ -180,6 +237,12 @@ Global
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.MiProtocolConsole|x64.ActiveCfg = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release|Any CPU.Build.0 = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release|x64.ActiveCfg = Release|Any CPU
@@ -196,6 +259,12 @@ Global
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}.Release|x64.ActiveCfg = Release|Any CPU
@@ -214,6 +283,12 @@ Global
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release - Union Gas|x86.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x64.ActiveCfg = Release|Any CPU
