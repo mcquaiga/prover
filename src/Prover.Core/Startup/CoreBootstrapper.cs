@@ -22,29 +22,24 @@ namespace Prover.Core.Startup
             //Database registrations
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
-            Builder.RegisterType<ProverContext>().InstancePerDependency();
+            Builder.Register(p => new ProverContext()).As<ProverContext>().InstancePerDependency().AutoActivate();
             Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>())).As<IProverStore<Instrument>>().InstancePerDependency();
 
             //EVC Communcation
-            Builder.Register(
-                c =>
-                    new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort,
-                        SettingsManager.SettingsInstance.InstrumentBaudRate)).Named<CommPort>("SerialPort");
+            Builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
+                .Named<CommPort>("SerialPort");
 
             Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
                 .As<EvcCommunicationClient>();
 
             //QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
-            Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort,
-                    c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
             Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
-
-            
 
             SettingsManager.RefreshSettings().Wait();
         }

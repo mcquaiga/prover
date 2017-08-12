@@ -73,16 +73,17 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             LoadClientsCommand
-                .ToProperty(this, x => x.Clients, out _clientsList,  new List<Client>());
+                .Select(x => new ReactiveList<Client>(x))
+                .ToProperty(this, x => x.Clients, out _clientsList,  new ReactiveList<Client>());
 
             FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
                 .ToProperty(this, x => x.NextCertificateNumber, out _nextCertificateNumber);
 
-            FetchExistingClientCertificatesCommand =
-                ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
+            FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
             FetchExistingClientCertificatesCommand
-                .ToProperty(this, x => x.ExistingClientCertificates, out _existingClientCertificates, new List<Certificate>());
+                .Select(x => new ReactiveList<Certificate>(x))
+                .ToProperty(this, x => x.ExistingClientCertificates, out _existingClientCertificates, new ReactiveList<Certificate>());
 
             var canExecutePrintCommand = this.WhenAnyValue(x => x.SelectedExistingClientCertificate)
                 .Select(c => c != null);
@@ -169,8 +170,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
         public long NextCertificateNumber => _nextCertificateNumber.Value;
 
-        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _existingClientCertificates;
-        public IEnumerable<Certificate> ExistingClientCertificates => _existingClientCertificates.Value;
+        private readonly ObservableAsPropertyHelper<ReactiveList<Certificate>> _existingClientCertificates;
+        public ReactiveList<Certificate> ExistingClientCertificates => _existingClientCertificates.Value;
 
         private Certificate _selectedExistingClientCertificate;
         public Certificate SelectedExistingClientCertificate
@@ -193,8 +194,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
             set => this.RaiseAndSetIfChanged(ref _testedBy, value);
         }
 
-        private readonly ObservableAsPropertyHelper<IEnumerable<Client>> _clientsList;
-        public IEnumerable<Client> Clients => _clientsList.Value;
+        private readonly ObservableAsPropertyHelper<ReactiveList<Client>> _clientsList;
+        public ReactiveList<Client> Clients => _clientsList.Value;
 
         private string _selectedVerificationType;
         public string SelectedVerificationType
