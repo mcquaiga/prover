@@ -18,7 +18,6 @@ using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Modules.Certificates.Reports;
 using Prover.GUI.Modules.ClientManager.Screens.CsvExporter;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
@@ -50,7 +49,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<CreateVerificationViewModel>>(LoadClientInstruments);                 
             LoadClientInstrumentsCommand
-                .ToPropertyEx(this, x => x.RootResults, new ReactiveList<CreateVerificationViewModel>());           
+                .ToProperty(this, x => x.RootResults, out _rootResults, new ReactiveList<CreateVerificationViewModel>());           
 
             UpdateFilter = ReactiveCommand.Create<string>(filter =>
             {                
@@ -61,7 +60,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             this.WhenAnyValue(x => x.ResultFilteredItems)
                 .Select(x => x != null && x.Any())
-                .ToPropertyEx(this, x => x.ShowTestViewListBox);
+                .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox);
+
+            LoadClientInstrumentsCommand.IsExecuting
+                .CombineLatest(UpdateFilter.IsExecuting, (clients, filter) => (clients || filter))
+                //.Delay(x => !x ? TimeSpan.FromMilliseconds(500).Ticks : 0)
+                .ToProperty(this, x => x.ShowLoadingIndicator, out _showLoadingIndicator);
 
             this.WhenAnyValue(x => x.RootResults)
                 .Select(s => "All")
@@ -69,16 +73,16 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             LoadClientsCommand
-                .ToPropertyEx(this, x => x.Clients, new List<Client>());
+                .ToProperty(this, x => x.Clients, out _clientsList,  new List<Client>());
 
             FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
-                .ToPropertyEx(this, x => x.NextCertificateNumber);
+                .ToProperty(this, x => x.NextCertificateNumber, out _nextCertificateNumber);
 
             FetchExistingClientCertificatesCommand =
                 ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
             FetchExistingClientCertificatesCommand
-                .ToPropertyEx(this, x => x.ExistingClientCertificates, new List<Certificate>());
+                .ToProperty(this, x => x.ExistingClientCertificates, out _existingClientCertificates, new List<Certificate>());
 
             var canExecutePrintCommand = this.WhenAnyValue(x => x.SelectedExistingClientCertificate)
                 .Select(c => c != null);
@@ -123,33 +127,90 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         #endregion
 
+        #region Fody Properties
+        //public extern ReactiveList<Instrument> RootClientInstruments { [ObservableAsProperty] get; }
+        //public extern ReactiveList<CreateVerificationViewModel> RootResults { [ObservableAsProperty] get; }
+        //public extern bool ShowLoadingIndicator { [ObservableAsProperty] get; }
+        //public extern bool ShowTestViewListBox { [ObservableAsProperty] get; }
+        //public extern long NextCertificateNumber { [ObservableAsProperty] get; }      
+        //public extern IEnumerable<Certificate> ExistingClientCertificates { [ObservableAsProperty] get; }
+        //public extern IEnumerable<Client> Clients { [ObservableAsProperty] get; }
+
+        //[Reactive]
+        //public Certificate SelectedExistingClientCertificate { get; set; }
+
+        //[Reactive]
+        //public string SelectedVerificationType { get; set; }
+
+        //[Reactive]
+        //public Client SelectedClient { get; set; }
+
+        //[Reactive]
+        //public string TestedBy { get; set; }
+
+        //[Reactive]
+        //public ExportToCsvViewModel ExportToCsvViewModel { get; set; }      
+
+        //[Reactive]
+        //public IReactiveDerivedList<CreateVerificationViewModel> ResultFilteredItems { get; set; }
+
+        #endregion
+
         #region Properties
-        public extern ReactiveList<Instrument> RootClientInstruments { [ObservableAsProperty] get; }
-        public extern ReactiveList<CreateVerificationViewModel> RootResults { [ObservableAsProperty] get; }
-        public extern bool ShowLoadingIndicator { [ObservableAsProperty] get; }
-        public extern bool ShowTestViewListBox { [ObservableAsProperty] get; }
-        public extern long NextCertificateNumber { [ObservableAsProperty] get; }      
-        public extern IEnumerable<Certificate> ExistingClientCertificates { [ObservableAsProperty] get; }
-        public extern IEnumerable<Client> Clients { [ObservableAsProperty] get; }
-      
-        [Reactive]
-        public Certificate SelectedExistingClientCertificate { get; set; }
-        
-        [Reactive]
-        public string SelectedVerificationType { get; set; }
+        private readonly ObservableAsPropertyHelper<ReactiveList<CreateVerificationViewModel>> _rootResults;
+        public ReactiveList<CreateVerificationViewModel> RootResults => _rootResults.Value;
 
-        [Reactive]
-        public Client SelectedClient { get; set; }
+        private readonly ObservableAsPropertyHelper<bool> _showLoadingIndicator;
+        public bool ShowLoadingIndicator => _showLoadingIndicator.Value;
 
-        [Reactive]
-        public string TestedBy { get; set; }
+        private readonly ObservableAsPropertyHelper<bool> _showTestViewListBox;
+        public bool ShowTestViewListBox => _showTestViewListBox.Value;
 
-        [Reactive]
-        public ExportToCsvViewModel ExportToCsvViewModel { get; set; }      
+        private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
+        public long NextCertificateNumber => _nextCertificateNumber.Value;
 
-        [Reactive]
-        public IReactiveDerivedList<CreateVerificationViewModel> ResultFilteredItems { get; set; }
+        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _existingClientCertificates;
+        public IEnumerable<Certificate> ExistingClientCertificates => _existingClientCertificates.Value;
 
+        private Certificate _selectedExistingClientCertificate;
+        public Certificate SelectedExistingClientCertificate
+        {
+            get => _selectedExistingClientCertificate;
+            set => this.RaiseAndSetIfChanged(ref _selectedExistingClientCertificate, value);
+        }
+
+        private Client _selectedClient;
+        public Client SelectedClient
+        {
+            get => _selectedClient;
+            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
+        }
+
+        private string _testedBy;
+        public string TestedBy
+        {
+            get => _testedBy;
+            set => this.RaiseAndSetIfChanged(ref _testedBy, value);
+        }
+
+        private readonly ObservableAsPropertyHelper<IEnumerable<Client>> _clientsList;
+        public IEnumerable<Client> Clients => _clientsList.Value;
+
+        private string _selectedVerificationType;
+        public string SelectedVerificationType
+        {
+            get => _selectedVerificationType;
+            set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
+        }
+
+        private IReactiveDerivedList<CreateVerificationViewModel> _resultFilteredItems;
+        public IReactiveDerivedList<CreateVerificationViewModel> ResultFilteredItems
+        {
+            get => _resultFilteredItems;
+            set => this.RaiseAndSetIfChanged(ref _resultFilteredItems, value);
+        }
+
+        public ExportToCsvViewModel ExportToCsvViewModel { get; set; }
         #endregion
 
         #region Private Functions
