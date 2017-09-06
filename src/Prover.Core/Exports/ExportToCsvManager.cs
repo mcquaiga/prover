@@ -8,6 +8,8 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using System.Collections.Generic;
+using Prover.Core.Services;
+using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
 {
@@ -26,21 +28,19 @@ namespace Prover.Core.Exports
     {
         private static readonly string CertificatesExportDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\";
 
-        private readonly IProverStore<Certificate> _certificateStore;
+        private readonly ICertificateService _certificateService;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public ExportToCsvManager(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
+        public ExportToCsvManager(ICertificateService certificateService, IProverStore<Instrument> instrumentStore)
         {
-            _certificateStore = certificateStore;
+            _certificateService = certificateService;
             _instrumentStore = instrumentStore;
         }
 
         public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber)
         {
-            var certificates = _certificateStore.Query()
-                .Where(c => c.ClientId == client.Id && (c.Number >= fromCertificateNumber && c.Number <= toCertificateNumber))
-                .OrderBy(c => c.Number)
-                .ToList();
+            var certificates =
+                await _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber);                
 
             var csvFiles = new List<string>();
             foreach (var cert in certificates)
@@ -55,48 +55,56 @@ namespace Prover.Core.Exports
         {
             return await Task.Run(async () =>
             {
-                var instrs = certificate
+                if (!certificate.Instruments.Any())
+                    throw new NullReferenceException("Certificate does not contain any instruments.");
+               
+                var client = certificate.Client;
+                var fileName = GetFilePath(certificate, client);
+
+                var instruments = certificate
                     .Instruments
                     .Select(i => _instrumentStore.Get(i.Id))
                     .ToList();
 
-                var certificateId = instrs.FirstOrDefault()?.CertificateId;
-                if (certificateId == null)
-                    throw new NullReferenceException("Certificate could not be found.");
-
-                var client = certificate.Client;
-                var fileName = GetFilePath(certificate, client);
-
-                try
+                var exportInstrumentsDictonary = new Dictionary<ExportFields, string>();
+                foreach (var instrument in instruments)
                 {
-                    var csvFormat = FindCsvTemplate(certificate, instrs, client);                    
+                    var csvFormat = FindCsvTemplate(certificate, instrument, client);
+                    var exportType = TranslateToExport.Translate(certificate, instrument);
 
-                    var exportInstruments = TranslateToExport.Translate(certificate).ToList();
-
-                    await CsvWriter.Write(fileName, csvFormat, exportInstruments);
-
-                    return fileName;
+                    exportInstrumentsDictonary.Add(exportType, csvFormat);
                 }
-                catch
-                {
-                    throw;
-                }
+                await CsvWriter.Write(fileName, exportInstrumentsDictonary);
+
+                return fileName;
             });
         }
 
-        private static string FindCsvTemplate(Certificate certificate, System.Collections.Generic.List<Instrument> instrs, Client client)
+        private static string FindCsvTemplate(Certificate certificate, Instrument instrument, Client client)
         {
-            var csvFormat = client.CsvTemplates.FirstOrDefault(c => 
-                        c.VerificationTypeString == certificate.VerificationType && 
-                        c.CorrectorType == instrs.First().CompositionType && 
-                        c.InstrumentType == instrs.First().InstrumentType)?.CsvTemplate;
+            var matchingCsvFormats = client.CsvTemplates
+                .Where(c =>                    
+                    c.InstrumentType == instrument.InstrumentType &&
+                    (c.VerificationType == null || c.VerificationTypeString == certificate.VerificationType) &&
+                    (c.DriveType == null || c.DriveType == (DriveTypeDescripter) Enum.Parse(typeof(DriveTypeDescripter), instrument.VolumeTest.DriveTypeDiscriminator)) &&
+                    (c.CorrectorType == null || c.CorrectorType == instrument.CompositionType)
+                 )
+                 .OrderBy(c => c.DriveType.HasValue && c.CorrectorType.HasValue && c.VerificationType.HasValue)
+                 .ToList();
+            
+            var csvFormat = matchingCsvFormats
+                .FirstOrDefault();
 
             if (csvFormat == null)
-                throw new Exception($"Could not find a CSV format that matches the following criteria for Certificate #{certificate.Number}. {Environment.NewLine}" +
+                throw new Exception(
+                    $"Could not find a CSV template that matches Instrument S/N:{instrument.SerialNumber} on Certificate #{certificate.Number}. {Environment.NewLine}{Environment.NewLine}" +
+                    $"The following criteria could not be matched: {Environment.NewLine}" +
                     $"  Verification Type: {certificate.VerificationType} {Environment.NewLine}" +
-                    $"  Corrector Type: {instrs.First().CompositionType} {Environment.NewLine}" +
-                    $"  Instrument: {instrs.First().InstrumentType.Name} {Environment.NewLine}");
-            return csvFormat;
+                    $"  Instrument Type: {instrument.InstrumentType.Name} {Environment.NewLine}" +
+                    $"  Drive Type: {instrument.VolumeTest.DriveTypeDiscriminator} {Environment.NewLine}" +
+                    $"  Corrector Type: {instrument.CompositionType} {Environment.NewLine}"
+                );
+            return csvFormat.CsvTemplate;
         }
 
         private static string GetFilePath(Certificate certificate, Client client)

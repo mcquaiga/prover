@@ -197,35 +197,19 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private void OpenCsvTemplateEditor(ClientCsvTemplate clientCsvTemplate = null)
         {
-            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
-            if (clientCsvTemplate != null)
+            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();        
+
+            if (clientCsvTemplate != null)    
                 csvEditorViewModel.ClientCsvTemplate = clientCsvTemplate;
 
             var result = ScreenManager.ShowDialog(csvEditorViewModel);
 
             if (result.HasValue && result.Value)
             {
-                if (clientCsvTemplate == null)
+                if (csvEditorViewModel.ClientCsvTemplate.Client == null)
                 {
-                    clientCsvTemplate = new ClientCsvTemplate(_client)
-                    {
-                        VerificationType = (VerificationTypeEnum) Enum.Parse(typeof(VerificationTypeEnum),
-                            csvEditorViewModel.SelectedVerificationType),
-                        InstrumentType = csvEditorViewModel.SelectedInstrumentType,
-                        CorrectorType = (EvcCorrectorType) Enum.Parse(typeof(EvcCorrectorType),
-                            csvEditorViewModel.SelectedCorrectorType),
-                        CsvTemplate = csvEditorViewModel.CsvTemplate
-                    };
-                    _client.CsvTemplates.Add(clientCsvTemplate);
-                }
-                else
-                {
-                    clientCsvTemplate.VerificationType = (VerificationTypeEnum) Enum.Parse(typeof(VerificationTypeEnum),
-                        csvEditorViewModel.SelectedVerificationType);
-                    clientCsvTemplate.InstrumentType = csvEditorViewModel.SelectedInstrumentType;
-                    clientCsvTemplate.CorrectorType = (EvcCorrectorType) Enum.Parse(typeof(EvcCorrectorType),
-                        csvEditorViewModel.SelectedCorrectorType);
-                    clientCsvTemplate.CsvTemplate = csvEditorViewModel.CsvTemplate;
+                    csvEditorViewModel.ClientCsvTemplate.Client = _client;
+                    _client.CsvTemplates.Add(csvEditorViewModel.ClientCsvTemplate);
                 }
 
                 using (ClientCsvTemplates.SuppressChangeNotifications())
@@ -233,6 +217,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens
                     ClientCsvTemplates.Clear();
                     ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());
                 }
+            }
+            else
+            {
+                
             }
         }
 

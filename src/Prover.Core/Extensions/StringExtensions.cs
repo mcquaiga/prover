@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Prover.Core.Extensions
 {
@@ -14,7 +15,16 @@ namespace Prover.Core.Extensions
 
         public static T ParseEnum<T>(this string value)
         {
-            return (T) Enum.Parse(typeof(T), value, true);
+            if (string.IsNullOrEmpty(value))
+                return default(T);
+            //throw new ArgumentNullException(nameof(value));
+            var t = typeof(T);
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                t = t.GetGenericArguments().First();
+            }
+
+            return (T) Enum.Parse(t, value, true);
         }
     }
 }

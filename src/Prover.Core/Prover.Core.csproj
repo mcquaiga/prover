@@ -183,6 +183,10 @@
     <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.Designer.cs">
       <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.cs" />
+    <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.Designer.cs">
+      <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
@@ -332,6 +336,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706181948396_AddClientCsvTemplates.resx">
       <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.resx">
+      <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

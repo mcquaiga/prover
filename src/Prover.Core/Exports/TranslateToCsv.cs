@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
@@ -25,9 +26,10 @@ namespace Prover.Core.Exports
         }
 
         public static ExportFields Translate(Certificate certificate, Instrument instrument)
-        {         
+        {
             var csvFormat = new ExportFields
             {
+                InstrumentType = instrument.InstrumentType.Name,
                 CompanyNumber = instrument.InventoryNumber,
                 SerialNumber = instrument.SerialNumber.ToString(),
                 VerificationType = certificate.VerificationType,
@@ -45,15 +47,21 @@ namespace Prover.Core.Exports
                 SuperMediumError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
                 SuperLowError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m,
 
-                CorrectedMultiplier = (long)instrument.CorrectedMultiplier(),
+                CorrectedMultiplier = (long) instrument.CorrectedMultiplier(),
                 CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
-                UncorrectMultiplier = (long)instrument.UnCorrectedMultiplier(),
+                UncorrectMultiplier = (long) instrument.UnCorrectedMultiplier(),
                 UncorrectMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
-                
+
                 CorrectedVolumeError = instrument.VolumeTest.CorrectedPercentError,
                 UncorrectedVolumeError = instrument.VolumeTest.UnCorrectedPercentError,
                 CorrectorType = Enum.GetName(typeof(EvcCorrectorType), instrument.CompositionType),
-                RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription
+                RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription,
+
+                Item = new Dictionary<int, string>(
+                    instrument.Items.ToDictionary(
+                        k => k.Metadata.Number,
+                        v => v.Metadata.ItemDescriptions.Any() ? v.Description : v.RawValue)
+                )
             };
 
             return csvFormat;

@@ -30,13 +30,13 @@ namespace Prover.Core.Models.Clients
         public Guid ClientId { get; set; }
 
         [NotMapped]
-        public VerificationTypeEnum VerificationType { get; set; }
+        public VerificationTypeEnum? VerificationType { get; set; }
 
         [Column("VerificationType")]
         public string VerificationTypeString
         {
             get => VerificationType.ToString();
-            private set => VerificationType = value.ParseEnum<VerificationTypeEnum>();
+            private set => VerificationType = value?.ParseEnum<VerificationTypeEnum?>();
         }
 
         [NotMapped]
@@ -50,13 +50,23 @@ namespace Prover.Core.Models.Clients
         }
 
         [NotMapped]
-        public EvcCorrectorType CorrectorType { get; set; }
+        public EvcCorrectorType? CorrectorType { get; set; }
 
         [Column("CorrectorType")]
         public string CorrectorTypeString
         {
             get => CorrectorType.ToString();
-            private set => CorrectorType = value.ParseEnum<EvcCorrectorType>();
+            private set => CorrectorType = value?.ParseEnum<EvcCorrectorType?>();
+        }
+
+        [NotMapped]
+        public DriveTypeDescripter? DriveType { get; set; }
+
+        [Column("DriveType")]
+        public string DriveTypeString
+        {
+            get => DriveType.ToString();
+            private set => DriveType = value?.ParseEnum<DriveTypeDescripter?>();
         }
 
         public string CsvTemplate { get; set; }

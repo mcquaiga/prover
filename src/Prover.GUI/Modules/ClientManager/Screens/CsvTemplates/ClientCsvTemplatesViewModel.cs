@@ -20,10 +20,37 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         public ClientCsvTemplatesViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(
             screenManager, eventAggregator)
         {
-            OkCommand = ReactiveCommand.Create(() => { TryClose(true); });
+            ClientCsvTemplate = new ClientCsvTemplate();
+
+            OkCommand = ReactiveCommand.Create(() =>
+            {
+                ClientCsvTemplate.CsvTemplate = CsvTemplate;
+                ClientCsvTemplate.InstrumentType = SelectedInstrumentType;
+
+                ClientCsvTemplate.VerificationType = string.IsNullOrEmpty(SelectedVerificationType)
+                    ? null
+                    : (VerificationTypeEnum?) Enum.Parse(typeof(VerificationTypeEnum),
+                        SelectedVerificationType);
+                
+                ClientCsvTemplate.CorrectorType = string.IsNullOrEmpty(SelectedCorrectorType)
+                    ? null
+                    : (EvcCorrectorType?) Enum.Parse(typeof(EvcCorrectorType), SelectedCorrectorType);
+
+                ClientCsvTemplate.DriveType = string.IsNullOrEmpty(SelectedDriveType)
+                    ? null
+                    : (DriveTypeDescripter?) Enum.Parse(typeof(DriveTypeDescripter), SelectedDriveType);
+                
+
+                TryClose(true);
+            });
             CancelCommand = ReactiveCommand.Create(() => { TryClose(false); });
 
-            AddFieldToTemplateCommand = ReactiveCommand.Create<string>(AddFieldToTemplate);
+            AddFieldToTemplateCommand = ReactiveCommand.Create<string>(s =>
+            {
+                CsvTemplate = string.IsNullOrEmpty(CsvTemplate)
+                    ? $"[{s}]"
+                    : $"{CsvTemplate},[{s}]";
+            });
 
             this.WhenAnyValue(x => x.ClientCsvTemplate)
                 .Where(c => c != null)
@@ -32,16 +59,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                     SelectedInstrumentType = y.InstrumentType;
                     SelectedCorrectorType = y.CorrectorTypeString;
                     SelectedVerificationType = y.VerificationTypeString;
+                    SelectedDriveType = y.DriveTypeString;
                     CsvTemplate = y.CsvTemplate;
                 });
-        }
-
-        private void AddFieldToTemplate(string fieldName)
-        {
-            CsvTemplate = string.IsNullOrEmpty(CsvTemplate)
-                ? $"[{fieldName}]"
-                : $"{CsvTemplate},[{fieldName}]";
-        }
+        }     
 
         #region Properties
 
@@ -83,6 +104,15 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         {
             get => _selectedCorrectorType;
             set => this.RaiseAndSetIfChanged(ref _selectedCorrectorType, value);
+        }
+
+        public List<string> DriveTypes => Enum.GetNames(typeof(DriveTypeDescripter)).ToList();
+        private string _selectedDriveType;
+
+        public string SelectedDriveType
+        {
+            get => _selectedDriveType;
+            set => this.RaiseAndSetIfChanged(ref _selectedDriveType, value);
         }
 
         public List<string> FieldList => new ExportFields().GetPropertyNames().OrderBy(x => x).ToList();

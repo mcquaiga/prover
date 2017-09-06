@@ -20,6 +20,10 @@
                       BorderThickness="1">
                 <ComboBox x:Name="InstrumentTypes" DisplayMemberPath="Name" />
             </GroupBox>
+            <GroupBox Header="Drive Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="DriveTypes"/>
+            </GroupBox>
             <GroupBox Header="Corrector Type"
                       BorderThickness="1">
                 <ComboBox x:Name="CorrectorTypes"/>

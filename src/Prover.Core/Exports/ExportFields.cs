@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Prover.CommProtocol.Common.Items;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
@@ -14,6 +16,7 @@ namespace Prover.Core.Exports
         public string VerificationType { get; set; }
         public DateTime TestedDate { get; set; }
 
+        public string InstrumentType { get; set; }
         public string CorrectorType { get; set; }
         public string CompanyNumber { get; set; }
         public string SerialNumber { get; set; }
@@ -39,5 +42,7 @@ namespace Prover.Core.Exports
         public decimal? UncorrectedVolumeError { get; set; }
         public string CorrectedMultiplierDescription { get; set; }
         public string UncorrectMultiplierDescription { get; set; }
+
+        public Dictionary<int, string> Item { get; set; }
     }
 }

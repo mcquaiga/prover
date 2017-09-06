@@ -47,9 +47,28 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
 
-            LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<CreateVerificationViewModel>>(LoadClientInstruments);                 
+            LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<CreateVerificationViewModel>>
+            (
+                async client =>
+                {
+                    var instruments = await _certificateService.GetInstrumentsWithNoCertificate(client.Id);
+                    var viewModels = new ReactiveList<CreateVerificationViewModel>(
+                        instruments.Select(i =>
+                        {
+                            var vvm = new VerificationViewModel(i);
+                            var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
+                            item.VerificationView = vvm;
+                            return item;
+                        }));
+
+                    return viewModels;
+                }
+            );                 
             LoadClientInstrumentsCommand
-                .ToProperty(this, x => x.RootResults, out _rootResults, new ReactiveList<CreateVerificationViewModel>());           
+                .ToProperty(this, x => x.RootResults, out _rootResults, new ReactiveList<CreateVerificationViewModel>());
+            LoadClientInstrumentsCommand
+                .ThrownExceptions
+                .Subscribe(ex => Console.WriteLine(ex.Message));
 
             UpdateFilter = ReactiveCommand.Create<string>(filter =>
             {                
@@ -64,7 +83,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             LoadClientInstrumentsCommand.IsExecuting
                 .CombineLatest(UpdateFilter.IsExecuting, (clients, filter) => (clients || filter))
-                //.Delay(x => !x ? TimeSpan.FromMilliseconds(500).Ticks : 0)
                 .ToProperty(this, x => x.ShowLoadingIndicator, out _showLoadingIndicator);
 
             this.WhenAnyValue(x => x.RootResults)
@@ -83,7 +101,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
             FetchExistingClientCertificatesCommand
                 .Select(x => new ReactiveList<Certificate>(x))
-                .ToProperty(this, x => x.ExistingClientCertificates, out _existingClientCertificates, new ReactiveList<Certificate>());
+                .ToProperty(this, x => x.ExistingClientCertificates, out _existingClientCertificates, new ReactiveList<Certificate>());              
 
             var canExecutePrintCommand = this.WhenAnyValue(x => x.SelectedExistingClientCertificate)
                 .Select(c => c != null);
@@ -95,19 +113,31 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 {
                     if (c == null)
                     {
-                        RootResults.Clear();                        
+                        RootResults.Clear();
+                        ExistingClientCertificates.Clear();
                     }
                 })
                 .Where(c => c != null);
 
             selectedClientChange
                 .Delay(TimeSpan.FromMilliseconds(25))
-                .InvokeCommand(LoadClientInstrumentsCommand);
-            selectedClientChange
-                .Delay(TimeSpan.FromMilliseconds(150))
-                .InvokeCommand(FetchExistingClientCertificatesCommand);
-            selectedClientChange
-                .Subscribe(c => ExportToCsvViewModel.Client = c);            
+                .Subscribe(client =>
+                {
+                    LoadClientInstrumentsCommand.Execute(client).Wait();
+                    FetchExistingClientCertificatesCommand.Execute(client).Wait();
+                    ExportToCsvViewModel.Client = client;
+                });
+
+            //selectedClientChange
+            //    .Delay(TimeSpan.FromMilliseconds(25))
+            //    .InvokeCommand(LoadClientInstrumentsCommand);
+
+            //selectedClientChange
+            //    .CombineLatest(LoadClientInstrumentsCommand.IsExecuting, (sc, lc) => !lc)
+            //    .InvokeCommand(FetchExistingClientCertificatesCommand);
+
+            //selectedClientChange
+            //    .Subscribe(c => ExportToCsvViewModel.Client = c);            
         }
 
         #region Commands
@@ -215,20 +245,20 @@ namespace Prover.GUI.Modules.Certificates.Screens
         #endregion
 
         #region Private Functions
-        private async Task<ReactiveList<CreateVerificationViewModel>> LoadClientInstruments(Client client)
-        {
-            var instruments = await _certificateService.GetInstrumentsWithNoCertificate(client.Id);
-            var viewModels = new ReactiveList<CreateVerificationViewModel>(
-                instruments.Select(i =>
-                {
-                    var vvm = new VerificationViewModel(i);
-                    var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
-                    item.VerificationView = vvm;
-                    return item;
-                }));
+        //private async Task<ReactiveList<CreateVerificationViewModel>> LoadClientInstruments(Client client)
+        //{
+        //    var instruments = _certificateService.GetInstrumentsWithNoCertificate(client.Id);
+        //    var viewModels = new ReactiveList<CreateVerificationViewModel>(
+        //        instruments.Select(i =>
+        //        {
+        //            var vvm = new VerificationViewModel(i);
+        //            var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
+        //            item.VerificationView = vvm;
+        //            return item;
+        //        }));
 
-            return viewModels;        
-        }
+        //    return viewModels;        
+        //}
     
         private async Task<List<Client>> LoadClients()
         {

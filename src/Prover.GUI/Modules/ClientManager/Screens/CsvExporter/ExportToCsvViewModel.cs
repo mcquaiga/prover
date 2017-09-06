@@ -25,34 +25,28 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
 {
     public class ExportToCsvViewModel : ViewModelBase, IWindowSettings
     {
-        private readonly IExportCertificate _exporter;
-        private readonly ICertificateService _certificateService;
-
         public ExportToCsvViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, 
             IExportCertificate exporter, ICertificateService certificateService) : base(screenManager, eventAggregator)
         {
-            _exporter = exporter;
-            _certificateService = certificateService;
+            ExportCommand = ReactiveCommand.CreateFromTask<Client>(async client =>
+            {
+                var csvFiles = await exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
 
-            ExportCommand = ReactiveCommand.CreateFromTask<Client>(ExportCertificates);
+                if (csvFiles.Any())
+                {
+                    var fileDir = new FileInfo(csvFiles.First()).Directory;
+                    Process.Start(fileDir.FullName);
+                }
+            });
             ExportCommand.ThrownExceptions
                 .Subscribe(ex => MessageBox.Show(ex.Message));
 
-            GetCertificatesCommand = 
-                ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(_certificateService.GetAllCertificates);
+            GetCertificatesCommand = ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(certificateService.GetAllCertificates);
 
             this.WhenAnyValue(x => x.Client)
                 .Where(c => c != null)
                 .InvokeCommand(GetCertificatesCommand);
-
-            //GetCertificatesCommand
-            //    .Select(c => c.ToList())
-            //    .Subscribe(certs =>
-            //    {                    
-            //        FromCertificates = certs;
-            //        ToCertificates = certs;
-            //    });
-
+            
             _fromCertificates = GetCertificatesCommand
                 .ToProperty(this, x => x.FromCertificates, new List<Certificate>());
             _toCertificates = GetCertificatesCommand
@@ -100,18 +94,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         public ReactiveCommand<Client, Unit> ExportCommand { get; }
         public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
 
-        #endregion
-
-        #region Private Functions
-        private async Task ExportCertificates(Client client)
-        {
-            var csvFiles = await _exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
-
-            var fileDir = new FileInfo(csvFiles?.First()).Directory;
-            Process.Start(fileDir.FullName);
-        }
-       
-        #endregion
+        #endregion       
 
         public dynamic WindowSettings
         {
