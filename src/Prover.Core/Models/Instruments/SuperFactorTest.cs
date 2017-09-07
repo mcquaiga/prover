@@ -55,11 +55,14 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 
-        private double CalculateFPV()
+        private double? CalculateFPV()
         {
+            if (!GaugePressure.HasValue)
+                return null;
+
             var super = new FactorCalculations((double) VerificationTest.Instrument.SpecGr().Value,
                 (double) VerificationTest.Instrument.CO2().Value, (double) VerificationTest.Instrument.N2().Value,
-                (double) GaugeTemp, (double) GaugePressure);
+                (double) GaugeTemp, (double) GaugePressure.Value);
             return super.SuperFactor;
         }
     }

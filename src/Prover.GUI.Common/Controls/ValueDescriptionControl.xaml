@@ -6,6 +6,7 @@
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls"
              x:Name="ValueDescription"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}">
@@ -33,7 +34,8 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="34" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding Path=Value}"
+                        <TextBox Text="{Binding Path=Value}"                               
+                                    controls:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
                                  Grid.Column="0"
                                  Margin="0 2"
                                  FontSize="{Binding ValueFontSize}"

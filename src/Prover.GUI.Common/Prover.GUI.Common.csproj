@@ -130,6 +130,7 @@
     <Compile Include="BackgroundWork\BackgroundWorker.cs" />
     <Compile Include="Controls\BindingProxy.cs" />
     <Compile Include="Controls\DesignViewModel.cs" />
+    <Compile Include="Controls\InputBindingsManager.cs" />
     <Compile Include="Controls\LabelValueControl.xaml.cs">
       <DependentUpon>LabelValueControl.xaml</DependentUpon>
     </Compile>
