@@ -8,12 +8,14 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using Newtonsoft.Json;
+using NLog;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI.Autofac;
+using LogManager = NLog.LogManager;
 
 namespace Prover.GUI
 {
@@ -21,13 +23,18 @@ namespace Prover.GUI
     {
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
+        private Logger _log = LogManager.GetCurrentClassLogger();
 
         public AppBootstrapper()
         {
+            _log.Info("Starting EVC Prover Application...");
+
             var coreBootstrap = new CoreBootstrapper();
             Builder = coreBootstrap.Builder;
 
             Initialize();
+
+            _log.Info("Finished starting application.");
         }
 
         public ContainerBuilder Builder { get; }

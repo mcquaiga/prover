@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Autofac;
+using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
@@ -17,18 +18,23 @@ namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
+        private Logger _log = LogManager.GetCurrentClassLogger(); 
+
         public CoreBootstrapper()
         {
             //Database registrations
+            _log.Debug("Started initializing database...");            
+            _log.Debug("    Running Migrations.");
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-
+            
             Builder.Register(c => new ProverContext())
                 .SingleInstance();
                 
             Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
                 .As<IProverStore<Instrument>>()
-                .SingleInstance()
-                .AutoActivate();
+                .SingleInstance();
+
+            _log.Debug("Completed initializing database...");
 
             //EVC Communcation
             Builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
