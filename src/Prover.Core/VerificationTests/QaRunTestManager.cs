@@ -89,8 +89,8 @@ namespace Prover.Core.VerificationTests
             {
                 if (Instrument == null) throw new NullReferenceException("Call InitializeTest before runnning a test");
 
-                _testStatus.OnNext($"Stabilizing live readings...");
-                await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct);
+                //_testStatus.OnNext($"Stabilizing live readings...");
+                //await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct);
 
                 _testStatus.OnNext($"Downloading items...");
                 await DownloadVerificationTestItems(level, ct);

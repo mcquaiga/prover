@@ -83,9 +83,9 @@
 
                     </StackPanel>
                     <Button Command="{Binding RunTestCommand}"
-                            Content="Run Test"
+                            Content="Download"
                             Margin="0"
-                            Grid.Row="2"
+                            Grid.Row="2"                            
                             Style="{StaticResource MaterialDesignRaisedDarkButton}"
                             Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
                             HorizontalAlignment="Right"

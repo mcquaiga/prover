@@ -60,8 +60,8 @@
                 <controls:ValueDescriptionControl Label="ATM Gauge"
                                                   IsReadOnly="{Binding IsAtmGaugeReadOnly}"
                                                   Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <controls:ValueDescriptionControl Label="EVC ATM Reading"
-                                                  Value="{Binding EvcAtmPressure}" />
+                <!--<controls:ValueDescriptionControl Label="EVC ATM Reading"
+                                                  Value="{Binding EvcAtmPressure}" />-->
             </UniformGrid>
             <UniformGrid Columns="2"
                          Margin="0">
