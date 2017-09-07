@@ -104,6 +104,13 @@ namespace Prover.Core.Models.Instruments
 
                 return PulseBCount;
             }
+            set
+            {
+                if (Instrument.PulseASelect() == "UncVol")
+                    PulseACount = value;
+                else
+                    PulseBCount = value;
+            }
         }
 
         [NotMapped]
@@ -115,6 +122,13 @@ namespace Prover.Core.Models.Instruments
                     return PulseACount;
 
                 return PulseBCount;
+            }
+            set
+            {
+                if (Instrument.PulseASelect() == "CorVol")
+                    PulseACount = value;
+                else
+                    PulseBCount = value;
             }
         }
 

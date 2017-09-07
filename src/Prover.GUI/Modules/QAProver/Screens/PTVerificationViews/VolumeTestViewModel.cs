@@ -68,8 +68,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public decimal? EvcUncorrected => Volume.EvcUncorrected;
         public decimal? EvcCorrected => Volume.EvcCorrected;
 
-        public int UncorrectedPulseCount => Volume.UncPulseCount;
-        public int CorrectedPulseCount => Volume.CorPulseCount;
+        public int UncorrectedPulseCount
+        {
+            get => Volume.UncPulseCount;
+            set
+            {
+                Volume.UncPulseCount = value;
+                RaisePropertyChangeEvents();
+            }
+        }
+
+        public int CorrectedPulseCount
+        {
+            get => Volume.CorPulseCount;
+            set
+            {
+                Volume.CorPulseCount = value;
+                RaisePropertyChangeEvents();
+            }
+        }
 
         public Brush UnCorrectedPercentColour
             =>
