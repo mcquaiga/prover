@@ -27,14 +27,23 @@ namespace Prover.GUI
 
         public AppBootstrapper()
         {
-            _log.Info("Starting EVC Prover Application...");
 
-            var coreBootstrap = new CoreBootstrapper();
-            Builder = coreBootstrap.Builder;
+            try
+            {
+                _log.Info("Starting EVC Prover Application...");
 
-            Initialize();
+                var coreBootstrap = new CoreBootstrapper();
+                Builder = coreBootstrap.Builder;
 
-            _log.Info("Finished starting application.");
+                Initialize();
+
+                _log.Info("Finished starting application.");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Application failed to load. See exception for more details.");
+                _log.Error(e);
+            }
         }
 
         public ContainerBuilder Builder { get; }
