@@ -40,6 +40,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public string BasePressure =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
+        public string AtmPressure =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+
         public string PressureRange =>
             $"{Instrument.Items.GetItem(ItemCodes.Pressure.Range).RawValue.Trim()} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 

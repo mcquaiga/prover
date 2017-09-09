@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -39,39 +40,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public bool RunningTest { get; set; }
 
-        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
-        {
-            try
-            {
-                RunningTest = true;
-
-                await Task.Run(async () =>
-                {
-                    Log.Info("Volume test started!");
-
-                    await ExecuteSyncTest(commClient, volumeTest, ct);
-                    ct.ThrowIfCancellationRequested();
-
-                    await PreTest(commClient, volumeTest, ct);
-
-                    await ExecutingTest(volumeTest, ct);
-                    ct.ThrowIfCancellationRequested();
-
-                    await PostTest(commClient, volumeTest, ct);
-
-                    Log.Info("Volume test finished!");
-                }, ct);
-            }
-            catch (OperationCanceledException ex)
-            {
-                Log.Info("volume test cancellation requested.");
-                throw;
-            }
-            finally
-            {
-                RunningTest = false;
-            }
-        }
+        public abstract Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct, Subject<string> testStatus = null);        
 
         protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             CancellationToken ct);

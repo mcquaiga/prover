@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
+             
              TextElement.FontSize="26"
              TextElement.FontWeight="Light"            
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -106,11 +106,11 @@
                                          HorizontalAlignment="Stretch">
                                 <StackPanel>
                                     <TextBlock  Text="{Binding BaseTemperature, FallbackValue='60.0 F'}" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="12" Text="Base T." HorizontalAlignment="Center" />
+                                    <TextBlock FontSize="12" Text="Base." HorizontalAlignment="Center" />
                                 </StackPanel>
                                 <StackPanel  >
                                     <TextBlock  Text="-40 to 170 F" HorizontalAlignment="Center"/>
-                                    <TextBlock FontSize="12" Text="T. Range" HorizontalAlignment="Center" />
+                                    <TextBlock FontSize="12" Text="Range" HorizontalAlignment="Center" />
                                 </StackPanel>
                             </UniformGrid>
                         </Grid>
@@ -118,7 +118,7 @@
                     
                         <Border BorderThickness="0 0 0 1" 
                                 Style="{StaticResource InfoSection}"
-                             BorderBrush="LightGray">
+                                BorderBrush="LightGray">
                             <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -132,14 +132,19 @@
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch">
                                     <StackPanel Margin="10">
-                                        <TextBlock Text="{Binding BasePressure, FallbackValue='14.73 PSIA'}"
+                                        <TextBlock Text="{Binding BasePressure, FallbackValue='N/A'}"
                                                HorizontalAlignment="Center" />
-                                        <TextBlock FontSize="12" Text="Base P." HorizontalAlignment="Center" />
+                                        <TextBlock FontSize="12" Text="Base" HorizontalAlignment="Center" />
                                     </StackPanel>
-                                    <StackPanel Margin="10">
+                                <StackPanel Margin="10">
+                                    <TextBlock Text="{Binding AtmPressure, FallbackValue='N/A'}"
+                                                       HorizontalAlignment="Center" />
+                                    <TextBlock FontSize="12" Text="Atmospheric" HorizontalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Margin="10">
                                         <TextBlock Text="{Binding PressureRange, FallbackValue='100 PSIA'}"
                                                HorizontalAlignment="Center" />
-                                        <TextBlock FontSize="12" Text="P. Range" HorizontalAlignment="Center" />
+                                        <TextBlock FontSize="12" Text="Transducer Range" HorizontalAlignment="Center" />
                                     </StackPanel>
                                 </UniformGrid>
                             </Grid>

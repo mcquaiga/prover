@@ -29,6 +29,40 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public IObservable<string> StatusMessage => _status.AsObservable();
 
+        public override async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct, Subject<string> testStatus = null)
+        {
+            try
+            {
+                RunningTest = true;
+
+                await Task.Run(async () =>
+                {
+                    Log.Info("Volume test started!");
+
+                    //await ExecuteSyncTest(commClient, volumeTest, ct);
+                    ct.ThrowIfCancellationRequested();
+
+                    await PreTest(commClient, volumeTest, ct);
+
+                    await ExecutingTest(volumeTest, ct);
+                    ct.ThrowIfCancellationRequested();
+
+                    await PostTest(commClient, volumeTest, ct);
+
+                    Log.Info("Volume test finished!");
+                }, ct);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Info("volume test cancellation requested.");
+                throw;
+            }
+            finally
+            {
+                RunningTest = false;
+            }
+        }
+
         protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             CancellationToken ct)
         {
@@ -95,8 +129,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                         //TODO: Raise events so the UI can respond
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                         volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() &&
-                             !ct.IsCancellationRequested);
+                    } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
                 }, ct);
                 ct.ThrowIfCancellationRequested();
             }
