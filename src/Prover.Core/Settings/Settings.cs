@@ -27,6 +27,8 @@ namespace Prover.Core.Settings
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
 
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
+        public string Client { get; set; }
+        public bool TachIsNotUsed { get; set; }
 
         public void SetDefaults()
         {

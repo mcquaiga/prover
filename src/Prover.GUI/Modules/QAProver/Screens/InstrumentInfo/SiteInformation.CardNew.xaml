@@ -47,6 +47,10 @@
                     <TextBlock FontWeight="UltraLight" Text=" | "/>
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator, FallbackValue=Mechanical}" FontWeight="Medium"/>
                 </StackPanel>
+                <TextBlock FontSize="20" 
+                           Margin="0 5 0 0"
+                           Text="{Binding Instrument.Client.Name, FallbackValue=''}" 
+                           HorizontalAlignment="Center"/>
                 <TextBlock FontSize="16" 
                            Margin="0 5 0 0"
                            Text="{Binding JobIdDisplay, FallbackValue='Job # Not Found'}" 

@@ -66,21 +66,32 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType, CancellationToken ct, Client client = null)
         {
-            _communicationClient.Initialize(instrumentType);
+            try
+            {
+                _communicationClient.Initialize(instrumentType);
 
-            _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
-            await _communicationClient.Connect(ct);
+                _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
+                await _communicationClient.Connect(ct);
 
-            _testStatus.OnNext("Downloading items...");
-            var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+                _testStatus.OnNext("Downloading items...");
+                var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
 
-            _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
-            await _communicationClient.Disconnect();
+                _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
+                await _communicationClient.Disconnect();
 
-            Instrument = new Instrument(instrumentType, items, client);
+                Instrument = new Instrument(instrumentType, items, client);
 
-            await RunVerifiers();
-            await SaveAsync();
+                await RunVerifiers();
+                await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                _communicationClient.Dispose();
+                throw;
+            }
+            finally
+            {
+            }
         }
 
         public async Task RunTest(int level, CancellationToken ct)

@@ -70,6 +70,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
                 VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);           
         }
+
+        #region Properties
         private bool _showDownloadButton;
         public bool ShowDownloadButton
         {
@@ -106,11 +108,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             get { return _cancelTestCommand; }
             set { this.RaiseAndSetIfChanged(ref _cancelTestCommand, value); }
         }
-
-        public void CancelTest()
-        {
-            _cancellationTokenSource?.Cancel();
-        }
+              
 
         private ReactiveCommand _runTestCommand;
 
@@ -119,7 +117,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             get { return _runTestCommand; }
             set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
         }
+        #endregion
 
+        public void CancelTest()
+        {
+            _cancellationTokenSource?.Cancel();
+        }
         public async Task RunTest()
         {
             _cancellationTokenSource = new CancellationTokenSource();

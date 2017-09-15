@@ -31,8 +31,7 @@ namespace Prover.Core.Startup
                 .SingleInstance();
                 
             Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
-                .As<IProverStore<Instrument>>()
-                .SingleInstance();
+                .As<IProverStore<Instrument>>();
 
             _log.Debug("Completed initializing database...");
 

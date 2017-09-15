@@ -118,7 +118,7 @@ namespace Prover.CommProtocol.Common
                         if (!CommPort.IsOpen())
                             await CommPort.Open();
 
-                        await ConnectToInstrument();
+                        await ConnectToInstrument(ct);
                     }
                     catch (Exception ex)
                     {
@@ -127,9 +127,14 @@ namespace Prover.CommProtocol.Common
 
                     if (!IsConnected)
                         if (connectionAttempts < retryAttempts)
+                        {
+                            Log.Warn(
+                                $"[{CommPort.Name}] Failed to connect to instrument - Trying again.");
                             Thread.Sleep(ConnectionRetryDelayMs);
+                        }
+                            
                         else
-                            throw new Exception($"{CommPort.Name} Could not connect to instrument.");
+                            throw new Exception($"{CommPort.Name} Could not connect to instrument in {retryAttempts} tries. Cancelling connection attempt.");
                 }
             }, ct);
 
@@ -151,8 +156,9 @@ namespace Prover.CommProtocol.Common
         ///     Establish a link with an instrument
         ///     Handles retries for failed connections
         /// </summary>
+        /// <param name="ct"></param>
         /// <returns></returns>
-        protected abstract Task ConnectToInstrument();
+        protected abstract Task ConnectToInstrument(CancellationToken ct);
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists
