@@ -39,15 +39,15 @@ namespace Prover.Core.Models.Instruments
         public decimal? EvcUnsqrFactor => PressureTest.Items.GetItem(ItemCodes.Pressure.UnsqrFactor).NumericValue;
 
         [NotMapped]
-        public override decimal? ActualFactor => decimal.Round((decimal) CalculateFPV(), 4);
+        public override decimal? ActualFactor => CalculateFPV();
 
-        public decimal SuperFactorSquared => (decimal) Math.Pow((double) ActualFactor, 2);
+        public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?) Math.Pow((double) ActualFactor, 2) : null;
 
         public override decimal? PercentError
         {
             get
             {
-                if (EvcUnsqrFactor == null || ActualFactor == 0) return null;
+                if (EvcUnsqrFactor == null || !ActualFactor.HasValue || ActualFactor == 0) return null;
                 return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor) / ActualFactor * 100), 2);
             }
         }
@@ -55,7 +55,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 
-        private double? CalculateFPV()
+        private decimal? CalculateFPV()
         {
             if (!GaugePressure.HasValue)
                 return null;
@@ -63,7 +63,7 @@ namespace Prover.Core.Models.Instruments
             var super = new FactorCalculations((double) VerificationTest.Instrument.SpecGr().Value,
                 (double) VerificationTest.Instrument.CO2().Value, (double) VerificationTest.Instrument.N2().Value,
                 (double) GaugeTemp, (double) GaugePressure.Value);
-            return super.SuperFactor;
+            return decimal.Round((decimal)super.SuperFactor, 4);
         }
     }
 }

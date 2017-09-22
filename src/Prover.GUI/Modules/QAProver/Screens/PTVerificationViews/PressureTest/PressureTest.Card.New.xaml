@@ -47,6 +47,7 @@
                     Grid.Column="1"
                     Margin="4">
             <UniformGrid Columns="2"
+                         Visibility="{Binding ShowGaugeOnly, Converter={StaticResource BoolToHiddenConverter}}"
                          Margin="0">
                 <controls:ValueDescriptionControl Label="Gauge"
                                                   IsReadOnly="False"
@@ -54,15 +55,64 @@
                 <controls:ValueDescriptionControl Label="EVC Reading"
                                                   Value="{Binding EvcGasPressure}" />
             </UniformGrid>
-            <UniformGrid Columns="2"
-                         Margin="0"
-                         Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}">
+            <Grid Visibility="{Binding ShowAbsolute, Converter={StaticResource BoolToHiddenConverter}}"
+                  Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <controls:ValueDescriptionControl Grid.Row="0"
+                                                  Grid.Column="0"
+                                                  Label="Gauge"
+                                                  IsReadOnly="False"
+                                                  Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <materialDesign:PackIcon Kind="Plus"
+                                         Width="24"
+                                         Height="24"
+                                         Grid.Row="0"
+                                         Grid.Column="1"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+                <controls:ValueDescriptionControl Label="Atmospheric"
+                                                  Grid.Row="0"
+                                                  Grid.Column="2"
+                                                  IsReadOnly="False"
+                                                  Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <materialDesign:PackIcon Kind="Equal"
+                                         Width="24"
+                                         Height="24"
+                                         Grid.Row="0"
+                                         Grid.Column="3"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+                <controls:ValueDescriptionControl Label="Absolute"
+                                                  Grid.Row="0"
+                                                  Grid.Column="4"
+                                                  IsReadOnly="True"
+                                                  Value="{Binding AbsolutePressure}" />
+
+                <controls:ValueDescriptionControl Label="EVC Reading"
+                                                  Grid.Row="1"
+                                                  Grid.Column="4"
+                                                  Value="{Binding EvcGasPressure}" />
+            </Grid>
+            
+            <!--<UniformGrid Columns="2"
+                         Margin="0">
                 <controls:ValueDescriptionControl Label="ATM Gauge"
                                                   IsReadOnly="{Binding IsAtmGaugeReadOnly}"
                                                   Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <!--<controls:ValueDescriptionControl Label="EVC ATM Reading"
-                                                  Value="{Binding EvcAtmPressure}" />-->
-            </UniformGrid>
+                --><!--<controls:ValueDescriptionControl Label="EVC ATM Reading"
+                                                  Value="{Binding EvcAtmPressure}" />--><!--
+            </UniformGrid>-->
             <UniformGrid Columns="2"
                          Margin="0">
                 <controls:ValueDescriptionControl Label="Actual Factor"

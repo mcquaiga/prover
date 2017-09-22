@@ -55,7 +55,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public bool EventLogChecked
         {
-            get { return Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value; }
+            get => Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value;
             set
             {
                 Instrument.EventLogPassed = value;
@@ -66,7 +66,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public bool CommPortChecked
         {
-            get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
+            get => Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value;
             set
             {
                 Instrument.CommPortsPassed = value;

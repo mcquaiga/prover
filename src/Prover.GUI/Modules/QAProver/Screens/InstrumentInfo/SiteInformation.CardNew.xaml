@@ -208,62 +208,13 @@
                                     <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
                                 </StackPanel>
 
-                                <!--<StackPanel Margin="10"
-                                    VerticalAlignment="Center" >
-                                    <TextBlock  Text="{Binding Instrument.PulseASelect, FallbackValue='UncVol'}" HorizontalAlignment="Center"/>
-
-                                    <TextBlock FontSize="12" Text="Pulser C" HorizontalAlignment="Center" />
-                                </StackPanel>-->
+             
                             </UniformGrid>
 
                         </Grid>
                     </Border>
                 </StackPanel>
             </StackPanel>
-
-
-            <!--<UniformGrid Columns="2">
-            <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber2}" />
-            <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
-            <controls1:ValueDescriptionControl Label="Firmware Version"
-                                                       Value="{Binding Instrument.FirmwareVersion}" />
-
-            <controls1:ValueDescriptionControl Label="Base Pressure" Value="{Binding BasePressure}" />
-            <controls1:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
-
-            <controls1:ValueDescriptionControl Label="Pulser A Select"
-                                                       Value="{Binding Instrument.PulseASelect}" />
-            <controls1:ValueDescriptionControl Label="Pulser A Scaling"
-                                                       Value="{Binding Instrument.PulseAScaling}" />
-   
-            <controls1:ValueDescriptionControl Label="Pulser B Select"
-                                                       Value="{Binding Instrument.PulseBSelect}" />
-            <controls1:ValueDescriptionControl Label="Pulser B Scaling"
-                                                       Value="{Binding Instrument.PulseBScaling}" />    
-
-        </UniformGrid>-->
-            <!--<StackPanel Orientation="Vertical">
-                <UniformGrid Rows="1">
-                    <controls1:ValueDescriptionControl Label="Type" Value="{Binding Instrument.InstrumentType.Name}" />
-                    <controls1:ValueDescriptionControl Label="Comp." Value="{Binding CorrectorType}" />
-                    <controls1:ValueDescriptionControl Label="Inventory Code" Value="{Binding Instrument.SiteNumber1}" />
-                    <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
-                </UniformGrid>
-                <UniformGrid Rows="1">
-                    <controls1:ValueDescriptionControl Label="Firmware Version"
-                                                       Value="{Binding Instrument.FirmwareVersion}" />
-                    <controls1:ValueDescriptionControl Label="Pulser A Select"
-                                                       Value="{Binding Instrument.PulseASelect}" />
-                    <controls1:ValueDescriptionControl Label="Pulser A Scaling"
-                                                       Value="{Binding Instrument.PulseAScaling}" />
-                    <controls1:ValueDescriptionControl Label="Pulser B Select"
-                                                       Value="{Binding Instrument.PulseBSelect}" />
-                    <controls1:ValueDescriptionControl Label="Pulser B Scaling"
-                                                       Value="{Binding Instrument.PulseBScaling}" />
-                    <controls1:ValueDescriptionControl Label="Base P." Value="{Binding BasePressure}" />
-                    <controls1:ValueDescriptionControl Label="Base T." Value="{Binding BaseTemperature}" />
-                </UniformGrid>
-            </StackPanel>-->
         </Grid>
     </Grid>
 </UserControl>

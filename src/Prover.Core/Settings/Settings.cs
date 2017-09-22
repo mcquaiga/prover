@@ -14,6 +14,20 @@ namespace Prover.Core.Settings
         public int UncorrectedPulses { get; set; }
     }
 
+    public class TestSettings
+    {
+        public enum VolumeTestType
+        {
+            Automatic,
+            Manual
+        }
+
+        public bool StabilizeLiveReadings { get; set; }
+        public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
+        public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
+        public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
+    }
+
     public class Settings
     {
         public string LastInstrumentTypeUsed { get; set; }
@@ -22,32 +36,33 @@ namespace Prover.Core.Settings
         public int InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }
         public string ExportServiceAddress { get; set; }
-
-        public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
-        public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
-
+        
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public string Client { get; set; }
         public bool TachIsNotUsed { get; set; }
+        
+        public TestSettings TestSettings { get; set; }
 
         public void SetDefaults()
         {
             ExportServiceAddress = "";
-            if (TemperatureGaugeDefaults == null)
+            TestSettings = new TestSettings()
+            {
+                StabilizeLiveReadings = false,
+                MechanicalDriveVolumeTestType = TestSettings.VolumeTestType.Automatic,
                 TemperatureGaugeDefaults = new List<GaugeDefaults>
                 {
                     new GaugeDefaults {Level = 0, Value = 32.0m},
                     new GaugeDefaults {Level = 1, Value = 60.0m},
                     new GaugeDefaults {Level = 2, Value = 90.0m}
-                };
-
-            if (PressureGaugeDefaults == null)
+                },
                 PressureGaugeDefaults = new List<GaugeDefaults>
                 {
                     new GaugeDefaults {Level = 0, Value = 80.0m},
                     new GaugeDefaults {Level = 1, Value = 50.0m},
                     new GaugeDefaults {Level = 2, Value = 20.0m}
-                };
+                }
+            };         
 
             if (MechanicalUncorrectedTestLimits == null)
                 MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>

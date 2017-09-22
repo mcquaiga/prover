@@ -82,14 +82,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 : string.Empty;
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
-                x => x.SelectedTachCommPort,
-                (baud, instrumentPort, tachPort) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
-                                                    !string.IsNullOrEmpty(tachPort));
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+                (baud, instrumentPort, tachPort, tachNotUsed) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
+                                                    (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
+
             StartTestCommand = ReactiveCommand
-                .CreateFromObservable(
-                    () => Observable
-                        .StartAsync(StartNewQaTest),
+                .CreateFromObservable(() => Observable.StartAsync(StartNewQaTest),
                     canStartNewTest);
 
             CancelCommand = ReactiveCommand.Create(() =>
@@ -108,7 +106,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
-
             SelectedClient = Clients.Contains(SettingsManager.SettingsInstance.Client)
                 ? SettingsManager.SettingsInstance.Client
                 : string.Empty;

@@ -32,7 +32,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
 
         public Brush HeaderColour
-            => VerificationTest.TestNumber == 0 ? new SolidColorBrush(Colors.DarkRed) : new SolidColorBrush(Colors.Orange);
+            => VerificationTest.TestNumber == 0
+                ? new SolidColorBrush(Colors.DarkRed)
+                : new SolidColorBrush(Colors.Orange);
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";
         public bool ShowVolumeTestViewModel => VolumeTestViewModel != null;
@@ -53,38 +55,59 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
+                SuperFactorTestViewModel =
+                    new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
 
-            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T || VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-
-            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P || VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T ||
+                VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+                TemperatureTestViewModel =
+                    new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
-                //this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge, x => x.PressureTestViewModel.GaugePressure)
-                //    .Where(x => QaRunTestManager != null)                    
-                //    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
+                this.WhenAnyValue(x => x.TemperatureTestViewModel.Gauge)
+                    .Where(x => QaRunTestManager != null)
+                    .Subscribe(async y => await QaRunTestManager.SaveAsync());
+            }
+
+            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
+                VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
+            {
+                PressureTestViewModel =
+                    new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+
+                this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge,
+                        x => x.PressureTestViewModel.GaugePressure)
+                    .Where(x => QaRunTestManager != null)
+                    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
             }
 
             if (VerificationTest.VolumeTest != null)
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);           
+            {
+                VolumeTestViewModel =
+                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
+
+                this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
+                    .Where(x => QaRunTestManager != null)
+                    .Subscribe(async y => await QaRunTestManager.SaveAsync());
+            }
         }
 
         #region Properties
+
         private bool _showDownloadButton;
+
         public bool ShowDownloadButton
         {
-            get { return _showDownloadButton; }
-            set { this.RaiseAndSetIfChanged(ref _showDownloadButton, value); }
+            get => _showDownloadButton;
+            set => this.RaiseAndSetIfChanged(ref _showDownloadButton, value);
         }
 
         private bool _showProgressDialog;
 
         public bool ShowProgressDialog
         {
-            get { return _showProgressDialog; }
-            set { this.RaiseAndSetIfChanged(ref _showProgressDialog, value); }
+            get => _showProgressDialog;
+            set => this.RaiseAndSetIfChanged(ref _showProgressDialog, value);
         }
 
         private ReactiveCommand _cancelTestCommand;
@@ -99,41 +122,43 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public string TestStatusMessage
         {
-            get { return _testStatusMessage; }
-            set { this.RaiseAndSetIfChanged(ref _testStatusMessage, value); }
+            get => _testStatusMessage;
+            set => this.RaiseAndSetIfChanged(ref _testStatusMessage, value);
         }
 
         public ReactiveCommand CancelTestCommand
         {
-            get { return _cancelTestCommand; }
-            set { this.RaiseAndSetIfChanged(ref _cancelTestCommand, value); }
+            get => _cancelTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _cancelTestCommand, value);
         }
-              
 
         private ReactiveCommand _runTestCommand;
 
         public ReactiveCommand RunTestCommand
         {
-            get { return _runTestCommand; }
-            set { this.RaiseAndSetIfChanged(ref _runTestCommand, value); }
+            get => _runTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _runTestCommand, value);
         }
+
         #endregion
 
         public void CancelTest()
         {
             _cancellationTokenSource?.Cancel();
         }
+
         public async Task RunTest()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             try
             {
                 ShowProgressDialog = true;
-                await QaRunTestManager.RunTest(VerificationTest.TestNumber, _cancellationTokenSource.Token);
+                await QaRunTestManager.RunCorrectionTest(VerificationTest.TestNumber, _cancellationTokenSource.Token);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"An error occured during the verification test. See exception for details. {ex.Message}");
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
             }
             finally
             {

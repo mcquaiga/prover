@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Reactive;
+using System.Windows.Media;
 using Caliburn.Micro;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
@@ -6,6 +7,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
+using ReactiveUI;
 
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
@@ -25,6 +27,18 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 MeterDisplacementItem =
                     new RotaryMeterTestViewModel(
                         (RotaryDrive) Volume.DriveType);
+
+            RunVolumeTestCommand = ReactiveCommand.CreateFromTask(async ct =>
+            {
+                await InstrumentManager.RunVolumeTest(ct);
+            });
+        }
+
+        private ReactiveCommand _runVolumeTestCommand;
+        public ReactiveCommand RunVolumeTestCommand
+        {
+            get { return _runVolumeTestCommand; }
+            set { this.RaiseAndSetIfChanged(ref _runVolumeTestCommand, value); }
         }
 
         public QaRunTestManager InstrumentManager { get; set; }
