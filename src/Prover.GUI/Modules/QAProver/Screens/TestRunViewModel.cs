@@ -15,7 +15,9 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
 using ReactiveUI;
 using Splat;
@@ -26,19 +28,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestViewNew";
-
-        private string _connectionStatusMessage;
-        private CancellationTokenSource _cancellationTokenSource;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
-
         private IQaRunTestManager _qaRunTestManager;
-
         private int _selectedBaudRate;
         private string _selectedCommPort;
-        private string _selectedTachCommPort;
-        private bool _showConnectionDialog;
-
-        private IDisposable _testStatusSubscription;
+        private string _selectedTachCommPort;     
         private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
@@ -82,20 +76,14 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 : string.Empty;
 
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
-                (baud, instrumentPort, tachPort, tachNotUsed) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
-                                                    (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
+                x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+                (baud, instrumentPort, tachPort, tachNotUsed) =>
+                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
+                    (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
 
-            StartTestCommand = ReactiveCommand
-                .CreateFromObservable(() => Observable.StartAsync(StartNewQaTest),
-                    canStartNewTest);
-
-            CancelCommand = ReactiveCommand.Create(() =>
-                {
-                    ConnectionStatusMessage = "Cancelling test...";
-                    _cancellationTokenSource?.Cancel();
-                },
-                StartTestCommand.IsExecuting);
+            StartTestCommand =
+                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
             var clientList = clientStore.Query().ToList();
             Clients = new ReactiveList<string>(
@@ -135,7 +123,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
         #region Properties
 
         public ReactiveCommand StartTestCommand { get; }
-        public ReactiveCommand CancelCommand { get; }
 
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
@@ -146,9 +133,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
 
         public List<VerificationSetViewModel> PTTestViews => TestViews.ToList();
-
         public VolumeTestViewModel VolumeInformationItem { get; set; }
-
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
         public string ViewContext
@@ -182,33 +167,28 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
-
         public int SelectedBaudRate
         {
             get => _selectedBaudRate;
             set => this.RaiseAndSetIfChanged(ref _selectedBaudRate, value);
         }
 
-        public bool ShowConnectionDialog
+        private bool _showDialog;
+        public bool ShowDialog
         {
-            get => _showConnectionDialog;
-            set => this.RaiseAndSetIfChanged(ref _showConnectionDialog, value);
+            get => _showDialog;
+            set => this.RaiseAndSetIfChanged(ref _showDialog, value);
         }
-
-        public string ConnectionStatusMessage
-        {
-            get => _connectionStatusMessage;
-            set => this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value);
-        }
+    
 
         private string _selectedClient;
-        private Client _client;     
-
+        private Client _client;
         private ReactiveList<string> _clients;
+
         public ReactiveList<string> Clients
         {
-            get { return _clients; }
-            set { this.RaiseAndSetIfChanged(ref _clients, value); }
+            get => _clients;
+            set => this.RaiseAndSetIfChanged(ref _clients, value);
         }
 
         public string SelectedClient
@@ -235,12 +215,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
             await ScreenManager.GoHome();
         }
 
-        private async Task StartNewQaTest(CancellationToken ct)
+        private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
         {
             if (SelectedInstrument == null)
                 return;
 
-            ShowConnectionDialog = true;
+            ShowDialog = true;
 
             try
             {
@@ -248,9 +228,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 await SettingsManager.Save();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                _cancellationTokenSource = new CancellationTokenSource();
-                await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+                _qaRunTestManager.TestStatus.Subscribe(statusObservable);                
+
+                await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -264,7 +244,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             }
             finally
             {
-                ShowConnectionDialog = false;
+                ShowDialog = false;
             }
         }
 
@@ -288,12 +268,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
-        }
-
-        private void OnTestStatusChange(string status)
-        {
-            ConnectionStatusMessage = status;
-        }
+        }      
 
         public class SelectableInstrumentType
         {
@@ -303,7 +278,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public void Dispose()
         {
-            _testStatusSubscription?.Dispose();
+            //_testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
     }

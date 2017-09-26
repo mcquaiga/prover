@@ -147,6 +147,8 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Design\DesignTimeViewModelLocator.cs" />
+    <Compile Include="Screens\Dialogs\DialogDisplayHelpers.cs" />
+    <Compile Include="Screens\Dialogs\IDialogViewModel.cs" />
     <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Events\ShowDialogEvent.cs" />
@@ -160,6 +162,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ScreenManager.cs" />
+    <Compile Include="Screens\Dialogs\InformationDialogView.xaml.cs">
+      <DependentUpon>InformationDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\InformationDialogViewModel.cs" />
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogView.xaml.cs">
+      <DependentUpon>ProgressStatusDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogViewModel.cs" />
     <Compile Include="Screens\MainMenu\IHaveMainMenuItem.cs" />
     <Compile Include="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
@@ -197,6 +207,14 @@
     <Page Include="Controls\MainMenuButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Dialogs\InformationDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\MainMenu\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>

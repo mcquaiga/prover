@@ -27,11 +27,13 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
 
         IObservable<string> TestStatus { get; }
+        VolumeTestManagerBase VolumeTestManager { get; set; }
 
         Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(),
             Client client = null);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
+        Task RunVolumeTest(CancellationToken ct);
         Task SaveAsync();
         Task RunVerifiers();
     }
@@ -79,14 +81,12 @@ namespace Prover.Core.VerificationTests
             {
                 _communicationClient.Initialize(instrumentType);
 
-                _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
-                await _communicationClient.Connect(ct);
+                await ConnectToInstrument(instrumentType, ct);
 
                 _testStatus.OnNext("Downloading items...");
                 var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
 
-                _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
-                await _communicationClient.Disconnect();
+                await DisconnectFromInstrument(instrumentType);
 
                 Instrument = new Instrument(instrumentType, items, client);
 
@@ -112,6 +112,24 @@ namespace Prover.Core.VerificationTests
                 Log.Error(ex);
                 throw;
             }            
+        }
+
+        private async Task DisconnectFromInstrument(InstrumentType instrumentType)
+        {
+            if (_communicationClient.IsConnected)
+            {
+                _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
+                await _communicationClient.Disconnect();
+            }
+        }
+
+        private async Task ConnectToInstrument(InstrumentType instrumentType, CancellationToken ct)
+        {
+            if (!_communicationClient.IsConnected)
+            {
+                _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
+                await _communicationClient.Connect(ct);
+            }
         }
 
         public async Task RunCorrectionTest(int level, CancellationToken ct)
@@ -155,6 +173,7 @@ namespace Prover.Core.VerificationTests
             }
             catch (OperationCanceledException e) 
             {
+                _testStatus.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -185,30 +204,35 @@ namespace Prover.Core.VerificationTests
 
         public void Dispose()
         {
-            _communicationClient.Dispose();
-            VolumeTestManager.Dispose();
+            _communicationClient?.Dispose();
+            VolumeTestManager?.Dispose();
         }
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
-            _testStatus.OnNext($"Downloading items...");
+            await ConnectToInstrument(Instrument.InstrumentType, ct);            
 
-            if (!_communicationClient.IsConnected)
-                await _communicationClient.Connect(ct);
-
+            
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
+                _testStatus.OnNext($"Downloading P & T items...");
                 await DownloadTemperatureTestItems(level);
                 await DownloadPressureTestItems(level);
             }
 
             if (Instrument.CompositionType == EvcCorrectorType.T)
+            {
+                _testStatus.OnNext($"Downloading T items...");
                 await DownloadTemperatureTestItems(level);
+            }
 
             if (Instrument.CompositionType == EvcCorrectorType.P)
+            {
+                _testStatus.OnNext($"Downloading P items...");
                 await DownloadPressureTestItems(level);
+            }
 
-            await _communicationClient.Disconnect();
+            await DisconnectFromInstrument(Instrument.InstrumentType);
         }
 
         public async Task DownloadTemperatureTestItems(int levelNumber)

@@ -1,14 +1,15 @@
 ﻿using Caliburn.Micro.ReactiveUI;
+using Prover.GUI.Common.Screens.Dialogs;
 
 namespace Prover.GUI.Common.Events
 {
-    public class ShowDialogEvent
+    public class DialogDisplayEvent
     {
-        public ShowDialogEvent(ReactiveScreen viewModel)
+        public DialogDisplayEvent(IDialogViewModel viewModel)
         {
             ViewModel = viewModel;
         }
 
-        public object ViewModel { get; private set; }
+        public IDialogViewModel ViewModel { get; }
     }
 }

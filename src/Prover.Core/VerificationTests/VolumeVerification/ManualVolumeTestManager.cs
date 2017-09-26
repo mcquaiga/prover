@@ -31,7 +31,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     Log.Info("Volume test started!");
                   
-                    testStatus?.OnNext("Downloading pre-Test values.");
+                    testStatus?.OnNext("Downloading pre-test values.");
                     await PreTest(commClient, volumeTest, ct);
 
                     testStatus?.OnNext("Waiting for input to complete.");

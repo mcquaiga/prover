@@ -11,50 +11,60 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Window.Resources>
         <DataTemplate x:Key="ToolbarItem">
-            <ContentControl cal:View.Model="{Binding .}" cal:View.Context="{Binding Path=ViewContext}"></ContentControl>
+            <ContentControl cal:View.Model="{Binding}" cal:View.Context="{Binding Path=ViewContext}"/>
         </DataTemplate>
     </Window.Resources>
-    <materialDesign:DialogHost Identifier="RootDialog">
-        <DockPanel>
-            <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                      Mode="PrimaryDark" DockPanel.Dock="Top">
-                <DockPanel>
-      
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                        <Button x:Name="HomeButton" 
-                                Width="64" 
-                                Height="64" 
-                                DockPanel.Dock="Left" Grid.Column="0">
-                            <StackPanel>
-                                <Image Source="..\..\Resources/Home.png" />
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="SettingsButton" Width="64" Height="64" Grid.Column="1"
-                            HorizontalAlignment="Right">
-                            <Image Source="..\..\Resources/settings-light.png" />
-                        </Button>
-                    </StackPanel>
-   
-                    <StackPanel DockPanel.Dock="Right">
-                        <ItemsControl
-                                  ItemsSource="{Binding Path=ToolbarItems}"
-                                    ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-                    
-                    <Grid DockPanel.Dock="Top">
-                        <TextBlock HorizontalAlignment="Center" 
-                               VerticalAlignment="Center" FontSize="22">EVC Prover</TextBlock>
-                    </Grid>
-                </DockPanel>
-            </materialDesign:ColorZone>
 
+    <DockPanel>
+        <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                  Mode="PrimaryDark" DockPanel.Dock="Top">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <Button x:Name="HomeButton"
+                            Width="48"
+                            Height="48">
+                        <StackPanel>
+                            <Image Source="..\..\Resources/Home.png" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="SettingsButton" 
+                            Width="48" 
+                            Height="48">
+                        <Image Source="..\..\Resources/settings-light.png" />
+                    </Button>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Right">
+                    <ItemsControl
+                        ItemsSource="{Binding Path=ToolbarItems}"
+                        ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+
+                <Grid DockPanel.Dock="Top">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center" 
+                               FontSize="22">
+                        EVC Prover
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        
+        <materialDesign:DialogHost Identifier="ActiveItemDialog"
+                                   IsOpen="{Binding DialogViewModel.ShowDialog}">
+            
+            <materialDesign:DialogHost.DialogContent>
+                <ContentControl cal:View.Model="{Binding DialogViewModel}" />
+            </materialDesign:DialogHost.DialogContent>
+            
             <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
-        </DockPanel>
-    </materialDesign:DialogHost>
+        </materialDesign:DialogHost>
+    </DockPanel>
+
 </Window>

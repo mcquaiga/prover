@@ -9,12 +9,17 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.GUI.Common.Screens.Dialogs;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
+    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, 
+        IShell, 
+        IHandle<ScreenChangeEvent>,
+        IHandle<DialogDisplayEvent>
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
         readonly IEventAggregator _eventAggregator;
@@ -31,20 +36,9 @@ namespace Prover.GUI.Screens.Shell
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
-        public string Title => "EVC Prover";
+        public string Title => $"EVC Prover - v{Environment.Version}";
 
-        public void Handle(ScreenChangeEvent message)
-        {
-            if (_currentView != null)
-            {
-                DeactivateItem(_currentView, true);
-                (_currentView as IDisposable)?.Dispose();
-            }
-
-            ActivateItem(message.ViewModel);
-            _currentView = message.ViewModel;
-        }
-
+       
         public async Task HomeButton()
         {
             await _screenManager.GoHome();
@@ -58,6 +52,30 @@ namespace Prover.GUI.Screens.Shell
         private void ShowSettingsWindow()
         {
             _screenManager.ShowDialog(new SettingsViewModel(_screenManager, _eventAggregator));
+        }
+
+        public void Handle(ScreenChangeEvent message)
+        {
+            if (_currentView != null)
+            {
+                DeactivateItem(_currentView, true);
+                (_currentView as IDisposable)?.Dispose();
+            }
+
+            ActivateItem(message.ViewModel);
+            _currentView = message.ViewModel;
+        }
+
+        public void Handle(DialogDisplayEvent message)
+        {
+            DialogViewModel = message.ViewModel;          
+        }       
+
+        private IDialogViewModel _dialogViewModel;
+        public IDialogViewModel DialogViewModel
+        {
+            get => _dialogViewModel;
+            set => this.RaiseAndSetIfChanged(ref _dialogViewModel, value);
         }
     }
 }

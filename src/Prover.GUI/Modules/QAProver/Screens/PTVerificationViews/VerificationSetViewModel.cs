@@ -11,6 +11,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.Dialogs;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
@@ -25,7 +26,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             CancelTestCommand = ReactiveCommand.Create(CancelTest);
-            RunTestCommand = ReactiveCommand.CreateFromTask(RunTest);
+            
+            RunTestCommand =
+                DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
         }
 
         public ColorZoneMode HeaderZoneColor
@@ -52,7 +55,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             ShowDownloadButton = QaRunTestManager != null;
 
-            _testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
+            //_testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTestViewModel =
@@ -84,7 +87,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
             {
                 VolumeTestViewModel =
-                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
+                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);                
 
                 this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
                     .Where(x => QaRunTestManager != null)
@@ -147,13 +150,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             _cancellationTokenSource?.Cancel();
         }
 
-        public async Task RunTest()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
+        public async Task RunTest(IObserver<string> statusObserver, CancellationToken cancellationToken)
+        {            
             try
             {
-                ShowProgressDialog = true;
-                await QaRunTestManager.RunCorrectionTest(VerificationTest.TestNumber, _cancellationTokenSource.Token);
+                QaRunTestManager.TestStatus.Subscribe(statusObserver);
+                await QaRunTestManager.RunCorrectionTest(VerificationTest.TestNumber, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -161,10 +163,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                     $"An error occured during the verification test. See exception for details. {ex.Message}");
             }
             finally
-            {
-                ShowProgressDialog = false;
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
-                _cancellationTokenSource.Dispose();
+            {               
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());                
             }
         }
     }
