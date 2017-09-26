@@ -15,7 +15,6 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
@@ -32,7 +31,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private IQaRunTestManager _qaRunTestManager;
         private int _selectedBaudRate;
         private string _selectedCommPort;
-        private string _selectedTachCommPort;     
+        private string _selectedTachCommPort;
         private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
@@ -123,7 +122,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
         #region Properties
 
         public ReactiveCommand StartTestCommand { get; }
-
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
@@ -167,6 +165,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
+
         public int SelectedBaudRate
         {
             get => _selectedBaudRate;
@@ -174,12 +173,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         private bool _showDialog;
+
         public bool ShowDialog
         {
             get => _showDialog;
             set => this.RaiseAndSetIfChanged(ref _showDialog, value);
         }
-    
 
         private string _selectedClient;
         private Client _client;
@@ -228,7 +227,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 await SettingsManager.Save();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                _qaRunTestManager.TestStatus.Subscribe(statusObservable);                
+                _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
                 await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
 
@@ -268,7 +267,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
-        }      
+        }
 
         public class SelectableInstrumentType
         {
