@@ -93,8 +93,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
-            SelectedClient = Clients.Contains(SettingsManager.SettingsInstance.Client)
-                ? SettingsManager.SettingsInstance.Client
+            SelectedClient = Clients.Contains(SettingsManager.SettingsInstance.LastClientSelected)
+                ? SettingsManager.SettingsInstance.LastClientSelected
                 : string.Empty;
 
             this.WhenAnyValue(x => x.TachIsNotUsed)
@@ -102,6 +102,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
 
             TachIsNotUsed = SettingsManager.SettingsInstance.TachIsNotUsed;
+            this.WhenAnyValue(x => x.TachIsNotUsed)
+                .Subscribe(t => SettingsManager.SettingsInstance.TachIsNotUsed = t);
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                     x => x.SelectedClient, x => x.TachIsNotUsed)
@@ -111,8 +113,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
                         SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
                         SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
                         SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                        SettingsManager.SettingsInstance.Client = _.Item4;
-                        SettingsManager.SettingsInstance.TachIsNotUsed = _.Item5;
+                        SettingsManager.SettingsInstance.LastClientSelected = _.Item4;
+                        
                         await SettingsManager.Save();
                     });
 

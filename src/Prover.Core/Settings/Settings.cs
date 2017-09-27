@@ -24,29 +24,13 @@ namespace Prover.Core.Settings
 
         public bool StabilizeLiveReadings { get; set; }
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
+        public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
-    }
 
-    public class Settings
-    {
-        public string LastInstrumentTypeUsed { get; set; }
-        public string LastDriveTypeUsed { get; set; }
-        public string InstrumentCommPort { get; set; }
-        public int InstrumentBaudRate { get; set; }
-        public string TachCommPort { get; set; }
-        public string ExportServiceAddress { get; set; }
-        
-        public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
-        public string Client { get; set; }
-        public bool TachIsNotUsed { get; set; }
-        
-        public TestSettings TestSettings { get; set; }
-
-        public void SetDefaults()
+        public static TestSettings CreateDefault()
         {
-            ExportServiceAddress = "";
-            TestSettings = new TestSettings()
+            return new TestSettings()
             {
                 StabilizeLiveReadings = false,
                 MechanicalDriveVolumeTestType = TestSettings.VolumeTestType.Automatic,
@@ -61,17 +45,38 @@ namespace Prover.Core.Settings
                     new GaugeDefaults {Level = 0, Value = 80.0m},
                     new GaugeDefaults {Level = 1, Value = 50.0m},
                     new GaugeDefaults {Level = 2, Value = 20.0m}
-                }
-            };         
+                },
 
-            if (MechanicalUncorrectedTestLimits == null)
                 MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
                 {
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1, UncorrectedPulses = 1000},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 100},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 100, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
-                };
+                }
+            };
+        }       
+    }
+
+    public class Settings
+    {
+        public string LastInstrumentTypeUsed { get; set; }
+        public string LastDriveTypeUsed { get; set; }
+        public string InstrumentCommPort { get; set; }        
+        public string TachCommPort { get; set; }
+        public string ExportServiceAddress { get; set; }
+        public string LastClientSelected { get; set; }
+
+        public bool TachIsNotUsed { get; set; }
+
+        public int InstrumentBaudRate { get; set; }
+
+        public TestSettings TestSettings { get; set; }
+
+        public void SetDefaults()
+        {
+            if (TestSettings == null)
+                TestSettings = TestSettings.CreateDefault();
         }
     }
 }

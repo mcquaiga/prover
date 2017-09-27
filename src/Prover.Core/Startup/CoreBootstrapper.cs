@@ -53,8 +53,11 @@ namespace Prover.Core.Startup
             _log.Debug("    Running Migrations.");
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
-            Builder.Register(c => new ProverContext())
+            Builder.RegisterType<ProverContext>()
+                .AsSelf()
+                .AutoActivate()
                 .SingleInstance();
+                
 
             Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
                 .As<IProverStore<Instrument>>();

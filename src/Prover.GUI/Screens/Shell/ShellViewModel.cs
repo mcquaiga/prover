@@ -8,8 +8,10 @@ using Prover.GUI.Screens.Settings;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Prover.GUI.Common.Screens.Dialogs;
@@ -32,11 +34,19 @@ namespace Prover.GUI.Screens.Shell
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
+            GetVersionNumber();
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
-        public string Title => $"EVC Prover - v{Environment.Version}";
+        private static string GetVersionNumber()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersionInfo.ProductVersion;
+        }
+
+        public string Title => $"EVC Prover - v{GetVersionNumber()}";
 
        
         public async Task HomeButton()
@@ -44,14 +54,9 @@ namespace Prover.GUI.Screens.Shell
             await _screenManager.GoHome();
         }
 
-        public void SettingsButton()
+        public async Task SettingsButton()
         {
-            ShowSettingsWindow();
-        }
-
-        private void ShowSettingsWindow()
-        {
-            _screenManager.ShowDialog(new SettingsViewModel(_screenManager, _eventAggregator));
+            await _screenManager.ChangeScreen<SettingsViewModel>(); //(new SettingsViewModel(_screenManager, _eventAggregator));
         }
 
         public void Handle(ScreenChangeEvent message)

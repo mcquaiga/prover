@@ -9,6 +9,14 @@
              d:DataContext="{d:DesignInstance designer:DesignTimeClientManagerViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="355">
     <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Clients"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
+            </StackPanel>
+        </materialDesign:ColorZone>
         <materialDesign:DialogHost Identifier="ClientDialogHost">
             <ScrollViewer>
                 <Grid DockPanel.Dock="Top"

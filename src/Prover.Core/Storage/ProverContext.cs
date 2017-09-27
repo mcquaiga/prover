@@ -3,6 +3,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
+using Autofac;
 using NLog;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
@@ -19,8 +20,7 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            _log.Trace("Opening Prover Context...");
-
+            _log.Trace("Starting Prover Context...");
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.Log = s => Debug.WriteLine(s);

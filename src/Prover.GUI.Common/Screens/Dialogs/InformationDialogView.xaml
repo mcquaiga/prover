@@ -10,13 +10,16 @@
           Height="200">
         <StackPanel VerticalAlignment="Center"
                     Width="200">
-            <TextBlock Text="{Binding HeaderText}"
-                       HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding DisplayText}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"/>
             
             <Button Command="{Binding DoneCommand}" 
                     Content="DONE" 
                     Margin="0 15 0 5"
-                    HorizontalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
                     Style="{DynamicResource MaterialDesignFlatButton}" />
         </StackPanel>
     </Grid>

@@ -16,6 +16,7 @@ using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
+using SplashScreen = Prover.GUI.Screens.SplashScreen;
 
 namespace Prover.GUI
 {
@@ -24,14 +25,16 @@ namespace Prover.GUI
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
         private Logger _log = LogManager.GetCurrentClassLogger();
+        private SplashScreen _splashScreen = new SplashScreen();
 
         public AppBootstrapper()
         {
-
             try
             {
                 _log.Info("Starting EVC Prover Application...");
-
+                
+                _splashScreen.Show();
+                
                 var coreBootstrap = new CoreBootstrapper();
                 Builder = coreBootstrap.Builder;
 
@@ -146,9 +149,13 @@ namespace Prover.GUI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            Task.Run(() => _splashScreen.Hide());
+
             DisplayRootViewFor<ShellViewModel>();
 
             Task.Run(() => IoC.Get<ScreenManager>().GoHome());
+
+            _splashScreen.Close();
         }
     }
 }

@@ -12,44 +12,52 @@ using ReactiveUI;
 
 namespace Prover.GUI.Screens.Settings
 {
-    public class SettingsViewModel : ViewModelBase, IWindowSettings
+    public class SettingsViewModel : ViewModelBase
     {
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        { 
-            MechanicalUncorrectedTestLimits.AddRange(SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits.ToList());            
-        }
+        {            
+            StabilizeLiveReadings = SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings;
+            this.WhenAnyValue(x => x.StabilizeLiveReadings)
+                .Subscribe(x => SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings = x);
 
-        public async Task SaveSettings()
+            MechanicalUncorrectedTestLimits
+                .AddRange(SettingsManager.SettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
+            this.WhenAnyValue(x => x.MechanicalUncorrectedTestLimits)
+                .Subscribe(x => SettingsManager.SettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
+            
+            SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                await SettingsManager.Save();
+            });
+        }
+     
+        #region Commands
+
+        public ReactiveCommand SaveSettingsCommand { get; private set; }
+
+        #endregion
+
+        #region Reactive Properties
+
+        private bool _stabilizeLiveReadings;
+        public bool StabilizeLiveReadings
         {
-            SettingsManager.SettingsInstance.MechanicalUncorrectedTestLimits =
-                        MechanicalUncorrectedTestLimits.ToList();
-            await SettingsManager.Save();
+            get => _stabilizeLiveReadings;
+            set => this.RaiseAndSetIfChanged(ref _stabilizeLiveReadings, value);
         }
 
         private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits = new ReactiveList<MechanicalUncorrectedTestLimit>();
         public ReactiveList<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
         {
-            get { return _mechanicalUncorrectedTestLimits; }
-            set { this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value); }
-        }
+            get => _mechanicalUncorrectedTestLimits;
+            set => this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value);
+        }      
 
-        public dynamic WindowSettings
-        {
-            get
-            {
-                dynamic settings = new ExpandoObject();
-                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                settings.ResizeMode = ResizeMode.CanResizeWithGrip;
-                settings.MinWidth = 600;
-                settings.Title = "Settings";
-                return settings;
-            }
-        }
-
+        #endregion
+        
         public override void CanClose(Action<bool> callback)
-        {
-            Task.Run(async () => await SaveSettings());
+        {           
             EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
         }      

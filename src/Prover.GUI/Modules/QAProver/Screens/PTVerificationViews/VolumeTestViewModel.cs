@@ -58,11 +58,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                             RunTest);                                          
                 }
             }
-
-            RunVolumeTestCommand = ReactiveCommand.CreateFromTask(async ct =>
-            {
-                await TestManager.RunVolumeTest(ct);
-            }, canRunTestCommand);
         }
 
         public async Task RunTest(IObserver<string> statusObserver, CancellationToken cancellationToken)

@@ -58,8 +58,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel Margin="5">
-        <Grid>
+    <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Certificates"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
+            </StackPanel>
+        </materialDesign:ColorZone>
+        <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="50" />

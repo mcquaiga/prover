@@ -3,65 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             xmlns:cal="http://www.caliburnproject.org"
-             mc:Ignorable="d"
-             d:DesignHeight="275" d:DesignWidth="500">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
     </UserControl.Resources>
-    <StackPanel>
-        <!--  Ports  -->
-        <materialDesign:Card Margin="5">
+
+    <DockPanel >
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
             <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                        Mode="PrimaryDark" DockPanel.Dock="Top">
-                    QA Test Run Settings
-                </materialDesign:ColorZone>
-                
-                <materialDesign:Card Margin="8">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Mechanical Uncorrected Pulse Test Limit" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                        <DataGrid  Margin="5" ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"
-                               CanUserSortColumns="True" CanUserAddRows="True" />
-                    </StackPanel>
-                </materialDesign:Card>
-
-                <!--<materialDesign:Card Margin="8">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Temperature Gauge Defaults" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                        <DataGrid  Margin="5" ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"
-                               CanUserSortColumns="True" CanUserAddRows="True" />
-                    </StackPanel>
-                </materialDesign:Card>-->
+                <TextBlock Text="Settings"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
             </StackPanel>
-        </materialDesign:Card>
+        </materialDesign:ColorZone>
 
-        <!--Tachometer-->
-        <!--  Ports  -->
-        <!--<materialDesign:Card Margin="5">
-            <StackPanel>
-                <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                          Mode="PrimaryDark" DockPanel.Dock="Top">
-                    Tachometer
-                </materialDesign:ColorZone>
-                <StackPanel Margin="5">
-                    <ComboBox x:Name="TachCommPort" />
-                </StackPanel>
-            </StackPanel>
-        </materialDesign:Card>
+        <StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Vertical">
+            <TabControl 
+                        Margin="5">
+                <TabItem Header="Test Configuration">
+                    <TabItem.Content>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox x:Name="StabilizeLiveReadings"/>
+                                <TextBlock Text="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."/>
+                            </StackPanel>
+                            <materialDesign:Card Margin="8">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Mechanical Uncorrected Pulse Test Limit"
+                                               Margin="5"
+                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
+                                    <DataGrid Margin="5"
+                                              ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"
+                                              CanUserSortColumns="True" CanUserAddRows="True" />
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem>
 
-        <Button Width="150" Margin="5" HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Command="{Binding RefreshCommSettingsCommand}"
-                Content="Refresh Ports">
-        </Button>-->
-    </StackPanel>
+                </TabItem>
+            </TabControl>
+
+            <Button Command="{Binding SaveSettingsCommand}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="8"
+                    Content="SAVE"/>
+        </StackPanel>
+        
+    </DockPanel>
 </UserControl>
