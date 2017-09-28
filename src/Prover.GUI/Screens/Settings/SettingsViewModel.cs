@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,12 @@ namespace Prover.GUI.Screens.Settings
             this.WhenAnyValue(x => x.StabilizeLiveReadings)
                 .Subscribe(x => SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings = x);
 
+            SelectedMechanicalVolumeTestType =
+                SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType.ToString();
+            this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)
+                .Subscribe(x =>
+                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType = (TestSettings.VolumeTestType)Enum.Parse(typeof(TestSettings.VolumeTestType), x));
+            
             MechanicalUncorrectedTestLimits
                 .AddRange(SettingsManager.SettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
             this.WhenAnyValue(x => x.MechanicalUncorrectedTestLimits)
@@ -39,6 +46,16 @@ namespace Prover.GUI.Screens.Settings
         #endregion
 
         #region Reactive Properties
+
+        public List<string> MechanicalVolumeTestType =>
+            Enum.GetNames(typeof(TestSettings.VolumeTestType)).ToList();       
+      
+        private string _selectedMechanicalVolumeTestType;
+        public string SelectedMechanicalVolumeTestType
+        {
+            get => _selectedMechanicalVolumeTestType;
+            set => this.RaiseAndSetIfChanged(ref _selectedMechanicalVolumeTestType, value);
+        }
 
         private bool _stabilizeLiveReadings;
         public bool StabilizeLiveReadings

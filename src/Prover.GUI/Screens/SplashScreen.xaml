@@ -9,19 +9,41 @@
         Title="SplashScreen" Height="300" Width="300"
         ResizeMode="NoResize" WindowStyle="None"  
         WindowStartupLocation="CenterScreen" Background="DarkBlue">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <StackPanel Orientation="Vertical"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
-        <TextBlock Text="EVC Prover"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   Margin="0 0 0 15"
-                   FontSize="24"/>
         <materialDesign:PackIcon Kind="ClipboardCheck"
                                  Height="75"
                                  Width="75"
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
                                  Foreground="White"/>
+        <TextBlock Text="EVC Prover"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Margin="0 10 0 5"
+                   FontSize="24"/>
+       
+        
+        <TextBlock Text="Starting Application..."
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Margin="0 0 0 0"
+                   FontSize="16"/>
+        <!-- Doesn't animate at the moment
+        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                     Value="0" 
+                     IsIndeterminate="True" 
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"                         
+                     Margin="10" />-->
+        
     </StackPanel>
 </Window>

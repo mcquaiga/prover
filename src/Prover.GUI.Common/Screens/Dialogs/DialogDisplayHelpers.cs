@@ -14,9 +14,14 @@ namespace Prover.GUI.Common.Screens.Dialogs
         {
             return ReactiveCommand.Create(() =>
             {
-                var message = new DialogDisplayEvent(new ProgressStatusDialogViewModel(headerText, taskFunc));
-                eventAggregator.PublishOnUIThreadAsync(message);
+                ProgressStatusDialogMessage(eventAggregator, headerText, taskFunc);
             });
+        }
+
+        public static void ProgressStatusDialogMessage(IEventAggregator eventAggregator, string headerText, Func<IObserver<string>, CancellationToken, Task> taskFunc)
+        {
+            var message = new DialogDisplayEvent(new ProgressStatusDialogViewModel(headerText, taskFunc));
+            eventAggregator.PublishOnUIThreadAsync(message);
         }
     }
 }

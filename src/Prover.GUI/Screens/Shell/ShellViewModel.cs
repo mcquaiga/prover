@@ -24,7 +24,6 @@ namespace Prover.GUI.Screens.Shell
         IHandle<DialogDisplayEvent>
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
-        readonly IEventAggregator _eventAggregator;
         readonly ScreenManager _screenManager;
         ReactiveObject _currentView;
 
@@ -32,9 +31,7 @@ namespace Prover.GUI.Screens.Shell
         {
             ToolbarItems = toolbarItems;
             _screenManager = screenManager;
-            _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
-            GetVersionNumber();
+            eventAggregator.Subscribe(this);
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
@@ -47,7 +44,6 @@ namespace Prover.GUI.Screens.Shell
         }
 
         public string Title => $"EVC Prover - v{GetVersionNumber()}";
-
        
         public async Task HomeButton()
         {

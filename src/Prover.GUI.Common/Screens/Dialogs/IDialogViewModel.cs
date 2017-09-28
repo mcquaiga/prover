@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Threading;
 using Caliburn.Micro.ReactiveUI;
 using ReactiveUI;
 
@@ -21,5 +22,6 @@ namespace Prover.GUI.Common.Screens.Dialogs
         }
         public ReactiveCommand<Unit, Unit> TaskCommand { get; protected set; }
         public abstract void Dispose();
+        public CancellationTokenSource CancellationTokenSource { get; protected set; }
     }
 }

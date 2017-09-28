@@ -10,12 +10,7 @@ namespace Prover.GUI.Common.Screens
         protected readonly IEventAggregator EventAggregator;
         protected readonly ScreenManager ScreenManager;
         protected Logger Log = LogManager.GetCurrentClassLogger();
-
-        public ViewModelBase()
-        {
-            
-        }
-
+      
         public ViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator)
         {
             ScreenManager = screenManager;

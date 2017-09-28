@@ -25,7 +25,7 @@ namespace Prover.GUI
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
         private Logger _log = LogManager.GetCurrentClassLogger();
-        private SplashScreen _splashScreen = new SplashScreen();
+        private readonly SplashScreen _splashScreen;
 
         public AppBootstrapper()
         {
@@ -33,6 +33,7 @@ namespace Prover.GUI
             {
                 _log.Info("Starting EVC Prover Application...");
                 
+                _splashScreen = new SplashScreen();
                 _splashScreen.Show();
                 
                 var coreBootstrap = new CoreBootstrapper();
@@ -149,7 +150,7 @@ namespace Prover.GUI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            Task.Run(() => _splashScreen.Hide());
+            _splashScreen.Hide();
 
             DisplayRootViewFor<ShellViewModel>();
 

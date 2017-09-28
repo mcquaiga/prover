@@ -27,12 +27,14 @@ namespace Prover.Core.Settings
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
+        public bool RunVolumeSyncTest { get; set; }
 
         public static TestSettings CreateDefault()
         {
             return new TestSettings()
             {
                 StabilizeLiveReadings = false,
+                RunVolumeSyncTest = false,
                 MechanicalDriveVolumeTestType = TestSettings.VolumeTestType.Automatic,
                 TemperatureGaugeDefaults = new List<GaugeDefaults>
                 {

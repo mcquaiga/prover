@@ -15,6 +15,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest;
+using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dialogs;
 using ReactiveUI;
 
 
@@ -35,36 +36,29 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             if (TestManager != null)
             {
-                if (Volume?.DriveType is MechanicalDrive &&
-                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
-                    TestSettings.VolumeTestType.Manual)
+                if (TestManager?.VolumeTestManager is ManualVolumeTestManager)
                 {
-                    TestManager.VolumeTestManager = new ManualVolumeTestManager(eventAggregator);
-
-                    RunVolumeTestCommand = ReactiveCommand.Create(() =>
+                    RunVolumeTestCommand = ReactiveCommand.CreateFromTask(async () =>
                     {
-                        var message = new DialogDisplayEvent(new InformationDialogViewModel(
-                            "Begin running test manually. Click Done when the desired input volume has been reached."));
-                        eventAggregator.PublishOnUIThreadAsync(message);
+                        var message =
+                            new DialogDisplayEvent(new ManualVolumeTestDialogViewModel(TestManager.VolumeTestManager as ManualVolumeTestManager, eventAggregator, RunTest));
+                        await eventAggregator.PublishOnUIThreadAsync(message);                       
 
                     }, canRunTestCommand);
                 }
-                else
+                else if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
                 {
-                    TestManager.VolumeTestManager = IoC.Get<AutoVolumeTestManagerBase>();
-
-                    RunVolumeTestCommand =
-                        DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Running volume test...",
-                            RunTest);                                          
+                    //RunVolumeTestCommand =
+                    //    DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Running volume test...",
+                    //        RunTest);                                          
                 }
             }
         }
 
-        public async Task RunTest(IObserver<string> statusObserver, CancellationToken cancellationToken)
+        public async Task RunTest(CancellationToken cancellationToken)
         {
             try
             {
-                TestManager.TestStatus.Subscribe(statusObserver);
                 await TestManager.RunVolumeTest(cancellationToken);
             }
             catch (Exception ex)

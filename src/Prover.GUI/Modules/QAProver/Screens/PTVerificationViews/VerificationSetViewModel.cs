@@ -18,18 +18,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase
     {
-        private CancellationTokenSource _cancellationTokenSource;
-
-        public IQaRunTestManager QaRunTestManager;
-
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {
-            CancelTestCommand = ReactiveCommand.Create(CancelTest);
-            
+        {                   
             RunTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
         }
+
+        public IQaRunTestManager QaRunTestManager;
 
         public ColorZoneMode HeaderZoneColor
             => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
@@ -53,9 +49,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
 
-            ShowDownloadButton = QaRunTestManager != null;
-
-            //_testStatusSubscription = QaRunTestManager?.TestStatus.Subscribe(OnTestStatusChange);
+            ShowDownloadButton = QaRunTestManager != null;            
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTestViewModel =
@@ -87,7 +81,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
             {
                 VolumeTestViewModel =
-                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);                
+                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
 
                 this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
                     .Where(x => QaRunTestManager != null)
@@ -111,15 +105,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             get => _showProgressDialog;
             set => this.RaiseAndSetIfChanged(ref _showProgressDialog, value);
-        }
-
-        private ReactiveCommand _cancelTestCommand;
-        private IDisposable _testStatusSubscription;
-
-        private void OnTestStatusChange(string status)
-        {
-            TestStatusMessage = status;
-        }
+        }        
 
         private string _testStatusMessage;
 
@@ -129,6 +115,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             set => this.RaiseAndSetIfChanged(ref _testStatusMessage, value);
         }
 
+        private ReactiveCommand _cancelTestCommand;
         public ReactiveCommand CancelTestCommand
         {
             get => _cancelTestCommand;
@@ -144,12 +131,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         #endregion
-
-        public void CancelTest()
-        {
-            _cancellationTokenSource?.Cancel();
-        }
-
+       
         public async Task RunTest(IObserver<string> statusObserver, CancellationToken cancellationToken)
         {            
             try

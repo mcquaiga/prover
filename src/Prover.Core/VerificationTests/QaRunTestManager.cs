@@ -27,7 +27,7 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
 
         IObservable<string> TestStatus { get; }
-        VolumeTestManagerBase VolumeTestManager { get; set; }
+        VolumeTestManager VolumeTestManager { get; set; }
 
         Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(),
             Client client = null);
@@ -69,7 +69,7 @@ namespace Prover.Core.VerificationTests
             _postTestCommands = postTestCommands;
         }
 
-        public VolumeTestManagerBase VolumeTestManager { get; set; }
+        public VolumeTestManager VolumeTestManager { get; set; }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
 
@@ -90,17 +90,15 @@ namespace Prover.Core.VerificationTests
 
                 Instrument = new Instrument(instrumentType, items, client);
 
-                if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+                if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
+                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
+                    TestSettings.VolumeTestType.Manual)
                 {
-                    if (SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
-                        TestSettings.VolumeTestType.Automatic)
-                        VolumeTestManager = new AutoVolumeTestManagerBase(_eventAggregator, _tachometerService);
-                    else
-                        VolumeTestManager = new ManualVolumeTestManager(_eventAggregator);
+                    VolumeTestManager = new ManualVolumeTestManager(_eventAggregator);
                 }
-                else if (Instrument.VolumeTest.DriveType is RotaryDrive)
+                else
                 {
-                    VolumeTestManager = new AutoVolumeTestManagerBase(_eventAggregator, _tachometerService);
+                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _tachometerService);
                 }
 
                 await RunVerifiers();
@@ -166,7 +164,9 @@ namespace Prover.Core.VerificationTests
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)
+                    {
                         await command.Execute(_communicationClient, Instrument, _testStatus);
+                    }
 
                     await SaveAsync();
                 }
@@ -211,7 +211,6 @@ namespace Prover.Core.VerificationTests
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
             await ConnectToInstrument(Instrument.InstrumentType, ct);            
-
             
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {

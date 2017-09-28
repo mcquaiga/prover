@@ -10,7 +10,7 @@ namespace Prover.GUI.Common.Screens.Dialogs
     public class ProgressStatusDialogViewModel : DialogViewModel
     {
         public ReactiveCommand CancelCommand { get; }             
-        public CancellationTokenSource CancellationTokenSource { get; }        
+         
 
         public ProgressStatusDialogViewModel(string headerText, Func<IObserver<string>, CancellationToken, Task> taskFunc)
         {           

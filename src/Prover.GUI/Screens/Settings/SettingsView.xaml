@@ -7,39 +7,90 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="8 4">
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel >
+    <DockPanel>
         <materialDesign:ColorZone DockPanel.Dock="Top"
                                   Mode="PrimaryLight"
                                   Padding="16 8">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Settings"
-                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
+                           VerticalAlignment="Center"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+               
             </StackPanel>
         </materialDesign:ColorZone>
 
         <StackPanel DockPanel.Dock="Bottom"
-                    Orientation="Vertical">
-            <TabControl 
-                        Margin="5">
+                    Orientation="Vertical"
+                    Margin="4">
+            <TabControl Margin="5">
                 <TabItem Header="Test Configuration">
                     <TabItem.Content>
                         <StackPanel Orientation="Vertical"
-                                    Margin="10">
+                                    Margin="8 16">
                             <StackPanel Orientation="Horizontal">
-                                <CheckBox x:Name="StabilizeLiveReadings"/>
-                                <TextBlock Text="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."/>
+                                <CheckBox x:Name="StabilizeLiveReadings" />
+                                <TextBlock
+                                    Text="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
+                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                    VerticalAlignment="Center" />
                             </StackPanel>
-                            <materialDesign:Card Margin="8">
+                            <StackPanel Orientation="Vertical"
+                                        Margin="0 20 0 10">
+                                <TextBlock Text="Mechanical Drive Volume input test type"
+                                           Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                           Margin="4" />
+                                <ComboBox x:Name="MechanicalVolumeTestType"
+                                          Margin="6"/>
+                                <StackPanel Margin="12 4">
+                                    <TextBlock Text="Manual"
+                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                               TextWrapping="WrapWithOverflow" />
+                                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                               Margin="4 2">
+                                        The QA operator runs the volume test without help from the application.
+                                        <LineBreak />
+                                        Applied input and pulse output readings must be entered after the test is complete.
+                                        <LineBreak />
+                                    </TextBlock>
+
+                                    <TextBlock Text="Automatic"
+                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                               TextWrapping="WrapWithOverflow" />
+                                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                               Margin="4 2">
+                                        The application is responsible for running the test by managing the applied input and monitoring the pulse output values through the DAQ board.
+                                        <LineBreak />
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                            <materialDesign:Card Margin="0">
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="Mechanical Uncorrected Pulse Test Limit"
-                                               Margin="5"
-                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
-                                    <DataGrid Margin="5"
-                                              ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"
-                                              CanUserSortColumns="True" CanUserAddRows="True" />
+                                               Margin="4"
+                                               Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                    <DataGrid Margin="5"                                              
+                                              ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"                                              
+                                              CanUserSortColumns="True" 
+                                              CanUserAddRows="True" 
+                                              CanUserDeleteRows="True" />
                                 </StackPanel>
                             </materialDesign:Card>
                         </StackPanel>
@@ -49,13 +100,15 @@
 
                 </TabItem>
             </TabControl>
-
             <Button Command="{Binding SaveSettingsCommand}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Margin="8"
-                    Content="SAVE"/>
+                    FontSize="24"
+                    Width="150"
+                    Content="SAVE" />
+
         </StackPanel>
-        
+
     </DockPanel>
 </UserControl>

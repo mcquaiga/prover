@@ -46,7 +46,7 @@ namespace Prover.Core.Storage
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);            
         }
     }
 }

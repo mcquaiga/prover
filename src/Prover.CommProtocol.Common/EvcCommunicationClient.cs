@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
@@ -16,6 +17,7 @@ namespace Prover.CommProtocol.Common
         private const int MaxConnectionAttempts = 10;
         private readonly IDisposable _receivedObservable;
         private readonly IDisposable _sentObservable;
+        private readonly Subject<string> _statusSubject = new Subject<string>();
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private CancellationToken _cancellationToken;
@@ -34,11 +36,16 @@ namespace Prover.CommProtocol.Common
             _sentObservable =
                 CommPort.DataSentObservable.Subscribe(
                     msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
+
+            StatusObservable.Subscribe(
+                s => Log.Debug(s));
         }
 
         protected CommPort CommPort { get; set; }
 
         public virtual InstrumentType InstrumentType { get; set; }
+
+        public IObservable<string> StatusObservable => _statusSubject.AsObservable();
 
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
@@ -54,9 +61,10 @@ namespace Prover.CommProtocol.Common
         {
             Disconnect().Wait();
 
-            _receivedObservable.Dispose();
-            _sentObservable.Dispose();
-            CommPort.Dispose();
+            _receivedObservable?.Dispose();
+            _sentObservable?.Dispose();
+            _statusSubject?.Dispose();
+            CommPort?.Dispose();
         }
 
         private async Task ExecuteCommand(string command)
@@ -102,16 +110,16 @@ namespace Prover.CommProtocol.Common
         {
             var connectionAttempts = 0;
 
+            ct.ThrowIfCancellationRequested();
+
             var result = Task.Run(async () =>
             {
                 while (!IsConnected)
-                {
-                    if (ct.IsCancellationRequested)
-                        ct.ThrowIfCancellationRequested();
-
+                {                    
                     connectionAttempts++;
-                    Log.Info(
-                        $"[{CommPort.Name}] Connecting to Instrument... Attempt {connectionAttempts} of {MaxConnectionAttempts}");
+                    _statusSubject.OnNext(
+                        $"Connecting to {InstrumentType.Name} on {CommPort.Name}... {Environment.NewLine} " +
+                        $" Try {connectionAttempts} of {MaxConnectionAttempts}");
 
                     try
                     {
@@ -128,13 +136,11 @@ namespace Prover.CommProtocol.Common
                     if (!IsConnected)
                         if (connectionAttempts < retryAttempts)
                         {
-                            Log.Warn(
-                                $"[{CommPort.Name}] Failed to connect to instrument - Trying again.");
+                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
                             Thread.Sleep(ConnectionRetryDelayMs);
-                        }
-                            
+                        }                            
                         else
-                            throw new Exception($"{CommPort.Name} Could not connect to instrument in {retryAttempts} tries. Cancelling connection attempt.");
+                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} in {retryAttempts} tries. Cancelling connection attempt.");
                 }
             }, ct);
 
