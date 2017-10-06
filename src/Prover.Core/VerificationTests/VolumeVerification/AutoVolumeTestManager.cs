@@ -20,34 +20,33 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         private readonly IDInOutBoard _outputBoard;            
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
-            : base(eventAggregator)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm) : base(eventAggregator, commClient, volumeTest)
         {
             _tachometerCommunicator = tachComm;
 
             FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
 
-            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);            
+            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
-       
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+
+        public override async Task ExecuteSyncTest(CancellationToken ct)
         {
             try
             {            
                 Status.OnNext("Running volume sync test...");                
 
-                await commClient.Disconnect();                
+                await CommClient.Disconnect();                
 
                 await Task.Run(() =>
                 {
-                    ResetPulseCounts(volumeTest);
+                    ResetPulseCounts(VolumeTest);
                     _outputBoard.StartMotor();
                     do
                     {
-                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (volumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
+                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                    } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
                 }, ct);          
             }
             catch (OperationCanceledException ex)
@@ -61,23 +60,22 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            CancellationToken ct)
+        public override async Task PreTest(CancellationToken ct)
         {
-            await commClient.Connect(ct);
-
-            volumeTest.Items = (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-            await commClient.Disconnect();
+            await CommClient.Connect(ct);
+            VolumeTest.Items = (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            await CommClient.Disconnect();
 
             if (_tachometerCommunicator != null)
-                await _tachometerCommunicator?.ResetTach();
+                await _tachometerCommunicator?.ResetTach();           
 
-            ResetPulseCounts(volumeTest);
+            ResetPulseCounts(VolumeTest);
+
+            TestStep.OnNext(VolumeTestSteps.PreTest);
         }
 
-        protected override async Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct)
-        {
-            TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+        public override async Task ExecutingTest(CancellationToken ct)
+        {            
             try
             {
                 await Task.Run(() =>
@@ -86,9 +84,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     do
                     {
                         //TODO: Raise events so the UI can respond
-                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
+                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                    } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
                 }, ct);     
             }
             catch (OperationCanceledException ex)
@@ -99,11 +97,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             finally
             {
                 _outputBoard?.StopMotor();
+                TestStep.OnNext(VolumeTestSteps.ExecutingTest);
             }
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            CancellationToken ct)
+        public override async Task PostTest(CancellationToken ct)
         {
             TestStep.OnNext(VolumeTestSteps.PostTest);
             ct.ThrowIfCancellationRequested();
@@ -111,15 +109,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 try
                 {
-                    await commClient.Connect(ct);
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    await CommClient.Connect(ct);
+                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
                 }
                 finally
                 {
-                    await commClient.Disconnect();
+                    await CommClient.Disconnect();
                 }
 
-                await GetAppliedInput(volumeTest);
+                await GetAppliedInput();
             }, ct);
         }
 
@@ -129,7 +127,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             _tachometerCommunicator.Dispose();
         }
 
-        private async Task GetAppliedInput(VolumeTest volumeTest)
+        private async Task GetAppliedInput()
         {
             if (_tachometerCommunicator == null) return;
 
@@ -151,7 +149,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
             Log.Debug($"Applied Input: {result.Value}");
 
-            volumeTest.AppliedInput = result.Value;
+            VolumeTest.AppliedInput = result.Value;
         }      
     }
 }

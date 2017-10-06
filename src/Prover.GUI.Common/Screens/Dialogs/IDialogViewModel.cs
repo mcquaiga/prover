@@ -23,5 +23,10 @@ namespace Prover.GUI.Common.Screens.Dialogs
         public ReactiveCommand<Unit, Unit> TaskCommand { get; protected set; }
         public abstract void Dispose();
         public CancellationTokenSource CancellationTokenSource { get; protected set; }
+        public override void TryClose(bool? dialogResult = null)
+        {
+            ShowDialog = false;
+            base.TryClose(dialogResult);
+        }
     }
 }

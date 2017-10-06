@@ -79,9 +79,11 @@ namespace Prover.Core.VerificationTests
         {
             try
             {
+                ct.ThrowIfCancellationRequested();
                 _communicationClient.Initialize(instrumentType);
-
+                _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
                 await ConnectToInstrument(instrumentType, ct);
+                ct.ThrowIfCancellationRequested();
 
                 _testStatus.OnNext("Downloading items...");
                 var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
@@ -91,14 +93,13 @@ namespace Prover.Core.VerificationTests
                 Instrument = new Instrument(instrumentType, items, client);
 
                 if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
-                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
-                    TestSettings.VolumeTestType.Manual)
+                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType == TestSettings.VolumeTestType.Manual)
                 {
-                    VolumeTestManager = new ManualVolumeTestManager(_eventAggregator);
+                    VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
                 }
                 else
                 {
-                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _tachometerService);
+                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _tachometerService);
                 }
 
                 await RunVerifiers();
@@ -116,7 +117,6 @@ namespace Prover.Core.VerificationTests
         {
             if (_communicationClient.IsConnected)
             {
-                _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
                 await _communicationClient.Disconnect();
             }
         }
@@ -124,8 +124,7 @@ namespace Prover.Core.VerificationTests
         private async Task ConnectToInstrument(InstrumentType instrumentType, CancellationToken ct)
         {
             if (!_communicationClient.IsConnected)
-            {
-                _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
+            {                
                 await _communicationClient.Connect(ct);
             }
         }
@@ -160,7 +159,7 @@ namespace Prover.Core.VerificationTests
                 if (Instrument.VerificationTests.Any(x => x.VolumeTest != null))
                 {
                     _testStatus.OnNext($"Running volume test...");
-                    await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, ct);
+                    //await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, ct);
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Newtonsoft.Json;
 using NLog;
 using Prover.Core.Startup;
@@ -14,6 +15,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
+using ReactiveUI;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
 using SplashScreen = Prover.GUI.Screens.SplashScreen;
@@ -67,6 +69,8 @@ namespace Prover.GUI
             Builder.RegisterViewModels(Assemblies);
             Builder.RegisterViews(Assemblies);
             Builder.RegisterScreen(Assemblies);
+
+            Builder.RegisterType<ShellViewModel>().As<IConductor>().SingleInstance();
 
             Container = Builder.Build();
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
@@ -154,7 +158,7 @@ namespace Prover.GUI
 
             DisplayRootViewFor<ShellViewModel>();
 
-            Task.Run(() => IoC.Get<ScreenManager>().GoHome());
+            Task.Run(() => Container.Resolve<ScreenManager>().GoHome());
 
             _splashScreen.Close();
         }

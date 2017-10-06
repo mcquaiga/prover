@@ -115,12 +115,13 @@ namespace Prover.CommProtocol.Common
             var result = Task.Run(async () =>
             {
                 while (!IsConnected)
-                {                    
+                {
+                    if (ct.IsCancellationRequested)
+                        ct.ThrowIfCancellationRequested();
+
                     connectionAttempts++;
                     _statusSubject.OnNext(
-                        $"Connecting to {InstrumentType.Name} on {CommPort.Name}... {Environment.NewLine} " +
-                        $" Try {connectionAttempts} of {MaxConnectionAttempts}");
-
+                        $"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
                     try
                     {
                         if (!CommPort.IsOpen())

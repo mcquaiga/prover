@@ -17,5 +17,10 @@ namespace Prover.GUI.Common.Screens
             EventAggregator = eventAggregator;
             EventAggregator.Subscribe(this);
         }
+
+        protected ViewModelBase()
+        {
+            
+        }
     }
 }

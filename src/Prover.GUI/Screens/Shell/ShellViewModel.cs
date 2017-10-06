@@ -14,6 +14,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
 using Prover.GUI.Common.Screens.Dialogs;
 
 namespace Prover.GUI.Screens.Shell
@@ -69,7 +70,7 @@ namespace Prover.GUI.Screens.Shell
 
         public void Handle(DialogDisplayEvent message)
         {
-            DialogViewModel = message.ViewModel;          
+            Task.Run(() => DialogHost.Show(message.ViewModel));
         }       
 
         private IDialogViewModel _dialogViewModel;

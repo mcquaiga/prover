@@ -16,7 +16,13 @@ namespace Prover.GUI.Common.Screens.Dialogs
 
             this.WhenActivated(d =>
             {
-                d(ViewModel = (ProgressStatusDialogViewModel)DataContext);
+                if (ViewModel == null)
+                    d(ViewModel = (ProgressStatusDialogViewModel) DataContext);
+                else
+                {
+                    DataContext = ViewModel;
+                }
+
 
                 d(this.WhenAnyValue(x => x.ViewModel.TaskCommand)
                     .SelectMany(x => x.Execute())

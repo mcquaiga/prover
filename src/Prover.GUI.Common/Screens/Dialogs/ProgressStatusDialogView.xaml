@@ -16,7 +16,7 @@
           VerticalAlignment="Center"
           Height="200">
         <StackPanel VerticalAlignment="Center"
-                    Width="200">
+                    Width="300">
             <TextBlock Text="{Binding HeaderText}"
                        HorizontalAlignment="Center" />
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
@@ -25,7 +25,8 @@
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center"                         
                          Margin="25" />
-            <TextBlock Text="{Binding StatusText}" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding StatusText}" 
+                       HorizontalAlignment="Center" />
             <Button Command="{Binding CancelCommand}" 
                     Content="Abort" 
                     Margin="0 15 0 5"

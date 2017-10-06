@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using MaterialDesignThemes.Wpf;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Common.Screens.MainMenu;
 using ReactiveUI;
 using Splat;
 using IScreen = ReactiveUI.IScreen;
+using ViewLocator = ReactiveUI.ViewLocator;
 
 namespace Prover.GUI.Common
 {
@@ -32,6 +36,8 @@ namespace Prover.GUI.Common
 
         bool? ShowDialog<T>(string key = null)
             where T : ViewModelBase;
+
+        Task<object> ShowModalDialog(DialogViewModel dialogViewModel);
 
         void ShowWindow(ViewModelBase dialogViewModel);
     }
@@ -103,6 +109,15 @@ namespace Prover.GUI.Common
         {
             var viewModel = IoC.Get<T>();
             return ShowDialog(viewModel);
+        }
+
+        public async Task<object> ShowModalDialog(DialogViewModel dialogViewModel)
+        {
+            var view = ViewLocator.Current.ResolveView(dialogViewModel);
+            view.ViewModel = dialogViewModel;
+            var result = await DialogHost.Show(view);
+
+            return result;
         }
 
         public void ShowWindow(ViewModelBase dialogViewModel)

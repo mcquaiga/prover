@@ -17,55 +17,58 @@ using LogManager = NLog.LogManager;
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class ManualVolumeTestManager : VolumeTestManager
-    {              
-        public ManualVolumeTestManager(IEventAggregator eventAggregator) : base(eventAggregator)
-        {            
-        } 
-
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+    {
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest) : base(eventAggregator, commClient, volumeTest)
         {
-            await commClient.Connect(ct);
-            
-            volumeTest.Items =
-                (ICollection<ItemValue>) await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-            await commClient.Disconnect();           
         }
 
-        protected override async Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct)
+        public override async Task PreTest(CancellationToken ct)
         {
-            ResetPulseCounts(volumeTest);
+            await CommClient.Connect(ct);
+            
+            VolumeTest.Items =
+                (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            await CommClient.Disconnect();
+            TestStep.OnNext(VolumeTestSteps.PreTest);
+        }
+
+        public override async Task ExecutingTest(CancellationToken ct)
+        {
+            RunningTest = true;
+            ResetPulseCounts(VolumeTest);
 
             await Task.Run(() =>
             {
-                while (ct.IsCancellationRequested == false)
+                while (RunningTest || ct.IsCancellationRequested)
                 {
 
-                }
+                }                
             }, ct);
+            TestStep.OnNext(VolumeTestSteps.ExecutingTest);
         }
 
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        public override async Task PostTest(CancellationToken ct)
         {
             await Task.Run(async () =>
             {
                 try
                 {
                     ct.ThrowIfCancellationRequested();
-                    await commClient.Connect(ct);
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    await CommClient.Connect(ct);
+                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
                 }
                 finally
                 {
-                    await commClient.Disconnect();
+                    await CommClient.Disconnect();
                 }               
             }, ct);
         }
 
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        public override async Task ExecuteSyncTest(CancellationToken ct)
         {
             await Task.Run(() =>
             {
-            });
+            }, ct);
         }       
     }
 }

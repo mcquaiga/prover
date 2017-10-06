@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.GUI</RootNamespace>
     <AssemblyName>Prover</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -55,7 +55,7 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\app-icon-dark.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\app-icon-light.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -173,6 +173,15 @@
       <DependentUpon>ItemsFileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ItemsFileViewModel.cs" />
+    <Compile Include="Converters\DialogTypeToSystemIconConverter.cs" />
+    <Compile Include="Dialogs\Dialog.cs" />
+    <Compile Include="Dialogs\DialogResult.cs" />
+    <Compile Include="Dialogs\DialogService.cs" />
+    <Compile Include="Dialogs\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogViewModel.cs" />
+    <Compile Include="Dialogs\IDialogViewModel.cs" />
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
@@ -363,6 +372,10 @@
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ItemsFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dia
 {
     public class ManualVolumeTestDialogViewModel : DialogViewModel
     {
-        public ManualVolumeTestManager TestManager { get; }
+        public VolumeTestManager TestManager { get; }
 
         public ManualVolumeTestDialogViewModel(ManualVolumeTestManager testManager, IEventAggregator eventAggregator, Func<CancellationToken, Task> taskFunc)
         {
@@ -23,24 +24,32 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dia
             TestManager.TestStepsObservable
                 .Subscribe(ts => CurrentTestStep = ts);
 
-            var preTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Starting Volume test...",
-                    ShowPrePostTestStatus);
-            TestManager.TestStepsObservable
-                .Where(ts => ts == VolumeTestSteps.PreTest)
-                .InvokeCommand(preTestCommand);
+            //var preTestCommand =
+            //    DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Starting Volume test...",
+            //        ShowPrePostTestStatus);
+            //TestManager.TestStepsObservable
+            //    .Where(ts => ts == VolumeTestSteps.PreTest)
+            //    .InvokeCommand(preTestCommand);
 
-            var postTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Finishing Volume test...",
-                    ShowPrePostTestStatus);
-            TestManager.TestStepsObservable
-                .Where(ts => ts == VolumeTestSteps.PostTest)
-                .InvokeCommand(postTestCommand);
+            //var postTestCommand =
+            //    DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Finishing Volume test...",
+            //        ShowPrePostTestStatus);
+            //TestManager.TestStepsObservable
+            //    .Where(ts => ts == VolumeTestSteps.PostTest)
+            //    .InvokeCommand(postTestCommand);
 
             CancellationTokenSource = new CancellationTokenSource();
             TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(CancellationTokenSource.Token));
+            DoneCommand = ReactiveCommand.Create(() =>
+            {
+                TestManager.RunningTest = false;
+                ShowDialog = false;
+//                this.TryClose();
+            });
+            ShowDialog = true;
         }
 
+        public ReactiveCommand<Unit, Unit> DoneCommand { get; set; }
         public VolumeTestSteps CurrentTestStep { get; set; }
 
         private async Task ShowPrePostTestStatus(IObserver<string> statusObserver, CancellationToken cancellationToken)
@@ -58,8 +67,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dia
         }
 
         public override void Dispose()
-        {
-            throw new NotImplementedException();
+        {            
         }
     }
 }
