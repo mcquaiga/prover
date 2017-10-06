@@ -10,12 +10,12 @@ namespace Prover.GUI.Common.Screens.Dialogs
     public static partial class DialogDisplayHelpers
     {        
         public static ReactiveCommand ProgressStatusDialogCommand(IEventAggregator eventAggregator, string headerText,
-            Func<IObserver<string>, CancellationToken, Task> taskFunc)
+            Func<IObserver<string>, CancellationToken, Task> taskFunc, IObservable<bool> canExecute = null)
         {
             return ReactiveCommand.Create(() =>
             {
                 ProgressStatusDialogMessage(eventAggregator, headerText, taskFunc);
-            });
+            }, canExecute);
         }
 
         public static void ProgressStatusDialogMessage(IEventAggregator eventAggregator, string headerText, Func<IObserver<string>, CancellationToken, Task> taskFunc)

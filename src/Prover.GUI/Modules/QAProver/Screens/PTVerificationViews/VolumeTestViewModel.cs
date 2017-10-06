@@ -21,6 +21,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
+        internal enum TestStep
+        {
+            PreTest,
+            PostTest
+        }
+
         public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null)
             : base(screenManager, eventAggregator, volumeTest)
@@ -29,82 +35,46 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             TestManager = qaRunTestManager;
 
             var canRunTestCommand = this.WhenAny(x => x.TestManager, tm => tm != null);
-            canRunTestCommand.ToProperty(this, model => model.ShowRunButton, out _showRunButton);
+            canRunTestCommand.ToProperty(this, model => model.DisplayButtons, out _displayButtons);
 
             CreateDriveSpecificViews();
 
             if (TestManager != null)
             {
-                PreVolumeTestCommand = (ReactiveCommand<Unit, Unit>) DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                    "Initializing Volume Test...", RunPreVolumeTest);
-
                 if (TestManager?.VolumeTestManager is ManualVolumeTestManager)
                 {
-                    RunVolumeTestCommand = ReactiveCommand.CreateFromTask(async () =>
-                    {
-                        var vm = new ManualVolumeTestDialogViewModel(TestManager.VolumeTestManager as ManualVolumeTestManager, eventAggregator, RunTest);
-                        var result = await ScreenManager.ShowModalDialog(vm);
+                    var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
+                        .Select(x => x == TestStep.PreTest);                                
+                    PreVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);                
 
-                        //var message =
-                        //    new DialogDisplayEvent(;
-                        //await eventAggregator.PublishOnUIThreadAsync(message);
-                    }, canRunTestCommand);
-                }
-                else if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
-                {
-                    RunVolumeTestCommand = ReactiveCommand.CreateFromTask(async () =>
-                    {
-                        //var message =
-                        //    new DialogDisplayEvent(new ManualVolumeTestDialogViewModel(TestManager.VolumeTestManager, eventAggregator, RunTest));
-                        //await eventAggregator.PublishOnUIThreadAsync(message);
-                    }, canRunTestCommand);
+                    var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
+                        .Select(x => x == TestStep.PostTest);
+                    PostVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Finishing Volume Test...", RunPostVolumeTest, canRunPostTest);
+
+                    ManualVolumeTestStep = TestStep.PreTest;
                 }
 
-                PostVolumeTestCommand = (ReactiveCommand<Unit, Unit>) DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                    "Completing Volume Test...", RunPostVolumeTest);
-
-                ExecuteVolumeTestCommand = ReactiveCommand.CreateCombined(new[] { PreVolumeTestCommand },
-                    canRunTestCommand);
-
-                ExecuteVolumeTestCommand = ReactiveCommand.CreateFromObservable(() => Observable.StartAsync(async () =>
+                if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
                 {
-                    await PreVolumeTestCommand.Execute();
-                }));
-
-                TestManager.VolumeTestManager.TestStepsObservable
-                    .Select(x =>
-                    {
-                        switch (x)
-                        {
-                            case VolumeTestSteps.PreTest:
-                                return RunVolumeTestCommand.Execute();
-                            case VolumeTestSteps.ExecutingTest:
-                                return PostVolumeTestCommand.Execute();
-
-                            default:
-                                return null;
-                        }
-                    })
-                    .Subscribe();               
-
-                //TestManager.VolumeTestManager.TestStepsObservable
-                //    .Where(x => x == VolumeTestSteps.ExecutingTest)                    
-                //    .InvokeCommand(this, x => x.PostVolumeTestCommand);
+                    RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Running Volume Test...", RunTest, canRunTestCommand);
+                }
             }
-        }
+        }     
 
-        public ReactiveCommand<Unit, Unit> PreVolumeTestCommand { get; set; }
-        public ReactiveCommand ExecuteVolumeTestCommand { get; set; }
-        public ReactiveCommand<Unit, Unit> PostVolumeTestCommand { get; set; }
+        public ReactiveCommand RunVolumeTestCommand { get; set; }
+        public ReactiveCommand PreVolumeTestCommand { get; set; }
+        public ReactiveCommand PostVolumeTestCommand { get; set; }
 
+        #region Methods
+       
         private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
         {
-            TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
-
-            if (SettingsManager.SettingsInstance.TestSettings.RunVolumeSyncTest)
-                await TestManager.VolumeTestManager.ExecuteSyncTest(ct);
-
+            TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
             await TestManager.VolumeTestManager.PreTest(ct);
+            ManualVolumeTestStep = TestStep.PostTest;
         }
 
         private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct)
@@ -113,6 +83,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.VolumeTestManager.PostTest(ct);
+                ManualVolumeTestStep = TestStep.PreTest;
             }
             catch (Exception ex)
             {
@@ -125,13 +96,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
         }
 
-      
-
-        public async Task RunTest(CancellationToken ct)
+        public async Task RunTest(IObserver<string> status, CancellationToken ct)
         {
             try
             {
-                await TestManager.VolumeTestManager.ExecutingTest(ct);
+                TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
+                await TestManager.RunVolumeTest(ct);
             }
             catch (Exception ex)
             {
@@ -148,13 +118,19 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Volume.DriveType);
         }
 
-        private ReactiveCommand<Unit, Unit> _runVolumeTestCommand;
+        #endregion
 
-        public ReactiveCommand<Unit, Unit> RunVolumeTestCommand
+        #region Properties
+        private TestStep _manualVolumeTestStep;
+        internal TestStep ManualVolumeTestStep
         {
-            get => _runVolumeTestCommand;
-            set => this.RaiseAndSetIfChanged(ref _runVolumeTestCommand, value);
-        }
+            get => _manualVolumeTestStep;
+            set => this.RaiseAndSetIfChanged(ref _manualVolumeTestStep, value);
+        }        
+
+        public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
+        public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
+
 
         public IQaRunTestManager TestManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
@@ -234,9 +210,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
             }
         }
-
-        private readonly ObservableAsPropertyHelper<bool> _showRunButton;
-        public bool ShowRunButton => _showRunButton.Value;
+        #endregion
+        private readonly ObservableAsPropertyHelper<bool> _displayButtons;
+        public bool DisplayButtons => _displayButtons.Value;
 
         protected override void RaisePropertyChangeEvents()
         {

@@ -18,7 +18,8 @@ namespace Prover.GUI.Common.Screens.Dialogs
             
             CancellationTokenSource = new CancellationTokenSource();            
             var statusObserver = Observer.Create<string>(s => StatusText = s);
-            TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token));
+            TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token)
+                .ContinueWith(task => this.TryClose(true)));
             
             TaskCommand.IsExecuting
                 .Subscribe(x => ShowDialog = x);

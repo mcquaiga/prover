@@ -3,33 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d"             
+             mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
-        <DataTemplate x:Key="InstrumentSelect">
-            <RadioButton Content="{Binding Path=Instrument.Name}"
-                         GroupName="Instruments"
-                         IsChecked="{Binding Path=IsSelected}"
-                         FontSize="16" />
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="InstrumentSelect">
+                <RadioButton Content="{Binding Path=Instrument.Name}"
+                             GroupName="Instruments"
+                             VerticalAlignment="Center"                             
+                             IsChecked="{Binding Path=IsSelected}" />
+            </DataTemplate>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical" Margin="15 10">
-        <StackPanel>
-            <TextBlock Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-                EVC QA Test Run
-            </TextBlock>
-        </StackPanel>
+    <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="QA Test Run"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+            </StackPanel>
+        </materialDesign:ColorZone>
         <Grid>
             <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition MaxHeight="250" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -64,7 +74,9 @@
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
+                <GroupBox Grid.Row="0" 
+                          Grid.Column="1" 
+                          Header="Instrument Settings"                       >
                     <StackPanel>
                         <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
@@ -79,26 +91,23 @@
                                   materialDesign:HintAssist.Hint="Port"
                                   IsEnabled="{Binding TachDisableCommPort}"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-                        
+
                         <CheckBox x:Name="TachIsNotUsed"
-                                  Content="Not available"/>
+                                  Content="Not available" />
                     </StackPanel>
                 </GroupBox>
+                <Button Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="15"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Command="{Binding StartTestCommand}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"                    
+                        Content="START TEST" />
             </Grid>
-        </Grid>
-        <Grid HorizontalAlignment="Stretch"
-                    Margin="15">
-            <!--<Button Margin="25 0"
-                    Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
-                CANCEL
-            </Button>-->
-            <Button HorizontalAlignment="Center"
-                    Command="{Binding StartTestCommand}"
-                    FontSize="18"
-                    Height="75"
-                    Content="START TEST" />
-        </Grid>
 
-    </StackPanel>
+
+        </Grid>
+    </DockPanel>
 </UserControl>

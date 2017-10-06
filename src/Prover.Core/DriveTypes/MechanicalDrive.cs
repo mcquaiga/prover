@@ -29,6 +29,7 @@ namespace Prover.Core.DriveTypes
         {
             get
             {
+                if (ActualEnergy == 0) return null;
                 var error = (EvcEnergy - ActualEnergy) / ActualEnergy * 100;
                 if (error != null)
                     return decimal.Round(error.Value, 2);

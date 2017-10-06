@@ -46,6 +46,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
             StatusMessage
                 .Subscribe(x => Log.Info(x));
+
+            CommClient.StatusObservable.Subscribe(Status);
         }
 
         public IObservable<string> StatusMessage => Status.AsObservable();
@@ -58,10 +60,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             try
             {
                 RunningTest = true;
-                Status.OnNext("Starting volume test...");
-
-                CommClient.StatusObservable
-                    .Subscribe(s => Status.OnNext(s));
+                Status.OnNext("Starting volume test...");               
 
                 await Task.Run(async () =>
                 {

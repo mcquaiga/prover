@@ -55,7 +55,7 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\app-icon-light.ico</ApplicationIcon>
+    <ApplicationIcon>clipbooard_check_white_qeW_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -603,6 +603,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\clipboard-check.ico" />
+    <Resource Include="Resources\clipbooard-check-white.png" />
     <Resource Include="Resources\app-icon-dark.ico" />
     <Resource Include="Resources\app-icon-light.ico" />
     <Resource Include="Resources\group.png" />
@@ -625,6 +627,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Resource Include="clipboard-check.ico" />
+    <Resource Include="clipbooard_check_white_qeW_icon.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

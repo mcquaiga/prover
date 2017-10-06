@@ -27,17 +27,16 @@ namespace Prover.GUI
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
         private Logger _log = LogManager.GetCurrentClassLogger();
-        private readonly SplashScreen _splashScreen;
+        private readonly SplashScreen _splashScreen = new SplashScreen();
 
         public AppBootstrapper()
         {
             try
             {
                 _log.Info("Starting EVC Prover Application...");
-                
-                _splashScreen = new SplashScreen();
-                _splashScreen.Show();
-                
+               
+                _splashScreen.Show();                
+
                 var coreBootstrap = new CoreBootstrapper();
                 Builder = coreBootstrap.Builder;
 
@@ -70,11 +69,8 @@ namespace Prover.GUI
             Builder.RegisterViews(Assemblies);
             Builder.RegisterScreen(Assemblies);
 
-            Builder.RegisterType<ShellViewModel>().As<IConductor>().SingleInstance();
-
             Container = Builder.Build();
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
-
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -97,12 +93,7 @@ namespace Prover.GUI
                 if (File.Exists($"{module}.dll"))
                 {
                     var ass = Assembly.LoadFrom($"{module}.dll");
-                    if (ass != null)
-                    {
-                        //var type = ass.GetType($"{module}.Startup");
-                        //type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
-                        assemblies.Add(ass);
-                    }
+                    assemblies.Add(ass);
                 }
             }
 

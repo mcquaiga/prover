@@ -158,8 +158,8 @@ namespace Prover.Core.VerificationTests
             {
                 if (Instrument.VerificationTests.Any(x => x.VolumeTest != null))
                 {
-                    _testStatus.OnNext($"Running volume test...");
-                    //await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, ct);
+                    VolumeTestManager.StatusMessage.Subscribe(_testStatus);
+                    await VolumeTestManager.RunTest(ct);
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)

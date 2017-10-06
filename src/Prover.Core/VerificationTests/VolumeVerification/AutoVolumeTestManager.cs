@@ -62,13 +62,16 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public override async Task PreTest(CancellationToken ct)
         {
+            CommClient.StatusObservable.Subscribe(Status);
             await CommClient.Connect(ct);
             VolumeTest.Items = (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
             await CommClient.Disconnect();
 
             if (_tachometerCommunicator != null)
-                await _tachometerCommunicator?.ResetTach();           
-
+            {
+                Status.OnNext("Resetting Tachometer...");
+                await _tachometerCommunicator?.ResetTach();
+            }
             ResetPulseCounts(VolumeTest);
 
             TestStep.OnNext(VolumeTestSteps.PreTest);
@@ -78,9 +81,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {            
             try
             {
+                Status.OnNext("Running volume test...");
                 await Task.Run(() =>
                 {
                     _outputBoard?.StartMotor();
+                    ct.ThrowIfCancellationRequested();
                     do
                     {
                         //TODO: Raise events so the UI can respond
@@ -105,6 +110,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             TestStep.OnNext(VolumeTestSteps.PostTest);
             ct.ThrowIfCancellationRequested();
+            Status.OnNext("Completing volume test...");
             await Task.Run(async () =>
             {
                 try

@@ -80,12 +80,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 (baud, instrumentPort, tachPort, tachNotUsed) =>
                     BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
                     (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
-
-            StartTestCommand = ReactiveCommand.CreateFromTask(async () => await ScreenManager.ShowModalDialog(
-                new ProgressStatusDialogViewModel("Starting test...", StartNewQaTest)));
-
-            //StartTestCommand =
-            //    DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
+            
+            StartTestCommand =
+                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
             var clientList = clientStore.Query().ToList();
             Clients = new ReactiveList<string>(

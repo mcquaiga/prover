@@ -49,11 +49,26 @@
                            VerticalAlignment="Center"
                            Margin="5"
                            HorizontalAlignment="Left" />
-                <Button Content="RUN TEST"
+                <Grid Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                     <Button Content="RUN TEST"
                         Margin="15 5"
-                        Visibility="{Binding ShowRunButton, Converter={StaticResource BoolToHiddenConverter}}"
+                        Visibility="{Binding IsAutoVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                        Command="{Binding ExecuteVolumeTestCommand}"/>
+                        Command="{Binding RunVolumeTestCommand}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="START"
+                                Margin="15 5"
+                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PreVolumeTestCommand}"/>
+                        <Button Content="FINISH"
+                                Margin="15 5"
+                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PostVolumeTestCommand}"/>
+                    </StackPanel>
+                </Grid>
+               
             </StackPanel>
             
             <WrapPanel Grid.Row="1" HorizontalAlignment="Left" Width="Auto">
