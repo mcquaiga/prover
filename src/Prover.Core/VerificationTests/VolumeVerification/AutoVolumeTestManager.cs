@@ -78,32 +78,42 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public override async Task ExecutingTest(CancellationToken ct)
-        {            
-            try
+        {
+            var statusFormat = $"Waiting for pulse inputs... {Environment.NewLine}" +
+                               $" UncVol = {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
+                               $" CorVol = {VolumeTest.CorPulseCount}";
+
+            using (Observable
+                    .Interval(TimeSpan.FromSeconds(1))
+                    .Subscribe(l => Status.OnNext(statusFormat)))
             {
-                Status.OnNext("Running volume test...");
-                await Task.Run(() =>
-                {
-                    _outputBoard?.StartMotor();
-                    ct.ThrowIfCancellationRequested();
-                    do
+                try
+                {                    
+                    await Task.Run(() =>
                     {
-                        //TODO: Raise events so the UI can respond
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
-                }, ct);     
+                        _outputBoard?.StartMotor();
+                        do
+                        {
+                            //TODO: Raise events so the UI can respond
+                            VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                            VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                        } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
+                    }, ct);
+                    ct.ThrowIfCancellationRequested();
+                }
+                catch (OperationCanceledException ex)
+                {
+                    Log.Info("Cancelling volume test.");
+                    throw;
+                }
+                finally
+                {
+                    _outputBoard?.StopMotor();
+                    TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+                }
             }
-            catch (OperationCanceledException ex)
-            {
-                Log.Info("Cancelling volume test.");
-                throw;
-            }
-            finally
-            {
-                _outputBoard?.StopMotor();
-                TestStep.OnNext(VolumeTestSteps.ExecutingTest);
-            }
+
+            
         }
 
         public override async Task PostTest(CancellationToken ct)
