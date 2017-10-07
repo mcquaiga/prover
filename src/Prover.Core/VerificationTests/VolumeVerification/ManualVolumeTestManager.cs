@@ -28,8 +28,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             
             VolumeTest.Items =
                 (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
-            await CommClient.Disconnect();
-            TestStep.OnNext(VolumeTestSteps.PreTest);
+            await CommClient.Disconnect();            
         }
 
         public override async Task ExecutingTest(CancellationToken ct)

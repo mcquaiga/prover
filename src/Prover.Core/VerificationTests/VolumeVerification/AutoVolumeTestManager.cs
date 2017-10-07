@@ -80,8 +80,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         public override async Task ExecutingTest(CancellationToken ct)
         {
             var statusFormat = $"Waiting for pulse inputs... {Environment.NewLine}" +
-                               $" UncVol = {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
-                               $" CorVol = {VolumeTest.CorPulseCount}";
+                               $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
+                               $"   CorVol => {VolumeTest.CorPulseCount}";
 
             using (Observable
                     .Interval(TimeSpan.FromSeconds(1))
