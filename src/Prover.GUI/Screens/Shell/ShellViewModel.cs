@@ -8,16 +8,22 @@ using Prover.GUI.Screens.Settings;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.GUI.Common.Screens.Dialogs;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, IShell, IHandle<ScreenChangeEvent>
+    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, 
+        IShell, 
+        IHandle<ScreenChangeEvent>,
+        IHandle<DialogDisplayEvent>
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
-        readonly IEventAggregator _eventAggregator;
         readonly ScreenManager _screenManager;
         ReactiveObject _currentView;
 
@@ -25,13 +31,29 @@ namespace Prover.GUI.Screens.Shell
         {
             ToolbarItems = toolbarItems;
             _screenManager = screenManager;
-            _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
+            eventAggregator.Subscribe(this);
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
-        public string Title => "EVC Prover";
+        private static string GetVersionNumber()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersionInfo.ProductVersion;
+        }
+
+        public string Title => $"EVC Prover - v{GetVersionNumber()}";
+       
+        public async Task HomeButton()
+        {
+            await _screenManager.GoHome();
+        }
+
+        public async Task SettingsButton()
+        {
+            await _screenManager.ChangeScreen<SettingsViewModel>(); //(new SettingsViewModel(_screenManager, _eventAggregator));
+        }
 
         public void Handle(ScreenChangeEvent message)
         {
@@ -45,19 +67,16 @@ namespace Prover.GUI.Screens.Shell
             _currentView = message.ViewModel;
         }
 
-        public async Task HomeButton()
+        public void Handle(DialogDisplayEvent message)
         {
-            await _screenManager.GoHome();
-        }
+            DialogViewModel = message.ViewModel;          
+        }       
 
-        public void SettingsButton()
+        private IDialogViewModel _dialogViewModel;
+        public IDialogViewModel DialogViewModel
         {
-            ShowSettingsWindow();
-        }
-
-        private void ShowSettingsWindow()
-        {
-            _screenManager.ShowDialog(new SettingsViewModel(_screenManager, _eventAggregator));
+            get => _dialogViewModel;
+            set => this.RaiseAndSetIfChanged(ref _dialogViewModel, value);
         }
     }
 }

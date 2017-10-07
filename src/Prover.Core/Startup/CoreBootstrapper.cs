@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Autofac;
+using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
@@ -13,28 +14,17 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.Startup
 {
     public class CoreBootstrapper
     {
-        private Logger _log = LogManager.GetCurrentClassLogger(); 
+        private readonly Logger _log = LogManager.GetCurrentClassLogger(); 
 
         public CoreBootstrapper()
         {
-            //Database registrations
-            _log.Debug("Started initializing database...");            
-            _log.Debug("    Running Migrations.");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-            
-            Builder.Register(c => new ProverContext())
-                .SingleInstance();
-                
-            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
-                .As<IProverStore<Instrument>>()
-                .SingleInstance();
-
-            _log.Debug("Completed initializing database...");
+            SetupDatabase();
 
             //EVC Communcation
             Builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
@@ -48,11 +38,31 @@ namespace Prover.Core.Startup
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
-            Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
+            Builder.RegisterType<AutoVolumeTestManager>();          
+
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
             SettingsManager.RefreshSettings().Wait();
+        }
+
+        private void SetupDatabase()
+        {
+            //Database registrations
+            _log.Debug("Started initializing database...");
+            _log.Debug("    Running Migrations.");
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+
+            Builder.RegisterType<ProverContext>()
+                .AsSelf()
+                .AutoActivate()
+                .SingleInstance();
+                
+
+            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
+                .As<IProverStore<Instrument>>();
+
+            _log.Debug("Completed initializing database...");
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

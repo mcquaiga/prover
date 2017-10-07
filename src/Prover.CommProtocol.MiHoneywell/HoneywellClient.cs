@@ -26,33 +26,40 @@ namespace Prover.CommProtocol.MiHoneywell
         /// <summary>
         ///     Establishes a link with the instrument
         /// </summary>
-        protected override async Task ConnectToInstrument()
+        /// <param name="ct"></param>
+        protected override async Task ConnectToInstrument(CancellationToken ct)
         {
+            var connectTasks = new List<Task>();
+
             if (ItemDetails == null)
+                connectTasks.Add(
+                    Task.Run(() => ItemHelpers.LoadItems(InstrumentType), ct)
+                        .ContinueWith(_ => { ItemDetails = _.Result; }, ct));
+
+            connectTasks.Add(Task.Run(async () =>
             {
-                var itemTask =
-                    Task.Run(() => ItemHelpers.LoadItems(InstrumentType)).ContinueWith(_ => { ItemDetails = _.Result; });
-            }
+                await WakeUpInstrument();
 
-            await WakeUpInstrument();
-
-            if (IsAwake)
-            {
-                var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
-
-                if (response.IsSuccess)
+                if (IsAwake)
                 {
-                    IsConnected = true;
-                    Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
-                }
-                else
-                {
-                    if (response.ResponseCode == ResponseCode.FramingError)
-                        await CommPort.Close();
+                    var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
 
-                    throw new Exception($"Error response {response.ResponseCode}");
+                    if (response.IsSuccess)
+                    {
+                        IsConnected = true;
+                        Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
+                    }
+                    else
+                    {
+                        if (response.ResponseCode == ResponseCode.FramingError)
+                            await CommPort.Close();
+
+                        throw new Exception($"Error response {response.ResponseCode}");
+                    }
                 }
-            }
+            }, ct));
+
+            Task.WaitAll(connectTasks.ToArray());
         }
 
         public override async Task Disconnect()

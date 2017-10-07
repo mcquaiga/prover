@@ -11,8 +11,8 @@ namespace Prover.GUI.Common.Screens.MainMenu
     {
         private readonly ScreenManager _screenManager;
 
-        public MainMenuViewModel(IEnumerable<IHaveMainMenuItem> appMainMenus, ScreenManager screenManager,
-            IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
+        public MainMenuViewModel(IEnumerable<IHaveMainMenuItem> appMainMenus, ScreenManager screenManager, IEventAggregator eventAggregator) 
+            : base(screenManager, eventAggregator)
         {
             _screenManager = screenManager;
             AppMainMenus = appMainMenus.OrderBy(x => x.Order);

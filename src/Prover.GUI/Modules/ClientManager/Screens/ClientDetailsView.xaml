@@ -20,6 +20,8 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
                 <Setter Property="Margin" Value="8" />
@@ -50,16 +52,21 @@
             </Grid.RowDefinitions>
 
             <materialDesign:ColorZone Mode="PrimaryLight"
-                                      Padding="10"
+                                      Padding="16 8"
                                       Grid.Row="0">
-                <Button Command="{Binding GoBackCommand}"
-                        HorizontalAlignment="Left"
-                        Margin="-15 0 0 0"
-                        Style="{DynamicResource MaterialDesignFlatButton}">
-                    <materialDesign:PackIcon Kind="ArrowLeft"
-                                             Height="48"
-                                             Width="48" />
-                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding GoBackCommand}"
+                            HorizontalAlignment="Left"
+                            Style="{DynamicResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="ArrowLeft"
+                                                 Height="48"
+                                                 Width="48" />
+                    </Button>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                               VerticalAlignment="Center">
+                        Client Details - <TextBlock Text="{Binding Client.Name}"/>
+                    </TextBlock>
+                </StackPanel>
             </materialDesign:ColorZone>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>

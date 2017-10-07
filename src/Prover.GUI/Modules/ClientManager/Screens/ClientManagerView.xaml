@@ -5,14 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance designer:DesignTimeClientManagerViewModel, IsDesignTimeCreatable=True}"
+             mc:Ignorable="d"             
              d:DesignHeight="300" d:DesignWidth="355">
     <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Clients"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
+            </StackPanel>
+        </materialDesign:ColorZone>
         <materialDesign:DialogHost Identifier="ClientDialogHost">
-            <ScrollViewer>
+            <ScrollViewer >
                 <Grid DockPanel.Dock="Top"
-                      HorizontalAlignment="Center">
+                      HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -25,16 +32,19 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
-                            Command="{Binding AddClientCommand}"
-                            Width="64"
-                            Height="64"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Margin="15"
-                            Grid.Row="1">
-                        <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
-                    </Button>
+                    <Grid Grid.Row="1"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Bottom">
+                        <Button Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
+                                Command="{Binding AddClientCommand}"
+                                Width="64"
+                                Height="64"
+                                Margin="25">
+                            <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+                        </Button>
+                    </Grid>
+                    
+                  
                 </Grid>
             </ScrollViewer>
         </materialDesign:DialogHost>

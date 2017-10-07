@@ -9,28 +9,8 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="500" d:DesignWidth="500">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
-        <materialDesign:DialogHost IsOpen="{Binding ShowConnectionDialog}">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
-                    <TextBlock Text="Starting test..." HorizontalAlignment="Center" />
-                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                 Value="0" IsIndeterminate="True" VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="12 12 12 12" />
-                    <TextBlock Text="{Binding ConnectionStatusMessage}" HorizontalAlignment="Center" />
-                </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
-
-            <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
+        <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"
                             cal:View.Model="{Binding}" />
-        </materialDesign:DialogHost>
     </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Newtonsoft.Json;
 using NLog;
 using Prover.Core.Startup;
@@ -14,8 +15,10 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
+using ReactiveUI;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
+using SplashScreen = Prover.GUI.Screens.SplashScreen;
 
 namespace Prover.GUI
 {
@@ -24,17 +27,28 @@ namespace Prover.GUI
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
         private Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly SplashScreen _splashScreen = new SplashScreen();
 
         public AppBootstrapper()
         {
-            _log.Info("Starting EVC Prover Application...");
+            try
+            {
+                _log.Info("Starting EVC Prover Application...");
+               
+                _splashScreen.Show();                
 
-            var coreBootstrap = new CoreBootstrapper();
-            Builder = coreBootstrap.Builder;
+                var coreBootstrap = new CoreBootstrapper();
+                Builder = coreBootstrap.Builder;
 
-            Initialize();
+                Initialize();
 
-            _log.Info("Finished starting application.");
+                _log.Info("Finished starting application.");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Application failed to load. See exception for more details.");
+                _log.Error(e);
+            }
         }
 
         public ContainerBuilder Builder { get; }
@@ -57,7 +71,6 @@ namespace Prover.GUI
 
             Container = Builder.Build();
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
-
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -80,12 +93,7 @@ namespace Prover.GUI
                 if (File.Exists($"{module}.dll"))
                 {
                     var ass = Assembly.LoadFrom($"{module}.dll");
-                    if (ass != null)
-                    {
-                        //var type = ass.GetType($"{module}.Startup");
-                        //type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
-                        assemblies.Add(ass);
-                    }
+                    assemblies.Add(ass);
                 }
             }
 
@@ -137,9 +145,13 @@ namespace Prover.GUI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            _splashScreen.Hide();
+
             DisplayRootViewFor<ShellViewModel>();
 
-            Task.Run(() => IoC.Get<ScreenManager>().GoHome());
+            Task.Run(() => Container.Resolve<ScreenManager>().GoHome());
+
+            _splashScreen.Close();
         }
     }
 }

@@ -21,7 +21,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -55,7 +55,7 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\app-icon-dark.ico</ApplicationIcon>
+    <ApplicationIcon>clipbooard_check_white_qeW_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -173,6 +173,15 @@
       <DependentUpon>ItemsFileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ItemsFileViewModel.cs" />
+    <Compile Include="Converters\DialogTypeToSystemIconConverter.cs" />
+    <Compile Include="Dialogs\Dialog.cs" />
+    <Compile Include="Dialogs\DialogResult.cs" />
+    <Compile Include="Dialogs\DialogService.cs" />
+    <Compile Include="Dialogs\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogViewModel.cs" />
+    <Compile Include="Dialogs\IDialogViewModel.cs" />
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
@@ -248,6 +257,10 @@
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml.cs">
       <DependentUpon>TempTest.Card.New.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Dialogs\ManualVolumeTestDialogView.xaml.cs">
+      <DependentUpon>ManualVolumeTestDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Dialogs\ManualVolumeTestDialogViewModel.cs" />
     <Compile Include="Reports\InstrumentReportGenerator.cs" />
     <Compile Include="Reports\InstrumentReportView.xaml.cs">
       <DependentUpon>InstrumentReportView.xaml</DependentUpon>
@@ -355,7 +368,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Screens\SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\ItemsFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -426,6 +446,10 @@
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\TemperatureTest\TempTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Dialogs\ManualVolumeTestDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\QAProver\Screens\Styles.xaml">
       <SubType>Designer</SubType>
@@ -560,6 +584,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -575,6 +603,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\clipboard-check.ico" />
+    <Resource Include="Resources\clipbooard-check-white.png" />
     <Resource Include="Resources\app-icon-dark.ico" />
     <Resource Include="Resources\app-icon-light.ico" />
     <Resource Include="Resources\group.png" />
@@ -597,6 +627,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Resource Include="clipboard-check.ico" />
+    <Resource Include="clipbooard_check_white_qeW_icon.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -640,7 +672,9 @@
       <Name>Prover.GUI.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Modules\QAProver\Screens\Dialogs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

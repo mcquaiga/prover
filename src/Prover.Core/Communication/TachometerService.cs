@@ -16,29 +16,41 @@ namespace Prover.Core.Communication
 
         public TachometerService(string portName, IDInOutBoard outputBoard)
         {
-            _serialPort = new SerialPort(portName, 9600);
-            _outputBoard = outputBoard;
+            if (string.IsNullOrEmpty(portName))
+            {
+                _serialPort = null;
+                _outputBoard = null;
+            }
+            else
+            {
+                _serialPort = new SerialPort(portName, 9600);
+                _outputBoard = outputBoard;
+            }
+               
         }
 
         public void Dispose()
         {
-            _serialPort.Close();
-            _outputBoard.Dispose();
+            _serialPort?.Close();
+            _outputBoard?.Dispose();
         }
 
         public async Task ResetTach()
         {
             await Task.Run(() =>
             {
-                _outputBoard.StartMotor();
+                _outputBoard?.StartMotor();
                 Thread.Sleep(500);
-                _outputBoard.StopMotor();
+                _outputBoard?.StopMotor();
                 Thread.Sleep(100);
             });
         }
 
         public async Task<int> ReadTach()
         {
+            if (_serialPort == null)
+                return -1;
+
             return await Task.Run(() =>
             {
                 try

@@ -4,41 +4,42 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:cal="http://www.caliburnproject.org"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             TextElement.FontWeight="Light"
+             TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
-        <DataTemplate x:Key="InstrumentSelect">
-            <RadioButton Content="{Binding Path=Instrument.Name}"
-                         GroupName="Instruments"
-                         IsChecked="{Binding Path=IsSelected}"
-                         FontSize="16" />
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="InstrumentSelect">
+                <RadioButton Content="{Binding Path=Instrument.Name}"
+                             GroupName="Instruments"
+                             VerticalAlignment="Center"                             
+                             IsChecked="{Binding Path=IsSelected}" />
+            </DataTemplate>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical" Margin="15 10">
-        <StackPanel>
-            <TextBlock Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}">
-                EVC QA Test Run
-            </TextBlock>
-        </StackPanel>
+    <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="QA Test Run"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+            </StackPanel>
+        </materialDesign:ColorZone>
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="1"
-                  Margin="5">
+            <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition MaxHeight="250" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -73,7 +74,9 @@
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Grid.Row="0" Grid.Column="1" Header="Instrument Settings">
+                <GroupBox Grid.Row="0" 
+                          Grid.Column="1" 
+                          Header="Instrument Settings"                       >
                     <StackPanel>
                         <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
@@ -83,22 +86,28 @@
                 </GroupBox>
 
                 <GroupBox Grid.Row="0" Grid.Column="2" Header="Tach. Settings">
-                    <ComboBox x:Name="TachCommPort" materialDesign:HintAssist.Hint="Port"
-                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-                </GroupBox>
-            </Grid>
-        </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                    Margin="0 16 20 0">
-            <Button Margin="25 0"
-                    Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}">
-                CANCEL
-            </Button>
-            <Button HorizontalAlignment="Right"
-                    Command="{Binding StartTestCommand}"
-                    Content="START" />
-        </StackPanel>
+                    <StackPanel>
+                        <ComboBox x:Name="TachCommPort"
+                                  materialDesign:HintAssist.Hint="Port"
+                                  IsEnabled="{Binding TachDisableCommPort}"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-    </StackPanel>
+                        <CheckBox x:Name="TachIsNotUsed"
+                                  Content="Not available" />
+                    </StackPanel>
+                </GroupBox>
+                <Button Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="15"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Command="{Binding StartTestCommand}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"                    
+                        Content="START TEST" />
+            </Grid>
+
+
+        </Grid>
+    </DockPanel>
 </UserControl>

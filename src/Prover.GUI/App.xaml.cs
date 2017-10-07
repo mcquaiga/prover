@@ -1,4 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Navigation;
+using Prover.GUI.Screens;
+
 
 namespace Prover.GUI
 {
@@ -7,9 +10,10 @@ namespace Prover.GUI
     /// </summary>
     public partial class App : Application
     {
+      
         public App()
         {
-            InitializeComponent();
-        }
+            InitializeComponent();      
+        }       
     }
 }

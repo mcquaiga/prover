@@ -38,64 +38,45 @@
     </UserControl.Resources>
 
     <Grid Margin="4">
-        <materialDesign:DialogHost Identifier="TestDialogHost" IsOpen="{Binding ShowProgressDialog}">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
-                    <TextBlock Text="Running test..." HorizontalAlignment="Center" />
-                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                 Value="0" IsIndeterminate="True" VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="12 12 12 12" />
-                    <TextBlock Text="{Binding TestStatusMessage}"
-                               HorizontalAlignment="Center" />
-                    <Button Command="{Binding CancelTestCommand}" Content="Cancel" Margin="2 10 5 5"
-                            HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" />
+        <Border Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
+                           Grid.Row="0"
+                           FontSize="32"
+                           Foreground="Black"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left" />
+
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="1"
+                            Margin="4">
+                    <ContentControl cal:View.Model="{Binding PressureTestViewModel}"
+                                    cal:View.Context="CardNew"
+                                    Margin="0 2" />
+                    <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}"
+                                    cal:View.Context="CardNew"
+                                    Margin="0 2" />
+                    <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"
+                                    cal:View.Context="CardNew"
+                                    Margin="0 2" />
+
+
                 </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
+                <Button Command="{Binding RunTestCommand}"
+                        Content="Download"
+                        Margin="0"
+                        Grid.Row="2"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center" />
 
-            <Border Padding="5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
-                               Grid.Row="0"
-                               FontSize="32"
-                               Foreground="Black"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Left" />
-
-                    <StackPanel Orientation="Vertical"
-                                Grid.Row="1"
-                                Margin="4">
-                        <ContentControl cal:View.Model="{Binding PressureTestViewModel}"
-                                        cal:View.Context="CardNew"
-                                        Margin="0 2" />
-                        <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}"
-                                        cal:View.Context="CardNew"
-                                        Margin="0 2" />
-                        <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"
-                                        cal:View.Context="CardNew"
-                                        Margin="0 2" />
-
-
-                    </StackPanel>
-                    <Button Command="{Binding RunTestCommand}"
-                            Content="Run Test"
-                            Margin="0"
-                            Grid.Row="2"
-                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                            Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center">
-
-                    </Button>
-
-                </Grid>
-            </Border>
-
-        </materialDesign:DialogHost>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

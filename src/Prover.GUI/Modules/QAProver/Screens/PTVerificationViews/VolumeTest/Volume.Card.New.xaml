@@ -6,7 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"             
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -16,6 +16,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
             <Style TargetType="{x:Type materialDesign:Card}">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
             </Style>
@@ -37,23 +41,45 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Text="Volume"
-                       FontSize="32"
-                       Foreground="Black"
-                       VerticalAlignment="Center"
-                       Margin="5"
-                       HorizontalAlignment="Left" />
-            <!--<materialDesign:ColorZone
-                            Padding="5"
-                            Margin="5 5 5 0"
-                            Content="Volume"
-                            Mode="PrimaryDark"
-                            materialDesign:ShadowAssist.ShadowDepth="Depth1"/>-->
-            <!--<WrapPanel HorizontalAlignment="Center" Width="Auto">
-                <controls1:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}"/>
-            </WrapPanel>-->
+            <StackPanel Grid.Row="0" 
+                        Orientation="Horizontal">
+                <TextBlock Text="Volume"
+                           FontSize="32"
+                           Foreground="Black"
+                           VerticalAlignment="Center"
+                           Margin="5"
+                           HorizontalAlignment="Left" />
+                <Grid Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}">
+                     <Button Content="RUN TEST"
+                        Margin="15 5"
+                        Visibility="{Binding IsAutoVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding RunVolumeTestCommand}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="START"
+                                Margin="15 5"
+                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PreVolumeTestCommand}"/>
+                        <Button Content="FINISH"
+                                Margin="15 5"
+                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PostVolumeTestCommand}"/>
+                    </StackPanel>
+                </Grid>
+               
+            </StackPanel>
+            
+            <WrapPanel Grid.Row="1" HorizontalAlignment="Left" Width="Auto">
+                <controls1:ValueDescriptionControl Label="Applied Input"
+                                                   ValueFontSize="28"
+                                                   LabelFontSize="18"
+                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
+                                                   IsReadOnly="False"/>
+            </WrapPanel>
 
-            <UniformGrid Grid.Row="1" 
+            <UniformGrid Grid.Row="2" 
                          Columns="3"
                          Margin="4 0">
                 <StackPanel Margin="4">
@@ -62,13 +88,6 @@
                                Foreground="SlateGray"
                                FontSize="18"
                                Text="Uncorrected" />
-                    <!--<materialDesign:ColorZone
-                                Padding="5"
-                                Margin="5"
-                                Content="Uncorrected"
-                                Mode="PrimaryLight"
-                                materialDesign:ShadowAssist.ShadowDepth="Depth1" />-->
-
                     <controls1:PercentageControlNew Margin="5"
                                                     HorizontalAlignment="Center"
                                                     DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
@@ -84,7 +103,8 @@
                         <controls1:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueUncorrected}" />
                         <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                           Value="{Binding UncorrectedPulseCount}" />
+                                                           Value="{Binding UncorrectedPulseCount, Mode=TwoWay}"
+                                                           IsReadOnly="False"/>
                         <controls1:ValueDescriptionControl Label="Multiplier"
                                                            Value="{Binding UnCorrectedMultiplierDescription}" />
                     </UniformGrid>
@@ -118,7 +138,8 @@
                         <controls1:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueCorrected}" />
                         <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                           Value="{Binding CorrectedPulseCount}" />
+                                                           Value="{Binding CorrectedPulseCount, Mode=TwoWay}"
+                                                           IsReadOnly="False" />
                         <controls1:ValueDescriptionControl Label="Multiplier"
                                                            Value="{Binding CorrectedMultiplierDescription}" />
 

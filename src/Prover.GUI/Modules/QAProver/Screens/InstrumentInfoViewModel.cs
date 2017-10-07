@@ -40,6 +40,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public string BasePressure =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
+        public string AtmPressure =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+
         public string PressureRange =>
             $"{Instrument.Items.GetItem(ItemCodes.Pressure.Range).RawValue.Trim()} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
@@ -52,7 +55,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public bool EventLogChecked
         {
-            get { return Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value; }
+            get => Instrument.EventLogPassed != null && Instrument.EventLogPassed.Value;
             set
             {
                 Instrument.EventLogPassed = value;
@@ -63,7 +66,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public bool CommPortChecked
         {
-            get { return Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value; }
+            get => Instrument.CommPortsPassed != null && Instrument.CommPortsPassed.Value;
             set
             {
                 Instrument.CommPortsPassed = value;

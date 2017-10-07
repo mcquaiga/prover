@@ -15,8 +15,8 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
 using ReactiveUI;
 using Splat;
@@ -26,20 +26,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
     public class TestRunViewModel : ViewModelBase, IDisposable
     {
         private const string NewQaTestViewContext = "NewTestView";
-        private const string EditQaTestViewContext = "EditTestViewNew"; //"EditTestViewNew";
-
-        private string _connectionStatusMessage;
+        private const string EditQaTestViewContext = "EditTestViewNew";
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
-
         private IQaRunTestManager _qaRunTestManager;
-
         private int _selectedBaudRate;
         private string _selectedCommPort;
         private string _selectedTachCommPort;
-        private bool _showConnectionDialog;
-        private CancellationTokenSource _cancellationTokenSource;
-
-        private IDisposable _testStatusSubscription;
         private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
@@ -82,46 +74,66 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 ? SettingsManager.SettingsInstance.TachCommPort
                 : string.Empty;
 
-            this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort)
-                .Subscribe(async _ =>
-                {
-                    SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
-                    SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
-                    SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    await SettingsManager.Save();
-                });
-
             /*** Commands ***/
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
-                (baud, instrumentPort, tachPort) => BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && !string.IsNullOrEmpty(tachPort));
-
-            StartTestCommand = ReactiveCommand.CreateFromTask(StartNewQaTest, canStartNewTest);
-
-            CancelCommand = ReactiveCommand.Create(Cancel);
+            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
+                x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+                (baud, instrumentPort, tachPort, tachNotUsed) =>
+                    BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) &&
+                    (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
+            
+            StartTestCommand =
+                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
             var clientList = clientStore.Query().ToList();
+            Clients = new ReactiveList<string>(
+                clientList.Select(x => x.Name).OrderBy(x => x).ToList())
+            {
+                string.Empty
+            };
 
-            Clients = new ReactiveList<string>(clientList.Select(x => x.Name).OrderBy(x => x).ToList());
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
+            SelectedClient = Clients.Contains(SettingsManager.SettingsInstance.LastClientSelected)
+                ? SettingsManager.SettingsInstance.LastClientSelected
+                : string.Empty;
+
+            this.WhenAnyValue(x => x.TachIsNotUsed)
+                .Select(x => !x)
+                .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
+
+            TachIsNotUsed = SettingsManager.SettingsInstance.TachIsNotUsed;
+            this.WhenAnyValue(x => x.TachIsNotUsed)
+                .Subscribe(t => SettingsManager.SettingsInstance.TachIsNotUsed = t);
+
+            this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
+                    x => x.SelectedClient, x => x.TachIsNotUsed)
+                .Subscribe(
+                    async _ =>
+                    {
+                        SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
+                        SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
+                        SettingsManager.SettingsInstance.TachCommPort = _.Item3;
+                        SettingsManager.SettingsInstance.LastClientSelected = _.Item4;
+                        
+                        await SettingsManager.Save();
+                    });
 
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand StartTestCommand { get; }
-        public ReactiveCommand CancelCommand { get; }
+        #region Properties
 
+        public ReactiveCommand StartTestCommand { get; }
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
 
-        public VolumeTestViewModel VolumeTestView => TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
+        public VolumeTestViewModel VolumeTestView =>
+            TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
 
         public List<VerificationSetViewModel> PTTestViews => TestViews.ToList();
-
         public VolumeTestViewModel VolumeInformationItem { get; set; }
-
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
         public string ViewContext
@@ -139,6 +151,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
+
         public string SelectedCommPort
         {
             get => _selectedCommPort;
@@ -146,6 +159,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public List<string> TachCommPort => SerialPort.GetPortNames().ToList();
+
         public string SelectedTachCommPort
         {
             get => _selectedTachCommPort;
@@ -153,35 +167,61 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
+
         public int SelectedBaudRate
         {
             get => _selectedBaudRate;
             set => this.RaiseAndSetIfChanged(ref _selectedBaudRate, value);
         }
 
-        public bool ShowConnectionDialog
+        private bool _showDialog;
+
+        public bool ShowDialog
         {
-            get => _showConnectionDialog;
-            set => this.RaiseAndSetIfChanged(ref _showConnectionDialog, value);
+            get => _showDialog;
+            set => this.RaiseAndSetIfChanged(ref _showDialog, value);
         }
 
-        public string ConnectionStatusMessage
+        private string _selectedClient;
+        private Client _client;
+        private ReactiveList<string> _clients;
+
+        public ReactiveList<string> Clients
         {
-            get => _connectionStatusMessage;
-            set => this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value);
+            get => _clients;
+            set => this.RaiseAndSetIfChanged(ref _clients, value);
         }
+
+        public string SelectedClient
+        {
+            get => _selectedClient;
+            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
+        }
+
+        private bool _tachIsNotUsed;
+
+        public bool TachIsNotUsed
+        {
+            get => _tachIsNotUsed;
+            set => this.RaiseAndSetIfChanged(ref _tachIsNotUsed, value);
+        }
+
+        private readonly ObservableAsPropertyHelper<bool> _tachDisableCommPort;
+        public bool TachDisableCommPort => _tachDisableCommPort.Value;
+
+        #endregion
 
         public async Task Cancel()
         {
             await ScreenManager.GoHome();
         }
 
-        private async Task StartNewQaTest()
+        private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
         {
-            ShowConnectionDialog = true;
+            if (SelectedInstrument == null)
+                return;
 
-            if (SelectedInstrument != null)
-                _cancellationTokenSource = new CancellationTokenSource();
+            ShowDialog = true;
 
             try
             {
@@ -189,20 +229,23 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 await SettingsManager.Save();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                await _qaRunTestManager.InitializeTest(SelectedInstrument, _cancellationTokenSource.Token, _client);
+                _qaRunTestManager.TestStatus.Subscribe(statusObservable);
+
+                await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
-                throw;
+                if (ex is OperationCanceledException)
+                    Log.Warn("Test init cancelled by user.");
+                else
+                    throw;
             }
             finally
             {
-                ShowConnectionDialog = false;
+                ShowDialog = false;
             }
         }
 
@@ -228,29 +271,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             });
         }
 
-        private void OnTestStatusChange(string status)
-        {
-            ConnectionStatusMessage = status;
-        }
-
-
-        private string _selectedClient;
-        private Client _client;
-
-        private ReactiveList<string> _clients;
-
-        public ReactiveList<string> Clients
-        {
-            get => _clients;
-            set => this.RaiseAndSetIfChanged(ref _clients, value);
-        }
-
-        public string SelectedClient
-        {
-            get => _selectedClient;
-            set => this.RaiseAndSetIfChanged(ref _selectedClient, value);
-        }
-
         public class SelectableInstrumentType
         {
             public InstrumentType Instrument { get; set; }
@@ -259,10 +279,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public void Dispose()
         {
-            _testStatusSubscription?.Dispose();
+            //_testStatusSubscription?.Dispose();
             _qaRunTestManager?.Dispose();
         }
-     
     }
 }
 
@@ -280,4 +299,3 @@ namespace Prover.GUI.Modules.QAProver.Screens
 //        }
 //    }
 //}
-

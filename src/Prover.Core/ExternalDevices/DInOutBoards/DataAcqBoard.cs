@@ -41,7 +41,9 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         {
             short value = 0;
 
-            if (_board.GetStatus(out var status, out var curCount, out var curIndex, FunctionType.DiFunction).Value != ErrorInfo.ErrorCode.NoErrors)
+            var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex,
+                FunctionType.AiFunction);
+            if (boardStatus.Value != ErrorInfo.ErrorCode.NoErrors)
             {
                 throw new Exception("DAQ board could not be found or is not configured correctly.");
             }

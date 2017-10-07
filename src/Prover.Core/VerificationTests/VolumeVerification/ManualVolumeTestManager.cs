@@ -1,80 +1,74 @@
-﻿//using System;
-//using System.Threading.Tasks;
-//using Caliburn.Micro;
-//using NLog;
-//using NLog.Fluent;
-//using Prover.CommProtocol.Common;
-//using Prover.CommProtocol.Common.Items;
-//using Prover.Core.Communication;
-//using Prover.Core.ExternalDevices.DInOutBoards;
-//using Prover.Core.Models.Instruments;
-//using LogManager = NLog.LogManager;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive.Subjects;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using NLog;
+using NLog.Fluent;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Items;
+using Prover.Core.Communication;
+using Prover.Core.ExternalDevices.DInOutBoards;
+using Prover.Core.Models.Instruments;
+using LogManager = NLog.LogManager;
 
-//namespace Prover.Core.VerificationTests.VolumeVerification
-//{
-//    public sealed class ManualVolumeTestManager : VolumeTestManagerBase
-//    {
-//        private IDInOutBoard _outputBoard;
-//        private TachometerCommunicator _tachometerCommunicator;
-//        private bool _requestStopTest;
+namespace Prover.Core.VerificationTests.VolumeVerification
+{
+    public sealed class ManualVolumeTestManager : VolumeTestManager
+    {
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest) : base(eventAggregator, commClient, volumeTest)
+        {
+        }
 
-//        public ManualVolumeTestManager(IEventAggregator eventAggregator) : base(eventAggregator)
-//        {
-//            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
-//        }
+        public override async Task PreTest(CancellationToken ct)
+        {
+            await CommClient.Connect(ct);
+            
+            VolumeTest.Items =
+                (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            await CommClient.Disconnect();            
+        }
 
-//        protected override Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest)
-//        {
-//            throw new NotImplementedException();
-//        }
+        public override async Task ExecutingTest(CancellationToken ct)
+        {
+            RunningTest = true;
+            ResetPulseCounts(VolumeTest);
 
-//        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
-//        {
-//            await commClient.Connect();
-//            await evcTestItemReset.PreReset(commClient);
-//            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-//            await commClient.Disconnect();
+            await Task.Run(() =>
+            {
+                while (RunningTest || ct.IsCancellationRequested)
+                {
 
-//            volumeTest.PulseACount = 0;
-//            volumeTest.PulseBCount = 0;        
-//        }
+                }                
+            }, ct);
+            TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+        }
 
-//        protected override async Task ExecutingTest(VolumeTest volumeTest)
-//        {
-//            await Task.Run(() =>
-//            {
-//                do
-//                {
-//                    //TODO: Raise events so the UI can respond
-//                    //volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-//                    //volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-//                } while (volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses() && !_requestStopTest);
+        public override async Task PostTest(CancellationToken ct)
+        {
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    ct.ThrowIfCancellationRequested();
+                    await CommClient.Connect(ct);
+                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+                }
+                finally
+                {
+                    await CommClient.Disconnect();
+                }               
+            }, ct);
+        }
 
-//                _outputBoard?.StopMotor();
-//            });
-//        }
-
-//        protected override async Task Reset(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
-//        {
-//            await Task.Run(async () =>
-//            {
-//                try
-//                {
-//                    await commClient.Connect();
-//                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-//                    await evcPostTestItemReset.PostReset(commClient);
-//                }
-//                catch (Exception ex)
-//                {
-//                    NLog.LogManager.GetCurrentClassLogger().Error(ex, "Error in Post volume test");
-//                }
-//                finally
-//                {
-//                    await commClient.Disconnect();
-//                    NLog.LogManager.GetCurrentClassLogger().Info("Volume test finished!");
-//                }
-//            });
-//        }             
-//    }
-//}
+        public override async Task ExecuteSyncTest(CancellationToken ct)
+        {
+            await Task.Run(() =>
+            {
+            }, ct);
+        }       
+    }
+}
 

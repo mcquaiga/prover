@@ -13,38 +13,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
     {
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
+            _gaugePressure = TestRun.GasGauge;
             _atmosphericGauge = TestRun.AtmosphericGauge;
 
-            var atmChange = this.WhenAnyValue(x => x.AtmosphericGauge);
-            _gaugePressure = TestRun.GasGauge;
+            this.WhenAnyValue(x => x.GaugePressure, x => x.AtmosphericGauge, 
+                    (g, a) => g + a)
+                .ToProperty(this, x => x.AbsolutePressure, out _absolutePressure);
 
             this.WhenAnyValue(x => x.GaugePressure)
-               .Subscribe(x => TestRun.GasGauge = x);
+                .Subscribe(x => TestRun.GasGauge = x);
+
             this.WhenAnyValue(x => x.AtmosphericGauge)
                 .Subscribe(x => TestRun.AtmosphericGauge = x);
 
             GaugePressure = TestRun.GasGauge;
-            AtmosphericGauge = TestRun.AtmosphericGauge;
-           
-
-            //if (ShowAtmValues)
-            //{
-            //    _gaugePressure = atmChange
-            //        .Where(x => ShowAtmValues)
-            //        .Select(x => TestRun.TotalGauge != 0 ? TestRun.TotalGauge - x.Value : TestRun.GasGauge ?? 0)
-            //        .ToProperty(this, x => x.GaugePressure);
-            //}
-            //else
-            //{
-            //    _gaugePressure = atmChange
-            //        .Where(x => !ShowAtmValues)
-            //        .Select(x => TestRun.GasGauge ?? 0)
-            //        .ToProperty(this, x => x.GaugePressure);
-            //}
+            AtmosphericGauge = TestRun.AtmosphericGauge;                           
         }
 
-        //private readonly ObservableAsPropertyHelper<decimal> _gaugePressure;
-        //public decimal GaugePressure => _gaugePressure.Value;
+        private readonly ObservableAsPropertyHelper<decimal?> _absolutePressure;
+        public decimal? AbsolutePressure => _absolutePressure.Value;
 
         private decimal? _gaugePressure;
         public decimal? GaugePressure
@@ -57,8 +44,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
         }
 
-        public bool ShowAtmValues => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
-        public bool IsAtmGaugeReadOnly => !ShowAtmValues;
+        public bool ShowAbsolute => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
+        public bool ShowGaugeOnly => !ShowAbsolute;
 
         private decimal? _atmosphericGauge;
         public decimal? AtmosphericGauge

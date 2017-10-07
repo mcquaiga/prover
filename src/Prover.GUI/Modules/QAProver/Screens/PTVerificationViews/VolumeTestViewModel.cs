@@ -1,40 +1,144 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 using Caliburn.Micro;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
+using Prover.Core.VerificationTests.VolumeVerification;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
-
+using Prover.GUI.Common.Screens.Dialogs;
+using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dialogs;
+using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
-        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
+        internal enum TestStep
         {
-            Volume = testRun;
-
-            if (Volume?.DriveType is MechanicalDrive)
-                EnergyTestItem =
-                    new EnergyTestViewModel(EventAggregator, (MechanicalDrive) Volume.DriveType);
-
-            if (Volume?.DriveType is RotaryDrive)
-                MeterDisplacementItem =
-                    new RotaryMeterTestViewModel(
-                        (RotaryDrive) Volume.DriveType);
+            PreTest,
+            PostTest
         }
 
-        public QaRunTestManager InstrumentManager { get; set; }
-        public Instrument Instrument => Volume.Instrument;
+        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null)
+            : base(screenManager, eventAggregator, volumeTest)
+        {
+            Volume = volumeTest;
+            TestManager = qaRunTestManager;
 
+            var canRunTestCommand = this.WhenAny(x => x.TestManager, tm => tm != null);
+            canRunTestCommand.ToProperty(this, model => model.DisplayButtons, out _displayButtons);
+
+            CreateDriveSpecificViews();
+
+            if (TestManager != null)
+            {
+                if (TestManager?.VolumeTestManager is ManualVolumeTestManager)
+                {
+                    var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
+                        .Select(x => x == TestStep.PreTest);                                
+                    PreVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);                
+
+                    var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
+                        .Select(x => x == TestStep.PostTest);
+                    PostVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Finishing Volume Test...", RunPostVolumeTest, canRunPostTest);
+
+                    ManualVolumeTestStep = TestStep.PreTest;
+                }
+
+                if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
+                {
+                    RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+                        "Running Volume Test...", RunTest, canRunTestCommand);
+                }
+            }
+        }     
+
+        public ReactiveCommand RunVolumeTestCommand { get; set; }
+        public ReactiveCommand PreVolumeTestCommand { get; set; }
+        public ReactiveCommand PostVolumeTestCommand { get; set; }
+
+        #region Methods
+       
+        private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
+        {
+            TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
+            await TestManager.VolumeTestManager.PreTest(ct);
+            ManualVolumeTestStep = TestStep.PostTest;
+        }
+
+        private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct)
+        {
+            try
+            {
+                TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
+                await TestManager.VolumeTestManager.PostTest(ct);
+                ManualVolumeTestStep = TestStep.PreTest;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+            }
+        }
+
+        public async Task RunTest(IObserver<string> status, CancellationToken ct)
+        {
+            try
+            {
+                TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
+                await TestManager.RunVolumeTest(ct);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+        }
+
+        private void CreateDriveSpecificViews()
+        {
+            if (Volume?.DriveType is MechanicalDrive)
+                EnergyTestItem = new EnergyTestViewModel(EventAggregator, (MechanicalDrive) Volume.DriveType);
+            else if (Volume?.DriveType is RotaryDrive)
+                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Volume.DriveType);
+        }
+
+        #endregion
+
+        #region Properties
+        private TestStep _manualVolumeTestStep;
+        internal TestStep ManualVolumeTestStep
+        {
+            get => _manualVolumeTestStep;
+            set => this.RaiseAndSetIfChanged(ref _manualVolumeTestStep, value);
+        }        
+
+        public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
+        public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
+
+
+        public IQaRunTestManager TestManager { get; set; }
+        public Instrument Instrument => Volume.Instrument;
         public Core.Models.Instruments.VolumeTest Volume { get; }
 
         public decimal AppliedInput
         {
-            get { return Volume.AppliedInput; }
+            get => Volume.AppliedInput;
             set
             {
                 Volume.AppliedInput = value;
@@ -44,11 +148,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
-
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
-
         public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
 
         public decimal? TrueCorrected
@@ -68,8 +170,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public decimal? EvcUncorrected => Volume.EvcUncorrected;
         public decimal? EvcCorrected => Volume.EvcCorrected;
 
-        public int UncorrectedPulseCount => Volume.UncPulseCount;
-        public int CorrectedPulseCount => Volume.CorPulseCount;
+        public int UncorrectedPulseCount
+        {
+            get => Volume.UncPulseCount;
+            set
+            {
+                Volume.UncPulseCount = value;
+                RaisePropertyChangeEvents();
+            }
+        }
+
+        public int CorrectedPulseCount
+        {
+            get => Volume.CorPulseCount;
+            set
+            {
+                Volume.CorPulseCount = value;
+                RaisePropertyChangeEvents();
+            }
+        }
 
         public Brush UnCorrectedPercentColour
             =>
@@ -90,7 +209,10 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 var rotaryDrive = Volume?.DriveType as RotaryDrive;
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
             }
-        }        
+        }
+        #endregion
+        private readonly ObservableAsPropertyHelper<bool> _displayButtons;
+        public bool DisplayButtons => _displayButtons.Value;
 
         protected override void RaisePropertyChangeEvents()
         {

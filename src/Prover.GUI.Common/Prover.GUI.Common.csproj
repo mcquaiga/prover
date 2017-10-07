@@ -127,9 +127,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundWork\BackgroundWorker.cs" />
     <Compile Include="Controls\BindingProxy.cs" />
     <Compile Include="Controls\DesignViewModel.cs" />
+    <Compile Include="Controls\InputBindingsManager.cs" />
     <Compile Include="Controls\LabelValueControl.xaml.cs">
       <DependentUpon>LabelValueControl.xaml</DependentUpon>
     </Compile>
@@ -146,6 +146,8 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Design\DesignTimeViewModelLocator.cs" />
+    <Compile Include="Screens\Dialogs\DialogDisplayHelpers.cs" />
+    <Compile Include="Screens\Dialogs\IDialogViewModel.cs" />
     <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Events\ShowDialogEvent.cs" />
@@ -159,6 +161,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ScreenManager.cs" />
+    <Compile Include="Screens\Dialogs\InformationDialogView.xaml.cs">
+      <DependentUpon>InformationDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\InformationDialogViewModel.cs" />
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogView.xaml.cs">
+      <DependentUpon>ProgressStatusDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogViewModel.cs" />
     <Compile Include="Screens\MainMenu\IHaveMainMenuItem.cs" />
     <Compile Include="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
@@ -196,6 +206,14 @@
     <Page Include="Controls\MainMenuButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Dialogs\InformationDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\MainMenu\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -265,11 +283,6 @@
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FodyWeavers.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

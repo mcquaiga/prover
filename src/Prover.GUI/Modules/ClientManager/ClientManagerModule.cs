@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 using Autofac;
 using Prover.Core.Exports;
 using Prover.Core.Modules.Clients.VerificationTestActions;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
@@ -37,7 +38,10 @@ namespace Prover.GUI.Modules.ClientManager
 
             builder.Register(c => new ClientStore(c.Resolve<ProverContext>()))
                 .As<IClientStore>()
-                .InstancePerDependency();            
+                .InstancePerDependency();
+
+            builder.RegisterType<ClientService>();
+
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
             builder.RegisterType<ExportToCsvManager>().As<IExportCertificate>();
