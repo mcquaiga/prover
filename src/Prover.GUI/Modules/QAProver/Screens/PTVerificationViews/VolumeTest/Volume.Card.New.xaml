@@ -13,10 +13,6 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
                                                   TrueValue="Visible"
                                                   FalseValue="Collapsed" />

@@ -11,14 +11,7 @@
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+           
             <DataTemplate x:Key="InstrumentSelect">
                 <RadioButton Content="{Binding Path=Instrument.Name}"
                              GroupName="Instruments"

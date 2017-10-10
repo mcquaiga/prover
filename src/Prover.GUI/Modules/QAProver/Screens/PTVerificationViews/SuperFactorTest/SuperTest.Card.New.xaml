@@ -10,14 +10,6 @@
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="157">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-
-    </UserControl.Resources>
     <!--**** START SUPER **** -->
     <Border Style="{StaticResource SubSectionDividerBorder}">
         <Grid>
