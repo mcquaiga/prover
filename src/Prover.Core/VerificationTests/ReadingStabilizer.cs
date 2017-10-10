@@ -51,7 +51,7 @@ namespace Prover.Core.VerificationTests
                     ct.ThrowIfCancellationRequested();
                 } while (liveReadItems.Any(x => !x.Value.IsStable));
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 _log.Info("Cancelled live reading.");
                 throw;

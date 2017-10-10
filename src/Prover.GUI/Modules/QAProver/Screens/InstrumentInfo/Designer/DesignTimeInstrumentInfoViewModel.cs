@@ -56,6 +56,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
 
         #region Data
 
+        /*
         private readonly string _json = @"{
   ""Certificate"": null,
   ""Client"": null,
@@ -2846,7 +2847,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
     }
   ],
   ""Id"": ""8d1ee376-f0a3-4119-b649-aeb20e2add49""
-}";
+}";*/
 
         #endregion
     }

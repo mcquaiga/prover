@@ -7,8 +7,7 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls"
-             x:Name="ValueDescription"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"             >
+             x:Name="ValueDescription">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,7 +19,7 @@
             
             <converters:BoolToVisibilityConverter
                 x:Key="BoolToHiddenConverter"
-                TrueValue="Visible" FalseValue="Collapsed" />
+                TrueValue="Collapsed" FalseValue="Visible" />
         </ResourceDictionary>
         
     </UserControl.Resources>
@@ -34,19 +33,20 @@
                             <ColumnDefinition Width="34" />
                         </Grid.ColumnDefinitions>
                         <TextBox Text="{Binding Path=Value}"                               
-                                    controls:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
+                                 controls:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
                                  Grid.Column="0"
                                  Margin="0 2"
                                  FontSize="{Binding ValueFontSize}"
                                  BorderThickness="0"
                                  IsReadOnly="{Binding Path=IsReadOnly}"
+                                 materialDesign:TextFieldAssist.DecorationVisibility="{Binding Path=IsReadOnly, Converter={StaticResource BoolToHiddenConverter}}"
                                  Foreground="{DynamicResource PrimaryHueDarkBrush}" />
-                        <materialDesign:PackIcon Kind="Pencil"
+                        <!--<materialDesign:PackIcon Kind="Pencil"
                                                  Grid.Column="1"
                                                  Width="32"
                                                  HorizontalAlignment="Center"
                                                  VerticalAlignment="Center"
-                                                 Visibility="{Binding Path=ShowEditSymbol, Converter={StaticResource BoolToHiddenConverter}}" />
+                                                 Visibility="{Binding Path=ShowEditSymbol, Converter={StaticResource BoolToHiddenConverter}}" />-->
                     </Grid>
                     <TextBlock Text="{Binding Path=Label}"
                                HorizontalAlignment="Left"

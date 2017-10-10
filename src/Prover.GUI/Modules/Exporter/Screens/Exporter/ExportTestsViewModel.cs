@@ -105,7 +105,7 @@ namespace Prover.GUI.Modules.Exporter.Screens.Exporter
 
         public void Handle(DataStorageChangeEvent message)
         {
-            GetInstrumentsWithNoExportDate();
+            Task.Run(async () => await GetInstrumentsWithNoExportDate());
         }
     }
 }

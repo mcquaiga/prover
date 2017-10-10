@@ -8,6 +8,8 @@
         <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxStyle.xaml" />
         <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxTemplate.xaml" />
         <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/Colours.xaml" />
+        <ResourceDictionary Source="/Prover;component/Modules/QAProver/Screens/Styles.xaml"/>
+        <ResourceDictionary Source="/Prover.GUI.Common;component/Resources/ResourceDictionary.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <!-- Resource dictionary entries should be defined here. -->
 </ResourceDictionary>

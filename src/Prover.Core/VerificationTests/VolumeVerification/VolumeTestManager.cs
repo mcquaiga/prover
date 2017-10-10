@@ -82,7 +82,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     Status.OnNext("Finished volume test.");
                 }, ct);
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Status.OnNext("Volume test cancelled.");
                 throw;

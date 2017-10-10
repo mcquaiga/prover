@@ -61,6 +61,17 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                     RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
                         "Running Volume Test...", RunTest, canRunTestCommand);
                 }
+
+                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount,
+                    (appliedInput, uncPulses, corPulses) =>
+                    {
+                        Volume.AppliedInput = appliedInput;
+                        Volume.UncPulseCount = uncPulses;
+                        Volume.CorPulseCount = corPulses;
+                        RaisePropertyChangeEvents();
+                        return true;
+                    })
+                    .Subscribe(async b => await TestManager.SaveAsync());                       
             }
         }     
 
@@ -74,6 +85,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
             await TestManager.VolumeTestManager.PreTest(ct);
+            await TestManager.SaveAsync();
             ManualVolumeTestStep = TestStep.PostTest;
         }
 
@@ -83,6 +95,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.VolumeTestManager.PostTest(ct);
+                await TestManager.SaveAsync();
                 ManualVolumeTestStep = TestStep.PreTest;
             }
             catch (Exception ex)
@@ -131,19 +144,29 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
         public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
 
-
         public IQaRunTestManager TestManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
         public Core.Models.Instruments.VolumeTest Volume { get; }
 
+        private decimal _appliedInput;
         public decimal AppliedInput
         {
-            get => Volume.AppliedInput;
-            set
-            {
-                Volume.AppliedInput = value;
-                RaisePropertyChangeEvents();
-            }
+            get => _appliedInput;
+            set => this.RaiseAndSetIfChanged(ref _appliedInput, value);
+        }
+
+        private int _uncorrectedPulseCount;
+        public int UncorrectedPulseCount
+        {
+            get => _uncorrectedPulseCount;
+            set => this.RaiseAndSetIfChanged(ref _uncorrectedPulseCount, value);
+        }       
+
+        private int _correctedPulseCount;
+        public int CorrectedPulseCount
+        {
+            get => _correctedPulseCount;
+            set => this.RaiseAndSetIfChanged(ref _correctedPulseCount, value);
         }
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
@@ -170,26 +193,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public decimal? EvcUncorrected => Volume.EvcUncorrected;
         public decimal? EvcCorrected => Volume.EvcCorrected;
 
-        public int UncorrectedPulseCount
-        {
-            get => Volume.UncPulseCount;
-            set
-            {
-                Volume.UncPulseCount = value;
-                RaisePropertyChangeEvents();
-            }
-        }
-
-        public int CorrectedPulseCount
-        {
-            get => Volume.CorPulseCount;
-            set
-            {
-                Volume.CorPulseCount = value;
-                RaisePropertyChangeEvents();
-            }
-        }
-
         public Brush UnCorrectedPercentColour
             =>
                 Volume?.UnCorrectedHasPassed == true
@@ -215,8 +218,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public bool DisplayButtons => _displayButtons.Value;
 
         protected override void RaisePropertyChangeEvents()
-        {
-            NotifyOfPropertyChange(() => AppliedInput);
+        {          
             NotifyOfPropertyChange(() => TrueCorrected);
             NotifyOfPropertyChange(() => TrueUncorrected);
             NotifyOfPropertyChange(() => StartUncorrected);
@@ -225,9 +227,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => EndCorrected);
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected);
-            NotifyOfPropertyChange(() => UncorrectedPulseCount);
-            NotifyOfPropertyChange(() => CorrectedPulseCount);
+            NotifyOfPropertyChange(() => StartCorrected); 
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
