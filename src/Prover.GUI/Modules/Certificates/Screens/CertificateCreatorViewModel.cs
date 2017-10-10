@@ -23,7 +23,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
 {
     public class CertificateCreatorViewModel : ViewModelBase, IDisposable
     {
-
         public List<string> VerificationType => new List<string>
         {
             "New",
@@ -47,25 +46,27 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     => !string.IsNullOrEmpty(testedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
 
-            LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<CreateVerificationViewModel>>
+            LoadClientInstrumentsCommand = ReactiveCommand.CreateFromTask<Client, ReactiveList<TestListItemViewModel>>
             (
                 async client =>
                 {
                     var instruments = await _certificateService.GetInstrumentsWithNoCertificate(client.Id);
-                    var viewModels = new ReactiveList<CreateVerificationViewModel>(
+                    var viewModels = new ReactiveList<TestListItemViewModel>(
                         instruments.Select(i =>
                         {
                             var vvm = new VerificationViewModel(i);
-                            var item = ScreenManager.ResolveViewModel<CreateVerificationViewModel>();
+                            var item = ScreenManager.ResolveViewModel<TestListItemViewModel>();
                             item.VerificationView = vvm;
                             return item;
                         }));
-
+                   
                     return viewModels;
                 }
-            );                 
+            );
+
             LoadClientInstrumentsCommand
-                .ToProperty(this, x => x.RootResults, out _rootResults, new ReactiveList<CreateVerificationViewModel>());
+                .ToProperty(this, x => x.RootResults, out _rootResults, new ReactiveList<TestListItemViewModel>());
+
             LoadClientInstrumentsCommand
                 .ThrownExceptions
                 .Subscribe(ex => Console.WriteLine(ex.Message));
@@ -74,7 +75,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
             {                
                 ResultFilteredItems = RootResults.CreateDerivedCollection(x => x,
                     x => filter == "All" || string.IsNullOrEmpty(filter) || (filter == "Passed" && x.Instrument.HasPassed) || (filter == "Failed" && !x.Instrument.HasPassed),
-                    (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));       
+                    (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));
+
+                ResultFilteredItems.ChangeTrackingEnabled = true;
+                ResultFilteredItems.ItemChanged
+                    .Where(x => x.PropertyName == "IsArchived" && x.Sender.IsArchived)
+                    .Subscribe(x => RootResults.Remove(x.Sender));
             });
 
             this.WhenAnyValue(x => x.ResultFilteredItems)
@@ -88,6 +94,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             this.WhenAnyValue(x => x.RootResults)
                 .Select(s => "All")
                 .InvokeCommand(UpdateFilter);            
+
 
             LoadClientsCommand = ReactiveCommand.CreateFromTask(LoadClients);
             LoadClientsCommand
@@ -110,12 +117,9 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             var selectedClientChange = this.WhenAnyValue(x => x.SelectedClient)
                 .Do(c =>
-                {
-                    if (c == null)
-                    {
-                        RootResults.Clear();
-                        ExistingClientCertificates.Clear();
-                    }
+                {                    
+                    RootResults.Clear();
+                    ExistingClientCertificates.Clear(); 
                 })
                 .Where(c => c != null);
 
@@ -126,18 +130,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     LoadClientInstrumentsCommand.Execute(client).Wait();
                     FetchExistingClientCertificatesCommand.Execute(client).Wait();
                     ExportToCsvViewModel.Client = client;
-                });
-
-            //selectedClientChange
-            //    .Delay(TimeSpan.FromMilliseconds(25))
-            //    .InvokeCommand(LoadClientInstrumentsCommand);
-
-            //selectedClientChange
-            //    .CombineLatest(LoadClientInstrumentsCommand.IsExecuting, (sc, lc) => !lc)
-            //    .InvokeCommand(FetchExistingClientCertificatesCommand);
-
-            //selectedClientChange
-            //    .Subscribe(c => ExportToCsvViewModel.Client = c);            
+                });                     
         }
 
         #region Commands
@@ -148,7 +141,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public ReactiveCommand<Unit, List<Client>> LoadClientsCommand { get; protected set; }
 
-        public ReactiveCommand<Client, ReactiveList<CreateVerificationViewModel>> LoadClientInstrumentsCommand { get; }
+        public ReactiveCommand<Client, ReactiveList<TestListItemViewModel>> LoadClientInstrumentsCommand { get; }
 
         public ReactiveCommand<Client, IEnumerable<Certificate>> FetchExistingClientCertificatesCommand { get; set; }
 
@@ -188,8 +181,15 @@ namespace Prover.GUI.Modules.Certificates.Screens
         #endregion
 
         #region Properties
-        private readonly ObservableAsPropertyHelper<ReactiveList<CreateVerificationViewModel>> _rootResults;
-        public ReactiveList<CreateVerificationViewModel> RootResults => _rootResults.Value;
+        private readonly ObservableAsPropertyHelper<ReactiveList<TestListItemViewModel>> _rootResults;
+        public ReactiveList<TestListItemViewModel> RootResults => _rootResults.Value;
+
+        //private ReactiveList<TestListItemViewModel> _rootResults = new ReactiveList<TestListItemViewModel>() { ChangeTrackingEnabled = true};
+        //public ReactiveList<TestListItemViewModel> RootResults
+        //{
+        //    get => _rootResults;
+        //    set => this.RaiseAndSetIfChanged(ref _rootResults, value);
+        //}
 
         private readonly ObservableAsPropertyHelper<bool> _showLoadingIndicator;
         public bool ShowLoadingIndicator => _showLoadingIndicator.Value;
@@ -234,8 +234,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
             set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
         }
 
-        private IReactiveDerivedList<CreateVerificationViewModel> _resultFilteredItems;
-        public IReactiveDerivedList<CreateVerificationViewModel> ResultFilteredItems
+        private IReactiveDerivedList<TestListItemViewModel> _resultFilteredItems;
+        public IReactiveDerivedList<TestListItemViewModel> ResultFilteredItems
         {
             get => _resultFilteredItems;
             set => this.RaiseAndSetIfChanged(ref _resultFilteredItems, value);

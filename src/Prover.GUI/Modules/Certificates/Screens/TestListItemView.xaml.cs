@@ -5,9 +5,9 @@ namespace Prover.GUI.Modules.Certificates.Screens
     /// <summary>
     ///     Interaction logic for CreateCertificateVerificationView.xaml
     /// </summary>
-    public partial class CreateVerificationView : UserControl
+    public partial class TestListItemView : UserControl
     {
-        public CreateVerificationView()
+        public TestListItemView()
         {
             InitializeComponent();
         }

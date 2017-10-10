@@ -185,6 +185,9 @@
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Certificates\Screens\TestListItemView.xaml.cs">
+      <DependentUpon>TestListItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ClientManager\Screens\CsvTemplates\ClientCsvTemplatesView.xaml.cs">
       <DependentUpon>ClientCsvTemplatesView.xaml</DependentUpon>
     </Compile>
@@ -221,9 +224,6 @@
     </Compile>
     <Compile Include="Modules\Certificates\Screens\CertificateCreatorView.xaml.cs">
       <DependentUpon>CertificateCreatorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Certificates\Screens\CreateVerificationView.xaml.cs">
-      <DependentUpon>CreateVerificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\ClientManager\ClientManagerModule.cs" />
     <Compile Include="Modules\ClientManager\Screens\ClientManagerView.xaml.cs">
@@ -273,7 +273,7 @@
     <Compile Include="Modules\Certificates\Common\VerificationView.xaml.cs">
       <DependentUpon>VerificationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Certificates\Screens\CreateVerificationViewModel.cs" />
+    <Compile Include="Modules\Certificates\Screens\TestListItemViewModel.cs" />
     <Compile Include="Modules\Certificates\Common\Verification\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
@@ -387,9 +387,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Modules\Certificates\Screens\CreateVerificationView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Modules\Certificates\Screens\TestListItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Modules\ClientManager\Screens\CsvTemplates\ClientCsvTemplatesView.xaml">
       <SubType>Designer</SubType>
