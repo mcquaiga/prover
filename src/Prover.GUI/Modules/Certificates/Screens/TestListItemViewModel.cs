@@ -12,12 +12,12 @@ using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
-    public class CreateVerificationViewModel : ViewModelBase
+    public class TestListItemViewModel : ViewModelBase
     {
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public CreateVerificationViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+        public TestListItemViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IProverStore<Instrument> instrumentStore, InstrumentReportGenerator instrumentReportGenerator)
             : base(screenManager, eventAggregator)
         {
@@ -78,7 +78,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private ReactiveCommand _archiveTestCommand;
-
         public ReactiveCommand ArchiveTestCommand
         {
             get { return _archiveTestCommand; }
@@ -88,7 +87,14 @@ namespace Prover.GUI.Modules.Certificates.Screens
         public async Task ArchiveTest()
         {
             await _instrumentStore.Delete(VerificationView.Instrument);
-            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
+            IsArchived = true;
+        }
+
+        private bool _isArchived;
+        public bool IsArchived
+        {
+            get => _isArchived;
+            set => this.RaiseAndSetIfChanged(ref _isArchived, value);
         }
     }
 }
