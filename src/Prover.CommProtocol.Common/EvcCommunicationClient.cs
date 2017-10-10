@@ -57,12 +57,14 @@ namespace Prover.CommProtocol.Common
 
         public virtual void Dispose()
         {
-            Disconnect().Wait();
-
-            _receivedObservable?.Dispose();
-            _sentObservable?.Dispose();
-            _statusSubject?.Dispose();
-            CommPort?.Dispose();
+            Disconnect().ContinueWith(task =>
+            {
+                _receivedObservable?.Dispose();
+                _sentObservable?.Dispose();
+                _statusSubject?.Dispose();
+                CommPort?.Dispose();
+            });
+            
         }
 
         private async Task ExecuteCommand(string command)

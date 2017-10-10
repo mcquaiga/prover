@@ -8,8 +8,6 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ImageSource x:Key="PassIcon">..\Resources\success.png</ImageSource>
-            <ImageSource x:Key="FailIcon">..\Resources\error_36.png</ImageSource>
             <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
         </ResourceDictionary>

@@ -16,7 +16,7 @@ using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
-    public class VerificationSetViewModel : ViewModelBase
+    public class VerificationSetViewModel : ViewModelBase, IDisposable
     {
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -81,13 +81,19 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             if (VerificationTest.VolumeTest != null)
             {
                 VolumeTestViewModel =
-                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
-
-                //this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
-                //    .Where(x => QaRunTestManager != null)
-                //    .Subscribe(async y => await QaRunTestManager.SaveAsync());
+                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);                
             }
         }
+        public void Dispose()
+        {
+            SuperFactorTestViewModel?.TryClose();
+            TemperatureTestViewModel?.TryClose();
+            PressureTestViewModel?.TryClose();
+            VolumeTestViewModel?.TryClose();
+            _cancelTestCommand?.Dispose();
+            _runTestCommand?.Dispose();
+        }
+
 
         #region Properties
 
@@ -149,5 +155,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());                
             }
         }
+
+       
     }
 }

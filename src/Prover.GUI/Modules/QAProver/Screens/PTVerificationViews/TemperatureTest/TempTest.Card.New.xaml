@@ -15,11 +15,7 @@
              d:DataContext ="{d:DesignInstance {x:Type dvm:TemperatureTestDesignData}, IsDesignTimeCreatable=True}"-->
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
-                <ResourceDictionary Source="../../Styles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+           
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
                 <Setter Property="Margin" Value="0 8 0 8" />
             </Style>

@@ -77,19 +77,15 @@ namespace Prover.GUI.Common.Controls
             UpdateIcon(myObj);
         }
 
-         
-
         private static void UpdateIcon(PercentageControlNew myObj)
         {
             if (myObj.Passed)
-            {
-                myObj.IconSource = myObj.Resources["PassIcon"] as ImageSource;
+            {  
                 myObj.IconKind = PackIconKind.Check;
                 myObj.IconBackground = (Brush) myObj.Resources["PassColour"];
             }  
             else
             {
-                myObj.IconSource = myObj.Resources["FailIcon"] as ImageSource;
                 myObj.IconKind = PackIconKind.AlertCircleOutline;
                 myObj.IconBackground = (Brush) myObj.Resources["FailColour"];
             }

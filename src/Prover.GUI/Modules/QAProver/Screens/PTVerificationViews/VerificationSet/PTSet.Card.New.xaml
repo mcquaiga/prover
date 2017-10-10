@@ -13,14 +13,6 @@
              mc:Ignorable="d" d:DesignWidth="245">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary Source="../../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
                                                   TrueValue="Visible"
                                                   FalseValue="Collapsed" />

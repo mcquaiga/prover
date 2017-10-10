@@ -61,6 +61,7 @@ namespace Prover.GUI.Screens.Shell
             {
                 DeactivateItem(_currentView, true);
                 (_currentView as IDisposable)?.Dispose();
+                (_currentView as ReactiveScreen)?.TryClose();
             }
 
             ActivateItem(message.ViewModel);
