@@ -83,9 +83,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 VolumeTestViewModel =
                     new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
 
-                this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
-                    .Where(x => QaRunTestManager != null)
-                    .Subscribe(async y => await QaRunTestManager.SaveAsync());
+                //this.WhenAnyValue(x => x.VolumeTestViewModel.AppliedInput)
+                //    .Where(x => QaRunTestManager != null)
+                //    .Subscribe(async y => await QaRunTestManager.SaveAsync());
             }
         }
 

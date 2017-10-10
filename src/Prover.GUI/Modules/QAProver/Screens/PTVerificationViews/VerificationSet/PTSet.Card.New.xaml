@@ -24,59 +24,46 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
                                                   TrueValue="Visible"
                                                   FalseValue="Collapsed" />
-
-            <Style TargetType="Border">
-                <Setter Property="BorderBrush"
-                        Value="{StaticResource BorderBrushColor}" />
-                <Setter Property="BorderThickness"
-                        Value="{StaticResource BorderBrushThickness}" />
-                <Setter Property="SnapsToDevicePixels"
-                        Value="True" />
-            </Style>
         </ResourceDictionary>
 
     </UserControl.Resources>
 
-    <Grid Margin="4">
-        <Border Padding="5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
-                           Grid.Row="0"
-                           FontSize="32"
-                           Foreground="Black"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left" />
+    <Border Padding="4"
+            Style="{StaticResource TestSectionOuterBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
+                       Grid.Row="0"
+                       FontSize="32"
+                       Foreground="Black"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left" />
 
-                <StackPanel Orientation="Vertical"
-                            Grid.Row="1"
-                            Margin="4">
-                    <ContentControl cal:View.Model="{Binding PressureTestViewModel}"
-                                    cal:View.Context="CardNew"
-                                    Margin="0 2" />
-                    <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}"
-                                    cal:View.Context="CardNew"
-                                    Margin="0 2" />
-                    <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"
-                                    cal:View.Context="CardNew"
-                                    Margin="0 2" />
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="1"
+                        Margin="4">
+                <ContentControl cal:View.Model="{Binding PressureTestViewModel}"
+                                cal:View.Context="CardNew"/>
+                <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}"
+                                cal:View.Context="CardNew"/>
+                <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}"
+                                cal:View.Context="CardNew"/>
 
 
-                </StackPanel>
-                <Button Command="{Binding RunTestCommand}"
-                        Content="Download"
-                        Margin="0"
-                        Grid.Row="2"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                        Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center" />
+            </StackPanel>
+            <Button Command="{Binding RunTestCommand}"
+                    Content="Download"
+                    Grid.Row="2"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center" />
 
-            </Grid>
-        </Border>
-    </Grid>
+        </Grid>
+    </Border>
+
 </UserControl>

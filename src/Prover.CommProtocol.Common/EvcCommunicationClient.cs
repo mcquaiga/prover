@@ -20,8 +20,6 @@ namespace Prover.CommProtocol.Common
         private readonly Subject<string> _statusSubject = new Subject<string>();
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private CancellationToken _cancellationToken;
-
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
@@ -97,6 +95,7 @@ namespace Prover.CommProtocol.Common
         public void Initialize(InstrumentType instrumentType)
         {
             InstrumentType = instrumentType;
+
         }
 
         /// <summary>

@@ -6,9 +6,23 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <SolidColorBrush x:Key="BorderBrushColor">#e0e0e0</SolidColorBrush>
-    <Thickness x:Key="BorderBrushThickness">1</Thickness>
-    
-    
+
+    <Style x:Key="TestSectionOuterBorder" TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource BorderBrushColor}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <Style x:Key="SubSectionDividerBorder" 
+            BasedOn="{StaticResource TestSectionOuterBorder}"
+           TargetType="{x:Type Border}">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="BorderThickness"
+                Value="0 1 0 0" />
+    </Style>
+   
 </ResourceDictionary>

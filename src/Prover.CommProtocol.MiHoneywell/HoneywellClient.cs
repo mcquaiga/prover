@@ -59,7 +59,7 @@ namespace Prover.CommProtocol.MiHoneywell
                 }
             }, ct));
 
-            Task.WaitAll(connectTasks.ToArray());
+            await Task.WhenAll(connectTasks.ToArray());
         }
 
         public override async Task Disconnect()

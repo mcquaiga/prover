@@ -266,8 +266,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
                     TestViews.Add(item);
                 }
 
-                if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
-                    EventLogCommPortItem = SiteInformationItem;
+                //if (instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt)
+                //{
+                //    EventLogCommPortItem = SiteInformationItem;
+                //}
+                    
             });
         }
 

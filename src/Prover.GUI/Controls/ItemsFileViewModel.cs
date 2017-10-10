@@ -190,7 +190,7 @@ namespace Prover.GUI.Controls
         }
 
         private async Task UpdateList(InstrumentType instrumentType)
-        {
+        {           
             SelectedInstrumentType = instrumentType;
             AvailableItems.Clear();
             AvailableItems.AddRange(ItemHelpers.LoadItems(instrumentType));

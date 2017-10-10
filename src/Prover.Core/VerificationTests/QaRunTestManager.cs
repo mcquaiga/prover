@@ -146,7 +146,7 @@ namespace Prover.Core.VerificationTests
 
                 await SaveAsync();
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Log.Info("Test run cancelled.");
             }
@@ -170,7 +170,7 @@ namespace Prover.Core.VerificationTests
                     await SaveAsync();
                 }
             }
-            catch (OperationCanceledException e) 
+            catch (OperationCanceledException) 
             {
                 _testStatus.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");

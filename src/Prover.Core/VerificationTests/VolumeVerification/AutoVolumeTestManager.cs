@@ -49,7 +49,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
                 }, ct);          
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Status.OnNext("Volume Sync test cancelled.");
                 throw;
@@ -101,7 +101,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     }, ct);
                     ct.ThrowIfCancellationRequested();
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
                     Log.Info("Cancelling volume test.");
                     throw;
