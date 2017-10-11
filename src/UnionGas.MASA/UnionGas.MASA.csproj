@@ -154,6 +154,9 @@
     <Compile Include="Screens\Toolbars\LoginToolbar\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml.cs">
+      <DependentUpon>WaitingForLogin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Validators\CompanyNumber\NewCompanyNumberPopupRequestor.cs" />
     <Compile Include="Validators\CompanyNumber\CompanyNumberUpdater.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
@@ -313,6 +316,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Toolbars\LoginToolbar\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

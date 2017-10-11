@@ -48,19 +48,21 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="PassFailIcon" TargetType="{x:Type Image}">
+            <Style x:Key="PassFailIcon" TargetType="{x:Type materialDesign:PackIcon}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Source" Value="{StaticResource PassIcon}" />
+                        <Setter Property="Kind" Value="Check" />
+                        <Setter Property="Background" Value="{StaticResource PassColour}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Source" Value="{StaticResource FailIcon}" />
+                        <Setter Property="Kind" Value="Exclamation" />
+                        <Setter Property="Background" Value="{StaticResource FailColour}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Style="{StaticResource DockPanelStyle}">
+    <DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="64"/>
@@ -68,9 +70,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Image x:Name="Icon"
+            <materialDesign:PackIcon x:Name="Icon"
                    Grid.Column="0"
-               Style="{StaticResource PassFailIcon}"
+                Style="{StaticResource PassFailIcon}"
                Margin="15"
                Width="36" Height="36" />
             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">

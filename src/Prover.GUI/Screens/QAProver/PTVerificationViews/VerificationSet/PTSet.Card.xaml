@@ -27,38 +27,42 @@
                 <StackPanel Orientation="Vertical" Margin="25" VerticalAlignment="Center">
                     <TextBlock Text="Running test..." HorizontalAlignment="Center" />
                     <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center"
-                     Margin="12 12 12 12" />
+                                 Value="0" IsIndeterminate="True" VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"
+                                 Margin="12 12 12 12" />
                     <TextBlock Text="{Binding TestStatusMessage}"
-                               HorizontalAlignment="Center"/>
-                    <Button Command="{Binding CancelTestCommand}" Content="Cancel" Margin="2 10 5 5"
-                        HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" />
+                               HorizontalAlignment="Center" />
+                    <Button Command="{Binding CancelTestCommand}"
+                            Content="Cancel"
+                            Margin="8"
+                            HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignRaisedButton}" />
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
-            
+
             <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <StackPanel Orientation="Vertical">
                     <materialDesign:ColorZone Padding="2" Margin="2"
-                                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                    Mode="Accent" >
+                                              materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                              Mode="Accent">
                         <Grid>
-                            <TextBlock Text="{Binding Level}" 
+                            <TextBlock Text="{Binding Level}"
                                        FontSize="18"
                                        Foreground="White"
                                        Margin="5"
                                        VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"/>
+                                       HorizontalAlignment="Left" />
                             <Button Margin="2"
                                     Width="90"
                                     Height="36"
                                     HorizontalAlignment="Right"
                                     Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <materialDesign:PackIcon Kind="Play" Height="32" Width="32" Margin="0" VerticalAlignment="Center" />
-                                    <TextBlock Margin="2" 
-                                               FontWeight="Light" 
+                                    <materialDesign:PackIcon Kind="Play" Height="32" Width="32" Margin="0"
+                                                             VerticalAlignment="Center" />
+                                    <TextBlock Margin="2"
+                                               FontWeight="Light"
                                                Text="Run"
-                                               VerticalAlignment="Center"/>
+                                               VerticalAlignment="Center" />
                                 </StackPanel>
 
                                 <i:Interaction.Triggers>
@@ -68,32 +72,32 @@
                                 </i:Interaction.Triggers>
                             </Button>
                         </Grid>
-                       
+
                     </materialDesign:ColorZone>
-                <Grid>
-                    
-                </Grid>
+                    <Grid>
+
+                    </Grid>
                     <StackPanel Orientation="Horizontal">
                         <!-- Column 1 - PTZ Verification -->
                         <StackPanel Orientation="Vertical">
                             <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
-                            Margin="2" />
+                                            Margin="2" />
 
                             <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
-                                Margin="2" />
+                                            Margin="2" />
 
                             <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
-                                Margin="2" />
-                           
+                                            Margin="2" />
+
                         </StackPanel>
                         <!-- Column 2 - Volume Verification -->
                         <ContentControl cal:View.Model="{Binding VolumeTestViewModel}"
-                            cal:View.Context="Card"
-                            Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
-                            Margin="2" />
+                                        cal:View.Context="Card"
+                                        Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
+                                        Margin="2" />
                     </StackPanel>
                 </StackPanel>
-        </materialDesign:Card>
+            </materialDesign:Card>
         </materialDesign:DialogHost>
     </Grid>
 </UserControl>

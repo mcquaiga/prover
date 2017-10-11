@@ -44,26 +44,27 @@
 
     <DockPanel Margin="5">
        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="73*" />
-                <ColumnDefinition Width="25*" />
-            </Grid.ColumnDefinitions>
+           <Grid.RowDefinitions>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="Auto"/>
+           </Grid.RowDefinitions>
 
-            <ListBox
-                Grid.Column="1"
-                Margin="3.836,10,10,10"
-                x:Name="InstrumentItems"
-                HorizontalContentAlignment="Stretch" />
+            <ListBox Grid.Row="0"
+                     Margin="5"
+                     x:Name="InstrumentItems"
+                     HorizontalContentAlignment="Stretch">
+            </ListBox>
 
             <!--  Certificate Information  -->
-            <StackPanel Grid.Column="2">
-                <Button Margin="0,20,0,0"
+            
+                <Button Margin="8"
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
                         Command="{Binding ExportAllPassedQaRunsCommand}"
                         Content="Export all passed">
 
                 </Button>
-            </StackPanel>
+            
         </Grid>
     </DockPanel>
 </UserControl>
