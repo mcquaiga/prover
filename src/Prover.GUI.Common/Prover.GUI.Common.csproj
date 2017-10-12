@@ -81,8 +81,8 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ReachFramework" />
-    <Reference Include="ReactiveUI, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-core.7.2.0\lib\Net45\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI.Autofac, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.Autofac.6.5.0\lib\net452\ReactiveUI.Autofac.dll</HintPath>
@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="BackgroundWork\BackgroundWorker.cs" />
     <Compile Include="Controls\DesignViewModel.cs" />
+    <Compile Include="Controls\InputBindingsManager.cs" />
     <Compile Include="Controls\LabelValueControl.xaml.cs">
       <DependentUpon>LabelValueControl.xaml</DependentUpon>
     </Compile>
@@ -161,6 +162,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SampleData\MainMenuDataSource\MainMenuDataSource.xaml.cs">
+      <DependentUpon>MainMenuDataSource.xaml</DependentUpon>
     </Compile>
     <Compile Include="ScreenManager.cs" />
     <Compile Include="Screens\MainMenu\IAppMainMenu.cs" />
@@ -196,6 +200,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <DesignTimeOnly Include="SampleData\MainMenuDataSource\MainMenuDataSource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </DesignTimeOnly>
     <Page Include="Screens\MainMenu\MainMenuView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -204,6 +212,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="SampleData\MainMenuDataSource\MainMenuDataSource.xsd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

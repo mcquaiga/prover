@@ -15,7 +15,7 @@
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="249">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter
             x:Key="BoolToHiddenConverter"
@@ -30,24 +30,30 @@
                                          DisplayValue="{Binding TestRun.PercentError}"
                                          Passed="{Binding TestRun.HasPassed}" />
 
-            <UniformGrid Columns="2" 
-                         Margin="0">
+            <UniformGrid Columns="2"
+                         Margin="0"
+                         Visibility="{Binding ShowGaugeOnly, Converter={StaticResource BoolToHiddenConverter}}">
                 <controls1:ValueDescriptionControl Label="Gauge"
-                                                   IsReadOnly="True"
-                                                   Value="{Binding GaugePressure, UpdateSourceTrigger=PropertyChanged}" />
-                
+                                                   IsReadOnly="False"
+                                                   Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <controls1:ValueDescriptionControl Label="EVC Reading"
                                                    Value="{Binding EvcGasPressure}" />
             </UniformGrid>
 
             <UniformGrid Columns="2" 
-                         Visibility="{Binding ShowAtmValues, Converter={StaticResource BoolToHiddenConverter}}"
+                         Visibility="{Binding ShowAbsolute, Converter={StaticResource BoolToHiddenConverter}}"
                          Margin="0">
+                <controls1:ValueDescriptionControl Label="Gauge"
+                                                   IsReadOnly="{Binding LockGaugePressure}"
+                                                   Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <controls1:ValueDescriptionControl Label="ATM Gauge" 
-                                                   IsReadOnly="{Binding IsAtmGaugeReadOnly}"
+                                                   IsReadOnly="False"
                                                    Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <controls1:ValueDescriptionControl Label="EVC ATM Reading"
-                                                   Value="{Binding EvcAtmPressure}" />
+                <controls1:ValueDescriptionControl Label="Absolute"
+                                                   Value="{Binding AbsolutePressure}" />
+                <controls1:ValueDescriptionControl Label="EVC Reading"
+                                                   Value="{Binding EvcGasPressure}" />
+
             </UniformGrid>
             <UniformGrid Columns="2" Margin="0">
                 <controls1:ValueDescriptionControl Label="Actual Factor"

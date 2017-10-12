@@ -25,7 +25,9 @@
                                         Mode="PrimaryDark" DockPanel.Dock="Top">
                     QA Test Run Settings
                 </materialDesign:ColorZone>
-                
+                <CheckBox IsChecked="{Binding Settings.UpdateAbsolutePressure}"
+                          Content="Update absolute pressure value for absolute transducers. Updates gauge value based on the atmospheric and absolute instead."
+                          Margin="5 10 5 15"/>
                 <materialDesign:Card Margin="8">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Mechanical Uncorrected Pulse Test Limit" Style="{StaticResource MaterialDesignBody2TextBlock}"/>

@@ -199,6 +199,7 @@
     <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Events\TestProgressEvent.cs" />
+    <Compile Include="Extensions\PredicateBuilder.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />
