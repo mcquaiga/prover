@@ -12,26 +12,25 @@
             <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
         </DataTemplate>
     </UserControl.Resources>
-    <Viewbox Stretch="Uniform">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}"
-                                cal:View.Context="SiteInfoCard" />
-                <!--<ContentControl Margin="2"
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+            <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}"
+                            cal:View.Context="SiteInfoCard" />
+            <!--<ContentControl Margin="2"
                                 cal:View.Model="{Binding EventLogCommPortItem}"
                                 cal:View.Context="EventLogCommPortCard" />-->
-            </StackPanel>
-
-            <ItemsControl HorizontalAlignment="Center"
-                          ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                          ItemsSource="{Binding TestViews}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
         </StackPanel>
 
-    </Viewbox>
+        <ItemsControl HorizontalAlignment="Center"
+                      ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
+                      ItemsSource="{Binding TestViews}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </StackPanel>
+
+
 </UserControl>
