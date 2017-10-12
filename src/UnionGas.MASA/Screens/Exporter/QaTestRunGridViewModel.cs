@@ -105,8 +105,7 @@ namespace UnionGas.MASA.Screens.Exporter
             if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
                 return;
 
-            await _exportManager.Export(Instrument);
-            IsRemoved = true;
+            IsRemoved = await _exportManager.Export(Instrument);            
         }
 
         
