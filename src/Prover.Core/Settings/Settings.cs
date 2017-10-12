@@ -16,10 +16,15 @@ namespace Prover.Core.Settings
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
 
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
+        public bool UpdateAbsolutePressure { get; set; } = true;
 
         public void SetDefaults()
         {
             ExportServiceAddress = "";
+
+            //if (UpdateAbsolutePressure.HasValue == false)
+            //    UpdateAbsolutePressure = true;
+
             if (TemperatureGaugeDefaults == null)
                 TemperatureGaugeDefaults = new List<GaugeDefaults>
                 {

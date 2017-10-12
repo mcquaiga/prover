@@ -6,12 +6,11 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             TextElement.Foreground="White"
+             TextElement.Foreground="Black"
              TextElement.FontWeight="Light"
              TextElement.FontSize="18"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="100">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,69 +18,58 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <ImageSource x:Key="PassIcon">pack://application:,,,/Resources/success.png</ImageSource>
-            <ImageSource x:Key="FailIcon">pack://application:,,,/Resources/error_36.png</ImageSource>
-            <SolidColorBrush x:Key="FontColour" Color="White" />
-            <SolidColorBrush x:Key="PassColour" Color="#8CC04F" />
-            <SolidColorBrush x:Key="FailColour" Color="#D54C53" />
-            <sys:Int32 x:Key="ValueFontSize">12</sys:Int32>
-            <sys:Int32 x:Key="LabelFontSize">12</sys:Int32>
+            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
+            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+
             <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
 
             <DataTemplate x:Key="TestTemplate">
-                <ContentControl cal:View.Model="{Binding .}" cal:View.Context="Grid" />
+                <ContentControl cal:View.Model="{Binding }" cal:View.Context="Grid" />
             </DataTemplate>
 
-            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="Black" />
                 <Setter Property="FontSize" Value="22" />
             </Style>
 
-            <Style x:Key="DockPanelStyle" TargetType="{x:Type DockPanel}">
+            <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Background" Value="{StaticResource PassColour}" />
+                        <Setter Property="Kind" Value="Check" />
+                        <Setter Property="Foreground" Value="{StaticResource PassColour}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Background" Value="{StaticResource FailColour}" />
+                        <Setter Property="Kind" Value="AlertCircleOutline" />
+                        <Setter Property="Foreground" Value="{StaticResource FailColour}" />
                     </DataTrigger>
                 </Style.Triggers>
-            </Style>
-
-            <Style x:Key="PassFailIcon" TargetType="{x:Type Image}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
-                        <Setter Property="Source" Value="{StaticResource PassIcon}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
-                        <Setter Property="Source" Value="{StaticResource FailIcon}" />
-                    </DataTrigger>
-                </Style.Triggers>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Style="{StaticResource DockPanelStyle}">
+    <DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="64"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="64" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Image x:Name="Icon"
-                   Grid.Column="0"
-               Style="{StaticResource PassFailIcon}"
-               Margin="15"
-               Width="36" Height="36" />
+            <materialDesign:PackIcon x:Name="Icon"
+                                     Grid.Column="0"
+                                     Style="{StaticResource PassFailIcon}"
+                                     Margin="15"
+                                     Width="36" Height="36" />
             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
-                <TextBlock Text="{Binding DateTimePretty}"/>
+                <TextBlock Text="{Binding DateTimePretty}" />
                 <TextBlock FontSize="32" Text="{Binding Instrument.InstrumentType.Name}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Instrument.CompositionType}" />
                     <TextBlock Text=" | " />
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
                 </StackPanel>
-                
+
             </StackPanel>
             <StackPanel Grid.Column="2" Margin="10 5" Orientation="Vertical" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
@@ -93,43 +81,41 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Job #</TextBlock>
-                    <TextBlock Text="{Binding Instrument.JobId}"/>
+                    <TextBlock Text="{Binding Instrument.JobId}" />
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5">
-                
+            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Margin="5">
+
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Height="48"
-                    Command="{Binding ExportQaTestRunCommand}"
-                    ToolTip="Export">
+                        Height="48"
+                        Command="{Binding ExportQaTestRunCommand}"
+                        ToolTip="Export">
                     <materialDesign:PackIcon Kind="Export"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
+                                             Height="36"
+                                             Width="36"/>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                         Height="48"
                         Command="{Binding ViewQaTestReportCommand}"
                         ToolTip="View QA Test Report">
-                   
+
                     <materialDesign:PackIcon Kind="Printer"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
+                                             Height="36"
+                                             Width="36"/>
                 </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="15 0 0 0"
-                    Height="48"
-                    Command="{Binding ArchiveTestCommand}"
-                    ToolTip="Archive Test">
+                        Height="48"
+                        Command="{Binding ArchiveTestCommand}"
+                        ToolTip="Archive Test">
                     <materialDesign:PackIcon Kind="Archive"
-                                         Height="36"
-                                         Width="36"
-                                         Foreground="White" />
+                                             Height="36"
+                                             Width="36" />
                 </Button>
             </StackPanel>
 
         </Grid>
     </DockPanel>
-   
+
 </UserControl>

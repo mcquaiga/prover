@@ -179,3 +179,4 @@ FakesAssemblies/
 src/.vs/config/applicationhost.config
 **/**/settings.conf
 **/**/*.orig
+src/.vs/EvcProver/v15/sqlite3/storage.ide

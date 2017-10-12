@@ -28,8 +28,8 @@
                         Text="{Binding EnergyTest.EnergyUnits}"
                                FontSize="16"/>
                     <UniformGrid Columns="2" HorizontalAlignment="Center">
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
                         <controls1:ValueDescriptionControl Label="True Calculated" Value="{Binding EnergyTest.ActualEnergy}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
                     </UniformGrid>
                     
                 </StackPanel>
