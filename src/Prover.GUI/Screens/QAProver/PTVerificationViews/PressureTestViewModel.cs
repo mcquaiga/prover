@@ -57,7 +57,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
                         if (TestRun.VerificationTest.TestNumber == 0)
                             EventAggregator.PublishOnUIThread(new AtmosphericGaugePressureUpdateMessage(this, x));
-                    });                  
+                    });
+            }
+            else
+            {
+                _absolutePressure = ObservableAsPropertyHelper<decimal?>.Default(TestRun.GasPressure);
             }
 
             this.WhenAnyValue(x => x.GaugePressure)
