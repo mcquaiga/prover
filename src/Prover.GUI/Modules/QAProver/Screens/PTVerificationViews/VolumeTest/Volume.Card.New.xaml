@@ -4,159 +4,167 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             TextElement.FontWeight="Light"
-             TextElement.FontSize="16"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
-            <Style TargetType="{x:Type materialDesign:Card}">
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
-            </Style>
+            <!--<Style x:Key="PassFailIconStyle"
+                    TargetType="materialDesign:PackIcon">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=Value, RelativeSource={RelativeSource Self}}"
+                                 Value="True">
+                        
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>-->
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border Style="{StaticResource TestSectionOuterBorder}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0"
-                        Orientation="Horizontal">
-                <TextBlock Text="Volume"
-                           FontSize="32"
-                           Foreground="Black"
-                           VerticalAlignment="Center"
-                           Margin="5"
-                           HorizontalAlignment="Left" />
-                <Grid Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}">
-                    <Button Content="RUN TEST"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock Text="Volume"
+                       Style="{StaticResource PrimaryTestHeaderStyle}" />
+            <Grid Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}"
+                  HorizontalAlignment="Center">
+                <Button Content="RUN TEST"
+                        Margin="15 5"
+                        Visibility="{Binding IsAutoVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding RunVolumeTestCommand}" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="START"
                             Margin="15 5"
-                            Visibility="{Binding IsAutoVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                            Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                            Command="{Binding RunVolumeTestCommand}" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="START"
-                                Margin="15 5"
-                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
-                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                                Command="{Binding PreVolumeTestCommand}" />
-                        <Button Content="FINISH"
-                                Margin="15 5"
-                                Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
-                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                                Command="{Binding PostVolumeTestCommand}" />
-                    </StackPanel>
-                </Grid>
+                            Command="{Binding PreVolumeTestCommand}" />
+                    <Button Content="FINISH"
+                            Margin="15 5"
+                            Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Command="{Binding PostVolumeTestCommand}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+
+        <Grid Grid.Row="2"
+                    Margin="0">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                    <Setter Property="Margin" Value="4 0" />
+                </Style>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                    <Setter Property="Margin" Value="4 0" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width=".33*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width=".33*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width=".33*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Bottom">
+                <controls:ValueDescriptionControl Label="Applied Input"
+                                                  Value="{Binding AppliedInput, Mode=TwoWay}"
+                                                  IsReadOnly="False" />
+
+                <controls:ValueDescriptionControl Label="Uncor Pulses"
+                                                  Value="{Binding UncorrectedPulseCount, Mode=TwoWay}"
+                                                  IsReadOnly="False" />
+
+                <controls:ValueDescriptionControl Label="Cor Pulses"
+                                                  Value="{Binding CorrectedPulseCount, Mode=TwoWay}"
+                                                  IsReadOnly="False" />
 
             </StackPanel>
 
             <Border Style="{StaticResource SubSectionDividerBorder}"
-                    Grid.Row="1">
-                <Grid HorizontalAlignment="Left">
-                    <controls1:ValueDescriptionControl Label="Applied Input"
-                                                       ValueFontSize="28"
-                                                       LabelFontSize="18"
+                    BorderThickness="1 0 0 0"
+                    Grid.Column="1"
+                    Margin="2 16"/>
+            
+            <StackPanel Grid.Column="2">
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                           Text="Uncorrected" />
+                <controls:PercentageControlNew HorizontalAlignment="Center"
+                                               DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
+                                               Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
 
-                                                       Value="{Binding AppliedInput, Mode=TwoWay}"
-                                                       IsReadOnly="False" />
+                <UniformGrid Columns="2">
+                    <controls:ValueDescriptionControl Label="Start Reading"
+                                                      Value="{Binding StartUncorrected}" />
+                    <controls:ValueDescriptionControl Label="End Reading"
+                                                      Value="{Binding EndUncorrected}" />
+                           
+                    <controls:ValueDescriptionControl Label="True Calculated"
+                                                      Value="{Binding TrueUncorrected}" />
+                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                                                      Value="{Binding EvcUncorrected}" />
+                    <controls:ValueDescriptionControl Label="Multiplier"
+                                                      Value="{Binding UnCorrectedMultiplierDescription}" />
+                    <controls:ValueDescriptionControl Label="Pulses Verified" 
+                                                      Value="{Binding Volume.UnCorPulsesPassed}" />
+                </UniformGrid>
+            </StackPanel>
+            
+
+
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    BorderThickness="1 0 0 0" 
+                    Grid.Column="3"
+                    Margin="2 16"/>
+                
+            <StackPanel Grid.Column="4">
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                           Text="Corrected" />
+                <controls:PercentageControlNew HorizontalAlignment="Center"
+                                               DisplayValue="{Binding Volume.CorrectedPercentError}"
+                                               Passed="{Binding Volume.CorrectedHasPassed}" />
+                <UniformGrid Columns="2">
+                    <controls:ValueDescriptionControl Label="Start Reading"
+                                                      Value="{Binding StartCorrected}" />
+                    <controls:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
+                            
+                    <controls:ValueDescriptionControl Label="True Calculated"
+                                                      Value="{Binding TrueCorrected}" />
+                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                                                      Value="{Binding EvcCorrected}" />
+                    <controls:ValueDescriptionControl Label="Multiplier"
+                                                      Value="{Binding CorrectedMultiplierDescription}" />
+                    <controls:ValueDescriptionControl Label="Pulses Verified" 
+                                                      Value="{Binding Volume.CorPulsesPassed}" />
+
+                </UniformGrid>
+
+            </StackPanel>
+            
+
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    BorderThickness="1 0 0 0" 
+                    Grid.Column="5"
+                    Margin="2 16"/>
+                <Grid  VerticalAlignment="Top"
+                       Grid.Column="6">
+                    <ContentControl cal:View.Model="{Binding EnergyTestItem}"
+                                    cal:View.Context="CardNew" />
+                    <ContentControl cal:View.Model="{Binding MeterDisplacementItem}"
+                                    cal:View.Context="CardNew" />
                 </Grid>
-
-            </Border>
-
-            <UniformGrid Columns="3"
-                         Grid.Row="2"
-                         Margin="4">
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <StackPanel>
-                        <TextBlock Margin="4"
-                                   FontWeight="Light"
-                                   Foreground="Black"
-                                   FontSize="24"
-                                   Text="Uncorrected" />
-                        <controls1:PercentageControlNew Margin="5"
-                                                        HorizontalAlignment="Center"
-                                                        DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
-                                                        Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
-
-                        <UniformGrid Columns="2" Margin="5">
-                            <controls1:ValueDescriptionControl Label="Start Reading"
-                                                               Value="{Binding StartUncorrected}" />
-                            <controls1:ValueDescriptionControl Label="End Reading"
-                                                               Value="{Binding EndUncorrected}" />
-                            <controls1:ValueDescriptionControl Label="EVC Calculated"
-                                                               Value="{Binding EvcUncorrected}" />
-                            <controls1:ValueDescriptionControl Label="True Calculated"
-                                                               Value="{Binding TrueUncorrected}" />
-                            <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                               Value="{Binding UncorrectedPulseCount, Mode=TwoWay}"
-                                                               IsReadOnly="False" />
-                            <controls1:ValueDescriptionControl Label="Multiplier"
-                                                               Value="{Binding UnCorrectedMultiplierDescription}" />
-                        </UniformGrid>
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <StackPanel>
-                        <TextBlock Margin="4"
-                                   FontWeight="Light"
-                                   Foreground="Black"
-                                   FontSize="24"
-                                   Text="Corrected" />
-                        <!--<materialDesign:ColorZone
-                                Padding="5"
-                                Margin="5"
-                                Content="Corrected"
-                                Mode="PrimaryLight"
-                                materialDesign:ShadowAssist.ShadowDepth="Depth1" />-->
-
-                        <controls1:PercentageControlNew Margin="5"
-                                                        HorizontalAlignment="Center"
-                                                        DisplayValue="{Binding Volume.CorrectedPercentError}"
-                                                        Passed="{Binding Volume.CorrectedHasPassed}" />
-
-                        <UniformGrid Columns="2" Margin="2 5">
-
-                            <controls1:ValueDescriptionControl Label="Start Reading"
-                                                               Value="{Binding StartCorrected}" />
-                            <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
-                            <controls1:ValueDescriptionControl Label="EVC Calculated"
-                                                               Value="{Binding EvcCorrected}" />
-                            <controls1:ValueDescriptionControl Label="True Calculated"
-                                                               Value="{Binding TrueCorrected}" />
-                            <controls1:ValueDescriptionControl Label="Pulse Count"
-                                                               Value="{Binding CorrectedPulseCount, Mode=TwoWay}"
-                                                               IsReadOnly="False" />
-                            <controls1:ValueDescriptionControl Label="Multiplier"
-                                                               Value="{Binding CorrectedMultiplierDescription}" />
-
-                        </UniformGrid>
-
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <Grid>
-                        <ContentControl cal:View.Model="{Binding EnergyTestItem}"
-                                        cal:View.Context="CardNew" />
-                        <ContentControl cal:View.Model="{Binding MeterDisplacementItem}"
-                                        cal:View.Context="CardNew" />
-                    </Grid>
-
-                </Border>
-            </UniformGrid>
 
         </Grid>
 
+    </Grid>
 
-    </Border>
 
 </UserControl>

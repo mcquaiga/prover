@@ -9,25 +9,19 @@
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="157">
+             mc:Ignorable="d" >
     <!--**** START SUPER **** -->
-    <Border Style="{StaticResource SubSectionDividerBorder}">
-        <Grid>
-           
-            <Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0"
-                       Margin="4"
-                       FontWeight="Light"
-                       Foreground="Black"
-                       FontSize="24"
-                       VerticalAlignment="Center"
-                       Text="Super. Factor" />
-
+            <Border Style="{StaticResource SubSectionDividerBorder}">
+                <TextBlock Grid.Row="0"
+                           Style="{StaticResource SecondaryTestHeaderStyle}"
+                           Text="Super. Factor" />
+            </Border>
             <controls1:PercentageControlNew Margin="16 0"                                            
                                             Grid.Row="1"
                                             HorizontalAlignment="Center"
@@ -43,7 +37,7 @@
                                                    Value="{Binding EVCUnsqrFactor}" />
             </UniformGrid>
 
-        </Grid></Border>
+        </Grid>
 
 
     <!--**** END SUPER ****-->

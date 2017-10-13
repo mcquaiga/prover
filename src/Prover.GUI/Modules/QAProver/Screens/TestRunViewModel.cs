@@ -84,7 +84,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
-            var clientList = clientStore.Query().ToList();
+            var clientList = clientStore.Query()
+                .Where(c => c.ArchivedDateTime == null)
+                .ToList();
             Clients = new ReactiveList<string>(
                 clientList.Select(x => x.Name).OrderBy(x => x).ToList())
             {

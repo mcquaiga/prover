@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Prover.Core.Models.Clients;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -20,19 +23,31 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             _clientStore = clientStore;
             ViewContext = ClientListViewContext;
 
-            LoadClients();
+            LoadClientsCommand = ReactiveCommand.CreateFromObservable(LoadClients);
+            LoadClientsCommand.Subscribe(client =>
+            {
+                ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore, client));
+            });
+
+            ClientList.ItemChanged
+                .Where(x => x.PropertyName == "IsRemoved" && x.Sender.IsRemoved)
+                .Select(x => x.Sender)
+                .Subscribe(x => ClientList.Remove(x));
 
             AddClientCommand = ReactiveCommand.CreateFromTask(AddClient);
         }
 
+        public ReactiveCommand<Unit, Client> LoadClientsCommand { get; set; }
+
         #region Private Functions
 
-        private void LoadClients()
+        private IObservable<Client> LoadClients()
         {
-            _clientStore.Query()
+            return _clientStore.Query()
+                .Where(x => x.ArchivedDateTime == null)
                 .OrderBy(c => c.Name)
-                .ToList()
-                .ForEach(x => ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore, x)));
+                .ToObservable();
+            //.ForEach(x => );
         }
 
         private async Task AddClient()
@@ -58,7 +73,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         #region Properties
 
-        private ReactiveList<ClientDetailsViewModel> _clientList = new ReactiveList<ClientDetailsViewModel>();
+        private ReactiveList<ClientDetailsViewModel> _clientList = new ReactiveList<ClientDetailsViewModel>() { ChangeTrackingEnabled = true };
 
         public ReactiveList<ClientDetailsViewModel> ClientList
         {

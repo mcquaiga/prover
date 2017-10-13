@@ -2,14 +2,27 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/SimpleStyles.xaml" />
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/RadioButtonStyle.xaml" />
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/Button.xaml" />
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxStyle.xaml" />
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/CheckboxTemplate.xaml" />
-        <ResourceDictionary Source="/Prover.GUI;component/Views/Themes/Colours.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
+
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+
         <ResourceDictionary Source="/Prover;component/Modules/QAProver/Screens/Styles.xaml"/>
         <ResourceDictionary Source="/Prover.GUI.Common;component/Resources/ResourceDictionary.xaml"/>
+        <ResourceDictionary Source="/Prover.GUI.Common;component/Resources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <!-- Resource dictionary entries should be defined here. -->
 </ResourceDictionary>

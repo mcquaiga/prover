@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Reactive.Linq;
+using System.Windows.Controls;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens
@@ -11,6 +13,14 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         public ClientManagerView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                ViewModel = (ClientManagerViewModel)DataContext;
+                d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
+            });
         }
 
         object IViewFor.ViewModel

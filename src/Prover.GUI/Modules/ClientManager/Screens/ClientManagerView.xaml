@@ -17,17 +17,21 @@
             </StackPanel>
         </materialDesign:ColorZone>
         <materialDesign:DialogHost Identifier="ClientDialogHost">
-            <ScrollViewer >
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
                 <Grid DockPanel.Dock="Top"
                       HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ListBox ItemsSource="{Binding ClientList}" HorizontalAlignment="Center">
+                    <ListBox ItemsSource="{Binding ClientList}" 
+                             HorizontalAlignment="Center">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ContentControl cal:View.Context="CardView" cal:View.Model="{Binding}" />
+                                <ContentControl cal:View.Context="CardView" 
+                                                cal:View.Model="{Binding}"
+                                                HorizontalAlignment="Stretch"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

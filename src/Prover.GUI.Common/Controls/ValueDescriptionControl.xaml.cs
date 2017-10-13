@@ -20,12 +20,12 @@ namespace Prover.GUI.Common.Controls
         // Using a DependencyProperty as the backing store for Size.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LabelFontSizeProperty =
             DependencyProperty.Register(nameof(LabelFontSize), typeof(int), typeof(ValueDescriptionControl),
-                new UIPropertyMetadata(12));
+                new UIPropertyMetadata(16));
 
         // Using a DependencyProperty as the backing store for ValueFontSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueFontSizeProperty =
             DependencyProperty.Register(nameof(ValueFontSize), typeof(int), typeof(ValueDescriptionControl),
-                new UIPropertyMetadata(24));
+                new UIPropertyMetadata(20));
 
         // Using a DependencyProperty as the backing store for ControlBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ControlBackgroundProperty =

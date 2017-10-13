@@ -13,43 +13,53 @@
             <converters:BoolToVisibilityConverter
                 x:Key="BoolToHiddenConverter"
                 TrueValue="Collapsed" FalseValue="Visible" />
-        </ResourceDictionary>
-        
-    </UserControl.Resources>
-    <Grid DataContext="{Binding ElementName=ValueDescription}">
-        <Border Margin="5 2 0 2" BorderBrush="LightSlateGray" BorderThickness="3 0 0 0">
-            <Grid Background="{Binding ControlBackground}">
-                <StackPanel Margin="4 0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="34" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding Path=Value}"                               
-                                 controls:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
-                                 Grid.Column="0"
-                                 Margin="0 2"
-                                 FontSize="{Binding ValueFontSize}"
-                                 BorderThickness="0"
-                                 IsReadOnly="{Binding Path=IsReadOnly}"
-                                 materialDesign:TextFieldAssist.DecorationVisibility="{Binding Path=IsReadOnly, Converter={StaticResource BoolToHiddenConverter}}"
-                                 Foreground="Black" />
-                        <!--<materialDesign:PackIcon Kind="Pencil"
-                                                 Grid.Column="1"
-                                                 Width="32"
-                                                 HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"
-                                                 Visibility="{Binding Path=ShowEditSymbol, Converter={StaticResource BoolToHiddenConverter}}" />-->
-                    </Grid>
-                    <TextBlock Text="{Binding Path=Label}"
-                               HorizontalAlignment="Left"
-                               FontSize="{Binding LabelFontSize}"
-                               Foreground="Gray" />
 
-                </StackPanel>
-            </Grid>
-        </Border>
-    </Grid>
+            <SolidColorBrush x:Key="PrimaryText"
+                             Opacity=".87" 
+                             Color="Black"/>
+            <SolidColorBrush x:Key="SecondaryText"
+                             Opacity=".54" 
+                             Color="Black"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="5 2 0 2" 
+            BorderThickness="3 0 0 0"
+            DataContext="{Binding ElementName=ValueDescription}">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsReadOnly}" Value="False">
+                        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAccentBrush}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=IsReadOnly}" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Grid Margin="5 0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Text="{Binding Path=Value, FallbackValue='32.00'}"                               
+                     controls:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
+                     Grid.Row="0"
+                     FontSize="{Binding ValueFontSize, FallbackValue=24}"
+                     BorderThickness="0"
+                     IsReadOnly="{Binding Path=IsReadOnly}"
+                     materialDesign:TextFieldAssist.DecorationVisibility="{Binding Path=IsReadOnly, Converter={StaticResource BoolToHiddenConverter}}"
+                     Foreground="{StaticResource PrimaryText}" />
+
+            <TextBlock Text="{Binding Path=Label, FallbackValue='Gauge'}"
+                       Grid.Row="1"
+                       HorizontalAlignment="Left"
+                       FontSize="{Binding LabelFontSize, FallbackValue=16}"
+                       Foreground="{StaticResource SecondaryText}" />
+        </Grid>
+    </Border>
+
 </UserControl>
 
 

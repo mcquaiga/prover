@@ -10,6 +10,7 @@ namespace Prover.Core.Storage
     public interface IClientStore : IProverStore<Client>
     {
         Task<List<Client>> GetAll();
+        Task<bool> DeleteCsvTemplate(ClientCsvTemplate template);
     }
 
     public class ClientStore : IClientStore
@@ -38,6 +39,12 @@ namespace Prover.Core.Storage
             return await Query()
                 .OrderBy(c => c.Name)
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteCsvTemplate(ClientCsvTemplate template)
+        {
+            _context.ClientCsvTemplates.Remove(template);
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<Client> UpsertAsync(Client entity)
