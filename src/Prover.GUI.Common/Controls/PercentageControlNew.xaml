@@ -12,40 +12,32 @@
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <!--"-->
     <Grid DataContext="{Binding ElementName=PercentUserControl}">
-        <Grid Height="42">
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="42" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <!--<materialDesign:PackIcon Kind=""
-                                          Width="36" Height="36"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>-->
-                <materialDesign:PackIcon
-                    Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}"
-                    Foreground="{Binding Path=IconBackground, ElementName=PercentUserControl}"
-                    Width="36" Height="36"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center" />
-                <!--<Image x:Name="Icon" 
-                       Source="{Binding Path=IconSource, ElementName=PercentUserControl}" 
-                       Width="36" Height="36"/>-->
-            </Grid>
-            <Grid Grid.Column="1" Margin="6 0">
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl}"
-                               FontSize="30"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="%"
-                               VerticalAlignment="Center"
-                               FontSize="24"/>
-                </StackPanel>
-            </Grid>
+            
+            <materialDesign:PackIcon
+                Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}"
+                Foreground="{Binding Path=IconBackground, ElementName=PercentUserControl}"
+                Width="32" 
+                Height="32"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1">
+                <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl, FallbackValue=0.01}"
+                           FontSize="28"
+                           VerticalAlignment="Bottom"/>
+                <TextBlock Text="%"
+                           VerticalAlignment="Bottom" 
+                           FontSize="16"/>
+                
+            </StackPanel>
+
         </Grid>
     </Grid>
 </UserControl>

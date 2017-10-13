@@ -49,7 +49,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                         "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);                
 
                     var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
-                        .Select(x => x == TestStep.PostTest);
+                        .Select(x => x == TestStep.PostTest || x == TestStep.PreTest);
                     PostVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
                         "Finishing Volume Test...", RunPostVolumeTest, canRunPostTest);
 

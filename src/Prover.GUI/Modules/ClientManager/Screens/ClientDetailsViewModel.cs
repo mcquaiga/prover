@@ -22,15 +22,16 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 {
     public class ClientDetailsViewModel : ViewModelBase
     {
-        private readonly IProverStore<Client> _clientStore;
+        private readonly IClientStore _clientStore;
 
-        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IProverStore<Client> clientStore, Client client = null)
+        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientStore clientStore, Client client = null)
             : base(screenManager, eventAggregator)
         {
             _clientStore = clientStore;
             _client = client;
 
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
+            ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveClient);
 
             var canSave = this.WhenAnyValue(c => c.Client, c => !string.IsNullOrEmpty(c.Name));
             SaveCommand = ReactiveCommand.CreateFromTask(Save, canSave);
@@ -39,7 +40,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
             GoToCsvExporter = ReactiveCommand.Create<Client>(OpenCsvExporter);
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
-
+            
             InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());
 
             VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify,
@@ -51,15 +52,28 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
             ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset,
                 "These items will be written to the instrument after the volume test is completed.");
+
             this.WhenAnyValue(x => x.SelectedInstrumentType)
                 .Where(x => x != null)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(ResetItemList.UpdateListItems);
 
-            ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());
+            ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());            
+            DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
+            {
+                if (await _clientStore.DeleteCsvTemplate(csv))
+                    ClientCsvTemplates.Remove(csv);
+            });
+
+            DeleteCsvTemplateCommand.ThrownExceptions
+                .Subscribe(ex => Log.Error(ex));
         }
 
+        public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
+
         #region Commands
+
+        public ReactiveCommand ArchiveCommand { get; set; }
 
         private ReactiveCommand<Unit, Unit> _saveCommand;
 
@@ -129,6 +143,13 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         #region Properties   
 
+        private bool _isRemoved = false;
+        public bool IsRemoved
+        {
+            get => _isRemoved;
+            set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
+        }
+
         private IEnumerable<InstrumentType> _instrumentTypes;
 
         public IEnumerable<InstrumentType> InstrumentTypes
@@ -172,7 +193,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _verifyItemList, value);
         }
 
-        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates = new ReactiveList<ClientCsvTemplate>();
+        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates = new ReactiveList<ClientCsvTemplate>() { ChangeTrackingEnabled = true };
 
         public ReactiveList<ClientCsvTemplate> ClientCsvTemplates
         {
@@ -218,10 +239,12 @@ namespace Prover.GUI.Modules.ClientManager.Screens
                     ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());
                 }
             }
-            else
-            {
-                
-            }
+        }
+
+        private async Task ArchiveClient()
+        {
+            await _clientStore.Delete(this.Client);
+            IsRemoved = true;
         }
 
         private void OpenCsvExporter(Client client)

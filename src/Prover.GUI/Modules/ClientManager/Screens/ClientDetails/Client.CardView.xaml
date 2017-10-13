@@ -4,13 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             d:DesignHeight="100" d:DesignWidth="600">
-    <Grid>
+             mc:Ignorable="d">
+    <Grid HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="450" />
-            <ColumnDefinition Width="64" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width=".2*" />
         </Grid.ColumnDefinitions>
         <materialDesign:PackIcon Width="64" Height="64"
                                  Grid.Column="0"
@@ -23,16 +22,29 @@
                    Margin="25 5"
                    HorizontalAlignment="Left" VerticalAlignment="Center"
                    FontSize="32" />
-        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                Height="48"
-                Grid.Column="2"
 
-                Command="{Binding EditCommand}"
-                ToolTip="Edit">
-            <materialDesign:PackIcon Kind="Pencil"
-                                     Height="36"
-                                     Width="36"
-                                     Foreground="Black" />
-        </Button>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Grid.Column="2">
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"                    
+                    Command="{Binding EditCommand}"
+                    ToolTip="Edit">
+                <materialDesign:PackIcon Kind="Pencil"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="Black" />
+            </Button>
+
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    Height="48"
+                    Command="{Binding ArchiveCommand}"
+                    ToolTip="Archive">
+                <materialDesign:PackIcon Kind="Archive"
+                                         Height="36"
+                                         Width="36"
+                                         Foreground="Black" />
+            </Button></StackPanel>
     </Grid>
 </UserControl>

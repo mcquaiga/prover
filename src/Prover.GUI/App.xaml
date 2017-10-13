@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:guicommon="clr-namespace:Prover;assembly=Prover.GUI.Common..NETFramework,Version=v4.6.2"
-             xmlns:gui="clr-namespace:Prover.GUI">
+             xmlns:gui="clr-namespace:Prover.GUI"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,6 +33,17 @@
                     <gui:AppBootstrapper x:Key="AppBoot" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+            
+            <SolidColorBrush x:Key="PrimaryTextColor"
+                             Opacity=".87" 
+                             Color="Black"/>
+            <SolidColorBrush x:Key="SecondaryTextColor"
+                             Opacity=".54" 
+                             Color="Black"/>
 
             <Style TargetType="{x:Type Window}">
                 <Setter Property="FontSize" Value="16" />

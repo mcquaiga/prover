@@ -5,10 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Name="PercentUserControl"
-             xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls">
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ImageSource x:Key="PassIcon">..\Resources\success.png</ImageSource>

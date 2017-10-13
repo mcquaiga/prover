@@ -3,34 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             TextElement.FontWeight="Light"
-             TextElement.FontSize="16"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
-            <Style TargetType="{x:Type materialDesign:Card}">
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
-            </Style>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <StackPanel>
-        <TextBlock Margin="4"
-                   FontWeight="Light"
-                   Foreground="Black"
-                   FontSize="24"
+    <StackPanel VerticalAlignment="Top">
+        <Border Style="{StaticResource SubSectionDividerBorder}">
+        <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                    Text="Meter Displacement" />
-        <controls1:PercentageControlNew
+            </Border>
+        <controls:PercentageControlNew
             Margin="5"
             HorizontalAlignment="Center"
             DisplayValue="{Binding MeterDisplacementPercentError}"
@@ -39,8 +19,8 @@
             <TextBlock Text="{Binding MeterTypeDescription}" HorizontalAlignment="Center"
                        FontSize="24" />
             <StackPanel Orientation="Horizontal">
-                <controls1:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
-                <controls1:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
+                <controls:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
+                <controls:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
             </StackPanel>
 
         </StackPanel>

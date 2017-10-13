@@ -13,14 +13,6 @@
              d:DesignHeight="600" d:DesignWidth="315.5">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
-
             <Style TargetType="materialDesign:PackIcon">
                 <Setter Property="Foreground" Value="Gray" />
                 <Setter Property="Width" Value="48" />
@@ -30,12 +22,11 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </ResourceDictionary>
-
     </UserControl.Resources>
-    <Border Style="{StaticResource TestSectionOuterBorder}"
-            Padding="4">
+    <Border Style="{StaticResource TestSectionOuterBorder}">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -68,165 +59,163 @@
             </StackPanel>
 
 
-            <StackPanel Margin="0 8"
-                        Grid.Row="1"
-                        Orientation="Vertical">
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <!--<Image Grid.Column="0" Source="{StaticResource InfoIcon}" Width="48" Height="48"/>-->
-                        <materialDesign:PackIcon
-                            Kind="InformationOutline"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center" />
-                        <UniformGrid Columns="2" Grid.Column="1"
-                                     HorizontalAlignment="Stretch">
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue='123456789'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Company Number" HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue='987654321'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Serial Number" HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='2.68765'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Firmware Version" HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </UniformGrid>
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    Grid.Row="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <!--<Image Grid.Column="0" Source="{StaticResource InfoIcon}" Width="48" Height="48"/>-->
+                    <materialDesign:PackIcon
+                        Kind="InformationOutline"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center" />
+                    <UniformGrid Columns="2" Grid.Column="1"
+                                 HorizontalAlignment="Stretch">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue='123456789'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Company Number" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue='987654321'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Serial Number" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='2.68765'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Firmware Version" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
 
-                    </Grid>
-                </Border>
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
-                            Kind="Thermometer" Width="48" Height="48" Grid.Column="0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center" />
-                        <UniformGrid Grid.Column="1" Columns="2"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch">
-                            <StackPanel>
-                                <TextBlock Text="{Binding BaseTemperature, FallbackValue='60.0 F'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Base." HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="-40 to 170 F" HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Range" HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </UniformGrid>
-                    </Grid>
-                </Border>
+                </Grid>
+            </Border>
 
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon Kind="Gauge"
-                                                 Grid.Column="0" />
-                        <UniformGrid Grid.Column="1"
-                                     Columns="2"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Stretch">
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding BasePressure, FallbackValue='N/A'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Base" HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding AtmPressure, FallbackValue='N/A'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Atmospheric" HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock Text="{Binding PressureRange, FallbackValue='100 PSIA'}"
-                                           HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Transducer Range" HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </UniformGrid>
-                    </Grid>
-                </Border>
-
-                <Border Style="{StaticResource SubSectionDividerBorder}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon
+                        Kind="Thermometer" Width="48" Height="48" Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center" />
+                    <UniformGrid Grid.Column="1" Columns="2"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch">
+                        <StackPanel>
+                            <TextBlock Text="{Binding BaseTemperature, FallbackValue='60.0 F'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Base." HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="-40 to 170 F" HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Range" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    Grid.Row="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="Gauge"
+                                             Grid.Column="0" />
+                    <UniformGrid Grid.Column="1"
+                                 Columns="2"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding BasePressure, FallbackValue='N/A'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Base" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding AtmPressure, FallbackValue='N/A'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Atmospheric" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding PressureRange, FallbackValue='100 PSIA'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Transducer Range" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    Grid.Row="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon
                             Kind="Pulse" Grid.Column="0" />
-                        <UniformGrid Grid.Column="1"
+                    <UniformGrid Grid.Column="1"
                                      Columns="3"
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Stretch">
-                            <!--Region Pulser A-->
-                            <StackPanel Margin="5" HorizontalAlignment="Center">
-                                <TextBlock FontSize="12" Text="Pulser A"
+                        <!--Region Pulser A-->
+                        <StackPanel Margin="5" HorizontalAlignment="Center">
+                            <TextBlock FontSize="12" Text="Pulser A"
                                            Foreground="Gray"
                                            FontWeight="Bold" HorizontalAlignment="Center" />
 
-                                <TextBlock Text="{Binding Instrument.PulseASelect, FallbackValue='UncVol'}"
+                            <TextBlock Text="{Binding Instrument.PulseASelect, FallbackValue='UncVol'}"
                                            HorizontalAlignment="Center" />
 
-                                <TextBlock FontSize="14"
+                            <TextBlock FontSize="14"
                                            Text="{Binding Instrument.PulseAScaling, FallbackValue='2'}"
                                            HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
-                            </StackPanel>
-                            <!--End Region-->
-                            <StackPanel Margin="5" HorizontalAlignment="Center">
-                                <TextBlock FontSize="12" Text="Pulser B"
+                            <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <!--End Region-->
+                        <StackPanel Margin="5" HorizontalAlignment="Center">
+                            <TextBlock FontSize="12" Text="Pulser B"
                                            Foreground="Gray"
                                            FontWeight="Bold" HorizontalAlignment="Center" />
 
-                                <TextBlock Text="{Binding Instrument.PulseBSelect, FallbackValue='CorVol'}"
+                            <TextBlock Text="{Binding Instrument.PulseBSelect, FallbackValue='CorVol'}"
                                            HorizontalAlignment="Center" />
 
-                                <TextBlock FontSize="14"
+                            <TextBlock FontSize="14"
                                            Text="{Binding Instrument.PulseBScaling, FallbackValue='2'}"
                                            HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
-                            </StackPanel>
+                            <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
+                        </StackPanel>
 
-                            <StackPanel Margin="5" HorizontalAlignment="Center">
-                                <TextBlock FontSize="12" Text="Pulser C"
+                        <StackPanel Margin="5" HorizontalAlignment="Center">
+                            <TextBlock FontSize="12" Text="Pulser C"
                                            Foreground="Gray"
                                            FontWeight="Bold" HorizontalAlignment="Center" />
 
-                                <TextBlock Text="{Binding Instrument.PulseBSelect, FallbackValue='CorVol'}"
+                            <TextBlock Text="{Binding Instrument.PulseBSelect, FallbackValue='CorVol'}"
                                            HorizontalAlignment="Center" />
 
-                                <TextBlock FontSize="14"
+                            <TextBlock FontSize="14"
                                            Text="{Binding Instrument.PulseBScaling, FallbackValue='2'}"
                                            HorizontalAlignment="Center" />
-                                <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
-                            </StackPanel>
+                            <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
+                        </StackPanel>
 
 
-                        </UniformGrid>
+                    </UniformGrid>
 
-                    </Grid>
-                </Border>
-                
-                    <ContentControl Margin="2" cal:View.Model="{Binding}"
-                                    Visibility="{Binding DisplayEventLogCommPortView, Converter={StaticResource BoolToHiddenConverter}}"
-                                    cal:View.Context="EventLogCommPortCard" />        
-                
-            </StackPanel>
+                </Grid>
+            </Border>
+            <ContentControl Margin="2" cal:View.Model="{Binding}"
+                            Grid.Row="5"
+                            Visibility="{Binding DisplayEventLogCommPortView, Converter={StaticResource BoolToHiddenConverter}}"
+                            cal:View.Context="EventLogCommPortCard" />
         </Grid>
     </Border>
 </UserControl>
