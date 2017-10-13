@@ -19,6 +19,7 @@ namespace UnionGas.MASA.Exporter
 {
     public static class Translate
     {
+        private const int ProverNumberId = 238;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static QARunEvcTestResult RunTranslationForExport(Instrument instrument)
@@ -85,7 +86,7 @@ namespace UnionGas.MASA.Exporter
                 IndexReading = (int)instrument.Items.GetItem(98).NumericValue,
                 Comments = string.Empty,
                 JobNumber = !string.IsNullOrEmpty(instrument.JobId) ? int.Parse(instrument.JobId) : -1,
-                ProverNumber = "236", //
+                ProverNumber = ProverNumberId.ToString(), //
                 MeterClassCode = "EV",
                 TestReason = "6",
                 FieldMeterDesc = string.Empty,
