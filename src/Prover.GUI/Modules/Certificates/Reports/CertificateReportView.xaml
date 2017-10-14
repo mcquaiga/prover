@@ -24,7 +24,7 @@
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1050" />
+                <ColumnDefinition Width="1040" />
             </Grid.ColumnDefinitions>
             <Border Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2" Margin="2,5,0,2">
                 <Grid>
@@ -52,6 +52,7 @@
                             <TextBlock Text="{Binding Client.Name}"
                                        FontSize="10" />
                             <TextBlock Text="{Binding Client.Address}"
+                                       TextWrapping="WrapWithOverflow"
                                        FontSize="10" />
                         </StackPanel>
                     </materialDesign:Card>

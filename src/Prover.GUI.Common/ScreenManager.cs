@@ -17,8 +17,7 @@ namespace Prover.GUI.Common
 {
     public interface IScreenManager
     {
-        Task GoHome();
-
+        IConductor Conductor { get; set; }
         T ResolveViewModel<T>()
             where T : ViewModelBase;
 
@@ -27,9 +26,9 @@ namespace Prover.GUI.Common
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task ChangeScreen(ViewModelBase viewModel);
+        void ChangeScreen(ViewModelBase viewModel);
 
-        Task ChangeScreen<T>(string key = null)
+        void ChangeScreen<T>(string key = null)
             where T : ViewModelBase;
 
         bool? ShowDialog(ViewModelBase dialogViewModel);
@@ -42,27 +41,17 @@ namespace Prover.GUI.Common
         void ShowWindow(ViewModelBase dialogViewModel);
     }
 
-    public class ScreenManager : IScreenManager, IScreen
+    public class ScreenManager : IScreenManager
     {
-        private readonly IEventAggregator _eventAggregator;
+        private ReactiveObject _currentView;
         private readonly IWindowManager _windowManager;
 
-        public ScreenManager(IWindowManager windowManager, IEventAggregator eventAggregator)
+        public ScreenManager(IWindowManager windowManager)
         {
             _windowManager = windowManager;
-            _eventAggregator = eventAggregator;
         }
 
-        public RoutingState Router
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public async Task GoHome()
-        {
-            var main = (MainMenuViewModel) Locator.CurrentMutable.GetService(typeof(MainMenuViewModel));
-            await ChangeScreen(main);
-        }
+        public IConductor Conductor { get; set; }
 
         public T ResolveViewModel<T>()
             where T : ViewModelBase
@@ -75,12 +64,19 @@ namespace Prover.GUI.Common
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        public async Task ChangeScreen(ViewModelBase viewModel)
+        public void ChangeScreen(ViewModelBase viewModel)
         {
-            await _eventAggregator.PublishOnUIThreadAsync(new ScreenChangeEvent(viewModel));
+            if (_currentView != null)
+            {
+                Conductor?.DeactivateItem(_currentView, true);
+                (_currentView as IDisposable)?.Dispose();
+            }
+
+            Conductor?.ActivateItem(viewModel);
+            _currentView = viewModel;            
         }
 
-        public async Task ChangeScreen<T>(string key = null)
+        public void ChangeScreen<T>(string key = null)
             where T : ViewModelBase
         {
             var viewModel = IoC.Get<T>(key);
@@ -91,7 +87,7 @@ namespace Prover.GUI.Common
             if (viewModel is ReactiveScreen == false)
                 throw new InvalidCastException($"{viewModel} is of {viewModel.GetType()}.");
 
-            await ChangeScreen(viewModel);
+            ChangeScreen(viewModel);
         }
 
         public bool? ShowDialog(ViewModelBase dialogViewModel)

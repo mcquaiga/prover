@@ -9,7 +9,7 @@ namespace Prover.Core.Storage
 {
     public interface IClientStore : IProverStore<Client>
     {
-        Task<List<Client>> GetAll();
+        Task<List<Client>> GetAll(bool includeArchived = false);
         Task<bool> DeleteCsvTemplate(ClientCsvTemplate template);
     }
 
@@ -34,9 +34,10 @@ namespace Prover.Core.Storage
             return Query().FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<List<Client>> GetAll()
+        public async Task<List<Client>> GetAll(bool includeArchived = false)
         {
             return await Query()
+                .Where(x => (includeArchived) || (includeArchived == false && !x.ArchivedDateTime.HasValue))
                 .OrderBy(c => c.Name)
                 .ToListAsync();
         }

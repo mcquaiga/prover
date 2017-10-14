@@ -13,6 +13,7 @@ using NLog;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
+using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI;
@@ -58,9 +59,25 @@ namespace Prover.GUI
         {
             base.Configure();
 
-            Builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
-            Builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-            Builder.RegisterType<ScreenManager>().SingleInstance();
+            Builder.Register(c => new WindowManager())
+                .As<IWindowManager>()
+                .SingleInstance();
+
+            Builder.RegisterType<ShellViewModel>()
+                .As<ReactiveConductor<ReactiveObject>.Collection.OneActive>()
+                //.OnActivated(args =>
+                //{
+                //    args.Instance.HomeViewModel = args.Context.Resolve<HomeViewModel>();
+                //    args.Instance.ToolbarItems = args.Context.Resolve<IEnumerable<IToolbarItem>>();
+                //})
+                .SingleInstance();
+
+            Builder.RegisterType<EventAggregator>()
+                .As<IEventAggregator>()
+                .SingleInstance();
+
+            Builder.RegisterType<ScreenManager>()
+                .SingleInstance();
 
             Builder.RegisterType<InstrumentReportGenerator>();
             Builder.RegisterAssemblyModules(Assemblies);
@@ -147,9 +164,7 @@ namespace Prover.GUI
         {
             _splashScreen.Hide();
 
-            DisplayRootViewFor<ShellViewModel>();
-
-            Task.Run(() => Container.Resolve<ScreenManager>().GoHome());
+            DisplayRootViewFor<ShellViewModel>();       
 
             _splashScreen.Close();
         }

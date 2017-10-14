@@ -16,12 +16,13 @@ namespace Prover.Core.Services
         Task<Certificate> GetCertificate(Guid id);
         Task<Certificate> GetCertificate(long number);
 
-        Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
+        IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
 
         Task<long> GetNextCertificateNumber();
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
-        Task<IEnumerable<Certificate>> GetAllCertificates(Client client);
-        Task<IEnumerable<Certificate>> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        IEnumerable<Certificate> GetAllCertificates(Client client);
+        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        IEnumerable<string> GetDistinctTestedBy();
     }
 
     public class CertificateService : ICertificateService
@@ -92,36 +93,38 @@ namespace Prover.Core.Services
             return certificate;
         }
 
-        public async Task<IEnumerable<Certificate>> GetAllCertificates(Client client)
+        public IEnumerable<Certificate> GetAllCertificates(Client client)
         {
-            return await GetAllCertificates(client, 0, 0);
+            return GetAllCertificates(client, 0, 0);
         }
 
-        public async Task<IEnumerable<Certificate>> GetAllCertificates(Client client, long fromNumber, long toNumber)
+        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber)
         {
-            return await _certificateStore.Query()
-                .Where(c => 
-                    (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id) &&
-                    (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))                               
-                .OrderBy(i => i.Number)                
-                .ToListAsync();
+            return _certificateStore.Query()
+                .Where(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
+                         && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
+                .OrderBy(i => i.Number);
+
         }
 
-        public async Task<IEnumerable<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false)
+        public IEnumerable<string> GetDistinctTestedBy()
         {
-            clientId = clientId == Guid.Empty ? null : clientId;
+            return _certificateStore.Query()                
+                .Select(c => c.TestedBy)
+                .Distinct();
+        }
 
+        public IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false)
+        {
             try
             {
                 var results = _instrumentStore.Query()
-                    .Where(x => 
-                            x.CertificateId == null && 
-                            (showArchived == false && x.ArchivedDateTime == null || showArchived) &&
-                            x.ClientId == clientId)
-                    .OrderBy(x => x.TestDateTime)
-                    .ToListAsync();
+                    .Where(x => x.CertificateId == null &&
+                            (x.ClientId == clientId || clientId == null || clientId == Guid.Empty) &&
+                            (showArchived == false && x.ArchivedDateTime == null || showArchived))
+                    .OrderBy(x => x.TestDateTime);
 
-                return await results;
+                return results;
             }
             catch (Exception e)
             {

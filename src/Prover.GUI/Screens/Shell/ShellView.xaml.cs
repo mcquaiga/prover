@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Reactive.Linq;
+using System.Windows;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell
@@ -6,7 +8,7 @@ namespace Prover.GUI.Screens.Shell
     /// <summary>
     ///     Interaction logic for ShellView.xaml
     /// </summary>
-    public partial class ShellView : Window, IViewFor<ShellViewModel>
+    public partial class ShellView : IViewFor<ShellViewModel>
     {
         public ShellView()
         {
@@ -14,6 +16,15 @@ namespace Prover.GUI.Screens.Shell
             
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
             Style = (Style)FindResource(typeof(Window));
+            
+            this.WhenActivated(d =>
+            {
+                d(ViewModel = (ShellViewModel) DataContext);
+
+                d(this.WhenAnyValue(x => x.ViewModel.GoHomeCommand)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
+            });
         }
 
         object IViewFor.ViewModel
@@ -23,5 +34,9 @@ namespace Prover.GUI.Screens.Shell
         }
 
         public ShellViewModel ViewModel { get; set; }
+
+        public void Dispose()
+        {
+        }
     }
 }

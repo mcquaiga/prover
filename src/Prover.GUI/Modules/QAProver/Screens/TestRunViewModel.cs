@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
@@ -84,6 +86,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest);
+
             var clientList = clientStore.Query()
                 .Where(c => c.ArchivedDateTime == null)
                 .ToList();
@@ -122,6 +126,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             _viewContext = NewQaTestViewContext;
         }
+
+        public ReactiveCommand SaveCommand { get; }
 
         #region Properties
 
@@ -212,10 +218,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public bool TachDisableCommPort => _tachDisableCommPort.Value;
 
         #endregion
-
-        public async Task Cancel()
+        
+        private async Task SaveTest()
         {
-            await ScreenManager.GoHome();
+            if (_qaRunTestManager != null)
+                await _qaRunTestManager.SaveAsync();
         }
 
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
@@ -278,7 +285,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public void Dispose()
         {
-            //_testStatusSubscription?.Dispose();
             foreach (var testView in TestViews)
             {
                 testView.Dispose();
@@ -287,20 +293,22 @@ namespace Prover.GUI.Modules.QAProver.Screens
             SiteInformationItem = null;
             _qaRunTestManager?.Dispose();
         }
+
+        public override void CanClose(Action<bool> callback)
+        {            
+            if (_qaRunTestManager != null)
+            {
+                if (!_qaRunTestManager.Instrument.HasPassed)
+                {
+                    //var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
+                    //    MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    //if (result == MessageBoxResult.No)
+                    //    callback(false);
+                    //else
+                        callback(true);
+                }
+            }            
+        }
     }
 }
 
-//public override void CanClose(Action<bool> callback)
-//{
-//    base.CanClose(callback);
-//    if (_qaRunTestManager != null)
-//    {
-//        if (!_qaRunTestManager.Instrument.HasPassed)
-//        {
-//            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
-//                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-//            if (result == MessageBoxResult.No)
-//                callback(false);
-//        }
-//    }
-//}

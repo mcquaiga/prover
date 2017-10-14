@@ -4,51 +4,67 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
-    <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Mode="PrimaryLight"
+                                  Padding="16 8">
+            <Grid HorizontalAlignment="Stretch">
+                <TextBlock Text="QA Test Run"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+                <Button HorizontalAlignment="Right"
+                        Command="{Binding SaveCommand}"
+                        Content="SAVE"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <ContentControl Margin="2"
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
-                        cal:View.Model="{Binding SiteInformationItem}"
-                        cal:View.Context="SiteInfoCardNew" />
+            <ContentControl Margin="2"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Grid.Column="0"
+                            cal:View.Model="{Binding SiteInformationItem}"
+                            cal:View.Context="SiteInfoCardNew" />
 
-        <ScrollViewer Grid.Row="0"
-                        Grid.Column="1"
-                        VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="0"
+                          Grid.Column="1"
+                          VerticalScrollBarVisibility="Auto">
 
-            <StackPanel>
-                <Border Style="{StaticResource TestSectionOuterBorder}">
-                    <ItemsControl ItemsSource="{Binding PTTestViews}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="3" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ContentControl cal:View.Model="{Binding }"
-                                                Margin="2"
-                                                cal:View.Context="CardNew" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-                
-                <ContentControl
+                <StackPanel>
+                    <Border Style="{StaticResource TestSectionOuterBorder}">
+                        <ItemsControl ItemsSource="{Binding PTTestViews}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl cal:View.Model="{Binding }"
+                                                    Margin="2"
+                                                    cal:View.Context="CardNew" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                    <ContentControl
                         Margin="2"
                         cal:View.Model="{Binding VolumeTestView}" cal:View.Context="CardNew" />
-            </StackPanel>
-        </ScrollViewer >
-        
-    </Grid>
+                </StackPanel>
+            </ScrollViewer >
+
+        </Grid>
+    </DockPanel>
+    
 </UserControl>

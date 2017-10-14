@@ -11,7 +11,7 @@
              FontWeight="Light"
              FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="100">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
            
@@ -48,7 +48,7 @@
 
             <Style TargetType="{x:Type TextBlock}" x:Key="LabelStyle">
                 <Setter Property="Margin" Value="0 0 0 2" />
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
                 <Setter Property="FontSize" Value="10" />
             </Style>
@@ -72,7 +72,7 @@
                 <Setter Property="BorderBrush" Value="LightGray" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth0" />
-
+                <Setter Property="Mode" Value="PrimaryLight"/>
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" 
@@ -92,443 +92,453 @@
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
-
+            
+            <DataTemplate x:Key="ValueLabelTemplate">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Temperature.Base, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text=" "
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text="{Binding Temperature.Units, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding LabelText}"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+            </DataTemplate>
         
         </ResourceDictionary>
     </UserControl.Resources>
-    <Viewbox Stretch="Uniform"
-             HorizontalAlignment="Left">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="110" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <Style TargetType="{x:Type StackPanel}">
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="VerticalAlignment" Value="Top" />
-                </Style>
-            </Grid.Resources>
-            <materialDesign:PackIcon x:Name="Icon"
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="110" />
+            <ColumnDefinition Width="175" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="350" />
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+            </Style>
+        </Grid.Resources>
+        <materialDesign:PackIcon x:Name="Icon"
                                      Grid.Column="0"
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Center"
                                      Style="{StaticResource PassFailIcon}"
                                      Width="32" Height="32" />
 
-            <StackPanel Grid.Column="1"
+        <StackPanel Grid.Column="1"
                         Orientation="Vertical"
                         VerticalAlignment="Center">
-                <TextBlock FontSize="12"
+            <!--<TextBlock FontSize="12"
                            HorizontalAlignment="Center"
-                           Text="{Binding DateTimePretty, FallbackValue='00-00-1900'}" />
-                <TextBlock FontSize="20"
+                           Text="{Binding DateTimePretty, FallbackValue='00-00-1900'}" />-->
+            <TextBlock FontSize="20"
                            HorizontalAlignment="Center"
                            Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" />
-                <Border BorderThickness="0 1 0 0"
+            <Border BorderThickness="0 1 0 0"
                         BorderBrush="Gray"
                         Margin="2 3">
-                    <TextBlock Text="{Binding Instrument.CompositionType, FallbackValue=PTZ}"
+                <TextBlock Text="{Binding Instrument.CompositionType, FallbackValue=PTZ}"
                                HorizontalAlignment="Center" />
-                    <!--<TextBlock Text=" | " />
+                <!--<TextBlock Text=" | " />
                         <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator, FallbackValue=Rotary}" />-->
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type StackPanel}" BasedOn="{StaticResource {x:Type StackPanel}}">
-                        <Setter Property="Margin" Value="2 2" />
-                    </Style>
-                    <Style TargetType="TextBlock"
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type StackPanel}" BasedOn="{StaticResource {x:Type StackPanel}}">
+                    <Setter Property="Margin" Value="2 2" />
+                </Style>
+                <Style TargetType="TextBlock"
                            x:Key="ValueStyle2"
                            BasedOn="{StaticResource ValueStyle}">
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                    </Style>
-                    <Style TargetType="TextBlock"
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                </Style>
+                <Style TargetType="TextBlock"
                            x:Key="LabelStyle2"
                            BasedOn="{StaticResource LabelStyle}">
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                    </Style>
-                </StackPanel.Resources>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue=1234567890}"
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                </Style>
+            </StackPanel.Resources>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue=1234567890}"
                                Style="{StaticResource ValueStyle2}" />
-                    <TextBlock Text="Company Number"
+                <TextBlock Text="Company Number"
                                Style="{StaticResource LabelStyle2}" />
-                </StackPanel>
-
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue=0987654321}"
-                               Style="{StaticResource ValueStyle2}" />
-                    <TextBlock Text="Serial Number"
-
-                               Style="{StaticResource LabelStyle2}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='0.00'}"
-
-                               Style="{StaticResource ValueStyle2}" />
-                    <TextBlock Text="Firmware Version"
-
-                               Style="{StaticResource LabelStyle2}" />
-                </StackPanel>
-
             </StackPanel>
 
-            <Grid Grid.Column="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="0.2*" />
-                    <ColumnDefinition Width="0.5*" />
-                </Grid.ColumnDefinitions>
-                <UniformGrid x:Name="PtzInfo"
-                             Columns="3"
-                             Margin="4 0"
-                             VerticalAlignment="Stretch"
-                             Grid.Column="0">
-                    <!-- Pressure Info-->
-                    <StackPanel HorizontalAlignment="Stretch"
-                                Margin="0"
-                                Visibility="{Binding ShowPressure, Converter={StaticResource BoolToVisible}}">
-                        <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
-                            <TextBlock Text="p"
-                                       Style="{StaticResource HeaderOneStyle}"
-                                       HorizontalAlignment="Center" />
-                        </materialDesign:ColorZone>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue=0987654321}"
+                               Style="{StaticResource ValueStyle2}" />
+                <TextBlock Text="Serial Number"
 
-                        <StackPanel Orientation="Vertical"
-                                    HorizontalAlignment="Right">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Pressure.Base, FallbackValue=[N]}"
-                                           Style="{StaticResource ValueStyle}" />
-                                <TextBlock Text=" "
-                                           Style="{StaticResource ValueStyle}" />
-                                <TextBlock Text="{Binding Pressure.Units, FallbackValue=[N]}"
-                                           Style="{StaticResource ValueStyle}" />
-                            </StackPanel>
-                            <TextBlock Text="base"
+                               Style="{StaticResource LabelStyle2}" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='0.00'}"
+
+                               Style="{StaticResource ValueStyle2}" />
+                <TextBlock Text="Firmware Version"
+
+                               Style="{StaticResource LabelStyle2}" />
+            </StackPanel>
+
+        </StackPanel>
+
+        <UniformGrid x:Name="PtzInfo"
+                     Columns="3"
+                     Margin="4 0 0 0"
+                     VerticalAlignment="Stretch"
+                     Grid.Column="3">
+            <!-- Pressure Info-->
+            <StackPanel HorizontalAlignment="Stretch"
+                        Margin="4 0"
+                        Visibility="{Binding ShowPressure, Converter={StaticResource BoolToVisible}}">
+                <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
+                    <TextBlock Text="p"
+                               Style="{StaticResource HeaderOneStyle}"
+                               HorizontalAlignment="Left" />
+                </materialDesign:ColorZone>
+
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Pressure.Base, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text=" "
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text="{Binding Pressure.Units, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                    </StackPanel>
+                    <TextBlock Text="base"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Pressure.Range, FallbackValue=[N]}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="range"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Temperature Info-->
+            <StackPanel HorizontalAlignment="Stretch"
+                        Margin="4 0"
+                        Visibility="{Binding ShowTemperature, Converter={StaticResource BoolToVisible}}">
+                <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
+                    <TextBlock Text="t"
+                               Style="{StaticResource HeaderOneStyle}"
+                               HorizontalAlignment="Left" />
+                </materialDesign:ColorZone>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Temperature.Base, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text=" "
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text="{Binding Temperature.Units, FallbackValue=[N]}"
+                                   Style="{StaticResource ValueStyle}" />
+                    </StackPanel>
+                    <TextBlock Text="base"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" 
+                            HorizontalAlignment="Right">
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Right">
+                        <TextBlock Text="-40 "
+                                   Style="{StaticResource ValueStyle}"
+                                   FontSize="10"/>
+                        <TextBlock Text="to 170 F"
+                                   Style="{StaticResource ValueStyle}"
+                                   FontSize="10"/>
+                    </StackPanel>
+                    <TextBlock Text="range"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- SuperFactor Info-->            
+            <StackPanel HorizontalAlignment="Stretch"
+                        Margin="4 0"
+                        Visibility="{Binding ShowSuperFactor, Converter={StaticResource BoolToVisible}}">
+                <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
+                    <TextBlock Text="z"
+                               Style="{StaticResource HeaderOneStyle}"
+                               HorizontalAlignment="LEft" />
+                </materialDesign:ColorZone>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="spec. gr."
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="n2"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="co2"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </UniformGrid>
+        
+        <Grid Grid.Column="4"
+              Margin="4 0 0 0"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <materialDesign:ColorZone Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Grid.Row="0"
+                                      Style="{StaticResource HeaderColorZone}">
+                <TextBlock Text="volume"
+                           Style="{StaticResource HeaderOneStyle}" />
+            </materialDesign:ColorZone>
+
+            <Grid x:Name="DriveTypeGrids"
+                  Grid.Row="1"
+                  Grid.Column="0"
+                  Margin="0">
+                <StackPanel x:Name="RotaryMeterGrid"
+                            Visibility="{Binding IsRotaryDrive, Converter={StaticResource BoolToVisible}, FallbackValue=Collapsed}">
+                       
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding RotaryMeterInfo.Meter.MeterType, FallbackValue=[NULL]}"
+                                Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="meter type"
                                        Style="{StaticResource LabelStyle}" />
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Pressure.TransducerType, FallbackValue=[N]}"
-                                       Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="transducer"
-                                       Style="{StaticResource LabelStyle}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Pressure.Range, FallbackValue=[N]}"
-                                       Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="range"
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding RotaryMeterInfo.Meter.MeterDisplacement, FallbackValue=[NULL]}"
+                                Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="displacement"
                                        Style="{StaticResource LabelStyle}" />
                         </StackPanel>
                     </StackPanel>
+                </StackPanel>
 
-
-                    <!-- Temperature Info-->
- 
-                    <StackPanel HorizontalAlignment="Stretch"
-                                Margin="0"
-                                Visibility="{Binding ShowTemperature, Converter={StaticResource BoolToVisible}}">
-                        <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
-                            <TextBlock Text="t"
-                                       Style="{StaticResource HeaderOneStyle}"
-                                       HorizontalAlignment="Center" />
-                        </materialDesign:ColorZone>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Temperature.Base, FallbackValue=[N]}"
-                                           Style="{StaticResource ValueStyle}" />
-                                <TextBlock Text=" "
-                                           Style="{StaticResource ValueStyle}" />
-                                <TextBlock Text="{Binding Temperature.Units, FallbackValue=[N]}"
-                                           Style="{StaticResource ValueStyle}" />
-                            </StackPanel>
-                            <TextBlock Text="base"
-                                       Style="{StaticResource LabelStyle}" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <!-- SuperFactor Info-->
-                    <!--Visibility="{Binding ShowSuperFactor, Converter={StaticResource BoolToVisible}}"-->
-                    <StackPanel HorizontalAlignment="Stretch"
-                                Margin="-1 0 0 0"
-                                Visibility="{Binding ShowSuperFactor, Converter={StaticResource BoolToVisible}}">
-                        <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
-                            <TextBlock Text="z"
-                                       Style="{StaticResource HeaderOneStyle}"
-                                       HorizontalAlignment="Center" />
-                        </materialDesign:ColorZone>
-                        <StackPanel Orientation="Vertical"
-                                    HorizontalAlignment="Right">
-                            <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
-                                       Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="spec. gr."
-                                       Style="{StaticResource LabelStyle}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical"
-                                    HorizontalAlignment="Right">
-                            <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
-                                       Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="n2"
-                                       Style="{StaticResource LabelStyle}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical"
-                                    HorizontalAlignment="Right">
-                            <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
-                                       Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="co2"
-                                       Style="{StaticResource LabelStyle}" />
-                        </StackPanel>
-                    </StackPanel>
-                </UniformGrid>
-
-                <materialDesign:Card x:Name="PtzTestResults"
-                                     Grid.Column="1"
-                                     Margin="4 0"
-                                     Background="Transparent"
-                                     materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                    <Grid DataContext="{Binding}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                <StackPanel x:Name="MechanicalGrid"
+                            Visibility="{Binding IsMechanicalDrive, Converter={StaticResource BoolToVisible}, FallbackValue=Visible}">
                         
-                        <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
-                            <TextBlock Text="test results"
-                                       Style="{StaticResource HeaderOneStyle}" />
-                        </materialDesign:ColorZone>
+                       
+                    <UniformGrid Grid.Row="1"
+                                 Margin="0">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Volume.DriveRateDescription, FallbackValue=[NULL]}"
+                                       Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="drive rate"
+                                       HorizontalAlignment="Right"
+                                       Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding MechanicalDriveInfo.Energy.HasPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
+                                Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="energy"
+                                       Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
 
-                        <DataGrid Grid.Row="1"
-                                  HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding VerificationTests}"
-                                  IsReadOnly="True"
-                                  IsEnabled="False"
-                                  CanUserSortColumns="False"
-                                  CanUserReorderColumns="False"
-                                  CanUserAddRows="False"
-                                  CanUserDeleteRows="False"
-                                  CanUserResizeColumns="False"
-                                  CanUserResizeRows="False"
-                                  AutoGenerateColumns="False"
-                                  materialDesign:DataGridAssist.CellPadding="4 2"
-                                  Background="Transparent"
-                                  materialDesign:DataGridAssist.ColumnHeaderPadding="0 5">
-                            <DataGrid.Resources>
-                                <controls:BindingProxy x:Key="proxy"
-                                                    Data="{Binding}" />
-                            </DataGrid.Resources>
-                            <DataGrid.CellStyle>
-                                <Style>
-                                    <Setter Property="DataGridCell.Background" Value="Transparent" />
-                                    <Setter Property="DataGridCell.Margin" Value="5 3 0 0" />
-                                    <Setter Property="DataGridCell.BorderThickness" Value="1 0 0 0" />
-                                    <Setter Property="DataGridCell.Foreground" Value="Black" />
-                                    <Setter Property="DataGridCell.FontSize" Value="12" />
-                                    <Setter Property="DataGridCell.HorizontalAlignment" Value="Right" />
-                                </Style>
-                            </DataGrid.CellStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding TestLevel}"
-                                                    IsReadOnly="True" />
-                                <DataGridTextColumn Binding="{Binding PressureTest.PercentError}"
-                                                    Header="p"
-                                                    Visibility="{Binding Data.ShowPressure, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
-                                                    IsReadOnly="True"
-                                                    HeaderStyle="{StaticResource DataGridHeaderStyle}" />
-                                <DataGridTextColumn Binding="{Binding TemperatureTest.PercentError}"
-                                                    Header="t"
-                                                    Visibility="{Binding Data.ShowTemperature, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
-                                                    IsReadOnly="True"
-                                                    HeaderStyle="{StaticResource DataGridHeaderStyle}" />
-                                <DataGridTextColumn Binding="{Binding SuperFactorTest.PercentError}"
-                                                    Header="z"
-                                                    Visibility="{Binding Data.ShowSuperFactor, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
-                                                    IsReadOnly="True"
-                                                    HeaderStyle="{StaticResource DataGridHeaderStyle}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </materialDesign:Card>
-
-                <materialDesign:Card x:Name="VolumeResults"
-                                     Grid.Column="2"
-                                     Margin="4 0"
-                                     Background="Transparent"
-                                     materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <materialDesign:ColorZone Grid.Column="0"
-                                                  Grid.ColumnSpan="2"
-                                                  Grid.Row="0"
-                                                  Style="{StaticResource HeaderColorZone}">
-                            <TextBlock Text="volume"
-                                       Style="{StaticResource HeaderOneStyle}" />
-                        </materialDesign:ColorZone>
-
-                        <Grid x:Name="DriveTypeGrids"
-                              Grid.Row="1"
-                              Grid.Column="0"
-                              Margin="1 0">
-                            <Grid x:Name="RotaryMeterGrid"
-                                  Visibility="{Binding IsRotaryDrive, Converter={StaticResource BoolToVisible}, FallbackValue=Visible}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="rotary meter"
-                                           Style="{StaticResource HeaderTwoStyle}" />
-
-                                <StackPanel Orientation="Vertical"
-                                            Grid.Row="1"
-                                            Margin="0 1">
-                                    <StackPanel>
-                                        <TextBlock
-                                            Text="{Binding RotaryMeterInfo.Meter.MeterType, FallbackValue=[NULL]}"
-                                            Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="type"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <TextBlock
-                                            Text="{Binding RotaryMeterInfo.Meter.MeterDisplacement, FallbackValue=[NULL]}"
-                                            Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="displacement"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Grid>
-
-                            <Grid x:Name="MechanicalGrid"
-                                  Visibility="{Binding IsMechanicalDrive, Converter={StaticResource BoolToVisible}, FallbackValue=Collapsed}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Text="mechanical  drive"
-                                           HorizontalAlignment="Left"
-                                           Style="{StaticResource HeaderTwoStyle}" />
-                                <UniformGrid Grid.Row="1"
-                                             Margin="0 1">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Volume.DriveRateDescription, FallbackValue=[NULL]}"
-                                                   Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="drive rate"
-                                                   HorizontalAlignment="Right"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                    <StackPanel>
-                                        <TextBlock
-                                            Text="{Binding MechanicalDriveInfo.Energy.HasPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
-                                            Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="energy"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-
-                                    <StackPanel>
-                                        <TextBlock
-                                            Text="{Binding Instrument.EventLogPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
-                                            Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="event log"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                    <StackPanel Margin="5 0 0 0">
-                                        <TextBlock
-                                            Text="{Binding Instrument.CommPortsPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
-                                            Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="comm. port"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                </UniformGrid>
-
-                            </Grid>
-                        </Grid>
-
-                        <Grid x:Name="VolumeTestGrid"
-                              Grid.Row="1"
-                              Margin="4 1"
-                              HorizontalAlignment="Stretch"
-                              Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Orientation="Vertical"
-                                        Grid.Column="0"
-                                        Margin="4 0">
-                                <TextBlock Text="uncorrected"
-                                           Style="{StaticResource HeaderTwoStyle}" />
-                                <StackPanel Orientation="Vertical"
-                                            HorizontalAlignment="Right"
-                                            Margin="0 1">
-                                    <StackPanel Orientation="Vertical"
-                                                Margin="8 0 0 0">
-                                        <StackPanel Orientation="Horizontal"
-                                                    HorizontalAlignment="Right">
-                                            <TextBlock
-                                                Text="{Binding VolumeTest.UnCorrectedPercentError, FallbackValue=[!]}"
-                                                Style="{StaticResource ValueStyle}" />
-                                            <TextBlock>%</TextBlock>
-                                        </StackPanel>
-                                        <TextBlock Text="error"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding UncorrectedUnits, FallbackValue='[NULL]'}"
-                                                   Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="units"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Vertical"
-                                        Grid.Column="1"
-                                        Margin="4 0">
-                                <TextBlock Text="corrected"
-                                           Style="{StaticResource HeaderTwoStyle}" />
-                                <StackPanel Orientation="Vertical"
-                                            HorizontalAlignment="Right"
-                                            Margin="0 1">
-                                    <StackPanel Orientation="Vertical"
-                                                Margin="8 0 0 0">
-                                        <StackPanel Orientation="Horizontal"
-                                                    HorizontalAlignment="Right">
-                                            <TextBlock
-                                                Text="{Binding VolumeTest.CorrectedPercentError, FallbackValue=[!]}"
-                                                Style="{StaticResource ValueStyle}" />
-                                            <TextBlock>%</TextBlock>
-                                        </StackPanel>
-                                        <TextBlock Text="error"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding CorrectedUnits, FallbackValue='[NULL]'}"
-                                                   Style="{StaticResource ValueStyle}" />
-                                        <TextBlock Text="units"
-                                                   Style="{StaticResource LabelStyle}" />
-                                    </StackPanel>
-                                </StackPanel>
-
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-                </materialDesign:Card>
-
-
+                        <StackPanel>
+                            <TextBlock
+                                Text="{Binding Instrument.EventLogPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
+                                Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="event log"
+                                       Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="5 0 0 0">
+                            <TextBlock
+                                Text="{Binding Instrument.CommPortsPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
+                                Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="comm. port"
+                                       Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
             </Grid>
 
-        </Grid>
-    </Viewbox>
+            <StackPanel Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="4 0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding UncorrectedUnits, FallbackValue='[NULL]'}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="uncor. units"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
 
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding CorrectedUnits, FallbackValue='[NULL]'}"
+                               Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="cor. units"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid DataContext="{Binding}"
+              Margin="4 0 0 0"
+              Grid.Column="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="175"/>
+                <ColumnDefinition Width="175"/>
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}"
+                                      Grid.ColumnSpan="2">
+                <TextBlock Text="test results"
+                           Style="{StaticResource HeaderOneStyle}" />
+            </materialDesign:ColorZone>
+
+            <DataGrid Grid.Row="1"
+                      Grid.Column="0"
+                      HorizontalAlignment="Stretch"
+                      ItemsSource="{Binding VerificationTests}"
+                      IsReadOnly="True"
+                      IsEnabled="False"
+                      CanUserSortColumns="False"
+                      CanUserReorderColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeColumns="False"
+                      CanUserResizeRows="False"
+                      AutoGenerateColumns="False"
+                      materialDesign:DataGridAssist.CellPadding="4 1 0 0"
+                      Background="Transparent"
+                      materialDesign:DataGridAssist.ColumnHeaderPadding="0 1">
+                <DataGrid.Resources>
+                    <controls:BindingProxy x:Key="proxy"
+                                           Data="{Binding}" />
+                </DataGrid.Resources>
+                <DataGrid.CellStyle>
+                    <Style>
+                        <Setter Property="DataGridCell.Background" Value="Transparent" />
+                        <Setter Property="DataGridCell.Margin" Value="5 3 0 0" />
+                        <Setter Property="DataGridCell.BorderThickness" Value="1 0 0 0" />
+                        <Setter Property="DataGridCell.Foreground" Value="Black" />
+                        <Setter Property="DataGridCell.FontSize" Value="12" />
+                        <Setter Property="DataGridCell.HorizontalAlignment" Value="Right" />
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Description}"
+                                        IsReadOnly="True" >
+                        <DataGridTextColumn.CellStyle>
+                            <Style>
+                                <Setter Property="DataGridCell.HorizontalAlignment" Value="Left" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Test.PressureTest.PercentError}"
+                                        Header="p"
+                                        Visibility="{Binding Data.ShowPressure, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        IsReadOnly="True"
+                                        HeaderStyle="{StaticResource DataGridHeaderStyle}" />
+                    <DataGridTextColumn Binding="{Binding Test.TemperatureTest.PercentError}"
+                                        Header="t"
+                                        Visibility="{Binding Data.ShowTemperature, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        IsReadOnly="True"
+                                        HeaderStyle="{StaticResource DataGridHeaderStyle}" />
+                    <DataGridTextColumn Binding="{Binding Test.SuperFactorTest.PercentError}"
+                                        Header="z"
+                                        Visibility="{Binding Data.ShowSuperFactor, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        IsReadOnly="True"
+                                        HeaderStyle="{StaticResource DataGridHeaderStyle}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid x:Name="VolumeTestGrid"
+                  Grid.Row="1"
+                  VerticalAlignment="Center"
+                  Margin="1"
+                  Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="55" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical"
+                            Margin="2 0">
+                    <TextBlock Text="uncorrected"
+                               Style="{StaticResource HeaderOneStyle}"
+                               FontSize="10"/>
+                    <TextBlock
+                        Text="{Binding VolumeTest.UnCorrectedPercentError, FallbackValue=[!]}"
+                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="error"
+                               Style="{StaticResource LabelStyle}"/>
+
+                    <TextBlock
+                        Text="{Binding VolumeTest.UnCorPulsesPassed, FallbackValue=[!]}"
+                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="pulses"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Margin="2 0"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="corrected"
+                               Style="{StaticResource HeaderOneStyle}"
+                               FontSize="10"/>
+                    <TextBlock
+                        Text="{Binding VolumeTest.CorrectedPercentError, FallbackValue=[!]}"
+                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="error"
+                               Style="{StaticResource LabelStyle}" />
+
+                    <TextBlock
+                        Text="{Binding VolumeTest.CorPulsesPassed, FallbackValue=[!]}"
+                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="pulses"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"
+                            Grid.Column="2"
+                            Margin="2 0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+
+                    <TextBlock
+                        Text="{Binding VolumeTest.HasPassed, FallbackValue=[!]}"
+                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="status"
+                               Style="{StaticResource LabelStyle}" />
+                    
+                </StackPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
 </UserControl>

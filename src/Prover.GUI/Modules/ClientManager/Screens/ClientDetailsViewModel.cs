@@ -206,7 +206,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         #region Public Functions
         public async Task Edit()
         {
-            await ScreenManager.ChangeScreen(this);
+            ScreenManager.ChangeScreen(this);
             SelectedInstrumentType = InstrumentTypes.First();
             //SelectedItemFileType = ClientItemType.Reset;
         }
@@ -261,7 +261,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         private async Task GoBack()
         {
             await Save();
-            await ScreenManager.ChangeScreen<ClientManagerViewModel>();
+            ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
         private async Task Save()

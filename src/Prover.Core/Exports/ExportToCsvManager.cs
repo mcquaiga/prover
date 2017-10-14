@@ -39,11 +39,8 @@ namespace Prover.Core.Exports
 
         public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber)
         {
-            var certificates =
-                await _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber);                
-
             var csvFiles = new List<string>();
-            foreach (var cert in certificates)
+            foreach (var cert in _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber))
             {
                 csvFiles.Add(await Export(cert));
             }

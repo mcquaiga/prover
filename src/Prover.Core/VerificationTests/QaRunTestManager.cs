@@ -103,7 +103,6 @@ namespace Prover.Core.VerificationTests
                 }
 
                 await RunVerifiers();
-                await SaveAsync();
             }
             catch (Exception ex)
             {
@@ -143,8 +142,6 @@ namespace Prover.Core.VerificationTests
                 }
 
                 await DownloadVerificationTestItems(level, ct);
-
-                await SaveAsync();
             }
             catch (OperationCanceledException)
             {
@@ -166,8 +163,6 @@ namespace Prover.Core.VerificationTests
                     {
                         await command.Execute(_communicationClient, Instrument, _testStatus);
                     }
-
-                    await SaveAsync();
                 }
             }
             catch (OperationCanceledException) 

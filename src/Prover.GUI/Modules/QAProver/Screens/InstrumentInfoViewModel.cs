@@ -50,7 +50,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
-        public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+        public string TestDatePretty => $"{Instrument.TestDateTime:g}";
 
         public string JobIdDisplay
             => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
@@ -63,7 +63,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set
             {
                 Instrument.EventLogPassed = value;
-                Task.Run(() => QaTestManager?.SaveAsync());
                 NotifyOfPropertyChange(() => Instrument);
             }
         }
@@ -74,7 +73,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set
             {
                 Instrument.CommPortsPassed = value;
-                Task.Run(() => QaTestManager?.SaveAsync());
                 NotifyOfPropertyChange(() => Instrument);
             }
         }

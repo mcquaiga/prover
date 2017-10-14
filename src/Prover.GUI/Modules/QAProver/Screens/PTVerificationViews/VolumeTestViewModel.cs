@@ -70,8 +70,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                         Volume.CorPulseCount = corPulses;
                         RaisePropertyChangeEvents();
                         return true;
-                    })
-                    .Subscribe(async b => await TestManager.SaveAsync());                       
+                    });
+                    //.Subscribe(async b => await TestManager.SaveAsync());                       
             }
         }     
 
@@ -85,7 +85,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
             await TestManager.VolumeTestManager.PreTest(ct);
-            await TestManager.SaveAsync();
             ManualVolumeTestStep = TestStep.PostTest;
         }
 
@@ -95,7 +94,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.VolumeTestManager.PostTest(ct);
-                await TestManager.SaveAsync();
                 ManualVolumeTestStep = TestStep.PreTest;
             }
             catch (Exception ex)
