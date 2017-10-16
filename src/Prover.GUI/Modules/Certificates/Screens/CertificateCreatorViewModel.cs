@@ -84,7 +84,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             ResultFilteredItems = RootResults.CreateDerivedCollection(
                 x => x, 
                 x => x.IsDisplayed, 
-                (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));            
+                (x, y) => x.Instrument.SerialNumber.CompareTo(y.Instrument.SerialNumber));            
             ResultFilteredItems.ChangeTrackingEnabled = true;
             ResultFilteredItems.ItemChanged
                     .Where(x => x.PropertyName == "IsArchived" && x.Sender.IsArchived)
