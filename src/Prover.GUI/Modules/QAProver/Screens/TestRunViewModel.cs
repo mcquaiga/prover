@@ -314,13 +314,31 @@ namespace Prover.GUI.Modules.QAProver.Screens
         {            
             if (_qaRunTestManager != null)
             {
+                MessageBoxResult result;
+                if (!_qaRunTestManager.Instrument.HasPassed)
+                {
+                    result = MessageBox.Show($"Instrument hasn't passed all tests. {Environment.NewLine}" +
+                                             $"Continue anyways?", "Failed Tests",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                    if (result == MessageBoxResult.No)
+                    {
+                        callback(false);
+                        return;
+                    }
+                }
+
                 if (IsDirty)
                 {
-                    var result = MessageBox.Show($"You have unsaved changes. {Environment.NewLine}" +
-                                                 $"Would you like to save before exiting?", "Save Changes",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                         SaveTest().Wait();
+
+                    if (result == MessageBoxResult.Cancel)
+                    {
+                        callback(false);
+                        return;
+                    }
                 }
             }
 

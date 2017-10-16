@@ -48,6 +48,9 @@ namespace Prover.GUI.Screens.Shell
             {
                 var lastItem = ActiveItem;
                 DeactivateItem(ActiveItem, true);
+                if (ActiveItem != null)
+                    return;
+
                 (lastItem as IDisposable)?.Dispose();
             }
 
