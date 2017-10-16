@@ -64,7 +64,7 @@ namespace Prover.GUI
                 .SingleInstance();
 
             Builder.RegisterType<ShellViewModel>()
-                .As<ReactiveConductor<ReactiveObject>.Collection.OneActive>()
+                .As<IConductor>()
                 //.OnActivated(args =>
                 //{
                 //    args.Instance.HomeViewModel = args.Context.Resolve<HomeViewModel>();

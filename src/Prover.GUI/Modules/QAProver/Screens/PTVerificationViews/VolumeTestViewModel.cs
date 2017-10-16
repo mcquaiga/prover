@@ -62,16 +62,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                         "Running Volume Test...", RunTest, canRunTestCommand);
                 }
 
-                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount,
-                    (appliedInput, uncPulses, corPulses) =>
+                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount)
+                    .Subscribe(values =>
                     {
-                        Volume.AppliedInput = appliedInput;
-                        Volume.UncPulseCount = uncPulses;
-                        Volume.CorPulseCount = corPulses;
-                        RaisePropertyChangeEvents();
-                        return true;
+                        Volume.AppliedInput = values.Item1;
+                        Volume.UncPulseCount = values.Item2;
+                        Volume.CorPulseCount = values.Item3;
+                        EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     });
-                    //.Subscribe(async b => await TestManager.SaveAsync());                       
             }
         }     
 
@@ -86,6 +84,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
             await TestManager.VolumeTestManager.PreTest(ct);
             ManualVolumeTestStep = TestStep.PostTest;
+            EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
         }
 
         private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct)
@@ -118,6 +117,10 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 Log.Error(ex,
                     $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 

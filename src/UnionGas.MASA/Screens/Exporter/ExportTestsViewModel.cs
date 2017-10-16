@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
@@ -14,7 +12,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 
-namespace Prover.GUI.Modules.Exporter.Screens.Exporter
+namespace UnionGas.MASA.Screens.Exporter
 {
     public class ExportTestsViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
     {

@@ -6,16 +6,26 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control" 
+                    Key="S" 
+                    Command="{Binding SaveCommand}"/>
+    </UserControl.InputBindings>
     <DockPanel>
         <materialDesign:ColorZone DockPanel.Dock="Top"
                                   Mode="PrimaryLight"
                                   Padding="16 8">
             <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <TextBlock Text="QA Test Run"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
-                <Button HorizontalAlignment="Right"
+                <Button HorizontalAlignment="Left"
                         Command="{Binding SaveCommand}"
                         Content="SAVE"
+                        Grid.Column="1"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
             </Grid>
         </materialDesign:ColorZone>

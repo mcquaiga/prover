@@ -1,8 +1,8 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Reactive.Linq;
+using ReactiveUI;
 
-namespace Prover.GUI.Modules.Exporter.Screens.Exporter
+namespace UnionGas.MASA.Screens.Exporter
 {
     /// <summary>
     ///     Interaction logic for CreateCertificateView.xaml

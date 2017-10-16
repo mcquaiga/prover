@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,6 +18,7 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
@@ -25,7 +27,7 @@ using Splat;
 
 namespace Prover.GUI.Modules.QAProver.Screens
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable
+    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<VerificationTestEvent>
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestViewNew";
@@ -36,8 +38,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private string _selectedTachCommPort;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IClientStore clientStore)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientStore clientStore)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -86,7 +87,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
-            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest);
+            var isSaving = new Subject<bool>();
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, isSaving);
+            SaveCommand.IsExecuting
+                .Select(x => !x)
+                .Subscribe(b => isSaving.OnNext(b));
 
             var clientList = clientStore.Query()
                 .Where(c => c.ArchivedDateTime == null)
@@ -130,6 +135,13 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public ReactiveCommand SaveCommand { get; }
 
         #region Properties
+
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set => this.RaiseAndSetIfChanged(ref _isDirty, value);
+        }
 
         public ReactiveCommand StartTestCommand { get; }
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
@@ -222,7 +234,10 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private async Task SaveTest()
         {
             if (_qaRunTestManager != null)
+            {
                 await _qaRunTestManager.SaveAsync();
+                IsDirty = false;
+            }
         }
 
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
@@ -241,6 +256,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
                 await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
+                IsDirty = true;
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -298,16 +314,22 @@ namespace Prover.GUI.Modules.QAProver.Screens
         {            
             if (_qaRunTestManager != null)
             {
-                if (!_qaRunTestManager.Instrument.HasPassed)
+                if (IsDirty)
                 {
-                    //var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
-                    //    MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    //if (result == MessageBoxResult.No)
-                    //    callback(false);
-                    //else
+                    var result = MessageBox.Show($"You have unsaved changes. {Environment.NewLine}" +
+                                                 $"Would you like to save before exiting?", "Save Changes",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                        SaveTest().ContinueWith(task => callback(true));
+                    else
                         callback(true);
                 }
             }            
+        }
+
+        public void Handle(VerificationTestEvent message)
+        {
+            IsDirty = true;
         }
     }
 }

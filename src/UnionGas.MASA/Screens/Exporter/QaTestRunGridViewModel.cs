@@ -9,7 +9,7 @@ using Prover.GUI.Common.Screens;
 using Prover.GUI.Reports;
 using ReactiveUI;
 
-namespace Prover.GUI.Modules.Exporter.Screens.Exporter
+namespace UnionGas.MASA.Screens.Exporter
 {
     public class QaTestRunGridViewModel : ViewModelBase
     {

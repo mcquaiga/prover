@@ -20,7 +20,7 @@ using Prover.GUI.Common.Screens.MainMenu;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,  
+    public class ShellViewModel : ReactiveConductor<ReactiveScreen>.Collection.OneActive,  
         IHandle<DialogDisplayEvent>, IDisposable
     {
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
@@ -37,14 +37,14 @@ namespace Prover.GUI.Screens.Shell
                 => screenManager.ChangeScreen(mainMenuViewModel));
         
             OpenSettingsCommand = ReactiveCommand.Create(() 
-                => screenManager.ChangeScreen(settingsViewModel));            
+                => screenManager.ChangeScreen(settingsViewModel));
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
         public ReactiveCommand<Unit, Unit> OpenSettingsCommand { get; set; }
         public ReactiveCommand<Unit, Unit> GoHomeCommand { get; set; }
-
+        
         private static string GetVersionNumber()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

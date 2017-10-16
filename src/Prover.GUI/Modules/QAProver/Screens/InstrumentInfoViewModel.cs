@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
@@ -64,6 +65,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             {
                 Instrument.EventLogPassed = value;
                 NotifyOfPropertyChange(() => Instrument);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
@@ -74,6 +76,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             {
                 Instrument.CommPortsPassed = value;
                 NotifyOfPropertyChange(() => Instrument);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 

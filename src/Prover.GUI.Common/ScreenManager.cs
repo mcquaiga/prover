@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using MaterialDesignThemes.Wpf;
-using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Dialogs;
-using Prover.GUI.Common.Screens.MainMenu;
 using ReactiveUI;
-using Splat;
-using IScreen = ReactiveUI.IScreen;
 using ViewLocator = ReactiveUI.ViewLocator;
 
 namespace Prover.GUI.Common
@@ -43,7 +38,7 @@ namespace Prover.GUI.Common
 
     public class ScreenManager : IScreenManager
     {
-        private ReactiveObject _currentView;
+        private ReactiveScreen _currentView;
         private readonly IWindowManager _windowManager;
 
         public ScreenManager(IWindowManager windowManager)
@@ -73,7 +68,7 @@ namespace Prover.GUI.Common
             }
 
             Conductor?.ActivateItem(viewModel);
-            _currentView = viewModel;            
+            _currentView = viewModel;
         }
 
         public void ChangeScreen<T>(string key = null)

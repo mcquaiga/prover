@@ -4,10 +4,10 @@ using System.Windows.Media.Imaging;
 using Autofac;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Modules.Exporter.Screens.Exporter;
+using UnionGas.MASA.Screens.Exporter;
 using Action = System.Action;
 
-namespace Prover.GUI.Modules.Exporter
+namespace UnionGas.MASA
 {
     public class ExportManagerModule : Module, IHaveMainMenuItem
     {
