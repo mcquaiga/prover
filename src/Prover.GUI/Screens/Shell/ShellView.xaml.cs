@@ -34,9 +34,6 @@ namespace Prover.GUI.Screens.Shell
         }
 
         public ShellViewModel ViewModel { get; set; }
-
-        public void Dispose()
-        {
-        }
+       
     }
 }

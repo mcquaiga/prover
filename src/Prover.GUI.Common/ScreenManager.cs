@@ -61,14 +61,7 @@ namespace Prover.GUI.Common
         /// <returns></returns>
         public void ChangeScreen(ViewModelBase viewModel)
         {
-            if (_currentView != null)
-            {
-                Conductor?.DeactivateItem(_currentView, true);
-                (_currentView as IDisposable)?.Dispose();
-            }
-
-            Conductor?.ActivateItem(viewModel);
-            _currentView = viewModel;
+            Conductor?.ActivateItem(viewModel);           
         }
 
         public void ChangeScreen<T>(string key = null)

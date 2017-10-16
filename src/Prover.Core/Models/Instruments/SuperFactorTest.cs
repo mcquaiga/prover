@@ -22,6 +22,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTest = verificationTest;
         }
 
+        protected override decimal PassTolerance => 0.1m;
         private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
         private PressureTest PressureTest => VerificationTest.PressureTest;
 

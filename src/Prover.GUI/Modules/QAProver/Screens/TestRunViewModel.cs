@@ -320,11 +320,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
                                                  $"Would you like to save before exiting?", "Save Changes",
                         MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
-                        SaveTest().ContinueWith(task => callback(true));
-                    else
-                        callback(true);
+                        SaveTest().Wait();
                 }
-            }            
+            }
+
+            callback(true);
         }
 
         public void Handle(VerificationTestEvent message)
