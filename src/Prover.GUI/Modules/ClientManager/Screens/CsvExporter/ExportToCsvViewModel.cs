@@ -41,16 +41,21 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             ExportCommand.ThrownExceptions
                 .Subscribe(ex => MessageBox.Show(ex.Message));
 
-            GetCertificatesCommand = ReactiveCommand.CreateFromTask<Client, IEnumerable<Certificate>>(certificateService.GetAllCertificates);
+            GetCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(
+                client => certificateService.GetAllCertificates(client).ToObservable());
+            GetCertificatesCommand
+                .Subscribe(c => ClientCertificates.Add(c));
+            FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
+            ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);
 
             this.WhenAnyValue(x => x.Client)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Do(client =>
+                {
+                    ClientCertificates.Clear();
+                })
                 .Where(c => c != null)
                 .InvokeCommand(GetCertificatesCommand);
-            
-            _fromCertificates = GetCertificatesCommand
-                .ToProperty(this, x => x.FromCertificates, new List<Certificate>());
-            _toCertificates = GetCertificatesCommand
-                .ToProperty(this, x => x.ToCertificates, new List<Certificate>());
         }
 
         #region Properties
@@ -61,15 +66,27 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private IEnumerable<Certificate> _clientCertificates;
-        public IEnumerable<Certificate> ClientCertificates
+        private ReactiveList<Certificate> _clientCertificates = new ReactiveList<Certificate>() {ChangeTrackingEnabled = true};
+        public ReactiveList<Certificate> ClientCertificates
         {
             get { return _clientCertificates; }
             set { this.RaiseAndSetIfChanged(ref _clientCertificates, value); }
         }
 
-        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _fromCertificates;
-        public IEnumerable<Certificate> FromCertificates => _fromCertificates.Value;     
+        private IReactiveDerivedList<Certificate> _fromCertificates;
+        public IReactiveDerivedList<Certificate> FromCertificates
+        {
+            get => _fromCertificates;
+            set => this.RaiseAndSetIfChanged(ref _fromCertificates, value);
+        }
+
+        private IReactiveDerivedList<Certificate> _toCertificates;
+        public IReactiveDerivedList<Certificate> ToCertificates
+        {
+            get => _toCertificates;
+            set => this.RaiseAndSetIfChanged(ref _toCertificates, value);
+        }
+       
 
         private Certificate _selectedFromCertificate;
         public Certificate SelectedFromCertificate
@@ -77,9 +94,6 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             get { return _selectedFromCertificate; }
             set { this.RaiseAndSetIfChanged(ref _selectedFromCertificate, value); }
         }
-
-        private readonly ObservableAsPropertyHelper<IEnumerable<Certificate>> _toCertificates;
-        public IEnumerable<Certificate> ToCertificates => _toCertificates.Value;    
 
         private Certificate _selectedToCertificate;
         public Certificate SelectedToCertificate
@@ -92,7 +106,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         #region Commands
 
         public ReactiveCommand<Client, Unit> ExportCommand { get; }
-        public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
+        public ReactiveCommand<Client, Certificate> GetCertificatesCommand { get; set; }       
 
         #endregion       
 

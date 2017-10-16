@@ -21,10 +21,18 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 .ToProperty(this, x => x.AbsolutePressure, out _absolutePressure);
 
             this.WhenAnyValue(x => x.GaugePressure)
-                .Subscribe(x => TestRun.GasGauge = x);
+                .Subscribe(x =>
+                {
+                    TestRun.GasGauge = x;
+                    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                });
 
             this.WhenAnyValue(x => x.AtmosphericGauge)
-                .Subscribe(x => TestRun.AtmosphericGauge = x);
+                .Subscribe(x =>
+                {
+                    TestRun.AtmosphericGauge = x;
+                    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                });
 
             GaugePressure = TestRun.GasGauge;
             AtmosphericGauge = TestRun.AtmosphericGauge;                           
@@ -39,8 +47,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             get { return _gaugePressure; }
             set
             {
-                this.RaiseAndSetIfChanged(ref _gaugePressure, value);
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                this.RaiseAndSetIfChanged(ref _gaugePressure, value);                
             }
         }
 
@@ -54,19 +61,17 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             set
             {
                 this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
 
-        public decimal? EvcGasPressure => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
+        public decimal? EvcGasPressure 
+            => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
 
         public decimal? EvcFactor
             => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
 
         public decimal? EvcAtmPressure
-            =>
-                TestRun.VerificationTest.Instrument.Items.GetItem(
-                    ItemCodes.Pressure.Atm).NumericValue;
+            => TestRun.VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
 
         protected override void RaisePropertyChangeEvents()
         {

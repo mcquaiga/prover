@@ -23,7 +23,7 @@ namespace Prover.GUI.Modules.ClientManager
 
         public string MenuTitle => "Clients";
 
-        public Action OpenAction => async () => await ScreenManager.ChangeScreen<ClientManagerViewModel>();
+        public Action OpenAction => () => ScreenManager.ChangeScreen<ClientManagerViewModel>();
         public int Order => 2;
 
         protected override void Load(ContainerBuilder builder)

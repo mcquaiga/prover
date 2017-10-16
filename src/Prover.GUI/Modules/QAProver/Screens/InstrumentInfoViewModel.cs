@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
@@ -50,7 +51,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
-        public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+        public string TestDatePretty => $"{Instrument.TestDateTime:g}";
 
         public string JobIdDisplay
             => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
@@ -63,8 +64,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set
             {
                 Instrument.EventLogPassed = value;
-                Task.Run(() => QaTestManager?.SaveAsync());
                 NotifyOfPropertyChange(() => Instrument);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 
@@ -74,8 +75,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set
             {
                 Instrument.CommPortsPassed = value;
-                Task.Run(() => QaTestManager?.SaveAsync());
                 NotifyOfPropertyChange(() => Instrument);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 

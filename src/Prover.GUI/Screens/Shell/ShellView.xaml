@@ -20,13 +20,12 @@
                                   Mode="PrimaryDark" DockPanel.Dock="Top">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                    <Button x:Name="HomeButton"
-                            Width="48" 
+                    <Button Command="{Binding GoHomeCommand}"
+                            Width="48"
                             Height="48">
-                        <materialDesign:PackIcon Kind="Home"
-                                                 />
+                        <materialDesign:PackIcon Kind="Home"/>
                     </Button>
-                    <Button x:Name="SettingsButton"
+                    <Button Command="{Binding OpenSettingsCommand}"
                             Width="48" 
                             Height="48">
                         <materialDesign:PackIcon Kind="Settings"

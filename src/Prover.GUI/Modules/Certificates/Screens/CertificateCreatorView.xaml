@@ -79,13 +79,13 @@
                         Grid.Column="0"                   
                         Orientation="Horizontal">
                 <Button Content="All"
-                        Command="{Binding UpdateFilter}"
+                        Command="{Binding UpdateFilterCommand}"
                         CommandParameter="All"/>
                 <Button Content="Passed"
-                        Command="{Binding UpdateFilter}"
+                        Command="{Binding UpdateFilterCommand}"
                         CommandParameter="Passed"/>
                 <Button Content="Failed"
-                        Command="{Binding UpdateFilter}"
+                        Command="{Binding UpdateFilterCommand}"
                         CommandParameter="Failed" />
             </StackPanel>
 
@@ -163,12 +163,21 @@
                                              Grid.Row="1"
                                              Kind="Account"
                                              Foreground="{Binding ElementName=TestedBy, Path=BorderBrush}" />
-                    <TextBox x:Name="TestedBy"
+                    <ComboBox ItemsSource="{Binding TestedBy}"
+                              Text="{Binding SelectedTestedBy, Mode=TwoWay}"
+                              IsTextSearchEnabled="True"
+                             Grid.Row="1"
+                             Grid.Column="1"
+                             IsEditable="True"
+                             HorizontalAlignment="Stretch"
+                             materialDesign:HintAssist.Hint="Tested By"
+                             Margin="2" />
+                    <!--<TextBox x:Name="TestedBy"
                              Grid.Row="1"
                              Grid.Column="1"
                              HorizontalAlignment="Stretch"
                              materialDesign:HintAssist.Hint="Tested By"
-                             Margin="2" />
+                             Margin="2" />-->
 
                     <materialDesign:PackIcon Grid.Row="2"
                                              Grid.Column="0"

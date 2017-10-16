@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
@@ -8,7 +9,6 @@ using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Reports;
 using ReactiveUI;
-
 
 namespace Prover.GUI.Modules.Certificates.Screens
 {
@@ -31,6 +31,15 @@ namespace Prover.GUI.Modules.Certificates.Screens
             AddTestToCertificate = ReactiveCommand.Create(() => IsSelected = true);
         }
 
+        #region Properties
+
+        private bool _isDisplayed = true;
+        public bool IsDisplayed
+        {
+            get => _isDisplayed;
+            set => this.RaiseAndSetIfChanged(ref _isDisplayed, value);
+        }
+
         private ReactiveCommand _addTestToCertificate;
         public ReactiveCommand AddTestToCertificate
         {
@@ -39,6 +48,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private VerificationViewModel _verificationViewModel;
+
         public VerificationViewModel VerificationView
         {
             get { return _verificationViewModel; }
@@ -50,6 +60,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private Instrument _instrument;
+
         public Instrument Instrument
         {
             get { return _instrument; }
@@ -62,7 +73,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             get { return _isSelected; }
             set { this.RaiseAndSetIfChanged(ref _isSelected, value); }
-        }              
+        }
 
         private ReactiveCommand _viewQaTestReportCommand;
 
@@ -72,29 +83,41 @@ namespace Prover.GUI.Modules.Certificates.Screens
             set { this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value); }
         }
 
-        public async Task DisplayInstrumentReport()
-        {
-            await _instrumentReportGenerator.GenerateAndViewReport(VerificationView.Instrument);
-        }
-
         private ReactiveCommand _archiveTestCommand;
+
         public ReactiveCommand ArchiveTestCommand
         {
             get { return _archiveTestCommand; }
             set { this.RaiseAndSetIfChanged(ref _archiveTestCommand, value); }
         }
 
-        public async Task ArchiveTest()
-        {
-            await _instrumentStore.Delete(VerificationView.Instrument);
-            IsArchived = true;
-        }
-
         private bool _isArchived;
+
         public bool IsArchived
         {
             get => _isArchived;
             set => this.RaiseAndSetIfChanged(ref _isArchived, value);
+        }
+
+        #endregion
+
+        public void SetFilter(IObservable<Predicate<Instrument>> filterObservable)
+        {
+            filterObservable.Subscribe(p =>
+            {
+                IsDisplayed = p(Instrument);
+            });
+        }
+
+        public async Task DisplayInstrumentReport()
+        {
+            await _instrumentReportGenerator.GenerateAndViewReport(VerificationView.Instrument);
+        }
+
+        public async Task ArchiveTest()
+        {
+            await _instrumentStore.Delete(VerificationView.Instrument);
+            IsArchived = true;
         }
     }
 }

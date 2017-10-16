@@ -4,10 +4,10 @@ using System.Windows.Media.Imaging;
 using Autofac;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Modules.Exporter.Screens.Exporter;
+using UnionGas.MASA.Screens.Exporter;
 using Action = System.Action;
 
-namespace Prover.GUI.Modules.Exporter
+namespace UnionGas.MASA
 {
     public class ExportManagerModule : Module, IHaveMainMenuItem
     {
@@ -24,7 +24,7 @@ namespace Prover.GUI.Modules.Exporter
 
         public string MenuTitle => "Export Test Runs";
 
-        public Action OpenAction => async () => await ScreenManager.ChangeScreen<ExportTestsViewModel>();
+        public Action OpenAction => () => ScreenManager.ChangeScreen<ExportTestsViewModel>();
         public int Order => 3;
     }
 }

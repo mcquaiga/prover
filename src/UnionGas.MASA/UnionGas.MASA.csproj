@@ -116,6 +116,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportManagerModule.cs" />
+    <Compile Include="Screens\Exporter\ExportTestsView.xaml.cs">
+      <DependentUpon>ExportTestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Exporter\ExportTestsViewModel.cs" />
+    <Compile Include="Screens\Exporter\QaTestRunGridView.xaml.cs">
+      <DependentUpon>QaTestRunGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Exporter\QaTestRunGridViewModel.cs" />
     <Compile Include="Screens\Toolbars\LoginToolbarViewModel.cs" />
     <Compile Include="Screens\Toolbars\LoginToolbar\LoggedIn.xaml.cs">
       <DependentUpon>LoggedIn.xaml</DependentUpon>
@@ -165,6 +174,10 @@
     <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
       <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
       <Name>Prover.GUI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prover.GUI\Prover.GUI.csproj">
+      <Project>{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}</Project>
+      <Name>Prover.GUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +271,14 @@
     <Page Include="Dialogs\LoginDialog\LoginDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Exporter\ExportTestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Exporter\QaTestRunGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\Toolbars\LoginToolbar\LoggedIn.xaml">
       <SubType>Designer</SubType>

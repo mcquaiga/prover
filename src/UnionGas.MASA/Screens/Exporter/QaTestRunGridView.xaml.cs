@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Modules.Exporter.Screens.Exporter
+namespace UnionGas.MASA.Screens.Exporter
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml

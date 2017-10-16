@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
 using Prover.GUI.Common.Screens.Toolbar;
@@ -9,63 +8,60 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.Dialogs;
+using Prover.GUI.Common.Screens.MainMenu;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, 
-        IShell, 
-        IHandle<ScreenChangeEvent>,
-        IHandle<DialogDisplayEvent>
+    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,  
+        IHandle<DialogDisplayEvent>, IDisposable
     {
-        public IEnumerable<IToolbarItem> ToolbarItems { get; set; }
-        readonly ScreenManager _screenManager;
-        ReactiveObject _currentView;
+        public IEnumerable<IToolbarItem> ToolbarItems { get; }
 
-        public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IEnumerable<IToolbarItem> toolbarItems)
+        public string Title => $"EVC Prover - v{GetVersionNumber()}";
+        
+        public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, MainMenuViewModel mainMenuViewModel, SettingsViewModel settingsViewModel, IEnumerable<IToolbarItem> toolBarItems)
         {
-            ToolbarItems = toolbarItems;
-            _screenManager = screenManager;
             eventAggregator.Subscribe(this);
+            ToolbarItems = toolBarItems;
+            screenManager.Conductor = this;
+
+            GoHomeCommand = ReactiveCommand.Create(() 
+                => screenManager.ChangeScreen(mainMenuViewModel));
+        
+            OpenSettingsCommand = ReactiveCommand.Create(() 
+                => screenManager.ChangeScreen(settingsViewModel));
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
+        public override void ActivateItem(ReactiveObject item)
+        {
+            if (ActiveItem != null)
+            {
+                var lastItem = ActiveItem;
+                DeactivateItem(ActiveItem, true);
+                (lastItem as IDisposable)?.Dispose();
+            }
+
+            base.ActivateItem(item);
+        }
+
+        public ReactiveCommand<Unit, Unit> OpenSettingsCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> GoHomeCommand { get; set; }
+        
         private static string GetVersionNumber()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fileVersionInfo.ProductVersion;
-        }
-
-        public string Title => $"EVC Prover - v{GetVersionNumber()}";
-       
-        public async Task HomeButton()
-        {
-            await _screenManager.GoHome();
-        }
-
-        public async Task SettingsButton()
-        {
-            await _screenManager.ChangeScreen<SettingsViewModel>(); //(new SettingsViewModel(_screenManager, _eventAggregator));
-        }
-
-        public void Handle(ScreenChangeEvent message)
-        {
-            if (_currentView != null)
-            {
-                DeactivateItem(_currentView, true);
-                (_currentView as IDisposable)?.Dispose();
-                (_currentView as ReactiveScreen)?.TryClose();
-            }
-
-            ActivateItem(message.ViewModel);
-            _currentView = message.ViewModel;
         }
 
         public void Handle(DialogDisplayEvent message)
@@ -78,6 +74,10 @@ namespace Prover.GUI.Screens.Shell
         {
             get => _dialogViewModel;
             set => this.RaiseAndSetIfChanged(ref _dialogViewModel, value);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -29,6 +29,12 @@ namespace Prover.GUI.Modules.Certificates.Common
                 SuperFactor = new SuperFactorInfoViewModel(Instrument);
 
             Volume = new VolumeInfoViewModel(Instrument);
+
+            VerificationTests = Instrument
+                .VerificationTests
+                .OrderByDescending(v => v.TestNumber)
+                .Select(x => new VerificationTestViewModel(x))
+                .ToList();
         }
 
         public SuperFactorInfoViewModel SuperFactor { get; protected set; }
@@ -49,8 +55,37 @@ namespace Prover.GUI.Modules.Certificates.Common
 
         public VolumeInfoViewModel Volume { get; protected set; }
 
-        public List<VerificationTest> VerificationTests => 
-            Instrument.VerificationTests.OrderBy(v => v.TestNumber).ToList();
+        public List<VerificationTestViewModel> VerificationTests { get; }            
+
+        public class VerificationTestViewModel
+        {
+            public VerificationTest Test { get; }
+
+            public VerificationTestViewModel(VerificationTest test)
+            {
+                Test = test;
+            }
+
+            public string Description
+            {
+                get
+                {
+                    switch (Test.TestNumber)
+                    {
+                        case 0:
+                            return "H";
+                        case 1:
+                            return "M";
+                        case 2:
+                            return "L";
+
+                        default:
+                            return "L";
+                    }
+                    
+                }
+            }
+        }
 
         public bool ShowTemperature => Instrument.IsLiveTemperature;
 
@@ -59,7 +94,7 @@ namespace Prover.GUI.Modules.Certificates.Common
         public bool ShowSuperFactor => Instrument.IsLiveSuper;
 
         public VolumeTest VolumeTest => 
-            VerificationTests.FirstOrDefault(v => v.VolumeTest != null)?.VolumeTest;
+            Instrument.VerificationTests.FirstOrDefault(v => v.VolumeTest != null)?.VolumeTest;
 
         public string UncorrectedUnits => Instrument.Items.GetItem(92).Description;
         public string CorrectedUnits => Instrument.Items.GetItem(90).Description;
@@ -79,13 +114,15 @@ namespace Prover.GUI.Modules.Certificates.Common
                 _instrument = instrument;
             }
 
+            public string UnitsAndTransducer => $"{Units}";
+
             public string Units => _instrument.Items.GetItem(87).Description;
 
             public decimal Base => decimal.Round(_instrument.Items.GetItem(13).NumericValue, 2);
 
             public string TransducerType => _instrument.Items.GetItem(112).Description;
 
-            public string Range => $"0 - {_instrument.Items.GetItem(137).Description}";
+            public string Range => $"{(int)_instrument.Items.GetItem(137).NumericValue} {UnitsAndTransducer}";
         }
 
         public class TemperatureInfoViewModel

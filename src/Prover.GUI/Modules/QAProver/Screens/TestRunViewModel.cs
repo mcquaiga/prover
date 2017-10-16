@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
@@ -15,6 +18,7 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Dialogs;
 using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews;
@@ -23,7 +27,7 @@ using Splat;
 
 namespace Prover.GUI.Modules.QAProver.Screens
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable
+    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<VerificationTestEvent>
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestViewNew";
@@ -34,8 +38,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private string _selectedTachCommPort;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IClientStore clientStore)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientStore clientStore)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -84,6 +87,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
+            var isSaving = new Subject<bool>();
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, isSaving);
+            SaveCommand.IsExecuting
+                .Select(x => !x)
+                .Subscribe(b => isSaving.OnNext(b));
+
             var clientList = clientStore.Query()
                 .Where(c => c.ArchivedDateTime == null)
                 .ToList();
@@ -123,7 +132,16 @@ namespace Prover.GUI.Modules.QAProver.Screens
             _viewContext = NewQaTestViewContext;
         }
 
+        public ReactiveCommand SaveCommand { get; }
+
         #region Properties
+
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set => this.RaiseAndSetIfChanged(ref _isDirty, value);
+        }
 
         public ReactiveCommand StartTestCommand { get; }
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
@@ -212,10 +230,14 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public bool TachDisableCommPort => _tachDisableCommPort.Value;
 
         #endregion
-
-        public async Task Cancel()
+        
+        private async Task SaveTest()
         {
-            await ScreenManager.GoHome();
+            if (_qaRunTestManager != null)
+            {
+                await _qaRunTestManager.SaveAsync();
+                IsDirty = false;
+            }
         }
 
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
@@ -234,6 +256,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
                 await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
+                IsDirty = true;
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -278,7 +301,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public void Dispose()
         {
-            //_testStatusSubscription?.Dispose();
             foreach (var testView in TestViews)
             {
                 testView.Dispose();
@@ -287,20 +309,28 @@ namespace Prover.GUI.Modules.QAProver.Screens
             SiteInformationItem = null;
             _qaRunTestManager?.Dispose();
         }
+
+        public override void CanClose(Action<bool> callback)
+        {            
+            if (_qaRunTestManager != null)
+            {
+                if (IsDirty)
+                {
+                    var result = MessageBox.Show($"You have unsaved changes. {Environment.NewLine}" +
+                                                 $"Would you like to save before exiting?", "Save Changes",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                        SaveTest().Wait();
+                }
+            }
+
+            callback(true);
+        }
+
+        public void Handle(VerificationTestEvent message)
+        {
+            IsDirty = true;
+        }
     }
 }
 
-//public override void CanClose(Action<bool> callback)
-//{
-//    base.CanClose(callback);
-//    if (_qaRunTestManager != null)
-//    {
-//        if (!_qaRunTestManager.Instrument.HasPassed)
-//        {
-//            var result = MessageBox.Show("Instrument test hasn't passed. Would you like to continue?", "Error",
-//                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-//            if (result == MessageBoxResult.No)
-//                callback(false);
-//        }
-//    }
-//}

@@ -82,13 +82,14 @@ namespace Prover.Core.VerificationTests
                 ct.ThrowIfCancellationRequested();
                 _communicationClient.Initialize(instrumentType);
                 _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
-                await ConnectToInstrument(instrumentType, ct);
+
+                await ConnectToInstrument(ct);
                 ct.ThrowIfCancellationRequested();
 
                 _testStatus.OnNext("Downloading items...");
                 var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
 
-                await DisconnectFromInstrument(instrumentType);
+                await DisconnectFromInstrument();
 
                 Instrument = new Instrument(instrumentType, items, client);
 
@@ -103,7 +104,6 @@ namespace Prover.Core.VerificationTests
                 }
 
                 await RunVerifiers();
-                await SaveAsync();
             }
             catch (Exception ex)
             {
@@ -113,7 +113,7 @@ namespace Prover.Core.VerificationTests
             }            
         }
 
-        private async Task DisconnectFromInstrument(InstrumentType instrumentType)
+        private async Task DisconnectFromInstrument()
         {
             if (_communicationClient.IsConnected)
             {
@@ -121,7 +121,7 @@ namespace Prover.Core.VerificationTests
             }
         }
 
-        private async Task ConnectToInstrument(InstrumentType instrumentType, CancellationToken ct)
+        private async Task ConnectToInstrument(CancellationToken ct)
         {
             if (!_communicationClient.IsConnected)
             {                
@@ -143,8 +143,6 @@ namespace Prover.Core.VerificationTests
                 }
 
                 await DownloadVerificationTestItems(level, ct);
-
-                await SaveAsync();
             }
             catch (OperationCanceledException)
             {
@@ -166,8 +164,6 @@ namespace Prover.Core.VerificationTests
                     {
                         await command.Execute(_communicationClient, Instrument, _testStatus);
                     }
-
-                    await SaveAsync();
                 }
             }
             catch (OperationCanceledException) 
@@ -209,7 +205,7 @@ namespace Prover.Core.VerificationTests
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
-            await ConnectToInstrument(Instrument.InstrumentType, ct);            
+            await ConnectToInstrument(ct);            
             
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
@@ -230,7 +226,7 @@ namespace Prover.Core.VerificationTests
                 await DownloadPressureTestItems(level);
             }
 
-            await DisconnectFromInstrument(Instrument.InstrumentType);
+            await DisconnectFromInstrument();
         }
 
         public async Task DownloadTemperatureTestItems(int levelNumber)
