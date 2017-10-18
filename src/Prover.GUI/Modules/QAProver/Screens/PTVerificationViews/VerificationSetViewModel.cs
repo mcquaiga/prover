@@ -152,7 +152,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
             finally
             {               
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());                
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(VerificationTest));                
             }
         }
 
