@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using Autofac;
 using Caliburn.Micro;
 using NLog;
@@ -28,9 +29,19 @@ namespace Prover.Core.Startup
 
             //EVC Communcation
             Builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
-                .Named<CommPort>("SerialPort");
+                .Named<ICommPort>("SerialPort");
 
-            Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
+            Builder.Register(c => new IrDAPort())
+                .Named<ICommPort>("IrDAPort");
+
+            Builder.Register(c =>
+                {
+                    var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+
+                    return SettingsManager.SettingsInstance.InstrumentUseIrDAPort
+                        ? new HoneywellClient(c.ResolveNamed<ICommPort>("IrDAPort"), instrument)
+                        : new HoneywellClient(c.ResolveNamed<ICommPort>("SerialPort"), instrument);
+                })
                 .As<EvcCommunicationClient>();
 
             //QA Test Runs

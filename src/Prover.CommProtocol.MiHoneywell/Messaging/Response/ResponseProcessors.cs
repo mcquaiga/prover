@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using Prover.CommProtocol.Common.Extensions;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
 
@@ -128,23 +129,25 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                 var valueChars = new List<char>();
                 var checksumChars = new List<char>();
 
-                Action emitPacket = () =>
+                void EmitPacket()
                 {
                     var checksum = new string(checksumChars.ToArray());
 
                     observer.OnNext(new ItemGroupResponseMessage(ItemValues, checksum));
                     checksumChars.Clear();
-                };
+                }
 
-                Action addValue = () =>
+                void AddValue()
                 {
                     if (valueChars.Any())
                     {
                         currentItemNumber.MoveNext();
-                        ItemValues[currentItemNumber.Current] = new string(valueChars.ToArray());
+                        var raw = new string(valueChars.ToArray());
+                        ItemValues[currentItemNumber.Current] = raw.ScrubInvalidCharacters();
+                        
                         valueChars.Clear();
                     }
-                };
+                }
 
                 var parsingItemValue = false;
                 var parsingChecksum = false;
@@ -159,17 +162,17 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                                 parsingItemValue = true;
                                 break;
                             case ControlCharacters.ETX:
-                                addValue();
+                                AddValue();
                                 parsingItemValue = false;
                                 parsingChecksum = true;
                                 break;
                             case ControlCharacters.EOT:
-                                emitPacket();
+                                EmitPacket();
                                 parsingItemValue = false;
                                 parsingChecksum = false;
                                 break;
                             case ControlCharacters.Comma:
-                                addValue();
+                                AddValue();
                                 break;
                             default:
                             {
@@ -185,7 +188,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Response
                     observer.OnError,
                     () =>
                     {
-                        emitPacket();
+                        EmitPacket();
                         observer.OnCompleted();
                     });
             });

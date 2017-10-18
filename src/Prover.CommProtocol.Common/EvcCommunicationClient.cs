@@ -15,33 +15,29 @@ namespace Prover.CommProtocol.Common
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
-        private readonly IDisposable _receivedObservable;
-        private readonly IDisposable _sentObservable;
+        private IDisposable _receivedObservable;
+        private IDisposable _sentObservable;
         private readonly Subject<string> _statusSubject = new Subject<string>();
+
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
         /// <param name="commPort">Communcations interface to the device</param>
-        protected EvcCommunicationClient(CommPort commPort)
+        /// <param name="instrumentType">Instrument type of device</param>
+        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType)
         {
             CommPort = commPort;
+            InstrumentType = instrumentType;
 
-            _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
-
-            _sentObservable =
-                CommPort.DataSentObservable.Subscribe(
-                    msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
-
-            StatusObservable.Subscribe(
-                s => Log.Debug(s));
+            StatusObservable
+                .Subscribe(s => Log.Info(s));
         }
 
-        protected CommPort CommPort { get; set; }
+        protected ICommPort CommPort { get; }
 
-        public virtual InstrumentType InstrumentType { get; set; }
+        public InstrumentType InstrumentType { get; }
 
         public IObservable<string> StatusObservable => _statusSubject.AsObservable();
 
@@ -53,19 +49,7 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Is this client already connected to an instrument
         /// </summary>
-        public abstract bool IsConnected { get; protected set; }
-
-        public virtual void Dispose()
-        {
-            Disconnect().ContinueWith(task =>
-            {
-                _receivedObservable?.Dispose();
-                _sentObservable?.Dispose();
-                _statusSubject?.Dispose();
-                CommPort?.Dispose();
-            });
-            
-        }
+        public abstract bool IsConnected { get; protected set; }        
 
         private async Task ExecuteCommand(string command)
         {
@@ -81,7 +65,7 @@ namespace Prover.CommProtocol.Common
             }
 
             var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Timeout(TimeSpan.FromSeconds(3))
+                .Timeout(TimeSpan.FromSeconds(5))
                 .FirstAsync()
                 .PublishLast();
 
@@ -90,14 +74,9 @@ namespace Prover.CommProtocol.Common
                 await CommPort.Send(command.Command);
 
                 var result = await response;
+
                 return result;
             }
-        }
-
-        public void Initialize(InstrumentType instrumentType)
-        {
-            InstrumentType = instrumentType;
-
         }
 
         /// <summary>
@@ -105,44 +84,53 @@ namespace Prover.CommProtocol.Common
         ///     Handles retries for failed connections
         /// </summary>
         /// <param name="ct">Cancellation token</param>
+        /// <param name="accessCode"></param>
         /// <param name="retryAttempts"></param>
         /// <returns></returns>
-        public async Task Connect(CancellationToken ct, int retryAttempts = MaxConnectionAttempts)
+        public async Task Connect(CancellationToken ct, string accessCode = null, int retryAttempts = MaxConnectionAttempts)
         {
-            var connectionAttempts = 0;
+            var connectionAttempts = 1;
 
             ct.ThrowIfCancellationRequested();
 
             var result = Task.Run(async () =>
             {
+                _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+
+                await CommPort.Open();
+
+                _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
+                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
+
+                _sentObservable = CommPort.DataSentObservable
+                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
+
                 while (!IsConnected)
                 {
                     if (ct.IsCancellationRequested)
                         ct.ThrowIfCancellationRequested();
-
-                    connectionAttempts++;
-                    _statusSubject.OnNext(
-                        $"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+                    
                     try
                     {
-                        if (!CommPort.IsOpen())
-                            await CommPort.Open();
-
-                        await ConnectToInstrument(ct);
+                        await ConnectToInstrument(ct, accessCode);
                     }
                     catch (Exception ex)
                     {
                         Log.Warn(ex.Message);
                     }
 
-                    if (!IsConnected)
-                        if (connectionAttempts < retryAttempts)
-                        {
-                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
-                            Thread.Sleep(ConnectionRetryDelayMs);
-                        }                            
-                        else
-                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} in {retryAttempts} tries. Cancelling connection attempt.");
+                    if (IsConnected) continue;
+
+                    if (connectionAttempts < retryAttempts)
+                    {
+                        Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
+                        Thread.Sleep(ConnectionRetryDelayMs);
+
+                        connectionAttempts++;
+                        _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+                    }                            
+                    else
+                        throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} in {retryAttempts} tries. Cancelling connection attempt.");
                 }
             }, ct);
 
@@ -155,9 +143,6 @@ namespace Prover.CommProtocol.Common
                 foreach (var v in e.InnerExceptions)
                     Log.Warn(e.Message + " " + v.Message);
             }
-            finally
-            {
-            }
         }
 
         /// <summary>
@@ -165,8 +150,9 @@ namespace Prover.CommProtocol.Common
         ///     Handles retries for failed connections
         /// </summary>
         /// <param name="ct"></param>
+        /// <param name="accessCode"></param>
         /// <returns></returns>
-        protected abstract Task ConnectToInstrument(CancellationToken ct);
+        protected abstract Task ConnectToInstrument(CancellationToken ct, string accessCode = null);
 
         /// <summary>
         ///     Disconnect the current link with the EVC, if one exists
@@ -233,5 +219,16 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumber">Item number to live read</param>
         /// <returns></returns>
         public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
+
+        public virtual void Dispose()
+        {
+            Disconnect().ContinueWith(task =>
+            {
+                _receivedObservable?.Dispose();
+                _sentObservable?.Dispose();
+                _statusSubject?.Dispose();
+                CommPort?.Dispose();
+            });
+        }
     }
 }

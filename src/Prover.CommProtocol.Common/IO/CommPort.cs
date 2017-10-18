@@ -6,27 +6,28 @@ using NLog;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public interface ICommPort
+    public interface ICommPort : IDisposable
     {
+        IConnectableObservable<char> DataReceivedObservable { get; }
+        ISubject<string> DataSentObservable { get; }
         string Name { get; }
-        IObservable<char> DataReceived();
         bool IsOpen();
         Task Open();
         Task Close();
         Task Send(string data);
     }
 
-    public abstract class CommPort : IDisposable, ICommPort
+    public abstract class CommPort : ICommPort
     {
         protected const int OpenPortTimeoutMs = 5000;
         protected const int ReadWriteTimeoutMs = 200;
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
-        public abstract IConnectableObservable<char> DataReceivedObservable { get; protected set; }
-        public abstract ISubject<string> DataSentObservable { get; protected set; }
+
+        public abstract IConnectableObservable<char> DataReceivedObservable { get; }
+        public abstract ISubject<string> DataSentObservable { get; }
 
         public abstract string Name { get; }
 
-        public abstract IObservable<char> DataReceived();
         public abstract bool IsOpen();
         public abstract Task Open();
         public abstract Task Close();

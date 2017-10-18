@@ -49,9 +49,12 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(InstrumentType instrument, string accessCode = DefaultAccessCode)
+            SignOn(InstrumentType instrument, string accessCode = null)
         {
-            var code = instrument.Id < 10 ? string.Concat("0", instrument.Id) : instrument.ToString();
+            if (string.IsNullOrEmpty(accessCode))
+                accessCode = DefaultAccessCode;
+
+            var code = instrument.AccessCode < 10 ? string.Concat("0", instrument.AccessCode) : instrument.AccessCode.ToString();
             var cmd = $"SN,{accessCode}{ControlCharacters.STX}vq{code}";
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }

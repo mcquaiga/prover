@@ -2,6 +2,20 @@
 
 namespace Prover.CommProtocol.Common.Items
 {
+    public class ItemGroup
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+
+        public bool? IsAlarm { get; set; }
+        public bool? IsPressure { get; set; }
+        public bool? IsPressureTest { get; set; }
+        public bool? IsTemperature { get; set; }
+        public bool? IsVolume { get; set; }
+        public bool? IsVolumeTest { get; set; }
+        public bool? IsSuperFactor { get; set; }
+    }
+
     public class ItemMetadata
     {
         public int Number { get; set; }

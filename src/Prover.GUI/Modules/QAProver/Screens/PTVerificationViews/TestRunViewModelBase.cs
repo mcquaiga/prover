@@ -40,8 +40,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public virtual void Handle(VerificationTestEvent message)
         {
-            if (message.VerificationTest == null ||
-                message.VerificationTest == TestRun.VerificationTest)
+            if (message.VerificationTest == TestRun.VerificationTest)
             {
                 RaisePropertyChangeEvents();
             }

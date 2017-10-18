@@ -18,7 +18,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
                 new ItemValue(new ItemMetadata() {Number = 201}, "300000"),
             };
 
-            Instrument = new Instrument(HoneywellInstrumentTypes.MiniAt, items);
+            //Instrument = new Instrument(HoneywellInstrumentTypes.MiniAt, items);
         }
 
         public Instrument Instrument { get; set; }

@@ -88,7 +88,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     .Subscribe(l => Status.OnNext(statusFormat)))
             {
                 try
-                {                    
+                {
+                    ct.ThrowIfCancellationRequested();
                     await Task.Run(() =>
                     {
                         _outputBoard?.StartMotor();

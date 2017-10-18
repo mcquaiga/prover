@@ -15,9 +15,13 @@
     <UserControl.Resources>
         <ResourceDictionary>
            
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisible" TrueValue="Visible" FalseValue="Collapsed" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisible" 
+                                                  TrueValue="Visible" 
+                                                  FalseValue="Collapsed" />
             <converters:NullToVisibilityConverter x:Key="NullToVisible"/>
-            <converters:BooleanToPassConverter x:Key="BooleanToPass" />
+            <converters:BooleanToPassConverter x:Key="BooleanToPass" 
+                                               TrueValue="PASS"
+                                               FalseValue="FAIL"/>
 
             <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
                 <Setter Property="Foreground" Value="SlateGray" />
@@ -113,10 +117,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="110" />
-            <ColumnDefinition Width="175" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="175" />
             <ColumnDefinition Width="350" />
         </Grid.ColumnDefinitions>
         <Grid.Resources>
@@ -135,19 +139,18 @@
         <StackPanel Grid.Column="1"
                         Orientation="Vertical"
                         VerticalAlignment="Center">
-            <!--<TextBlock FontSize="12"
-                           HorizontalAlignment="Center"
-                           Text="{Binding DateTimePretty, FallbackValue='00-00-1900'}" />-->
             <TextBlock FontSize="20"
                            HorizontalAlignment="Center"
                            Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" />
             <Border BorderThickness="0 1 0 0"
                         BorderBrush="Gray"
-                        Margin="2 3">
-                <TextBlock Text="{Binding Instrument.CompositionType, FallbackValue=PTZ}"
+                        Margin="5 0">
+                <StackPanel>
+                    <TextBlock Text="{Binding Instrument.CompositionType, FallbackValue=PTZ}"
                                HorizontalAlignment="Center" />
-                <!--<TextBlock Text=" | " />
-                        <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator, FallbackValue=Rotary}" />-->
+                    <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator, FallbackValue=Rotary}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
             </Border>
         </StackPanel>
         <StackPanel Grid.Column="2">
@@ -193,8 +196,9 @@
 
         <UniformGrid x:Name="PtzInfo"
                      Columns="3"
-                     Margin="4 0 0 0"
+                     Margin="2 0 0 0"
                      VerticalAlignment="Stretch"
+                     HorizontalAlignment="Stretch"
                      Grid.Column="3">
             <!-- Pressure Info-->
             <StackPanel HorizontalAlignment="Stretch"
@@ -209,11 +213,11 @@
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Pressure.Base, FallbackValue=[N]}"
+                        <TextBlock Text="{Binding Pressure.Base, FallbackValue=14.73}"
                                    Style="{StaticResource ValueStyle}" />
                         <TextBlock Text=" "
                                    Style="{StaticResource ValueStyle}" />
-                        <TextBlock Text="{Binding Pressure.Units, FallbackValue=[N]}"
+                        <TextBlock Text="{Binding Pressure.Units, FallbackValue=PSIG}"
                                    Style="{StaticResource ValueStyle}" />
                     </StackPanel>
                     <TextBlock Text="base"
@@ -255,9 +259,9 @@
                         <TextBlock Text="-40 "
                                    Style="{StaticResource ValueStyle}"
                                    FontSize="10"/>
-                        <TextBlock Text="to 170 F"
+                        <TextBlock Text="to 170 F "
                                    Style="{StaticResource ValueStyle}"
-                                   FontSize="10"/>
+                                   FontSize="8"/>
                     </StackPanel>
                     <TextBlock Text="range"
                                Style="{StaticResource LabelStyle}" />
@@ -301,7 +305,7 @@
               Margin="4 0 0 0"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -322,7 +326,6 @@
                   Margin="0">
                 <StackPanel x:Name="RotaryMeterGrid"
                             Visibility="{Binding IsRotaryDrive, Converter={StaticResource BoolToVisible}, FallbackValue=Collapsed}">
-                       
                     <StackPanel Orientation="Vertical">
                         <StackPanel>
                             <TextBlock
@@ -373,7 +376,7 @@
                             <TextBlock
                                 Text="{Binding Instrument.CommPortsPassed, Converter={StaticResource BooleanToPass}, FallbackValue=[NULL]}"
                                 Style="{StaticResource ValueStyle}" />
-                            <TextBlock Text="comm. port"
+                            <TextBlock Text="comm."
                                        Style="{StaticResource LabelStyle}" />
                         </StackPanel>
                     </UniformGrid>
@@ -459,17 +462,17 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Test.PressureTest.PercentError}"
                                         Header="p"
-                                        Visibility="{Binding Data.ShowPressure, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        Visibility="{Binding Data.ShowPressure, Source={StaticResource proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         IsReadOnly="True"
                                         HeaderStyle="{StaticResource DataGridHeaderStyle}" />
                     <DataGridTextColumn Binding="{Binding Test.TemperatureTest.PercentError}"
                                         Header="t"
-                                        Visibility="{Binding Data.ShowTemperature, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        Visibility="{Binding Data.ShowTemperature, Source={StaticResource proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         IsReadOnly="True"
                                         HeaderStyle="{StaticResource DataGridHeaderStyle}" />
                     <DataGridTextColumn Binding="{Binding Test.SuperFactorTest.PercentError}"
                                         Header="z"
-                                        Visibility="{Binding Data.ShowSuperFactor, Source={StaticResource proxy}, Converter={StaticResource NullToVisible}}"
+                                        Visibility="{Binding Data.ShowSuperFactor, Source={StaticResource proxy}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         IsReadOnly="True"
                                         HeaderStyle="{StaticResource DataGridHeaderStyle}" />
                 </DataGrid.Columns>
@@ -497,7 +500,7 @@
                                Style="{StaticResource LabelStyle}"/>
 
                     <TextBlock
-                        Text="{Binding VolumeTest.UnCorPulsesPassed, FallbackValue=[!]}"
+                        Text="{Binding VolumeTest.UnCorPulsesPassed, FallbackValue=[!], Converter={StaticResource BooleanToPass}}"
                         Style="{StaticResource ValueStyle}" />
                     <TextBlock Text="pulses"
                                Style="{StaticResource LabelStyle}" />
@@ -518,7 +521,7 @@
                                Style="{StaticResource LabelStyle}" />
 
                     <TextBlock
-                        Text="{Binding VolumeTest.CorPulsesPassed, FallbackValue=[!]}"
+                        Text="{Binding VolumeTest.CorPulsesPassed, FallbackValue=[!], Converter={StaticResource BooleanToPass}}"
                         Style="{StaticResource ValueStyle}" />
                     <TextBlock Text="pulses"
                                Style="{StaticResource LabelStyle}" />
@@ -530,11 +533,12 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">
 
-                    <TextBlock
-                        Text="{Binding VolumeTest.HasPassed, FallbackValue=[!]}"
-                        Style="{StaticResource ValueStyle}" />
+                    <TextBlock Text="{Binding VolumeTest.HasPassed, FallbackValue=[!], Converter={StaticResource BooleanToPass}}" 
+                               Style="{StaticResource ValueStyle}"
+                               FontSize="20"/>
                     <TextBlock Text="status"
-                               Style="{StaticResource LabelStyle}" />
+                               Style="{StaticResource LabelStyle}" 
+                               FontSize="14"/>
                     
                 </StackPanel>
 

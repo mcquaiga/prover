@@ -149,7 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EvcCommunicationClient.cs" />
-    <Compile Include="Extensions\Task.cs" />
+    <Compile Include="Extensions\CommStringHelpers.cs" />
     <Compile Include="InstrumentType.cs" />
     <Compile Include="IO\CommPort.cs" />
     <Compile Include="IO\IrDAPort.cs" />

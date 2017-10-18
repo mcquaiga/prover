@@ -14,20 +14,17 @@ namespace Prover.CommProtocol.MiHoneywell
 {
     public class HoneywellClient : EvcCommunicationClient
     {
-        public HoneywellClient(CommPort commPort) : base(commPort)
+        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
         {
+            Task.Run(() => ItemHelpers.LoadItems(InstrumentType))
+                .ContinueWith(_ => { this.ItemDetails = _.Result; });
         }
 
         public override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
 
         public override bool IsConnected { get; protected set; }
-        public bool IsAwake { get; private set; }
-
-        /// <summary>
-        ///     Establishes a link with the instrument
-        /// </summary>
-        /// <param name="ct"></param>
-        protected override async Task ConnectToInstrument(CancellationToken ct)
+      
+        protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null)
         {
             var connectTasks = new List<Task>();
 
@@ -37,17 +34,15 @@ namespace Prover.CommProtocol.MiHoneywell
                         .ContinueWith(_ => { ItemDetails = _.Result; }, ct));
 
             connectTasks.Add(Task.Run(async () =>
-            {
-                await WakeUpInstrument();
-
-                if (IsAwake)
+            {            
+                if (await WakeUpInstrument())
                 {
-                    var response = await ExecuteCommand(Commands.SignOn(InstrumentType));
+                    var response = await ExecuteCommand(Commands.SignOn(InstrumentType, accessCode));
 
                     if (response.IsSuccess)
                     {
                         IsConnected = true;
-                        Log.Info($"[{CommPort.Name}] Connected to {InstrumentType}!");
+                        Log.Info($"[{CommPort.Name}] Connected to {InstrumentType.Name}!");
                     }
                     else
                     {
@@ -138,19 +133,17 @@ namespace Prover.CommProtocol.MiHoneywell
         {
             await ExecuteCommand(Commands.WakeupOne());
             Thread.Sleep(150);
+
             var response = await ExecuteCommand(Commands.WakeupTwo());
 
             if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
             {
-                IsAwake = true;
-                Thread.Sleep(100);
-            }
-            else
-            {
-                await ExecuteCommand(Commands.OkayToSend());
+                return true;
             }
 
-            return IsAwake;
+            await ExecuteCommand(Commands.OkayToSend());
+
+            return false;
         }
     }
 }
