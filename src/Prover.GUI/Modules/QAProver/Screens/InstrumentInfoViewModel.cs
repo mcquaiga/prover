@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Enums;
@@ -51,12 +52,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
-        public string TestDatePretty => $"{Instrument.TestDateTime:g}";
+        public string TestDatePretty => $"{Instrument.TestDateTime:d}";
 
         public string JobIdDisplay
             => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
-        public bool DisplayEventLogCommPortView => Instrument.InstrumentType == HoneywellInstrumentTypes.MiniAt;
+        public bool DisplayEventLogCommPortView => Instrument.VolumeTest.DriveType is MechanicalDrive;
 
         public bool EventLogChecked
         {

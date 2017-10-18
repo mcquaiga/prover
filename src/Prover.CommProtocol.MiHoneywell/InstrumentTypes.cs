@@ -1,33 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
     public static class HoneywellInstrumentTypes
     {
-        public static InstrumentType MiniAt = new InstrumentType
+        public static InstrumentType GetByName(string name)
         {
-            Id = 3,
-            AccessCode = 3,
-            Name = "Mini-AT",
-            ItemFilePath = "MiniATItems.xml"
-        };
-
-        public static InstrumentType MiniMax = new InstrumentType
-        {
-            Id = 4,
-            AccessCode = 4,
-            Name = "Mini-Max",
-            ItemFilePath = "MiniMaxItems.xml"
-        };
+            return GetAll().FirstOrDefault(
+                i => i.Name == name);
+        }
 
         public static IEnumerable<InstrumentType> GetAll()
         {
-            return new List<InstrumentType>
-            {
-                MiniAt,
-                MiniMax
-            };
+            return ItemHelpers.LoadInstruments()
+                .OrderBy(i => i.Name);
         }
     }
 }

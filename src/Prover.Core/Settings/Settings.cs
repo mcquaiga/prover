@@ -74,6 +74,7 @@ namespace Prover.Core.Settings
         public int InstrumentBaudRate { get; set; }
 
         public TestSettings TestSettings { get; set; }
+        public bool InstrumentUseIrDAPort { get; set; }
 
         public void SetDefaults()
         {

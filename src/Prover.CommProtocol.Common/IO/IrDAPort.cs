@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -12,14 +17,18 @@ using InTheHand.Net.Sockets;
 
 namespace Prover.CommProtocol.Common.IO
 {
+   
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class IrDAPort : CommPort
+    public sealed class IrDAPort : CommPort
     {
         private const int DevicePeerIndex = 0;
         private const string ServiceName = "IrDA:IrCOMM";
         private readonly Encoding _encoding;
         private IrDAClient _client;
         private IrDAEndPoint _endPoint;
+        private IrDADeviceInfo _device;
+        private IConnectableObservable<char> _dataReceivedConnectableObservable;
+        private IDisposable _dataReceivedObs;
 
         public IrDAPort()
         {
@@ -32,11 +41,8 @@ namespace Prover.CommProtocol.Common.IO
                 _encoding = Encoding.ASCII;
             }
 
-            LoadDevice();
-
-            DataReceivedObservable = DataReceived().Publish();
-            DataReceivedObservable.Connect();
-
+            _client = new IrDAClient();
+            
             DataSentObservable = new Subject<string>();
         }
 
@@ -44,19 +50,74 @@ namespace Prover.CommProtocol.Common.IO
 
         public override string Name => "IrDA";
 
-        public override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
-        public override ISubject<string> DataSentObservable { get; protected set; }
+        public override IConnectableObservable<char> DataReceivedObservable => _dataReceivedConnectableObservable;
+        public override ISubject<string> DataSentObservable { get; }
 
-        public sealed override IObservable<char> DataReceived()
+        private IObservable<char> DataReceived(Stream sourceStream)
         {
-            return Observable.Defer(async () =>
+            int subscribed = 0;
+            var scheduler = Scheduler.Default;
+            return Observable.Create<char>(o =>
             {
-                var stream = _client.GetStream();
+                // first check there is only one subscriber
+                // (multiple stream readers would cause havoc)
+                int previous = Interlocked.CompareExchange(ref subscribed, 1, 0);
 
-                var buffer = new byte[1024];
-                var readBytes = await stream.ReadAsync(buffer, 0, buffer.Length);
-                var chars = Encoding.ASCII.GetChars(buffer);
-                return chars.Take(readBytes).ToObservable();
+                if (previous != 0)
+                    o.OnError(new Exception(
+                        "Only one subscriber is allowed for each stream."));
+
+                // we will return a disposable that cleans
+                // up both the scheduled task below and
+                // the source stream
+                var dispose = new CompositeDisposable
+                {
+                    Disposable.Create(sourceStream.Dispose)
+                };
+
+                // use async scheduling to get nice imperative code
+                var schedule = scheduler.ScheduleAsync(async (ctrl, ct) =>
+                {
+                    // store the header here each time
+                    var buffer = new byte[1000];
+
+                    // loop until cancellation requested
+                    while (!ct.IsCancellationRequested)
+                    {
+                        if (sourceStream.CanRead)
+                        {
+                            int numRead;
+                            try
+                            {
+                                numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length, ct);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                throw;
+                            }
+                            catch (Exception ex)
+                            {
+                                // pass through any problem in the stream and quit
+                                o.OnError(new InvalidDataException("Error in stream.", ex));
+                                return;
+                            }
+                            ct.ThrowIfCancellationRequested();
+
+                            var chars = _encoding.GetChars(buffer, 0, numRead);
+                            foreach (var c in chars)
+                            {
+                                o.OnNext(c);
+                            }
+                        }
+                    }
+                    // wrap things up
+                    ct.ThrowIfCancellationRequested();
+                    o.OnCompleted();
+                });
+
+                // return the suscription handle
+                dispose.Add(schedule);
+                return dispose;
             });
         }
 
@@ -67,12 +128,36 @@ namespace Prover.CommProtocol.Common.IO
 
         public override async Task Open()
         {
-            if (IsOpen()) return;
+            if (_device == null)
+                _device = SelectIrDAPeerInfo(_client);
 
-            var tokenSource = new CancellationTokenSource();
-            tokenSource.CancelAfter(OpenPortTimeoutMs);
+            if (!_client.Connected)
+            {
+                _client.Client.SetSocketOption(
+                    IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+                
+                _endPoint = new IrDAEndPoint(_device.DeviceAddress, ServiceName);
 
-            await Task.Run(() => { _client.Connect(_endPoint); }, tokenSource.Token);
+                await Task.Factory.FromAsync(
+                    _client.BeginConnect(_endPoint, ar =>
+                    {
+                        try
+                        {
+                            _client.EndConnect(ar);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex);
+                            throw;
+                        }
+                    }, _device),
+                    ar =>
+                    {
+                        if (!_client.Connected) return;                        
+                        _dataReceivedConnectableObservable = DataReceived(_client.GetStream()).Publish();
+                        _dataReceivedObs = _dataReceivedConnectableObservable.Connect();
+                    });
+            }
         }
 
         public override async Task Close()
@@ -82,45 +167,26 @@ namespace Prover.CommProtocol.Common.IO
 
         public override async Task Send(string data)
         {
-            if (!IsOpen())
-                await Open();
+            await Open();
 
-            await Task.Run(() =>
+            var strm = _client.GetStream();
+            if (strm.CanWrite)
             {
-                using (var stream = _client.GetStream())
-                {
-                    // Sleep for 5 seconds to give the IrDA "connected" icon lots of time to 
-                    // appear.
-                    Thread.Sleep(2500);
-                    if (stream.CanWrite)
-                    {
-                        var content = new List<byte>();
-                        content.AddRange(Encoding.ASCII.GetBytes(data));
-
-                        var buffer = content.ToArray();
-                        stream.Write(buffer, 0, buffer.Length);
-
-                        DataSentObservable.OnNext(data);
-                    }
-                }
-            });
+                var buffer = _encoding.GetBytes(data);
+                await strm.WriteAsync(buffer, 0, buffer.Length);
+                await strm.FlushAsync();
+                DataSentObservable.OnNext(data);
+            }
         }
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
-        }
+            _dataReceivedObs?.Dispose();
 
-        private void LoadDevice()
-        {
-            _client = new IrDAClient();
-
-            _client.Client.SetSocketOption(
-                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode,
-                1);
-
-            var device = SelectIrDAPeerInfo(_client);
-            _endPoint = new IrDAEndPoint(device.DeviceAddress, "IrDA:IrCOMM");
+            _client?.Close();
+            _client?.Dispose();
+            _client = null;
+            _endPoint = null;
         }
 
         private IrDADeviceInfo SelectIrDAPeerInfo(IrDAClient client)
@@ -130,7 +196,7 @@ namespace Prover.CommProtocol.Common.IO
             do
             {
                 var devices = client.DiscoverDevices();
-                if (devices.Count() > DevicePeerIndex)
+                if (devices.Length > DevicePeerIndex)
                     return devices[DevicePeerIndex];
 
                 tryNumber++;

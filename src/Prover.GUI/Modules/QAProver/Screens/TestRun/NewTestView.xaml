@@ -12,12 +12,12 @@
     <UserControl.Resources>
         <ResourceDictionary>
            
-            <DataTemplate x:Key="InstrumentSelect">
-                <RadioButton Content="{Binding Path=Instrument.Name}"
+            <!--<DataTemplate x:Key="InstrumentSelect">
+                <RadioButton Content="{Binding Path=Name}"
                              GroupName="Instruments"
                              VerticalAlignment="Center"                             
                              IsChecked="{Binding Path=IsSelected}" />
-            </DataTemplate>
+            </DataTemplate>-->
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel>
@@ -49,14 +49,16 @@
                     <GroupBox Grid.Row="0"
                               BorderThickness="1"
                               Header="Instrument Type">
-                        <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
+                        <!--<ItemsControl x:Name="InstrumentTypes"
                                       ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" Margin="4" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        </ItemsControl>-->
+                        <ComboBox x:Name="InstrumentTypes"
+                                  DisplayMemberPath="Name"/>
                     </GroupBox>
                     <GroupBox Grid.Row="1"
                               Header="Client"
@@ -69,12 +71,18 @@
 
                 <GroupBox Grid.Row="0" 
                           Grid.Column="1" 
-                          Header="Instrument Settings"                       >
+                          Header="Instrument Settings">
                     <StackPanel>
                         <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port"
+                                  IsEnabled="{Binding DisableCommPortAndBaudRate}"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                         <ComboBox x:Name="BaudRate" materialDesign:HintAssist.Hint="Baud Rate"
+                                  IsEnabled="{Binding DisableCommPortAndBaudRate}"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        <CheckBox x:Name="UseIrDaPort"
+                                  Style="{StaticResource MaterialDesignCheckBox}"
+                                  Margin="0 5"
+                                  Content="IrDA"/>
                     </StackPanel>
                 </GroupBox>
 
@@ -96,8 +104,11 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Command="{Binding StartTestCommand}"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}"                    
-                        Content="START TEST" />
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"    
+                        FontSize="24"
+                        Height="60"
+                        Width="150"
+                        Content="START" />
             </Grid>
 
 

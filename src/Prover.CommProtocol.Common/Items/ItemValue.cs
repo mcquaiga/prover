@@ -23,10 +23,13 @@ namespace Prover.CommProtocol.Common.Items
         public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue
-            => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
+        public virtual decimal NumericValue => RawValue != "! Unsupported" 
+            ? ItemDescription?.Value ?? decimal.Parse(RawValue)
+            : 0;
 
-        public virtual string Description => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+        public virtual string Description => RawValue != "! Unsupported"
+            ? ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture)
+            : "N/A";
 
         private ItemMetadata.ItemDescription ItemDescription
         {

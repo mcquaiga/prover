@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.DriveTypes;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
@@ -153,9 +154,10 @@ namespace Prover.Core.Models.Instruments
             get
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
-                if (InstrumentType == HoneywellInstrumentTypes.MiniAt)
-                    return verificationTestsPassed && EventLogPassed != null && EventLogPassed.Value &&
-                           CommPortsPassed != null && CommPortsPassed.Value;
+                if (VolumeTest.DriveType is MechanicalDrive)
+                    return verificationTestsPassed 
+                        && EventLogPassed != null && EventLogPassed.Value 
+                        && CommPortsPassed != null && CommPortsPassed.Value;
 
                 return verificationTestsPassed;
             }
@@ -175,6 +177,12 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public string PulseBSelect => Items.GetItem(94).Description;
+
+        [NotMapped]
+        public decimal PulseCScaling => Items.GetItem(58).NumericValue;
+
+        [NotMapped]
+        public string PulseCSelect => Items.GetItem(95).Description;
 
         [NotMapped]
         public decimal SiteNumber1 => Items.GetItem(200).NumericValue;

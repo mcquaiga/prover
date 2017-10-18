@@ -84,7 +84,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
             await TestManager.VolumeTestManager.PreTest(ct);
             ManualVolumeTestStep = TestStep.PostTest;
-            EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+            EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
         }
 
         private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct)
@@ -102,7 +102,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
             finally
             {
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
             }
         }
 

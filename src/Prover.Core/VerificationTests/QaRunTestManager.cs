@@ -80,7 +80,7 @@ namespace Prover.Core.VerificationTests
             try
             {
                 ct.ThrowIfCancellationRequested();
-                _communicationClient.Initialize(instrumentType);
+                
                 _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
 
                 await ConnectToInstrument(ct);

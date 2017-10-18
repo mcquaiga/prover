@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
     {
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestViewNew";
-        private ReactiveList<SelectableInstrumentType> _instrumentTypes;
+        
         private IQaRunTestManager _qaRunTestManager;
         private int _selectedBaudRate;
         private string _selectedCommPort;
@@ -42,30 +43,18 @@ namespace Prover.GUI.Modules.QAProver.Screens
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
+            
+            #region Instruments
 
-            /***  Setup Instruments list  ***/
-            InstrumentTypes = new ReactiveList<SelectableInstrumentType>
-            {
-                ChangeTrackingEnabled = true
-            };
+            /***  Setup Instruments list  ***/           
 
-            foreach (var x in HoneywellInstrumentTypes.GetAll())
-                InstrumentTypes.Add(new SelectableInstrumentType
-                {
-                    Instrument = x,
-                    IsSelected = x.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed
-                });
+            InstrumentTypes.AddRange(HoneywellInstrumentTypes.GetAll());
 
-            InstrumentTypes.ItemChanged
-                .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)
-                .Select(x => x.Sender)
-                .Subscribe(async x =>
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Instrument.Name;
-                    await SettingsManager.Save();
-                });
+            _selectedInstrumentType = HoneywellInstrumentTypes.GetByName(SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
 
-            /***  Setup Comm Ports and Baud Rate settings ***/
+            this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Subscribe(x => SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Name);
+
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
                 ? SettingsManager.SettingsInstance.InstrumentCommPort
                 : string.Empty;
@@ -73,11 +62,33 @@ namespace Prover.GUI.Modules.QAProver.Screens
             _selectedBaudRate = BaudRate.Contains(SettingsManager.SettingsInstance.InstrumentBaudRate)
                 ? SettingsManager.SettingsInstance.InstrumentBaudRate
                 : -1;
+
+            this.WhenAnyValue(x => x.UseIrDaPort)
+                .Select(x => !x)
+                .ToProperty(this, x => x.DisableCommPortAndBaudRate, out _disableCommPortAndBaudRate);
+            UseIrDaPort = SettingsManager.SettingsInstance.InstrumentUseIrDAPort;
+
+            this.
+            #endregion
+
+            #region Tachometer
+            /**
+             * 
+             * Tachometer Settings
+             *
+             **/
             _selectedTachCommPort = TachCommPort.Contains(SettingsManager.SettingsInstance.TachCommPort)
                 ? SettingsManager.SettingsInstance.TachCommPort
                 : string.Empty;
 
-            /*** Commands ***/
+            this.WhenAnyValue(x => x.TachIsNotUsed)
+                .Select(x => !x)
+                .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
+
+            TachIsNotUsed = SettingsManager.SettingsInstance.TachIsNotUsed;
+            #endregion
+
+            #region Commands
             var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort,
                 x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
                 (baud, instrumentPort, tachPort, tachNotUsed) =>
@@ -87,12 +98,21 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
-            var isSaving = new Subject<bool>();
-            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, isSaving);
+            var canSave = new Subject<bool>();
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
             SaveCommand.IsExecuting
                 .Select(x => !x)
-                .Subscribe(b => isSaving.OnNext(b));
+                .Subscribe(b => canSave.OnNext(b));
 
+            SaveCommand.IsExecuting
+                .StepInterval(TimeSpan.FromSeconds(2))
+                .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
+            #endregion
+
+            #region Clients
+             /**             
+             * Clients              
+             **/
             var clientList = clientStore.Query()
                 .Where(c => c.ArchivedDateTime == null)
                 .ToList();
@@ -108,33 +128,33 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 ? SettingsManager.SettingsInstance.LastClientSelected
                 : string.Empty;
 
-            this.WhenAnyValue(x => x.TachIsNotUsed)
-                .Select(x => !x)
-                .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
-
-            TachIsNotUsed = SettingsManager.SettingsInstance.TachIsNotUsed;
-            this.WhenAnyValue(x => x.TachIsNotUsed)
-                .Subscribe(t => SettingsManager.SettingsInstance.TachIsNotUsed = t);
+            #endregion
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
-                    x => x.SelectedClient, x => x.TachIsNotUsed)
-                .Subscribe(
-                    async _ =>
-                    {
-                        SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
-                        SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
-                        SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                        SettingsManager.SettingsInstance.LastClientSelected = _.Item4;
-                        
-                        await SettingsManager.Save();
-                    });
-
+                    x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort)
+                .Subscribe(_ =>
+                {
+                    SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
+                    SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
+                    SettingsManager.SettingsInstance.TachCommPort = _.Item3;
+                    SettingsManager.SettingsInstance.LastClientSelected = _.Item4;
+                    SettingsManager.SettingsInstance.TachIsNotUsed = _.Item5;
+                    SettingsManager.SettingsInstance.InstrumentUseIrDAPort = _.Item6;
+                });  
+            
             _viewContext = NewQaTestViewContext;
         }
 
-        public ReactiveCommand SaveCommand { get; }
-
         #region Properties
+
+        private readonly ObservableAsPropertyHelper<bool> _disableCommPortAndBaudRate;
+        public bool DisableCommPortAndBaudRate => _disableCommPortAndBaudRate.Value;
+
+
+        private readonly ObservableAsPropertyHelper<bool> _showSaveSnackbar;
+        public bool ShowSaveSnackbar => _showSaveSnackbar.Value;
+
+        public ReactiveCommand SaveCommand { get; }
 
         private bool _isDirty;
         public bool IsDirty
@@ -142,6 +162,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             get => _isDirty;
             set => this.RaiseAndSetIfChanged(ref _isDirty, value);
         }
+
+        public bool DisplayHeader => _qaRunTestManager != null;
 
         public ReactiveCommand StartTestCommand { get; }
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
@@ -162,9 +184,15 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set => this.RaiseAndSetIfChanged(ref _viewContext, value);
         }
 
-        public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
+        private InstrumentType _selectedInstrumentType;
+        public InstrumentType SelectedInstrumentType
+        {
+            get => _selectedInstrumentType;
+            set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);
+        }        
 
-        public ReactiveList<SelectableInstrumentType> InstrumentTypes
+        private ReactiveList<InstrumentType> _instrumentTypes = new ReactiveList<InstrumentType> { ChangeTrackingEnabled = true };
+        public ReactiveList<InstrumentType> InstrumentTypes
         {
             get => _instrumentTypes;
             set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
@@ -195,7 +223,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         private bool _showDialog;
-
         public bool ShowDialog
         {
             get => _showDialog;
@@ -226,11 +253,20 @@ namespace Prover.GUI.Modules.QAProver.Screens
             set => this.RaiseAndSetIfChanged(ref _tachIsNotUsed, value);
         }
 
+        private bool _useIrDaPort;
+        public bool UseIrDaPort
+        {
+            get => _useIrDaPort;
+            set => this.RaiseAndSetIfChanged(ref _useIrDaPort, value);
+        }
+
         private readonly ObservableAsPropertyHelper<bool> _tachDisableCommPort;
         public bool TachDisableCommPort => _tachDisableCommPort.Value;
 
         #endregion
-        
+
+        #region Methods
+
         private async Task SaveTest()
         {
             if (_qaRunTestManager != null)
@@ -242,20 +278,19 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
         {
-            if (SelectedInstrument == null)
+            if (SelectedInstrumentType == null)
                 return;
 
             ShowDialog = true;
 
             try
             {
-                SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument?.Name;
                 await SettingsManager.Save();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
-                await _qaRunTestManager.InitializeTest(SelectedInstrument, ct, _client);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, ct, _client);
                 IsDirty = true;
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
@@ -293,12 +328,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
             });
         }
 
-        public class SelectableInstrumentType
-        {
-            public InstrumentType Instrument { get; set; }
-            public bool IsSelected { get; set; }
-        }
-
         public void Dispose()
         {
             foreach (var testView in TestViews)
@@ -311,8 +340,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public override void CanClose(Action<bool> callback)
-        {            
-            if (_qaRunTestManager != null)
+        {
+            if (_qaRunTestManager?.Instrument != null)
             {
                 MessageBoxResult result;
                 if (!_qaRunTestManager.Instrument.HasPassed)
@@ -348,6 +377,21 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public void Handle(VerificationTestEvent message)
         {
             IsDirty = true;
+        }
+
+        #endregion
+
+    }
+
+    public static class RxExtensions
+    {
+        public static IObservable<T> StepInterval<T>(this IObservable<T> source, TimeSpan minDelay)
+        {
+            return source.Select(x =>
+                Observable.Empty<T>()
+                    .Delay(minDelay)
+                    .StartWith(x)
+            ).Concat();
         }
     }
 }

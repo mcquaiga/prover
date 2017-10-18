@@ -9,7 +9,7 @@ using RJCP.IO.Ports;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public class SerialPort : CommPort
+    public sealed class SerialPort : CommPort
     {
         public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
 
@@ -25,8 +25,7 @@ namespace Prover.CommProtocol.Common.IO
                 throw new ArgumentException($"{portName} does not exist.");
 
             if (!BaudRates.Contains(baudRate))
-                throw new ArgumentException(
-                    $"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
+                throw new ArgumentException($"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
 
             _serialStream = new SerialPortStream
             {
@@ -45,11 +44,11 @@ namespace Prover.CommProtocol.Common.IO
             DataSentObservable = new Subject<string>();
         }
 
-        public sealed override IConnectableObservable<char> DataReceivedObservable { get; protected set; }
-        public sealed override ISubject<string> DataSentObservable { get; protected set; }
+        public override IConnectableObservable<char> DataReceivedObservable { get; }
+        public override ISubject<string> DataSentObservable { get; }
         public override string Name => _serialStream.PortName;
 
-        public sealed override IObservable<char> DataReceived()
+        private IObservable<char> DataReceived()
         {
             return Observable.FromEventPattern<SerialDataReceivedEventArgs>(_serialStream, "DataReceived")
                 .SelectMany(_ =>

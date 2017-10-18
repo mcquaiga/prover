@@ -39,12 +39,19 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
                                                   TrueValue="Visible"
                                                   FalseValue="Collapsed" />
-            
+
+            <converters:BooleanToPassConverter x:Key="BoolToPassFailConverter"
+                                               TrueValue="Pass"
+                                               FalseValue="Fail"/>
+            <converters:BooleanToPassConverter x:Key="BoolToYesNoConverter"
+                                               TrueValue="Yes"
+                                               FalseValue="No"/>
+
             <SolidColorBrush x:Key="PrimaryTextColor"
                              Opacity=".87" 
                              Color="Black"/>
             <SolidColorBrush x:Key="SecondaryTextColor"
-                             Opacity=".54" 
+                             Opacity=".6" 
                              Color="Black"/>
 
             <Style TargetType="{x:Type Window}">

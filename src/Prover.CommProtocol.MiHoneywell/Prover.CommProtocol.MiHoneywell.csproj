@@ -109,14 +109,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ItemDefinitions\MiniATItems.xml">
+    <Content Include="ItemDefinitions\Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_MiniAT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="ItemDefinitions\EC350_Items.xml">
+    <Content Include="ItemDefinitions\Type_EC350.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ItemDefinitions\MiniMaxItems.xml">
+    <Content Include="ItemDefinitions\Type_MiniMax.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_TCI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

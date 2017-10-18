@@ -6,13 +6,22 @@ namespace Prover.GUI.Common.Converters
 {
     public class BooleanToPassConverter : IValueConverter
     {
+        public BooleanToPassConverter()
+        {
+            TrueValue = "Pass";
+            FalseValue = "Fail";
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool && (bool) value)
-                return "P";
+                return TrueValue;
 
-            return "F";
+            return FalseValue;
         }
+
+        public string TrueValue { get; set; }
+        public string FalseValue { get; set; }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

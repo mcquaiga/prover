@@ -54,16 +54,19 @@
                 </Grid>
             </DockPanel>
         </materialDesign:ColorZone>
-        
-        <materialDesign:DialogHost Identifier="ActiveItemDialog"
+
+        <Grid>
+            <materialDesign:DialogHost Identifier="ActiveItemDialog"
                                    IsOpen="{Binding DialogViewModel.ShowDialog}">
             
-            <materialDesign:DialogHost.DialogContent>
-                <ContentControl cal:View.Model="{Binding DialogViewModel}" />
-            </materialDesign:DialogHost.DialogContent>
+                <materialDesign:DialogHost.DialogContent>
+                    <ContentControl cal:View.Model="{Binding DialogViewModel}" />
+                </materialDesign:DialogHost.DialogContent>
             
-            <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
-        </materialDesign:DialogHost>
+                <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
+            </materialDesign:DialogHost>
+        </Grid>
+        
     </DockPanel>
 
 </Window>
