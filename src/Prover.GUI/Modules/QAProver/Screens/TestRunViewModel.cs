@@ -53,7 +53,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             _selectedInstrumentType = HoneywellInstrumentTypes.GetByName(SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
 
             this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Subscribe(x => SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Name);
+                .Subscribe(x => SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x?.Name);
 
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
                 ? SettingsManager.SettingsInstance.InstrumentCommPort
