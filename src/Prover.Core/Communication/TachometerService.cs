@@ -39,6 +39,17 @@ namespace Prover.Core.Communication
         {
             await Task.Run(() =>
             {
+                if (_serialPort == null)
+                    return;
+
+                _serialPort.Write($"@T1{(char)13}");
+                Thread.Sleep(50);
+                _serialPort.Write($"6{(char)13}");
+                _serialPort.DiscardInBuffer();
+            });
+
+            await Task.Run(() =>
+            {
                 _outputBoard?.StartMotor();
                 Thread.Sleep(500);
                 _outputBoard?.StopMotor();
