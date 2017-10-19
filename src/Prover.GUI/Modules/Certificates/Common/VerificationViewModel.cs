@@ -104,7 +104,8 @@ namespace Prover.GUI.Modules.Certificates.Common
             (MechanicalDrive) (Instrument?.VolumeTest?.DriveType is MechanicalDrive ? Instrument.VolumeTest.DriveType : null);
 
         public bool IsRotaryDrive => Instrument.DriveRateDescription().ToLower() == "rotary";
-        public RotaryDrive RotaryMeterInfo => (RotaryDrive) (Instrument?.VolumeTest?.DriveType is RotaryDrive ? Instrument.VolumeTest.DriveType : null);
+        public RotaryDrive RotaryMeterInfo => 
+            (RotaryDrive) (Instrument?.VolumeTest?.DriveType is RotaryDrive ? Instrument.VolumeTest.DriveType : null);
 
         public class PressureInfoViewModel
         {
@@ -163,21 +164,18 @@ namespace Prover.GUI.Modules.Certificates.Common
 
             public decimal DriveRate => _instrument.Items.GetItem(98).NumericValue;
 
-            public string DriveRateDescription => _instrument.Items.GetItem(98).Description;
+            public string DriveRateDescription
+            {
+                get
+                {
+                    if (_instrument.InstrumentType.Id == 12)
+                        return "Rotary";
+
+                    return _instrument.Items.GetItem(98).Description;
+                }
+            }
 
             public bool IsRotaryMeter => DriveRateDescription.ToLower() == "rotary";
-
-            //public class RotaryInfoViewModel
-            //{
-            //    private readonly Instrument _instrument;
-
-            //    public RotaryInfoViewModel(Instrument instrument)
-            //    {
-            //        _instrument = instrument;
-            //    }
-
-
-            //}
         }
 
         public Client Client => Instrument.Client;
