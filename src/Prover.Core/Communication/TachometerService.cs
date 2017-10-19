@@ -24,6 +24,9 @@ namespace Prover.Core.Communication
             else
             {
                 _serialPort = new SerialPort(portName, 9600);
+                if (!_serialPort.IsOpen)
+                    _serialPort.Open();
+
                 _outputBoard = outputBoard;
             }
                
@@ -41,6 +44,8 @@ namespace Prover.Core.Communication
             {
                 if (_serialPort == null)
                     return;
+
+                if (!_serialPort.IsOpen) _serialPort.Open();
 
                 _serialPort.Write($"@T1{(char)13}");
                 Thread.Sleep(50);
@@ -66,7 +71,8 @@ namespace Prover.Core.Communication
             {
                 try
                 {
-                    if (!_serialPort.IsOpen) _serialPort.Open();
+                    if (!_serialPort.IsOpen)
+                        _serialPort.Open();
 
                     _serialPort.DiscardInBuffer();
                     _serialPort.Write("@D0");
