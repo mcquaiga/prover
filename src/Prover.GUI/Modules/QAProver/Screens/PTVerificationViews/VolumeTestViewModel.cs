@@ -91,7 +91,10 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             try
             {
-                TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
+                TestManager.VolumeTestManager.StatusMessage
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(status);
+
                 await TestManager.VolumeTestManager.PostTest(ct);
                 ManualVolumeTestStep = TestStep.PreTest;
             }

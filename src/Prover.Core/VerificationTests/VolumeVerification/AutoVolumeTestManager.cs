@@ -84,7 +84,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                                $"   CorVol => {VolumeTest.CorPulseCount}";
 
             using (Observable
-                    .Interval(TimeSpan.FromSeconds(1))
+                    .Interval(TimeSpan.FromMilliseconds(250))
                     .Subscribe(l => Status.OnNext(statusFormat)))
             {
                 try
@@ -98,7 +98,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                             //TODO: Raise events so the UI can respond
                             VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                             VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                            Status.OnNext(statusFormat);
                         } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
                     }, ct);
                     ct.ThrowIfCancellationRequested();
