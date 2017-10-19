@@ -144,7 +144,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         public override void Dispose()
         {
             base.Dispose();
-            _tachometerCommunicator.Dispose();
+            _tachometerCommunicator?.Dispose();
         }
 
         private async Task GetAppliedInput()
@@ -159,7 +159,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     tries++;
                     Log.Debug($"Reading tachometer .... Attempt {tries} of 10");
-                    result = await _tachometerCommunicator.ReadTach();
+                    result = await _tachometerCommunicator?.ReadTach();
                 }
                 catch (Exception ex)
                 {

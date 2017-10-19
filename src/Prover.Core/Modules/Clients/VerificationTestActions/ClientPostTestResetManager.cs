@@ -30,9 +30,12 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
         public async Task Execute(EvcCommunicationClient commClient, Instrument instrument,
             Subject<string> statusUpdates)
         {
-            var resetItems = instrument.Client.Items
+            if (instrument?.Client == null) return;
+
+            var resetItems = instrument?.Client?.Items?
                 .FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset &&
-                                     c.InstrumentType == instrument.InstrumentType)?.Items.ToList();
+                                     c.InstrumentType == instrument.InstrumentType)
+                ?.Items.ToList();
 
             if (resetItems == null || !resetItems.Any()) return;
 
