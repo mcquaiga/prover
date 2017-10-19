@@ -60,6 +60,8 @@ namespace Prover.Core.Communication
                 _outputBoard?.StopMotor();
                 Thread.Sleep(100);
             });
+
+            Thread.Sleep(2000);
         }
 
         public async Task<int> ReadTach()
