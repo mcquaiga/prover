@@ -91,7 +91,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                         .Interval(TimeSpan.FromMilliseconds(250))
                         .Subscribe(l => Status.OnNext($"{statusFormat}")))
                     {
-                        //_outputBoard?.StartMotor();
+                        _outputBoard?.StartMotor();
                         do
                         {
                             //TODO: Raise events so the UI can respond

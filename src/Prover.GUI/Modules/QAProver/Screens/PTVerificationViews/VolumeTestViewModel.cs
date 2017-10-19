@@ -115,6 +115,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.RunVolumeTest(ct);
+                AppliedInput = Volume.AppliedInput;
+                UncorrectedPulseCount = Volume.UncPulseCount;
+                CorrectedPulseCount = Volume.CorPulseCount;
             }
             catch (Exception ex)
             {
@@ -235,9 +238,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
-            NotifyOfPropertyChange(() => AppliedInput);
-            NotifyOfPropertyChange(() => UncorrectedPulseCount);
-            NotifyOfPropertyChange(() => CorrectedPulseCount);
         }
     }
 }
