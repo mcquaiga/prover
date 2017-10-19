@@ -171,7 +171,7 @@
     <Compile Include="Models\Instrument\Items\ISuperFactorItems.cs" />
     <Compile Include="Models\Instrument\Items\ITemperatureItems.cs" />
     <Compile Include="Models\Instrument\Items\IVolumeItems.cs" />
-    <Compile Include="Models\Instrument\Items\Meters\MeterIndexes.cs" />
+    <Compile Include="Models\MeterIndexes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -181,9 +181,7 @@
   <ItemGroup>
     <Folder Include="Events\" />
     <Folder Include="Interfaces\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\Instrument\Items\Meters\MeterIndexes.xml" />
+    <Folder Include="Models\Instrument\Items\Meters\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">

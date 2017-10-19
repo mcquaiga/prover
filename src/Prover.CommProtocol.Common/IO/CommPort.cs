@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 
@@ -12,7 +13,7 @@ namespace Prover.CommProtocol.Common.IO
         ISubject<string> DataSentObservable { get; }
         string Name { get; }
         bool IsOpen();
-        Task Open();
+        Task Open(CancellationToken ct);
         Task Close();
         Task Send(string data);
     }
@@ -29,7 +30,7 @@ namespace Prover.CommProtocol.Common.IO
         public abstract string Name { get; }
 
         public abstract bool IsOpen();
-        public abstract Task Open();
+        public abstract Task Open(CancellationToken ct);
         public abstract Task Close();
         public abstract Task Send(string data);
 

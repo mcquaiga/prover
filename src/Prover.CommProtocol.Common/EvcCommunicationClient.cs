@@ -97,7 +97,7 @@ namespace Prover.CommProtocol.Common
             {
                 _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
 
-                await CommPort.Open();
+                await CommPort.Open(ct);
 
                 _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
                         .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });

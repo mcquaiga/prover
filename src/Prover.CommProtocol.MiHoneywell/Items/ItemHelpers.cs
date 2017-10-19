@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
 {
@@ -21,7 +22,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         private static List<ItemMetadata> _itemDefinitions;
 
         public static IEnumerable<InstrumentType> LoadInstruments()
-        {
+        {          
             if (!ItemFileCache.IsEmpty)
                 return ItemFileCache.Keys;
 
@@ -43,8 +44,18 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                     CanUseIrDa = root.XPathSelectElement("CanUserIrDAPort") != null ? Convert.ToBoolean(root.XPathSelectElement("CanUserIrDAPort").Value) : default(bool?)
                 };
                 result.Add(i);
-                ItemFileCache.GetOrAdd(i, items);
+
+                var overrideItems = GetItemDefinitions(xDoc).ToList();
+
+                var mergedList = items.Concat(overrideItems)
+                    .GroupBy(item => item.Number)
+                    .Select(group => group.Aggregate((merged, next) => next))
+                    .ToList();
+        
+                ItemFileCache.GetOrAdd(i, mergedList);
             }
+
+            MeterIndexInfo.Get(0);
 
             return result;
         }
@@ -57,45 +68,49 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             _itemDefinitions = new List<ItemMetadata>();
             var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
             var xDoc = XDocument.Load(path);
-            _itemDefinitions = (from x in xDoc.Descendants("item")
-                                select new ItemMetadata
-                                {
-                                    Number = Convert.ToInt32(x.Attribute("number").Value),
-                                    Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
-                                    ShortDescription =
-                                        x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
-                                    LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
-                                    IsAlarm = (x.Attribute("isAlarm") != null) && Convert.ToBoolean(x.Attribute("isAlarm").Value),
-                                    IsPressure =
-                                        (x.Attribute("isPressure") != null) && Convert.ToBoolean(x.Attribute("isPressure").Value),
-                                    IsPressureTest =
-                                        (x.Attribute("isPressureTest") != null) &&
-                                        Convert.ToBoolean(x.Attribute("isPressureTest").Value),
-                                    IsTemperature =
-                                        (x.Attribute("isTemperature") != null) && Convert.ToBoolean(x.Attribute("isTemperature").Value),
-                                    IsTemperatureTest =
-                                        (x.Attribute("isTemperatureTest") != null) &&
-                                        Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
-                                    IsVolume = (x.Attribute("isVolume") != null) && Convert.ToBoolean(x.Attribute("isVolume").Value),
-                                    IsVolumeTest =
-                                        (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
-                                    IsSuperFactor = (x.Attribute("isSuper") != null) && Convert.ToBoolean(x.Attribute("isSuper").Value),
-                                    ItemDescriptions =
-                                        (from y in x.Descendants("value")
-                                         select new ItemMetadata.ItemDescription
-                                         {
-                                             Id = Convert.ToInt32(y.Attribute("id").Value),
-                                             Description = y.Attribute("description").Value,
-                                             Value =
-                                        y.Attribute("numericvalue") == null
-                                            ? (decimal?)null
-                                            : Convert.ToDecimal(y.Attribute("numericvalue").Value)
-                                         })
-                                            .ToList()
-                                }
-            ).ToList();
+            _itemDefinitions = GetItemDefinitions(xDoc).ToList();
 
             return _itemDefinitions;
+        }        
+
+        private static IEnumerable<ItemMetadata> GetItemDefinitions(XDocument xDoc)
+        {
+            return from x in xDoc.Descendants("item")
+                   select new ItemMetadata
+                   {
+                       Number = Convert.ToInt32(x.Attribute("number").Value),
+                       Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
+                       ShortDescription = x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
+                       LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
+                       IsAlarm = (x.Attribute("isAlarm") != null) && Convert.ToBoolean(x.Attribute("isAlarm").Value),
+                       IsPressure =
+                           (x.Attribute("isPressure") != null) && Convert.ToBoolean(x.Attribute("isPressure").Value),
+                       IsPressureTest =
+                           (x.Attribute("isPressureTest") != null) &&
+                           Convert.ToBoolean(x.Attribute("isPressureTest").Value),
+                       IsTemperature =
+                           (x.Attribute("isTemperature") != null) && Convert.ToBoolean(x.Attribute("isTemperature").Value),
+                       IsTemperatureTest =
+                           (x.Attribute("isTemperatureTest") != null) &&
+                           Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
+                       IsVolume = (x.Attribute("isVolume") != null) && Convert.ToBoolean(x.Attribute("isVolume").Value),
+                       IsVolumeTest =
+                           (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
+                       IsSuperFactor = (x.Attribute("isSuper") != null) && Convert.ToBoolean(x.Attribute("isSuper").Value),
+                       ItemDescriptions =
+                           (from y in x.Descendants("value")
+                            select new ItemMetadata.ItemDescription
+                            {
+                                Id = Convert.ToInt32(y.Attribute("id").Value),
+                                Description = y.Attribute("description") != null 
+                                    ? y.Attribute("description").Value 
+                                    : y.Value,
+                                Value = y.Attribute("numericvalue") == null
+                               ? (decimal?)null
+                               : Convert.ToDecimal(y.Attribute("numericvalue").Value)
+                            })
+                               .ToList()
+                   };
         }
 
         public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)

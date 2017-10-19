@@ -81,6 +81,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             }
         }
 
+        public string DriveRate => Instrument.Items.GetItem(98).Description;
+
         public IQaRunTestManager QaTestManager { get; set; }
 
         public void Handle(VerificationTestEvent message)

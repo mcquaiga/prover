@@ -1,5 +1,6 @@
 ﻿using System;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 
@@ -42,7 +43,7 @@ namespace Prover.Core.DriveTypes
             }
         }
 
-        public MeterIndexInfo MeterIndex { get; }
+        public MeterIndex MeterIndex { get; }
 
         public string MeterTypeDescription => MeterIndex.Description;
 
