@@ -232,6 +232,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);
+            NotifyOfPropertyChange(() => AppliedInput);
+            NotifyOfPropertyChange(() => UncorrectedPulseCount);
+            NotifyOfPropertyChange(() => CorrectedPulseCount);
         }
     }
 }
