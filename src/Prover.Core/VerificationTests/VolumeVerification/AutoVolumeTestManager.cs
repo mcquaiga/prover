@@ -89,7 +89,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     using (Observable
                         .Interval(TimeSpan.FromMilliseconds(250))
-                        .Subscribe(l => Status.OnNext($"{statusFormat}")))
+                        .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
+                                                      $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
+                                                      $"   CorVol => {VolumeTest.CorPulseCount}")))
                     {
                         _outputBoard?.StartMotor();
                         do
