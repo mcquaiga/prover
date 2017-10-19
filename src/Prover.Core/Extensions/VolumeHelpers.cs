@@ -74,6 +74,9 @@ namespace Prover.Core.Extensions
 
         public static string DriveRateDescription(this Instrument instrument)
         {
+            if (instrument.InstrumentType.Id == 12)
+                return "Rotary";
+
             return instrument.Items.GetItem(98).Description;
         }
 
