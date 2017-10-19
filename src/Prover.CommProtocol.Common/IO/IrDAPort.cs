@@ -42,7 +42,9 @@ namespace Prover.CommProtocol.Common.IO
             }
 
             _client = new IrDAClient();
-            
+            _client.Client.SetSocketOption(
+                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+
             DataSentObservable = new Subject<string>();
         }
 
@@ -128,16 +130,18 @@ namespace Prover.CommProtocol.Common.IO
 
         public override async Task Open(CancellationToken ct)
         {
-            if (_device == null)
+            _client = new IrDAClient();
+            _client.Client.SetSocketOption(
+                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+
+            //if (_device == null)
                 _device = await SelectIrDAPeerInfo(_client, ct);
+
+            //if (_endPoint == null)
+                _endPoint = new IrDAEndPoint(_device.DeviceAddress, ServiceName);
 
             if (!_client.Connected)
             {
-                _client.Client.SetSocketOption(
-                    IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
-                
-                _endPoint = new IrDAEndPoint(_device.DeviceAddress, ServiceName);
-
                 await Task.Factory.FromAsync(
                     _client.BeginConnect(_endPoint, ar =>
                     {
