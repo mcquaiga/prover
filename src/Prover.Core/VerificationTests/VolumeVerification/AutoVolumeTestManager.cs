@@ -82,39 +82,40 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             var statusFormat = $"Waiting for pulse inputs... {Environment.NewLine}" +
                                $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                $"   CorVol => {VolumeTest.CorPulseCount}";
-
-            using (Observable
-                    .Interval(TimeSpan.FromMilliseconds(250))
-                    .Subscribe(l => Status.OnNext(statusFormat)))
+            try
             {
-                try
+                ct.ThrowIfCancellationRequested();                
+                await Task.Run(() =>
                 {
-                    ct.ThrowIfCancellationRequested();
-                    await Task.Run(() =>
+                    using (Observable
+                        .Interval(TimeSpan.FromMilliseconds(250))
+                        .Subscribe(l => Status.OnNext($"{statusFormat}")))
                     {
-                        _outputBoard?.StartMotor();
+                        //_outputBoard?.StartMotor();
                         do
                         {
                             //TODO: Raise events so the UI can respond
                             VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                             VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                        } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() && !ct.IsCancellationRequested);
-                    }, ct);
-                    ct.ThrowIfCancellationRequested();
-                }
-                catch (OperationCanceledException)
-                {
-                    Log.Info("Cancelling volume test.");
-                    throw;
-                }
-                finally
-                {
-                    _outputBoard?.StopMotor();
-                    TestStep.OnNext(VolumeTestSteps.ExecutingTest);
-                }
+                        } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() &&
+                                    !ct.IsCancellationRequested);
+                    }
+                }, ct);
+
+                ct.ThrowIfCancellationRequested();                
+            }
+            catch (OperationCanceledException)
+            {
+                Log.Info("Cancelling volume test.");
+                throw;
+            }
+            finally
+            {
+                _outputBoard?.StopMotor();
+                TestStep.OnNext(VolumeTestSteps.ExecutingTest);
             }
 
-            
+
         }
 
         public override async Task PostTest(CancellationToken ct)
