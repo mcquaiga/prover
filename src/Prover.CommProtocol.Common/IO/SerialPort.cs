@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using RJCP.IO.Ports;
 
@@ -66,11 +67,11 @@ namespace Prover.CommProtocol.Common.IO
 
         public override bool IsOpen() => _serialStream.IsOpen;
 
-        public override async Task Open()
+        public override async Task Open(CancellationToken ct)
         {
             if (_serialStream.IsOpen) return;
 
-            await Task.Run(() => _serialStream.Open());
+            await Task.Run(() => _serialStream.Open(), ct);
         }
 
         public override async Task Close()

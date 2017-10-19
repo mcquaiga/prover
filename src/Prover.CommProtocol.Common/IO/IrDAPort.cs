@@ -46,7 +46,7 @@ namespace Prover.CommProtocol.Common.IO
             DataSentObservable = new Subject<string>();
         }
 
-        public int RetryCount { get; } = 10;
+        public int RetryCount { get; } = 30;
 
         public override string Name => "IrDA";
 
@@ -126,10 +126,10 @@ namespace Prover.CommProtocol.Common.IO
             return _client.Connected;
         }
 
-        public override async Task Open()
+        public override async Task Open(CancellationToken ct)
         {
             if (_device == null)
-                _device = SelectIrDAPeerInfo(_client);
+                _device = await SelectIrDAPeerInfo(_client, ct);
 
             if (!_client.Connected)
             {
@@ -167,8 +167,6 @@ namespace Prover.CommProtocol.Common.IO
 
         public override async Task Send(string data)
         {
-            await Open();
-
             var strm = _client.GetStream();
             if (strm.CanWrite)
             {
@@ -189,21 +187,26 @@ namespace Prover.CommProtocol.Common.IO
             _endPoint = null;
         }
 
-        private IrDADeviceInfo SelectIrDAPeerInfo(IrDAClient client)
+        private async Task<IrDADeviceInfo> SelectIrDAPeerInfo(IrDAClient client, CancellationToken ct)
         {
             var tryNumber = 0;
 
-            do
+            return await Task.Run(async () =>
             {
-                var devices = client.DiscoverDevices();
-                if (devices.Length > DevicePeerIndex)
-                    return devices[DevicePeerIndex];
+                do
+                {
+                    var devices = client.DiscoverDevices();
+                    if (devices.Length > DevicePeerIndex)
+                        return devices[DevicePeerIndex];
 
-                tryNumber++;
-                Thread.Sleep(5000);
-            } while (tryNumber < RetryCount);
+                    tryNumber++;
+                    await Task.Run(() => Thread.Sleep(1000), ct);
+                } while (tryNumber < RetryCount);
 
-            throw new Exception("No IrDA devices found.");
+                throw new Exception("No IrDA devices found.");
+            }, ct);
+
+            
         }
     }
 }

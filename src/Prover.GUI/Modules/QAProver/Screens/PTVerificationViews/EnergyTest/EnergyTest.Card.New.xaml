@@ -5,27 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              mc:Ignorable="d">
-    <StackPanel>
-        <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
-                   Text="Energy" />
-        <controls:PercentageControlNew
-            Margin="5"
-            HorizontalAlignment="Center"
-            DisplayValue="{Binding EnergyTest.PercentError}"
-            Passed="{Binding EnergyTest.HasPassed}" />
-        <StackPanel Margin="5">
-            <controls:ValueDescriptionControl Label="Units" 
-                                              Value="{Binding EnergyTest.EnergyUnits}" 
-                                              HorizontalAlignment="Center"/>
-            <UniformGrid Columns="2" HorizontalAlignment="Center">
-                
-                <controls:ValueDescriptionControl Label="True Calculated"
-                                                   Value="{Binding EnergyTest.ActualEnergy}" />
-                <controls:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
-            </UniformGrid>
+    <Grid>
+        <StackPanel VerticalAlignment="Bottom">
+            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Energy" />
+            <controls:PercentageControlNew
+                Margin="5"
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding EnergyTest.PercentError}"
+                Passed="{Binding EnergyTest.HasPassed}" />
+            <StackPanel>
+                <controls:ValueDescriptionControl Label="Units"
+                                                  Value="{Binding EnergyTest.EnergyUnits}"
+                                                  HorizontalAlignment="Center" />
+                <UniformGrid Columns="2" 
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Bottom">
 
+                    <controls:ValueDescriptionControl Label="True Calculated"
+                                                      Value="{Binding EnergyTest.ActualEnergy}" />
+                    <controls:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
+                </UniformGrid>
+
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </Grid>
 
 
 </UserControl>
