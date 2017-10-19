@@ -24,6 +24,9 @@ namespace Prover.Core.Communication
             else
             {
                 _serialPort = new SerialPort(portName, 9600);
+                if (!_serialPort.IsOpen)
+                    _serialPort.Open();
+
                 _outputBoard = outputBoard;
             }
                
@@ -42,6 +45,8 @@ namespace Prover.Core.Communication
                 if (_serialPort == null)
                     return;
 
+                if (!_serialPort.IsOpen) _serialPort.Open();
+
                 _serialPort.Write($"@T1{(char)13}");
                 Thread.Sleep(50);
                 _serialPort.Write($"6{(char)13}");
@@ -55,6 +60,8 @@ namespace Prover.Core.Communication
                 _outputBoard?.StopMotor();
                 Thread.Sleep(100);
             });
+
+            Thread.Sleep(2000);
         }
 
         public async Task<int> ReadTach()
@@ -66,7 +73,8 @@ namespace Prover.Core.Communication
             {
                 try
                 {
-                    if (!_serialPort.IsOpen) _serialPort.Open();
+                    if (!_serialPort.IsOpen)
+                        _serialPort.Open();
 
                     _serialPort.DiscardInBuffer();
                     _serialPort.Write("@D0");

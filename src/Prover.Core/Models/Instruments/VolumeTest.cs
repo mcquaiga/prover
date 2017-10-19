@@ -199,9 +199,15 @@ namespace Prover.Core.Models.Instruments
         private void CreateDriveType()
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
+            {
                 DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
                     ? "Rotary"
                     : "Mechanical";
+
+                if (InstrumentType.Id == 12)
+                    DriveTypeDiscriminator = "Rotary";                
+            }
+                
 
             if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
                 switch (DriveTypeDiscriminator)

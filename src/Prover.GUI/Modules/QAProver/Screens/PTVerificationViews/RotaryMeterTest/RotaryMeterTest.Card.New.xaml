@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              mc:Ignorable="d">
-    <StackPanel VerticalAlignment="Top">
+    <StackPanel VerticalAlignment="Top"
+                HorizontalAlignment="Center">
         <Border Style="{StaticResource SubSectionDividerBorder}">
         <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                    Text="Meter Displacement" />
