@@ -116,8 +116,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 _outputBoard?.StopMotor();
                 TestStep.OnNext(VolumeTestSteps.ExecutingTest);
             }
-
-
         }
 
         public override async Task PostTest(CancellationToken ct)

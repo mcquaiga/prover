@@ -62,12 +62,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                         "Running Volume Test...", RunTest, canRunTestCommand);
                 }
 
-                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount)
-                    .Subscribe(values =>
+                this.WhenAnyValue(x => x.AppliedInput)
+                    .Subscribe(value =>
                     {
-                        Volume.AppliedInput = values.Item1;
-                        Volume.UncPulseCount = values.Item2;
-                        Volume.CorPulseCount = values.Item3;
+                        Volume.AppliedInput = value;
+                        EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+
+                    });
+
+                this.WhenAnyValue(x => x.UncorrectedPulseCount)
+                    .Subscribe(value =>
+                    {
+                        Volume.UncPulseCount = value;
+                        EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                    });
+
+                this.WhenAnyValue(x => x.CorrectedPulseCount)
+                    .Subscribe(value =>
+                    {
+                        Volume.UncPulseCount = value;
                         EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     });
             }
