@@ -41,6 +41,10 @@ namespace Prover.GUI.Modules.QAProver.Screens
             }
         }
 
+        public string DriveRateDescription => Instrument.DriveRateDescription();
+        public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
+        public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
+
         public string BasePressure =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 

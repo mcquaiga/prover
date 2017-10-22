@@ -66,6 +66,7 @@
   </value>
   <value description="RM5000" UnCorPulsesX10="40" UnCorPulsesX100="4" MeterDisplacement="0.0367347">
     <id>15</id>
+    <id>145</id>
   </value>
   <value description="RM7000" UnCorPulsesX10="65" UnCorPulsesX100="7" MeterDisplacement="0.0612245">
     <id>16</id>

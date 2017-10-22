@@ -586,6 +586,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\chemistry_4C5_icon.ico" />
+    <Content Include="Resources\science.svg" />
+    <Resource Include="Resources\chemistry.png" />
     <Resource Include="Resources\clipboard-check.ico" />
     <Resource Include="Resources\clipbooard-check-white.png" />
     <Resource Include="Resources\app-icon-dark.ico" />
@@ -612,6 +615,7 @@
     </EmbeddedResource>
     <Resource Include="clipboard-check.ico" />
     <Resource Include="clipbooard_check_white_qeW_icon.ico" />
+    <Resource Include="Modules\Certificates\Reports\Resources\crwall_logo.jpg" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

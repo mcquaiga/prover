@@ -31,6 +31,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <StackPanel VerticalAlignment="Center"
@@ -90,9 +91,38 @@
 
                 </Grid>
             </Border>
-
             <Border Style="{StaticResource SubSectionDividerBorder}"
                     Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="TestTube"/>
+                    <UniformGrid Grid.Column="1"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding UnCorrectedMultiplierDescription, FallbackValue='N/A'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="UnCor. Units" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding CorrectedMultiplierDescription, FallbackValue='N/A'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Cor. Units" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding DriveRateDescription, FallbackValue='100 PSIA'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock FontSize="12" Text="Drive Rate" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource SubSectionDividerBorder}"
+                    Grid.Row="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -118,7 +148,7 @@
                 </Grid>
             </Border>
             <Border Style="{StaticResource SubSectionDividerBorder}"
-                    Grid.Row="3">
+                    Grid.Row="4">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -149,7 +179,7 @@
                 </Grid>
             </Border>
             <Border Style="{StaticResource SubSectionDividerBorder}"
-                    Grid.Row="4">
+                    Grid.Row="5">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -210,7 +240,7 @@
                 </Grid>
             </Border>
             <ContentControl Margin="2" cal:View.Model="{Binding}"
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Visibility="{Binding DisplayEventLogCommPortView, Converter={StaticResource BoolToHiddenConverter}}"
                             cal:View.Context="EventLogCommPortCard" />
         </Grid>
