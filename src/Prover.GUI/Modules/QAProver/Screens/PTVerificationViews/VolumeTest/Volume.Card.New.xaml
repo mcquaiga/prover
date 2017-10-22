@@ -85,14 +85,17 @@
                         VerticalAlignment="Bottom">
                 <controls:ValueDescriptionControl Label="Applied Input"
                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
+                                                  TabIndex="0"
                                                   IsReadOnly="False" />
 
                 <controls:ValueDescriptionControl Label="Uncor Pulses"
                                                   Value="{Binding UncorrectedPulseCount, Mode=TwoWay}"
+                                                  TabIndex="1"
                                                   IsReadOnly="False" />
 
                 <controls:ValueDescriptionControl Label="Cor Pulses"
                                                   Value="{Binding CorrectedPulseCount, Mode=TwoWay}"
+                                                  TabIndex="2"
                                                   IsReadOnly="False" />
 
             </StackPanel>
@@ -119,8 +122,8 @@
                                                       Value="{Binding TrueUncorrected}" />
                     <controls:ValueDescriptionControl Label="EVC Calculated"
                                                       Value="{Binding EvcUncorrected}" />
-                    <controls:ValueDescriptionControl Label="Multiplier"
-                                                      Value="{Binding UnCorrectedMultiplierDescription}" />
+                    <!--<controls:ValueDescriptionControl Label="Multiplier"
+                                                      Value="{Binding UnCorrectedMultiplierDescription}" />-->
                     <controls:ValueDescriptionControl Label="Pulses Verified" 
                                                       Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
@@ -148,8 +151,8 @@
                                                       Value="{Binding TrueCorrected}" />
                     <controls:ValueDescriptionControl Label="EVC Calculated"
                                                       Value="{Binding EvcCorrected}" />
-                    <controls:ValueDescriptionControl Label="Multiplier"
-                                                      Value="{Binding CorrectedMultiplierDescription}" />
+                    <!--<controls:ValueDescriptionControl Label="Multiplier"
+                                                      Value="{Binding CorrectedMultiplierDescription}" />-->
                     <controls:ValueDescriptionControl Label="Pulses Verified" 
                                                       Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>

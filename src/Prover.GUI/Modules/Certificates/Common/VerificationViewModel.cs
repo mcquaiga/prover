@@ -32,7 +32,7 @@ namespace Prover.GUI.Modules.Certificates.Common
 
             VerificationTests = Instrument
                 .VerificationTests
-                .OrderByDescending(v => v.TestNumber)
+                .OrderBy(v => v.TestNumber)
                 .Select(x => new VerificationTestViewModel(x))
                 .ToList();
         }
@@ -66,25 +66,7 @@ namespace Prover.GUI.Modules.Certificates.Common
                 Test = test;
             }
 
-            public string Description
-            {
-                get
-                {
-                    switch (Test.TestNumber)
-                    {
-                        case 0:
-                            return "H";
-                        case 1:
-                            return "M";
-                        case 2:
-                            return "L";
-
-                        default:
-                            return "L";
-                    }
-                    
-                }
-            }
+            public string Description => Test.TestLevel;
         }
 
         public bool ShowTemperature => Instrument.IsLiveTemperature;

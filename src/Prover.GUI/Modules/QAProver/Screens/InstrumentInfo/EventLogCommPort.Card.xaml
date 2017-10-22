@@ -33,8 +33,6 @@
     <Border Style="{StaticResource SubSectionDividerBorder}">
         <StackPanel Grid.Column="0"
                     VerticalAlignment="Bottom">
-            <controls:ValueDescriptionControl Label="Driver Rate"
-                                              Value="{Binding DriveRate}" />
              <StackPanel Orientation="Vertical"
                     VerticalAlignment="Center"
                     Margin="10">

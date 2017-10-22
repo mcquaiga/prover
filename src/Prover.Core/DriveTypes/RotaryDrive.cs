@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models;
 using Prover.Core.Extensions;
@@ -14,6 +15,9 @@ namespace Prover.Core.DriveTypes
         {
             _instrument = instrument;
             MeterIndex = MeterIndexInfo.Get((int) _instrument.Items.GetItem(432).NumericValue);
+
+            if (MeterIndex == null)
+                throw new KeyNotFoundException("Could not find a meter type that match the instruments value in item 432.");
         }
 
         public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(Global
