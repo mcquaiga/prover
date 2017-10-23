@@ -25,90 +25,96 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel>
-        <materialDesign:ColorZone DockPanel.Dock="Top"
-                                  Mode="PrimaryLight"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <materialDesign:ColorZone Mode="PrimaryLight"
+                                  Grid.Row="0"
                                   Padding="16 8">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical"
+                        Margin="4">
                 <TextBlock Text="Settings"
                            VerticalAlignment="Center"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
-               
             </StackPanel>
         </materialDesign:ColorZone>
-
-        <StackPanel DockPanel.Dock="Bottom"
-                    Orientation="Vertical"
-                    Margin="4">
-            <TabControl Margin="5">
-                <TabItem Header="Test Configuration">
-                    <TabItem.Content>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="8 16">
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox x:Name="StabilizeLiveReadings" />
-                                <TextBlock
-                                    Text="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
-                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                    VerticalAlignment="Center" />
-                            </StackPanel>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+                <TabControl Margin="5">
+                    <TabItem Header="Test Configuration">
+                        <TabItem.Content>
                             <StackPanel Orientation="Vertical"
-                                        Margin="0 20 0 10">
-                                <TextBlock Text="Mechanical Drive Volume input test type"
-                                           Style="{StaticResource MaterialDesignTitleTextBlock}"
-                                           Margin="4" />
-                                <ComboBox x:Name="MechanicalVolumeTestType"
-                                          Margin="6"/>
-                                <StackPanel Margin="12 4">
-                                    <TextBlock Text="Manual"
-                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                                               TextWrapping="WrapWithOverflow" />
-                                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                               Margin="4 2">
-                                        The QA operator runs the volume test without help from the application.
-                                        <LineBreak />
-                                        Applied input and pulse output readings must be entered after the test is complete.
-                                        <LineBreak />
-                                    </TextBlock>
-
-                                    <TextBlock Text="Automatic"
-                                               Style="{StaticResource MaterialDesignSubheadingTextBlock}"
-                                               TextWrapping="WrapWithOverflow" />
-                                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                               Margin="4 2">
-                                        The application is responsible for running the test by managing the applied input and monitoring the pulse output values through the DAQ board.
-                                        <LineBreak />
-                                    </TextBlock>
+                                        Margin="8 16">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox x:Name="StabilizeLiveReadings" />
+                                    <TextBlock
+                                        Text="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
+                                        Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                        VerticalAlignment="Center" />
                                 </StackPanel>
+                                <StackPanel Orientation="Vertical"
+                                            Margin="0 20 0 10">
+                                    <TextBlock Text="Mechanical Drive Volume input test type"
+                                               Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                               Margin="4" />
+                                    <ComboBox x:Name="MechanicalVolumeTestType"
+                                              Margin="6" />
+                                    <StackPanel Margin="12 4">
+                                        <TextBlock Text="Manual"
+                                                   Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                                   TextWrapping="WrapWithOverflow" />
+                                        <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   Margin="4 2">
+                                            The QA operator runs the volume test without help from the application.
+                                            <LineBreak />
+                                            Applied input and pulse output readings must be entered after the test is complete.
+                                            <LineBreak />
+                                        </TextBlock>
+
+                                        <TextBlock Text="Automatic"
+                                                   Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                                   TextWrapping="WrapWithOverflow" />
+                                        <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   Margin="4 2">
+                                            The application is responsible for running the test by managing the applied input and monitoring the pulse output values through the DAQ board.
+                                            <LineBreak />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <materialDesign:Card Margin="0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Mechanical Uncorrected Pulse Test Limit"
+                                                   Margin="4"
+                                                   Style="{StaticResource MaterialDesignTitleTextBlock}" />
+                                        <DataGrid Margin="5"
+                                                  ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"
+                                                  CanUserSortColumns="True"
+                                                  CanUserAddRows="True"
+                                                  CanUserDeleteRows="True" />
+                                    </StackPanel>
+                                </materialDesign:Card>
                             </StackPanel>
-                            <materialDesign:Card Margin="0">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Mechanical Uncorrected Pulse Test Limit"
-                                               Margin="4"
-                                               Style="{StaticResource MaterialDesignTitleTextBlock}" />
-                                    <DataGrid Margin="5"                                              
-                                              ItemsSource="{Binding MechanicalUncorrectedTestLimits, NotifyOnSourceUpdated=True}"                                              
-                                              CanUserSortColumns="True" 
-                                              CanUserAddRows="True" 
-                                              CanUserDeleteRows="True" />
-                                </StackPanel>
-                            </materialDesign:Card>
-                        </StackPanel>
-                    </TabItem.Content>
-                </TabItem>
-                <TabItem>
+                        </TabItem.Content>
+                    </TabItem>
+                    <TabItem>
 
-                </TabItem>
-            </TabControl>
-            <Button Command="{Binding SaveSettingsCommand}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Margin="8"
-                    FontSize="24"
-                    Width="150"
-                    Content="SAVE" />
+                    </TabItem>
+                </TabControl>
+            </ScrollViewer>
+        
 
-        </StackPanel>
 
-    </DockPanel>
+        <Button Command="{Binding SaveSettingsCommand}"
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Bottom"
+                Margin="8"
+                FontSize="22"
+                Width="150"
+                Content="SAVE" />
+    </Grid>
 </UserControl>
