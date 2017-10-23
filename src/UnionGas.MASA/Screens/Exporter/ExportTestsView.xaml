@@ -58,10 +58,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <StackPanel Orientation="Vertical"
                     Grid.Row="0"
-                Margin="5"
+                Margin="5">
             <TextBlock Text="Filter by instrument"/>
             <StackPanel Orientation="Horizontal">
                 <Button Content="All"

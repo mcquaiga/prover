@@ -24,8 +24,7 @@ namespace Prover.Core.Models.Instruments
         PTZ
     }
 
-    public class
-        Instrument : ProverTable
+    public partial class Instrument : ProverTable
     {
         public Instrument()
         {

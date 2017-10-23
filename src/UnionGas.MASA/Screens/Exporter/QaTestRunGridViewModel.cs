@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
@@ -22,7 +23,7 @@ namespace UnionGas.MASA.Screens.Exporter
         public QaTestRunGridViewModel(ScreenManager screenManager, 
                 IEventAggregator eventAggregator,
                 IExportTestRun exportManager,
-                IInstrumentStore<Instrument> instrumentStore,
+                InstrumentStore instrumentStore,
                 InstrumentReportGenerator instrumentReportGenerator) 
             : base(screenManager, eventAggregator)
         {

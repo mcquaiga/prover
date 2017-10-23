@@ -13,6 +13,7 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
 
 namespace UnionGas.MASA.Screens.Exporter
 {

@@ -33,7 +33,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             if (ShowAbsolute)
             {
-                if (SettingsManager.SettingsInstance.UpdateAbsolutePressure)
+                if (SettingsManager.SettingsInstance.TestSettings.UpdateAbsolutePressure)
                 {
                     LockGaugePressure = false;
                     this.WhenAnyValue(x => x.GaugePressure, x => x.AtmosphericGauge,
@@ -65,12 +65,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
 
             this.WhenAnyValue(x => x.GaugePressure)
-                .Subscribe(x => TestRun.GasGauge = x);           
-
-                {
-                    TestRun.AtmosphericGauge = x;
-                    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-                });
+                .Subscribe(x => TestRun.GasGauge = x);  
+                //.Subscribe(x =>
+                //{
+                //    TestRun.AtmosphericGauge = x;
+                //    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+                //});
 
             GaugePressure = TestRun.GasGauge;
             AtmosphericGauge = TestRun.AtmosphericGauge;                           
