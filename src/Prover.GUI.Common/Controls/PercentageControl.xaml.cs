@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.GUI.Common.Controls
 {
@@ -9,10 +10,10 @@ namespace Prover.GUI.Common.Controls
     /// </summary>
     public partial class PercentageControl : UserControl
     {
-        // Using a DependencyProperty as the backing store for IconSource.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IconSourceProperty =
-            DependencyProperty.Register(nameof(IconSource), typeof(ImageSource), typeof(PercentageControl),
-                new FrameworkPropertyMetadata(null));
+        //// Using a DependencyProperty as the backing store for IconSource.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty IconSourceProperty =
+        //    DependencyProperty.Register(nameof(IconSource), typeof(ImageSource), typeof(PercentageControl),
+        //        new FrameworkPropertyMetadata(null));
 
         // Using a DependencyProperty as the backing store for IconBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IconBackgroundProperty =
@@ -31,6 +32,9 @@ namespace Prover.GUI.Common.Controls
                 new PropertyMetadata(0.0m));
 
 
+        public static readonly DependencyProperty IconKindProperty = DependencyProperty.Register(
+            "IconKind", typeof(PackIconKind), typeof(PercentageControl), new PropertyMetadata(default(PackIconKind)));
+
         public PercentageControl()
         {
             InitializeComponent();
@@ -43,10 +47,10 @@ namespace Prover.GUI.Common.Controls
             set { SetValue(PassedProperty, value); }
         }
 
-        public ImageSource IconSource
+        public PackIconKind IconKind
         {
-            get { return (ImageSource) GetValue(IconSourceProperty); }
-            set { SetValue(IconSourceProperty, value); }
+            get { return (PackIconKind)GetValue(IconKindProperty); }
+            set { SetValue(IconKindProperty, value); }
         }
 
         public Brush IconBackground
@@ -72,13 +76,14 @@ namespace Prover.GUI.Common.Controls
         {
             if (myObj.Passed)
             {
-                myObj.IconSource = myObj.Resources["PassIcon"] as ImageSource;
-                myObj.IconBackground = (Brush) myObj.Resources["PassColour"];
+                myObj.IconKind = PackIconKind.Check;
+                //myObj.IconBackground = (Brush)myObj.Resources["PassColour"];
+                myObj.IconBackground = new SolidColorBrush(Colors.ForestGreen);
             }
             else
             {
-                myObj.IconSource = myObj.Resources["FailIcon"] as ImageSource;
-                myObj.IconBackground = (Brush) myObj.Resources["FailColour"];
+                myObj.IconKind = PackIconKind.AlertCircleOutline;
+                myObj.IconBackground = new SolidColorBrush(Colors.IndianRed);
             }
         }
     }

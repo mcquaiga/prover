@@ -52,6 +52,9 @@
                                     Style="{StaticResource MaterialDesignBody2TextBlock}"
                                     VerticalAlignment="Center" />
                             </StackPanel>
+                            <CheckBox IsChecked="{Binding Settings.UpdateAbsolutePressure}"
+                          Content="Update absolute pressure value for absolute transducers. Updates gauge value based on the atmospheric and absolute instead."
+                          Margin="5 10 5 15"/>
                             <StackPanel Orientation="Vertical"
                                         Margin="0 20 0 10">
                                 <TextBlock Text="Mechanical Drive Volume input test type"

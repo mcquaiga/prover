@@ -8,6 +8,8 @@ using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Reports;
 using ReactiveUI;
+using System.Linq.Expressions;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
@@ -17,9 +19,12 @@ namespace UnionGas.MASA.Screens.Exporter
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public QaTestRunGridViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportManager, IProverStore<Instrument> instrumentStore,
-            InstrumentReportGenerator instrumentReportGenerator) : base(screenManager, eventAggregator)
+        public QaTestRunGridViewModel(ScreenManager screenManager, 
+                IEventAggregator eventAggregator,
+                IExportTestRun exportManager,
+                IInstrumentStore<Instrument> instrumentStore,
+                InstrumentReportGenerator instrumentReportGenerator) 
+            : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;
             _instrumentStore = instrumentStore;
@@ -34,6 +39,14 @@ namespace UnionGas.MASA.Screens.Exporter
             ViewQaTestReportCommand = ReactiveCommand.CreateFromTask(DisplayInstrumentReport);
         }
 
+        #region Properties
+        private bool _isShowing;
+        public bool IsShowing
+        {
+            get => _isShowing;
+            set => this.RaiseAndSetIfChanged(ref _isShowing, value);
+        }
+
         private Instrument _instrument;
         public Instrument Instrument
         {
@@ -41,7 +54,7 @@ namespace UnionGas.MASA.Screens.Exporter
             set { this.RaiseAndSetIfChanged(ref _instrument, value); }
         }
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:M/dd/yyyy h:mm tt}";
+        public string DateTimePretty => $"{Instrument.TestDateTime:g}";
 
         public bool IsSelected { get; set; }
 
@@ -62,20 +75,38 @@ namespace UnionGas.MASA.Screens.Exporter
             get { return _archiveTestCommand; }
             set { this.RaiseAndSetIfChanged(ref _archiveTestCommand, value); }
         }
-        public async Task ArchiveTest()
+
+        private bool _isRemoved;
+        public bool IsRemoved
         {
-            await _instrumentStore.Delete(Instrument);
-            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
+            get => _isRemoved;
+            set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
+        }
+        public ReactiveCommand ExportQaTestRunCommand { get; }      
+        #endregion
+
+        public void SetFilter(IObservable<Predicate<Instrument>> filter)
+        {
+            filter.Subscribe(x =>
+            {
+                IsShowing = x(Instrument);
+            });
         }
 
-        public ReactiveCommand ExportQaTestRunCommand { get; }
+        public async Task ArchiveTest()
+        {
+            await _instrumentStore.Delete(Instrument);            
+            IsRemoved = true;
+        }
+        
         public async Task ExportQaTestRun()
         {
             if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
                 return;
 
-            await _exportManager.Export(Instrument);
-            await EventAggregator.PublishOnUIThreadAsync(new DataStorageChangeEvent());
+            IsRemoved = await _exportManager.Export(Instrument);            
         }
+
+        
     }
 }

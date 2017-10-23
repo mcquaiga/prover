@@ -13,6 +13,7 @@ namespace UnionGas.MASA.Screens.Toolbars
     {
         private const string LoginViewContext = "Login";
         private const string LoggedInViewContext = "LoggedIn";
+        private const string WaitingForLogInViewContext = "WaitingForLogin";
         private readonly ILoginService<EmployeeDTO> _loginService;
         
         public LoginToolbarViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ILoginService<EmployeeDTO> loginService) : base(screenManager, eventAggregator)
@@ -34,8 +35,9 @@ namespace UnionGas.MASA.Screens.Toolbars
 
             if (userId != null)
             {
+                ChangeContext(WaitingForLogInViewContext);
                 var success = await _loginService.Login(userId);
-                if (success) ChangeContext(LoggedInViewContext);
+                ChangeContext(success ? LoggedInViewContext : LoginViewContext);
             }
 
             loginViewModel = null;

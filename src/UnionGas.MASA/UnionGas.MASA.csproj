@@ -116,6 +116,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportManagerApp.cs" />
     <Compile Include="ExportManagerModule.cs" />
     <Compile Include="Screens\Exporter\ExportTestsView.xaml.cs">
       <DependentUpon>ExportTestsView.xaml</DependentUpon>
@@ -131,6 +132,9 @@
     </Compile>
     <Compile Include="Screens\Toolbars\LoginToolbar\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml.cs">
+      <DependentUpon>WaitingForLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
@@ -285,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Toolbars\LoginToolbar\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

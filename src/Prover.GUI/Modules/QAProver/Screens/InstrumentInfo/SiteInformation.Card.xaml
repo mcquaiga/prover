@@ -1,65 +1,83 @@
-﻿<UserControl x:Class="Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.SiteInfoCard"
+﻿<UserControl x:Class="Prover.GUI.Screens.QAProver.InstrumentInfo.SiteInfoCard"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             
-             TextElement.FontSize="24"
-             TextElement.FontWeight="Light"
+             Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              cal:Bind.AtDesignTime="True"
-             mc:Ignorable="d"
-             d:DesignHeight="125" d:DesignWidth="700">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ImageSource x:Key="PassIcon">..\Resources\clipboard-check.png</ImageSource>
-            <ImageSource x:Key="FailIcon">..\Resources\clipboard-error.png</ImageSource>
-            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
-            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontWeight" Value="Light"/>
+            </Style>
+            
+            <Style TargetType="controls:ValueDescriptionControl">
+                <Setter Property="ValueFontSize" Value="18"/>
+                <Setter Property="LabelFontSize" Value="12"/>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{DynamicResource MaterialDesignBackground}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55" />
-            <ColumnDefinition Width="0.4*"/>
-            <ColumnDefinition Width="*"/>
-           
+            <ColumnDefinition Width="55"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
-            <controls1:PercentageControl DisplayValue="0" Passed="{Binding Instrument.HasPassed}"
-                                         HorizontalAlignment="Center" Margin="2 2" />
+            <controls:PercentageControl Passed="{Binding Instrument.HasPassed}"/>
         </StackPanel>
-        <StackPanel Margin="10 5 5 5" Grid.Column="1" VerticalAlignment="Center">
-            <TextBlock FontSize="16" Margin="0 0 0 2" Text="{Binding TestDatePretty}" />
-            <TextBlock FontSize="38" Text="{Binding Instrument.InstrumentType.Name}" />
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding CorrectorType}" />
-                <TextBlock FontWeight="UltraLight" Text=" | " />
-                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator}" />
-            </StackPanel>
-            <TextBlock FontSize="18" Text="{Binding Instrument.Client.Name}" />
-            <TextBlock FontSize="16" Text="{Binding JobIdDisplay}" />
+        <StackPanel Margin="10 5 5 5" Grid.Column="1" 
+                    VerticalAlignment="Center">
+            <TextBlock Margin="1" Text="{Binding TestDatePretty}"/>
+            <TextBlock FontSize="28"
+                       Margin="0 2"
+                       Text="{Binding Instrument.InstrumentType.Name}"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock HorizontalAlignment="Center">
+                <TextBlock Text="{Binding CorrectorType, FallbackValue='Rotary'}"/>
+                |
+                <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator, FallbackValue='PTZ'}"/>
+            </TextBlock>
+
+            <TextBlock Text="{Binding JobIdDisplay}" 
+                       HorizontalAlignment="Center"/>
+
+            <ContentControl Margin="2 0" 
+                            cal:View.Model="{Binding}"                            
+                            Visibility="{Binding DisplayEventLogCommPortView, Converter={StaticResource BoolToHiddenConverter}}"
+                            cal:View.Context="EventLogCommPortCard" />
         </StackPanel>
 
-        <UniformGrid Grid.Column="2" Columns="5">
-            <controls1:ValueDescriptionControl Label="Company Number" Value="{Binding Instrument.SiteNumber2}" />
-            <controls1:ValueDescriptionControl Label="Serial Number" Value="{Binding Instrument.SerialNumber}" />
-            <controls1:ValueDescriptionControl Label="Firmware Version"
-                                               Value="{Binding Instrument.FirmwareVersion}" />
-            <controls1:ValueDescriptionControl Label="Base Pressure" Value="{Binding BasePressure}" />
-            <controls1:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
-            <controls1:ValueDescriptionControl Label="Pulser A Select"
-                                               Value="{Binding Instrument.PulseASelect}" />
-            <controls1:ValueDescriptionControl Label="Pulser A Scaling"
-                                               Value="{Binding Instrument.PulseAScaling}" />
-            <controls1:ValueDescriptionControl Label="Pulser B Select"
-                                               Value="{Binding Instrument.PulseBSelect}" />
-            <controls1:ValueDescriptionControl Label="Pulser B Scaling"
-                                               Value="{Binding Instrument.PulseBScaling}" />
-        </UniformGrid>
+        <Grid Grid.Column="2">
+            <UniformGrid Columns="5">
+                <controls:ValueDescriptionControl Label="Company Number"
+                                                  Value="{Binding Instrument.SiteNumber2}" />
+                <controls:ValueDescriptionControl Label="Serial Number"
+                                                  Value="{Binding Instrument.SerialNumber}" />
+                <controls:ValueDescriptionControl Label="Firmware Version"
+                                                  Value="{Binding Instrument.FirmwareVersion}" />
+                <controls:ValueDescriptionControl Label="Base Pressure" Value="{Binding BasePressure}" />
+                <controls:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
+                <controls:ValueDescriptionControl Label="Pulser A Select"
+                                                  Value="{Binding Instrument.PulseASelect}" />
+                <controls:ValueDescriptionControl Label="Pulser A Scaling"
+                                                  Value="{Binding Instrument.PulseAScaling}" />
+                <controls:ValueDescriptionControl Label="Pulser B Select"
+                                                  Value="{Binding Instrument.PulseBSelect}" />
+                <controls:ValueDescriptionControl Label="Pulser B Scaling"
+                                                  Value="{Binding Instrument.PulseBScaling}" />
+            </UniformGrid></Grid>
 
         <!--<StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">

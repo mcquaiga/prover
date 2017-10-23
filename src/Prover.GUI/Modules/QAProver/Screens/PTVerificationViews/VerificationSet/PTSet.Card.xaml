@@ -32,7 +32,7 @@
                                  Margin="12 12 12 12" />
                     <TextBlock Text="{Binding TestStatusMessage}"
                                HorizontalAlignment="Center" />
-                    <Button Command="{Binding CancelTestCommand}" Content="Cancel" Margin="2 10 5 5"
+                    <Button Command="{Binding CancelTestCommand}"
                             HorizontalAlignment="Left" Style="{DynamicResource MaterialDesignFlatButton}" />
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>

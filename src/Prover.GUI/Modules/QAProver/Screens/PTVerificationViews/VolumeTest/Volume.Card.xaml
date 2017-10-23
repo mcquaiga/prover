@@ -42,11 +42,14 @@
                         Passed="{Binding Volume.UnCorrectedHasPassed}" />
 
                     <UniformGrid Columns="2" Margin="5">
-                        <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="Start Reading" 
+                                                           Value="{Binding StartUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="End Reading" 
+                                                           Value="{Binding EndUncorrected}" />
                         <controls1:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueUncorrected}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated" 
+                                                           Value="{Binding EvcUncorrected}" />
                         <controls1:ValueDescriptionControl Label="Pulse Count"
                                                            Value="{Binding UncorrectedPulseCount}" />
                         <controls1:ValueDescriptionControl Label="Multiplier"
@@ -73,9 +76,12 @@
 
                         <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartCorrected}" />
                         <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcCorrected}" />
+                        
                         <controls1:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueCorrected}" />
+                        <controls1:ValueDescriptionControl Label="EVC Calculated" 
+                                                           Value="{Binding EvcCorrected}" />
+                        
                         <controls1:ValueDescriptionControl Label="Pulse Count"
                                                            Value="{Binding CorrectedPulseCount}" />
                         <controls1:ValueDescriptionControl Label="Multiplier"

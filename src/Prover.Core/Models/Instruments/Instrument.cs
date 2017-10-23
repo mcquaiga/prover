@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
@@ -14,6 +16,14 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
+    public enum CorrectorType
+    {
+        T,
+        P,
+        // ReSharper disable once InconsistentNaming
+        PTZ
+    }
+
     public class
         Instrument : ProverTable
     {
@@ -214,6 +224,39 @@ namespace Prover.Core.Models.Instruments
                     JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
                         {ReferenceLoopHandling = ReferenceLoopHandling.Ignore})
                 }";
+        }
+    }
+
+    public partial class Instrument
+    {
+        public static Predicate<Instrument> IsExported()
+        {
+            return i => i.ExportedDateTime != null;
+        }
+
+        public static Predicate<Instrument> IsArchived()
+        {
+            return i => i.ArchivedDateTime != null;
+        }
+
+        public static Predicate<Instrument> CanExport()
+        {
+            return i => i.ExportedDateTime == null && i.ArchivedDateTime == null;
+        }
+
+        public static Predicate<Instrument> HasNoCertificate()
+        {
+            return i => i.CertificateId == null || i.CertificateId == Guid.Empty && i.ArchivedDateTime == null;
+        }
+
+        public static Predicate<Instrument> IsOfInstrumentType(string instrumentType)
+        {
+            return i => i.InstrumentType.Name.ToLower() == instrumentType.ToLower() || string.IsNullOrEmpty(instrumentType) || instrumentType.ToLower() == "all";
+        }
+
+        public static Predicate<Instrument> IsNotOfInstrumentType(string instrumentType)
+        {
+            return i => i.InstrumentType.Name != instrumentType;
         }
     }
 }
