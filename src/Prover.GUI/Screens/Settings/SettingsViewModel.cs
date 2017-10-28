@@ -57,6 +57,8 @@ namespace Prover.GUI.Screens.Settings
             set => this.RaiseAndSetIfChanged(ref _selectedMechanicalVolumeTestType, value);
         }
 
+        public Core.Settings.Settings Settings => SettingsManager.SettingsInstance;
+
         private bool _stabilizeLiveReadings;
         public bool StabilizeLiveReadings
         {
