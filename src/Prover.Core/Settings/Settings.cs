@@ -26,6 +26,7 @@ namespace Prover.Core.Settings
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
+        public bool UpdateAbsolutePressure { get; set; } = true;
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
         public bool RunVolumeSyncTest { get; set; }
 

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.GUI.Common</RootNamespace>
     <AssemblyName>Prover.GUI.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -160,6 +160,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SampleData\MainMenuDataSource\MainMenuDataSource.xaml.cs">
+      <DependentUpon>MainMenuDataSource.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScreenManager.cs" />
     <Compile Include="Screens\Dialogs\InformationDialogView.xaml.cs">
       <DependentUpon>InformationDialogView.xaml</DependentUpon>
@@ -211,6 +214,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <DesignTimeOnly Include="SampleData\MainMenuDataSource\MainMenuDataSource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </DesignTimeOnly>
     <Page Include="Screens\Dialogs\InformationDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -227,6 +234,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="SampleData\MainMenuDataSource\MainMenuDataSource.xsd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

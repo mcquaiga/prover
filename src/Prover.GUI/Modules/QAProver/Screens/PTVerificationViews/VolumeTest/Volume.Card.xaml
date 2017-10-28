@@ -4,17 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             
-
-             TextElement.FontWeight="Light"
-             TextElement.FontSize="16"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
@@ -26,7 +17,7 @@
                 Mode="PrimaryDark"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
-            <controls1:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}" />
+            <controls:ValueDescriptionControl Label="Applied Input" Value="{Binding AppliedInput}" />
             <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <StackPanel>
                     <materialDesign:ColorZone
@@ -35,21 +26,24 @@
                         Content="Uncorrected"
                         Mode="Accent"
                         materialDesign:ShadowAssist.ShadowDepth="Depth1" />
-                    <controls1:PercentageControl
+                    <controls:PercentageControl
                         Margin="5"
                         HorizontalAlignment="Center"
                         DisplayValue="{Binding Volume.UnCorrectedPercentError}"
                         Passed="{Binding Volume.UnCorrectedHasPassed}" />
 
                     <UniformGrid Columns="2" Margin="5">
-                        <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="True Calculated"
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                           Value="{Binding StartUncorrected}" />
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                           Value="{Binding EndUncorrected}" />
+                        <controls:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueUncorrected}" />
-                        <controls1:ValueDescriptionControl Label="Pulse Count"
+                        <controls:ValueDescriptionControl Label="EVC Calculated"
+                                                           Value="{Binding EvcUncorrected}" />
+                        <controls:ValueDescriptionControl Label="Pulse Count"
                                                            Value="{Binding UncorrectedPulseCount}" />
-                        <controls1:ValueDescriptionControl Label="Multiplier"
+                        <controls:ValueDescriptionControl Label="Multiplier"
                                                            Value="{Binding UnCorrectedMultiplierDescription}" />
                     </UniformGrid>
                 </StackPanel>
@@ -63,7 +57,7 @@
                         Mode="Accent"
                         materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
-                    <controls1:PercentageControl
+                    <controls:PercentageControl
                         Margin="5"
                         HorizontalAlignment="Center"
                         DisplayValue="{Binding Volume.CorrectedPercentError}"
@@ -71,14 +65,17 @@
 
                     <UniformGrid Columns="2" Margin="2 5">
 
-                        <controls1:ValueDescriptionControl Label="Start Reading" Value="{Binding StartCorrected}" />
-                        <controls1:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EvcCorrected}" />
-                        <controls1:ValueDescriptionControl Label="True Calculated"
+                        <controls:ValueDescriptionControl Label="Start Reading" Value="{Binding StartCorrected}" />
+                        <controls:ValueDescriptionControl Label="End Reading" Value="{Binding EndCorrected}" />
+
+                        <controls:ValueDescriptionControl Label="True Calculated"
                                                            Value="{Binding TrueCorrected}" />
-                        <controls1:ValueDescriptionControl Label="Pulse Count"
+                        <controls:ValueDescriptionControl Label="EVC Calculated"
+                                                           Value="{Binding EvcCorrected}" />
+
+                        <controls:ValueDescriptionControl Label="Pulse Count"
                                                            Value="{Binding CorrectedPulseCount}" />
-                        <controls1:ValueDescriptionControl Label="Multiplier"
+                        <controls:ValueDescriptionControl Label="Multiplier"
                                                            Value="{Binding CorrectedMultiplierDescription}" />
 
                     </UniformGrid>

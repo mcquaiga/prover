@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnionGas.MASA</RootNamespace>
     <AssemblyName>UnionGas.MASA</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -131,6 +131,9 @@
     </Compile>
     <Compile Include="Screens\Toolbars\LoginToolbar\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml.cs">
+      <DependentUpon>WaitingForLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogView.xaml.cs">
@@ -285,6 +288,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Toolbars\LoginToolbar\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
