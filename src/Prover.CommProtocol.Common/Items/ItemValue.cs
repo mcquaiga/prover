@@ -23,21 +23,25 @@ namespace Prover.CommProtocol.Common.Items
         public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue => RawValue != "! Unsupported" 
-            ? ItemDescription?.Value ?? decimal.Parse(RawValue)
-            : 0;
+        public virtual decimal NumericValue
+        {
+            get
+            {
+                if (!decimal.TryParse(RawValue, out var result)) return 0;
 
-        public virtual string Description => RawValue != "! Unsupported"
-            ? ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture)
-            : "N/A";
+                return ItemDescription?.Value ?? decimal.Parse(RawValue);
+            }
+        }
+
+        public virtual string Description => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
         private ItemMetadata.ItemDescription ItemDescription
         {
             get
-            {
+            {                
                 if ((Metadata?.ItemDescriptions != null) && Metadata.ItemDescriptions.Any())
                 {
-                    var intValue = Convert.ToInt32(RawValue);
+                    if (!int.TryParse(RawValue.Trim(), out var intValue)) return null;
                     return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
                 }
 

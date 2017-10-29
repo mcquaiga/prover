@@ -115,7 +115,7 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Bottom"
                                     Margin="2 2">
-                            <TextBlock Text="{Binding MeasurementApparatus}"
+                            <TextBlock Text="{Binding Certificate.Apparatus}"
                                        HorizontalAlignment="Center"
                                        FontSize="10"
                                        TextWrapping="WrapWithOverflow"/>

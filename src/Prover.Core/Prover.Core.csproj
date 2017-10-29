@@ -113,6 +113,7 @@
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\CsvWriter.cs" />
     <Compile Include="Exports\ExportFields.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\PredicateBuilder.cs" />
     <Compile Include="Exports\ExportToCsvManager.cs" />
     <Compile Include="Exports\IExportCertificate.cs" />
@@ -190,6 +191,10 @@
     <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.cs" />
     <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.Designer.cs">
       <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710290128497_AddApparatusToCertificate.cs" />
+    <Compile Include="Migrations\201710290128497_AddApparatusToCertificate.Designer.cs">
+      <DependentUpon>201710290128497_AddApparatusToCertificate.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
@@ -342,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.resx">
       <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710290128497_AddApparatusToCertificate.resx">
+      <DependentUpon>201710290128497_AddApparatusToCertificate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

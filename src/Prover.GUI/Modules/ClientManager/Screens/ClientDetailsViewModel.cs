@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
@@ -39,6 +40,22 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             GoToCsvExporter = ReactiveCommand.Create<Client>(OpenCsvExporter);
+            //GoToCsvExporter.ThrownExceptions
+            //    .Where(ex => ex is CsvTemplateNotFoundException)
+            //    .Select(ex => ex as CsvTemplateNotFoundException)
+            //    .Subscribe(ex =>
+            //        {
+            //            if (ex == null) return;
+
+            //            var result = MessageBox.Show(ex.Message, "No matching CSV Template",
+            //                MessageBoxButton.YesNo);
+            //            if (result == MessageBoxResult.Yes)
+            //            {
+            //                GoToCsvTemplateManager
+            //                    .Execute(ex.CsvTemplate);
+            //            }
+            //        }
+            //    );
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
             
             InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());
@@ -252,10 +269,16 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             var exporter = IoC.Get<ExportToCsvViewModel>();
             exporter.Client = _client;
 
-            var result = ScreenManager.ShowDialog(exporter);
-            if (result.HasValue && result.Value)
-            {
-            }
+            ScreenManager.ShowDialog(exporter);
+            //if (exporter.NotFoundException != null)
+            //{
+            //    var result = MessageBox.Show(exporter.NotFoundException.Message, "No matching CSV Template", MessageBoxButton.YesNo);
+            //    if (result == MessageBoxResult.Yes)
+            //    {
+            //        GoToCsvTemplateManager
+            //            .Execute(exporter.NotFoundException.CsvTemplate);
+            //    }
+            //}
         }
 
         private async Task GoBack()

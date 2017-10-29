@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Services
@@ -22,6 +23,7 @@ namespace Prover.Core.Services
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
         IEnumerable<Certificate> GetAllCertificates(Client client);
         IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        IEnumerable<long> GetCertificateNumbers(Client client);
         IEnumerable<string> GetDistinctTestedBy();
     }
 
@@ -74,6 +76,7 @@ namespace Prover.Core.Services
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
+                Apparatus = SettingsManager.SettingsInstance.TestSettings.MeasurementApparatus,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
@@ -93,6 +96,13 @@ namespace Prover.Core.Services
             return certificate;
         }
 
+        public IEnumerable<long> GetCertificateNumbers(Client client)
+        {
+            return _certificateStore.Query()
+                .Where(c => c.Client == client)
+                .Select(c => c.Number);
+        }
+
         public IEnumerable<Certificate> GetAllCertificates(Client client)
         {
             return GetAllCertificates(client, 0, 0);
@@ -104,7 +114,6 @@ namespace Prover.Core.Services
                 .Where(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
                          && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
                 .OrderBy(i => i.Number);
-
         }
 
         public IEnumerable<string> GetDistinctTestedBy()

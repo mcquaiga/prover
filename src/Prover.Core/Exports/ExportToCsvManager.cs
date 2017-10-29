@@ -37,18 +37,18 @@ namespace Prover.Core.Exports
             _instrumentStore = instrumentStore;
         }
 
-        public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber)
+        public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber, string exportPath)
         {
             var csvFiles = new List<string>();
             foreach (var cert in _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber))
             {
-                csvFiles.Add(await Export(cert));
+                csvFiles.Add(await Export(cert, exportPath));
             }
 
             return csvFiles.ToArray();
         }
 
-        public async Task<string> Export(Certificate certificate)
+        public async Task<string> Export(Certificate certificate, string exportPath)
         {
             return await Task.Run(async () =>
             {
@@ -56,7 +56,7 @@ namespace Prover.Core.Exports
                     throw new NullReferenceException("Certificate does not contain any instruments.");
                
                 var client = certificate.Client;
-                var fileName = GetFilePath(certificate, client);
+                var fileName = GetFilePath(exportPath, certificate, client);
 
                 var instruments = certificate
                     .Instruments
@@ -92,26 +92,42 @@ namespace Prover.Core.Exports
             var csvFormat = matchingCsvFormats
                 .FirstOrDefault();
 
-            if (csvFormat == null)
-                throw new Exception(
-                    $"Could not find a CSV template that matches Instrument S/N:{instrument.SerialNumber} on Certificate #{certificate.Number}. {Environment.NewLine}{Environment.NewLine}" +
-                    $"The following criteria could not be matched: {Environment.NewLine}" +
-                    $"  Verification Type: {certificate.VerificationType} {Environment.NewLine}" +
-                    $"  Instrument Type: {instrument.InstrumentType.Name} {Environment.NewLine}" +
-                    $"  Drive Type: {instrument.VolumeTest.DriveTypeDiscriminator} {Environment.NewLine}" +
-                    $"  Corrector Type: {instrument.CompositionType} {Environment.NewLine}"
-                );
+                if (csvFormat == null)
+                {
+                    throw new CsvTemplateNotFoundException(
+                        $"Could not find a CSV template that matches Instrument S/N:{instrument.SerialNumber} on Certificate #{certificate.Number}. {Environment.NewLine}{Environment.NewLine}" +
+                        $"The following criteria could not be matched: {Environment.NewLine}" +
+                        $"  Verification Type: {certificate.VerificationType} {Environment.NewLine}" +
+                        $"  Instrument Type: {instrument.InstrumentType.Name} {Environment.NewLine}" +
+                        $"  Drive Type: {instrument.VolumeTest.DriveTypeDiscriminator} {Environment.NewLine}" +
+                        $"  Corrector Type: {instrument.CompositionType} {Environment.NewLine}"
+                        , new ClientCsvTemplate(client)
+                        {
+                            InstrumentType = instrument.InstrumentType,
+                            //VerificationType = certificate.VerificationType,                           
+
+                        });
+                }
+                
             return csvFormat.CsvTemplate;
         }
 
-        private static string GetFilePath(Certificate certificate, Client client)
+        private static string GetFilePath(string exportDirPath, Certificate certificate, Client client)
         {
-            var fileName = $"certificate_{certificate.Number}.csv";
+            var fileName = $"certificate_{client.Name}_{certificate.Number}.csv";
+            if (!Directory.Exists(exportDirPath)) Directory.CreateDirectory(exportDirPath);
 
-            var filePath = $"{CertificatesExportDirectory}{client.Name}";
-            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+            return $"{exportDirPath}\\{fileName}";
+        }
+    }
 
-            return $"{filePath}\\{fileName}";
+    public class CsvTemplateNotFoundException : Exception
+    {
+        public ClientCsvTemplate CsvTemplate { get; }
+
+        public CsvTemplateNotFoundException(string message, ClientCsvTemplate csvTemplate) : base(message)
+        {
+            CsvTemplate = csvTemplate;
         }
     }
 }

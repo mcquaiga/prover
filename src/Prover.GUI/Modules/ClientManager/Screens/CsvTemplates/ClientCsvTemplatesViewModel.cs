@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
+using Prover.Core.Extensions;
 using Prover.Core.Models.Clients;
 using Prover.Core.Shared.Enums;
 using Prover.GUI.Common;
@@ -39,7 +40,6 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                 ClientCsvTemplate.DriveType = string.IsNullOrEmpty(SelectedDriveType)
                     ? null
                     : (DriveTypeDescripter?) Enum.Parse(typeof(DriveTypeDescripter), SelectedDriveType);
-                
 
                 TryClose(true);
             });
@@ -76,7 +76,9 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         
         // Instrument Types      
 
-        public List<InstrumentType> InstrumentTypes => HoneywellInstrumentTypes.GetAll().ToList();
+        public List<InstrumentType> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
+            .OrderBy(s => s.Name)
+            .ToList();
 
         private InstrumentType _selectedInstrumentType;
 
@@ -87,26 +89,35 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         }
 
         // Verification Types
-        public List<string> VerificationTypes => Enum.GetNames(typeof(VerificationTypeEnum)).ToList();
+        public List<string> VerificationTypes => Enum.GetNames(typeof(VerificationTypeEnum))
+            .AddEmptyItem(() => string.Empty)
+            .OrderBy(s => s)
+            .ToList();
 
         private string _selectedVerificationType;
-
         public string SelectedVerificationType
         {
             get => _selectedVerificationType;
             set => this.RaiseAndSetIfChanged(ref _selectedVerificationType, value);
         }
 
-        public List<string> CorrectorTypes => Enum.GetNames(typeof(EvcCorrectorType)).ToList();
-        private string _selectedCorrectorType;
+        public List<string> CorrectorTypes => Enum.GetNames(typeof(EvcCorrectorType))
+            .AddEmptyItem(() => string.Empty)
+            .OrderBy(s => s)
+            .ToList();
 
+        private string _selectedCorrectorType;
         public string SelectedCorrectorType
         {
             get => _selectedCorrectorType;
             set => this.RaiseAndSetIfChanged(ref _selectedCorrectorType, value);
         }
 
-        public List<string> DriveTypes => Enum.GetNames(typeof(DriveTypeDescripter)).ToList();
+        public List<string> DriveTypes => Enum.GetNames(typeof(DriveTypeDescripter))
+            .AddEmptyItem(() => string.Empty)
+            .OrderBy(s => s)
+            .ToList();
+
         private string _selectedDriveType;
 
         public string SelectedDriveType
@@ -115,7 +126,11 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
             set => this.RaiseAndSetIfChanged(ref _selectedDriveType, value);
         }
 
-        public List<string> FieldList => new ExportFields().GetPropertyNames().OrderBy(x => x).ToList();
+        public List<string> FieldList 
+            => new ExportFields()
+                .GetPropertyDescriptions()
+                .Select(x => x)
+                .OrderBy(x => x).ToList();
 
         private string _csvTemplate;
         public string CsvTemplate

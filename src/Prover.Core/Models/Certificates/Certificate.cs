@@ -20,6 +20,8 @@ namespace Prover.Core.Models.Certificates
         public string VerificationType { get; set; }
         
         public string TestedBy { get; set; }
+        
+        public string Apparatus { get; set; }
 
         public Guid? ClientId { get; set; }
         public virtual Client Client { get; set; }
