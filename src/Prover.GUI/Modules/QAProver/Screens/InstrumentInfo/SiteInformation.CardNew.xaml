@@ -141,7 +141,7 @@
                             <TextBlock FontSize="12" Text="Base." HorizontalAlignment="Center" />
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="-40 to 170 F" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding TemperatureRange}" HorizontalAlignment="Center" />
                             <TextBlock FontSize="12" Text="Range" HorizontalAlignment="Center" />
                         </StackPanel>
                     </UniformGrid>

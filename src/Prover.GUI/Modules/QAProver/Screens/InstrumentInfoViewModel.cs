@@ -51,10 +51,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public string AtmPressure =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
-        public string PressureRange =>
-            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+        public string PressureRange => $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
+
+        public string TemperatureRange =>
+            $"{TemperatureTest.ConvertTo(-40, "F", Instrument.TemperatureUnits())} to {TemperatureTest.ConvertTo(170, "F", Instrument.TemperatureUnits())} {Instrument.TemperatureUnits()}";
 
         public string TestDatePretty => $"{Instrument.TestDateTime:d}";
 

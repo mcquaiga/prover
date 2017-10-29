@@ -51,11 +51,10 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
+                if (EvcUncorrected.HasValue && TrueUncorrected.HasValue && TrueUncorrected != 0 )
                 {
-                    var o = (EvcUncorrected - TrueUncorrected) / TrueUncorrected;
-                    if (o != null)
-                        return Math.Round((decimal) o * 100, 2);
+                    var o = (EvcUncorrected.Value - TrueUncorrected.Value) / TrueUncorrected.Value;
+                    return decimal.Round(o * 100, 2);
                 }
 
                 return null;
@@ -70,11 +69,10 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
+                if (EvcCorrected.HasValue && TrueCorrected.HasValue && TrueCorrected != 0 )
                 {
-                    var o = (EvcCorrected - TrueCorrected) / TrueCorrected * 100;
-                    if (o != null)
-                        return Math.Round((decimal) o, 2);
+                    var o = (EvcCorrected.Value - TrueCorrected.Value) / TrueCorrected.Value;
+                    return decimal.Round(o * 100, 2);
                 }
 
                 return null;
@@ -93,6 +91,7 @@ namespace Prover.Core.Models.Instruments
 
         public override decimal? PercentError { get; }
         public override decimal? ActualFactor { get; }
+        public override decimal? EvcFactor { get; }
 
         [NotMapped]
         public int UncPulseCount

@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Prover.GUI.Screens
 {
     /// <summary>
-    /// Interaction logic for SplashScreen.xaml
+    /// Interaction logic for StartScreen.xaml
     /// </summary>
-    public partial class SplashScreen : Window
+    public partial class StartScreen : Window
     {
-        public SplashScreen()
+        public StartScreen()
         {
             InitializeComponent();
         }
