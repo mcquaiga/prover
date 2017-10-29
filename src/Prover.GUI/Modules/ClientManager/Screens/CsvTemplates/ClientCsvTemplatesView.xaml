@@ -64,19 +64,24 @@
                          TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
                          AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto" />
+                         FontWeight="Regular"
+                         FontSize="16"
+                         VerticalScrollBarVisibility="Auto"/>
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
+        <Grid Grid.Row="2"               
                     Margin="8"
-                    HorizontalAlignment="Right">
+                    HorizontalAlignment="Stretch">
             <Button Content="Cancel"
-                    Command="{Binding CancelCommand}"/>
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    HorizontalAlignment="Left"/>
             <Button Content="OK"
                     Command="{Binding OkCommand}"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
                     HorizontalAlignment="Right"/>
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
+

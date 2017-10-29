@@ -22,7 +22,7 @@
                    TargetType="controls:ValueDescriptionControl">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding ElementName=Value}" Value="True">
-                        <Setter Property="Value" Value="Y"/>
+                        <Setter Property="Value" Value="Y" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -59,9 +59,8 @@
             </Grid>
         </Grid>
 
-
         <Grid Grid.Row="2"
-                    Margin="0">
+              Margin="0">
             <Grid.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="VerticalAlignment" Value="Bottom" />
@@ -73,13 +72,13 @@
                 </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width=".33*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width=".33*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width=".33*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width=".33*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width=".33*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width=".33*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         VerticalAlignment="Bottom">
@@ -103,8 +102,8 @@
             <Border Style="{StaticResource SubSectionDividerBorder}"
                     BorderThickness="1 0 0 0"
                     Grid.Column="1"
-                    Margin="2 16"/>
-            
+                    Margin="2 16" />
+
             <StackPanel Grid.Column="2">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Uncorrected" />
@@ -117,25 +116,24 @@
                                                       Value="{Binding StartUncorrected}" />
                     <controls:ValueDescriptionControl Label="End Reading"
                                                       Value="{Binding EndUncorrected}" />
-                           
+
                     <controls:ValueDescriptionControl Label="True Calculated"
                                                       Value="{Binding TrueUncorrected}" />
                     <controls:ValueDescriptionControl Label="EVC Calculated"
                                                       Value="{Binding EvcUncorrected}" />
                     <!--<controls:ValueDescriptionControl Label="Multiplier"
                                                       Value="{Binding UnCorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified" 
+                    <controls:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
             </StackPanel>
-            
 
 
             <Border Style="{StaticResource SubSectionDividerBorder}"
-                    BorderThickness="1 0 0 0" 
+                    BorderThickness="1 0 0 0"
                     Grid.Column="3"
-                    Margin="2 16"/>
-                
+                    Margin="2 16" />
+
             <StackPanel Grid.Column="4">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Corrected" />
@@ -145,7 +143,7 @@
                 <UniformGrid Columns="2">
                     <controls:ValueDescriptionControl Label="Start Reading"
                                                       Value="{Binding StartCorrected}" />
-                    <controls:ValueDescriptionControl Label="End Reading" 
+                    <controls:ValueDescriptionControl Label="End Reading"
                                                       Value="{Binding EndCorrected}" />
                     <controls:ValueDescriptionControl Label="True Calculated"
                                                       Value="{Binding TrueCorrected}" />
@@ -153,28 +151,26 @@
                                                       Value="{Binding EvcCorrected}" />
                     <!--<controls:ValueDescriptionControl Label="Multiplier"
                                                       Value="{Binding CorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified" 
+                    <controls:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
 
             </StackPanel>
-            
+
 
             <Border Style="{StaticResource SubSectionDividerBorder}"
-                    BorderThickness="1 0 0 0" 
+                    BorderThickness="1 0 0 0"
                     Grid.Column="5"
-                    Margin="2 16"/>
-                <Grid  VerticalAlignment="Top"
-                       Grid.Column="6">
-                    <ContentControl cal:View.Model="{Binding EnergyTestItem}"
-                                    cal:View.Context="CardNew" />
-                    <ContentControl cal:View.Model="{Binding MeterDisplacementItem}"
-                                    cal:View.Context="CardNew" />
-                </Grid>
+                    Margin="2 16" />
+            <Grid VerticalAlignment="Top"
+                  Grid.Column="6">
+                <ContentControl cal:View.Model="{Binding EnergyTestItem}"
+                                cal:View.Context="CardNew" />
+                <ContentControl cal:View.Model="{Binding MeterDisplacementItem}"
+                                cal:View.Context="CardNew" />
+            </Grid>
 
         </Grid>
-
     </Grid>
-
 
 </UserControl>

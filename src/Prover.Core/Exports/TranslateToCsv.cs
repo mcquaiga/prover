@@ -12,9 +12,9 @@ namespace Prover.Core.Exports
 {
     internal static class TranslateToExport
     {
-        private const int HighTestNumber = 2;
-        private const int MidTestNumber = 1;
-        private const int LowTestNumber = 0;
+        private const int Level3Number = 2;
+        private const int Level2Number = 1;
+        private const int Level1Number = 0;
 
         public static IList<ExportFields> Translate(Certificate certificate)
         {
@@ -34,19 +34,19 @@ namespace Prover.Core.Exports
                 SerialNumber = instrument.SerialNumber.ToString(),
                 VerificationType = certificate.VerificationType,
                 TestedDate = instrument.TestDateTime,
+                               
+                TemperatureLevel1Error = GetTempTestPercentError(instrument, Level1Number) ?? 0.0m,
+                TemperatureLevel2Error = GetTempTestPercentError(instrument, Level2Number) ?? 0.0m,
+                TemperatureLevel3Error = GetTempTestPercentError(instrument, Level3Number) ?? 0.0m,
+                
+                PressureLevel1Error = GetPressureTestPercentError(instrument, Level1Number) ?? 0.0m,
+                PressureLevel2Error = GetPressureTestPercentError(instrument, Level2Number) ?? 0.0m,
+                PressureLevel3Error = GetPressureTestPercentError(instrument, Level3Number) ?? 0.0m,
 
-                TemperatureHighError = GetTempTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                TemperatureMediumError = GetTempTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                TemperatureLowError = GetTempTestPercentError(instrument, LowTestNumber) ?? 0.0m,
-
-                PressureHighError = GetPressureTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                PressureMediumError = GetPressureTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                PressureLowError = GetPressureTestPercentError(instrument, LowTestNumber) ?? 0.0m,
-
-                SuperHighError = GetSuperTestPercentError(instrument, HighTestNumber) ?? 0.0m,
-                SuperMediumError = GetSuperTestPercentError(instrument, MidTestNumber) ?? 0.0m,
-                SuperLowError = GetSuperTestPercentError(instrument, LowTestNumber) ?? 0.0m,
-
+                SuperLevel1Error = GetSuperTestPercentError(instrument, Level1Number) ?? 0.0m,
+                SuperLevel2Error = GetSuperTestPercentError(instrument, Level2Number) ?? 0.0m,
+                SuperLevel3Error = GetSuperTestPercentError(instrument, Level3Number) ?? 0.0m,
+                
                 CorrectedMultiplier = (long) instrument.CorrectedMultiplier(),
                 CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
                 UncorrectMultiplier = (long) instrument.UnCorrectedMultiplier(),
@@ -57,7 +57,7 @@ namespace Prover.Core.Exports
                 CorrectorType = Enum.GetName(typeof(EvcCorrectorType), instrument.CompositionType),
                 RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription,
 
-                Item = new Dictionary<int, string>(
+                Items = new Dictionary<int, string>(
                     instrument.Items.ToDictionary(
                         k => k.Metadata.Number,
                         v => v.Metadata.ItemDescriptions.Any() ? v.Description : v.RawValue)

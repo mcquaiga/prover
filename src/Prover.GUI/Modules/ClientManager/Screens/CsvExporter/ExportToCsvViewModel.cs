@@ -20,17 +20,21 @@ using ReactiveUI.Legacy;
 using ReactiveCommand = ReactiveUI.ReactiveCommand;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
 {
-    public class ExportToCsvViewModel : ViewModelBase, IWindowSettings
+    public class ExportToCsvViewModel : ViewModelBase, IWindowSettings, IDisposable
     {
         public ExportToCsvViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, 
             IExportCertificate exporter, ICertificateService certificateService) : base(screenManager, eventAggregator)
         {
             ExportCommand = ReactiveCommand.CreateFromTask<Client>(async client =>
             {
-                var csvFiles = await exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number);
+                var exportPath = GetExportDirectory();
+                var csvFiles = await exporter.Export(Client, SelectedFromCertificate.Number, SelectedToCertificate.Number, exportPath);
 
                 if (csvFiles.Any())
                 {
@@ -38,27 +42,44 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
                     Process.Start(fileDir.FullName);
                 }
             });
-            ExportCommand.ThrownExceptions
-                .Subscribe(ex => MessageBox.Show(ex.Message));
 
-            GetCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(
-                client => certificateService.GetAllCertificates(client).ToObservable());
+            ExportCommand.ThrownExceptions
+                .Subscribe(ex =>
+                {
+                    MessageBox.Show(ex.Message);
+                });
+
+            GetCertificatesCommand = ReactiveCommand.Create<Client, IEnumerable<Certificate>>(
+                client => certificateService.GetAllCertificates(client).ToList());
             GetCertificatesCommand
-                .Subscribe(c => ClientCertificates.Add(c));
+                .Subscribe(c => ClientCertificates.AddRange(c));
+
             FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
             ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);
 
             this.WhenAnyValue(x => x.Client)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(client =>
-                {
-                    ClientCertificates.Clear();
-                })
                 .Where(c => c != null)
                 .InvokeCommand(GetCertificatesCommand);
         }
 
+        private static string GetExportDirectory()
+        {
+            var exportPath = string.Empty;
+            using (var fbd = new FolderBrowserDialog())
+            {
+                var result = fbd.ShowDialog();
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    exportPath = fbd.SelectedPath;
+                }
+            }
+
+            return exportPath;
+        }
+
         #region Properties
+        public CsvTemplateNotFoundException NotFoundException { get; private set; }
+
         private Client _client;
         public Client Client
         {
@@ -106,7 +127,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         #region Commands
 
         public ReactiveCommand<Client, Unit> ExportCommand { get; }
-        public ReactiveCommand<Client, Certificate> GetCertificatesCommand { get; set; }       
+        public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
 
         #endregion       
 
@@ -123,5 +144,12 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             }
         }
 
+        public void Dispose()
+        {
+            _fromCertificates?.Dispose();
+            _toCertificates?.Dispose();
+            ExportCommand?.Dispose();
+            GetCertificatesCommand?.Dispose();
+        }
     }
 }

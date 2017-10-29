@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Prover.Core.Exports
 {
+    public class CsvTemplateAttribute : Attribute
+    {
+        public string Name { get; }
+
+        public CsvTemplateAttribute(string name)
+        {
+            Name = name;
+        }
+    }
+
     public static class CsvWriter
     {
         public static async Task Write<T>(string fileName, Dictionary<T, string> recordsAndRowFormats,
@@ -52,10 +64,15 @@ namespace Prover.Core.Exports
             {
                 try
                 {
+                    var csvAttribute =
+                            (property.GetCustomAttribute(typeof(CsvTemplateAttribute)) as CsvTemplateAttribute);
+
+                    var name = csvAttribute.Name;
+
                     if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() ==
                         typeof(Dictionary<,>))
                     {
-                        var pattern = $@"\[{property.Name}\d+\]";
+                        var pattern = $@"\[{name}\d+\]";
                         if (Regex.IsMatch(rowFormat, pattern))
                         {
                             var values = recordType.GetProperty(property.Name)?.GetValue(record);
@@ -63,7 +80,7 @@ namespace Prover.Core.Exports
                             {
                                 foreach (Capture capture in match.Captures)
                                 {
-                                    var key = capture.Value.Replace($"[{property.Name}", string.Empty);
+                                    var key = capture.Value.Replace($"[{name}", string.Empty);
                                     key = key.Replace("]", string.Empty);
                                     var k = Int32.Parse(key);
                                     var value = values.GetType().GetProperty("Item").GetValue(values, new object[] { k });
@@ -73,11 +90,11 @@ namespace Prover.Core.Exports
                         }
                     }
 
-                    if (rowFormat.Contains($"[{property.Name}]"))
+                    if (rowFormat.Contains($"[{name}]"))
                     {
                         var value = recordType.GetProperty(property.Name)?.GetValue(record)?.ToString();
                         if (value != null)
-                            rowFormat = rowFormat.Replace($"[{property.Name}]", value);
+                            rowFormat = rowFormat.Replace($"[{name}]", value);
                     }
                 }
                 catch (Exception e)
