@@ -29,7 +29,7 @@ namespace Prover.CommProtocol.Common.Items
             {
                 if (!decimal.TryParse(RawValue, out var result)) return 0;
 
-                return ItemDescription?.Value ?? decimal.Parse(RawValue);
+                return ItemDescription?.Value ?? result;
             }
         }
 
