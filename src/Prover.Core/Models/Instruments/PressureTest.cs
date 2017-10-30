@@ -2,6 +2,7 @@
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -49,41 +50,94 @@ namespace Prover.Core.Models.Instruments
         public decimal GasPressure
         {
             get
-            {                
-                var result = 0m;
-                result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
+            {                                
+                var result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
                 return decimal.Round(result, 4);
-
-                //switch (VerificationTest?.Instrument?.Transducer)
-                //{
-                //    case TransducerType.Gauge:
-                //        result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
-                //        break;
-                //    case TransducerType.Absolute:
-                //        result = GasGauge.GetValueOrDefault(0) - AtmosphericGauge.GetValueOrDefault(0);
-                //        break;
-                //}
-                //return decimal.Round(result, 2);
-            }
-        }
-
-        public decimal? GasGauge { get; set; }
-
-        public decimal? AtmosphericGauge { get; set; }
-
-        public override decimal? PercentError
-        {
-            get
-            {
-                if ((ActualFactor ?? 0) == 0) return null;
-
-                var result = (EvcFactor - ActualFactor) / ActualFactor * 100;
-                return decimal.Round(result ?? 0, 2);
             }
         }
 
         [NotMapped]
-        public decimal EvcFactor => Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue ?? 0;
+        public decimal GasPressurePsi => ConvertToPsi(GasPressure, VerificationTest.Instrument.PressureUnits());
+
+        public static decimal ConvertTo(decimal value, string fromUnit, string toUnit)
+        {
+            var result = ConvertToPsi(value, fromUnit);
+
+            switch (toUnit.ToLower())
+            {
+                case "bar":
+                    result = value * (6.894757m * (10 ^ -2));
+                    break;
+                case "inwc":
+                    result = value * 27.68067m;
+                    break;
+                case "kgcm2":
+                    result = value * (7.030696m * (10 ^ -2));
+                    break;
+                case "kpa":
+                    result = value * 6.894757m;
+                    break;
+                case "mbar":
+                    result = value * (6.894757m * (10 ^ 1));
+                    break;
+                case "mpa":
+                    result = value * (6.894757m * (10 ^ -3));
+                    break;
+                case "inhg":
+                    result = value * 2.03602m;
+                    break;
+                case "mmhg":
+                    result = value * 51.71492m;
+                    break;
+            }
+
+            return decimal.Round(result, 2);
+        }
+
+        public static decimal ConvertToPsi(decimal value, string fromUnit)
+        {
+            var result = 0.0m;
+            switch (fromUnit.ToLower())
+            {
+                case "bar":
+                    result = value / (6.894757m * (10 ^ -2));
+                    break;
+                case "inwc":
+                    result = value / 27.68067m;
+                    break;
+                case "kgcm2":
+                    result = value / (7.030696m * (10 ^ -2));
+                    break;
+                case "kpa":
+                    result = value / 6.894757m;
+                    break;
+                case "mbar":
+                    result = value / (6.894757m * (10 ^ 1));
+                    break;
+                case "mpa":
+                    result = value / (6.894757m * (10 ^ -3));
+                    break;
+                case "inhg":
+                    result = value / 2.03602m;
+                    break;
+                case "mmhg":
+                    result = value / 51.71492m;
+                    break;                
+            }
+
+            return decimal.Round(result, 2);
+        }
+
+        public decimal? GasGauge { get; set; }
+
+        [NotMapped]
+        public decimal? GasGaugePsi 
+            => GasGauge.HasValue ? ConvertToPsi(GasGauge.Value, VerificationTest.Instrument.PressureUnits()) : default(decimal?);
+
+        public decimal? AtmosphericGauge { get; set; }
+
+        [NotMapped]
+        public override decimal? EvcFactor => Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue ?? 0;
 
         [NotMapped]
         public override decimal? ActualFactor

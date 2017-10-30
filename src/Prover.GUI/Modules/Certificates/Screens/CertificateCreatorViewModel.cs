@@ -89,6 +89,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
             ResultFilteredItems.ItemChanged
                     .Where(x => x.PropertyName == "IsArchived" && x.Sender.IsArchived)
                     .Subscribe(x => RootResults.Remove(x.Sender));
+            ResultFilteredItems.CountChanged
+                .ToProperty(this, x => x.VisibleCount, out _visibleCount);
+            ResultFilteredItems.ItemChanged
+                .Where(x => x.PropertyName == "IsSelected")
+                .Select(x => ResultFilteredItems.Count(c => c.IsSelected))
+                .ToProperty(this, x => x.SelectedCount, out _selectedCount);
 
             LoadClientsCommand = ReactiveCommand.CreateFromObservable(LoadClients);
             LoadClientsCommand
@@ -266,6 +272,13 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         public ExportToCsvViewModel ExportToCsvViewModel { get; set; }
+
+        private readonly ObservableAsPropertyHelper<int> _visibleCount;
+        public int VisibleCount => _visibleCount.Value;
+
+        private readonly ObservableAsPropertyHelper<int> _selectedCount;
+        public int SelectedCount => _selectedCount.Value;
+
         #endregion
 
         #region Private Functions

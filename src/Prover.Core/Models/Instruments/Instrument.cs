@@ -101,20 +101,20 @@ namespace Prover.Core.Models.Instruments
 
         public decimal GetGaugeTemp(int testNumber)
         {
-            return SettingsManager.SettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)
-                .Value;
+            var result = SettingsManager.SettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)?.Value;
+            return result.HasValue ? TemperatureTest.ConvertTo(result.Value, "F", this.TemperatureUnits()) : 0m;
         }
 
         public decimal GetGaugePressure(int testNumber)
         {
             var value = SettingsManager.SettingsInstance.TestSettings.PressureGaugeDefaults
-                .FirstOrDefault(p => p.Level == testNumber).Value;
-
+                .FirstOrDefault(p => p.Level == testNumber)?.Value;
+            
             if (value > 1)
                 value = value / 100;
 
             var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return value * evcPressureRange;
+            return value * evcPressureRange ?? 0.0m;
         }
 
         #region NotMapped Properties
