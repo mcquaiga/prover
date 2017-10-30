@@ -66,28 +66,31 @@ namespace Prover.Core.Models.Instruments
             switch (toUnit.ToLower())
             {
                 case "bar":
-                    result = value * (6.894757m * (10 ^ -2));
+                    result = result * (6.894757m * (10 ^ -2));
                     break;
                 case "inwc":
-                    result = value * 27.68067m;
+                    result = result * 27.68067m;
                     break;
                 case "kgcm2":
-                    result = value * (7.030696m * (10 ^ -2));
+                    result = result * (7.030696m * (10 ^ -2));
                     break;
                 case "kpa":
-                    result = value * 6.894757m;
+                    result = result * 6.894757m;
                     break;
                 case "mbar":
-                    result = value * (6.894757m * (10 ^ 1));
+                    result = result * (6.894757m * (10 ^ 1));
                     break;
                 case "mpa":
-                    result = value * (6.894757m * (10 ^ -3));
+                    result = result * (6.894757m * (10 ^ -3));
                     break;
                 case "inhg":
-                    result = value * 2.03602m;
+                    result = result * 2.03602m;
                     break;
                 case "mmhg":
-                    result = value * 51.71492m;
+                    result = result * 51.71492m;
+                    break;
+                default:
+                    result = result / 1;
                     break;
             }
 
@@ -122,7 +125,10 @@ namespace Prover.Core.Models.Instruments
                     break;
                 case "mmhg":
                     result = value / 51.71492m;
-                    break;                
+                    break;
+                default:
+                    result = value / 1;
+                    break;
             }
 
             return decimal.Round(result, 2);

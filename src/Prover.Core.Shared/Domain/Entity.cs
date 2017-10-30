@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 #endregion
 
@@ -9,11 +10,15 @@ namespace Prover.Core.Shared.Domain
     /// <summary>
     ///     Entity base class for domain objects
     /// </summary>
-    /// <typeparam name="TId">
     ///     Id type
     /// </typeparam>
     public abstract class Entity
     {
+        protected Entity()
+        {
+            Id = Guid.NewGuid();
+        }
+
         protected Entity(Guid id)
         {
             Id = id;
@@ -22,7 +27,12 @@ namespace Prover.Core.Shared.Domain
         /// <summary>
         ///     Gets or sets the id.
         /// </summary>
+        [Key]
         public Guid Id { get; set; }
+
+        public virtual void OnInitializing()
+        {
+        }
 
         //public override bool Equals(object obj)
         //{

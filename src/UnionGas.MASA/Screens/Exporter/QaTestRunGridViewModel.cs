@@ -10,6 +10,7 @@ using Prover.GUI.Common.Screens;
 using Prover.GUI.Reports;
 using ReactiveUI;
 using System.Linq.Expressions;
+using Prover.Core.Services;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace UnionGas.MASA.Screens.Exporter
@@ -18,17 +19,17 @@ namespace UnionGas.MASA.Screens.Exporter
     {
         private readonly IExportTestRun _exportManager;
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
 
         public QaTestRunGridViewModel(ScreenManager screenManager, 
                 IEventAggregator eventAggregator,
                 IExportTestRun exportManager,
-                InstrumentStore instrumentStore,
+                TestRunService testRunService,
                 InstrumentReportGenerator instrumentReportGenerator) 
             : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _instrumentReportGenerator = instrumentReportGenerator;
 
             var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
@@ -96,7 +97,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public async Task ArchiveTest()
         {
-            await _instrumentStore.Delete(Instrument);            
+            await _testRunService.ArchiveTest(Instrument);            
             IsRemoved = true;
         }
         

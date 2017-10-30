@@ -15,6 +15,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
@@ -39,7 +40,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private string _selectedTachCommPort;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientStore clientStore)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -113,8 +114,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
              /**             
              * Clients              
              **/
-            var clientList = clientStore.Query()
-                .Where(c => c.ArchivedDateTime == null)
+            var clientList = clientService.GetActiveClients()
                 .ToList();
             Clients = new ReactiveList<string>(
                 clientList.Select(x => x.Name).OrderBy(x => x).ToList())

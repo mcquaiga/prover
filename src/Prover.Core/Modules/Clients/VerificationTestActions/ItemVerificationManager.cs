@@ -8,6 +8,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 
@@ -16,15 +17,15 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
     public class ItemVerificationManager : IPreTestValidation
     {
         private readonly IHandleInvalidItemVerification _invalidItemHandler;
-        private readonly IClientStore _clientStore;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly ClientService _clientService;
+        private readonly TestRunService _testRunService;
 
-        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, IClientStore clientStore,
-            IProverStore<Instrument> instrumentStore)
+        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, ClientService clientService,
+            TestRunService testRunService)
         {
             _invalidItemHandler = invalidItemHandler;
-            _clientStore = clientStore;
-            _instrumentStore = instrumentStore;
+            _clientService = clientService;
+            _testRunService = testRunService;
         }
 
         public async Task Validate(EvcCommunicationClient commClient, Instrument instrument,
@@ -94,7 +95,7 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
                         invalidItem.Value.Item1.RawValue;
             }
             await evcCommunicationClient.Disconnect();
-            await _instrumentStore.UpsertAsync(instrument);
+            await _testRunService.Save(instrument);
 
             return true;
         }

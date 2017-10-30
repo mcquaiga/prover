@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Models.Clients;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -14,19 +16,19 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 {
     public class ClientManagerViewModel : ViewModelBase, IDisposable
     {
-        private readonly IClientStore _clientStore;
+        private readonly ClientService _clientService;
         private const string ClientListViewContext = "ClientListView";
 
         public ClientManagerViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IClientStore clientStore) : base(screenManager, eventAggregator)
+            ClientService clientService) : base(screenManager, eventAggregator)
         {
-            _clientStore = clientStore;
+            _clientService = clientService;
             ViewContext = ClientListViewContext;
 
             LoadClientsCommand = ReactiveCommand.CreateFromObservable(LoadClients);
             LoadClientsCommand.Subscribe(client =>
             {
-                ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore, client));
+                ClientList.Add(new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientService, client));
             });
 
             ClientList.ItemChanged
@@ -43,16 +45,13 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private IObservable<Client> LoadClients()
         {
-            return _clientStore.Query()
-                .Where(x => x.ArchivedDateTime == null)
-                .OrderBy(c => c.Name)
-                .ToObservable();
-            //.ForEach(x => );
+            return _clientService.GetActiveClients()
+                .ToObservable();            
         }
 
         private async Task AddClient()
         {
-            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientStore,
+            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientService,
                 new Core.Models.Clients.Client());
             await newClientVm.Edit();
         }

@@ -4,17 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Certificates
 {
-    public class Certificate
+    public class Certificate : Entity
     {
-        public Certificate()
-        {
-            Id = Guid.NewGuid();
-        }
 
-        public Guid Id { get; set; }
         public DateTime CreatedDateTime { get; set; }
 
         public string VerificationType { get; set; }

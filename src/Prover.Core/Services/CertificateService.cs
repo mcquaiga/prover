@@ -40,11 +40,15 @@ namespace Prover.Core.Services
 
         public async Task<Certificate> GetCertificate(long number)
         {
-            var cert = await _certificateStore.Query().FirstOrDefaultAsync(x => x.Number == number);
+            var cert = await _certificateStore
+                .Query(x => x.Number == number)
+                .FirstOrDefaultAsync();
+
             if (cert == null) return null;
 
             var instruments = cert.Instruments
-                .Select(i => _instrumentStore.Get(i.Id)).ToList();
+                .Select(i => _instrumentStore.Get(i.Id).Result)
+                .ToList();
 
             cert.Instruments = instruments;
 
@@ -53,13 +57,13 @@ namespace Prover.Core.Services
 
         public async Task<Certificate> GetCertificate(Guid id)
         {
-            var cert = await _certificateStore.Query().FirstOrDefaultAsync(x => x.Id == id);
+            var cert = await _certificateStore.Query(x => x.Id == id).FirstOrDefaultAsync();
             return await GetCertificate(cert.Number);
         }
 
         public async Task<long> GetNextCertificateNumber()
         {
-            var last = await _certificateStore.Query()
+            var last = await _certificateStore.GetAll()
                 .Select(x => x.Number)
                 .OrderByDescending(x => x)
                 .FirstOrDefaultAsync();
@@ -91,15 +95,14 @@ namespace Prover.Core.Services
                 certificate.Instruments.Add(i);
             });
 
-            await _certificateStore.UpsertAsync(certificate);
+            await _certificateStore.Upsert(certificate);
             
             return certificate;
         }
 
         public IEnumerable<long> GetCertificateNumbers(Client client)
         {
-            return _certificateStore.Query()
-                .Where(c => c.Client == client)
+            return _certificateStore.Query(c => c.Client == client)
                 .Select(c => c.Number);
         }
 
@@ -110,15 +113,14 @@ namespace Prover.Core.Services
 
         public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber)
         {
-            return _certificateStore.Query()
-                .Where(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
+            return _certificateStore.Query(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
                          && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
                 .OrderBy(i => i.Number);
         }
 
         public IEnumerable<string> GetDistinctTestedBy()
         {
-            return _certificateStore.Query()                
+            return _certificateStore.GetAll()                
                 .Select(c => c.TestedBy)
                 .Distinct();
         }
@@ -127,8 +129,7 @@ namespace Prover.Core.Services
         {
             try
             {
-                var results = _instrumentStore.Query()
-                    .Where(x => x.CertificateId == null 
+                var results = _instrumentStore.Query(x => x.CertificateId == null 
                         && ((clientId == Guid.Empty && x.ClientId == null) || x.ClientId == clientId) 
                         && (showArchived == false && x.ArchivedDateTime == null || showArchived))
                     .OrderBy(x => x.TestDateTime);

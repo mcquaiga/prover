@@ -31,16 +31,16 @@ namespace Prover.GUI.Modules.Certificates.Screens
             "Re-Verified"
         };
   
-        private readonly IClientStore _clientStore;
+        private readonly ClientService _clientService;
         private readonly ICertificateService _certificateService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IClientStore clientStore, ICertificateService certificateService, ExportToCsvViewModel exportToCsvViewModel)
+            ClientService clientService, ICertificateService certificateService, ExportToCsvViewModel exportToCsvViewModel)
             : base(screenManager, eventAggregator)
         {
             ExportToCsvViewModel = exportToCsvViewModel;
-            _clientStore = clientStore;
+            _clientService = clientService;
             _certificateService = certificateService;
 
             var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient, 
@@ -285,8 +285,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
     
         private IObservable<Client> LoadClients()
         {
-            return _clientStore.Query()
-                .Where(x => x.ArchivedDateTime == null)
+            return _clientService.GetActiveClients()
                 .ToObservable()
                 .DefaultIfEmpty(null);
         }

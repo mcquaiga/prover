@@ -10,6 +10,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
 using Prover.Core.Models.Clients;
+using Prover.Core.Services;
 using Prover.Core.Shared.Enums;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
@@ -23,12 +24,12 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 {
     public class ClientDetailsViewModel : ViewModelBase
     {
-        private readonly IClientStore _clientStore;
+        private readonly ClientService _clientService;
 
-        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientStore clientStore, Client client = null)
+        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService, Client client = null)
             : base(screenManager, eventAggregator)
         {
-            _clientStore = clientStore;
+            _clientService = clientService;
             _client = client;
 
             EditCommand = ReactiveCommand.CreateFromTask(Edit);
@@ -40,22 +41,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             GoToCsvExporter = ReactiveCommand.Create<Client>(OpenCsvExporter);
-            //GoToCsvExporter.ThrownExceptions
-            //    .Where(ex => ex is CsvTemplateNotFoundException)
-            //    .Select(ex => ex as CsvTemplateNotFoundException)
-            //    .Subscribe(ex =>
-            //        {
-            //            if (ex == null) return;
-
-            //            var result = MessageBox.Show(ex.Message, "No matching CSV Template",
-            //                MessageBoxButton.YesNo);
-            //            if (result == MessageBoxResult.Yes)
-            //            {
-            //                GoToCsvTemplateManager
-            //                    .Execute(ex.CsvTemplate);
-            //            }
-            //        }
-            //    );
+        
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
             
             InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());
@@ -78,7 +64,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());            
             DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
             {
-                if (await _clientStore.DeleteCsvTemplate(csv))
+                if (await _clientService.DeleteCsvTemplate(csv))
                     ClientCsvTemplates.Remove(csv);
             });
 
@@ -260,7 +246,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private async Task ArchiveClient()
         {
-            await _clientStore.Delete(this.Client);
+            await _clientService.ArchiveClient(this.Client);
             IsRemoved = true;
         }
 
@@ -269,16 +255,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             var exporter = IoC.Get<ExportToCsvViewModel>();
             exporter.Client = _client;
 
-            ScreenManager.ShowDialog(exporter);
-            //if (exporter.NotFoundException != null)
-            //{
-            //    var result = MessageBox.Show(exporter.NotFoundException.Message, "No matching CSV Template", MessageBoxButton.YesNo);
-            //    if (result == MessageBoxResult.Yes)
-            //    {
-            //        GoToCsvTemplateManager
-            //            .Execute(exporter.NotFoundException.CsvTemplate);
-            //    }
-            //}
+            ScreenManager.ShowDialog(exporter);        
         }
 
         private async Task GoBack()
@@ -289,7 +266,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private async Task Save()
         {
-            await _clientStore.UpsertAsync(Client);
+            await _clientService.Save(Client);
         }
 
         #endregion

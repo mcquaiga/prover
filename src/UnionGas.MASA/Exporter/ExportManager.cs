@@ -7,6 +7,7 @@ using System.Windows;
 using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using UnionGas.MASA.DCRWebService;
 
@@ -16,11 +17,11 @@ namespace UnionGas.MASA.Exporter
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly DCRWebServiceSoap _dcrWebService;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
 
-        public ExportToMasaManager(IProverStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
+        public ExportToMasaManager(TestRunService testRunService, DCRWebServiceSoap dcrWebService)
         {
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _dcrWebService = dcrWebService;
         }
 
@@ -46,7 +47,7 @@ namespace UnionGas.MASA.Exporter
                 foreach (var instr in forExport)
                 {
                     instr.ExportedDateTime = DateTime.Now;
-                    await _instrumentStore.UpsertAsync(instr);
+                    await _testRunService.Save(instr);
                 }
                 return true;
             }

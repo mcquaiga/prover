@@ -13,6 +13,7 @@ using Prover.Core.Communication;
 using Prover.Core.DriveTypes;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
 using Prover.Core.Storage;
@@ -43,7 +44,7 @@ namespace Prover.Core.VerificationTests
         protected static Logger Log = LogManager.GetCurrentClassLogger();
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly TachometerService _tachometerService;
         private readonly Subject<string> _testStatus = new Subject<string>();
@@ -53,7 +54,7 @@ namespace Prover.Core.VerificationTests
 
         public QaRunTestManager(
             IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore,
+            TestRunService testRunService,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             TachometerService tachometerService,
@@ -61,7 +62,7 @@ namespace Prover.Core.VerificationTests
             IEnumerable<IPostTestAction> postTestCommands = null)
         {
             _eventAggregator = eventAggregator;
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _tachometerService = tachometerService;
@@ -179,7 +180,7 @@ namespace Prover.Core.VerificationTests
             {
                 _testStatus.OnNext($"Saving test...");
 
-                await _instrumentStore.UpsertAsync(Instrument);
+                await _testRunService.Save(Instrument);
             }
             catch (Exception ex)
             {

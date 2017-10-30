@@ -14,21 +14,22 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Storage;
 using Prover.Core.Login;
+using Prover.Core.Services;
 
 namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberValidationManager : IPreTestValidation
     {
         private readonly ScreenManager _screenManager;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
         private readonly DCRWebServiceSoap _webService;
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberValidationManager(ScreenManager screenManager, IProverStore<Instrument> instrumentStore, DCRWebServiceSoap webService, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidationManager(ScreenManager screenManager, TestRunService testRunService, DCRWebServiceSoap webService, ILoginService<EmployeeDTO> loginService)
         {
             _screenManager = screenManager;
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _webService = webService;
             _loginService = loginService;
         }
@@ -70,7 +71,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
         {
             instrument.JobId = meterDto?.JobNumber.ToString();
             instrument.EmployeeId = _loginService.User?.Id;
-            await _instrumentStore.UpsertAsync(instrument);
+            await _testRunService.Save(instrument);
         }
 
         public async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
@@ -88,7 +89,7 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             if (response)
             {
                 instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber;
-                await _instrumentStore.UpsertAsync(instrument);
+                await _testRunService.Save(instrument);
             }
 
             return newCompanyNumber;
