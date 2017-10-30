@@ -10,8 +10,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-
         <DataTemplate x:Key="AppButton">
             <Button Width="128" Height="150">
                 <StackPanel>
@@ -38,27 +36,5 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-
-        <!--<Button x:Name="NewTestButton" Width="128" Height="150">
-                <StackPanel>
-                    <Image Source="..\..\Resources\clipboard-check.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Prove Instrument</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button x:Name="ExportRunButton" Width="128" Height="150">
-                <StackPanel>
-                    <Image Source="..\..\Resources\clipboard-text.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">Export to MASA</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button x:Name="RawInstrumentAccessButton" Width="128" Height="150">
-                <StackPanel>
-                    <Image Source="..\..\Resources\cloud-upload.png" Width="48" Height="48" />
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWithOverflow">
-                        Raw Item
-                        Access
-                    </TextBlock>
-                </StackPanel>
-            </Button>-->
     </Grid>
 </UserControl>

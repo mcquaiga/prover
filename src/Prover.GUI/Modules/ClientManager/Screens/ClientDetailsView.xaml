@@ -96,16 +96,6 @@
                          VerticalAlignment="Stretch"
                          AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" />
-
-                <materialDesign:PackIcon Grid.Column="2"
-                                         Grid.Row="0"
-                                         Kind="FileDelimited"
-                                         Foreground="{Binding ElementName=AddressTextBox, Path=BorderBrush}" />
-
-                <Button Grid.Column="3"
-                        Grid.Row="0"
-                        Content="Export Certificates to CSVs"
-                        Command="{Binding GoToCsvExporter}" />
             </Grid>
 
             <Grid Grid.Row="2"

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 
@@ -13,13 +14,13 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 {
     public class ClientPostTestResetManager : IPostTestAction
     {
-        private IClientStore _clientStore;
-        private IProverStore<Instrument> _instrumentStore;
+        private readonly ClientService _clientService;
+        private readonly TestRunService _testRunService;
 
-        public ClientPostTestResetManager(IClientStore clientStore, IProverStore<Instrument> instrumentStore)
+        public ClientPostTestResetManager(ClientService clientService, TestRunService testRunService)
         {
-            _clientStore = clientStore;
-            _instrumentStore = instrumentStore;
+            _clientService = clientService;
+            _testRunService = testRunService;
         }
 
         public Task Execute(Action<EvcCommunicationClient, Instrument> postTestAction)
@@ -30,8 +31,6 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
         public async Task Execute(EvcCommunicationClient commClient, Instrument instrument,
             Subject<string> statusUpdates)
         {
-            if (instrument?.Client == null) return;
-
             var resetItems = instrument?.Client?.Items?
                 .FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset &&
                                      c.InstrumentType == instrument.InstrumentType)

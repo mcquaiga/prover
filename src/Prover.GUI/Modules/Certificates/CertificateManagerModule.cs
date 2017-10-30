@@ -32,13 +32,7 @@ namespace Prover.GUI.Modules.Certificates
                 .As<IHaveMainMenuItem>()
                 .SingleInstance();
            
-            builder.RegisterType<CertificateStore>()
-                .As<IProverStore<Certificate>>()
-                .SingleInstance();
-
-            builder.RegisterType<CertificateService>()
-                .As<ICertificateService>()
-                .SingleInstance();
+            
 
             builder.RegisterType<ExportToCsvManager>()
                 .As<IExportCertificate>();

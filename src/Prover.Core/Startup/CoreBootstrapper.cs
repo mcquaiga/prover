@@ -10,7 +10,10 @@ using Prover.Core.Communication;
 using Prover.Core.Exports;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
+using Prover.Core.Models.Certificates;
+using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
@@ -68,10 +71,25 @@ namespace Prover.Core.Startup
                 .AsSelf()
                 .AutoActivate()
                 .SingleInstance();
-                
 
-            Builder.Register(c => new InstrumentStore(c.Resolve<ProverContext>()))
-                .As<IProverStore<Instrument>>();
+            Builder.RegisterType<InstrumentStore>()
+                .As<IProverStore<Instrument>>()
+                .SingleInstance();
+            Builder.RegisterType<TestRunService>();
+
+            Builder.RegisterType<ClientStore>()
+                .As<IProverStore<Client>>()
+                .SingleInstance();
+            Builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>()))
+                .As<IProverStore<ClientCsvTemplate>>()
+                .SingleInstance();
+            Builder.RegisterType<ClientService>();
+
+            Builder.RegisterType<CertificateStore>()
+                .As<IProverStore<Certificate>>()
+                .SingleInstance();
+            Builder.RegisterType<CertificateService>()
+                .As<ICertificateService>();
 
             _log.Debug("Completed initializing database...");
         }

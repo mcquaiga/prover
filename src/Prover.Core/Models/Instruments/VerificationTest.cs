@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.Core.Shared.Domain;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VerificationTest : BaseEntity
+    public sealed class VerificationTest : Entity
     {
         public VerificationTest()
         {
@@ -67,8 +68,6 @@ namespace Prover.Core.Models.Instruments
 
         public override void OnInitializing()
         {
-            base.OnInitializing();
-
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTest = new SuperFactorTest(this);
         }

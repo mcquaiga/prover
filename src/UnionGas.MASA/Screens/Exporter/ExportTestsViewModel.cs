@@ -14,19 +14,20 @@ using Prover.GUI.Common.Screens;
 using ReactiveUI;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
+using Prover.Core.Services;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
     public class ExportTestsViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
     {
         private readonly IExportTestRun _exportTestRun;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
 
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, IExportTestRun exportTestRun = null) : base(screenManager, eventAggregator)
+            TestRunService testRunService, IExportTestRun exportTestRun = null) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
-            _instrumentStore = instrumentStore;                    
+            _testRunService = testRunService;                    
 
             FilterObservable = new Subject<Predicate<Instrument>>();
             
@@ -100,9 +101,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
         private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
         {
-            return _instrumentStore.Query()
-                .AsEnumerable()               
-                .Where(whereFunc.Invoke)
+            return _testRunService.GetAllUnexported()
                 .OrderBy(i => i.TestDateTime)
                 .ToObservable();
         }

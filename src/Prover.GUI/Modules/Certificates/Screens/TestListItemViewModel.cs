@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Services;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
@@ -15,13 +16,13 @@ namespace Prover.GUI.Modules.Certificates.Screens
     public class TestListItemViewModel : ViewModelBase
     {
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
-        private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
 
         public TestListItemViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IProverStore<Instrument> instrumentStore, InstrumentReportGenerator instrumentReportGenerator)
+            TestRunService testRunService, InstrumentReportGenerator instrumentReportGenerator)
             : base(screenManager, eventAggregator)
         {
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _instrumentReportGenerator = instrumentReportGenerator;
 
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
@@ -116,7 +117,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public async Task ArchiveTest()
         {
-            await _instrumentStore.Delete(VerificationView.Instrument);
+            await _testRunService.ArchiveTest(VerificationView.Instrument);
             IsArchived = true;
         }
     }

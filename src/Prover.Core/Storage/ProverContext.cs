@@ -8,6 +8,7 @@ using NLog;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Domain;
 
 //using Prover.Core.Migrations;
 
@@ -39,7 +40,7 @@ namespace Prover.Core.Storage
 
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
-            (e.Entity as BaseEntity)?.OnInitializing();
+            (e.Entity as Entity)?.OnInitializing();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

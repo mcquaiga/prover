@@ -2,72 +2,22 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Clients;
 
 namespace Prover.Core.Storage
 {
-    public interface IClientStore : IProverStore<Client>
+    public class ClientStore : ProverStore<Client>
     {
-        Task<List<Client>> GetAll(bool includeArchived = false);
-        Task<bool> DeleteCsvTemplate(ClientCsvTemplate template);
-    }
-
-    public class ClientStore : IClientStore
-    {
-        private readonly ProverContext _context;
-
-        public ClientStore(ProverContext context)
+        public ClientStore(ProverContext dbContext) : base(dbContext)
         {
-            _context = context;
         }
 
-        public IQueryable<Client> Query()
+        protected override IQueryable<Client> QueryCommand()
         {
-            return _context.Clients
-                .Include(x => x.Items)
-                .AsQueryable();
-        }
-
-        public Client Get(Guid id)
-        {
-            return Query().FirstOrDefault(x => x.Id == id);
-        }
-
-        public async Task<List<Client>> GetAll(bool includeArchived = false)
-        {
-            return await Query()
-                .Where(x => (includeArchived) || (includeArchived == false && !x.ArchivedDateTime.HasValue))
-                .OrderBy(c => c.Name)
-                .ToListAsync();
-        }
-
-        public async Task<bool> DeleteCsvTemplate(ClientCsvTemplate template)
-        {
-            _context.ClientCsvTemplates.Remove(template);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<Client> UpsertAsync(Client entity)
-        {
-            if (Get(entity.Id) != null)
-            {
-                _context.Clients.Attach(entity);
-                _context.Entry(entity).State = EntityState.Modified;
-            }
-            else
-            {
-                _context.Clients.Add(entity);
-            }
-
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        public async Task Delete(Client entity)
-        {
-            entity.ArchivedDateTime = DateTime.UtcNow;
-            await UpsertAsync(entity);
+            return Context.Clients
+                .Include(x => x.Items);
         }
     }
 }

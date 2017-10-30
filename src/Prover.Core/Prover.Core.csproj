@@ -203,7 +203,9 @@
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\TestRunService.cs" />
     <Compile Include="Storage\ClientStore.cs" />
+    <Compile Include="Storage\GenericRepository.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ItemVerificationManager.cs" />

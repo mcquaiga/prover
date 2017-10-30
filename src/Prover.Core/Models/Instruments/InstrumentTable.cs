@@ -8,25 +8,11 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class BaseEntity
-    {
-        protected BaseEntity()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-
-        public virtual void OnInitializing()
-        {
-        }
-    }
-
-    public abstract class ProverTable : BaseEntity
+    public abstract class ProverTable : Entity
     {
         private string _instrumentData;
 
@@ -44,8 +30,6 @@ namespace Prover.Core.Models.Instruments
 
         public override void OnInitializing()
         {
-            base.OnInitializing();
-
             if (this is Instrument)
                 InstrumentType = HoneywellInstrumentTypes.GetAll()
                     .FirstOrDefault(i => i.Id == (this as Instrument)?.Type);
