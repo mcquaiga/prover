@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Prover.Core.Models.Clients;
+using Prover.Core.Shared.Data;
 
 namespace Prover.Core.Storage
 {
-    public class ClientStore : ProverStore<Client>
-    {
-        public ClientStore(ProverContext dbContext) : base(dbContext)
+    public class ClientStore : EfProverStore<Client>
+    {    
+        public ClientStore(IAmbientDbContextLocator ambientDbContextLocator) : base(ambientDbContextLocator)
         {
         }
 
-        protected override IQueryable<Client> QueryCommand()
+        protected override IQueryable<Client> Query()
         {
             return Context.Clients
                 .Include(x => x.Items);

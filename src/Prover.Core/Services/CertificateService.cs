@@ -8,6 +8,7 @@ using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Data;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Services
@@ -16,130 +17,157 @@ namespace Prover.Core.Services
     {
         Task<Certificate> GetCertificate(Guid id);
         Task<Certificate> GetCertificate(long number);
-
-        IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
-
+        Task<List<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
         Task<long> GetNextCertificateNumber();
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
-        IEnumerable<Certificate> GetAllCertificates(Client client);
-        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
-        IEnumerable<long> GetCertificateNumbers(Client client);
+        Task<List<Certificate>> GetAllCertificates(Client client);
+        Task<List<Certificate>> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        Task<List<Instrument>> GetInstrumentsOnCertificate(Certificate cert);
+        Task<List<long>> GetCertificateNumbers(Client client);
         IEnumerable<string> GetDistinctTestedBy();
     }
 
     public class CertificateService : ICertificateService
     {
+        private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IProverStore<Certificate> _certificateStore;
         private readonly IProverStore<Instrument> _instrumentStore;
 
-        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
+        public CertificateService(IDbContextScopeFactory dbContextScopeFactory,
+            IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
         {
+            _dbContextScopeFactory = dbContextScopeFactory;
             _certificateStore = certificateStore;
             _instrumentStore = instrumentStore;
         }
 
         public async Task<Certificate> GetCertificate(long number)
         {
-            var cert = await _certificateStore
-                .Query(x => x.Number == number)
-                .FirstOrDefaultAsync();
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                var cert = await _certificateStore.Query(x => x.Number == number).FirstOrDefaultAsync();
 
-            if (cert == null) return null;
+                if (cert == null)
+                    throw new ArgumentException(
+                        $"Invalid value provided for certificate #: [{number}]. Couldn't find a certificate with this number.");
 
-            var instruments = cert.Instruments
-                .Select(i => _instrumentStore.Get(i.Id).Result)
-                .ToList();
+                cert.Instruments = await GetInstrumentsOnCertificate(cert);
 
-            cert.Instruments = instruments;
+                return cert;
+            }
+        }
 
-            return cert;
+        public async Task<List<Instrument>> GetInstrumentsOnCertificate(Certificate cert)
+        {
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return await _instrumentStore.Query(i => i.CertificateId == cert.Id).ToListAsync();
+            }
         }
 
         public async Task<Certificate> GetCertificate(Guid id)
         {
-            var cert = await _certificateStore.Query(x => x.Id == id).FirstOrDefaultAsync();
-            return await GetCertificate(cert.Number);
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                var cert = await _certificateStore.Query(x => x.Id == id).FirstOrDefaultAsync();
+                return await GetCertificate(cert.Number);
+            }
         }
 
         public async Task<long> GetNextCertificateNumber()
         {
-            var last = await _certificateStore.GetAll()
-                .Select(x => x.Number)
-                .OrderByDescending(x => x)
-                .FirstOrDefaultAsync();
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                var last = await _certificateStore.GetAll()
+                    .Select(x => x.Number)
+                    .OrderByDescending(x => x)
+                    .FirstOrDefaultAsync();
 
-            return last + 1;
+                return last + 1;
+            }
         }
 
         public async Task<Certificate> CreateCertificate(string testedBy, string verificationType,
             List<Instrument> instruments)
         {
-            var client = instruments.First().Client;
-
-            var certificate = new Certificate
+            using (var db = _dbContextScopeFactory.Create())
             {
-                CreatedDateTime = DateTime.Now,
-                VerificationType = verificationType,
-                Apparatus = SettingsManager.SettingsInstance.TestSettings.MeasurementApparatus,
-                TestedBy = testedBy,
-                Client = client,
-                ClientId = client.Id,
-                Number = await GetNextCertificateNumber(),
-                Instruments = new Collection<Instrument>()
-            };
+                var client = instruments.First().Client;
 
-            instruments.ForEach(i =>
-            {
-                i.CertificateId = certificate.Id;
-                i.Certificate = certificate;
-                certificate.Instruments.Add(i);
-            });
+                var certificate = new Certificate
+                {
+                    CreatedDateTime = DateTime.Now,
+                    VerificationType = verificationType,
+                    Apparatus = SettingsManager.SettingsInstance.TestSettings.MeasurementApparatus,
+                    TestedBy = testedBy,
+                    Client = client,
+                    ClientId = client.Id,
+                    Number = await GetNextCertificateNumber(),
+                    Instruments = new Collection<Instrument>()
+                };
 
-            await _certificateStore.Upsert(certificate);
-            
-            return certificate;
+                instruments.ForEach(i =>
+                {
+                    i.CertificateId = certificate.Id;
+                    i.Certificate = certificate;
+                    certificate.Instruments.Add(i);
+                });
+
+                await _certificateStore.Upsert(certificate);
+                await db.SaveChangesAsync();
+                return certificate;
+            }
         }
 
-        public IEnumerable<long> GetCertificateNumbers(Client client)
+        public async Task<List<long>> GetCertificateNumbers(Client client)
         {
-            return _certificateStore.Query(c => c.Client == client)
-                .Select(c => c.Number);
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return await _certificateStore.Query(c => c.Client == client)
+                    .Select(c => c.Number)
+                    .ToListAsync();
+            }
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client)
+        public Task<List<Certificate>> GetAllCertificates(Client client)
         {
             return GetAllCertificates(client, 0, 0);
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber)
+        public async Task<List<Certificate>> GetAllCertificates(Client client, long fromNumber, long toNumber)
         {
-            return _certificateStore.Query(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
-                         && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
-                .OrderBy(i => i.Number);
+            using (_dbContextScopeFactory.CreateReadOnly())
+            {
+                return await _certificateStore.Query(c =>
+                        (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
+                        && (fromNumber == 0 || c.Number >= fromNumber)
+                        && (toNumber == 0 || c.Number <= toNumber))
+                    .OrderBy(i => i.Number)
+                    .ToListAsync();
+            }
         }
 
         public IEnumerable<string> GetDistinctTestedBy()
         {
-            return _certificateStore.GetAll()                
-                .Select(c => c.TestedBy)
-                .Distinct();
+            _dbContextScopeFactory.CreateReadOnly();
+
+            return _certificateStore.GetAll()
+                    .Select(c => c.TestedBy)
+                    .Distinct();
         }
 
-        public IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false)
+        public async Task<List<Instrument>> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false)
         {
-            try
+            using (_dbContextScopeFactory.CreateReadOnly())
             {
-                var results = _instrumentStore.Query(x => x.CertificateId == null 
-                        && ((clientId == Guid.Empty && x.ClientId == null) || x.ClientId == clientId) 
-                        && (showArchived == false && x.ArchivedDateTime == null || showArchived))
+                var results = _instrumentStore.Query(x => x.CertificateId == null
+                                                          && ((clientId == Guid.Empty && x.ClientId == null) ||
+                                                              x.ClientId == clientId)
+                                                          && (showArchived == false && x.ArchivedDateTime == null ||
+                                                              showArchived))
                     .OrderBy(x => x.TestDateTime);
 
-                return results;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
+                return await results.ToListAsync();
             }
         }
     }

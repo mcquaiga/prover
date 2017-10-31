@@ -49,8 +49,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
                     MessageBox.Show(ex.Message);
                 });
 
-            GetCertificatesCommand = ReactiveCommand.Create<Client, IEnumerable<Certificate>>(
-                client => certificateService.GetAllCertificates(client).ToList());
+            GetCertificatesCommand = ReactiveCommand.CreateFromTask<Client, List<Certificate>>(certificateService.GetAllCertificates);
             GetCertificatesCommand
                 .Subscribe(c => ClientCertificates.AddRange(c));
 
@@ -127,7 +126,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         #region Commands
 
         public ReactiveCommand<Client, Unit> ExportCommand { get; }
-        public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
+        public ReactiveCommand<Client, List<Certificate>> GetCertificatesCommand { get; set; }       
 
         #endregion       
 

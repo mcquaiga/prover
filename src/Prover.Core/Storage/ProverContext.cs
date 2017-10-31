@@ -3,6 +3,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
+using System.Reflection;
 using Autofac;
 using NLog;
 using Prover.Core.Models.Certificates;
@@ -21,7 +22,6 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            _log.Trace("Starting Prover Context...");
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.Log = s => Debug.WriteLine(s);
@@ -47,7 +47,8 @@ namespace Prover.Core.Storage
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-            base.OnModelCreating(modelBuilder);            
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Configurations.AddFromAssembly(Assembly.GetAssembly(typeof(ProverContext)));
         }
     }
 }

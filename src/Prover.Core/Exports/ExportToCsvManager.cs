@@ -29,18 +29,16 @@ namespace Prover.Core.Exports
         private static readonly string CertificatesExportDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\";
 
         private readonly ICertificateService _certificateService;
-        private readonly TestRunService _testRunService;
 
-        public ExportToCsvManager(ICertificateService certificateService, TestRunService testRunService)
+        public ExportToCsvManager(ICertificateService certificateService)
         {
             _certificateService = certificateService;
-            _testRunService = testRunService;
         }
 
         public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber, string exportPath)
         {
             var csvFiles = new List<string>();
-            foreach (var cert in _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber))
+            foreach (var cert in await _certificateService.GetAllCertificates(client, fromCertificateNumber, toCertificateNumber))
             {
                 csvFiles.Add(await Export(cert, exportPath));
             }
@@ -58,7 +56,7 @@ namespace Prover.Core.Exports
                 var client = certificate.Client;
                 var fileName = GetFilePath(exportPath, certificate, client);
 
-                var instruments = _testRunService.GetTestRunByCertificate(certificate.Id).ToList();
+                var instruments = await _certificateService.GetInstrumentsOnCertificate(certificate);
 
                 var exportInstrumentsDictonary = new Dictionary<ExportFields, string>();
                 foreach (var instrument in instruments)

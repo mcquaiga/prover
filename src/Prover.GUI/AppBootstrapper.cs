@@ -10,7 +10,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Newtonsoft.Json;
 using NLog;
-using Prover.Core.Startup;
+using Prover.Core;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Common.Screens.Toolbar;

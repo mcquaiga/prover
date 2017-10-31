@@ -50,6 +50,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
                 client => _certificateService
                             .GetInstrumentsWithNoCertificate(client.Id)
+                            .Result
                             .ToObservable()                            
                             .DefaultIfEmpty(null));
 
@@ -109,6 +110,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(client =>
                 _certificateService.GetAllCertificates(client)
+                    .Result
                     .ToObservable()
                     .DefaultIfEmpty(null));
             FetchExistingClientCertificatesCommand.ThrownExceptions
@@ -139,7 +141,9 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     ExportToCsvViewModel.Client = client;
                 });
 
-            GetTestedByCommand = ReactiveCommand.CreateFromObservable(() => _certificateService.GetDistinctTestedBy().ToObservable());
+            GetTestedByCommand = ReactiveCommand.CreateFromObservable(
+                () => _certificateService.GetDistinctTestedBy().ToObservable());
+
             GetTestedByCommand
                 .Where(t => t != null)
                 .Subscribe(tb => TestedBy.Add(tb));

@@ -4,16 +4,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Data;
 
 namespace Prover.Core.Storage
 {   
-    public class InstrumentStore : ProverStore<Instrument>
+    public class InstrumentStore : EfProverStore<Instrument>
     {
-        public InstrumentStore(ProverContext dbContext) : base(dbContext)
+        public InstrumentStore(IAmbientDbContextLocator ambientDbContextLocator) : base(ambientDbContextLocator)
         {
         }
 
-        protected override IQueryable<Instrument> QueryCommand()
+        protected override IQueryable<Instrument> Query()
         {
             return Context.Instruments
                 .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))

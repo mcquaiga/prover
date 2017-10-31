@@ -37,6 +37,12 @@
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -51,7 +57,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AmbientContextSuppressor.cs" />
+    <Compile Include="Data\AmbientDbContextLocator.cs" />
+    <Compile Include="Data\DbContextCollection.cs" />
+    <Compile Include="Data\DbContextReadOnlyScope.cs" />
+    <Compile Include="Data\DbContextScope.cs" />
+    <Compile Include="Data\DbContextScopeFactory.cs" />
+    <Compile Include="Data\DbContextScopeOption.cs" />
+    <Compile Include="Data\IAmbientDbContextLocator.cs" />
     <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\IDbContextCollection.cs" />
+    <Compile Include="Data\IDbContextFactory.cs" />
+    <Compile Include="Data\IDbContextReadOnlyScope.cs" />
+    <Compile Include="Data\IDbContextScope.cs" />
+    <Compile Include="Data\IDbContextScopeFactory.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\BusinessRule.cs" />
@@ -84,6 +103,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

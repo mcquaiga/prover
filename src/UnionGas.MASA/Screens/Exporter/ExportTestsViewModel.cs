@@ -14,6 +14,7 @@ using Prover.GUI.Common.Screens;
 using ReactiveUI;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using Prover.Core.Services;
 
 namespace UnionGas.MASA.Screens.Exporter
@@ -101,8 +102,8 @@ namespace UnionGas.MASA.Screens.Exporter
 
         private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
         {
-            return _testRunService.GetAllUnexported()
-                .OrderBy(i => i.TestDateTime)
+            return _testRunService.GetAllUnexported() 
+                .Result
                 .ToObservable();
         }
 
