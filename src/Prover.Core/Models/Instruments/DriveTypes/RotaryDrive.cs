@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models;
 using Prover.Core.Extensions;
-using Prover.Core.Models.Instruments;
 
-namespace Prover.Core.DriveTypes
+namespace Prover.Core.Models.Instruments.DriveTypes
 {
     public class MeterTest
     {
@@ -51,8 +50,10 @@ namespace Prover.Core.DriveTypes
 
         public string MeterTypeDescription => MeterIndex.Description;
 
-        public string MeterType => _instrument.Items.GetItem(432).Description;
-
+        public string MeterType
+            => !string.IsNullOrEmpty(MeterTypeDescription)
+                ? MeterTypeDescription
+                : _instrument.Items.GetItem(432).Description;
 
         public int MeterTypeId => (int) _instrument.Items.GetItem(432).NumericValue;
     }

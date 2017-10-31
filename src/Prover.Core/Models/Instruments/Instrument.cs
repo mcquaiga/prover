@@ -7,10 +7,10 @@ using System.Linq.Expressions;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
+using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
 

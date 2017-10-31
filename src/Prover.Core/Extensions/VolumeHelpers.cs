@@ -85,7 +85,7 @@ namespace Prover.Core.Extensions
             return instrument.Items.GetItem(98).NumericValue;
         }
 
-        public static decimal? CorrectedMultiplier(this Instrument instrument)
+        public static decimal CorrectedMultiplier(this Instrument instrument)
         {
             return instrument.Items.GetItem(90).NumericValue;
         }
@@ -96,7 +96,7 @@ namespace Prover.Core.Extensions
         }
 
 
-        public static decimal? UnCorrectedMultiplier(this Instrument instrument)
+        public static decimal UnCorrectedMultiplier(this Instrument instrument)
         {
             return instrument.Items.GetItem(92).NumericValue;
         }

@@ -107,9 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="DriveTypes\IDriveType.cs" />
-    <Compile Include="DriveTypes\MechanicalDrive.cs" />
-    <Compile Include="DriveTypes\RotaryDrive.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\CsvWriter.cs" />
     <Compile Include="Exports\ExportFields.cs" />
