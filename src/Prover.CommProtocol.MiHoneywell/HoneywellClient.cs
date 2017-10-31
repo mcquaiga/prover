@@ -16,22 +16,16 @@ namespace Prover.CommProtocol.MiHoneywell
     {
         public HoneywellClient(ICommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
         {
-            Task.Run(() => ItemHelpers.LoadItems(InstrumentType))
-                .ContinueWith(_ => { this.ItemDetails = _.Result; });
+            ItemDetails = InstrumentType.ItemsMetadata;
         }
 
-        public override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
+        public sealed override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
 
         public override bool IsConnected { get; protected set; }
       
         protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null)
         {
-            var connectTasks = new List<Task>();
-
-            if (ItemDetails == null)
-                connectTasks.Add(
-                    Task.Run(() => ItemHelpers.LoadItems(InstrumentType), ct)
-                        .ContinueWith(_ => { ItemDetails = _.Result; }, ct));
+            var connectTasks = new List<Task>();             
 
             connectTasks.Add(Task.Run(async () =>
             {            

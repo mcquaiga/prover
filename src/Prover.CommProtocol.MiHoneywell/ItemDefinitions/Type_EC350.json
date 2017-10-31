@@ -1,0 +1,866 @@
+{
+    "Id": "14",
+    "Name": "EC-350",
+    "AccessCode": "99",
+    "CanUseIrDaPort": true,
+    "OverrideItems": [
+        {
+          "number": "87",
+          "code": "PRESS_UNITS",
+          "shortDescription": "Press Units",
+          "description": "Pressure Units",
+          "isPressure": "true",
+          "value": [
+            {
+              "id": "0",
+              "description": "PSI",
+              "numericvalue": "0"
+            },
+            {
+              "id": "1",
+              "description": "kPa",
+              "numericvalue": "2"
+            },
+            {
+              "id": "2",
+              "description": "mPa",
+              "numericvalue": "3"
+            },
+            {
+              "id": "3",
+              "description": "BAR",
+              "numericvalue": "4"
+            },
+            {
+              "id": "4",
+              "description": "mBAR",
+              "numericvalue": "5"
+            },
+            {
+              "id": "5",
+              "description": "KGcm2",
+              "numericvalue": "6"
+            },
+            {
+              "id": "6",
+              "description": "inWC",
+              "numericvalue": "7"
+            },
+            {
+              "id": "7",
+              "description": "inHG",
+              "numericvalue": "8"
+            },
+            {
+              "id": "8",
+              "description": "mmHG",
+              "numericvalue": "9"
+            }
+          ]
+        },
+        {
+          "number": "90",
+          "code": "Corr Vol Units",
+          "shortDescription": "Corr Vol Units",
+          "description": "Corrected Volume Units",
+          "isVolume": "true",
+          "value": [
+            {
+              "id": "0",
+              "description": "CF",
+              "numericvalue": "1"
+            },
+            {
+              "id": "1",
+              "description": "CFx10",
+              "numericvalue": "10"
+            },
+            {
+              "id": "2",
+              "description": "CFx100",
+              "numericvalue": "100"
+            },
+            {
+              "id": "3",
+              "description": "CFx1000",
+              "numericvalue": "1000"
+            },
+            {
+              "id": "4",
+              "description": "CFx10000",
+              "numericvalue": "10000"
+            },
+            {
+              "id": "5",
+              "description": "CCF",
+              "numericvalue": "100"
+            },
+            {
+              "id": "6",
+              "description": "MCF",
+              "numericvalue": "1000"
+            },
+            {
+              "id": "7",
+              "description": "m3x0.1",
+              "numericvalue": "0.1"
+            },
+            {
+              "id": "8",
+              "description": "m3",
+              "numericvalue": "1"
+            },
+            {
+              "id": "9",
+              "description": "m3x10",
+              "numericvalue": "10"
+            },
+            {
+              "id": "10",
+              "description": "m3x100",
+              "numericvalue": "100"
+            },
+            {
+              "id": "11",
+              "description": "m3x1000",
+              "numericvalue": "1000"
+            }
+          ]
+        },
+        {
+          "number": "92",
+          "code": "Uncorr Volume Units",
+          "shortDescription": "Uncorr Volume Units",
+          "description": "UnCorrected Volume Units",
+          "isVolume": "true",
+          "value": [
+            {
+              "id": "0",
+              "description": "CF",
+              "numericvalue": "1"
+            },
+            {
+              "id": "1",
+              "description": "CFx10",
+              "numericvalue": "10"
+            },
+            {
+              "id": "2",
+              "description": "CFx100",
+              "numericvalue": "100"
+            },
+            {
+              "id": "3",
+              "description": "CFx1000",
+              "numericvalue": "1000"
+            },
+            {
+              "id": "4",
+              "description": "CFx10000",
+              "numericvalue": "10000"
+            },
+            {
+              "id": "5",
+              "description": "CCF",
+              "numericvalue": "100"
+            },
+            {
+              "id": "6",
+              "description": "MCF",
+              "numericvalue": "1000"
+            },
+            {
+              "id": "7",
+              "description": "m3x0.1",
+              "numericvalue": "0.1"
+            },
+            {
+              "id": "8",
+              "description": "m3",
+              "numericvalue": "1"
+            },
+            {
+              "id": "9",
+              "description": "m3x10",
+              "numericvalue": "10"
+            },
+            {
+              "id": "10",
+              "description": "m3x100",
+              "numericvalue": "100"
+            },
+            {
+              "id": "11",
+              "description": "m3x1000",
+              "numericvalue": "1000"
+            }
+          ]
+        },
+        {
+          "number": "98",
+          "code": "METER_INDEX",
+          "shortDescription": "Meter Index Rate",
+          "description": "Meter Index Rate",
+          "isVolume": "true",
+          "value": [
+            {
+              "id": "0",
+              "description": "Rotary",
+              "numericvalue": "0"
+            },
+            {
+              "id": "1",
+              "description": "1 CF",
+              "numericvalue": "1"
+            },
+            {
+              "id": "2",
+              "description": "2 CF",
+              "numericvalue": "2"
+            },
+            {
+              "id": "3",
+              "description": "5 CF",
+              "numericvalue": "5"
+            },
+            {
+              "id": "4",
+              "description": "10 CF",
+              "numericvalue": "10"
+            },
+            {
+              "id": "5",
+              "description": "50 CF",
+              "numericvalue": "50"
+            },
+            {
+              "id": "6",
+              "description": "100 CF",
+              "numericvalue": "100"
+            },
+            {
+              "id": "7",
+              "description": "500 CF",
+              "numericvalue": "500"
+            },
+            {
+              "id": "8",
+              "description": "1000 CF",
+              "numericvalue": "1000"
+            },
+            {
+              "id": "9",
+              "description": "10000 CF",
+              "numericvalue": "10000"
+            },
+            {
+              "id": "10",
+              "description": "0.1 M3",
+              "numericvalue": "0.1"
+            },
+            {
+              "id": "11",
+              "description": "1.0 M3",
+              "numericvalue": "1"
+            },
+            {
+              "id": "12",
+              "description": "10 M3",
+              "numericvalue": "10"
+            },
+            {
+              "id": "13",
+              "description": "100 M3",
+              "numericvalue": "100"
+            },
+            {
+              "id": "14",
+              "description": "1000 M3",
+              "numericvalue": "1000"
+            }
+          ]
+        },
+        {
+          "number": "432",
+          "code": "METER_TYPE",
+          "shortDescription": "Meter Type",
+          "description": "Meter Type",
+          "isVolume": "true",
+          "value": [
+            {
+              "id": "0",
+              "description": "Other"
+            },
+            {
+              "id": "20",
+              "description": "Dresser ID B3 8C175/200"
+            },
+            {
+              "id": "21",
+              "description": "Dresser ID B3 11C175/200"
+            },
+            {
+              "id": "22",
+              "description": "Dresser ID B3 15C175/200"
+            },
+            {
+              "id": "23",
+              "description": "Dresser ID B3 1M300"
+            },
+            {
+              "id": "24",
+              "description": "Dresser ID B3 2M175/200"
+            },
+            {
+              "id": "25",
+              "description": "Dresser ID B3 3M175/300"
+            },
+            {
+              "id": "26",
+              "description": "Dresser ID B3 5M175"
+            },
+            {
+              "id": "27",
+              "description": "Dresser ID B3 7M175"
+            },
+            {
+              "id": "28",
+              "description": "Dresser ID B3 11M175"
+            },
+            {
+              "id": "29",
+              "description": "Dresser ID B3 16M175"
+            },
+            {
+              "id": "30",
+              "description": "Dresser ID B3 23M175"
+            },
+            {
+              "id": "31",
+              "description": "Dresser ID B3 38M175"
+            },
+            {
+              "id": "32",
+              "description": "Dresser ID B3 56M175"
+            },
+            {
+              "id": "40",
+              "description": "Dresser ID LMMA 1.5M"
+            },
+            {
+              "id": "41",
+              "description": "Dresser ID LMMA 2M"
+            },
+            {
+              "id": "42",
+              "description": "Dresser ID LMMA 3M"
+            },
+            {
+              "id": "43",
+              "description": "Dresser ID LMMA 5M"
+            },
+            {
+              "id": "44",
+              "description": "Dresser ID LMMA 7M"
+            },
+            {
+              "id": "45",
+              "description": "Dresser ID LMMA 11M"
+            },
+            {
+              "id": "46",
+              "description": "Dresser ID LMMA 16M"
+            },
+            {
+              "id": "47",
+              "description": "Dresser ID LMMA 23M"
+            },
+            {
+              "id": "48",
+              "description": "Dresser ID LMMA 38M"
+            },
+            {
+              "id": "49",
+              "description": "Dresser ID LMMA 56M"
+            },
+            {
+              "id": "50",
+              "description": "Dresser ID LMMA 102M"
+            },
+            {
+              "id": "60",
+              "description": "Dresser ROT B3 8C175/200"
+            },
+            {
+              "id": "61",
+              "description": "Dresser ROT B3 11C175/200"
+            },
+            {
+              "id": "62",
+              "description": "Dresser ROT B3 15C175/200"
+            },
+            {
+              "id": "63",
+              "description": "Dresser ROT B3 1M300"
+            },
+            {
+              "id": "64",
+              "description": "Dresser ROT B3 2M175/200"
+            },
+            {
+              "id": "65",
+              "description": "Dresser ROT B3 3M175/300"
+            },
+            {
+              "id": "66",
+              "description": "Dresser ROT B3 5M175"
+            },
+            {
+              "id": "67",
+              "description": "Dresser ROT B3 7M175"
+            },
+            {
+              "id": "68",
+              "description": "Dresser ROT B3 11M175"
+            },
+            {
+              "id": "69",
+              "description": "Dresser ROT B3 16M175"
+            },
+            {
+              "id": "70",
+              "description": "Dresser ROT B3 23M175"
+            },
+            {
+              "id": "71",
+              "description": "Dresser ROT B3 23M232"
+            },
+            {
+              "id": "72",
+              "description": "Dresser ROT B3 38M175"
+            },
+            {
+              "id": "73",
+              "description": "Dresser ROT B3 56M175"
+            },
+            {
+              "id": "80",
+              "description": "Dresser ROT LMMA 1.5M"
+            },
+            {
+              "id": "81",
+              "description": "Dresser ROT LMMA 2M"
+            },
+            {
+              "id": "82",
+              "description": "Dresser ROT LMMA 3M"
+            },
+            {
+              "id": "83",
+              "description": "Dresser ROT LMMA 5M"
+            },
+            {
+              "id": "84",
+              "description": "Dresser ROT LMMA 7M"
+            },
+            {
+              "id": "85",
+              "description": "Dresser ROT LMMA 11M"
+            },
+            {
+              "id": "86",
+              "description": "Dresser ROT LMMA 16M"
+            },
+            {
+              "id": "87",
+              "description": "Dresser ROT LMMA 23M"
+            },
+            {
+              "id": "88",
+              "description": "Dresser ROT LMMA 38M"
+            },
+            {
+              "id": "89",
+              "description": "Dresser ROT LMMA 56M"
+            },
+            {
+              "id": "90",
+              "description": "Dresser ROT LMMA 102M"
+            },
+            {
+              "id": "100",
+              "description": "ElsterAMC ROT RPM 9.0C"
+            },
+            {
+              "id": "101",
+              "description": "ElsterAMC ROT RPM 1.5M"
+            },
+            {
+              "id": "107",
+              "description": "ElsterAMC ROT RPM 2M"
+            },
+            {
+              "id": "102",
+              "description": "ElsterAMC ROT RPM 3.5M"
+            },
+            {
+              "id": "103",
+              "description": "ElsterAMC ROT RPM 5.5M"
+            },
+            {
+              "id": "104",
+              "description": "ElsterAMC ROT RPM 7.0M"
+            },
+            {
+              "id": "105",
+              "description": "ElsterAMC ROT RPM 11.0M"
+            },
+            {
+              "id": "106",
+              "description": "ElsterAMC ROT RPM 16.0M"
+            },
+            {
+              "id": "110",
+              "description": "Elster ID DIAPHR AL 800"
+            },
+            {
+              "id": "111",
+              "description": "Elster ID DIAPHR AL 1000"
+            },
+            {
+              "id": "112",
+              "description": "Elster ID DIAPHR AL 1400"
+            },
+            {
+              "id": "113",
+              "description": "Elster ID DIAPHR AL 2300"
+            },
+            {
+              "id": "114",
+              "description": "Elster ID DIAPHR AL 5000"
+            },
+            {
+              "id": "120",
+              "description": "Elster ID TURBIN 3GT"
+            },
+            {
+              "id": "121",
+              "description": "Elster ID TURBIN 4GT"
+            },
+            {
+              "id": "122",
+              "description": "Elster ID TURBIN 6GT"
+            },
+            {
+              "id": "123",
+              "description": "Elster ID TURBIN 12GT"
+            },
+            {
+              "id": "152",
+              "description": "Romet ROT RM600 OLD"
+            },
+            {
+              "id": "153",
+              "description": "Romet ROT RM600 NEW"
+            },
+            {
+              "id": "140",
+              "description": "Romet ROT RM1000 OLD"
+            },
+            {
+              "id": "141",
+              "description": "Romet ROT RM1000 NEW"
+            },
+            {
+              "id": "142",
+              "description": "Romet ROT RM1500"
+            },
+            {
+              "id": "143",
+              "description": "Romet ROT RM2000 OLD"
+            },
+            {
+              "id": "154",
+              "description": "Romet ROT RM2000 NEW"
+            },
+            {
+              "id": "144",
+              "description": "Romet ROT RM3000"
+            },
+            {
+              "id": "145",
+              "description": "Romet ROT RM5000"
+            },
+            {
+              "id": "146",
+              "description": "Romet ROT RM7000"
+            },
+            {
+              "id": "147",
+              "description": "Romet ROT RM11000"
+            },
+            {
+              "id": "148",
+              "description": "Romet ROT RM1600024"
+            },
+            {
+              "id": "149",
+              "description": "Romet ROT RM1600020"
+            },
+            {
+              "id": "150",
+              "description": "Romet ROT RM23000"
+            },
+            {
+              "id": "155",
+              "description": "Romet ROT RM25000"
+            },
+            {
+              "id": "151",
+              "description": "Romet ROT RM38000"
+            },
+            {
+              "id": "156",
+              "description": "Romet ROT RM56000"
+            },
+            {
+              "id": "160",
+              "description": "Sensus ID DIAPHR 750"
+            },
+            {
+              "id": "161",
+              "description": "Sensus ID DIAPHR 1600"
+            },
+            {
+              "id": "162",
+              "description": "Sensus ID DIAPHR 3000"
+            },
+            {
+              "id": "163",
+              "description": "Sensus ID DIAPHR 5000"
+            },
+            {
+              "id": "164",
+              "description": "Sensus ID DIAPHR 10000"
+            },
+            {
+              "id": "170",
+              "description": "Sensus ID ROTARY R3"
+            },
+            {
+              "id": "171",
+              "description": "Sensus ID ROTARY R5"
+            },
+            {
+              "id": "172",
+              "description": "Sensus ID ROTARY R8"
+            },
+            {
+              "id": "173",
+              "description": "Sensus ID ROTARY R11"
+            },
+            {
+              "id": "180",
+              "description": "Sensus ID TURBIN 2\" TP4"
+            },
+            {
+              "id": "181",
+              "description": "Sensus ID TURBIN 2\" 5HP"
+            },
+            {
+              "id": "182",
+              "description": "Sensus ID TURBIN 3\" 10HP"
+            },
+            {
+              "id": "183",
+              "description": "Sensus ID TURBIN 4\" T18"
+            },
+            {
+              "id": "184",
+              "description": "Sensus ID TURBIN 6\" T30"
+            },
+            {
+              "id": "185",
+              "description": "Sensus ID TURBIN 8\" T60"
+            },
+            {
+              "id": "186",
+              "description": "Sensus ID TURBIN 12\" T140"
+            },
+            {
+              "id": "190",
+              "description": "Dresser ROT MET B3 8C175/200"
+            },
+            {
+              "id": "191",
+              "description": "Dresser ROT MET B3 11C175/200"
+            },
+            {
+              "id": "192",
+              "description": "Dresser ROT MET B3 15C175/200"
+            },
+            {
+              "id": "193",
+              "description": "Dresser ROT MET B3 1M300"
+            },
+            {
+              "id": "194",
+              "description": "Dresser ROT MET B3 2M175/200"
+            },
+            {
+              "id": "195",
+              "description": "Dresser ROT MET B3 3M175/300"
+            },
+            {
+              "id": "196",
+              "description": "Dresser ROT MET B3 5M175"
+            },
+            {
+              "id": "197",
+              "description": "Dresser ROT MET B3 7M175"
+            },
+            {
+              "id": "198",
+              "description": "Dresser ROT MET B3 11M175"
+            },
+            {
+              "id": "199",
+              "description": "Dresser ROT MET B3 16M175"
+            },
+            {
+              "id": "200",
+              "description": "Dresser ROT MET B3 23M175"
+            },
+            {
+              "id": "201",
+              "description": "Dresser ROT MET B3 23M232"
+            },
+            {
+              "id": "202",
+              "description": "Dresser ROT MET B3 38M175"
+            },
+            {
+              "id": "203",
+              "description": "Dresser ROT MET B3 56M175"
+            },
+            {
+              "id": "210",
+              "description": "Romet ROT RM16"
+            },
+            {
+              "id": "211",
+              "description": "Romet ROT RM30"
+            },
+            {
+              "id": "212",
+              "description": "Romet ROT RM40"
+            },
+            {
+              "id": "213",
+              "description": "Romet ROT RM55"
+            },
+            {
+              "id": "214",
+              "description": "Romet ROT RM55 NEW"
+            },
+            {
+              "id": "215",
+              "description": "Romet ROT RM85"
+            },
+            {
+              "id": "216",
+              "description": "Romet ROT RM140"
+            },
+            {
+              "id": "217",
+              "description": "Romet ROT RM200 OLD"
+            },
+            {
+              "id": "218",
+              "description": "Romet ROT RM200 NEW"
+            },
+            {
+              "id": "219",
+              "description": "Romet ROT RM300"
+            },
+            {
+              "id": "220",
+              "description": "Romet ROT RM450 OLD"
+            },
+            {
+              "id": "221",
+              "description": "Romet ROT RM450 NEW"
+            },
+            {
+              "id": "222",
+              "description": "Romet ROT RM650 OLD"
+            },
+            {
+              "id": "223",
+              "description": "Romet ROT RM650 NEW"
+            },
+            {
+              "id": "224",
+              "description": "Romet ROT RM700"
+            },
+            {
+              "id": "225",
+              "description": "Romet ROT RM1100"
+            },
+            {
+              "id": "226",
+              "description": "Romet ROT RM1600"
+            },
+            {
+              "id": "230",
+              "description": "Romet ROT G10"
+            },
+            {
+              "id": "231",
+              "description": "Romet ROT G16"
+            },
+            {
+              "id": "232",
+              "description": "Romet ROT G25"
+            },
+            {
+              "id": "233",
+              "description": "Romet ROT G40"
+            },
+            {
+              "id": "234",
+              "description": "Romet ROT G65"
+            },
+            {
+              "id": "235",
+              "description": "Romet ROT G100"
+            },
+            {
+              "id": "236",
+              "description": "Romet ROT G160"
+            },
+            {
+              "id": "237",
+              "description": "Romet ROT G250"
+            },
+            {
+              "id": "238",
+              "description": "Romet ROT G400"
+            },
+            {
+              "id": "239",
+              "description": "Romet ROT G400150"
+            },
+            {
+              "id": "240",
+              "description": "Romet ROT G650"
+            },
+            {
+              "id": "241",
+              "description": "Romet ROT G1000"
+            }
+          ]
+         }
+      ],
+    "ExcludeItems": []
+}

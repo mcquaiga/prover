@@ -1,0 +1,30 @@
+{
+  "AccessCode": "99",
+  "CanUseIrDaPort": true,
+  "Id": "12",
+  "Name": "TCI",
+  "OverrideItems": [
+    {
+      "number": "433",
+      "code": "Input Volume Mode",
+      "shortDescription": "Meter Input Volume Mode",
+      "description": "Input Volume Mode",
+      "isVolume": "true",
+      "value": [
+        {
+          "id": "0",
+          "description": "ID Drive Input"
+        },
+        {
+          "id": "1",
+          "description": "Normal Rotary Input"
+        },
+        {
+          "id": "2",
+          "description": "HiRes Proving Mode"
+        }
+      ]
+    }
+  ],
+  "ExcludeItems": [] 
+}

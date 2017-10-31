@@ -254,13 +254,9 @@
     <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ItemDefinitions\MiniATItems.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="..\..\..\..\Desktop\EvcProver.cd" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -290,9 +286,6 @@
   <ItemGroup>
     <Content Include="MeterIndexes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\MiniMaxItems.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

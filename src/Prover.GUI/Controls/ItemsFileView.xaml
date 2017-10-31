@@ -41,7 +41,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Number}"
                                        Margin="0 0 5 0" />
-                            <TextBlock Text="{Binding LongDescription}" />
+                            <TextBlock Text="{Binding Description}" />
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
