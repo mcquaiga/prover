@@ -32,6 +32,9 @@ namespace Prover.CommProtocol.Common.Items
         public bool? IsVolumeTest { get; set; } = false;
         public bool? IsSuperFactor { get; set; } = false;
 
+        public bool CanVerify { get; set; } = true;
+        public bool CanReset { get; set; } = true;
+
         public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
 
         public class ItemDescription

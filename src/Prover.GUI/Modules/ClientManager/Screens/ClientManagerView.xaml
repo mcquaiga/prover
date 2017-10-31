@@ -7,50 +7,56 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"             
              d:DesignHeight="300" d:DesignWidth="355">
-    <DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <materialDesign:ColorZone DockPanel.Dock="Top"
                                   Mode="PrimaryLight"
+                                  Grid.Row="0"
                                   Padding="16 8">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Clients"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
             </StackPanel>
         </materialDesign:ColorZone>
-        <materialDesign:DialogHost Identifier="ClientDialogHost">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto">
-                <Grid DockPanel.Dock="Top"
-                      HorizontalAlignment="Stretch">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <ListBox ItemsSource="{Binding ClientList}" 
-                             HorizontalAlignment="Center">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <ContentControl cal:View.Context="CardView" 
-                                                cal:View.Model="{Binding}"
-                                                HorizontalAlignment="Stretch"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Grid.Row="1">
+            <Grid HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListBox ItemsSource="{Binding ClientList}" 
+                         Margin="15"
+                         HorizontalAlignment="Stretch"
+                         Style="{StaticResource MaterialDesignCardsListBox}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl cal:View.Context="CardView" 
+                                            cal:View.Model="{Binding}"
+                                            HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-                    <Grid Grid.Row="1"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Bottom">
-                        <Button Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
-                                Command="{Binding AddClientCommand}"
-                                Width="64"
-                                Height="64"
-                                Margin="25">
-                            <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
-                        </Button>
-                    </Grid>
+                <Grid Grid.Row="1"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom">
+                    <Button Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
+                            Command="{Binding AddClientCommand}"
+                            Width="64"
+                            Height="64"
+                            Margin="25">
+                        <materialDesign:PackIcon Kind="Plus" Height="24" Width="24" />
+                    </Button>
+                </Grid>
                     
                   
-                </Grid>
-            </ScrollViewer>
-        </materialDesign:DialogHost>
-    </DockPanel>
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
 </UserControl>

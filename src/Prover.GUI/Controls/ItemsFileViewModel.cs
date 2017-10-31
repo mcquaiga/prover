@@ -18,7 +18,7 @@ namespace Prover.GUI.Controls
         private readonly Client _client;
         public ClientItemType ItemsFileType { get; }
 
-        public ItemsFileViewModel(Client client, ClientItemType itemsFileType, string helpInfo)
+        public ItemsFileViewModel(Client client, ClientItemType itemsFileType, IObservable<InstrumentType> selectedInstrumentTypeObservable, string helpInfo)
         {
             _client = client;
             ItemsFileType = itemsFileType;
@@ -26,10 +26,18 @@ namespace Prover.GUI.Controls
             DescriptionText = helpInfo;
 
             UpdateListItems = ReactiveCommand.CreateFromTask<InstrumentType>(UpdateList);
-            //this.WhenAnyValue(x => x.SelectedInstrumentType)
-            //    .Where(x => x != null)
-            //    .Select(i => ActiveItemList())
-            //    .ToProperty(this, x => x.CurrentItemsList, out _currentItemsList);
+            selectedInstrumentTypeObservable
+                .InvokeCommand(UpdateListItems);
+
+            selectedInstrumentTypeObservable
+                .Subscribe(i =>
+                {
+                    AvailableItems.Clear();
+                    AvailableItems.AddRange(i.ItemsMetadata.Where(item =>
+                        ItemsFileType == ClientItemType.Reset && item.CanReset
+                        || ItemsFileType == ClientItemType.Verify && item.CanVerify));
+                });
+           
             ActiveItems.Changed
                 .Subscribe(x => ActiveItemList = ActiveItems.ToList());
 
@@ -108,8 +116,8 @@ namespace Prover.GUI.Controls
         private readonly ObservableAsPropertyHelper<List<ItemMetadata.ItemDescription>> _itemDescriptionsList;
         public List<ItemMetadata.ItemDescription> ItemDescriptionsList => _itemDescriptionsList.Value;
 
-        private readonly ObservableAsPropertyHelper<List<ItemValue>> _currentItemsList;
-        public List<ItemValue> CurrentItemsList => _currentItemsList.Value;
+        private readonly ObservableAsPropertyHelper<ReactiveList<ItemMetadata>> _currentItemsList;
+        public ReactiveList<ItemMetadata> CurrentItemsList => _currentItemsList.Value;
 
         private ReactiveList<ItemMetadata> _availableItems = new ReactiveList<ItemMetadata>();
         public ReactiveList<ItemMetadata> AvailableItems
@@ -192,8 +200,6 @@ namespace Prover.GUI.Controls
         private async Task UpdateList(InstrumentType instrumentType)
         {           
             SelectedInstrumentType = instrumentType;
-            AvailableItems.Clear();
-            AvailableItems.AddRange(instrumentType.ItemsMetadata);
 
             using (ActiveItems.SuppressChangeNotifications())
             {
@@ -220,19 +226,17 @@ namespace Prover.GUI.Controls
 
         private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
         {
-            return
-                _client.Items.FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
+            return _client.Items
+                .FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
         }
-
-        //private List<ItemValue> ActiveItemList()
-        //{
-        //    return _client.Items
-        //        .FirstOrDefault(x => x.InstrumentType == SelectedInstrumentType && x.ItemFileType == ItemsFileType)?.Items.ToList();
-        //}
+   
 
         private List<ItemValue> ActiveItemList
         {
-            get => GetItemList(SelectedInstrumentType, ItemsFileType)?.Items.OrderBy(i => i.Metadata.Number).ToList();
+            get => GetItemList(SelectedInstrumentType, ItemsFileType)?
+                .Items               
+                .OrderBy(i => i.Metadata.Number)
+                .ToList();
             set => GetItemList(SelectedInstrumentType, ItemsFileType).Items = value;
         }
         #endregion

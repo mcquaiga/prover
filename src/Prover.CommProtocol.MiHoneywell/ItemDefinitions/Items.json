@@ -172,7 +172,7 @@
         "shortDescription": "Press Units",
         "description": "Pressure Units",
         "isPressure": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "PSIG",
@@ -231,7 +231,7 @@
         "shortDescription": "Temperature Units",
         "description": "Temperature Units",
         "isTemperature": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "F",
@@ -260,7 +260,7 @@
         "shortDescription": "Corr Vol Units",
         "description": "Corrected Volume Units",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CuFT",
@@ -344,7 +344,7 @@
         "shortDescription": "Uncorr Volume Units",
         "description": "UnCorrected Volume Units",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CuFT",
@@ -428,7 +428,7 @@
         "shortDescription": "Pulser A",
         "description": "Pulser A",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CorVol"
@@ -457,7 +457,7 @@
         "shortDescription": "Pulser B",
         "description": "Pulser B",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CorVol"
@@ -486,7 +486,7 @@
         "shortDescription": "Pulser C",
         "description": "Pulser C",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CorVol"
@@ -515,7 +515,7 @@
         "shortDescription": "Meter Index Rate",
         "description": "Meter Index Rate",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "CF1",
@@ -600,7 +600,7 @@
         "description": "Fixed Pressure Factor",
         "isPressure": "true",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "Live",
@@ -620,7 +620,7 @@
         "description": "Fixed Super Factor",
         "isSuper": "true",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "Live",
@@ -640,7 +640,7 @@
         "description": "Fixed Temp Factor",
         "isTemperature": "true",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "Live",
@@ -659,7 +659,7 @@
         "shortDescription": "Transducer Type",
         "description": "Transducer Type",
         "isPressure": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "Gauge",
@@ -712,7 +712,7 @@
         "shortDescription": "Energy Units",
         "description": "Energy Units",
         "isVolume": "true",
-        "value": [
+        "values": [
           {
             "id": "0",
             "description": "Therms"
@@ -771,156 +771,9 @@
         "shortDescription": "Meter Type",
         "description": "Meter Type",
         "isVolume": "true",
-        "value": [
-          {
-            "id": "0",
-            "description": "No Meter Type"
-          },
-          {
-            "id": "45",
-            "description": "Roots2M"
-          },
-          {
-            "id": "2",
-            "description": "Roots3M"
-          },
-          {
-            "id": "3",
-            "description": "Roots5M"
-          },
-          {
-            "id": "4",
-            "description": "Roots7M"
-          },
-          {
-            "id": "5",
-            "description": "Roots11M"
-          },
-          {
-            "id": "6",
-            "description": "Roots16M"
-          },
-          {
-            "id": "7",
-            "description": "Roots23M"
-          },
-          {
-            "id": "8",
-            "description": "Roots38M"
-          },
-          {
-            "id": "9",
-            "description": "Roots56M"
-          },
-          {
-            "id": "10",
-            "description": "Roots102M"
-          },
-          {
-            "id": "11",
-            "description": "RM1000"
-          },
-          {
-            "id": "33",
-            "description": "RM1000n"
-          },
-          {
-            "id": "12",
-            "description": "RM1500"
-          },
-          {
-            "id": "13",
-            "description": "RM2000"
-          },
-          {
-            "id": "50",
-            "description": "RM2000n"
-          },
-          {
-            "id": "14",
-            "description": "RM3000"
-          },
-          {
-            "id": "15",
-            "description": "RM5000"
-          },
-          {
-            "id": "16",
-            "description": "RM7000"
-          },
-          {
-            "id": "17",
-            "description": "RM11000"
-          },
-          {
-            "id": "18",
-            "description": "RM16000"
-          },
-          {
-            "id": "34",
-            "description": "RM16000n"
-          },
-          {
-            "id": "35",
-            "description": "RM23000"
-          },
-          {
-            "id": "36",
-            "description": "RM38000"
-          },
-          {
-            "id": "22",
-            "description": "Roots2MB3"
-          },
-          {
-            "id": "23",
-            "description": "Roots3MB3"
-          },
-          {
-            "id": "24",
-            "description": "Roots5MB3"
-          },
-          {
-            "id": "25",
-            "description": "Roots7MB3"
-          },
-          {
-            "id": "26",
-            "description": "Roots11MB3"
-          },
-          {
-            "id": "27",
-            "description": "Roots16MB3"
-          },
-          {
-            "id": "28",
-            "description": "Roots23MB3"
-          },
-          {
-            "id": "29",
-            "description": "Roots38MB3"
-          },
-          {
-            "id": "30",
-            "description": "Roots56MB3"
-          },
-          {
-            "id": "19",
-            "description": "Roots8CB3"
-          },
-          {
-            "id": "20",
-            "description": "Roots11CB3"
-          },
-          {
-            "id": "21",
-            "description": "Roots15CB3"
-          },
-          {
-            "id": "33",
-            "description": "RM1000n"
-          }
-        ]
+        "canVerify": "false",
+        "canReset":  "false", 
+        "definitionPath": "Item_MeterType.json" 
       },
       {
         "number": "439",

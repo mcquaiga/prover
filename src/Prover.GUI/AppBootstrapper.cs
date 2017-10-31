@@ -10,7 +10,7 @@ using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Newtonsoft.Json;
 using NLog;
-using Prover.Core.Startup;
+using Prover.Core;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Common.Screens.Toolbar;
@@ -34,15 +34,9 @@ namespace Prover.GUI
         {
             try
             {
-                _log.Info("Starting EVC Prover Application...");
-               
-                _splashScreen.Show();                
-
-                var coreBootstrap = new CoreBootstrapper();
-                Builder = coreBootstrap.Builder;
-
+                _log.Info("Starting EVC Prover Application...");               
+                _splashScreen.Show();
                 Initialize();
-
                 _log.Info("Finished starting application.");
             }
             catch (Exception e)
@@ -52,12 +46,15 @@ namespace Prover.GUI
             }
         }
 
-        public ContainerBuilder Builder { get; }
+        public ContainerBuilder Builder { get; private set; }
         public IContainer Container { get; private set; }
 
         protected override void Configure()
         {
             base.Configure();
+
+            Builder = new ContainerBuilder();
+            CoreBootstrapper.RegisterServices(Builder);
 
             Builder.Register(c => new WindowManager())
                 .As<IWindowManager>()
@@ -65,11 +62,6 @@ namespace Prover.GUI
 
             Builder.RegisterType<ShellViewModel>()
                 .As<IConductor>()
-                //.OnActivated(args =>
-                //{
-                //    args.Instance.HomeViewModel = args.Context.Resolve<HomeViewModel>();
-                //    args.Instance.ToolbarItems = args.Context.Resolve<IEnumerable<IToolbarItem>>();
-                //})
                 .SingleInstance();
 
             Builder.RegisterType<EventAggregator>()
@@ -87,8 +79,9 @@ namespace Prover.GUI
             Builder.RegisterScreen(Assemblies);
 
             Container = Builder.Build();
+
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
-        }
+        }      
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
@@ -121,15 +114,6 @@ namespace Prover.GUI
 
         public Assembly[] Assemblies => _assemblies ?? (_assemblies = SelectAssemblies().ToArray());
 
-        private void RegisterMainMenuApps(Assembly[] assemblies)
-        {
-            //register main menu apps
-            Builder.RegisterAssemblyTypes(assemblies)
-                    .Where(t => t.GetTypeInfo()
-                    .ImplementedInterfaces.Any(i => i == typeof(IHaveMainMenuItem)))
-                    .As<IHaveMainMenuItem>();
-        }
-
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
             return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType)) as IEnumerable<object>;
@@ -155,10 +139,7 @@ namespace Prover.GUI
         {
             Container.InjectProperties(instance);
         }
-
-        protected virtual void ConfigureContainer(ContainerBuilder builder)
-        {
-        }
+        
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {

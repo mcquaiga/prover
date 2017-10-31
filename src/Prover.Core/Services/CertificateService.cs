@@ -14,12 +14,12 @@ namespace Prover.Core.Services
 {
     public interface ICertificateService
     {
-        Task<Certificate> GetCertificate(Guid id);
-        Task<Certificate> GetCertificate(long number);
+        Certificate GetCertificate(Guid id);
+        Certificate GetCertificate(long number);
 
         IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
 
-        Task<long> GetNextCertificateNumber();
+        long GetNextCertificateNumber();
         Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
         IEnumerable<Certificate> GetAllCertificates(Client client);
         IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
@@ -38,11 +38,11 @@ namespace Prover.Core.Services
             _instrumentStore = instrumentStore;
         }
 
-        public async Task<Certificate> GetCertificate(long number)
+        public Certificate GetCertificate(long number)
         {
-            var cert = await _certificateStore
+            var cert = _certificateStore
                 .Query(x => x.Number == number)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (cert == null) return null;
 
@@ -55,18 +55,17 @@ namespace Prover.Core.Services
             return cert;
         }
 
-        public async Task<Certificate> GetCertificate(Guid id)
+        public Certificate GetCertificate(Guid id)
         {
-            var cert = await _certificateStore.Query(x => x.Id == id).FirstOrDefaultAsync();
-            return await GetCertificate(cert.Number);
+            return _certificateStore.Query(x => x.Id == id).FirstOrDefault();
         }
 
-        public async Task<long> GetNextCertificateNumber()
+        public long GetNextCertificateNumber()
         {
-            var last = await _certificateStore.GetAll()
+            var last = _certificateStore.GetAll()
                 .Select(x => x.Number)
                 .OrderByDescending(x => x)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             return last + 1;
         }
@@ -84,7 +83,7 @@ namespace Prover.Core.Services
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
-                Number = await GetNextCertificateNumber(),
+                Number = GetNextCertificateNumber(),
                 Instruments = new Collection<Instrument>()
             };
 

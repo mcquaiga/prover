@@ -41,35 +41,31 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             GoToCsvExporter = ReactiveCommand.Create<Client>(OpenCsvExporter);
-        
+
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
-            
-            InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());
 
-            VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify,
-                "These items will be compared to the instruments values at the beginning of the test");
-            this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Where(x => x != null)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(VerifyItemList.UpdateListItems);
-
-            ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset,
-                "These items will be written to the instrument after the volume test is completed.");
-
-            this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Where(x => x != null)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(ResetItemList.UpdateListItems);
-
-            ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());            
-            DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
+            SwitchToDetailsContextCommand = ReactiveCommand.Create(() =>
             {
-                if (await _clientService.DeleteCsvTemplate(csv))
-                    ClientCsvTemplates.Remove(csv);
-            });
+                InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
 
-            DeleteCsvTemplateCommand.ThrownExceptions
-                .Subscribe(ex => Log.Error(ex));
+                var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
+
+                VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify, instrumentSelected,
+                    "These items will be compared to the instruments values at the beginning of the test");
+
+                ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset, instrumentSelected,
+                    "These items will be written to the instrument after the volume test is completed.");
+
+                ClientCsvTemplates = new ReactiveList<ClientCsvTemplate>(Client.CsvTemplates);
+                DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
+                {
+                    if (await _clientService.DeleteCsvTemplate(csv))
+                        ClientCsvTemplates.Remove(csv);
+                });
+
+                DeleteCsvTemplateCommand.ThrownExceptions
+                    .Subscribe(ex => Log.Error(ex));
+            });
         }
 
         public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
@@ -142,6 +138,13 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set { this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value); }
         }
 
+        private ReactiveCommand<Unit, Unit> _switchToDetailsContextCommand;
+        public ReactiveCommand<Unit, Unit> SwitchToDetailsContextCommand
+        {
+            get => _switchToDetailsContextCommand;
+            set => this.RaiseAndSetIfChanged(ref _switchToDetailsContextCommand, value);
+        }
+
         #endregion
 
         #region Properties   
@@ -153,9 +156,9 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
         }
 
-        private IEnumerable<InstrumentType> _instrumentTypes;
+        private ReactiveList<InstrumentType> _instrumentTypes;
 
-        public IEnumerable<InstrumentType> InstrumentTypes
+        public ReactiveList<InstrumentType> InstrumentTypes
         {
             get { return _instrumentTypes; }
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
@@ -210,8 +213,6 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         public async Task Edit()
         {
             ScreenManager.ChangeScreen(this);
-            SelectedInstrumentType = InstrumentTypes.First();
-            //SelectedItemFileType = ClientItemType.Reset;
         }
 
 

@@ -23,6 +23,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         {
             ClientCsvTemplate = new ClientCsvTemplate();
 
+            var canSave = this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Select(x => x != null && !string.IsNullOrEmpty(x.Name));
             OkCommand = ReactiveCommand.Create(() =>
             {
                 ClientCsvTemplate.CsvTemplate = CsvTemplate;
@@ -42,7 +44,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                     : (DriveTypeDescripter?) Enum.Parse(typeof(DriveTypeDescripter), SelectedDriveType);
 
                 TryClose(true);
-            });
+            }, canSave);
             CancelCommand = ReactiveCommand.Create(() => { TryClose(false); });
 
             AddFieldToTemplateCommand = ReactiveCommand.Create<string>(s =>

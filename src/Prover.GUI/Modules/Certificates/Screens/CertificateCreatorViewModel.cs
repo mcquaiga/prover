@@ -101,7 +101,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 .Where(c => c != null)
                 .Subscribe(c => Clients.Add(c));
 
-            FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
+            FetchNextCertificateNumberCommand = ReactiveCommand.Create(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
                 .ToProperty(this, x => x.NextCertificateNumber, out _nextCertificateNumber);
             FetchNextCertificateNumberCommand.ThrownExceptions
@@ -325,7 +325,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             if (certificate == null) return;
 
-            var cert = await _certificateService.GetCertificate(certificate.Number);
+            var cert = _certificateService.GetCertificate(certificate.Number);
 
             if (cert == null)
             {
@@ -337,7 +337,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             ResultFilteredItems?.Dispose();
             LoadInstrumentsCommand?.Dispose();

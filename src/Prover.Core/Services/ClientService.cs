@@ -30,7 +30,8 @@ namespace Prover.Core.Services
         public IEnumerable<Client> GetActiveClients()
         {
             return _clientStore
-                .Query(x => x.ArchivedDateTime == null);
+                .Query(x => x.ArchivedDateTime == null)
+                .OrderBy(c => c.Name);
         }
 
         public async Task ArchiveClient(Client client)
