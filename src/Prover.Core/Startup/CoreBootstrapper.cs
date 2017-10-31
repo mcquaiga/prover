@@ -1,11 +1,13 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Communication;
 using Prover.Core.Exports;
 using Prover.Core.ExternalDevices.DInOutBoards;
@@ -31,6 +33,8 @@ namespace Prover.Core.Startup
             SetupDatabase();
 
             //EVC Communcation
+            Task.Run(ItemHelpers.LoadInstruments);
+
             Builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
                 .Named<ICommPort>("SerialPort");
 

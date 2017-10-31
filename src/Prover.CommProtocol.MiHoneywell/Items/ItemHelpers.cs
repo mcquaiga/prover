@@ -3,8 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models;
@@ -15,49 +19,49 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     {
         private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\ItemDefinitions";
 
-        private const string ItemDefinitionFileName = "Items.xml";
+        private const string ItemDefinitionFileName = "Items.json";
         private const string TypeFileName = "Type_";
 
-        private static readonly ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>> ItemFileCache = new ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>>();
+        private static readonly List<InstrumentType> ItemFileCache = new List<InstrumentType>();
         private static List<ItemMetadata> _itemDefinitions;
 
-        public static IEnumerable<InstrumentType> LoadInstruments()
+        public static async Task<IEnumerable<InstrumentType>> LoadInstruments()
         {          
-            if (!ItemFileCache.IsEmpty)
-                return ItemFileCache.Keys;
+            if (ItemFileCache.Any())
+                return ItemFileCache;
 
-            var result = new List<InstrumentType>();
-            var items = LoadItemDefinitions().ToList();
-
-            var files = Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*");
-            foreach (var file in files)
+            return await Task.Run(() =>
             {
-                var xDoc = XDocument.Load(file);
-                var root = xDoc.XPathSelectElement("InstrumentDetails");
-                var i = new InstrumentType()
+                var result = new List<InstrumentType>();
+                var items = LoadItemDefinitions().ToList();
+
+                var files = Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json");
+                foreach (var file in files)
                 {
-                    Id = int.Parse(root.XPathSelectElement("Id").Value),
-                    Name = root.XPathSelectElement("Name").Value,
-                    AccessCode = int.Parse(root.XPathSelectElement("AccessCode").Value),
-                    ItemFilePath = (new FileInfo(file).Name),
-                    MaxBaudRate = root.XPathSelectElement("MaxBaudRate") != null ? Convert.ToInt32(root.XPathSelectElement("MaxBaudRate").Value) : default(int?),
-                    CanUseIrDa = root.XPathSelectElement("CanUserIrDAPort") != null ? Convert.ToBoolean(root.XPathSelectElement("CanUserIrDAPort").Value) : default(bool?)
-                };
-                result.Add(i);
+                    var fileText = File.ReadAllText(file);
+                    var instrJson = JObject.Parse(fileText);
+                    var i = instrJson.ToObject<InstrumentType>();
+                    result.Add(i);
 
-                var overrideItems = GetItemDefinitions(xDoc).ToList();
+                    var overrideItems = GetItemDefinitions(fileText, "OverrideItems").ToList();
+                    var mergedList = items.Concat(overrideItems)
+                        .GroupBy(item => item.Number)
+                        .Select(group => group.Aggregate((merged, next) => next))
+                        .ToList();
 
-                var mergedList = items.Concat(overrideItems)
-                    .GroupBy(item => item.Number)
-                    .Select(group => group.Aggregate((merged, next) => next))
-                    .ToList();
-        
-                ItemFileCache.GetOrAdd(i, mergedList);
-            }
+                    var excludeItems = GetItemDefinitions(fileText, "ExcludeItems").ToList();
+                    excludeItems
+                        .ForEach(ei => mergedList.RemoveAll(x => x.Number == ei.Number));
 
-            MeterIndexInfo.Get(0);
+                    i.ItemsMetadata = mergedList;
 
-            return result;
+                    ItemFileCache.Add(i);
+                }
+
+                MeterIndexInfo.Get(0);
+
+                return result;
+            });
         }
 
         private static IEnumerable<ItemMetadata> LoadItemDefinitions()
@@ -66,51 +70,28 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                 return _itemDefinitions;
 
             _itemDefinitions = new List<ItemMetadata>();
-            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
-            var xDoc = XDocument.Load(path);
-            _itemDefinitions = GetItemDefinitions(xDoc).ToList();
+            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";           
+            var itemText = File.ReadAllText(path);
+            _itemDefinitions = GetItemDefinitions(itemText, "ItemDefinitions").ToList();
 
             return _itemDefinitions;
-        }        
+        }  
 
-        private static IEnumerable<ItemMetadata> GetItemDefinitions(XDocument xDoc)
+        private static IEnumerable<ItemMetadata> GetItemDefinitions(string itemDefinitionText, string attributeName)
         {
-            return from x in xDoc.Descendants("item")
-                   select new ItemMetadata
-                   {
-                       Number = Convert.ToInt32(x.Attribute("number").Value),
-                       Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
-                       ShortDescription = x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
-                       LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
-                       IsAlarm = (x.Attribute("isAlarm") != null) && Convert.ToBoolean(x.Attribute("isAlarm").Value),
-                       IsPressure =
-                           (x.Attribute("isPressure") != null) && Convert.ToBoolean(x.Attribute("isPressure").Value),
-                       IsPressureTest =
-                           (x.Attribute("isPressureTest") != null) &&
-                           Convert.ToBoolean(x.Attribute("isPressureTest").Value),
-                       IsTemperature =
-                           (x.Attribute("isTemperature") != null) && Convert.ToBoolean(x.Attribute("isTemperature").Value),
-                       IsTemperatureTest =
-                           (x.Attribute("isTemperatureTest") != null) &&
-                           Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
-                       IsVolume = (x.Attribute("isVolume") != null) && Convert.ToBoolean(x.Attribute("isVolume").Value),
-                       IsVolumeTest =
-                           (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
-                       IsSuperFactor = (x.Attribute("isSuper") != null) && Convert.ToBoolean(x.Attribute("isSuper").Value),
-                       ItemDescriptions =
-                           (from y in x.Descendants("value")
-                            select new ItemMetadata.ItemDescription
-                            {
-                                Id = Convert.ToInt32(y.Attribute("id").Value),
-                                Description = y.Attribute("description") != null 
-                                    ? y.Attribute("description").Value 
-                                    : y.Value,
-                                Value = y.Attribute("numericvalue") == null
-                               ? (decimal?)null
-                               : Convert.ToDecimal(y.Attribute("numericvalue").Value)
-                            })
-                               .ToList()
-                   };
+            var itemsJson = JObject.Parse(itemDefinitionText);
+            var items = itemsJson[attributeName].Children().ToList();
+            var results = new List<ItemMetadata>();
+            foreach(JToken item in items)
+            {                
+                var i = item.ToObject<ItemMetadata>();
+
+                var values = item["value"]?.Children().ToList();
+                i.ItemDescriptions = values?.Select(v => v.ToObject<ItemMetadata.ItemDescription>());
+
+                results.Add(i);
+            }
+            return results;
         }
 
         public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
@@ -118,20 +99,12 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (instrumentType == null)
                 throw new ArgumentNullException(nameof(instrumentType));
 
-            var metadata = LoadItems(instrumentType);
+            var metadata = instrumentType.ItemsMetadata;
 
-            return itemValues.Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
-        }
-
-        public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (ItemFileCache.ContainsKey(type))
-                return ItemFileCache[type];
-
-            return new List<ItemMetadata>();
+            //return metadata.Select(meta => new ItemValue(meta, itemValues.ContainsKey(meta.Number) ? itemValues[meta.Number] : string.Empty));
+            return itemValues
+                .Where(i => metadata.GetItem(i.Key) != null)
+                .Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
         }
     }
 }

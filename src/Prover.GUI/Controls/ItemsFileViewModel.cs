@@ -56,7 +56,7 @@ namespace Prover.GUI.Controls
 
             //Toggle Item Descriptions combo box
             itemSelected
-                .Select(x => x.ItemDescriptions.Any())
+                .Select(x => x.ItemDescriptions != null && x.ItemDescriptions.Any())
                 .ToProperty(this, x => x.ShowItemDescriptions, out _showItemDescriptions);
 
             itemSelected
@@ -65,7 +65,7 @@ namespace Prover.GUI.Controls
             
             //Toggle Item value text box
             itemSelected
-                .Select(x => !x.ItemDescriptions.Any())
+                .Select(x => x.ItemDescriptions == null || !x.ItemDescriptions.Any())
                 .ToProperty(this, x => x.ShowItemValueTextBox, out _showItemValueTextBox);
         }
 
@@ -193,7 +193,7 @@ namespace Prover.GUI.Controls
         {           
             SelectedInstrumentType = instrumentType;
             AvailableItems.Clear();
-            AvailableItems.AddRange(ItemHelpers.LoadItems(instrumentType));
+            AvailableItems.AddRange(instrumentType.ItemsMetadata);
 
             using (ActiveItems.SuppressChangeNotifications())
             {
