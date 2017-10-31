@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
@@ -47,9 +47,9 @@ namespace Prover.Core.Exports
                 SuperLevel2Error = GetSuperTestPercentError(instrument, Level2Number) ?? 0.0m,
                 SuperLevel3Error = GetSuperTestPercentError(instrument, Level3Number) ?? 0.0m,
                 
-                CorrectedMultiplier = (long) instrument.CorrectedMultiplier(),
+                CorrectedMultiplier = instrument.CorrectedMultiplier(),
                 CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
-                UncorrectMultiplier = (long) instrument.UnCorrectedMultiplier(),
+                UncorrectMultiplier = instrument.UnCorrectedMultiplier(),
                 UncorrectMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
 
                 CorrectedVolumeError = instrument.VolumeTest.CorrectedPercentError,

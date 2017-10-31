@@ -1,4 +1,4 @@
-﻿namespace Prover.Core.DriveTypes
+﻿namespace Prover.Core.Models.Instruments.DriveTypes
 {
     public interface IDriveType
     {

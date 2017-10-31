@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
+using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments

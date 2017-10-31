@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.GUI.Common.Screens;
 
 namespace Prover.GUI.Modules.Certificates.Common

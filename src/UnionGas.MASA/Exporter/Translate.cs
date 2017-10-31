@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Models.Instruments.DriveTypes;
 using UnionGas.MASA.DCRWebService;
 using PressureTest = UnionGas.MASA.DCRWebService.PressureTest;
 using SuperFactorTest = UnionGas.MASA.DCRWebService.SuperFactorTest;
@@ -70,10 +70,10 @@ namespace UnionGas.MASA.Exporter
                 {
                     CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
                     CorrectedMultiplierValue =
-                        instrument.CorrectedMultiplier().HasValue ? (int) instrument.CorrectedMultiplier().Value : 0,
+                        (int)instrument.CorrectedMultiplier(),
                     UncorrectedMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
                     UncorrectedMultiplierValue =
-                        instrument.UnCorrectedMultiplier().HasValue ? (int) instrument.UnCorrectedMultiplier().Value : 0,
+                        (int)instrument.UnCorrectedMultiplier(),
                     DriveRateDescription = instrument.DriveRateDescription(),
                     PulseASelect = instrument.PulseASelect(),
                     PulseBSelect = instrument.PulseBSelect()

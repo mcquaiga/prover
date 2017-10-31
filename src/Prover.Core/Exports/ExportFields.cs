@@ -29,67 +29,67 @@ namespace Prover.Core.Exports
                 .ToArray();
         }
 
-        [CsvTemplateAttribute("Verification Type")]
+        [CsvTemplate("Verification Type")]
         public string VerificationType { get; set; }
 
-        [CsvTemplateAttribute("Tested Date")]
+        [CsvTemplate("Tested Date")]
         public DateTime TestedDate { get; set; }
 
-        [CsvTemplateAttribute("Instrument Type")]
+        [CsvTemplate("Instrument Type")]
         public string InstrumentType { get; set; }
 
-        [CsvTemplateAttribute("Corrector Type")]
+        [CsvTemplate("Corrector Type")]
         public string CorrectorType { get; set; }
 
-        [CsvTemplateAttribute("Company Number")]
+        [CsvTemplate("Company Number")]
         public string CompanyNumber { get; set; }
 
-        [CsvTemplateAttribute("Serial Number")]
+        [CsvTemplate("Serial Number")]
         public string SerialNumber { get; set; }
 
-        [CsvTemplateAttribute("Corrected Multiplier")]
-        public long CorrectedMultiplier { get; set; }
+        [CsvTemplate("Corrected Multiplier")]
+        public decimal CorrectedMultiplier { get; set; }
 
-        [CsvTemplateAttribute("Uncorrected Multiplier")]
-        public long UncorrectMultiplier { get; set; }
+        [CsvTemplate("Uncorrected Multiplier")]
+        public decimal UncorrectMultiplier { get; set; }
 
-        [CsvTemplateAttribute("Rotary Meter Type")]
+        [CsvTemplate("Rotary Meter Type")]
         public string RotaryMeterType { get; set; }
 
-        [CsvTemplateAttribute("Temperature Level 3 Error")]
+        [CsvTemplate("Temperature Level 3 Error")]
         public decimal? TemperatureLevel3Error { get; set; }
-        [CsvTemplateAttribute("Temperature Level 2 Error")]
+        [CsvTemplate("Temperature Level 2 Error")]
         public decimal? TemperatureLevel2Error { get; set; }
-        [CsvTemplateAttribute("Temperature Level 1 Error")]
+        [CsvTemplate("Temperature Level 1 Error")]
         public decimal? TemperatureLevel1Error { get; set; }
 
-        [CsvTemplateAttribute("Pressure Level 1 Error")]
+        [CsvTemplate("Pressure Level 1 Error")]
         public decimal? PressureLevel1Error { get; set; }
-        [CsvTemplateAttribute("Pressure Level 2 Error")]
+        [CsvTemplate("Pressure Level 2 Error")]
         public decimal? PressureLevel2Error { get; set; }
-        [CsvTemplateAttribute("Pressure Level 3 Error")]
+        [CsvTemplate("Pressure Level 3 Error")]
         public decimal? PressureLevel3Error { get; set; }
 
-        [CsvTemplateAttribute("Super Level 1 Error")]
+        [CsvTemplate("Super Level 1 Error")]
         public decimal? SuperLevel1Error { get; set; }
-        [CsvTemplateAttribute("Super Level 2 Error")]
+        [CsvTemplate("Super Level 2 Error")]
         public decimal? SuperLevel2Error { get; set; }
-        [CsvTemplateAttribute("Super Level 3 Error")]
+        [CsvTemplate("Super Level 3 Error")]
         public decimal? SuperLevel3Error { get; set; }
 
-        [CsvTemplateAttribute("Corrected Volume Error")]
+        [CsvTemplate("Corrected Volume Error")]
         public decimal? CorrectedVolumeError { get; set; }
 
-        [CsvTemplateAttribute("Uncorrected Volume Error")]
+        [CsvTemplate("Uncorrected Volume Error")]
         public decimal? UncorrectedVolumeError { get; set; }
 
-        [CsvTemplateAttribute("Corrected Multiplier Description")]
+        [CsvTemplate("Corrected Multiplier Description")]
         public string CorrectedMultiplierDescription { get; set; }
 
-        [CsvTemplateAttribute("Uncorrected Multiplier Description")]
+        [CsvTemplate("Uncorrected Multiplier Description")]
         public string UncorrectMultiplierDescription { get; set; }
 
-        [CsvTemplateAttribute("Item")]
+        [CsvTemplate("Item")]
         public Dictionary<int, string> Items { get; set; }
     }
 }
