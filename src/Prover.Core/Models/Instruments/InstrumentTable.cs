@@ -31,8 +31,11 @@ namespace Prover.Core.Models.Instruments
         public override void OnInitializing()
         {
             if (this is Instrument)
-                InstrumentType = HoneywellInstrumentTypes.GetAll()
-                    .FirstOrDefault(i => i.Id == (this as Instrument)?.Type);
+            {
+                var id = (this as Instrument)?.Type;
+                if (!id.HasValue) throw new NullReferenceException("Instrument ID could not be found.");
+                InstrumentType = HoneywellInstrumentTypes.GetById(id.Value);
+            }
 
             if (string.IsNullOrEmpty(_instrumentData)) return;
 

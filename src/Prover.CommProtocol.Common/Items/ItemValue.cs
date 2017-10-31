@@ -10,8 +10,8 @@ namespace Prover.CommProtocol.Common.Items
     {
         public ItemValue(ItemMetadata metadata, string value)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException(nameof(value));
+            //if (string.IsNullOrEmpty(value))
+            //    throw new ArgumentNullException(nameof(value));
 
             //if (metadata == null)
             //    throw new ArgumentNullException(nameof(metadata));
@@ -29,7 +29,7 @@ namespace Prover.CommProtocol.Common.Items
             {
                 if (!decimal.TryParse(RawValue, out var result)) return 0;
 
-                return ItemDescription?.Value ?? result;
+                return ItemDescription?.NumericValue ?? result;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Prover.CommProtocol.Common.Items
 
         public override string ToString()
         {
-            return $" {Metadata?.LongDescription} - #{Metadata?.Number} {Environment.NewLine}" +
+            return $" {Metadata?.Description} - #{Metadata?.Number} {Environment.NewLine}" +
                    $"   Item Value: {RawValue} {Environment.NewLine}" +
                    $"   Item Description: {Description} {Environment.NewLine}" +
                    $"   Numeric Value: {NumericValue} {Environment.NewLine}";
@@ -62,7 +62,7 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            var result = items.FirstOrDefault(x => x.Metadata.Code.ToLower() == code.ToLower());
+            var result = items.FirstOrDefault(x => x.Metadata?.Code?.ToLower() == code.ToLower());
             //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
 
             return result;
