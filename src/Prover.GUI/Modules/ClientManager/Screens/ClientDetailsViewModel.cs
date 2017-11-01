@@ -26,7 +26,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens
     {
         private readonly ClientService _clientService;
 
-        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService, Client client = null)
+        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            ClientService clientService, Client client = null)
             : base(screenManager, eventAggregator)
         {
             _clientService = clientService;
@@ -68,12 +69,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             });
         }
 
-        public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
-
         #region Commands
 
+        public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
         public ReactiveCommand ArchiveCommand { get; set; }
-
         private ReactiveCommand<Unit, Unit> _saveCommand;
 
         public ReactiveCommand<Unit, Unit> SaveCommand
@@ -139,6 +138,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         }
 
         private ReactiveCommand<Unit, Unit> _switchToDetailsContextCommand;
+
         public ReactiveCommand<Unit, Unit> SwitchToDetailsContextCommand
         {
             get => _switchToDetailsContextCommand;
@@ -150,6 +150,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         #region Properties   
 
         private bool _isRemoved = false;
+
         public bool IsRemoved
         {
             get => _isRemoved;
@@ -199,7 +200,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _verifyItemList, value);
         }
 
-        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates = new ReactiveList<ClientCsvTemplate>() { ChangeTrackingEnabled = true };
+        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates =
+            new ReactiveList<ClientCsvTemplate>() {ChangeTrackingEnabled = true};
 
         public ReactiveList<ClientCsvTemplate> ClientCsvTemplates
         {
@@ -210,11 +212,11 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         #endregion
 
         #region Public Functions
+
         public async Task Edit()
         {
             ScreenManager.ChangeScreen(this);
         }
-
 
         #endregion
 
@@ -222,9 +224,9 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private void OpenCsvTemplateEditor(ClientCsvTemplate clientCsvTemplate = null)
         {
-            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();        
+            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
 
-            if (clientCsvTemplate != null)    
+            if (clientCsvTemplate != null)
                 csvEditorViewModel.ClientCsvTemplate = clientCsvTemplate;
 
             var result = ScreenManager.ShowDialog(csvEditorViewModel);
@@ -256,12 +258,12 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             var exporter = IoC.Get<ExportToCsvViewModel>();
             exporter.Client = _client;
 
-            ScreenManager.ShowDialog(exporter);        
+            ScreenManager.ShowDialog(exporter);
         }
 
         private async Task GoBack()
         {
-            await Save();
+            //await Save();
             ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
@@ -271,6 +273,22 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         }
 
         #endregion
+
+        public override void CanClose(Action<bool> callback)
+        {
+            MessageBoxResult result;
+            result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+                Save().ConfigureAwait(false);
+
+            if (result == MessageBoxResult.Cancel)
+            {
+                callback(false);
+                return;
+            }
+
+            callback(true);
+        }
 
         protected override void OnDeactivate(bool close)
         {

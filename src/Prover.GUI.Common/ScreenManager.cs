@@ -106,9 +106,7 @@ namespace Prover.GUI.Common
 
         public void ShowWindow(ViewModelBase dialogViewModel)
         {
-            var windowsSettings = dialogViewModel as IWindowSettings;
-
-            if (windowsSettings != null)
+            if (dialogViewModel is IWindowSettings windowsSettings)
                 _windowManager.ShowWindow(dialogViewModel, null, windowsSettings.WindowSettings);
             else
                 _windowManager.ShowWindow(dialogViewModel);
