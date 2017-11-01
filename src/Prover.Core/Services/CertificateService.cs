@@ -46,11 +46,7 @@ namespace Prover.Core.Services
 
             if (cert == null) return null;
 
-            var instruments = cert.Instruments
-                .Select(i => _instrumentStore.Get(i.Id).Result)
-                .ToList();
-
-            cert.Instruments = instruments;
+            cert.Instruments = _instrumentStore.Query(i => i.CertificateId == cert.Id).ToList();
 
             return cert;
         }

@@ -2,7 +2,7 @@
 
 namespace Prover.CommProtocol.Common.Models
 {
-    public class MeterIndexItemDescription : ItemMetadata.ItemDescription
+    public class MeterIndexItemDescription : ItemMetadata.ItemDescription, IHaveManyId
     {            
         public int[] Ids { get; set; }        
         public int UnCorPulsesX10 { get; set; }

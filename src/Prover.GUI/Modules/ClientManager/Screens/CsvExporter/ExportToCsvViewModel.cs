@@ -39,7 +39,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
                 if (csvFiles.Any())
                 {
                     var fileDir = new FileInfo(csvFiles.First()).Directory;
-                    Process.Start(fileDir.FullName);
+                    if (fileDir != null)
+                        Process.Start(fileDir.FullName);
                 }
             });
 
@@ -49,16 +50,21 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
                     MessageBox.Show(ex.Message);
                 });
 
-            GetCertificatesCommand = ReactiveCommand.Create<Client, IEnumerable<Certificate>>(
-                client => certificateService.GetAllCertificates(client).ToList());
+            GetCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(
+                client => certificateService.GetAllCertificates(client).ToObservable());
             GetCertificatesCommand
-                .Subscribe(c => ClientCertificates.AddRange(c));
+                .Subscribe(c => ClientCertificates.Add(c));
 
             FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
             ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);
 
             this.WhenAnyValue(x => x.Client)
-                .Where(c => c != null)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Do(c =>
+                {
+                    ClientCertificates.Clear();
+                })
+                .Where(c => c != null)                
                 .InvokeCommand(GetCertificatesCommand);
         }
 
@@ -87,7 +93,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             set { this.RaiseAndSetIfChanged(ref _client, value); }
         }
 
-        private ReactiveList<Certificate> _clientCertificates = new ReactiveList<Certificate>() {ChangeTrackingEnabled = true};
+        //private readonly ObservableAsPropertyHelper<ReactiveList<Certificate>> _clientCertificates;
+        //public ReactiveList<Certificate> ClientCertificates => _clientCertificates.Value;
+
+        private ReactiveList<Certificate> _clientCertificates = new ReactiveList<Certificate>() { ChangeTrackingEnabled = true };
         public ReactiveList<Certificate> ClientCertificates
         {
             get { return _clientCertificates; }
@@ -127,7 +136,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
         #region Commands
 
         public ReactiveCommand<Client, Unit> ExportCommand { get; }
-        public ReactiveCommand<Client, IEnumerable<Certificate>> GetCertificatesCommand { get; set; }       
+        public ReactiveCommand<Client, Certificate> GetCertificatesCommand { get; set; }       
 
         #endregion       
 

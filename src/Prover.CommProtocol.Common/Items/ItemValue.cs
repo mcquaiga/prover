@@ -33,20 +33,12 @@ namespace Prover.CommProtocol.Common.Items
             }
         }
 
-        public virtual string Description => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+        public virtual string Description 
+            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
         private ItemMetadata.ItemDescription ItemDescription
         {
-            get
-            {                
-                if ((Metadata?.ItemDescriptions != null) && Metadata.ItemDescriptions.Any())
-                {
-                    if (!int.TryParse(RawValue.Trim(), out var intValue)) return null;
-                    return Metadata.ItemDescriptions.FirstOrDefault(x => x.Id == intValue);
-                }
-
-                return null;
-            }
+            get { return Metadata.GetItemDescription(RawValue); }
         }
 
         public override string ToString()

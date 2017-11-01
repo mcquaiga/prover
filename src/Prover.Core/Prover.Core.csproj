@@ -107,6 +107,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="Migrations\201711010030152_Indexes.cs" />
+    <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -346,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710290128497_AddApparatusToCertificate.resx">
       <DependentUpon>201710290128497_AddApparatusToCertificate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711010030152_Indexes.resx">
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

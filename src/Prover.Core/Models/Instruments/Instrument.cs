@@ -46,6 +46,7 @@ namespace Prover.Core.Models.Instruments
 
         public DateTime TestDateTime { get; set; }
 
+        [Index]
         public DateTime? ArchivedDateTime { get; set; }
 
         public int Type { get; set; }
@@ -53,10 +54,12 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType { get; set; }
 
+        [Index]
         public Guid? CertificateId { get; set; }
 
         public virtual Certificate Certificate { get; set; }
 
+        [Index]
         public Guid? ClientId { get; set; }
 
         public virtual Client Client { get; set; }
@@ -65,6 +68,7 @@ namespace Prover.Core.Models.Instruments
 
         public string JobId { get; set; }
 
+        [Index]
         public DateTime? ExportedDateTime { get; set; } = null;
 
         public bool? EventLogPassed { get; set; }

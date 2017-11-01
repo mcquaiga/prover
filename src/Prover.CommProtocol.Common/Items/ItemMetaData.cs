@@ -1,7 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Prover.CommProtocol.Common.Items
 {
+    public interface IHaveOneId
+    {
+        int Id { get; set; }
+    }
+
+    public interface IHaveManyId
+    {
+        int[] Ids { get; set; }
+    }
+
     public class ItemGroup
     {
         public int Id { get; set; }
@@ -37,11 +48,34 @@ namespace Prover.CommProtocol.Common.Items
 
         public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
 
-        public class ItemDescription
+        public virtual ItemDescription GetItemDescription(string rawValue)
         {
-            public int Id { get; set; } //Maps to the Id that the instrument uses
+                if (ItemDescriptions != null && ItemDescriptions.Any())
+                {
+                    if (!int.TryParse(rawValue.Trim(), out var intValue)) return null;
+
+                    var result = ItemDescriptions.FirstOrDefault(x
+                        => (x as IHaveManyId)?.Ids.Contains(intValue) ?? false);
+
+                    if (result == null)
+                        result = ItemDescriptions.FirstOrDefault(x => (x as IHaveOneId)?.Id == intValue);
+
+                    return result;
+                }
+
+                return null;
+        }
+
+        public abstract class ItemDescriptionBase
+        {
             public string Description { get; set; } //Human displayed description
             public decimal? NumericValue { get; set; } // Numeric value used for calculations, etc.
         }
+
+        public class ItemDescription : ItemDescriptionBase, IHaveOneId
+        {
+            public int Id { get; set; } //Maps to the Id that the instrument uses           
+        }
+        
     }
 }

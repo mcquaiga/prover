@@ -103,21 +103,36 @@
                 </StackPanel>
             </Grid>
             
-
-            <!--<TextBlock Grid.Column="0"
-                       Grid.Row="2"
-                       HorizontalAlignment="Center"
+            <StackPanel Grid.Column="0"
+                        Grid.Row="2"                        
+                        Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ClipboardCheck"
+                                             Foreground="{StaticResource BorderBrushColor}"
+                                             Width="112"
+                                             Height="112"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Margin="15"/>
+                    <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Text="Select a customer from the dropdown."
-                       Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}" />-->
+                       FontSize="24"
+                       Foreground="{StaticResource PrimaryTextColor}"
+                       Text="{Binding BlankStateText}"/>
+            </StackPanel>
+           
             <ProgressBar Grid.Row="2"
                          Grid.Column="0"
+                         Width="56"
+                         Height="56"
                          Style="{StaticResource MaterialDesignCircularProgressBar}"                         
                          Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
                          Value="0"
                          IsIndeterminate="True"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center" />
+            
             <ListBox x:Name="ResultFilteredItems"
                      Grid.Column="0"
                      VerticalContentAlignment="Stretch"
