@@ -19,18 +19,19 @@ namespace Prover.Core.Services
             _csvTemplateStore = csvTemplateStore;
         }
 
-        public async Task<List<Client>> GetAllClients()
+        public List<Client> GetAllClients()
         {
             var clients = _clientStore.GetAll();
-            return await clients
+            return clients
                 .OrderBy(c => c.Name)
-                .ToListAsync();                
+                .ToList();                
         }
 
         public IEnumerable<Client> GetActiveClients()
         {
             return _clientStore
-                .Query(x => x.ArchivedDateTime == null);
+                .Query(x => x.ArchivedDateTime == null)
+                .OrderBy(c => c.Name);
         }
 
         public async Task ArchiveClient(Client client)

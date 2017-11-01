@@ -26,7 +26,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens
     {
         private readonly ClientService _clientService;
 
-        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService, Client client = null)
+        public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            ClientService clientService, Client client = null)
             : base(screenManager, eventAggregator)
         {
             _clientService = clientService;
@@ -41,43 +42,38 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
 
             GoToCsvExporter = ReactiveCommand.Create<Client>(OpenCsvExporter);
-        
+
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
-            
-            InstrumentTypes = new List<InstrumentType>(HoneywellInstrumentTypes.GetAll().ToList());
 
-            VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify,
-                "These items will be compared to the instruments values at the beginning of the test");
-            this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Where(x => x != null)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(VerifyItemList.UpdateListItems);
-
-            ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset,
-                "These items will be written to the instrument after the volume test is completed.");
-
-            this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Where(x => x != null)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(ResetItemList.UpdateListItems);
-
-            ClientCsvTemplates.AddRange(Client.CsvTemplates.ToList());            
-            DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
+            SwitchToDetailsContextCommand = ReactiveCommand.Create(() =>
             {
-                if (await _clientService.DeleteCsvTemplate(csv))
-                    ClientCsvTemplates.Remove(csv);
+                IsDirty = true;
+                InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
+
+                var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
+
+                VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify, instrumentSelected,
+                    "These items will be compared to the instruments values at the beginning of the test");
+
+                ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset, instrumentSelected,
+                    "These items will be written to the instrument after the volume test is completed.");
+
+                ClientCsvTemplates = new ReactiveList<ClientCsvTemplate>(Client.CsvTemplates);
+                DeleteCsvTemplateCommand = ReactiveCommand.CreateFromTask<ClientCsvTemplate>(async csv =>
+                {
+                    if (await _clientService.DeleteCsvTemplate(csv))
+                        ClientCsvTemplates.Remove(csv);
+                });
+
+                DeleteCsvTemplateCommand.ThrownExceptions
+                    .Subscribe(ex => Log.Error(ex));
             });
-
-            DeleteCsvTemplateCommand.ThrownExceptions
-                .Subscribe(ex => Log.Error(ex));
         }
-
-        public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
 
         #region Commands
 
+        public ReactiveCommand<ClientCsvTemplate, Unit> DeleteCsvTemplateCommand { get; set; }
         public ReactiveCommand ArchiveCommand { get; set; }
-
         private ReactiveCommand<Unit, Unit> _saveCommand;
 
         public ReactiveCommand<Unit, Unit> SaveCommand
@@ -142,20 +138,29 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set { this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value); }
         }
 
+        private ReactiveCommand<Unit, Unit> _switchToDetailsContextCommand;
+
+        public ReactiveCommand<Unit, Unit> SwitchToDetailsContextCommand
+        {
+            get => _switchToDetailsContextCommand;
+            set => this.RaiseAndSetIfChanged(ref _switchToDetailsContextCommand, value);
+        }
+
         #endregion
 
         #region Properties   
 
         private bool _isRemoved = false;
+
         public bool IsRemoved
         {
             get => _isRemoved;
             set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
         }
 
-        private IEnumerable<InstrumentType> _instrumentTypes;
+        private ReactiveList<InstrumentType> _instrumentTypes;
 
-        public IEnumerable<InstrumentType> InstrumentTypes
+        public ReactiveList<InstrumentType> InstrumentTypes
         {
             get { return _instrumentTypes; }
             set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
@@ -196,7 +201,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _verifyItemList, value);
         }
 
-        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates = new ReactiveList<ClientCsvTemplate>() { ChangeTrackingEnabled = true };
+        private ReactiveList<ClientCsvTemplate> _clientCsvTemplates =
+            new ReactiveList<ClientCsvTemplate>() {ChangeTrackingEnabled = true};
 
         public ReactiveList<ClientCsvTemplate> ClientCsvTemplates
         {
@@ -207,13 +213,11 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         #endregion
 
         #region Public Functions
+
         public async Task Edit()
         {
             ScreenManager.ChangeScreen(this);
-            SelectedInstrumentType = InstrumentTypes.First();
-            //SelectedItemFileType = ClientItemType.Reset;
         }
-
 
         #endregion
 
@@ -221,9 +225,9 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private void OpenCsvTemplateEditor(ClientCsvTemplate clientCsvTemplate = null)
         {
-            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();        
+            var csvEditorViewModel = IoC.Get<ClientCsvTemplatesViewModel>();
 
-            if (clientCsvTemplate != null)    
+            if (clientCsvTemplate != null)
                 csvEditorViewModel.ClientCsvTemplate = clientCsvTemplate;
 
             var result = ScreenManager.ShowDialog(csvEditorViewModel);
@@ -255,7 +259,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             var exporter = IoC.Get<ExportToCsvViewModel>();
             exporter.Client = _client;
 
-            ScreenManager.ShowDialog(exporter);        
+            ScreenManager.ShowDialog(exporter);
         }
 
         private async Task GoBack()
@@ -267,9 +271,31 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         private async Task Save()
         {
             await _clientService.Save(Client);
+            IsDirty = false;
         }
 
+        public bool IsDirty { get; set; }
+
         #endregion
+
+        public override void CanClose(Action<bool> callback)
+        {
+            if (IsDirty)
+            {
+                MessageBoxResult result;
+                result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                    Save().ConfigureAwait(false);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    callback(false);
+                    return;
+                }
+            }
+            callback(true);
+        }
 
         protected override void OnDeactivate(bool close)
         {

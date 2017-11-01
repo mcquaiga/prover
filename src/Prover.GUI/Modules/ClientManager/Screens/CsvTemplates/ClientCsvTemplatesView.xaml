@@ -4,8 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             d:DesignHeight="300" d:DesignWidth="300">
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -57,11 +56,12 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical"
+                        Margin="10">
                 <TextBlock Text="CSV Template"
                            FontWeight="DemiBold"/>
                 <TextBox x:Name="CsvTemplate"
-                         TextWrapping="Wrap"
+                         TextWrapping="WrapWithOverflow"
                          VerticalAlignment="Stretch"
                          AcceptsReturn="True"
                          FontWeight="Regular"

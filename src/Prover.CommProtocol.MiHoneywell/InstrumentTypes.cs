@@ -24,9 +24,9 @@ namespace Prover.CommProtocol.MiHoneywell
 
         public static IEnumerable<InstrumentType> GetAll()
         {
-            var allTask = ItemHelpers.LoadInstruments();
-            allTask.Wait();
-            return allTask.Result
+            var allTask = ItemHelpers.GetInstrumentDefinitions().ConfigureAwait(false);
+            ;
+            return allTask.GetAwaiter().GetResult()
                 .ToList()
                 .OrderBy(i => i.Name);
         }

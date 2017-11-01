@@ -73,35 +73,48 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     item.SetFilter(FilterObservable);
                     RootResults.Add(item);
                 });
+           
+            ResultFilteredItems = RootResults.CreateDerivedCollection(
+                x => x, 
+                x => x.IsDisplayed, 
+                (x, y) => x.Instrument.SerialNumber.CompareTo(y.Instrument.SerialNumber)); 
+            
+            ResultFilteredItems.ChangeTrackingEnabled = true;
 
-            LoadInstrumentsCommand.IsExecuting
-                .Select(x => !x)
-                .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox);
+            ResultFilteredItems.ItemChanged
+                    .Where(x => x.PropertyName == "IsArchived" && x.Sender.IsArchived)
+                    .Subscribe(x => RootResults.Remove(x.Sender));
+
+            ResultFilteredItems.ItemChanged.Where(x => x.PropertyName == "IsSelected").Select(x => ResultFilteredItems.Count(c => c.IsSelected))
+                .Merge(RootResults.CountChanged.Select(x => 0))
+                .ToProperty(this, x => x.SelectedCount, out _selectedCount);
+
+            ResultFilteredItems.CountChanged
+                .ToProperty(this, x => x.VisibleCount, out _visibleCount);            
 
             LoadInstrumentsCommand.IsExecuting
                 .ToProperty(this, x => x.ShowLoadingIndicator, out _showLoadingIndicator);
 
-            ResultFilteredItems = RootResults.CreateDerivedCollection(
-                x => x, 
-                x => x.IsDisplayed, 
-                (x, y) => x.Instrument.SerialNumber.CompareTo(y.Instrument.SerialNumber));            
-            ResultFilteredItems.ChangeTrackingEnabled = true;
-            ResultFilteredItems.ItemChanged
-                    .Where(x => x.PropertyName == "IsArchived" && x.Sender.IsArchived)
-                    .Subscribe(x => RootResults.Remove(x.Sender));
             ResultFilteredItems.CountChanged
-                .ToProperty(this, x => x.VisibleCount, out _visibleCount);
-            ResultFilteredItems.ItemChanged
-                .Where(x => x.PropertyName == "IsSelected")
-                .Select(x => ResultFilteredItems.Count(c => c.IsSelected))
-                .ToProperty(this, x => x.SelectedCount, out _selectedCount);
+                .Select(x => x > 0)
+                .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox);
+
+            this.WhenAnyValue(x => x.ShowTestViewListBox)
+                .CombineLatest(this.WhenAnyValue(x => x.ShowLoadingIndicator),
+                    (list, loading) => !list && !loading)
+                .ToProperty(this, x => x.DisplayHelpBlankState, out _displayHelpBlankState);
+            BlankStateText = "Select a customer from the dropdown";
+            LoadInstrumentsCommand
+                .Take(1)
+                .Subscribe(x => BlankStateText = "No tests found");
+            
 
             LoadClientsCommand = ReactiveCommand.CreateFromObservable(LoadClients);
             LoadClientsCommand
                 .Where(c => c != null)
                 .Subscribe(c => Clients.Add(c));
 
-            FetchNextCertificateNumberCommand = ReactiveCommand.CreateFromTask(_certificateService.GetNextCertificateNumber);
+            FetchNextCertificateNumberCommand = ReactiveCommand.Create(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
                 .ToProperty(this, x => x.NextCertificateNumber, out _nextCertificateNumber);
             FetchNextCertificateNumberCommand.ThrownExceptions
@@ -211,6 +224,16 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         private readonly ObservableAsPropertyHelper<bool> _showTestViewListBox;
         public bool ShowTestViewListBox => _showTestViewListBox.Value;
+
+        private readonly ObservableAsPropertyHelper<bool> _displayHelpBlankState;
+        public bool DisplayHelpBlankState => _displayHelpBlankState.Value;
+
+        private string _blankStateText;
+        public string BlankStateText
+        {
+            get => _blankStateText;
+            set => this.RaiseAndSetIfChanged(ref _blankStateText, value);
+        }
 
         private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
         public long NextCertificateNumber => _nextCertificateNumber.Value;
@@ -325,7 +348,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             if (certificate == null) return;
 
-            var cert = await _certificateService.GetCertificate(certificate.Number);
+            var cert = _certificateService.GetCertificate(certificate.Number);
 
             if (cert == null)
             {
@@ -337,7 +360,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             ResultFilteredItems?.Dispose();
             LoadInstrumentsCommand?.Dispose();

@@ -15,10 +15,12 @@ namespace Prover.Core.Models.Certificates
 
         public string VerificationType { get; set; }
         
+        [Index]
         public string TestedBy { get; set; }
         
         public string Apparatus { get; set; }
 
+        [Index]
         public Guid? ClientId { get; set; }
         public virtual Client Client { get; set; }
 
