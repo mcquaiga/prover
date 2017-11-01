@@ -124,9 +124,12 @@ namespace Prover.Core.Services
         {
             try
             {
+                if (clientId == Guid.Empty)
+                    clientId = null;
+
                 var results = _instrumentStore.Query(x => x.CertificateId == null 
-                        && ((clientId == Guid.Empty && x.ClientId == null) || x.ClientId == clientId) 
-                        && (showArchived == false && x.ArchivedDateTime == null || showArchived))
+                        && x.ClientId == clientId
+                        && x.ArchivedDateTime == null)
                     .OrderBy(x => x.TestDateTime);
 
                 return results;

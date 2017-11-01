@@ -47,6 +47,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
             SwitchToDetailsContextCommand = ReactiveCommand.Create(() =>
             {
+                IsDirty = true;
                 InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
 
                 var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
@@ -263,30 +264,36 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private async Task GoBack()
         {
-            //await Save();
+            await Save();
             ScreenManager.ChangeScreen<ClientManagerViewModel>();
         }
 
         private async Task Save()
         {
             await _clientService.Save(Client);
+            IsDirty = false;
         }
+
+        public bool IsDirty { get; set; }
 
         #endregion
 
         public override void CanClose(Action<bool> callback)
         {
-            MessageBoxResult result;
-            result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
-                Save().ConfigureAwait(false);
-
-            if (result == MessageBoxResult.Cancel)
+            if (IsDirty)
             {
-                callback(false);
-                return;
-            }
+                MessageBoxResult result;
+                result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                    Save().ConfigureAwait(false);
 
+                if (result == MessageBoxResult.Cancel)
+                {
+                    callback(false);
+                    return;
+                }
+            }
             callback(true);
         }
 
