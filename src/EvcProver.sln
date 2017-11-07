@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -46,6 +46,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Domain\Prover.Domain.csproj", "{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core.Shared", "Prover.Core.Shared\Prover.Core.Shared.csproj", "{35FE4429-B8F5-4761-B401-A215D1B4EBA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dresser", "Dresser", "{BCC150AF-AFC3-4254-8F13-D2B1B7C202C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Dresser", "Prover.CommProtocol.Dresser\Prover.CommProtocol.Dresser.csproj", "{36F73CB8-ED85-4E31-991F-C4E116022577}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -276,6 +280,30 @@ Global
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x64.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|x64.Build.0 = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Debug|x86.Build.0 = Debug|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|x64.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|x64.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|x86.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.MiProtocolConsole|x86.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release - Union Gas|x86.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|x64.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|x64.Build.0 = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|x86.ActiveCfg = Release|Any CPU
+		{36F73CB8-ED85-4E31-991F-C4E116022577}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,6 +317,8 @@ Global
 		{8EEB9315-56E0-4A4F-9A36-3B9E8CCD47A1} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 		{7A630399-E7B2-4227-A6D9-B492E911DB1E} = {7C53DB60-5DE9-4BAD-8FB1-FA0FB7EDE434}
 		{904F99E1-2E5B-4C16-B900-7559D2E11553} = {2A28EC01-0F71-4788-9A69-9620A0CDD436}
+		{BCC150AF-AFC3-4254-8F13-D2B1B7C202C4} = {A62C434D-5F70-4692-9F2D-9DCF6CB73A2A}
+		{36F73CB8-ED85-4E31-991F-C4E116022577} = {BCC150AF-AFC3-4254-8F13-D2B1B7C202C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9288949F-46C4-426B-8891-A6660386728F}

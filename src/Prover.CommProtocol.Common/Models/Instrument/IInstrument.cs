@@ -6,16 +6,14 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.CommProtocol.Common.Models.Instrument
 {
-    public interface IInstrument
+    public interface IInstrument<T>
     {
-        int Id { get; }
-        string Name { get; }
-
+        InstrumentType InstrumentType { get; set; }
         EvcCommunicationClient CommunicationClient { get; }
         //IInstrumentFactory InstrumentFactory { get; }
         EvcCorrectorType CorrectorType { get; }
         IEnumerable<ItemMetadata> ItemDefinitions { get; }
-        Dictionary<string, string> ItemData { get; }
+        Dictionary<T, string> ItemData { get; }
 
         IPressureItems PressureItems { get; }
         ISiteInformationItems SiteInformationItems { get; }
