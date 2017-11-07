@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
@@ -16,13 +18,15 @@ using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
 {
-    public class ClientCsvTemplatesViewModel : ViewModelBase, IDisposable
+    public class ClientCsvTemplatesViewModel : ViewModelBase, IDisposable, IWindowSettings
     {
         public ClientCsvTemplatesViewModel(ScreenManager screenManager, IEventAggregator eventAggregator) : base(
             screenManager, eventAggregator)
         {
             ClientCsvTemplate = new ClientCsvTemplate();
 
+            var canSave = this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Select(x => x != null && !string.IsNullOrEmpty(x.Name));
             OkCommand = ReactiveCommand.Create(() =>
             {
                 ClientCsvTemplate.CsvTemplate = CsvTemplate;
@@ -42,7 +46,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                     : (DriveTypeDescripter?) Enum.Parse(typeof(DriveTypeDescripter), SelectedDriveType);
 
                 TryClose(true);
-            });
+            }, canSave);
             CancelCommand = ReactiveCommand.Create(() => { TryClose(false); });
 
             AddFieldToTemplateCommand = ReactiveCommand.Create<string>(s =>
@@ -157,6 +161,20 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         {
             OkCommand?.Dispose();
             CancelCommand?.Dispose();
+        }
+
+        public dynamic WindowSettings
+        {
+            get
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.CanResizeWithGrip;
+                settings.Width = 1000;
+                settings.SizeToContent = SizeToContent.Manual;
+                settings.Title = "CSV Template Editor";
+                return settings;
+            }
         }
     }
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
@@ -27,44 +27,50 @@ namespace Prover.Core.Exports
 
         public static ExportFields Translate(Certificate certificate, Instrument instrument)
         {
-            var csvFormat = new ExportFields
+            try
             {
-                InstrumentType = instrument.InstrumentType.Name,
-                CompanyNumber = instrument.InventoryNumber,
-                SerialNumber = instrument.SerialNumber.ToString(),
-                VerificationType = certificate.VerificationType,
-                TestedDate = instrument.TestDateTime,
-                               
-                TemperatureLevel1Error = GetTempTestPercentError(instrument, Level1Number) ?? 0.0m,
-                TemperatureLevel2Error = GetTempTestPercentError(instrument, Level2Number) ?? 0.0m,
-                TemperatureLevel3Error = GetTempTestPercentError(instrument, Level3Number) ?? 0.0m,
-                
-                PressureLevel1Error = GetPressureTestPercentError(instrument, Level1Number) ?? 0.0m,
-                PressureLevel2Error = GetPressureTestPercentError(instrument, Level2Number) ?? 0.0m,
-                PressureLevel3Error = GetPressureTestPercentError(instrument, Level3Number) ?? 0.0m,
+                var csvFormat = new ExportFields
+                {
+                    InstrumentType = instrument.InstrumentType.Name,
+                    CompanyNumber = instrument.InventoryNumber,
+                    SerialNumber = instrument.SerialNumber.ToString(),
+                    VerificationType = certificate.VerificationType,
+                    TestedDate = instrument.TestDateTime,
 
-                SuperLevel1Error = GetSuperTestPercentError(instrument, Level1Number) ?? 0.0m,
-                SuperLevel2Error = GetSuperTestPercentError(instrument, Level2Number) ?? 0.0m,
-                SuperLevel3Error = GetSuperTestPercentError(instrument, Level3Number) ?? 0.0m,
-                
-                CorrectedMultiplier = (long) instrument.CorrectedMultiplier(),
-                CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
-                UncorrectMultiplier = (long) instrument.UnCorrectedMultiplier(),
-                UncorrectMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
+                    TemperatureLevel1Error = GetTempTestPercentError(instrument, Level1Number) ?? 0.0m,
+                    TemperatureLevel2Error = GetTempTestPercentError(instrument, Level2Number) ?? 0.0m,
+                    TemperatureLevel3Error = GetTempTestPercentError(instrument, Level3Number) ?? 0.0m,
 
-                CorrectedVolumeError = instrument.VolumeTest.CorrectedPercentError,
-                UncorrectedVolumeError = instrument.VolumeTest.UnCorrectedPercentError,
-                CorrectorType = Enum.GetName(typeof(EvcCorrectorType), instrument.CompositionType),
-                RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription,
+                    PressureLevel1Error = GetPressureTestPercentError(instrument, Level1Number) ?? 0.0m,
+                    PressureLevel2Error = GetPressureTestPercentError(instrument, Level2Number) ?? 0.0m,
+                    PressureLevel3Error = GetPressureTestPercentError(instrument, Level3Number) ?? 0.0m,
 
-                Items = new Dictionary<int, string>(
-                    instrument.Items.ToDictionary(
-                        k => k.Metadata.Number,
-                        v => v.Metadata.ItemDescriptions.Any() ? v.Description : v.RawValue)
-                )
-            };
+                    SuperLevel1Error = GetSuperTestPercentError(instrument, Level1Number) ?? 0.0m,
+                    SuperLevel2Error = GetSuperTestPercentError(instrument, Level2Number) ?? 0.0m,
+                    SuperLevel3Error = GetSuperTestPercentError(instrument, Level3Number) ?? 0.0m,
 
-            return csvFormat;
+                    CorrectedMultiplier = instrument.CorrectedMultiplier(),
+                    CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
+                    UncorrectMultiplier = instrument.UnCorrectedMultiplier(),
+                    UncorrectMultiplierDescription = instrument.UnCorrectedMultiplierDescription(),
+
+                    CorrectedVolumeError = instrument.VolumeTest.CorrectedPercentError,
+                    UncorrectedVolumeError = instrument.VolumeTest.UnCorrectedPercentError,
+                    CorrectorType = Enum.GetName(typeof(EvcCorrectorType), instrument.CompositionType),
+                    RotaryMeterType = (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription,
+
+                    Items = new Dictionary<int, string>(
+                        instrument.Items.ToDictionary(
+                            k => k.Metadata.Number,
+                            v => v.Metadata.ItemDescriptions != null && v.Metadata.ItemDescriptions.Any() ? v.Description : v.RawValue)
+                    )
+                };
+                return csvFormat;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private static decimal? GetTempTestPercentError(Instrument instrument, int testLevel)

@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+using NuGet;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models;
@@ -15,102 +22,92 @@ namespace Prover.CommProtocol.MiHoneywell.Items
     {
         private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\ItemDefinitions";
 
-        private const string ItemDefinitionFileName = "Items.xml";
+        private const string ItemDefinitionFileName = "Items.json";
         private const string TypeFileName = "Type_";
 
-        private static readonly ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>> ItemFileCache = new ConcurrentDictionary<InstrumentType, IEnumerable<ItemMetadata>>();
-        private static List<ItemMetadata> _itemDefinitions;
+        private static HashSet<InstrumentType> _instrumentTypesCache = new HashSet<InstrumentType>();
 
-        public static IEnumerable<InstrumentType> LoadInstruments()
-        {          
-            if (!ItemFileCache.IsEmpty)
-                return ItemFileCache.Keys;
+        public static async Task<HashSet<InstrumentType>> GetInstrumentDefinitions()
+        {
+            if (!_instrumentTypesCache.Any())
+                await LoadInstrumentTypes();
 
-            var result = new List<InstrumentType>();
-            var items = LoadItemDefinitions().ToList();
-
-            var files = Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*");
-            foreach (var file in files)
-            {
-                var xDoc = XDocument.Load(file);
-                var root = xDoc.XPathSelectElement("InstrumentDetails");
-                var i = new InstrumentType()
-                {
-                    Id = int.Parse(root.XPathSelectElement("Id").Value),
-                    Name = root.XPathSelectElement("Name").Value,
-                    AccessCode = int.Parse(root.XPathSelectElement("AccessCode").Value),
-                    ItemFilePath = (new FileInfo(file).Name),
-                    MaxBaudRate = root.XPathSelectElement("MaxBaudRate") != null ? Convert.ToInt32(root.XPathSelectElement("MaxBaudRate").Value) : default(int?),
-                    CanUseIrDa = root.XPathSelectElement("CanUserIrDAPort") != null ? Convert.ToBoolean(root.XPathSelectElement("CanUserIrDAPort").Value) : default(bool?)
-                };
-                result.Add(i);
-
-                var overrideItems = GetItemDefinitions(xDoc).ToList();
-
-                var mergedList = items.Concat(overrideItems)
-                    .GroupBy(item => item.Number)
-                    .Select(group => group.Aggregate((merged, next) => next))
-                    .ToList();
-        
-                ItemFileCache.GetOrAdd(i, mergedList);
-            }
-
-            MeterIndexInfo.Get(0);
-
-            return result;
+            return _instrumentTypesCache;
         }
 
-        private static IEnumerable<ItemMetadata> LoadItemDefinitions()
+        public static async Task LoadInstrumentTypes()
         {
-            if (_itemDefinitions != null && _itemDefinitions.Any())
-                return _itemDefinitions;
+            _instrumentTypesCache.Clear();
 
-            _itemDefinitions = new List<ItemMetadata>();
-            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
-            var xDoc = XDocument.Load(path);
-            _itemDefinitions = GetItemDefinitions(xDoc).ToList();
+            var items = await LoadGlobalItemDefinitions();
 
-            return _itemDefinitions;
-        }        
+            var files = Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json");
+            foreach (var file in files)
+            {
+                var fileText = File.ReadAllText(file);
+                var instrJson = JObject.Parse(fileText);
+                var i = instrJson.ToObject<InstrumentType>();
 
-        private static IEnumerable<ItemMetadata> GetItemDefinitions(XDocument xDoc)
+                var overrideItems = await GetItemDefinitions(fileText, "OverrideItems");
+                var excludeItems = await GetItemDefinitions(fileText, "ExcludeItems");
+                i.ItemsMetadata = items.Concat(overrideItems)
+                    .Where(item => excludeItems.All(x => x.Number != item.Number))
+                    .GroupBy(item => item.Number)                        
+                    .Select(group => group.Aggregate((merged, next) => next))
+                    .ToList();
+
+                _instrumentTypesCache.Add(i);
+            }
+        }
+
+        private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
         {
-            return from x in xDoc.Descendants("item")
-                   select new ItemMetadata
-                   {
-                       Number = Convert.ToInt32(x.Attribute("number").Value),
-                       Code = x.Attribute("code") == null ? "" : x.Attribute("code").Value,
-                       ShortDescription = x.Attribute("shortDescription") == null ? "" : x.Attribute("shortDescription").Value,
-                       LongDescription = x.Attribute("description") == null ? "" : x.Attribute("description").Value,
-                       IsAlarm = (x.Attribute("isAlarm") != null) && Convert.ToBoolean(x.Attribute("isAlarm").Value),
-                       IsPressure =
-                           (x.Attribute("isPressure") != null) && Convert.ToBoolean(x.Attribute("isPressure").Value),
-                       IsPressureTest =
-                           (x.Attribute("isPressureTest") != null) &&
-                           Convert.ToBoolean(x.Attribute("isPressureTest").Value),
-                       IsTemperature =
-                           (x.Attribute("isTemperature") != null) && Convert.ToBoolean(x.Attribute("isTemperature").Value),
-                       IsTemperatureTest =
-                           (x.Attribute("isTemperatureTest") != null) &&
-                           Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
-                       IsVolume = (x.Attribute("isVolume") != null) && Convert.ToBoolean(x.Attribute("isVolume").Value),
-                       IsVolumeTest =
-                           (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
-                       IsSuperFactor = (x.Attribute("isSuper") != null) && Convert.ToBoolean(x.Attribute("isSuper").Value),
-                       ItemDescriptions =
-                           (from y in x.Descendants("value")
-                            select new ItemMetadata.ItemDescription
-                            {
-                                Id = Convert.ToInt32(y.Attribute("id").Value),
-                                Description = y.Attribute("description") != null 
-                                    ? y.Attribute("description").Value 
-                                    : y.Value,
-                                Value = y.Attribute("numericvalue") == null
-                               ? (decimal?)null
-                               : Convert.ToDecimal(y.Attribute("numericvalue").Value)
-                            })
-                               .ToList()
-                   };
+            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";           
+            var itemText = File.ReadAllText(path);
+            return await GetItemDefinitions(itemText, "ItemDefinitions");            
+        }  
+
+        private static async Task<HashSet<ItemMetadata>> GetItemDefinitions(string itemDefinitionText, string attributeName)
+        {
+            var itemsJson = JObject.Parse(itemDefinitionText);
+            var items = itemsJson[attributeName].Children().ToList();
+            var results = new HashSet<ItemMetadata>();
+            foreach(JToken item in items)
+            {                
+                var i = item.ToObject<ItemMetadata>();
+
+                JToken itemValues;
+                if (item["definitionPath"] != null)
+                {
+                    var defPath = item["definitionPath"].Value<string>();
+                    var definitionsJObject = await ReadItemFile(defPath);
+
+                    var typeName = definitionsJObject["type"].Value<string>();
+                    var type = Type.GetType(typeName);
+                    itemValues = definitionsJObject["values"];
+                    var values = itemValues?.Children().ToList();
+                    i.ItemDescriptions = values?.Select(v => (ItemMetadata.ItemDescription)v.ToObject(type));
+                }
+                else
+                {
+                    itemValues = item["values"];
+                    var values = itemValues?.Children().ToList();
+                    i.ItemDescriptions = values?.Select(v => v.ToObject<ItemMetadata.ItemDescription>());
+                }
+
+                results.Add(i);
+            }
+            return results;
+        }
+
+        private static async Task<JObject> ReadItemFile(string fileName)
+        {
+            var path = $@"{ItemDefinitionsFolder}\{fileName}";
+            using (var fs = File.OpenText(path))
+            {
+                var t = await fs.ReadToEndAsync();
+                return JObject.Parse(t);
+            }
         }
 
         public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
@@ -118,20 +115,11 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (instrumentType == null)
                 throw new ArgumentNullException(nameof(instrumentType));
 
-            var metadata = LoadItems(instrumentType);
+            var metadata = instrumentType.ItemsMetadata;
 
-            return itemValues.Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
-        }
-
-        public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-
-            if (ItemFileCache.ContainsKey(type))
-                return ItemFileCache[type];
-
-            return new List<ItemMetadata>();
+            return itemValues
+                .Where(i => metadata.GetItem(i.Key) != null)
+                .Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
         }
     }
 }

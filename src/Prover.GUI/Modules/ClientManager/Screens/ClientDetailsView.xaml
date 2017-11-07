@@ -25,7 +25,21 @@
                                 cal:View.Context="Card" />
             </DataTemplate>
 
-
+            <Style x:Key="ListViewItemOptionStyle" TargetType="ListViewItem"
+                   BasedOn="{StaticResource {x:Type ListViewItem}}">
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsSelected" Value="True" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="Background" Value="{StaticResource BorderBrushColor}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushColor}" />
+                            <!--<Setter Property="Foreground" Value="{}"/>-->
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <materialDesign:DialogHost>
@@ -103,6 +117,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -111,30 +126,46 @@
                 </Grid.RowDefinitions>
                 <materialDesign:ColorZone Mode="Accent"
                                           Grid.Row="0"
-                                          Grid.ColumnSpan="3"
+                                          Grid.ColumnSpan="4"
                                           Padding="4"
                                           Margin="4">
                     <TextBlock Text="Verify/Reset Items"
                                Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
                 </materialDesign:ColorZone>
-                <ListBox ItemsSource="{Binding InstrumentTypes}"
+                <Border Grid.Row="1"
+                        Grid.Column="0"
+                        BorderThickness="0 0 1 0"
+                        BorderBrush="{StaticResource BorderBrushColor}"
+                        Margin="2"> 
+                    <ListBox ItemsSource="{Binding InstrumentTypes}"
                          SelectedItem="{Binding SelectedInstrumentType}"
                          SelectionMode="Single"
-                         Grid.Row="1"
-                         Grid.Column="0">
+                         SelectedIndex="0"
+                         Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
+                         Margin="4 8">
+                    <ListBox.ItemsPanel>
+                         <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                </Border>
+                
 
                 <ContentControl cal:View.Model="{Binding VerifyItemList}" 
                                 Grid.Row="1"
                                 Grid.Column="1"/>
+                <GridSplitter Width="5" HorizontalAlignment="Stretch"
+                              Grid.Row="1"
+                              Grid.Column="2"/>
                 <ContentControl cal:View.Model="{Binding ResetItemList}" 
                                 Grid.Row="1"
-                                Grid.Column="2"/>
+                                Grid.Column="3"/>
 
 
             </Grid>

@@ -12,43 +12,47 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <TextBlock FontSize="18"
                    Margin="4"
                    Grid.Row="0"
                    Text="{Binding Path=HeaderText}" />
+        
         <TextBlock Text="{Binding Path=DescriptionText}"
                    Margin="6 0"
                    Grid.Row="1"
                    TextWrapping="WrapWithOverflow" />
-        <Grid HorizontalAlignment="Left"
+        
+        <Grid HorizontalAlignment="Stretch"
               Grid.Row="2"
-              Margin="10">
+              Margin="15">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="0.4*" />
+                <ColumnDefinition Width="0.4*" />
+                <ColumnDefinition Width="0.2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="1"
+            <ComboBox Grid.Column="0"
                       materialDesign:HintAssist.Hint="Item"
                       SelectedItem="{Binding SelectedItem}"
                       ItemsSource="{Binding Path=AvailableItems}"
-                      Width="Auto">
+                      HorizontalAlignment="Stretch">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Number}"
                                        Margin="0 0 5 0" />
-                            <TextBlock Text="{Binding LongDescription}" />
+                            <Border BorderThickness="0 0 1 0"
+                                    BorderBrush="{StaticResource BorderBrushColor}"/>
+                            <TextBlock Text="{Binding Description}" />
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Grid Grid.Column="3"
-                  Margin="10 0 0 0">
+            <Grid Grid.Column="1"
+                  Margin="10 0 0 0"
+                  HorizontalAlignment="Stretch">
                 <TextBox Text="{Binding ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Width="Auto"
                          Margin="2 5"
@@ -69,7 +73,7 @@
                 </ComboBox>
             </Grid>
 
-            <Button Grid.Column="4"
+            <Button Grid.Column="2"
                     VerticalAlignment="Center"
                     Command="{Binding AddItemCommand}"
                     HorizontalContentAlignment="Left"

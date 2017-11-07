@@ -29,7 +29,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
 
         public string MeasurementApparatus => "902349, 983378, 1232222, 988889, 0987767";
 
-        public string CertificateDate => $"{Certificate.CreatedDateTime:d}";
+        public string CertificateDate => $"{Certificate.CreatedDateTime:dd/MM/yyyy}";
 
         public long NumberOfTestsPassed => Certificate.Instruments.Count(i => i.HasPassed);
 

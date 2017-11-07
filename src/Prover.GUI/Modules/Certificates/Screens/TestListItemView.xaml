@@ -30,17 +30,26 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="36" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <CheckBox IsChecked="{Binding Path=IsSelected}"
+        <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" 
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=IsSelected}"
+                      Content=""
+                      Grid.Column="0"
+                      Grid.Row="0"
+                      Margin="8"
+                      HorizontalAlignment="Center"/>
+        <!--<CheckBox IsChecked="{Binding Path=IsSelected}"
                   Grid.Column="0"
                   Grid.Row="0"
                   Margin="8"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
-                  Style="{StaticResource MaterialDesignAccentCheckBox}"/>
+                  Style="{StaticResource MaterialDesignAccentCheckBox}"/>-->
+        
         <Viewbox Grid.Row="0"
                  Grid.Column="1"
                  Stretch="UniformToFill"

@@ -9,7 +9,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width=".2*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <materialDesign:PackIcon Width="64" Height="64"
                                  Grid.Column="0"
@@ -28,7 +28,8 @@
                     HorizontalAlignment="Right"
                     Grid.Column="2">
             <Button Style="{StaticResource MaterialDesignFlatButton}"
-                    Height="48"                    
+                    Height="48"        
+                    HorizontalAlignment="Right"
                     Command="{Binding EditCommand}"
                     ToolTip="Edit">
                 <materialDesign:PackIcon Kind="Pencil"
@@ -40,6 +41,7 @@
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Height="48"
                     Command="{Binding ArchiveCommand}"
+                    HorizontalAlignment="Right"
                     ToolTip="Archive">
                 <materialDesign:PackIcon Kind="Archive"
                                          Height="36"

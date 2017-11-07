@@ -13,8 +13,7 @@ namespace Prover.Core.Storage
 
         protected override IQueryable<Client> Query()
         {
-            return Context.Clients
-                .Include(x => x.Items);
+            return Context.Clients;
         }
     }
 }

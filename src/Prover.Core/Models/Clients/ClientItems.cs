@@ -48,10 +48,7 @@ namespace Prover.Core.Models.Clients
         public string InstrumentTypeString
         {
             get => InstrumentType.Id.ToString();
-            private set
-            {
-                InstrumentType = HoneywellInstrumentTypes.GetAll().FirstOrDefault(i => i.Id == int.Parse(value));
-            }
+            private set => InstrumentType = HoneywellInstrumentTypes.GetById(int.Parse(value));
         }
     }
 }

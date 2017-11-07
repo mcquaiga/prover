@@ -1,11 +1,12 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using NLog;
 using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Common.Screens
 {
-    public class ViewModelBase : ReactiveScreen
+    public class ViewModelBase : ReactiveScreen, IDisposable
     {
         protected readonly IEventAggregator EventAggregator;
         protected readonly ScreenManager ScreenManager;
@@ -21,6 +22,10 @@ namespace Prover.GUI.Common.Screens
         protected ViewModelBase()
         {
             
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="SplashScreen" Height="300" Width="300"
+        Title="EVC Prover" Height="300" Width="300"
         ResizeMode="NoResize" WindowStyle="None"  
         WindowStartupLocation="CenterScreen" Background="DarkBlue">
     <StackPanel Orientation="Vertical"

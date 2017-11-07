@@ -1,3 +1,5 @@
+using System;
+using System.Reactive.Linq;
 using System.Windows.Controls;
 using ReactiveUI;
 
@@ -11,6 +13,15 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         public ClientDetailsView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                d(ViewModel = (ClientDetailsViewModel)DataContext);
+
+                d(this.WhenAnyValue(x => x.ViewModel.SwitchToDetailsContextCommand)
+                    .SelectMany(x => x.Execute())
+                    .Subscribe());
+            });
         }
 
         object IViewFor.ViewModel

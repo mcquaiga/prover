@@ -1,0 +1,13 @@
+{
+  "Id": "3",
+  "Name": "Mini-AT",
+  "AccessCode": "3",
+  "MaxBaudRate": "9600",
+  "CanUseIrDaPort": false,
+  "OverrideItems": [],
+  "ExcludeItems": [
+    { "number": "432" },
+    { "number": "439" },
+    { "number": "892" }
+  ]
+}
