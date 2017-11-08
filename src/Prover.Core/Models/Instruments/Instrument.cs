@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Linq.Expressions;
@@ -13,6 +14,7 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
+using Prover.Core.Shared.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -76,6 +78,30 @@ namespace Prover.Core.Models.Instruments
         public bool? CommPortsPassed { get; set; }
 
         public virtual List<VerificationTest> VerificationTests { get; set; } = new List<VerificationTest>();
+
+        public DateTime GetDateTime()
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            dateFormat = $"{dateFormat} HH mm ss";
+
+            var time = Items.GetItem(203).RawValue;
+            var date = Items.GetItem(204).RawValue;
+
+            return DateTime.ParseExact($"{date} {time}", dateFormat, null);
+        }
+
+        public string GetDateFormatted(DateTime dateTime)
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            return dateTime.ToString(dateFormat);
+        }
+
+        public string GetTimeFormatted(DateTime dateTime)
+        {
+            return dateTime.ToString("HH mm ss");
+        }
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {

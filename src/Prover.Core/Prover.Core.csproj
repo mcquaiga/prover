@@ -215,6 +215,7 @@
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ItemVerificationManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\IHandleInvalidItemVerification.cs" />
+    <Compile Include="VerificationTests\PreTestActions\DateTimeValidator.cs" />
     <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />

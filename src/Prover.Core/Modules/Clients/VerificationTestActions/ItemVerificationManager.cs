@@ -84,8 +84,6 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 
         private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
-            var ct = new CancellationToken();
-            await evcCommunicationClient.Connect(ct);
             foreach (var invalidItem in InvalidInstrumentValues)
             {
                 var response =
@@ -94,9 +92,6 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
                     instrument.Items.First(i => i.Metadata.Number == invalidItem.Key.Number).RawValue =
                         invalidItem.Value.Item1.RawValue;
             }
-            await evcCommunicationClient.Disconnect();
-            await _testRunService.Save(instrument);
-
             return true;
         }
     }
