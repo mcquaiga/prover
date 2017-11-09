@@ -110,6 +110,18 @@
                          VerticalAlignment="Stretch"
                          AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" />
+
+                <materialDesign:PackIcon Grid.Column="2"
+                                         Grid.Row="0"
+                                         Kind="PoundBox"
+                                         Foreground="{Binding ElementName=RegistrationNumberTextBox, Path=BorderBrush}" />
+                <TextBox x:Name="RegistrationNumberTextBox"
+                    Grid.Column="3"
+                         Grid.Row="0"
+                         Text="{Binding Client.RegistrationNumber}"
+                         materialDesign:HintAssist.Hint="Registration Number"
+                         VerticalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto" />
             </Grid>
 
             <Grid Grid.Row="2"

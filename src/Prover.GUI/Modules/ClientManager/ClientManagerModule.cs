@@ -6,6 +6,7 @@ using Prover.Core.Exports;
 using Prover.Core.Modules.Clients.VerificationTestActions;
 using Prover.Core.Services;
 using Prover.Core.Storage;
+using Prover.Core.VerificationTests.PreTestActions;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
@@ -36,6 +37,7 @@ namespace Prover.GUI.Modules.ClientManager
                 .As<IHaveMainMenuItem>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<DateTimeValidator>().As<IPreTestValidation>();
             builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
             builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
             builder.RegisterType<ExportToCsvManager>().As<IExportCertificate>();

@@ -20,7 +20,7 @@ namespace Prover.Core.Services
         IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
 
         long GetNextCertificateNumber();
-        Task<Certificate> CreateCertificate(string testedBy, string verificationType, List<Instrument> instruments);
+        Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, List<Instrument> instruments);
         IEnumerable<Certificate> GetAllCertificates(Client client);
         IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
         IEnumerable<long> GetCertificateNumbers(Client client);
@@ -66,7 +66,7 @@ namespace Prover.Core.Services
             return last + 1;
         }
 
-        public async Task<Certificate> CreateCertificate(string testedBy, string verificationType,
+        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType,
             List<Instrument> instruments)
         {
             var client = instruments.First().Client;
@@ -79,7 +79,7 @@ namespace Prover.Core.Services
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
-                Number = GetNextCertificateNumber(),
+                Number =  number,
                 Instruments = new Collection<Instrument>()
             };
 
@@ -129,8 +129,7 @@ namespace Prover.Core.Services
 
                 var results = _instrumentStore.Query(x => x.CertificateId == null 
                         && x.ClientId == clientId
-                        && x.ArchivedDateTime == null)
-                    .OrderBy(x => x.TestDateTime);
+                        && x.ArchivedDateTime == null);
 
                 return results;
             }

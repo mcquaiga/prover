@@ -20,6 +20,12 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
+
+            <Style x:Key="LabelFontStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Style="{StaticResource TestSectionOuterBorder}">
@@ -36,8 +42,10 @@
 
             <StackPanel VerticalAlignment="Center"
                         Grid.Row="0">
-                <TextBlock FontSize="14" Margin="0"
-                           Text="{Binding TestDatePretty, FallbackValue='02/15/2017'}" />
+                <TextBlock Text="{Binding TestDatePretty, FallbackValue='02/15/2017'}"
+                           Foreground="{StaticResource SecondaryTextColor}"
+                           FontSize="14"                           
+                           FontWeight="DemiBold"/>
                 <TextBlock FontSize="28"
                            Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-AT}"
                            HorizontalAlignment="Center" Margin="0 10 0 5" />
@@ -46,12 +54,10 @@
                     <TextBlock FontWeight="UltraLight" Text=" | " />
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator, FallbackValue=Mechanical}"/>
                 </StackPanel>
-                <TextBlock FontSize="14"
-                           Margin="0 5 0 0"
+                <TextBlock Margin="0 5 0 0"
                            Text="{Binding Instrument.Client.Name, FallbackValue=''}"
                            HorizontalAlignment="Center" />
-                <TextBlock FontSize="14"
-                           Margin="0 5 0 0"
+                <TextBlock Margin="0 5 0 0"
                            Text="{Binding JobIdDisplay, FallbackValue='Job # Not Found'}"
                            HorizontalAlignment="Center" />
             </StackPanel>
@@ -75,17 +81,20 @@
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue='123456789'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Company Number" HorizontalAlignment="Center" />
+                            <TextBlock Text="Company Number" 
+                                       Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue='987654321'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Serial Number" HorizontalAlignment="Center" />
+                            <TextBlock Text="Serial Number" 
+                                       Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='2.68765'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Firmware Version" HorizontalAlignment="Center" />
+                            <TextBlock Text="Firmware Version" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                     </UniformGrid>
 
@@ -105,17 +114,20 @@
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding UnCorrectedMultiplierDescription, FallbackValue='N/A'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="UnCor. Units" HorizontalAlignment="Center" />
+                            <TextBlock Text="UnCor. Units"
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding CorrectedMultiplierDescription, FallbackValue='N/A'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Cor. Units" HorizontalAlignment="Center" />
+                            <TextBlock Text="Cor. Units" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding DriveRateDescription, FallbackValue='100 PSIA'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Drive Rate" HorizontalAlignment="Center" />
+                            <TextBlock Text="Drive Rate" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                     </UniformGrid>
                 </Grid>
@@ -138,11 +150,13 @@
                         <StackPanel>
                             <TextBlock Text="{Binding BaseTemperature, FallbackValue='60.0 F'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Base." HorizontalAlignment="Center" />
+                            <TextBlock Text="Base." 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="{Binding TemperatureRange}" HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Range" HorizontalAlignment="Center" />
+                            <TextBlock Text="Range" 
+                                       Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                     </UniformGrid>
                 </Grid>
@@ -163,17 +177,20 @@
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding BasePressure, FallbackValue='N/A'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Base" HorizontalAlignment="Center" />
+                            <TextBlock Text="Base" 
+                                       Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding AtmPressure, FallbackValue='N/A'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Atmospheric" HorizontalAlignment="Center" />
+                            <TextBlock Text="Atmospheric"
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding PressureRange, FallbackValue='100 PSIA'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Transducer Range" HorizontalAlignment="Center" />
+                            <TextBlock Text="Transducer Range" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                     </UniformGrid>
                 </Grid>
@@ -203,7 +220,8 @@
                             <TextBlock FontSize="12"
                                            Text="{Binding Instrument.PulseAScaling, FallbackValue='2'}"
                                            HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
+                            <TextBlock Text="Scaling" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <!--End Region-->
                         <StackPanel Margin="5" HorizontalAlignment="Center">
@@ -215,9 +233,10 @@
                                            HorizontalAlignment="Center" />
 
                             <TextBlock FontSize="12"
-                                           Text="{Binding Instrument.PulseBScaling, FallbackValue='2'}"
+                                        Text="{Binding Instrument.PulseBScaling, FallbackValue='2'}"
                                            HorizontalAlignment="Center" />
-                            <TextBlock FontSize="12" Text="Scaling" HorizontalAlignment="Center" />
+                            <TextBlock Text="Scaling" 
+                                       Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
 
                         <!--<StackPanel Margin="5" HorizontalAlignment="Center">

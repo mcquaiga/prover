@@ -42,22 +42,21 @@
                       Grid.Row="0"
                       Margin="8"
                       HorizontalAlignment="Center"/>
-        <!--<CheckBox IsChecked="{Binding Path=IsSelected}"
-                  Grid.Column="0"
-                  Grid.Row="0"
-                  Margin="8"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Style="{StaticResource MaterialDesignAccentCheckBox}"/>-->
         
         <Viewbox Grid.Row="0"
                  Grid.Column="1"
                  Stretch="UniformToFill"
                  StretchDirection="Both">
-             <ContentControl Grid.Row="0"
-                        Grid.Column="1"
-                        HorizontalAlignment="Stretch"
-                        cal:View.Model="{Binding VerificationView}" />
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding VerificationView.DateTimePretty}"
+                           Margin="12 0"
+                           FontSize="10"
+                           FontWeight="DemiBold"
+                           Foreground="{StaticResource SecondaryTextColor}"/>
+                <ContentControl 
+                                HorizontalAlignment="Stretch"
+                                cal:View.Model="{Binding VerificationView}" />
+            </StackPanel>
         </Viewbox>
        
 

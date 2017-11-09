@@ -57,6 +57,14 @@
                             <TextBlock Text="{Binding Client.Address}"
                                        TextWrapping="WrapWithOverflow"
                                        FontSize="10" />
+                            <TextBlock Text="Reg. #:">
+                                <TextBlock Text="{Binding Client.RegistrationNumber}"
+                                           TextWrapping="WrapWithOverflow"
+                                           FontSize="10" />
+                            </TextBlock>
+                          
+
+
                         </StackPanel>
                     </materialDesign:Card>
 
@@ -124,6 +132,7 @@
                                        HorizontalAlignment="Center"
                                        Foreground="{StaticResource PrimaryTextColor}"
                                        FontSize="8"/>
+
                         </StackPanel>
                     </Grid>
 
@@ -145,30 +154,45 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Width="36"
                                        Margin="4"
-                                       VerticalAlignment="Top"
+                                       VerticalAlignment="Center"
                                        Source="Resources/crwall_logo.jpg" />
                                 <TextBlock Margin="4 2"
-                                           Grid.Column="1">
+                                           Grid.Column="1"
+                                           >
                                     <TextBlock FontWeight="DemiBold">
                                         C.R. Wall and Co. Inc.
-                                    </TextBlock>
-                                    <LineBreak />
+                                    </TextBlock><LineBreak />
                                     55 Thompson Dr. <LineBreak />
-                                    Cambridge, Ontario<LineBreak />
-                                    N1T 2E4
+                                    Cambridge, ON
+                                    N1T 2E4 <LineBreak/>
+                                    M.C. Reg. #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
+                                    District: London
                                 </TextBlock>
+
+                                <!--<StackPanel Margin="2 2"
+                                            HorizontalAlignment="Left"
+                                            Grid.Row="2"
+                                            Grid.Column="2">
+                                    <TextBlock FontSize="10" 
+                                               HorizontalAlignment="Right"
+                                               Text="{Binding MCRegistrationNumber}" />
+                                    <TextBlock Foreground="{StaticResource PrimaryTextColor}"
+                                               FontSize="8"
+                                               VerticalAlignment="Bottom"
+                                               HorizontalAlignment="Right"
+                                               Text="M.C. Reg. #: "/>
+                                </StackPanel>-->
                                 <!--<StackPanel Orientation="Vertical"
                                             Margin="2 2"
                                             Grid.Column="1"
                                             HorizontalAlignment="Left">
                                     <TextBlock FontSize="10"
-                                               Text="MC Registration #: ">
-                                        <TextBlock FontSize="10"
+                                               Text="M.C. Reg. #: ">
+                                        <TextBlock FontSize="10" 
                                                    Text="XXXXX" />
                                     </TextBlock>
 
-                                    <TextBlock FontSize="10"
-                                               Text="District: London"/>
+                                   
                                 </StackPanel>-->
 
 

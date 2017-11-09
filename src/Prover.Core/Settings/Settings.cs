@@ -22,6 +22,7 @@ namespace Prover.Core.Settings
             Manual
         }
 
+        public string McRegistrationNumber { get; set; } = string.Empty;
         public string MeasurementApparatus { get; set; } = string.Empty;
         public bool StabilizeLiveReadings { get; set; }
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
