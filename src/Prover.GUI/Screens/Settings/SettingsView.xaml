@@ -50,6 +50,12 @@
                                     Margin="16">
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
+                                <TextBlock Text="M.C. Registration #" 
+                                           Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
+                                <TextBox Text="{Binding Settings.TestSettings.McRegistrationNumber}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical"
+                                        Margin="0 8">
                                 <TextBlock Text="Measurement Apparatus" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
                                 <TextBox Text="{Binding Settings.TestSettings.MeasurementApparatus}" />

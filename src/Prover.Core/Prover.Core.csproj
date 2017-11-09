@@ -111,6 +111,10 @@
     <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
       <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.cs" />
+    <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.Designer.cs">
+      <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -354,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711010030152_Indexes.resx">
       <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711091434443_AddClientRegisterationNumber.resx">
+      <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
