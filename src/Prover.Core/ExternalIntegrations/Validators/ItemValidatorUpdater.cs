@@ -19,42 +19,5 @@ namespace Prover.Core.ExternalIntegrations.Validators
     {
         Task<object> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
     }
-    //    private readonly IValidator _validator;
-    //{
-
-    //public abstract class ItemValidatorUpdater
-    //    private readonly IUpdater _updater;
-    //    private readonly IGetValue _getter;
-
-    //    protected ItemValidatorUpdater(IValidator validator, IUpdater updater, IGetValue getter)
-    //    {
-    //        _validator = validator;
-    //        _updater = updater;
-    //        _getter = getter;
-    //    }
-
-    //    public async Task Run(EvcCommunicationClient commClient, Instrument instrument)
-    //    {
-    //        bool isValid = false;
-
-    //        do
-    //        {
-    //            isValid = await _validator.Validate(commClient, instrument);
-
-    //            if (!isValid)
-    //            {
-
-    //            }
-    //        } while (!isValid);
-
-    //        if (!isValid)
-    //        {
-
-    //        }
-    //    }
-
-    //    public abstract Task<bool> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
-    //    public abstract Task<bool> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument);
-    //    public abstract string GetValue();
-    //}
+   
 }

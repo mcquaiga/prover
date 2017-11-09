@@ -26,8 +26,6 @@ namespace Prover.Core.Exports
 
     public class ExportToCsvManager : IExportCertificate
     {
-        private static readonly string CertificatesExportDirectory = $"{AppDomain.CurrentDomain.BaseDirectory}\\Certificates\\";
-
         private readonly ICertificateService _certificateService;
         private readonly TestRunService _testRunService;
 
@@ -111,7 +109,7 @@ namespace Prover.Core.Exports
 
         private static string GetFilePath(string exportDirPath, Certificate certificate, Client client)
         {
-            var fileName = $"certificate_{client.Name}_{certificate.Number}.csv";
+            var fileName = $"Instr_CR Wall_{certificate.Number}_{certificate.CreatedDateTime:MMddyyyy}.csv";
             if (!Directory.Exists(exportDirPath)) Directory.CreateDirectory(exportDirPath);
 
             return $"{exportDirPath}\\{fileName}";

@@ -50,6 +50,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
                 client => _certificateService
                             .GetInstrumentsWithNoCertificate(client.Id)
+                            .OrderBy(x => x.SerialNumber)
                             .ToObservable()                            
                             .DefaultIfEmpty(null));
 
@@ -77,7 +78,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             ResultFilteredItems = RootResults.CreateDerivedCollection(
                 x => x, 
                 x => x.IsDisplayed, 
-                (x, y) => x.Instrument.SerialNumber.CompareTo(y.Instrument.SerialNumber)); 
+                (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime)); 
             
             ResultFilteredItems.ChangeTrackingEnabled = true;
 
@@ -116,7 +117,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             FetchNextCertificateNumberCommand = ReactiveCommand.Create(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
-                .ToProperty(this, x => x.NextCertificateNumber, out _nextCertificateNumber);
+                .Subscribe(x => NextCertificateNumber = x);
+               
             FetchNextCertificateNumberCommand.ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
 
@@ -144,7 +146,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 .Where(c => c != null);
 
             selectedClientChange
-                .Delay(TimeSpan.FromMilliseconds(25))
+                .Delay(TimeSpan.FromMilliseconds(50))
                 .Subscribe(client =>
                 {
                     LoadInstrumentsCommand.Execute(client).Wait();
@@ -235,8 +237,15 @@ namespace Prover.GUI.Modules.Certificates.Screens
             set => this.RaiseAndSetIfChanged(ref _blankStateText, value);
         }
 
-        private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
-        public long NextCertificateNumber => _nextCertificateNumber.Value;
+        //private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
+        //public long NextCertificateNumber => _nextCertificateNumber.Value;
+
+        private long _nextCertificateNumber;
+        public long NextCertificateNumber
+        {
+            get => _nextCertificateNumber;
+            set => this.RaiseAndSetIfChanged(ref _nextCertificateNumber, value);
+        }
 
         private ReactiveList<Certificate> _existingClientCertificates = new ReactiveList<Certificate>();
         public ReactiveList<Certificate> ExistingClientCertificates
@@ -334,6 +343,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 MessageBox.Show("Cannot have multiple clients on the same certificate.");
 
             var certificate = await _certificateService.CreateCertificate(
+                    NextCertificateNumber,
                     SelectedTestedBy, 
                     SelectedVerificationType, 
                     instruments);            

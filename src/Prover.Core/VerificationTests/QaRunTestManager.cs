@@ -16,7 +16,7 @@ using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
-using Prover.Core.Storage;
+using Prover.Core.VerificationTests.PreTestActions;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 using LogManager = NLog.LogManager;
@@ -26,7 +26,6 @@ namespace Prover.Core.VerificationTests
     public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-
         IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
@@ -48,7 +47,6 @@ namespace Prover.Core.VerificationTests
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly TachometerService _tachometerService;
         private readonly Subject<string> _testStatus = new Subject<string>();
-
         private readonly IEnumerable<IPreTestValidation> _validators;
         private readonly IEnumerable<IPostTestAction> _postTestCommands;
 
@@ -71,9 +69,7 @@ namespace Prover.Core.VerificationTests
         }
 
         public VolumeTestManager VolumeTestManager { get; set; }
-
         public IObservable<string> TestStatus => _testStatus.AsObservable();
-
         public Instrument Instrument { get; private set; }
 
         public async Task InitializeTest(InstrumentType instrumentType, CancellationToken ct, Client client = null)
@@ -81,7 +77,7 @@ namespace Prover.Core.VerificationTests
             try
             {
                 ct.ThrowIfCancellationRequested();
-                
+
                 _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
 
                 await ConnectToInstrument(ct);
@@ -89,45 +85,41 @@ namespace Prover.Core.VerificationTests
 
                 _testStatus.OnNext("Downloading items...");
                 var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+                Instrument = new Instrument(instrumentType, items, client);                
+
+                await RunVerifiers();
 
                 await DisconnectFromInstrument();
 
-                Instrument = new Instrument(instrumentType, items, client);
-
                 if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
-                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType == TestSettings.VolumeTestType.Manual)
-                {
-                    VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
-                }
+                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
+                    TestSettings.VolumeTestType.Manual)
+                    VolumeTestManager =
+                        new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
                 else
-                {
-                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _tachometerService);
-                }
+                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient,
+                        Instrument.VolumeTest, _tachometerService);
 
-                await RunVerifiers();
+                
             }
             catch (Exception ex)
             {
                 _communicationClient.Dispose();
                 Log.Error(ex);
                 throw;
-            }            
+            }
         }
 
         private async Task DisconnectFromInstrument()
         {
             if (_communicationClient.IsConnected)
-            {
                 await _communicationClient.Disconnect();
-            }
         }
 
         private async Task ConnectToInstrument(CancellationToken ct)
         {
             if (!_communicationClient.IsConnected)
-            {                
                 await _communicationClient.Connect(ct);
-            }
         }
 
         public async Task RunCorrectionTest(int level, CancellationToken ct)
@@ -140,7 +132,8 @@ namespace Prover.Core.VerificationTests
                 if (SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings)
                 {
                     _testStatus.OnNext($"Stabilizing live readings...");
-                    await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct);
+                    await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level,
+                        ct);
                 }
 
                 await DownloadVerificationTestItems(level, ct);
@@ -162,12 +155,10 @@ namespace Prover.Core.VerificationTests
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)
-                    {
                         await command.Execute(_communicationClient, Instrument, _testStatus);
-                    }
                 }
             }
-            catch (OperationCanceledException) 
+            catch (OperationCanceledException)
             {
                 _testStatus.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");
@@ -206,8 +197,8 @@ namespace Prover.Core.VerificationTests
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
-            await ConnectToInstrument(ct);            
-            
+            await ConnectToInstrument(ct);
+
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
                 _testStatus.OnNext($"Downloading P & T items...");

@@ -2,6 +2,7 @@
 using System.Linq;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
+using Prover.Core.Settings;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using ReactiveUI;
@@ -27,7 +28,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
 
         public Certificate Certificate { get; set; }
 
-        public string MeasurementApparatus => "902349, 983378, 1232222, 988889, 0987767";
+        public string McRegistrationNumber => SettingsManager.SettingsInstance.TestSettings.McRegistrationNumber;
 
         public string CertificateDate => $"{Certificate.CreatedDateTime:dd/MM/yyyy}";
 

@@ -108,7 +108,7 @@
                         Visibility="{Binding DisplayHelpBlankState, Converter={StaticResource BoolToVisible}}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="ClipboardCheck"
+                    <materialDesign:PackIcon Kind="ClipboardAlert"
                                              Foreground="{StaticResource BorderBrushColor}"
                                              Width="112"
                                              Height="112"
@@ -185,14 +185,14 @@
                                              Kind="Pound"
                                              Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
 
-                    <TextBlock x:Name="NextCertificateNumberTextBlock"
-                               Text="{Binding NextCertificateNumber, FallbackValue=5}"
+                    <TextBox x:Name="NextCertificateNumberTextBlock"
+                               Text="{Binding NextCertificateNumber}"
                                materialDesign:HintAssist.Hint="Next Certificate Number"
-                               Style="{StaticResource MaterialDesignBody1TextBlock}"
                                HorizontalAlignment="Stretch"
                                Grid.Row="0"
                                Margin="4"
                                Grid.Column="1" />
+                    
                     <materialDesign:PackIcon Grid.Column="0"
                                              Grid.Row="1"
                                              Kind="Account"

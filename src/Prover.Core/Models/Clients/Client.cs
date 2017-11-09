@@ -14,6 +14,7 @@ namespace Prover.Core.Models.Clients
 
         public string Name { get; set; }
         public string Address { get; set; }
+        public string RegistrationNumber { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public DateTime? ArchivedDateTime { get; set; }
 
