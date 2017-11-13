@@ -64,7 +64,7 @@
           "shortDescription": "Corr Vol Units",
           "description": "Corrected Volume Units",
           "isVolume": "true",
-          "value": [
+          "values": [
             {
               "id": "0",
               "description": "CF",
@@ -133,7 +133,7 @@
           "shortDescription": "Uncorr Volume Units",
           "description": "UnCorrected Volume Units",
           "isVolume": "true",
-          "value": [
+          "values": [
             {
               "id": "0",
               "description": "CF",
@@ -202,7 +202,7 @@
           "shortDescription": "Meter Index Rate",
           "description": "Meter Index Rate",
           "isVolume": "true",
-          "value": [
+          "values": [
             {
               "id": "0",
               "description": "Rotary",
