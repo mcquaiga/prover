@@ -10,7 +10,7 @@
       "shortDescription": "Meter Input Volume Mode",
       "description": "Input Volume Mode",
       "isVolume": "true",
-      "value": [
+      "values": [
         {
           "id": "0",
           "description": "ID Drive Input"
