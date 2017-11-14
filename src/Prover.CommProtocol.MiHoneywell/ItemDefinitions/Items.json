@@ -681,6 +681,35 @@
       "isVolumeTest": "true"
     },
     {
+      "number": "115",
+      "code": "PULSE_OUTPUT_WAITING",
+      "shortDescription": "Pulse Output Waiting",
+      "description": "Pulse Output Waiting",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "numericvalue": "0.0625"
+        },
+        {
+          "id": "1",
+          "numericvalue": "0.500"
+        },
+        {
+          "id": "2",
+          "numericvalue": "1.000"
+        },
+        {
+          "id": "3",
+          "numericvalue": "0.125"
+        },
+        {
+          "id": "4",
+          "numericvalue": "0.250"
+        }
+      ] 
+    },
+    {
       "number": "122",
       "code": "FIRMWARE",
       "shortDescription": "Firm. Ver.",
