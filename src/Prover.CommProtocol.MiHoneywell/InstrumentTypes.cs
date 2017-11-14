@@ -13,6 +13,14 @@ namespace Prover.CommProtocol.MiHoneywell
             ItemFilePath = "MiniATItems.xml"
         };
 
+        public static InstrumentType Toc = new InstrumentType
+        {
+            Id = 33,
+            AccessCode = 3,
+            Name = "Turbo Corrector",
+            ItemFilePath = "TOC_Items.xml"
+        };
+
         public static InstrumentType MiniMax = new InstrumentType
         {
             Id = 4,
