@@ -132,8 +132,7 @@ namespace Prover.Core.VerificationTests
                 if (SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings)
                 {
                     _testStatus.OnNext($"Stabilizing live readings...");
-                    await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level,
-                        ct);
+                    await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct, _testStatus);
                 }
 
                 await DownloadVerificationTestItems(level, ct);
