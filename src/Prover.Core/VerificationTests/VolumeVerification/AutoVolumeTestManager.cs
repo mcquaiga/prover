@@ -27,6 +27,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
             FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
 
+            FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+            FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 

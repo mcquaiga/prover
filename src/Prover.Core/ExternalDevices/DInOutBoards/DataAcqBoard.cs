@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using MccDaq;
 using NLog;
 
@@ -6,12 +9,31 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 {
     public class DataAcqBoard : IDisposable, IDInOutBoard
     {
+        private enum MotorValues
+        {
+            Start = 1023,
+            Stop = 0
+        }
+
+        private enum OutputPorts
+        {
+            DaOut0 = 0,
+            DaOut1 = 1
+        }
+
+        private enum SignalValues
+        {
+            On = 254,
+            Off = 255
+        }
+
+        private const decimal PulseTimingDefaultSeconds = 0.0625m;
         private readonly int _channelNum;
         private readonly DigitalPortType _channelType;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         private MccBoard _board;
-        private bool _pulseIsCleared;
+        private bool _isPulseWaitTimeOver;
         private ErrorInfo _ulStatErrorInfo;
 
         public DataAcqBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
@@ -23,9 +45,12 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             _channelType = channelType;
             _channelNum = channelNumber;
 
-            _pulseIsCleared = true;
+            _isPulseWaitTimeOver = true;
             _log.Info("Initialized DataAcqBoard: {0}, channel type {1}, channel number {2}", boardNumber, channelType, channelNumber);
+
         }
+
+        public decimal PulseTiming { get; set; } = PulseTimingDefaultSeconds;
 
         public void StartMotor()
         {
@@ -39,36 +64,42 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public int ReadInput()
         {
-            short value = 0;
+            var pulseOutputWaitTimeSpan = TimeSpan.FromMilliseconds(Convert.ToDouble(PulseTiming) * 1000);
 
-            var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex,
-                FunctionType.AiFunction);
+            var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex, FunctionType.AiFunction);
             if (boardStatus.Value != ErrorInfo.ErrorCode.NoErrors)
             {
                 throw new Exception("DAQ board could not be found or is not configured correctly.");
             }
 
+            short value = 0;
             _ulStatErrorInfo = _board.DIn(_channelType, out value);
 
-            if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
+            if (_isPulseWaitTimeOver && _ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
-                if (value != 255)
+                if ((SignalValues) value != SignalValues.Off)
                 {
-                    if (_pulseIsCleared)
-                    {
-                        _log.Trace($"Pulse value read -> value = {value}");
-                        _pulseIsCleared = false;
-                        return 1;
-                    }
-                }
-                else
-                {
-                    _pulseIsCleared = true;
+                    _log.Trace($"Pulse value read -> value = {value}");
+                    Task.Run(() =>
+                        {
+                            _isPulseWaitTimeOver = false;
+
+                            var watch = Stopwatch.StartNew();
+                            Thread.Sleep(pulseOutputWaitTimeSpan);
+                            return watch;
+                        })
+                        .ContinueWith(watch =>
+                        {
+                            _isPulseWaitTimeOver = true;
+                            _log.Trace($@"Pulse Output Wait Time over - Channel: {this._channelNum} in { watch.Result.ElapsedMilliseconds} ms");
+                        });
+
+                    return 1;
                 }
             }
             else
             {
-                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
+                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors)
                     _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
             }
             return 0;         
@@ -89,18 +120,6 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors &&
                 _ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
                 _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo.Message);
-        }
-
-        private enum MotorValues
-        {
-            Start = 1023,
-            Stop = 0
-        }
-
-        private enum OutputPorts
-        {
-            DaOut0 = 0,
-            DaOut1 = 1
-        }
+        }        
     }
 }
