@@ -37,6 +37,8 @@ namespace Prover.GUI.Screens.Settings
             set { this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value); }
         }
 
+        public Core.Settings.Settings Settings => SettingsManager.SettingsInstance;
+
         public dynamic WindowSettings
         {
             get

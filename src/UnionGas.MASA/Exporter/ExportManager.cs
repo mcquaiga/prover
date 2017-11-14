@@ -60,8 +60,12 @@ namespace UnionGas.MASA.Exporter
         {
             try
             {
+                var items = evcQaRuns.ToArray();
+
+                if (!items.Any()) throw new ArgumentOutOfRangeException(nameof(evcQaRuns));
+
                 var request =
-                    new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(evcQaRuns.ToArray()));
+                    new SubmitQAEvcTestResultsRequest(new SubmitQAEvcTestResultsRequestBody(items));
 
                 var result = await _dcrWebService.SubmitQAEvcTestResultsAsync(request);
 

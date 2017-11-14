@@ -5,16 +5,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Name="parent"
-             xmlns:local="clr-namespace:Prover.GUI.Common.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls">
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ImageSource x:Key="PassIcon">..\Resources\success.png</ImageSource>
-            <ImageSource x:Key="FailIcon">..\Resources\error_36.png</ImageSource>
             <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+
+            <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Passed}" Value="True">
+                        <Setter Property="Kind" Value="Check" />
+                        <Setter Property="Foreground" Value="{StaticResource PassColour}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Passed}" Value="False">
+                        <Setter Property="Kind" Value="AlertCircleOutline" />
+                        <Setter Property="Foreground" Value="{StaticResource FailColour}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <!---->
@@ -24,9 +33,14 @@
                 <ColumnDefinition Width="42" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Background="{Binding Path=IconBackground}">
+            <materialDesign:PackIcon Style="{StaticResource PassFailIcon}"                         
+                Width="36" 
+                Height="36"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <!--<Grid Grid.Column="0" Background="{Binding Path=IconBackground}">
                 <Image x:Name="Icon" Source="{Binding Path=IconSource}" Width="36" Height="36" />
-            </Grid>
+            </Grid>-->
             <Grid Grid.Column="1" Margin="6 0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <TextBlock Text="{Binding Path=DisplayValue}"

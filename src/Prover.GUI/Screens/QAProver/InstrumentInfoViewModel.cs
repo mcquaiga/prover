@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
@@ -43,7 +44,7 @@ namespace Prover.GUI.Screens.QAProver
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
-        public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
+        public string TestDatePretty => $"{Instrument.TestDateTime:g}"; //MMMM d, yyyy h:mm tt
 
         public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
@@ -57,6 +58,8 @@ namespace Prover.GUI.Screens.QAProver
                 NotifyOfPropertyChange(() => Instrument);
             }
         }
+
+        public bool DisplayEventLogCommPortView => Instrument.InstrumentType == Instruments.MiniAt;
 
         public bool CommPortChecked
         {

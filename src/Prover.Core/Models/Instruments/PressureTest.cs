@@ -14,7 +14,7 @@ namespace Prover.Core.Models.Instruments
     public sealed class PressureTest : BaseVerificationTest
     {
         
-        private const decimal DefaultAtmGauge = 14.0m;
+        private const decimal DefaultAtmGauge = 0m;
 
         public PressureTest()
         {
@@ -36,8 +36,8 @@ namespace Prover.Core.Models.Instruments
                     AtmosphericGauge = VerificationTest.Instrument.Items.GetItem(14).NumericValue;
                     break;
                 case TransducerType.Absolute:
-                    AtmosphericGauge = DefaultAtmGauge;
-                    GasGauge = TotalGauge - AtmosphericGauge;
+                    AtmosphericGauge = null;
+                    GasGauge = TotalGauge - (AtmosphericGauge ?? 0);
                     break;
             }
         }
@@ -51,7 +51,6 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-
                 var result = 0m;
                 switch (VerificationTest?.Instrument?.Transducer)
                 {

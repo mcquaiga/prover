@@ -36,7 +36,7 @@ namespace Prover.GUI.Common
         void ShowWindow(ViewModelBase dialogViewModel);
     }
 
-    public class ScreenManager : IScreenManager, IScreen
+    public class ScreenManager : IScreenManager
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
@@ -45,11 +45,6 @@ namespace Prover.GUI.Common
         {
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
-        }
-
-        public RoutingState Router
-        {
-            get { throw new NotImplementedException(); }
         }
 
         public async Task GoHome()

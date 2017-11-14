@@ -4,24 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontSize="24"
-             TextElement.FontWeight="Light"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              cal:Bind.AtDesignTime="True"
-             mc:Ignorable="d"
-             d:DesignHeight="79" d:DesignWidth="200">
-    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-        <CheckBox x:Name="EventLogChecked" VerticalContentAlignment="Center"
-            Style="{StaticResource MaterialDesignCheckBox}" Margin="0 0 8 8" VerticalAlignment="Center">
-            Event Log
-        </CheckBox>
-        <CheckBox x:Name="CommPortChecked" VerticalContentAlignment="Center"
-            Style="{StaticResource MaterialDesignCheckBox}" Margin="0 0 8 8" VerticalAlignment="Center">
-            Comm. Port
-        </CheckBox>
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MaterialDesignLightCheckBox}">
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontWeight" Value="Light"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border BorderThickness="0 1 0 0"
+            BorderBrush="#747474"
+            Margin="0">
+    <StackPanel Orientation="Vertical"
+                Margin="4 2"
+                VerticalAlignment="Center">
+        <CheckBox x:Name="EventLogChecked"
+                  Content="Event Log" />
+
+        <CheckBox x:Name="CommPortChecked"
+                  Content="Comm. Port" />
     </StackPanel>
+    </Border>
+
 </UserControl>

@@ -111,8 +111,8 @@
       <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ReactiveUI, Version=7.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\reactiveui-core.7.2.0\lib\Net45\ReactiveUI.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI.Autofac, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.Autofac.6.5.0\lib\net452\ReactiveUI.Autofac.dll</HintPath>
@@ -174,6 +174,7 @@
     <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Events\TestProgressEvent.cs" />
+    <Compile Include="Extensions\PredicateBuilder.cs" />
     <Compile Include="Extensions\PressureHelpers.cs" />
     <Compile Include="Extensions\SuperFactorExtensions.cs" />
     <Compile Include="Extensions\TemperatureHelpers.cs" />

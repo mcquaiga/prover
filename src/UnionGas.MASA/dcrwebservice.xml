@@ -1431,10 +1431,10 @@
   <wsdl:service name="DCRWebService">
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
     <wsdl:port name="DCRWebServiceSoap" binding="tns:DCRWebServiceSoap">
-      <soap:address location="http://dosdev/uniongas.dcrwebservice/dcrwebservice.asmx" />
+      <soap:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
     </wsdl:port>
     <wsdl:port name="DCRWebServiceSoap12" binding="tns:DCRWebServiceSoap12">
-      <soap12:address location="http://dosdev/uniongas.dcrwebservice/dcrwebservice.asmx" />
+      <soap12:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
