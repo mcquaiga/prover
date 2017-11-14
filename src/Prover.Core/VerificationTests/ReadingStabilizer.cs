@@ -11,13 +11,13 @@ using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Enums;
 using LogManager = NLog.LogManager;
+using System.Reactive.Subjects;
 
 namespace Prover.Core.VerificationTests
 {
     public interface IReadingStabilizer
     {
-        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level,
-            CancellationToken ct);
+        Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct, Subject<string> statusUpdates);
     }
 
     public class AverageReadingStabilizer : IReadingStabilizer
@@ -31,13 +31,13 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; set; }
 
-        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument,
-            int level, CancellationToken ct)
+        public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct, Subject<string> statusUpdates)
         {
             try
             {
                 var liveReadItems = GetLiveReadItemNumbers(instrument, level);
                 await commClient.Connect(ct);
+                statusUpdates.OnNext("Waiting for readings to stabilize...");
                 ct.ThrowIfCancellationRequested();
                 do
                 {

@@ -80,7 +80,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 this.WhenAnyValue(x => x.CorrectedPulseCount)
                     .Subscribe(value =>
                     {
-                        Volume.UncPulseCount = value;
+                        Volume.CorPulseCount = value;
                         EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     });
             }
