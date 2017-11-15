@@ -19,7 +19,7 @@ namespace UnionGas.MASA.Exporter
 {
     public static class Translate
     {
-        private const int ProverNumberId = 238;
+        private const int ProverNumberId = 239;
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static QARunEvcTestResult RunTranslationForExport(Instrument instrument)
