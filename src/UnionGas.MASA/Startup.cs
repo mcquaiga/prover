@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Login;
 using Prover.Core.VerificationTests.TestActions;
@@ -13,8 +14,9 @@ namespace UnionGas.MASA
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient()).As<DCRWebServiceSoap>();
-
+            var assembly = Assembly.GetExecutingAssembly();
+            
+            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
             //Login service
             builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
 
