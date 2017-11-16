@@ -17,7 +17,7 @@ namespace Prover.CommProtocol.MiHoneywell
         {
             Id = 33,
             AccessCode = 3,
-            Name = "Turbo Corrector",
+            Name = "TOC",
             ItemFilePath = "TOCItems.xml"
         };
 
