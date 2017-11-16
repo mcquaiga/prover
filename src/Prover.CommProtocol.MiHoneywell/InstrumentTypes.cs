@@ -18,7 +18,7 @@ namespace Prover.CommProtocol.MiHoneywell
             Id = 33,
             AccessCode = 3,
             Name = "Turbo Corrector",
-            ItemFilePath = "TOC_Items.xml"
+            ItemFilePath = "TOCItems.xml"
         };
 
         public static InstrumentType MiniMax = new InstrumentType
@@ -34,7 +34,8 @@ namespace Prover.CommProtocol.MiHoneywell
             return new List<InstrumentType>
             {
                 MiniAt,
-                MiniMax
+                MiniMax,
+                Toc
             };
         }
     }
