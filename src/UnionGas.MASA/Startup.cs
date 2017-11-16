@@ -14,14 +14,11 @@ namespace UnionGas.MASA
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
+
             //Login service
             builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
-
             builder.RegisterType<CompanyNumberValidationManager>().As<IPreTestValidation>();
-
             builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
            
         }
