@@ -64,7 +64,6 @@ namespace Prover.Core.Models.Instruments
 
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
-
             for (var i = 0; i < 3; i++)
             {
                 var verificationTest = new VerificationTest(i, this);
@@ -83,7 +82,13 @@ namespace Prover.Core.Models.Instruments
                 }
 
                 if (i == defaultVolumeTestNumber)
+                {
                     verificationTest.VolumeTest = new VolumeTest(verificationTest);
+                    if (InstrumentType.Name == "TOC")
+                    {
+                        verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
+                    }
+                }
 
                 VerificationTests.Add(verificationTest);
             }

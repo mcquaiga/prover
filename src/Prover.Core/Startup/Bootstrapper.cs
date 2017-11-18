@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using Akavache;
 using Autofac;
 using Caliburn.Micro;
@@ -43,11 +44,11 @@ namespace Prover.Core.Startup
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
-            Builder.RegisterType<AutoVolumeTestManagerBase>().As<VolumeTestManagerBase>();
+            Builder.RegisterType<AutoVolumeTestManager>().As<VolumeTestManager>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
-            SettingsManager.RefreshSettings();
+            Task.Run(SettingsManager.RefreshSettings);
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

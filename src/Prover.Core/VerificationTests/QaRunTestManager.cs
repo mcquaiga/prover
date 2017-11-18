@@ -40,7 +40,7 @@ namespace Prover.Core.VerificationTests
             IInstrumentStore<Instrument> instrumentStore,
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
-            VolumeTestManagerBase volumeTestManager,
+            VolumeTestManager volumeTestManager,
             IValidator validator,
             IEvcItemReset itemResetter = null
         )
@@ -55,7 +55,7 @@ namespace Prover.Core.VerificationTests
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
 
-        public VolumeTestManagerBase VolumeTestManager { get; set; }
+        public VolumeTestManager VolumeTestManager { get; set; }
 
         public void Dispose()
         {

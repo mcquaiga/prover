@@ -11,7 +11,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public abstract class VolumeTestManagerBase : IDisposable
+    public abstract class VolumeTestManager : IDisposable
     {
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
@@ -22,7 +22,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected bool RequestStopTest;
         protected CancellationTokenSource TestCancellationToken;
 
-        protected VolumeTestManagerBase(
+        protected VolumeTestManager(
             IEventAggregator eventAggregator)
         {
             Log = LogManager.GetCurrentClassLogger();
@@ -81,9 +81,5 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public abstract void Dispose();
 
-    }
-
-    public interface IPulseInputService
-    {
     }
 }

@@ -242,11 +242,15 @@
     <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711180029595_Add-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711180029595_Add-FrequencyTests.Designer.cs">
+      <DependentUpon>201711180029595_Add-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
+    <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
@@ -286,7 +290,8 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManagerBase.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">
@@ -356,6 +361,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711180029595_Add-FrequencyTests.resx">
+      <DependentUpon>201711180029595_Add-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,13 +13,13 @@ namespace Prover.CommProtocol.Common.Items
         public bool? IsPressure { get; set; }
         public bool? IsPressureTest { get; set; }
         public bool? IsTemperature { get; set; }
-        public bool? IsTemperatureTest { get; set; }
+        public bool? IsTemperatureTest { get; set; }      
+        public bool? IsSuperFactor { get; set; }
         public bool? IsVolume { get; set; }
         public bool? IsVolumeTest { get; set; }
-        public bool? IsSuperFactor { get; set; }
+        public bool? IsFrequencyTest { get; set; }
 
-        public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
-
+        public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }        
         public class ItemDescription
         {
             public int Id { get; set; } //Maps to the Id that the instrument uses

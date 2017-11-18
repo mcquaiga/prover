@@ -10,12 +10,12 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManagerBase : VolumeTestManagerBase
+    public sealed class AutoVolumeTestManager : VolumeTestManager
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManagerBase(IEventAggregator eventAggregator, TachometerService tachComm)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
             : base(eventAggregator)
         {
             _tachometerCommunicator = tachComm;
@@ -58,8 +58,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             IEvcItemReset evcTestItemReset)
         {
             await commClient.Connect();
-            if (evcTestItemReset != null) await evcTestItemReset.PreReset(commClient);
+
+            if (evcTestItemReset != null)
+                await evcTestItemReset.PreReset(commClient);
+
             volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+
+            if (volumeTest.VerificationTest.FrequencyTest != null)
+            {
+                volumeTest.VerificationTest.FrequencyTest.Items = await commClient.GetItemValues(commClient.ItemDetails.FrequencyTestItems());
+            }
+
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -109,6 +118,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     await commClient.Connect();
                     volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+
+                    if (volumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        volumeTest.VerificationTest.FrequencyTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.FrequencyTestItems());
+                    }
+
                     if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset(commClient);
                 }
                 finally

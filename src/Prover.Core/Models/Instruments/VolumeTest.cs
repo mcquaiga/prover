@@ -35,6 +35,8 @@ namespace Prover.Core.Models.Instruments
 
         public IDriveType DriveType { get; set; }
 
+        [NotMapped]
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
         public string TestInstrumentData
         {
             get { return AfterTestItems.Serialize(); }
@@ -43,15 +45,14 @@ namespace Prover.Core.Models.Instruments
 
         public Instrument Instrument => VerificationTest.Instrument;
 
-        [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
+        
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
         {
             get
             {
-                if ((EvcUncorrected != null) && (TrueUncorrected != 0) && TrueUncorrected.HasValue)
+                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
                     var o = (EvcUncorrected - TrueUncorrected)/TrueUncorrected;
                     if (o != null)
@@ -70,7 +71,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if ((EvcCorrected != null) && (TrueCorrected != 0) && (TrueCorrected != null))
+                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
                 {
                     var o = (EvcCorrected - TrueCorrected)/TrueCorrected*100;
                     if (o != null)
@@ -147,13 +148,13 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.T) &&
-                    (VerificationTest.TemperatureTest != null))
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.T &&
+                    VerificationTest.TemperatureTest != null)
                     return VerificationTest.TemperatureTest.ActualFactor*
                            DriveType.UnCorrectedInputVolume(AppliedInput);
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.P) &&
-                    (VerificationTest.PressureTest != null))
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.P &&
+                    VerificationTest.PressureTest != null)
                     return VerificationTest.PressureTest.ActualFactor*
                            DriveType.UnCorrectedInputVolume(AppliedInput);
 
@@ -182,18 +183,20 @@ namespace Prover.Core.Models.Instruments
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
                 DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
             
-            if ((DriveType == null) && (DriveTypeDiscriminator != null) && (VerificationTest != null))
+            if (DriveType == null && VerificationTest != null)
+            {
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
-                        DriveType = new RotaryDrive(this.Instrument);
+                        DriveType = new RotaryDrive(Instrument);
                         break;
                     case "Mechanical":
                         DriveType = new MechanicalDrive(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }
+                }               
+            }
             else
             {
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
