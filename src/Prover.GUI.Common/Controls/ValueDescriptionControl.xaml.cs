@@ -20,12 +20,12 @@ namespace Prover.GUI.Common.Controls
         // Using a DependencyProperty as the backing store for Size.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LabelFontSizeProperty =
             DependencyProperty.Register(nameof(LabelFontSize), typeof(int), typeof(ValueDescriptionControl),
-                new UIPropertyMetadata(12));
+                new UIPropertyMetadata(16));
 
         // Using a DependencyProperty as the backing store for ValueFontSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueFontSizeProperty =
             DependencyProperty.Register(nameof(ValueFontSize), typeof(int), typeof(ValueDescriptionControl),
-                new UIPropertyMetadata(18));
+                new UIPropertyMetadata(20));
 
         // Using a DependencyProperty as the backing store for ControlBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ControlBackgroundProperty =
@@ -65,20 +65,7 @@ namespace Prover.GUI.Common.Controls
         {
             get { return (Brush) GetValue(ControlBackgroundProperty); }
             set { SetValue(ControlBackgroundProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsEditableProperty = DependencyProperty.Register(
-            "IsEditable", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(false));
-
-        public bool IsEditable
-        {
-            get { return (bool) GetValue(IsEditableProperty); }
-            set
-            {
-                SetValue(IsEditableProperty, value);
-                IsReadOnly = !value;
-            }
-        }
+        }      
 
         public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
             "IsReadOnly", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(true));
@@ -89,8 +76,20 @@ namespace Prover.GUI.Common.Controls
             set
             {
                 SetValue(IsReadOnlyProperty, value);
-                IsEditable = !value;
+                ShowEditSymbol = !IsReadOnly;
             }
         }
+
+        public bool ShowEditSymbol
+        {
+            get { return (bool)GetValue(ShowEditSymbolProperty); }
+            set { SetValue(ShowEditSymbolProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowEditSymbol.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowEditSymbolProperty =
+            DependencyProperty.Register("ShowEditSymbol", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(false));
+
+
     }
 }

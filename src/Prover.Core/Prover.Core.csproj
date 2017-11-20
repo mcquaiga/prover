@@ -242,9 +242,9 @@
     <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711180029595_Add-FrequencyTests.cs" />
-    <Compile Include="Migrations\201711180029595_Add-FrequencyTests.Designer.cs">
-      <DependentUpon>201711180029595_Add-FrequencyTests.cs</DependentUpon>
+    <Compile Include="Migrations\201711180713513_Add-FrequencyTest.cs" />
+    <Compile Include="Migrations\201711180713513_Add-FrequencyTest.Designer.cs">
+      <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
@@ -362,8 +362,8 @@
     <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711180029595_Add-FrequencyTests.resx">
-      <DependentUpon>201711180029595_Add-FrequencyTests.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711180713513_Add-FrequencyTest.resx">
+      <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

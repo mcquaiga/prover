@@ -24,6 +24,11 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 MeterDisplacementItem =
                     new RotaryMeterTestViewModel(
                         (RotaryDrive)Volume.DriveType);
+
+            if (Volume?.VerificationTest.FrequencyTest != null)
+            {
+                FrequencyTestItem = new FrequencyTestViewModel(EventAggregator, Volume.VerificationTest.FrequencyTest);
+            }
         }
 
         public QaRunTestManager InstrumentManager { get; set; }
@@ -42,6 +47,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         }
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
+        public FrequencyTestViewModel FrequencyTestItem { get; set; }
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
 
         public string DriveRateDescription => Instrument.DriveRateDescription();

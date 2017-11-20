@@ -33,7 +33,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(volumeTest);
-                    _outputBoard.StartMotor();
+                    _outputBoard?.StartMotor();
                     do
                     {
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
