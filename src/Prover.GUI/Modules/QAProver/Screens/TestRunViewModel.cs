@@ -51,23 +51,23 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             InstrumentTypes.AddRange(HoneywellInstrumentTypes.GetAll());
 
-            _selectedInstrumentType = HoneywellInstrumentTypes.GetByName(SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+            _selectedInstrumentType = HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
 
             this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Subscribe(x => SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x?.Name);
+                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);
 
-            _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
-                ? SettingsManager.SettingsInstance.InstrumentCommPort
+            _selectedCommPort = CommPort.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
+                ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
                 : string.Empty;
 
-            _selectedBaudRate = BaudRate.Contains(SettingsManager.SettingsInstance.InstrumentBaudRate)
-                ? SettingsManager.SettingsInstance.InstrumentBaudRate
+            _selectedBaudRate = BaudRate.Contains(SettingsManager.LocalSettingsInstance.InstrumentBaudRate)
+                ? SettingsManager.LocalSettingsInstance.InstrumentBaudRate
                 : -1;
 
             this.WhenAnyValue(x => x.UseIrDaPort)
                 .Select(x => !x)
                 .ToProperty(this, x => x.DisableCommPortAndBaudRate, out _disableCommPortAndBaudRate);
-            UseIrDaPort = SettingsManager.SettingsInstance.InstrumentUseIrDAPort;
+            UseIrDaPort = SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort;
 
             this.
             #endregion
@@ -78,15 +78,15 @@ namespace Prover.GUI.Modules.QAProver.Screens
              * Tachometer Settings
              *
              **/
-            _selectedTachCommPort = TachCommPort.Contains(SettingsManager.SettingsInstance.TachCommPort)
-                ? SettingsManager.SettingsInstance.TachCommPort
+            _selectedTachCommPort = TachCommPort.Contains(SettingsManager.LocalSettingsInstance.TachCommPort)
+                ? SettingsManager.LocalSettingsInstance.TachCommPort
                 : string.Empty;
 
             this.WhenAnyValue(x => x.TachIsNotUsed)
                 .Select(x => !x)
                 .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
 
-            TachIsNotUsed = SettingsManager.SettingsInstance.TachIsNotUsed;
+            TachIsNotUsed = SettingsManager.LocalSettingsInstance.TachIsNotUsed;
             #endregion
 
             #region Commands
@@ -99,12 +99,9 @@ namespace Prover.GUI.Modules.QAProver.Screens
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
 
-            var canSave = new Subject<bool>();
+            var canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
-            SaveCommand.IsExecuting
-                .Select(x => !x)
-                .Subscribe(b => canSave.OnNext(b));
-
+        
             SaveCommand.IsExecuting
                 .StepInterval(TimeSpan.FromSeconds(2))
                 .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
@@ -124,8 +121,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
-            SelectedClient = Clients.Contains(SettingsManager.SettingsInstance.LastClientSelected)
-                ? SettingsManager.SettingsInstance.LastClientSelected
+            SelectedClient = Clients.Contains(SettingsManager.LocalSettingsInstance.LastClientSelected)
+                ? SettingsManager.LocalSettingsInstance.LastClientSelected
                 : string.Empty;
 
             #endregion
@@ -134,12 +131,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort)
                 .Subscribe(_ =>
                 {
-                    SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
-                    SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
-                    SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    SettingsManager.SettingsInstance.LastClientSelected = _.Item4;
-                    SettingsManager.SettingsInstance.TachIsNotUsed = _.Item5;
-                    SettingsManager.SettingsInstance.InstrumentUseIrDAPort = _.Item6;
+                    SettingsManager.LocalSettingsInstance.InstrumentBaudRate = _.Item1;
+                    SettingsManager.LocalSettingsInstance.InstrumentCommPort = _.Item2;
+                    SettingsManager.LocalSettingsInstance.TachCommPort = _.Item3;
+                    SettingsManager.LocalSettingsInstance.LastClientSelected = _.Item4;
+                    SettingsManager.LocalSettingsInstance.TachIsNotUsed = _.Item5;
+                    SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort = _.Item6;
                 });  
             
             _viewContext = NewQaTestViewContext;
@@ -285,7 +282,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             try
             {
-                await SettingsManager.Save();
+                await SettingsManager.SaveLocalSettings();
 
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);

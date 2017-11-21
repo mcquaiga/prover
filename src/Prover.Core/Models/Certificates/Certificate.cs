@@ -8,7 +8,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Certificates
 {
-    public class Certificate : Entity
+    public class Certificate : EntityWithId
     {
 
         public DateTime CreatedDateTime { get; set; }

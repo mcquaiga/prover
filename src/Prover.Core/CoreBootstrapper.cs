@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Autofac;
 using NLog;
@@ -14,6 +15,8 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Data;
+using Prover.Core.Shared.KeyValueStore;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;
@@ -26,12 +29,18 @@ namespace Prover.Core
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static void RegisterServices(ContainerBuilder builder)
-        {            
+        {
+            SettingsManager.RefreshSettings().Wait();
+
             SetupDatabase(builder);
 
             RegisterCommunications(builder);
 
-            SettingsManager.RefreshSettings().Wait();
+            builder.RegisterBuildCallback(container =>
+            {
+                SettingsManager.Initialize(container.Resolve<KeyValueStore>());
+                SettingsManager.RefreshSettings().Wait();
+            });
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
@@ -39,7 +48,7 @@ namespace Prover.Core
             //EVC Communcation
             Task.Run(ItemHelpers.LoadInstrumentTypes);
 
-            builder.Register(c => new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate))
+            builder.Register(c => new SerialPort(SettingsManager.LocalSettingsInstance.InstrumentCommPort, SettingsManager.LocalSettingsInstance.InstrumentBaudRate))
                 .Named<ICommPort>("SerialPort");
 
             builder.Register(c => new IrDAPort())
@@ -47,16 +56,16 @@ namespace Prover.Core
 
             builder.Register(c =>
             {
-                var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+                var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
 
-                return SettingsManager.SettingsInstance.InstrumentUseIrDAPort
+                return SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort
                     ? new HoneywellClient(c.ResolveNamed<ICommPort>("IrDAPort"), instrument)
                     : new HoneywellClient(c.ResolveNamed<ICommPort>("SerialPort"), instrument);
             }).As<EvcCommunicationClient>();
 
             //QA Test Runs
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
-            builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            builder.Register(c => new TachometerService(SettingsManager.LocalSettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();
@@ -68,33 +77,32 @@ namespace Prover.Core
         private static void SetupDatabase(ContainerBuilder builder)
         {
             //Database registrations
-            Log.Debug("Started initializing database...");
-            Log.Debug("    Running Migrations.");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-
+             Log.Debug("Started initializing database...");
             builder.RegisterType<ProverContext>()
                 .AsSelf()
                 .AutoActivate()
                 .SingleInstance();
+           
+            Log.Debug("    Running Migrations.");
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            
+            builder.Register(c => new KeyValueStore(c.Resolve<ProverContext>()))
+                .As<KeyValueStore>()
+                .InstancePerDependency();
 
-            builder.RegisterType<InstrumentStore>()
-                .As<IProverStore<Instrument>>()
+            builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
                 .InstancePerDependency();
             builder.RegisterType<TestRunService>();
 
-            builder.RegisterType<ClientStore>()
-                .As<IProverStore<Client>>()
+            builder.RegisterType<ClientStore>().As<IProverStore<Client>>()
                 .InstancePerDependency();
-            builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>()))
-                .As<IProverStore<ClientCsvTemplate>>()
+            builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>())).As<IProverStore<ClientCsvTemplate>>()
                 .InstancePerDependency();
             builder.RegisterType<ClientService>();
 
-            builder.RegisterType<CertificateStore>()
-                .As<IProverStore<Certificate>>()
+            builder.RegisterType<CertificateStore>().As<IProverStore<Certificate>>()
                 .InstancePerDependency();
-            builder.RegisterType<CertificateService>()
-                .As<ICertificateService>();
+            builder.RegisterType<CertificateService>().As<ICertificateService>();
 
             Log.Debug("Completed initializing database...");
         }

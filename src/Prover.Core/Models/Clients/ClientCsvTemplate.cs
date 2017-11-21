@@ -12,7 +12,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Clients
 {
-    public class ClientCsvTemplate : Entity
+    public class ClientCsvTemplate : EntityWithId
     {
         public ClientCsvTemplate()
         {           

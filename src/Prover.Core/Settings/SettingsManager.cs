@@ -1,38 +1,60 @@
 ﻿using System;
+using System.Data.Entity;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prover.Core.IO;
+using Prover.Core.Shared.Data;
+using Prover.Core.Shared.KeyValueStore;
+using Prover.Core.Storage;
 
 namespace Prover.Core.Settings
 {
     public static class SettingsManager
-    {
+    {    
         private const string SettingsFileName = "settings.conf";
         private static readonly string SettingsPath = Path.Combine(Environment.CurrentDirectory, SettingsFileName);
+        private static KeyValueStore _keyValueStore;
 
-        public static Settings SettingsInstance { get; set; }
+        public static LocalSettings LocalSettingsInstance { get; set; }
+        public static SharedSettings SharedSettingsInstance { get; set; }
+
+        public static void Initialize(KeyValueStore keyValueStore)
+        {
+            _keyValueStore = keyValueStore;
+        }
 
         public static async Task RefreshSettings()
         {
-            SettingsInstance = await LoadSettings();
-            await Save();
+            LocalSettingsInstance = await LoadLocalSettings();
+
+            if (_keyValueStore != null)
+                SharedSettingsInstance = await LoadSharedSettings(_keyValueStore);
         }
 
-        private static async Task<Settings> LoadSettings()
+        private static async Task<LocalSettings> LoadLocalSettings()
         {
             return await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
                 var settings = (fileSystem.FileExists(SettingsPath)
                                    ? new SettingsReader(fileSystem).Read(SettingsPath)
-                                   : null) ?? new Settings();
-                settings.SetDefaults();
+                                   : null) ?? new LocalSettings();
                 return settings;
             });
         }
 
-        public static async Task Save()
+        private static async Task<SharedSettings> LoadSharedSettings(KeyValueStore keyValueStore)
+        {
+            var settingsKeyValue = await keyValueStore.Query(k => k.Id == "SharedSettings").FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(settingsKeyValue?.Value))
+                return SharedSettings.Create();
+
+            return JsonConvert.DeserializeObject<SharedSettings>(settingsKeyValue.Value);
+        }
+
+        public static async Task SaveLocalSettings()
         {
             await Task.Run(() =>
             {
@@ -40,8 +62,14 @@ namespace Prover.Core.Settings
 
                 if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
                     fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
-                new SettingsWriter(fileSystem).Write(SettingsPath, SettingsInstance);
+                new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
             });
+        }
+
+        public static async Task SaveSharedSettings()
+        {
+            var kv = new KeyValue() { Id = "SharedSettings", Value = JsonConvert.SerializeObject(SharedSettingsInstance)};
+            await _keyValueStore.Upsert(kv);
         }
     }
 
@@ -54,13 +82,13 @@ namespace Prover.Core.Settings
             _fileSystem = fileSystem;
         }
 
-        public Settings Read(string path)
+        public LocalSettings Read(string path)
         {
             var jsonText = _fileSystem.ReadAllText(path);
             if (string.IsNullOrEmpty(jsonText))
-                return new Settings();
+                return new LocalSettings();
 
-            return JsonConvert.DeserializeObject<Settings>(jsonText);
+            return JsonConvert.DeserializeObject<LocalSettings>(jsonText);
         }
     }
 
@@ -73,7 +101,7 @@ namespace Prover.Core.Settings
             _fileSystem = fileSystem;
         }
 
-        public void Write(string path, Settings config)
+        public void Write(string path, LocalSettings config)
         {
             var jsonText = JsonConvert.SerializeObject(config, Formatting.Indented);
             _fileSystem.WriteAllText(path, jsonText);

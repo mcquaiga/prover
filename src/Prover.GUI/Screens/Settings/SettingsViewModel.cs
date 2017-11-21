@@ -7,6 +7,9 @@ using System.Windows;
 using Caliburn.Micro;
 using Prover.Core.Events;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Data;
+using Prover.Core.Shared.KeyValueStore;
+using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
@@ -17,25 +20,26 @@ namespace Prover.GUI.Screens.Settings
     {
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {            
-            StabilizeLiveReadings = SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings;
+        {
+            StabilizeLiveReadings = SettingsManager.SharedSettingsInstance.TestSettings.StabilizeLiveReadings;
             this.WhenAnyValue(x => x.StabilizeLiveReadings)
-                .Subscribe(x => SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings = x);
+                .Subscribe(x => SettingsManager.SharedSettingsInstance.TestSettings.StabilizeLiveReadings = x);
 
             SelectedMechanicalVolumeTestType =
-                SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType.ToString();
+                SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)
                 .Subscribe(x =>
-                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType = (TestSettings.VolumeTestType)Enum.Parse(typeof(TestSettings.VolumeTestType), x));
+                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType = (TestSettings.VolumeTestType)Enum.Parse(typeof(TestSettings.VolumeTestType), x));
             
             MechanicalUncorrectedTestLimits
-                .AddRange(SettingsManager.SettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
+                .AddRange(SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
             this.WhenAnyValue(x => x.MechanicalUncorrectedTestLimits)
-                .Subscribe(x => SettingsManager.SettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
+                .Subscribe(x => SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
             
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                await SettingsManager.Save();
+                await SettingsManager.SaveLocalSettings();
+                await SettingsManager.SaveSharedSettings();
             });
         }
      
@@ -57,7 +61,8 @@ namespace Prover.GUI.Screens.Settings
             set => this.RaiseAndSetIfChanged(ref _selectedMechanicalVolumeTestType, value);
         }
 
-        public Core.Settings.Settings Settings => SettingsManager.SettingsInstance;
+        public LocalSettings LocalSettings => SettingsManager.LocalSettingsInstance;
+        public SharedSettings SharedSettings => SettingsManager.SharedSettingsInstance;
 
         private bool _stabilizeLiveReadings;
         public bool StabilizeLiveReadings

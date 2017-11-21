@@ -5,7 +5,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Clients
 {
-    public class Client : Entity
+    public class Client : EntityWithId
     {
         public Client()
         {

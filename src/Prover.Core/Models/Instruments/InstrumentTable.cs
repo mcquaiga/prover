@@ -12,7 +12,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class ProverTable : Entity
+    public abstract class ProverTable : EntityWithId
     {
         private string _instrumentData;
 
