@@ -274,6 +274,10 @@
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
       <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTestViewModel.cs" />
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml.cs">
       <DependentUpon>PTSet.Card.New.xaml</DependentUpon>
     </Compile>
@@ -469,6 +473,10 @@
     <Page Include="Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\Certificates\Common\VerificationView.xaml">
       <Generator>MSBuild:Compile</Generator>

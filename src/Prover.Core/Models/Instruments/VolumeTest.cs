@@ -35,6 +35,8 @@ namespace Prover.Core.Models.Instruments
 
         public IDriveType DriveType { get; set; }
 
+        [NotMapped]
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
         public string TestInstrumentData
         {
             get => AfterTestItems.Serialize();
@@ -43,8 +45,7 @@ namespace Prover.Core.Models.Instruments
 
         public Instrument Instrument => VerificationTest.Instrument;
 
-        [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
+        
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
@@ -209,6 +210,7 @@ namespace Prover.Core.Models.Instruments
                 
 
             if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
+            { 
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
@@ -219,7 +221,8 @@ namespace Prover.Core.Models.Instruments
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }
+                }               
+            }
             else
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
         }

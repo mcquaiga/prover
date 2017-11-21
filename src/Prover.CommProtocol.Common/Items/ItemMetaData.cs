@@ -22,9 +22,10 @@ namespace Prover.CommProtocol.Common.Items
         public bool? IsPressure { get; set; }
         public bool? IsPressureTest { get; set; }
         public bool? IsTemperature { get; set; }
+        public bool? IsSuperFactor { get; set; }
         public bool? IsVolume { get; set; }
         public bool? IsVolumeTest { get; set; }
-        public bool? IsSuperFactor { get; set; }
+        public bool? IsFrequencyTest { get; set; }
     }
 
     public class ItemMetadata
@@ -42,6 +43,7 @@ namespace Prover.CommProtocol.Common.Items
         public bool? IsVolume { get; set; } = false;
         public bool? IsVolumeTest { get; set; } = false;
         public bool? IsSuperFactor { get; set; } = false;
+        public bool? IsFrequencyTest { get; set; } = false;
 
         public bool CanVerify { get; set; } = true;
         public bool CanReset { get; set; } = true;

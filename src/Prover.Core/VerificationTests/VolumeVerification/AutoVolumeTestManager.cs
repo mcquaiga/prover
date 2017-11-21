@@ -41,7 +41,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(VolumeTest);
-                    _outputBoard.StartMotor();
+                    _outputBoard?.StartMotor();
                     do
                     {
                         VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
@@ -65,6 +65,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             CommClient.StatusObservable.Subscribe(Status);
             await CommClient.Connect(ct);
             VolumeTest.Items = (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            if (VolumeTest.VerificationTest.FrequencyTest != null)
+            {
+                //VolumeTest.VerificationTest.FrequencyTest.Items = await CommClient.GetItemValues(CommClient.ItemDetails.FrequencyTestItems());
+            }
             await CommClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -129,6 +133,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     await CommClient.Connect(ct);
                     VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+
+                    if (VolumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        //VolumeTest.VerificationTest.FrequencyTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.FrequencyTestItems());
+                    }
                 }
                 finally
                 {

@@ -28,6 +28,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             
             VolumeTest.Items =
                 (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+
+            if (VolumeTest.VerificationTest.FrequencyTest != null)
+            {
+                //VolumeTest.VerificationTest.FrequencyTest.Items = await CommClient.GetItemValues(CommClient.ItemDetails.FrequencyTestItems());
+            }
+
             await CommClient.Disconnect();            
         }
 
@@ -42,8 +48,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
 
                 }                
-            }, ct);
-            TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+            }, ct);            
         }
 
         public override async Task PostTest(CancellationToken ct)
@@ -55,6 +60,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     ct.ThrowIfCancellationRequested();
                     await CommClient.Connect(ct);
                     VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+                    if (VolumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        //VolumeTest.VerificationTest.FrequencyTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.FrequencyTestItems());
+                    }
                 }
                 finally
                 {
