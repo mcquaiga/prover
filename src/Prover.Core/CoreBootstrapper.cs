@@ -16,7 +16,6 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Data;
-using Prover.Core.Shared.KeyValueStore;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;

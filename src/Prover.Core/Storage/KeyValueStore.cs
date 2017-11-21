@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Shared.Data;
-using Prover.Core.Shared.KeyValueStore;
+using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Storage
 {   

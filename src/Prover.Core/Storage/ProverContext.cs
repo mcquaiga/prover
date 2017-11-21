@@ -10,7 +10,6 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
-using Prover.Core.Shared.KeyValueStore;
 
 //using Prover.Core.Migrations;
 

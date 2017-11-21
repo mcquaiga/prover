@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prover.Core.IO;
 using Prover.Core.Shared.Data;
-using Prover.Core.Shared.KeyValueStore;
+using Prover.Core.Shared.Domain;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Settings

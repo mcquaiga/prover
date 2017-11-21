@@ -8,7 +8,6 @@ using Caliburn.Micro;
 using Prover.Core.Events;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Data;
-using Prover.Core.Shared.KeyValueStore;
 using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
