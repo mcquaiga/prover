@@ -47,7 +47,8 @@ namespace Prover.GUI.Modules.Certificates.Common
 
         public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:d}";
+        public string DatePretty => $"{Instrument.TestDateTime:d}";
+        public string TimePretty => $"{Instrument.TestDateTime:t}";
 
         public TemperatureInfoViewModel Temperature { get; protected set; }
 

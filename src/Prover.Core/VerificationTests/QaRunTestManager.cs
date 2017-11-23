@@ -92,7 +92,7 @@ namespace Prover.Core.VerificationTests
                 await DisconnectFromInstrument();
 
                 if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
-                    SettingsManager.SettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
+                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
                     TestSettings.VolumeTestType.Manual)
                     VolumeTestManager =
                         new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
@@ -129,7 +129,7 @@ namespace Prover.Core.VerificationTests
 
             try
             {
-                if (SettingsManager.SettingsInstance.TestSettings.StabilizeLiveReadings)
+                if (SettingsManager.SharedSettingsInstance.TestSettings.StabilizeLiveReadings)
                 {
                     _testStatus.OnNext($"Stabilizing live readings...");
                     await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct, _testStatus);

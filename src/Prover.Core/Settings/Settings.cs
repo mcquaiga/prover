@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Settings
 {
@@ -10,8 +13,14 @@ namespace Prover.Core.Settings
 
     public class MechanicalUncorrectedTestLimit
     {
-        public int CuFtValue { get; set; }
+        public decimal CuFtValue { get; set; }
         public int UncorrectedPulses { get; set; }
+    }
+
+    public class CertificateSettings
+    {
+        public string McRegistrationNumber { get; set; } = string.Empty;
+        public string MeasurementApparatus { get; set; } = string.Empty;
     }
 
     public class TestSettings
@@ -21,9 +30,7 @@ namespace Prover.Core.Settings
             Automatic,
             Manual
         }
-
-        public string McRegistrationNumber { get; set; } = string.Empty;
-        public string MeasurementApparatus { get; set; } = string.Empty;
+       
         public bool StabilizeLiveReadings { get; set; }
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
@@ -63,26 +70,32 @@ namespace Prover.Core.Settings
         }       
     }
 
-    public class Settings
+    public class LocalSettings
     {
-        public string LastInstrumentTypeUsed { get; set; }
-        public string LastDriveTypeUsed { get; set; }
-        public string InstrumentCommPort { get; set; }        
         public string TachCommPort { get; set; }
-        public string ExportServiceAddress { get; set; }
-        public string LastClientSelected { get; set; }
-
         public bool TachIsNotUsed { get; set; }
 
+        public string LastClientSelected { get; set; }
+
+        public string LastInstrumentTypeUsed { get; set; }
+        public string InstrumentCommPort { get; set; }
         public int InstrumentBaudRate { get; set; }
+        public bool InstrumentUseIrDaPort { get; set; }
+    }
 
+    public class SharedSettings
+    {
+        public CertificateSettings CertificateSettings { get; set; }
+       
         public TestSettings TestSettings { get; set; }
-        public bool InstrumentUseIrDAPort { get; set; }
 
-        public void SetDefaults()
+        public static SharedSettings Create()
         {
-            if (TestSettings == null)
-                TestSettings = TestSettings.CreateDefault();
+            return new SharedSettings()
+            {
+                CertificateSettings = new CertificateSettings(),
+                TestSettings = TestSettings.CreateDefault()
+            };
         }
     }
 }

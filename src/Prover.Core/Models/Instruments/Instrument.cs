@@ -131,13 +131,13 @@ namespace Prover.Core.Models.Instruments
 
         public decimal GetGaugeTemp(int testNumber)
         {
-            var result = SettingsManager.SettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)?.Value;
+            var result = SettingsManager.SharedSettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)?.Value;
             return result.HasValue ? TemperatureTest.ConvertTo(result.Value, "F", this.TemperatureUnits()) : 0m;
         }
 
         public decimal GetGaugePressure(int testNumber)
         {
-            var value = SettingsManager.SettingsInstance.TestSettings.PressureGaugeDefaults
+            var value = SettingsManager.SharedSettingsInstance.TestSettings.PressureGaugeDefaults
                 .FirstOrDefault(p => p.Level == testNumber)?.Value;
             
             if (value > 1)

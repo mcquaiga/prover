@@ -57,7 +57,7 @@
                             <TextBlock Text="{Binding Client.Address}"
                                        TextWrapping="WrapWithOverflow"
                                        FontSize="10" />
-                            <TextBlock Text="Reg. #:">
+                            <TextBlock Text="Contractors Reg. #: ">
                                 <TextBlock Text="{Binding Client.RegistrationNumber}"
                                            TextWrapping="WrapWithOverflow"
                                            FontSize="10" />
@@ -165,7 +165,7 @@
                                     55 Thompson Dr. <LineBreak />
                                     Cambridge, ON
                                     N1T 2E4 <LineBreak/>
-                                    M.C. Reg. #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
+                                    Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
                                     District: London
                                 </TextBlock>
 

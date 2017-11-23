@@ -28,7 +28,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
 
         public Certificate Certificate { get; set; }
 
-        public string McRegistrationNumber => SettingsManager.SettingsInstance.TestSettings.McRegistrationNumber;
+        public string McRegistrationNumber => SettingsManager.SharedSettingsInstance.CertificateSettings.McRegistrationNumber;
 
         public string CertificateDate => $"{Certificate.CreatedDateTime:dd/MM/yyyy}";
 

@@ -17,7 +17,7 @@ namespace Prover.Core.Shared.Data
     /// <typeparam name="T">Type of entity</typeparam>
     /// <typeparam name="TId">Type of Id</typeparam>
     public interface IRepository<T>
-        where T : Entity
+        where T : EntityWithId
 
     {
         /// <summary>

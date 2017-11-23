@@ -5,7 +5,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Domain.Model.Verifications
 {
-    public class TemperatureTest : Entity, ITemperatureItems
+    public class TemperatureTest : EntityWithId, ITemperatureItems
     {
         private const double MetericTempCorrection = 273.15d;
         private const double TempCorrection = 459.67d;

@@ -8,6 +8,7 @@ using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Data;
 using Prover.Core.Storage;
 
 namespace Prover.Core.Services
@@ -75,7 +76,7 @@ namespace Prover.Core.Services
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
-                Apparatus = SettingsManager.SettingsInstance.TestSettings.MeasurementApparatus,
+                Apparatus = SettingsManager.SharedSettingsInstance.CertificateSettings.MeasurementApparatus,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,

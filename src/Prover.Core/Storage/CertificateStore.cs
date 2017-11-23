@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
+using Prover.Core.Shared.Data;
 
 namespace Prover.Core.Storage
 {
