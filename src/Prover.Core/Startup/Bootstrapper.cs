@@ -29,22 +29,14 @@ namespace Prover.Core.Startup
             Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-
-            //EVC Communcation
-            Builder.Register(
-                c =>
-                    new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort,
-                        SettingsManager.SettingsInstance.InstrumentBaudRate)).Named<CommPort>("SerialPort");
-
-            Builder.Register(c => new HoneywellClient(c.ResolveNamed<CommPort>("SerialPort")))
-                .As<EvcCommunicationClient>();
-
+            
             ////QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
-            Builder.RegisterType<AutoVolumeTestManager>().As<VolumeTestManager>();
+            //Builder.RegisterType<AutoVolumeTestManager>().As<VolumeTestManager>();
+            Builder.RegisterType<ManualVolumeTestManager>().As<VolumeTestManager>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 

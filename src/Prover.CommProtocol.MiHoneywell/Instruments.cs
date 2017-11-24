@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.MiHoneywell.CommClients;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
@@ -10,7 +12,8 @@ namespace Prover.CommProtocol.MiHoneywell
             Id = 3,
             AccessCode = 3,
             Name = "Mini-AT",
-            ItemFilePath = "MiniATItems.xml"
+            ItemFilePath = "MiniATItems.xml",
+            ClientFactory = port => new HoneywellClient(port, Instruments.MiniAt)
         };
 
         public static InstrumentType Toc = new InstrumentType
@@ -18,15 +21,17 @@ namespace Prover.CommProtocol.MiHoneywell
             Id = 33,
             AccessCode = 3,
             Name = "TOC",
-            ItemFilePath = "TOCItems.xml"
-        };
+            ItemFilePath = "TOCItems.xml",
+            ClientFactory = port => new TocHoneywellClient(port, Toc)
+        };       
 
         public static InstrumentType MiniMax = new InstrumentType
         {
             Id = 4,
             AccessCode = 4,
             Name = "Mini-Max",
-            ItemFilePath = "MiniMaxItems.xml"
+            ItemFilePath = "MiniMaxItems.xml",
+            ClientFactory = port => new HoneywellClient(port, Instruments.MiniMax)
         };
 
         public static IEnumerable<InstrumentType> GetAll()

@@ -60,6 +60,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                 VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
         }
 
+        public bool ShowDownloadButton => QaRunTestManager != null;
+
         private bool _showProgressDialog;
         public bool ShowProgressDialog
         {

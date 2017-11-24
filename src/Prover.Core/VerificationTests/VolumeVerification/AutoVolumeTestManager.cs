@@ -10,7 +10,7 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManager : VolumeTestManager
+    public class AutoVolumeTestManager : VolumeTestManager
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerService _tachometerCommunicator;
@@ -164,16 +164,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             Log.Debug($"Applied Input: {result.Value}");
 
             volumeTest.AppliedInput = result.Value;
-        }
-
-        //protected override async Task ZeroInstrumentVolumeItems()
-        //{
-        //    await InstrumentCommunicator.Connect();
-        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
-        //    await InstrumentCommunicator.SetItemValue(434, "0");
-        //    await InstrumentCommunicator.SetItemValue(113, "0");
-        //    await InstrumentCommunicator.SetItemValue(892, "0");
-        //    await base.ZeroInstrumentVolumeItems();
-        //}
+        }   
     }
 }

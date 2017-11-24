@@ -27,7 +27,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
             if (Volume?.VerificationTest.FrequencyTest != null)
             {
-                FrequencyTestItem = new FrequencyTestViewModel(EventAggregator, Volume.VerificationTest.FrequencyTest);
+                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest);
             }
         }
 

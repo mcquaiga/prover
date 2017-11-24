@@ -21,23 +21,33 @@
                 <controls1:PercentageControl
                     Margin="5"
                     HorizontalAlignment="Center"
-                    DisplayValue="{Binding FrequencyTest.PercentError}"
-                    Passed="{Binding FrequencyTest.HasPassed}" />
+                    DisplayValue="{Binding TestRun.PercentError}"
+                    Passed="{Binding TestRun.HasPassed}" />
                 <StackPanel Margin="5">
-                    <TextBlock HorizontalAlignment="Center"
-                        Text="{Binding FrequencyTest.EnergyUnits}"
-                               FontSize="16"/>
+                    <controls1:ValueDescriptionControl Label="Applied KMO (AAT Sim)" 
+                                                       Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                       IsReadOnly="False"
+                                                       HorizontalAlignment="Center"/>
                     <UniformGrid Columns="2" HorizontalAlignment="Center">
                         <controls1:ValueDescriptionControl Label="Main Rotor Pulses" 
-                                                           Value="{Binding FrequencyTest.ActualEnergy}" 
+                                                           Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                            IsReadOnly="False"/>
                         <controls1:ValueDescriptionControl Label="Sensing Rotor Pulses" 
-                                                           Value="{Binding FrequencyTest.EvcEnergy}"
+                                                           Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                            IsReadOnly="False"/>
-                        <controls1:ValueDescriptionControl Label="True Adjusted Vol." Value="{Binding FrequencyTest.ActualEnergy}" />
-                        <controls1:ValueDescriptionControl Label="EVC Adjusted Vol." Value="{Binding FrequencyTest.EvcEnergy}" />
-                        <controls1:ValueDescriptionControl Label="True Unadjusted Vol." Value="{Binding FrequencyTest.ActualEnergy}" />
-                        <controls1:ValueDescriptionControl Label="EVC Unadjusted Vol." Value="{Binding FrequencyTest.EvcEnergy}" />
+                        <controls1:ValueDescriptionControl Label="True Adjusted Vol." 
+                                                           Value="{Binding AdjustedVolume}"
+                                                           LabelFontSize="10"
+                                                           ValueFontSize="12"/>
+                        <controls1:ValueDescriptionControl Label="EVC Adjusted Vol." Value="{Binding EvcAdjustedVolume}" 
+                                                           LabelFontSize="10"
+                                                           ValueFontSize="12"/>
+                        <controls1:ValueDescriptionControl Label="True Unadjusted Vol." Value="{Binding UnadjustedVolume}"
+                                                           LabelFontSize="10"
+                                                           ValueFontSize="12"/>
+                        <controls1:ValueDescriptionControl Label="EVC Unadjusted Vol." Value="{Binding EvcUnadjustedVolume}"
+                                                           LabelFontSize="10"
+                                                           ValueFontSize="12"/>
                     </UniformGrid>
 
                 </StackPanel>

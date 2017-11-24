@@ -51,7 +51,7 @@ namespace Prover.Core.Models.Instruments
         {
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
-            return mainAdjVol - senseAdjVol;
+            return decimal.Round(mainAdjVol - senseAdjVol, 4);
         }
 
         public long RoundedAdjustedVolume()
@@ -65,17 +65,17 @@ namespace Prover.Core.Models.Instruments
         {
             if (MainRotorPulseCount == 0 || MechanicalOutputFactor == 0) return 0m;
 
-            return (decimal) MainRotorPulseCount / MechanicalOutputFactor;
+            return decimal.Round((decimal) MainRotorPulseCount / MechanicalOutputFactor, 4);
         }
 
-        public decimal EvcAdjustedVolume()
+        public decimal? EvcAdjustedVolume()
         {
-            return AfterTestItems.GetItem(850).NumericValue - Items.GetItem(850).NumericValue;
+            return AfterTestItems?.GetItem(850)?.NumericValue - Items?.GetItem(850)?.NumericValue;
         }
 
-        public decimal EvcUnadjustedVolume()
+        public decimal? EvcUnadjustedVolume()
         {
-            return AfterTestItems.GetItem(852).NumericValue - Items.GetItem(852).NumericValue;
+            return AfterTestItems?.GetItem(852)?.NumericValue - Items?.GetItem(852)?.NumericValue;
         }
 
         public override void OnInitializing()

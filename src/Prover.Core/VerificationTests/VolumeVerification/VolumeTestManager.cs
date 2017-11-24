@@ -22,8 +22,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected bool RequestStopTest;
         protected CancellationTokenSource TestCancellationToken;
 
-        protected VolumeTestManager(
-            IEventAggregator eventAggregator)
+        protected VolumeTestManager(IEventAggregator eventAggregator)
         {
             Log = LogManager.GetCurrentClassLogger();
             EventAggreator = eventAggregator;

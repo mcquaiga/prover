@@ -59,6 +59,7 @@ namespace Prover.Core.DriveTypes
         {
             get
             {
+                if (ActualEnergy == 0) return null;
                 var error = (EvcEnergy - ActualEnergy)/ActualEnergy*100;
                 if (error != null)
                     return decimal.Round(error.Value, 2);
@@ -86,8 +87,7 @@ namespace Prover.Core.DriveTypes
             get
             {
                 if (!_instrument.VolumeTest.EvcCorrected.HasValue) return null;
-
-                    var energyValue = _instrument.Items.GetItem(142).NumericValue;
+                var energyValue = _instrument.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {
                     case Therms:

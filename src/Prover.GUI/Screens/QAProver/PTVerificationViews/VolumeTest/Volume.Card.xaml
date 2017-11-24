@@ -84,9 +84,9 @@
 
                 </StackPanel>
             </materialDesign:Card>
+            <ContentControl Margin="2" cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card" />
             <ContentControl Margin="2" cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" />
             <ContentControl Margin="2" cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" />
-            <ContentControl Margin="2" cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card" />
         </StackPanel>
     </materialDesign:Card>
 </UserControl>
