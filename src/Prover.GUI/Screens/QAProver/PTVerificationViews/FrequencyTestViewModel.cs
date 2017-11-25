@@ -17,7 +17,12 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
     public class FrequencyTestViewModel : TestRunViewModelBase<Core.Models.Instruments.FrequencyTest>
     {       
         public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun) : base(screenManager, eventAggregator, testRun)
-        {            
+        {
+            _mainRotorPulses = testRun.MainRotorPulseCount;
+            _senseRotorPulses = testRun.SenseRotorPulseCount;
+            _mechanicalOutputFactor = testRun.MechanicalOutputFactor;
+            RaisePropertyChangeEvents();
+
             this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
                 .Subscribe(x =>
                 {
@@ -82,7 +87,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             set { this.RaiseAndSetIfChanged(ref _evcAdjustedVolume, value); }
         }
 
-        protected override void RaisePropertyChangeEvents()
+        protected sealed override void RaisePropertyChangeEvents()
         {
             AdjustedVolume = TestRun.AdjustedVolume();
             UnadjustedVolume = TestRun.UnadjustedVolume();

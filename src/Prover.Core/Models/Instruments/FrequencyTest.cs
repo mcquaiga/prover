@@ -5,8 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -24,7 +27,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
+        public IEnumerable<ItemValue> AfterTestItems { get; set; } = new List<ItemValue>();
         public string AfterTestData
         {
             get { return AfterTestItems.Serialize(); }
@@ -37,7 +40,8 @@ namespace Prover.Core.Models.Instruments
             {
                 if (AdjustedVolume() == 0) return null;
 
-                return (EvcAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
+                var result = (EvcAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
+                return result.HasValue ? decimal.Round(result.Value, 2) : default(decimal?);
             }
         }
 
@@ -70,7 +74,10 @@ namespace Prover.Core.Models.Instruments
 
         public decimal? EvcAdjustedVolume()
         {
-            return AfterTestItems?.GetItem(850)?.NumericValue - Items?.GetItem(850)?.NumericValue;
+            if (!AfterTestItems.Any()) return default(decimal?);
+            var startAdjusted = Items.GetHighResolutionValue(850, 851);
+            var endAdjusted = AfterTestItems.GetHighResolutionValue(850, 851);
+            return endAdjusted - startAdjusted;
         }
 
         public decimal? EvcUnadjustedVolume()
@@ -78,14 +85,26 @@ namespace Prover.Core.Models.Instruments
             return AfterTestItems?.GetItem(852)?.NumericValue - Items?.GetItem(852)?.NumericValue;
         }
 
+        [NotMapped]
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+
         public override void OnInitializing()
         {
             base.OnInitializing();
 
+            var itemsValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
+            var newItems = Items.ToList();
+            newItems.AddRange(ItemHelpers.LoadItems(TocHoneywellClient.TurboMonitor, itemsValues));
+            newItems.RemoveAll(value => value.Metadata == null);
+            Items = newItems;
+
             if (!string.IsNullOrEmpty(_afterTestData))
             {
                 var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_afterTestData);
-                AfterTestItems = ItemHelpers.LoadItems(VerificationTest.Instrument.InstrumentType, afterItemValues);
+                var items = ItemHelpers.LoadItems(VerificationTest.Instrument.InstrumentType, afterItemValues).ToList();
+                items.AddRange(ItemHelpers.LoadItems(TocHoneywellClient.TurboMonitor, afterItemValues));
+                items.RemoveAll(value => value.Metadata == null);
+                AfterTestItems = items;
             }
         }
     }

@@ -33,10 +33,16 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
             <controls:PercentageControl Passed="{Binding Instrument.HasPassed}"/>
         </StackPanel>
-        <StackPanel Margin="10 5 5 5" Grid.Column="1" 
+        <StackPanel Margin="10 5 5 5" 
+                    Grid.Column="1" 
+                    Grid.Row="0"
                     VerticalAlignment="Center">
             <TextBlock Margin="1" Text="{Binding TestDatePretty}"/>
             <TextBlock FontSize="28"
@@ -59,8 +65,10 @@
                             cal:View.Context="EventLogCommPortCard" />
         </StackPanel>
 
-        <Grid Grid.Column="2">
-            <UniformGrid Columns="5">
+        <Grid Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Grid.Row="1">
+            <UniformGrid Columns="2">
                 <controls:ValueDescriptionControl Label="Company Number"
                                                   Value="{Binding Instrument.SiteNumber2}" />
                 <controls:ValueDescriptionControl Label="Serial Number"
@@ -77,7 +85,8 @@
                                                   Value="{Binding Instrument.PulseBSelect}" />
                 <controls:ValueDescriptionControl Label="Pulser B Scaling"
                                                   Value="{Binding Instrument.PulseBScaling}" />
-            </UniformGrid></Grid>
+            </UniformGrid>
+        </Grid>
 
         <!--<StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">

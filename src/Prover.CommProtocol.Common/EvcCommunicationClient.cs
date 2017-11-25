@@ -116,6 +116,10 @@ namespace Prover.CommProtocol.Common
 
                         await ConnectToInstrument();
                     }
+                    catch (UnauthorizedAccessException unauthorizedAccessException)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         Log.Warn(ex.Message);

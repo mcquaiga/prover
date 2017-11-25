@@ -59,8 +59,8 @@ namespace Prover.Core.VerificationTests
 
         public void Dispose()
         {
-            _communicationClient.Dispose();
-            VolumeTestManager.Dispose();
+            _communicationClient?.Dispose();
+            VolumeTestManager?.Dispose();
         }
 
         public Instrument Instrument { get; private set; }

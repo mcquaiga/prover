@@ -32,21 +32,21 @@ namespace Prover.GUI.Screens.QAProver
         private string _connectionStatusMessage;
         private ReactiveList<SelectableInstrumentType> _instrumentTypes;
 
-        private readonly IQaRunTestManager _qaTestRunManager;
+        private IQaRunTestManager _qaTestRunManager;
 
         private int _selectedBaudRate;
         private string _selectedCommPort;
         private string _selectedTachCommPort;
         private bool _showConnectionDialog;
 
-        private readonly IDisposable _testStatusSubscription;
+        private IDisposable _testStatusSubscription;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IQaRunTestManager qaTestRunManager)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
         {
-            _qaTestRunManager = qaTestRunManager;
-            _testStatusSubscription = _qaTestRunManager.TestStatus.Subscribe(OnTestStatusChange);
+           
+           
 
             /***  Setup Instruments list  ***/
             InstrumentTypes = new ReactiveList<SelectableInstrumentType>
@@ -111,7 +111,8 @@ namespace Prover.GUI.Screens.QAProver
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
 
-        public VolumeTestViewModel VolumeInformationItem { get; set; }
+        public VolumeTestViewModel VolumeTestView =>
+            TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
@@ -184,6 +185,8 @@ namespace Prover.GUI.Screens.QAProver
                 try
                 {
                     var commPort = GetCommPort();
+                    _qaTestRunManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaTestRunManager.TestStatus.Subscribe(OnTestStatusChange);
                     await _qaTestRunManager.InitializeTest(SelectedInstrument, commPort);
                     await InitializeViews(_qaTestRunManager, _qaTestRunManager.Instrument);
                     ViewContext = EditQaTestViewContext;
@@ -245,7 +248,7 @@ namespace Prover.GUI.Screens.QAProver
 
         public void Handle(SaveTestEvent message)
         {
-            _qaTestRunManager.SaveAsync();
+            _qaTestRunManager?.SaveAsync();
         }
     }
 }

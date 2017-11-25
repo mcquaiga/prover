@@ -24,30 +24,32 @@
                     DisplayValue="{Binding TestRun.PercentError}"
                     Passed="{Binding TestRun.HasPassed}" />
                 <StackPanel Margin="5">
-                    <controls1:ValueDescriptionControl Label="Applied KMO (AAT Sim)" 
+                    <controls1:ValueDescriptionControl Label="KMO (AAT Sim)" 
                                                        Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                        IsReadOnly="False"
                                                        HorizontalAlignment="Center"/>
-                    <UniformGrid Columns="2" HorizontalAlignment="Center">
-                        <controls1:ValueDescriptionControl Label="Main Rotor Pulses" 
+                    <UniformGrid Columns="2" 
+                                 HorizontalAlignment="Center">
+                        
+                        <controls1:ValueDescriptionControl Label="Main Pulses" 
                                                            Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                            IsReadOnly="False"/>
-                        <controls1:ValueDescriptionControl Label="Sensing Rotor Pulses" 
+                        
+                        <controls1:ValueDescriptionControl Label="Sense Pulses" 
                                                            Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                            IsReadOnly="False"/>
-                        <controls1:ValueDescriptionControl Label="True Adjusted Vol." 
-                                                           Value="{Binding AdjustedVolume}"
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
-                        <controls1:ValueDescriptionControl Label="EVC Adjusted Vol." Value="{Binding EvcAdjustedVolume}" 
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
-                        <controls1:ValueDescriptionControl Label="True Unadjusted Vol." Value="{Binding UnadjustedVolume}"
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
-                        <controls1:ValueDescriptionControl Label="EVC Unadjusted Vol." Value="{Binding EvcUnadjustedVolume}"
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
+                        
+                        <controls1:ValueDescriptionControl Label="True Adjusted" 
+                                                           Value="{Binding AdjustedVolume}" />
+                        
+                        <controls1:ValueDescriptionControl Label="EVC Adjusted" 
+                                                           Value="{Binding EvcAdjustedVolume}" />
+                        
+                        <controls1:ValueDescriptionControl Label="True Unadjusted" 
+                                                           Value="{Binding UnadjustedVolume}" />
+                        
+                        <controls1:ValueDescriptionControl Label="EVC Unadjusted" 
+                                                           Value="{Binding EvcUnadjustedVolume}"/>
                     </UniformGrid>
 
                 </StackPanel>

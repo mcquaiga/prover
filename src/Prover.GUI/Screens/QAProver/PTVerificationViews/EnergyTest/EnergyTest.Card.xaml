@@ -29,13 +29,9 @@
                                FontSize="10"/>
                     <UniformGrid Columns="2" HorizontalAlignment="Center">
                         <controls1:ValueDescriptionControl Label="True Calculated" 
-                                                           Value="{Binding EnergyTest.ActualEnergy}" 
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
+                                                           Value="{Binding EnergyTest.ActualEnergy}" />
                         <controls1:ValueDescriptionControl Label="EVC Calculated" 
-                                                           Value="{Binding EnergyTest.EvcEnergy}" 
-                                                           LabelFontSize="10"
-                                                           ValueFontSize="12"/>
+                                                           Value="{Binding EnergyTest.EvcEnergy}" />
                     </UniformGrid>
                     
                 </StackPanel>

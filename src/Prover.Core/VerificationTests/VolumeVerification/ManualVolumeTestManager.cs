@@ -68,7 +68,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

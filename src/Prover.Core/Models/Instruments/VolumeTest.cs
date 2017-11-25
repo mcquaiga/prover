@@ -148,20 +148,29 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
+                return TotalCorrectionFactor * DriveType.UnCorrectedInputVolume(AppliedInput);
+            }
+        }
+
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.T &&
                     VerificationTest.TemperatureTest != null)
-                    return VerificationTest.TemperatureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.TemperatureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.P &&
                     VerificationTest.PressureTest != null)
-                    return VerificationTest.PressureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor*VerificationTest.TemperatureTest?.ActualFactor*
-                           VerificationTest.SuperFactorTest.SuperFactorSquared*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest?.ActualFactor *
+                           VerificationTest.TemperatureTest?.ActualFactor *
+                           VerificationTest.SuperFactorTest.SuperFactorSquared;
 
                 return null;
             }
