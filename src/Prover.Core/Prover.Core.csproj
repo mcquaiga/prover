@@ -190,7 +190,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AkavacheSqliteLinkerOverride.cs" />
     <Compile Include="Collections\FixedSizeQueue.cs" />
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
@@ -246,6 +245,10 @@
     <Compile Include="Migrations\201711180713513_Add-FrequencyTest.Designer.cs">
       <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
@@ -300,7 +303,6 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="..\..\..\..\Desktop\EvcProver.cd" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -364,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711180713513_Add-FrequencyTest.resx">
       <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250817346_Modify-FrequencyTests.resx">
+      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

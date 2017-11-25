@@ -88,7 +88,7 @@ namespace Prover.GUI.Screens.QAProver
                     SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
                     SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = _.Item4.Name;
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = _.Item4?.Name;
 
                     await SettingsManager.Save();
                 });

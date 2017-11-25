@@ -1,40 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Prover.CommProtocol.Common;
+﻿using Newtonsoft.Json;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.CommClients;
-using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.Extensions;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class FrequencyTest : BaseVerificationTest
+    public class FrequencyTest : BaseEntity, IHaveVerificationTest, IHavePercentError
     {
-        private string _afterTestData;
-
         public FrequencyTest() { }
 
         public FrequencyTest(VerificationTest verificationTest)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsFrequencyTest == true);
             VerificationTest = verificationTest;
             VerificationTestId = verificationTest.Id;
+        }       
+
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
+        public Guid VerificationTestId { get; set; }
+
+        public long MainRotorPulseCount { get; set; }
+        public long SenseRotorPulseCount { get; set; }
+        public long MechanicalOutputFactor { get; set; }
+
+        private string _itemsType;
+        public string ItemsType
+        {
+            get => PreTestItemValues?.GetType().AssemblyQualifiedName;
+            set => _itemsType = value;
         }
 
         [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; } = new List<ItemValue>();
-        public string AfterTestData
+        public IFrequencyTestItems PreTestItemValues { get; set; }
+
+        private string _preTestItemData;
+        public string PreTestItemData
         {
-            get { return AfterTestItems.Serialize(); }
-            set { _afterTestData = value; }
+            get => JsonConvert.SerializeObject(PreTestItemValues);
+            set => _preTestItemData = value;
         }
 
-        public override decimal? PercentError
+        [NotMapped]
+        public IFrequencyTestItems PostTestItemValues { get; set; }
+
+        private string _postTestItemData;
+        public string PostTestItemData
+        {
+            get => JsonConvert.SerializeObject(PostTestItemValues);
+            set => _postTestItemData = value;
+        }
+
+        public decimal? PercentError
         {
             get
             {
@@ -45,11 +63,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public override decimal? ActualFactor => 0m;
-
-        public long MainRotorPulseCount { get; set; }
-        public long SenseRotorPulseCount { get; set; }
-        public long MechanicalOutputFactor { get; set; }
+        [NotMapped]
+        public bool HasPassed => PercentError.HasValue && PercentError < 1 && PercentError > -1;
 
         public decimal AdjustedVolume()
         {
@@ -74,37 +89,25 @@ namespace Prover.Core.Models.Instruments
 
         public decimal? EvcAdjustedVolume()
         {
-            if (!AfterTestItems.Any()) return default(decimal?);
-            var startAdjusted = Items.GetHighResolutionValue(850, 851);
-            var endAdjusted = AfterTestItems.GetHighResolutionValue(850, 851);
-            return endAdjusted - startAdjusted;
+            return PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading;
         }
 
         public decimal? EvcUnadjustedVolume()
         {
-            return AfterTestItems?.GetItem(852)?.NumericValue - Items?.GetItem(852)?.NumericValue;
+            return PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading;
         }
-
-        [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
-
+        
         public override void OnInitializing()
         {
             base.OnInitializing();
 
-            var itemsValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
-            var newItems = Items.ToList();
-            newItems.AddRange(ItemHelpers.LoadItems(TocHoneywellClient.TurboMonitor, itemsValues));
-            newItems.RemoveAll(value => value.Metadata == null);
-            Items = newItems;
+            if (string.IsNullOrEmpty(_itemsType)) return;
 
-            if (!string.IsNullOrEmpty(_afterTestData))
+            var type = Type.GetType(_itemsType, name => Assembly.Load(name), (assembly, s, arg3) => assembly.GetType(s)); 
+            if (type != null && !string.IsNullOrEmpty(_preTestItemData) && !string.IsNullOrEmpty(_postTestItemData))
             {
-                var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_afterTestData);
-                var items = ItemHelpers.LoadItems(VerificationTest.Instrument.InstrumentType, afterItemValues).ToList();
-                items.AddRange(ItemHelpers.LoadItems(TocHoneywellClient.TurboMonitor, afterItemValues));
-                items.RemoveAll(value => value.Metadata == null);
-                AfterTestItems = items;
+                PreTestItemValues = (IFrequencyTestItems) JsonConvert.DeserializeObject(_preTestItemData, type);
+                PostTestItemValues = (IFrequencyTestItems) JsonConvert.DeserializeObject(_postTestItemData, type);
             }
         }
     }

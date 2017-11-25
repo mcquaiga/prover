@@ -207,7 +207,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="QaTestRunApp.cs" />
-    <Compile Include="ConnectionDialogManager.cs" />
     <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>

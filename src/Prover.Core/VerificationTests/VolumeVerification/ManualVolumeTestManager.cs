@@ -31,11 +31,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             await commClient.Connect();
 
-            volumeTest.Items = (ICollection<ItemValue>)await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
-
+            volumeTest.Items = await commClient.GetVolumeItems();
+       
             if (volumeTest.VerificationTest.FrequencyTest != null)
             {
-                volumeTest.VerificationTest.FrequencyTest.Items = await commClient.GetFrequencyItems();
+                volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
             }
 
             await commClient.Disconnect();
@@ -56,7 +56,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     volumeTest.AfterTestItems = await commClient.GetVolumeItems();
                     if (volumeTest.VerificationTest.FrequencyTest != null)
                     {
-                        volumeTest.VerificationTest.FrequencyTest.AfterTestItems = await commClient.GetFrequencyItems();
+                        volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
                     }
                 }
                 finally

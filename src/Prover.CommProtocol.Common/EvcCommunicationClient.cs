@@ -116,7 +116,7 @@ namespace Prover.CommProtocol.Common
 
                         await ConnectToInstrument();
                     }
-                    catch (UnauthorizedAccessException unauthorizedAccessException)
+                    catch (UnauthorizedAccessException)
                     {
                         throw;
                     }
@@ -203,10 +203,7 @@ namespace Prover.CommProtocol.Common
         ///     Read frequency test items defined in items xml definitions
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<ItemValue>> GetFrequencyItems()
-        {
-            return await GetItemValues(ItemDetails.FrequencyTestItems());
-        }
+        public abstract Task<IFrequencyTestItems> GetFrequencyItems();
 
         /// <summary>
         ///     Read pressure test items defined in items xml definitions

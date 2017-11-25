@@ -62,11 +62,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             if (evcTestItemReset != null)
                 await evcTestItemReset.PreReset(commClient);
 
-            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+            volumeTest.Items = await commClient.GetVolumeItems();
 
             if (volumeTest.VerificationTest.FrequencyTest != null)
             {
-                volumeTest.VerificationTest.FrequencyTest.Items = await commClient.GetItemValues(commClient.ItemDetails.FrequencyTestItems());
+                volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
             }
 
             await commClient.Disconnect();
@@ -117,11 +117,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 try
                 {
                     await commClient.Connect();
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    volumeTest.AfterTestItems = await commClient.GetVolumeItems();
 
                     if (volumeTest.VerificationTest.FrequencyTest != null)
                     {
-                        volumeTest.VerificationTest.FrequencyTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.FrequencyTestItems());
+                        volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
                     }
 
                     if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset(commClient);

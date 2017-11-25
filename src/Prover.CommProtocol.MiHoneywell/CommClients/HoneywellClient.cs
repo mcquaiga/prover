@@ -110,8 +110,10 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             return results;
         }
 
-        //public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
-        //    => await GetItemValues(itemNumbers.GetAllItemNumbers());
+        public override Task<IFrequencyTestItems> GetFrequencyItems()
+        {
+            throw new NotImplementedException();
+        }
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
@@ -173,9 +175,9 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             _tibBoardItems = ItemHelpers.LoadItems(TurboMonitor);
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetFrequencyItems()
+        public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
-            var results = await base.GetFrequencyItems();            
+            var results = await GetItemValues(ItemDetails.FrequencyTestItems());
             await Disconnect();
             Thread.Sleep(1000);
 
@@ -189,7 +191,8 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 
             var values = results.ToList();
             values.AddRange(tibResults.ToList());
-            return values;
+
+            return new FrequencyTestItems(values);
         }
     }
 }
