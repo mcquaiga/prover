@@ -153,7 +153,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _fromCertificates?.Dispose();
             _toCertificates?.Dispose();

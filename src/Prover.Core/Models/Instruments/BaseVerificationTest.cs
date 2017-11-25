@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class BaseVerificationTest : ProverTable
+    public abstract class BaseVerificationTest : ProverTable, IHavePercentError, IHaveVerificationTest
     {
         [NotMapped]
         public bool HasPassed => PercentError.HasValue && PercentError < PassTolerance && PercentError > -PassTolerance;
@@ -32,5 +32,17 @@ namespace Prover.Core.Models.Instruments
                 ? decimal.Round(result.Value * 100, 2) 
                 : default(decimal?);
         }
+    }
+
+    public interface IHavePercentError
+    {
+        decimal? PercentError { get; }
+        bool HasPassed { get; }
+    }
+
+    public interface IHaveVerificationTest
+    {
+        Guid VerificationTestId { get; set; }
+        VerificationTest VerificationTest { get; set; }
     }
 }

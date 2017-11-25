@@ -134,11 +134,9 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (instrumentType == null)
                 throw new ArgumentNullException(nameof(instrumentType));
 
-            var metadata = instrumentType.ItemsMetadata;
-
             return itemValues
-                .Where(i => metadata.GetItem(i.Key) != null)
-                .Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
+                .Where(i => instrumentType.ItemsMetadata.GetItem(i.Key) != null)
+                .Select(iv => new ItemValue(instrumentType.ItemsMetadata.GetItem(iv.Key), iv.Value));
         }
     }
 }

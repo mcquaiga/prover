@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
@@ -14,33 +16,36 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             Id = 6,
             AccessCode = 6,
             Name = "Turbo Monitor",
-            ItemFilePath = "TurboMonitorItems.xml"
+            ItemsMetadata = new List<ItemMetadata>()
+            {
+                new ItemMetadata() { Code = "HIGHRES", Number = 851, IsFrequencyTest = true}
+            }
         };
-
-        private readonly IEnumerable<ItemMetadata> _tibBoardItems;
 
         public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
         {
-            //_tibBoardItems = TurboMonitor;
+            
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetFrequencyItems()
+        public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
-            var results = await base.GetFrequencyItems();
-            //await Disconnect();
-            //Thread.Sleep(1000);
+            var firstInstrument = InstrumentType;
+            var results = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
+            await Disconnect();
+            Thread.Sleep(1000);
 
-            //InstrumentType = TurboMonitor;
-            //await Connect();
-            //var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
-            //await Disconnect();
-            //Thread.Sleep(1000);
+            InstrumentType = TurboMonitor;
+            await Connect(new CancellationToken());
+            var tibResults = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
+            await Disconnect();
 
-            //InstrumentType = Instruments.Toc;
+            Thread.Sleep(1000);
+
+            InstrumentType = firstInstrument;
 
             var values = results.ToList();
-            //values.AddRange(tibResults.ToList());
-            return values;
+            values.AddRange(tibResults.ToList());
+            return new FrequencyTestItems(values);
         }
     }
 }

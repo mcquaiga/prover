@@ -37,7 +37,7 @@ namespace Prover.CommProtocol.Common
 
         protected ICommPort CommPort { get; }
 
-        public InstrumentType InstrumentType { get; }
+        public InstrumentType InstrumentType { get; set; }
 
         public IObservable<string> StatusObservable => _statusSubject.AsObservable();
 
@@ -114,7 +114,7 @@ namespace Prover.CommProtocol.Common
                     {
                         await ConnectToInstrument(ct, accessCode);
                     }
-                    catch (UnauthorizedAccessException unauthorizedAccessException)
+                    catch (UnauthorizedAccessException)
                     {
                         throw;
                     }
@@ -206,10 +206,7 @@ namespace Prover.CommProtocol.Common
         ///     Read frequency test items defined in items xml definitions
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<ItemValue>> GetFrequencyItems()
-        {
-            return await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
-        }
+        public abstract Task<IFrequencyTestItems> GetFrequencyItems();
 
         /// <summary>
         ///     Read pressure test items defined in items xml definitions

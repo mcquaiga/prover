@@ -104,6 +104,11 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             return results;
         }
 
+        public override Task<IFrequencyTestItems> GetFrequencyItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
             var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));

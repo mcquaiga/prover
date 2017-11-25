@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201711250153353_Add-FrequencyTests.Designer.cs">
       <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -377,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711250153353_Add-FrequencyTests.resx">
       <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250647351_Modify-FrequencyTests.resx">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

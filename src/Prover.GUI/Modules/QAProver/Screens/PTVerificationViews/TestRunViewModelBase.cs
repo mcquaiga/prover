@@ -9,7 +9,7 @@ using ReactiveUI;
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public abstract class TestRunViewModelBase<T> : ViewModelBase, IHandle<VerificationTestEvent>
-        where T : BaseVerificationTest
+        where T : IHavePercentError, IHaveVerificationTest
     {
         protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun)
             : base(screenManager, eventAggregator)
@@ -22,8 +22,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public T TestRun
         {
-            get { return _testRun; }
-            set { this.RaiseAndSetIfChanged(ref _testRun, value); }
+            get => _testRun;
+            set => this.RaiseAndSetIfChanged(ref _testRun, value);
         }
 
         public decimal? PercentError => TestRun?.PercentError;

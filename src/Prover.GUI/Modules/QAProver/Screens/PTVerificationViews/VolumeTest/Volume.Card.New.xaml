@@ -65,11 +65,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="30*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="30*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="50*" />
+                <ColumnDefinition Width="40*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         VerticalAlignment="Top"

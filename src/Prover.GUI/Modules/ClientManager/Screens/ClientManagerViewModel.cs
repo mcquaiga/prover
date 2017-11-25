@@ -90,7 +90,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             ClientList = null;
         }

@@ -19,7 +19,6 @@
                                                    IsReadOnly="False"
                                                    HorizontalAlignment="Center"/>
                 <UniformGrid Columns="2">
-                        
                     <controls:ValueDescriptionControl Label="Main Pulses" 
                                                        Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                        IsReadOnly="False"/>
@@ -28,16 +27,16 @@
                                                        Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        IsReadOnly="False"/>
                         
-                    <controls:ValueDescriptionControl Label="True Adjusted" 
+                    <controls:ValueDescriptionControl Label="True Adj." 
                                                        Value="{Binding AdjustedVolume}" />
                         
-                    <controls:ValueDescriptionControl Label="EVC Adjusted" 
+                    <controls:ValueDescriptionControl Label="EVC Adj." 
                                                        Value="{Binding EvcAdjustedVolume}" />
                         
-                    <controls:ValueDescriptionControl Label="True Unadjusted" 
+                    <controls:ValueDescriptionControl Label="True Unadj." 
                                                        Value="{Binding UnadjustedVolume}" />
                         
-                    <controls:ValueDescriptionControl Label="EVC Unadjusted" 
+                    <controls:ValueDescriptionControl Label="EVC Unadj." 
                                                        Value="{Binding EvcUnadjustedVolume}"/>
                 </UniformGrid>
 

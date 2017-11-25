@@ -157,7 +157,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
 
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             OkCommand?.Dispose();
             CancelCommand?.Dispose();

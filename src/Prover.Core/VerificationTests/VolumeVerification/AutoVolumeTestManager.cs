@@ -64,11 +64,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             CommClient.StatusObservable.Subscribe(Status);
             await CommClient.Connect(ct);
-            VolumeTest.Items = (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            VolumeTest.Items = await CommClient.GetVolumeItems();
 
             if (VolumeTest.VerificationTest.FrequencyTest != null)
             {
-                VolumeTest.VerificationTest.FrequencyTest.Items = await CommClient.GetFrequencyItems();
+                VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
             }
 
             await CommClient.Disconnect();
@@ -134,10 +134,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 try
                 {
                     await CommClient.Connect(ct);
-                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
                     if (VolumeTest.VerificationTest.FrequencyTest != null)
                     {
-                        VolumeTest.VerificationTest.FrequencyTest.AfterTestItems = await CommClient.GetFrequencyItems();
+                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
                     }
                 }
                 finally
