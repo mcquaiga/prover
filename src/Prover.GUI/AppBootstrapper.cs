@@ -103,8 +103,15 @@ namespace Prover.GUI
                 if (File.Exists($"{module}.dll"))
                 {
                     var ass = Assembly.LoadFrom($"{module}.dll");
-                    assemblies.Add(ass);
+                    if (ass != null)
+                    {
+                        var type = ass.GetType($"{module}.Startup");
+                        type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
+                        assemblies.Add(ass);
+                    }
+                    
                 }
+                
             }
 
             _assemblies = assemblies.ToArray();

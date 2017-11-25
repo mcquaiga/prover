@@ -56,7 +56,6 @@ namespace Prover.Core.Models.Instruments.DriveTypes
             get
             {
                 if (!_instrument.VolumeTest.EvcCorrected.HasValue) return null;
-
                 var energyValue = _instrument.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {

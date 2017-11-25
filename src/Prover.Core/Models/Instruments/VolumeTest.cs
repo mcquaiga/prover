@@ -165,21 +165,29 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
+                return TotalCorrectionFactor * DriveType.UnCorrectedInputVolume(AppliedInput);
+            }
+        }
+
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
                     VerificationTest.TemperatureTest != null)
-                    return VerificationTest.TemperatureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.TemperatureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
                     VerificationTest.PressureTest != null)
-                    return VerificationTest.PressureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                     return VerificationTest.PressureTest?.ActualFactor *
                            VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                           VerificationTest.SuperFactorTest.SuperFactorSquared;
 
                 return null;
             }
@@ -204,7 +212,7 @@ namespace Prover.Core.Models.Instruments
                     ? "Rotary"
                     : "Mechanical";
 
-                if (InstrumentType.Id == 12)
+                if (InstrumentType == Instruments.Tci)
                     DriveTypeDiscriminator = "Rotary";                
             }
                 

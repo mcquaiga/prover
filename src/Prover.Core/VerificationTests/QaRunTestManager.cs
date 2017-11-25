@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.Models.Clients;
@@ -29,7 +30,7 @@ namespace Prover.Core.VerificationTests
         IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(InstrumentType instrumentType, CancellationToken ct = new CancellationToken(),
+        Task InitializeTest(InstrumentType instrumentType, CommPort commPort, CancellationToken ct = new CancellationToken(),
             Client client = null);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
@@ -41,7 +42,7 @@ namespace Prover.Core.VerificationTests
     public class QaRunTestManager : IQaRunTestManager
     {
         protected static Logger Log = LogManager.GetCurrentClassLogger();
-        private readonly EvcCommunicationClient _communicationClient;
+        private EvcCommunicationClient _communicationClient;
         private readonly IEventAggregator _eventAggregator;
         private readonly TestRunService _testRunService;
         private readonly IReadingStabilizer _readingStabilizer;
@@ -53,7 +54,6 @@ namespace Prover.Core.VerificationTests
         public QaRunTestManager(
             IEventAggregator eventAggregator,
             TestRunService testRunService,
-            EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             TachometerService tachometerService,
             IEnumerable<IPreTestValidation> validators = null,
@@ -61,7 +61,6 @@ namespace Prover.Core.VerificationTests
         {
             _eventAggregator = eventAggregator;
             _testRunService = testRunService;
-            _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
             _tachometerService = tachometerService;
             _validators = validators;
@@ -72,8 +71,9 @@ namespace Prover.Core.VerificationTests
         public IObservable<string> TestStatus => _testStatus.AsObservable();
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType, CancellationToken ct, Client client = null)
+        public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort)
         {
+            _communicationClient = instrumentType.ClientFactory.Invoke(commPort);
             try
             {
                 ct.ThrowIfCancellationRequested();
@@ -84,13 +84,12 @@ namespace Prover.Core.VerificationTests
                 ct.ThrowIfCancellationRequested();
 
                 _testStatus.OnNext("Downloading items...");
-                var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
-                Instrument = new Instrument(instrumentType, items, client);                
+            	var items = await _communicationClient.GetAllItems();
+
+                Instrument = new Instrument(instrumentType, items, client);           
 
                 await RunVerifiers();
-
-                await DisconnectFromInstrument();
-
+            	await DisconnectFromInstrument();
                 if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
                     SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
                     TestSettings.VolumeTestType.Manual)
@@ -227,8 +226,7 @@ namespace Prover.Core.VerificationTests
 
             if (test != null)
                 test.Items =
-                    (ICollection<ItemValue>)
-                    await _communicationClient.GetItemValues(_communicationClient.ItemDetails.TemperatureItems());
+                    await _communicationClient.GetTemperatureTestItems();
         }
 
         public async Task DownloadPressureTestItems(int level)
@@ -236,9 +234,7 @@ namespace Prover.Core.VerificationTests
             var firstOrDefault = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
             var test = firstOrDefault?.PressureTest;
             if (test != null)
-                test.Items =
-                    (ICollection<ItemValue>)
-                    await _communicationClient.GetItemValues(_communicationClient.ItemDetails.PressureItems());
+                test.Items = await _communicationClient.GetPressureTestItems();                   
         }
     }
 }

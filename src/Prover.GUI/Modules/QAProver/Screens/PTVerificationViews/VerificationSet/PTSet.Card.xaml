@@ -37,12 +37,13 @@
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
 
-            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                 HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Vertical">
                     <materialDesign:ColorZone Padding="2" Margin="2"
                                               materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                               Mode="Accent">
-                        <Grid>
+                        <Grid HorizontalAlignment="Stretch">
                             <TextBlock Text="{Binding Level}"
                                        FontSize="18"
                                        Foreground="White"
@@ -67,26 +68,25 @@
                         </Grid>
 
                     </materialDesign:ColorZone>
-                    <Grid />
-                    <StackPanel Orientation="Horizontal">
-                        <!-- Column 1 - PTZ Verification -->
-                        <StackPanel Orientation="Vertical">
-                            <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
-                                            Margin="2" />
+                    <!-- Column 1 - PTZ Verification -->
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Stretch">
+                        <ContentControl cal:View.Model="{Binding TemperatureTestViewModel}" cal:View.Context="Card"
+                                        Margin="2" />
 
-                            <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
-                                            Margin="2" />
+                        <ContentControl cal:View.Model="{Binding PressureTestViewModel}" cal:View.Context="Card"
+                                        Margin="2" />
 
-                            <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
-                                            Margin="2" />
+                        <ContentControl cal:View.Model="{Binding SuperFactorTestViewModel}" cal:View.Context="Card"
+                                        Margin="2" />
 
-                        </StackPanel>
-                        <!-- Column 2 - Volume Verification -->
+                    </StackPanel>
+                    <!-- Column 2 - Volume Verification --><!--
                         <ContentControl cal:View.Model="{Binding VolumeTestViewModel}"
                                         cal:View.Context="Card"
                                         Visibility="{Binding ShowVolumeTestViewModel, Converter={StaticResource BoolToHiddenConverter}}"
-                                        Margin="2" />
-                    </StackPanel>
+                                        Margin="2" />-->
+
                 </StackPanel>
             </materialDesign:Card>
         </materialDesign:DialogHost>

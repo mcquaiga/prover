@@ -342,6 +342,9 @@
     <EmbeddedResource Include="Migrations\201711180713513_Add-FrequencyTest.resx">
       <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711180713513_Add-FrequencyTest.resx">
+      <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612151919517_AddClients.resx">
       <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
     </EmbeddedResource>

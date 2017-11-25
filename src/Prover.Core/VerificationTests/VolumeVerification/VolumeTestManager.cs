@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -9,82 +7,59 @@ using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Settings;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public enum VolumeTestSteps
-    {
-        PreTest,
-        RunningSyncTest,
-        ExecutingTest,
-        PostTest
-    }
-
-    public interface IPulseInputService
-    {
-    }
-
     public abstract class VolumeTestManager : IDisposable
     {
-        public VolumeTest VolumeTest { get; }
-        protected Logger Log = LogManager.GetCurrentClassLogger();
         protected IEventAggregator EventAggreator;
-        protected readonly EvcCommunicationClient CommClient;
-        protected readonly Subject<string> Status = new Subject<string>();
-        protected readonly Subject<VolumeTestSteps> TestStep = new Subject<VolumeTestSteps>();
-
         protected IDInOutBoard FirstPortAInputBoard;
-        protected IDInOutBoard FirstPortBInputBoard;               
+        protected IDInOutBoard FirstPortBInputBoard;
+        
+        protected bool IsFirstVolumeTest = true;
+        protected Logger Log;
+        protected bool RequestStopTest;
+        protected CancellationTokenSource TestCancellationToken;
 
-        protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest)
+        protected VolumeTestManager(IEventAggregator eventAggregator)
         {
-            VolumeTest = volumeTest;
+            Log = LogManager.GetCurrentClassLogger();
             EventAggreator = eventAggregator;
-            CommClient = commClient;
 
-            StatusMessage
-                .Subscribe(x => Log.Info(x));
-
-            CommClient.StatusObservable.Subscribe(Status);
+            //DaqService = daqService;
+            FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
+            FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
         }
-
-        public IObservable<string> StatusMessage => Status.AsObservable();
-        public IObservable<VolumeTestSteps> TestStepsObservable => TestStep.AsObservable();
 
         public bool RunningTest { get; set; }
 
-        public virtual async Task RunTest(CancellationToken ct, Subject<string> testStatus = null)
+        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset, CancellationToken ct)
         {
             try
             {
                 RunningTest = true;
-                Status.OnNext("Starting volume test...");               
 
                 await Task.Run(async () =>
                 {
-                    if (SettingsManager.SharedSettingsInstance.TestSettings.RunVolumeSyncTest)
-                    {
-                        TestStep.OnNext(VolumeTestSteps.RunningSyncTest);
-                        await ExecuteSyncTest(ct);
-                    }
+                    Log.Info("Volume test started!");
 
-                    TestStep.OnNext(VolumeTestSteps.PreTest);
-                    await PreTest(ct);
+                    await ExecuteSyncTest(commClient, volumeTest, ct);
+                    ct.ThrowIfCancellationRequested();
 
-                    TestStep.OnNext(VolumeTestSteps.ExecutingTest);
-                    await ExecutingTest(ct);
+                    await PreTest(commClient, volumeTest, evcTestItemReset);
 
-                    TestStep.OnNext(VolumeTestSteps.PostTest);
-                    await PostTest(ct);
+                    await ExecutingTest(volumeTest, ct);
+                    ct.ThrowIfCancellationRequested();
 
-                    Status.OnNext("Finished volume test.");
+                    await PostTest(commClient, volumeTest, evcTestItemReset);
+
+                    Log.Info("Volume test finished!");
                 }, ct);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-                Status.OnNext("Volume test cancelled.");
+                Log.Info("volume test cancellation requested.");
                 throw;
             }
             finally
@@ -93,21 +68,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        public abstract Task ExecuteSyncTest(CancellationToken ct);
-        public abstract Task PreTest(CancellationToken ct);
-        public abstract Task ExecutingTest(CancellationToken ct);
-        public abstract Task PostTest(CancellationToken ct);
+        protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
-        public virtual void Dispose()
-        {
-            TestStep?.Dispose();
-            Status?.Dispose();
-        }
+        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset);
 
-        protected static void ResetPulseCounts(VolumeTest volumeTest)
-        {
-            volumeTest.PulseACount = 0;
-            volumeTest.PulseBCount = 0;
-        }
+        protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
+
+        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcPostTestItemReset);
+
+        public abstract void Dispose();
+
     }
 }

@@ -89,8 +89,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
-    <Compile Include="HoneywellClient.cs" />
-    <Compile Include="InstrumentTypes.cs" />
+    <Compile Include="CommClients\HoneywellClient.cs" />
+    <Compile Include="Instruments.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />
     <Compile Include="Messaging\Response\MiResponseCodes.cs" />
@@ -111,6 +111,16 @@
   <ItemGroup>
     <None Include="app.config" />
     <Content Include="ItemDefinitions\Items.json">
+	<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\TurboMonitorItems.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\TOCItems.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ItemDefinitions\Type_EC350.json">
@@ -130,9 +140,7 @@
     </Content>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommClients\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

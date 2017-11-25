@@ -14,7 +14,7 @@ namespace Prover.Core.Models.Instruments
 {
     public abstract class ProverTable : EntityWithId
     {
-        private string _instrumentData;
+        protected string _instrumentData;
 
         public string InstrumentData
         {

@@ -44,7 +44,7 @@ namespace Prover.CommProtocol.Common
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
         /// </summary>
-        public virtual IEnumerable<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
+        public virtual List<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
         /// <summary>
         ///     Is this client already connected to an instrument
@@ -114,6 +114,10 @@ namespace Prover.CommProtocol.Common
                     {
                         await ConnectToInstrument(ct, accessCode);
                     }
+                    catch (UnauthorizedAccessException unauthorizedAccessException)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         Log.Warn(ex.Message);
@@ -164,14 +168,14 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         /// <param name="itemNumber">Item number for the value to request</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> GetItemValue(int itemNumber);
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
 
-        /// <summary>
-        ///     Read a group of items from instrument
-        /// </summary>
-        /// <param name="itemNumbers">Item numbers for the values to request</param>
-        /// <returns></returns>
-        public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
+        ///// <summary>
+        /////     Read a group of items from instrument
+        ///// </summary>
+        ///// <param name="itemNumbers">Item numbers for the values to request</param>
+        ///// <returns></returns>
+        //public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
 
         /// <summary>
         ///     Read a group of items from instrument
@@ -179,6 +183,51 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumbers">Item numbers for the values to request</param>
         /// <returns></returns>
         public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
+        ///     Read all items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetAllItems()
+        {
+            return await GetItemValues(ItemDetails);
+        }
+
+        /// <summary>
+        ///     Read volume items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetVolumeItems()
+        {
+            return await GetItemValues(ItemDetails.VolumeItems());
+        }
+
+        /// <summary>
+        ///     Read frequency test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetFrequencyItems()
+        {
+            return await GetItemValues(ItemDetails.FrequencyTestItems());
+        }
+
+        /// <summary>
+        ///     Read pressure test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetPressureTestItems()
+        {
+            return await GetItemValues(ItemDetails.PressureItems());
+        }
+
+        /// <summary>
+        ///     Read temperature test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetTemperatureTestItems()
+        {
+            return await GetItemValues(ItemDetails.TemperatureItems());
+        }
 
         /// <summary>
         ///     Write a value to an item

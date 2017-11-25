@@ -25,6 +25,7 @@ namespace Prover.CommProtocol.Common.Items
 
         public virtual decimal NumericValue
         {
+        {
             get
             {
                 if (!decimal.TryParse(RawValue, out var result)) return 0;
@@ -71,8 +72,17 @@ namespace Prover.CommProtocol.Common.Items
 
         public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
         {
-            if (items == null) return new Dictionary<int, string>();
-            return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
+            try
+            {
+                if (items == null) return new Dictionary<int, string>();
+                return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
 
         public static string Serialize(this IEnumerable<ItemValue> items)
