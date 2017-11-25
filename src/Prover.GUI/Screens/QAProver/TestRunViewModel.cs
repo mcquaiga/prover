@@ -30,7 +30,7 @@ namespace Prover.GUI.Screens.QAProver
         private const string EditQaTestViewContext = "EditTestView";
 
         private string _connectionStatusMessage;
-        private ReactiveList<SelectableInstrumentType> _instrumentTypes;
+        
 
         private IQaRunTestManager _qaTestRunManager;
 
@@ -44,31 +44,36 @@ namespace Prover.GUI.Screens.QAProver
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {
-           
-           
-
+        {           
             /***  Setup Instruments list  ***/
-            InstrumentTypes = new ReactiveList<SelectableInstrumentType>
+            Instruments = new ReactiveList<SelectableInstrumentType>
             {
                 ChangeTrackingEnabled = true
             };
 
-            Instruments.GetAll().ForEach(
-                x => InstrumentTypes.Add(new SelectableInstrumentType
+            Instruments.ItemChanged
+                .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)              
+                .Select(x => x.Sender.Instrument)
+                .ToProperty(this, x => x.SelectedInstrument, out _selectedInstrument);
+
+            this.WhenAnyValue(x => x.SelectedInstrument)
+                .Where(i => i != null)
+                .Subscribe(x =>
+                {
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Name;
+                });
+
+            CommProtocol.MiHoneywell.Instruments.GetAll().ForEach(
+                x => Instruments.Add(new SelectableInstrumentType
                 {
                     Instrument = x,
-                    IsSelected = x.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed
+                    IsSelected = false
                 }));
 
-            InstrumentTypes.ItemChanged
-                .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)
-                .Select(x => x.Sender)
-                .Subscribe(async x =>
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Instrument.Name;
-                    await SettingsManager.Save();
-                });
+            var lastInstrument = Instruments.FirstOrDefault(x =>
+                x.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+            if (lastInstrument != null)
+                lastInstrument.IsSelected = true;
 
             /***  Setup Comm Ports and Baud Rate settings ***/
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
@@ -82,15 +87,12 @@ namespace Prover.GUI.Screens.QAProver
                 ? SettingsManager.SettingsInstance.TachCommPort
                 : string.Empty;
 
-            this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort, x => x.SelectedInstrument)
+            this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort)
                 .Subscribe(async _ =>
                 {
                     SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
                     SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = _.Item4?.Name;
-
-                    await SettingsManager.Save();
                 });
 
             /*** Commands ***/
@@ -122,12 +124,14 @@ namespace Prover.GUI.Screens.QAProver
             set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
         }
 
-        public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
+        private readonly ObservableAsPropertyHelper<InstrumentType> _selectedInstrument;
+        public InstrumentType SelectedInstrument => _selectedInstrument.Value;
 
-        public ReactiveList<SelectableInstrumentType> InstrumentTypes
+        private ReactiveList<SelectableInstrumentType> _instruments;
+        public ReactiveList<SelectableInstrumentType> Instruments
         {
-            get { return _instrumentTypes; }
-            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+            get { return _instruments; }
+            set { this.RaiseAndSetIfChanged(ref _instruments, value); }
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
@@ -182,8 +186,10 @@ namespace Prover.GUI.Screens.QAProver
             ShowConnectionDialog = true;
 
             if (SelectedInstrument != null)
+            {
                 try
                 {
+                    await SettingsManager.Save();
                     var commPort = GetCommPort();
                     _qaTestRunManager = Locator.Current.GetService<IQaRunTestManager>();
                     _testStatusSubscription = _qaTestRunManager.TestStatus.Subscribe(OnTestStatusChange);
@@ -200,6 +206,8 @@ namespace Prover.GUI.Screens.QAProver
                 {
                     ShowConnectionDialog = false;
                 }
+            }
+               
         }
 
         private static CommPort GetCommPort()
@@ -224,7 +232,7 @@ namespace Prover.GUI.Screens.QAProver
                     TestViews.Add(item);
                 }
 
-                if (instrument.InstrumentType == Instruments.MiniAt)
+                if (instrument.InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
         }
@@ -234,10 +242,16 @@ namespace Prover.GUI.Screens.QAProver
             ConnectionStatusMessage = status;
         }
 
-        public class SelectableInstrumentType
+        public class SelectableInstrumentType : ReactiveObject
         {
-            public InstrumentType Instrument { get; set; }
-            public bool IsSelected { get; set; }
+            private bool _isSelected;
+            public bool IsSelected
+            {
+                get { return _isSelected; }
+                set { this.RaiseAndSetIfChanged(ref _isSelected, value); }
+            }
+
+            public InstrumentType Instrument { get; set; }            
         }
 
         public void Dispose()

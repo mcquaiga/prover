@@ -26,30 +26,30 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
                 .Subscribe(x =>
                 {
-                    TestRun.MainRotorPulseCount = x.Item1;
-                    TestRun.SenseRotorPulseCount = x.Item2;
-                    TestRun.MechanicalOutputFactor = x.Item3;
+                    TestRun.MainRotorPulseCount = x.Item1 ?? 0;
+                    TestRun.SenseRotorPulseCount = x.Item2 ?? 0;
+                    TestRun.MechanicalOutputFactor = x.Item3 ?? 0;
                     eventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     eventAggregator.PublishOnUIThread(new SaveTestEvent());
                 });
         }
 
-        private long _mechanicalOutputFactor;
-        public long MechanicalOutputFactor
+        private long? _mechanicalOutputFactor;
+        public long? MechanicalOutputFactor
         {
             get { return _mechanicalOutputFactor; }
             set { this.RaiseAndSetIfChanged(ref _mechanicalOutputFactor, value); }
         }
 
-        private long _mainRotorPulses;
-        public long MainRotorPulses
+        private long? _mainRotorPulses;
+        public long? MainRotorPulses
         {
             get { return _mainRotorPulses; }
             set { this.RaiseAndSetIfChanged(ref _mainRotorPulses, value); }
         }
 
-        private long _senseRotorPulses;
-        public long SenseRotorPulses
+        private long? _senseRotorPulses;
+        public long? SenseRotorPulses
         {
             get { return _senseRotorPulses; }
             set { this.RaiseAndSetIfChanged(ref _senseRotorPulses, value); }
@@ -90,6 +90,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         protected sealed override void RaisePropertyChangeEvents()
         {
             AdjustedVolume = TestRun.AdjustedVolume();
+            TestRun.RoundedAdjustedVolume();
             UnadjustedVolume = TestRun.UnadjustedVolume();
             EvcAdjustedVolume = TestRun.EvcAdjustedVolume() ?? 0;
             EvcUnadjustedVolume = TestRun.EvcUnadjustedVolume() ?? 0;

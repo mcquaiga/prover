@@ -28,12 +28,16 @@ namespace Prover.Core.Storage
 
         public Instrument Get(Guid id)
         {
-            return Query().FirstOrDefault(x => x.Id == id);
+            var i = Query().FirstOrDefault(x => x.Id == id);
+            
+            i.VerificationTests = _proverContext.VerificationTests.Where(v => v.InstrumentId == i.Id).ToList();
+
+            return i;
         }
 
         public async Task<Instrument> UpsertAsync(Instrument instrument)
         {
-            if (Get(instrument.Id) != null)
+            if (await _proverContext.Instruments.FindAsync(instrument.Id) != null)
             {
                 _proverContext.Instruments.Attach(instrument);
                 _proverContext.Entry(instrument).State = EntityState.Modified;

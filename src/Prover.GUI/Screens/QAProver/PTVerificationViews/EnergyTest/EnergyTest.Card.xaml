@@ -12,12 +12,15 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <Grid>
-        <materialDesign:Card Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
             <StackPanel>
-                <materialDesign:ColorZone Padding="3" materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                          Mode="Accent">
-                    Energy
-                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Padding="5" 
+                                          Margin="5"
+                                          Content="Energy"
+                                          materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                          Mode="Accent"/>
+                
+                
                 <controls1:PercentageControl
                     Margin="5"
                     HorizontalAlignment="Center"
