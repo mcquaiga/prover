@@ -8,6 +8,7 @@ using NLog;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 
 //using Prover.Core.Migrations;
@@ -21,7 +22,7 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            _log.Trace("Starting Prover Context...");
+            _log.Trace("Starting Db Context...");
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.Log = s => Debug.WriteLine(s);
@@ -37,10 +38,11 @@ namespace Prover.Core.Storage
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientItems> ClientItemses { get; set; }
         public DbSet<ClientCsvTemplate> ClientCsvTemplates { get; set; }
+        public DbSet<KeyValue> KeyValueStore { get; set; }
 
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
-            (e.Entity as Entity)?.OnInitializing();
+            (e.Entity as EntityWithId)?.OnInitializing();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

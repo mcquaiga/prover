@@ -58,7 +58,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public string TemperatureRange =>
             $"{TemperatureTest.ConvertTo(-40, "F", Instrument.TemperatureUnits())} to {TemperatureTest.ConvertTo(170, "F", Instrument.TemperatureUnits())} {Instrument.TemperatureUnits()}";
 
-        public string TestDatePretty => $"{Instrument.TestDateTime:d}";
+        public string TestDatePretty => $"{Instrument.TestDateTime:g}";
 
         public string JobIdDisplay
             => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;

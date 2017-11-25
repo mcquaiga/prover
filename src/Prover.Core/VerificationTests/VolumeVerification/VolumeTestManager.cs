@@ -64,7 +64,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
                 await Task.Run(async () =>
                 {
-                    if (SettingsManager.SettingsInstance.TestSettings.RunVolumeSyncTest)
+                    if (SettingsManager.SharedSettingsInstance.TestSettings.RunVolumeSyncTest)
                     {
                         TestStep.OnNext(VolumeTestSteps.RunningSyncTest);
                         await ExecuteSyncTest(ct);

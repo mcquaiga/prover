@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prover.Core.Storage;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Data;
 
 namespace Prover.Core.Services
 {
@@ -36,6 +37,10 @@ namespace Prover.Core.Services
 
         public async Task Save(Instrument instrument)
         {
+            foreach (var vt in instrument.VerificationTests)
+            {
+                   
+            }
             await _instrumentStore.Upsert(instrument);
         }
     }

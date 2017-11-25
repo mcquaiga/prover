@@ -52,21 +52,21 @@
                                         Margin="0 8">
                                 <TextBlock Text="M.C. Registration #" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                <TextBox Text="{Binding Settings.TestSettings.McRegistrationNumber}" />
+                                <TextBox Text="{Binding SharedSettings.CertificateSettings.McRegistrationNumber}" />
                             </StackPanel>
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
                                 <TextBlock Text="Measurement Apparatus" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                <TextBox Text="{Binding Settings.TestSettings.MeasurementApparatus}" />
+                                <TextBox Text="{Binding SharedSettings.CertificateSettings.MeasurementApparatus}" />
                             </StackPanel>
 
-                            <CheckBox IsChecked="{Binding Settings.TestSettings.StabilizeLiveReadings}"
+                            <CheckBox IsChecked="{Binding SharedSettings.TestSettings.StabilizeLiveReadings}"
                                       Content="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
                                       Style="{StaticResource MaterialDesignCheckBox}"
                                       Margin="0 8"/>
 
-                            <CheckBox IsChecked="{Binding Settings.TestSettings.UpdateAbsolutePressure}"
+                            <CheckBox IsChecked="{Binding SharedSettings.TestSettings.UpdateAbsolutePressure}"
                                       Content="Update absolute pressure value for absolute transducers. Updates gauge value based on the atmospheric and absolute instead."
                                       Style="{StaticResource MaterialDesignCheckBox}"
                                       Margin="0 8" />

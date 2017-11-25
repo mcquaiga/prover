@@ -5,7 +5,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Domain.Model.Instrument
 {
-    public class EvcInstrument : Entity
+    public class EvcInstrument : EntityWithId
     {
         private Dictionary<string, string> _items;
         private string _itemsSerialized;

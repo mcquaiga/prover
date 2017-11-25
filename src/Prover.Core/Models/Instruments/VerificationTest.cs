@@ -6,7 +6,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VerificationTest : Entity
+    public sealed class VerificationTest : EntityWithId
     {
         public VerificationTest()
         {

@@ -115,6 +115,10 @@
     <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.Designer.cs">
       <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711210642092_AddKeyValueTable.cs" />
+    <Compile Include="Migrations\201711210642092_AddKeyValueTable.Designer.cs">
+      <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -220,6 +224,8 @@
     <Compile Include="Services\TestRunService.cs" />
     <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="Storage\GenericRepository.cs" />
+    <Compile Include="Storage\KeyValueStore.cs" />
+    <Compile Include="Storage\ProverStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ItemVerificationManager.cs" />
@@ -261,7 +267,6 @@
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="CoreBootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
-    <Compile Include="Storage\IProverStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
@@ -369,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711091434443_AddClientRegisterationNumber.resx">
       <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711210642092_AddKeyValueTable.resx">
+      <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

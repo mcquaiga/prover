@@ -42,21 +42,34 @@
                       Grid.Row="0"
                       Margin="8"
                       HorizontalAlignment="Center"/>
-        
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="5 8 0 -16"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Width="125">
+            <TextBlock Text="{Binding VerificationView.DatePretty}"                           
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontWeight="Regular"
+                       Foreground="{StaticResource SecondaryTextColor}"/>
+            <TextBlock Text="{Binding VerificationView.TimePretty}"
+                       FontSize="12"
+                       FontWeight="Regular"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource SecondaryTextColor}"/>
+        </StackPanel>
+
+
         <Viewbox Grid.Row="0"
                  Grid.Column="1"
                  Stretch="UniformToFill"
                  StretchDirection="Both">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding VerificationView.DateTimePretty}"
-                           Margin="12 0"
-                           FontSize="10"
-                           FontWeight="DemiBold"
-                           Foreground="{StaticResource SecondaryTextColor}"/>
-                <ContentControl 
-                                HorizontalAlignment="Stretch"
-                                cal:View.Model="{Binding VerificationView}" />
-            </StackPanel>
+            <ContentControl HorizontalAlignment="Stretch"
+                            cal:View.Model="{Binding VerificationView}" />
         </Viewbox>
        
 

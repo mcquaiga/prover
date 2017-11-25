@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Prover.Core.Shared.Domain
 {
-    public abstract class AggregateRoot : Entity, IAggregateRoot
+    public abstract class AggregateRoot : EntityWithId, IAggregateRoot
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
 
