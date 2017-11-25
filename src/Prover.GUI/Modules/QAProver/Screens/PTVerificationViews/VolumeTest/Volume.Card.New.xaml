@@ -9,15 +9,6 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <!--<Style x:Key="PassFailIconStyle"
-                    TargetType="materialDesign:PackIcon">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=Value, RelativeSource={RelativeSource Self}}"
-                                 Value="True">
-                        
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>-->
             <Style x:Key="VerifiedText"
                    TargetType="controls:ValueDescriptionControl">
                 <Style.Triggers>
@@ -30,7 +21,6 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -59,7 +49,8 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="1"
+              VerticalAlignment="Top"
               Margin="0">
             <Grid.Resources>
                 <Style TargetType="{x:Type Border}">
@@ -74,14 +65,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width=".33*" />
+                <ColumnDefinition Width="25*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width=".33*" />
+                <ColumnDefinition Width="25*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width=".33*" />
+                <ColumnDefinition Width="50*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
-                        VerticalAlignment="Bottom">
+                        VerticalAlignment="Top"
+                        Margin="0 75">
                 <controls:ValueDescriptionControl Label="Applied Input"
                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
                                                   TabIndex="0"
@@ -104,7 +96,8 @@
                     Grid.Column="1"
                     Margin="2 16" />
 
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="2"
+                        VerticalAlignment="Top">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Uncorrected" />
                 <controls:PercentageControlNew HorizontalAlignment="Center"
@@ -112,18 +105,16 @@
                                                Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
 
                 <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Start Reading"
+                    <controls:ValueDescriptionControl Label="Start"
                                                       Value="{Binding StartUncorrected}" />
-                    <controls:ValueDescriptionControl Label="End Reading"
+                    <controls:ValueDescriptionControl Label="End"
                                                       Value="{Binding EndUncorrected}" />
 
-                    <controls:ValueDescriptionControl Label="True Calculated"
+                    <controls:ValueDescriptionControl Label="Actual"
                                                       Value="{Binding TrueUncorrected}" />
-                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                    <controls:ValueDescriptionControl Label="EVC"
                                                       Value="{Binding EvcUncorrected}" />
-                    <!--<controls:ValueDescriptionControl Label="Multiplier"
-                                                      Value="{Binding UnCorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified"
+                    <controls:ValueDescriptionControl Label="Pulses Ver'd"
                                                       Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
             </StackPanel>
@@ -134,24 +125,23 @@
                     Grid.Column="3"
                     Margin="2 16" />
 
-            <StackPanel Grid.Column="4">
+            <StackPanel Grid.Column="4"
+                        VerticalAlignment="Top">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Corrected" />
                 <controls:PercentageControlNew HorizontalAlignment="Center"
                                                DisplayValue="{Binding Volume.CorrectedPercentError}"
                                                Passed="{Binding Volume.CorrectedHasPassed}" />
                 <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Start Reading"
+                    <controls:ValueDescriptionControl Label="Start"
                                                       Value="{Binding StartCorrected}" />
-                    <controls:ValueDescriptionControl Label="End Reading"
+                    <controls:ValueDescriptionControl Label="End"
                                                       Value="{Binding EndCorrected}" />
-                    <controls:ValueDescriptionControl Label="True Calculated"
+                    <controls:ValueDescriptionControl Label="Actual"
                                                       Value="{Binding TrueCorrected}" />
-                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                    <controls:ValueDescriptionControl Label="EVC"
                                                       Value="{Binding EvcCorrected}" />
-                    <!--<controls:ValueDescriptionControl Label="Multiplier"
-                                                      Value="{Binding CorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified"
+                    <controls:ValueDescriptionControl Label="Pulses Ver'd"
                                                       Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
 
@@ -162,13 +152,26 @@
                     BorderThickness="1 0 0 0"
                     Grid.Column="5"
                     Margin="2 16" />
-            <Grid VerticalAlignment="Top"
-                  Grid.Column="6">
-                <ContentControl cal:View.Model="{Binding EnergyTestItem}"
-                                cal:View.Context="CardNew" />
-                <ContentControl cal:View.Model="{Binding MeterDisplacementItem}"
-                                cal:View.Context="CardNew" />
-            </Grid>
+
+            <UniformGrid Grid.Column="6"
+                        Rows="1"
+                        VerticalAlignment="Top">
+                <ContentControl Margin="2" 
+                                VerticalAlignment="Top"
+                                cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="CardNew"
+                                Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
+                                Grid.Column="0"/>
+                <ContentControl Margin="2" 
+                                VerticalAlignment="Top"
+                                cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="CardNew" 
+                                Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
+                                Grid.Column="1"/>
+                <ContentControl Margin="2" 
+                                VerticalAlignment="Top"
+                                cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="CardNew" 
+                                Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}"
+                                Grid.Column="2"/>
+            </UniformGrid>
 
         </Grid>
     </Grid>

@@ -16,13 +16,9 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
     {
         protected Task LoadItemsTask { get; private set; }
 
-        public HoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
-        {
-            LoadItemsTask = Task.Run(() => ItemHelpers.LoadItems(InstrumentType))
-                .ContinueWith(_ => { ItemDetails = _.Result.ToList(); });
+        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
+        {            
         }
-
-        //public override IEnumerable<ItemMetadata> ItemDetails { get; protected set; }
 
         public override bool IsConnected { get; protected set; }
       
@@ -49,9 +45,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
                         throw new Exception($"Error response {response.ResponseCode}");
                     }
                 }
-            }, ct));
-            connectTasks.Add(LoadItemsTask);
-
+            }, ct));          
             await Task.WhenAll(connectTasks.ToArray());
         }
 
@@ -110,9 +104,6 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             return results;
         }
 
-        //public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
-        //    => await GetItemValues(itemNumbers.GetAllItemNumbers());
-
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
             var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
@@ -151,43 +142,6 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             await ExecuteCommand(Commands.OkayToSend());
 
             return false;
-        }
-    }
-
-    public sealed class TocHoneywellClient : HoneywellClient
-    {
-        public static InstrumentType TurboMonitor = new InstrumentType()
-        {
-            Id = 6,
-            AccessCode = 6,
-            Name = "Turbo Monitor",
-            ItemFilePath = "TurboMonitorItems.xml"
-        };
-
-        private readonly IEnumerable<ItemMetadata> _tibBoardItems;
-
-        public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
-        {
-            _tibBoardItems = ItemHelpers.LoadItems(TurboMonitor);
-        }
-
-        public override async Task<IEnumerable<ItemValue>> GetFrequencyItems()
-        {
-            var results = await base.GetFrequencyItems();            
-            await Disconnect();
-            Thread.Sleep(1000);
-
-            InstrumentType = TurboMonitor;
-            await Connect();
-            var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
-            await Disconnect();
-            Thread.Sleep(1000);
-
-            InstrumentType = Instruments.Toc;
-
-            var values = results.ToList();
-            values.AddRange(tibResults.ToList());
-            return values;
         }
     }
 }

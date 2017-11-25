@@ -1,47 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell.CommClients;
+using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
-    public static class Instruments
+    public static class HoneywellInstrumentTypes
     {
-        public static InstrumentType MiniAt = new InstrumentType
+        public static InstrumentType GetByName(string name)
         {
-            Id = 3,
-            AccessCode = 3,
-            Name = "Mini-AT",
-            ItemFilePath = "MiniATItems.xml",
-            ClientFactory = port => new HoneywellClient(port, Instruments.MiniAt)
-        };
+            var all = GetAll();
 
-        public static InstrumentType Toc = new InstrumentType
-        {
-            Id = 33,
-            AccessCode = 3,
-            Name = "TOC",
-            ItemFilePath = "TOCItems.xml",
-            ClientFactory = port => new TocHoneywellClient(port, Toc)
-        };       
+            return all.ToList().FirstOrDefault(i => i.Name == name);
+        }
 
-        public static InstrumentType MiniMax = new InstrumentType
+        public static InstrumentType GetById(int id)
         {
-            Id = 4,
-            AccessCode = 4,
-            Name = "Mini-Max",
-            ItemFilePath = "MiniMaxItems.xml",
-            ClientFactory = port => new HoneywellClient(port, Instruments.MiniMax)
-        };
+            var all = GetAll();
+
+            return all.ToList().FirstOrDefault(i => i.Id == id);
+        }
 
         public static IEnumerable<InstrumentType> GetAll()
         {
-            return new List<InstrumentType>
-            {
-                MiniAt,
-                MiniMax,
-                Toc
-            };
+            var allTask = ItemHelpers.GetInstrumentDefinitions().ConfigureAwait(false);
+            return allTask.GetAwaiter().GetResult()
+                .ToList()
+                .OrderBy(i => i.Name);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.FrequencyTest
     /// <summary>
     /// Interaction logic for FrequencyTest.xaml
     /// </summary>
-    public partial class Card : UserControl, IViewFor<FrequencyTestViewModel>
+    public partial class CardNew : UserControl, IViewFor<FrequencyTestViewModel>
     {
-        public Card()
+        public CardNew()
         {
             InitializeComponent();
         }

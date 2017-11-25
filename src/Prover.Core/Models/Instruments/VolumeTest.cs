@@ -212,7 +212,7 @@ namespace Prover.Core.Models.Instruments
                     ? "Rotary"
                     : "Mechanical";
 
-                if (InstrumentType == Instruments.Tci)
+                if (InstrumentType.Id == 12)
                     DriveTypeDiscriminator = "Rotary";                
             }
                 

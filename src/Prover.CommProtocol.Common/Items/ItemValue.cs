@@ -23,8 +23,7 @@ namespace Prover.CommProtocol.Common.Items
         public string RawValue { get; set; }
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue
-        {
+        public virtual decimal NumericValue        
         {
             get
             {

@@ -38,6 +38,7 @@
             <converters:BooleanToPassConverter x:Key="BoolToYesNoConverter"
                                                TrueValue="Yes"
                                                FalseValue="No"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
             <SolidColorBrush x:Key="PrimaryTextColor"
                              Opacity=".87" 
@@ -45,14 +46,6 @@
             <SolidColorBrush x:Key="SecondaryTextColor"
                              Opacity=".6" 
                              Color="Black"/>
-
-            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
-
-            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
 
             <Style TargetType="{x:Type Window}">
                 <Setter Property="FontSize" Value="16" />

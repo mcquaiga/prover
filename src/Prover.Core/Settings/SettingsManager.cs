@@ -13,7 +13,8 @@ namespace Prover.Core.Settings
     public static class SettingsManager
     {    
         private const string SettingsFileName = "settings.conf";
-        private static readonly string SettingsPath = Path.Combine(Environment.CurrentDirectory, SettingsFileName);
+        private static readonly string AppDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EvcProver");
+        private static readonly string SettingsPath = Path.Combine(AppDirectory, SettingsFileName);
         private static KeyValueStore _keyValueStore;
 
         public static LocalSettings LocalSettingsInstance { get; set; }
@@ -37,6 +38,7 @@ namespace Prover.Core.Settings
             return await Task.Run(() =>
             {
                 var fileSystem = new FileSystem();
+                Directory.CreateDirectory(AppDirectory);
                 var settings = (fileSystem.FileExists(SettingsPath)
                                    ? new SettingsReader(fileSystem).Read(SettingsPath)
                                    : null) ?? new LocalSettings();
@@ -60,8 +62,9 @@ namespace Prover.Core.Settings
             {
                 var fileSystem = new FileSystem();
 
-                if (!fileSystem.DirectoryExists(Path.GetDirectoryName(SettingsPath)))
-                    fileSystem.CreateDirectory(Path.GetDirectoryName(SettingsPath));
+                if (!fileSystem.DirectoryExists(Path.GetDirectoryName(AppDirectory)))
+                    fileSystem.CreateDirectory(Path.GetDirectoryName(AppDirectory));
+
                 new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
             });
         }

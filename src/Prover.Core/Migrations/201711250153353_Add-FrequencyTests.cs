@@ -3,7 +3,7 @@ namespace Prover.Core.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddFrequencyTest : DbMigration
+    public partial class AddFrequencyTests : DbMigration
     {
         public override void Up()
         {
@@ -12,12 +12,12 @@ namespace Prover.Core.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        AfterTestData = c.String(maxLength: 4000),
+                        AfterTestData = c.String(),
                         MainRotorPulseCount = c.Long(nullable: false),
                         SenseRotorPulseCount = c.Long(nullable: false),
                         MechanicalOutputFactor = c.Long(nullable: false),
                         VerificationTestId = c.Guid(nullable: false),
-                        InstrumentData = c.String(maxLength: 4000),
+                        InstrumentData = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.VerificationTests", t => t.Id)

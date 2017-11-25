@@ -19,8 +19,8 @@ namespace Prover.Core.Storage
             return Context.Instruments
                 .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
                 .Include(v => v.VerificationTests.Select(p => p.PressureTest))
-                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest));
-                .Include(v => v.VerificationTests.Select(fr => fr.FrequencyTest))
+                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
+                .Include(v => v.VerificationTests.Select(fr => fr.FrequencyTest));
         }
 
         public override async Task<bool> Delete(Instrument entity)

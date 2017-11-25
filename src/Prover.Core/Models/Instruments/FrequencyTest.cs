@@ -21,7 +21,7 @@ namespace Prover.Core.Models.Instruments
 
         public FrequencyTest(VerificationTest verificationTest)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsFrequencyTest == true);
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsFrequencyTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = verificationTest.Id;
         }
@@ -46,7 +46,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         public override decimal? ActualFactor => 0m;
-
+        public override decimal? EvcFactor => 0m;
         public long MainRotorPulseCount { get; set; }
         public long SenseRotorPulseCount { get; set; }
         public long MechanicalOutputFactor { get; set; }

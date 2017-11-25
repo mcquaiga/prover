@@ -7,13 +7,13 @@ namespace Prover.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddFrequencyTest : IMigrationMetadata
+    public sealed partial class AddFrequencyTests : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddFrequencyTest));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddFrequencyTests));
         
         string IMigrationMetadata.Id
         {
-            get { return "201711180713513_Add-FrequencyTest"; }
+            get { return "201711250153353_Add-FrequencyTests"; }
         }
         
         string IMigrationMetadata.Source

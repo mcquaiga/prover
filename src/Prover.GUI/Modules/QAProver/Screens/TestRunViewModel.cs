@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -128,8 +128,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
             #endregion
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
-                    x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort)
-                .Subscribe(_ =>
+                    x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
+                .Subscribe(async _ =>
                 {
                     SettingsManager.LocalSettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.LocalSettingsInstance.InstrumentCommPort = _.Item2;
@@ -137,6 +137,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
                     SettingsManager.LocalSettingsInstance.LastClientSelected = _.Item4;
                     SettingsManager.LocalSettingsInstance.TachIsNotUsed = _.Item5;
                     SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort = _.Item6;
+                    SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = _.Item7?.Name;
+                    await SettingsManager.SaveLocalSettings();
                 });  
             
             _viewContext = NewQaTestViewContext;
@@ -282,12 +284,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
 
             try
             {
-                await SettingsManager.SaveLocalSettings();
-
+                var commPort = GetCommPort();
                 _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, ct, _client);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, commPort,  ct, _client);
                 IsDirty = true;
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
@@ -304,6 +305,11 @@ namespace Prover.GUI.Modules.QAProver.Screens
             {
                 ShowDialog = false;
             }
+        }
+
+        private static ICommPort GetCommPort()
+        {
+            return new SerialPort(SettingsManager.LocalSettingsInstance.InstrumentCommPort, SettingsManager.LocalSettingsInstance.InstrumentBaudRate);
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
@@ -325,7 +331,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             });
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (var testView in TestViews)
             {

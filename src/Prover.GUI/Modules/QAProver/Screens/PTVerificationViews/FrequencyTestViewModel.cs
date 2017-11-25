@@ -1,13 +1,10 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
+using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using ReactiveUI;
-using System;
-using System.Reactive.Linq;
-using Caliburn.Micro.ReactiveUI;
-using Prover.Core.Models.Instruments;
-using Prover.GUI.Common;
 
-namespace Prover.GUI.Screens.QAProver.PTVerificationViews
+namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
     public class SaveTestEvent
     {

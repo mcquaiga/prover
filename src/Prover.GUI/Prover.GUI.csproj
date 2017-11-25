@@ -235,6 +235,9 @@
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\EnergyTest\EnergyTest.Card.New.xaml.cs">
       <DependentUpon>EnergyTest.Card.New.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.New.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
       <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
     </Compile>
@@ -276,8 +279,6 @@
     </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTestViewModel.cs" />
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
-    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTestViewModel.cs" />
-    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
       <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml.cs">
@@ -423,6 +424,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -475,10 +480,6 @@
     <Page Include="Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
       <SubType>Designer</SubType>

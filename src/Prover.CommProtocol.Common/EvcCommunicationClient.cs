@@ -190,7 +190,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetAllItems()
         {
-            return await GetItemValues(ItemDetails);
+            return await GetItemValues(InstrumentType.ItemsMetadata);
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetVolumeItems()
         {
-            return await GetItemValues(ItemDetails.VolumeItems());
+            return await GetItemValues(InstrumentType.ItemsMetadata.VolumeItems());
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetFrequencyItems()
         {
-            return await GetItemValues(ItemDetails.FrequencyTestItems());
+            return await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetPressureTestItems()
         {
-            return await GetItemValues(ItemDetails.PressureItems());
+            return await GetItemValues(InstrumentType.ItemsMetadata.PressureItems());
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetTemperatureTestItems()
         {
-            return await GetItemValues(ItemDetails.TemperatureItems());
+            return await GetItemValues(InstrumentType.ItemsMetadata.TemperatureItems());
         }
 
         /// <summary>

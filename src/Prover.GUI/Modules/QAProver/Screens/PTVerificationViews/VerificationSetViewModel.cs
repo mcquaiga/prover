@@ -60,10 +60,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 TemperatureTestViewModel =
                     new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-
-                //this.WhenAnyValue(x => x.TemperatureTestViewModel.Gauge)
-                //    .Where(x => QaRunTestManager != null)
-                //    .Subscribe(async y => await QaRunTestManager.SaveAsync());
             }
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
@@ -71,11 +67,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             {
                 PressureTestViewModel =
                     new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
-
-                //this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge,
-                //        x => x.PressureTestViewModel.GaugePressure)
-                //    .Where(x => QaRunTestManager != null)
-                //    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
             }
 
             if (VerificationTest.VolumeTest != null)
@@ -84,7 +75,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                     new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);                
             }
         }
-        public void Dispose()
+        public override void Dispose()
         {
             SuperFactorTestViewModel?.TryClose();
             TemperatureTestViewModel?.TryClose();

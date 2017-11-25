@@ -11,7 +11,10 @@ namespace Prover.CommProtocol.Common
         public string Name { get; set; }
         public int Id { get; set; }
         public string ItemFilePath { get; set; }
-        public Func<CommPort, EvcCommunicationClient> ClientFactory { get; set; }
+
+        public string CommClientType { get; set; }
+        public Func<ICommPort, EvcCommunicationClient> ClientFactory { get; set; }
+
         public bool? CanUseIrDaPort { get; set; }
 
         public int? MaxBaudRate { get; set; }

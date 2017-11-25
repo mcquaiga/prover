@@ -23,7 +23,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public ICollection<ItemValue> Items { get; set; }
+        public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
         public virtual InstrumentType InstrumentType { get; set; }

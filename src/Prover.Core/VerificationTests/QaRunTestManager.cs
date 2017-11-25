@@ -30,8 +30,7 @@ namespace Prover.Core.VerificationTests
         IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(InstrumentType instrumentType, CommPort commPort, CancellationToken ct = new CancellationToken(),
-            Client client = null);
+        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
         Task RunVolumeTest(CancellationToken ct);
@@ -71,11 +70,12 @@ namespace Prover.Core.VerificationTests
         public IObservable<string> TestStatus => _testStatus.AsObservable();
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort)
+        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null)
         {
-            _communicationClient = instrumentType.ClientFactory.Invoke(commPort);
+            
             try
             {
+                _communicationClient = instrumentType.ClientFactory.Invoke(commPort);
                 ct.ThrowIfCancellationRequested();
 
                 _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
@@ -98,7 +98,6 @@ namespace Prover.Core.VerificationTests
                 else
                     VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient,
                         Instrument.VolumeTest, _tachometerService);
-
                 
             }
             catch (Exception ex)
