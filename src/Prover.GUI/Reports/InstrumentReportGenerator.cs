@@ -71,6 +71,11 @@ namespace Prover.GUI.Reports
 
         private string WriteDocument(FixedDocument fixedDoc, string filePath)
         {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
             xw.Write(fixedDoc);

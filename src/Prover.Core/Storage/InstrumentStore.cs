@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,20 +20,29 @@ namespace Prover.Core.Storage
         public IQueryable<Instrument> Query()
         {
             return _proverContext.Instruments
-                .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
-                .Include(v => v.VerificationTests.Select(p => p.PressureTest))
-                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
-                .Include(v => v.VerificationTests.Select(fr => fr.FrequencyTest))
+                .Include(v => v.VerificationTests.Select(vt => vt.VolumeTest))
                 .AsQueryable();
         }
 
         public Instrument Get(Guid id)
         {
-            var i = Query().FirstOrDefault(x => x.Id == id);
-            
-            i.VerificationTests = _proverContext.VerificationTests.Where(v => v.InstrumentId == i.Id).ToList();
+            var i = Query()
+                .FirstOrDefault(x => x.Id == id);
+
+            i.VerificationTests = _proverContext.VerificationTests
+                .Include(v => v.TemperatureTest)
+                .Include(v => v.PressureTest)
+                .Include(v => v.VolumeTest)
+                .Include(v => v.FrequencyTest)
+                .Where(v => v.InstrumentId == i.Id)
+            .ToList();
 
             return i;
+        }
+
+        public IEnumerable<Instrument> GetAll(Predicate<Instrument> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Instrument> UpsertAsync(Instrument instrument)

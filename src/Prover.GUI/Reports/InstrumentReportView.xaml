@@ -13,7 +13,7 @@
              mc:Ignorable="d"
              Height="816" Width="1056">
    
-    <Viewbox Width="1056" Height="816" Stretch="UniformToFill">
+    <Viewbox Width="1056" Height="816" Stretch="Fill">
         <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
                         Margin="3" />
     </Viewbox>

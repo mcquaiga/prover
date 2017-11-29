@@ -42,6 +42,9 @@ namespace Prover.GUI.Screens.QAProver
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
             ;
 
+        public string PressureRange =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue,0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
         public string TestDatePretty => $"{Instrument.TestDateTime:g}"; //MMMM d, yyyy h:mm tt
