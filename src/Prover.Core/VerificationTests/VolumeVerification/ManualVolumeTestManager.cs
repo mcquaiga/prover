@@ -27,7 +27,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await CommClient.Connect(ct);
             
             VolumeTest.Items = await CommClient.GetVolumeItems();
-
+       
             if (VolumeTest.VerificationTest.FrequencyTest != null)
             {
                 VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();

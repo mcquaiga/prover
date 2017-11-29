@@ -107,21 +107,13 @@
             </materialDesign:Card>
             <UniformGrid Grid.Column="3"
                         Rows="1">
-                <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>-->
-                <ContentControl Margin="2" 
-                                cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card"
+                <ContentControl cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card"
                                 Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
                                 Grid.Column="0"/>
-                <ContentControl Margin="2" 
-                                cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" 
+                <ContentControl cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card" 
                                 Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
                                 Grid.Column="1"/>
-                <ContentControl Margin="2" 
-                                cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" 
+                <ContentControl cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card" 
                                 Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}"
                                 Grid.Column="2"/>
             </UniformGrid>

@@ -21,7 +21,7 @@
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         cal:View.Model="{Binding SiteInformationItem}"
                         cal:View.Context="SiteInfoCard" />
         <ScrollViewer Grid.Row="0"

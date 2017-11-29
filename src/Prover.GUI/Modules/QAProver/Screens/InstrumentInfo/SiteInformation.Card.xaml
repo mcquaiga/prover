@@ -62,9 +62,10 @@
                             cal:View.Context="EventLogCommPortCard" />
         </StackPanel>
 
-        <Grid Grid.Column="0"
-              Grid.ColumnSpan="2"
-              Grid.Row="1">
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    Orientation="Vertical">
             <UniformGrid Columns="2">
                 <controls:ValueDescriptionControl Label="Company Number"
                                                   Value="{Binding Instrument.SiteNumber2}" />
@@ -72,8 +73,14 @@
                                                   Value="{Binding Instrument.SerialNumber}" />
                 <controls:ValueDescriptionControl Label="Firmware Version"
                                                   Value="{Binding Instrument.FirmwareVersion}" />
+            </UniformGrid>
+            <UniformGrid Columns="2">
                 <controls:ValueDescriptionControl Label="Base Pressure" Value="{Binding BasePressure}" />
+                <controls:ValueDescriptionControl Label="Pressure Range" Value="{Binding PressureRange}" />
                 <controls:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
+            </UniformGrid>
+            
+            <UniformGrid Columns="2">
                 <controls:ValueDescriptionControl Label="Pulser A Select"
                                                   Value="{Binding Instrument.PulseASelect}" />
                 <controls:ValueDescriptionControl Label="Pulser A Scaling"
@@ -83,7 +90,7 @@
                 <controls:ValueDescriptionControl Label="Pulser B Scaling"
                                                   Value="{Binding Instrument.PulseBScaling}" />
             </UniformGrid>
-        </Grid>
+        </StackPanel>
 
         <!--<StackPanel Orientation="Vertical">
                 <UniformGrid Rows="1">
@@ -108,4 +115,4 @@
                 </UniformGrid>
             </StackPanel>-->
     </Grid>
-</UserControl>
+</UserControl> 
