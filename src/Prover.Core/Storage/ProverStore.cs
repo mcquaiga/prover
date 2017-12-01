@@ -12,7 +12,7 @@ namespace Prover.Core.Storage
     public class ProverStore<T, TId> : IProverStore<T, TId> 
         where T : GenericEntity<TId>
     {
-        protected ProverContext Context { get; }
+        public ProverContext Context { get; }
 
         public ProverStore(ProverContext dbContext)
         {
@@ -31,7 +31,7 @@ namespace Prover.Core.Storage
 
         public virtual async Task<T> Get(TId id)
         {
-            return await Context.Set<T>().FindAsync(id);
+            return await GetById(id);
         }
 
         public virtual async Task<T> Upsert(T entity)
@@ -41,7 +41,7 @@ namespace Prover.Core.Storage
 
             if (state == EntityState.Detached || state == EntityState.Unchanged)
             {
-                var existing = await Get(entity.Id);
+                var existing = await GetById(entity.Id);
                 if (existing == null)
                 {
                     Context.Set<T>().Add(entity);
@@ -68,7 +68,12 @@ namespace Prover.Core.Storage
         protected virtual IQueryable<T> QueryCommand()
         {
             return Context.Set<T>();
-        } 
+        }
+
+        protected async Task<T> GetById(TId id)
+        {
+            return await Context.Set<T>().FindAsync(id);
+        }
     }
 
     public class ProverStore<T> : ProverStore<T, Guid>, IProverStore<T>
