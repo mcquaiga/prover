@@ -68,6 +68,7 @@ namespace Prover.Core
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();
+            builder.RegisterType<ManualVolumeTestManager>();
 
             builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
@@ -76,14 +77,11 @@ namespace Prover.Core
         private static void SetupDatabase(ContainerBuilder builder)
         {
             //Database registrations
-             Log.Debug("Started initializing database...");
+            Log.Debug("Started initializing database...");
             builder.RegisterType<ProverContext>()
                 .AsSelf()
                 .AutoActivate()
-                .SingleInstance();
-           
-            Log.Debug("    Running Migrations.");
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+                .SingleInstance();                    
             
             builder.Register(c => new KeyValueStore(c.Resolve<ProverContext>()))
                 .As<KeyValueStore>()
