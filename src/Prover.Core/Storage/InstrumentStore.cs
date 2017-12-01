@@ -14,6 +14,11 @@ namespace Prover.Core.Storage
         {
         }
 
+        public override async Task<Instrument> Get(Guid id)
+        {
+            return await QueryCommand().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         protected override IQueryable<Instrument> QueryCommand()
         {
             return Context.Instruments
