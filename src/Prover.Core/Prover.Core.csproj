@@ -220,6 +220,7 @@
     <Compile Include="Storage\ClientStore.cs" />
     <Compile Include="Storage\GenericRepository.cs" />
     <Compile Include="Storage\KeyValueStore.cs" />
+    <Compile Include="Storage\NLogCommandInterceptor.cs" />
     <Compile Include="Storage\ProverStore.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />

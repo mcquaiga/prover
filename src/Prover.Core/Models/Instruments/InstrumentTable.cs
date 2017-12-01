@@ -37,7 +37,10 @@ namespace Prover.Core.Models.Instruments
                 InstrumentType = HoneywellInstrumentTypes.GetById(id.Value);
             }
 
-            if (string.IsNullOrEmpty(_instrumentData)) return;
+            if (InstrumentType == null)
+                throw new NullReferenceException(nameof(InstrumentType));
+            if (string.IsNullOrEmpty(_instrumentData))
+                throw new NullReferenceException(nameof(_instrumentData));
 
             var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_instrumentData);
             Items = ItemHelpers.LoadItems(InstrumentType, itemValues).ToList();

@@ -358,7 +358,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 {
                     result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
-                        SaveTest().Wait();
+                        Task.Run(SaveTest);
 
                     if (result == MessageBoxResult.Cancel)
                     {
