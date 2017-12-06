@@ -20,7 +20,7 @@
                                           Margin="5"
                                           Content="Meter Displacement"
                                           materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                          Mode="Accent"/>
+                                          Mode="PrimaryLight"/>
 
                 <controls1:PercentageControl
                     Margin="5"

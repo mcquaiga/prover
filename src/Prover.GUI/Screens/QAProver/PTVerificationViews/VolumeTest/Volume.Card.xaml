@@ -48,7 +48,7 @@
                         Padding="5"
                         Margin="5"
                         Content="Uncorrected"
-                        Mode="Accent"
+                        Mode="PrimaryLight"
                         materialDesign:ShadowAssist.ShadowDepth="Depth1" />
                     <controls1:PercentageControl
                         Margin="5"
@@ -79,7 +79,7 @@
                         Padding="5"
                         Margin="5"
                         Content="Corrected"
-                        Mode="Accent"
+                        Mode="PrimaryLight"
                         materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
                     <controls1:PercentageControl
