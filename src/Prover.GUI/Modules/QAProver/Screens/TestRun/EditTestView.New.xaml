@@ -15,7 +15,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <materialDesign:ColorZone DockPanel.Dock="Top"
                                   Grid.Row="0"
@@ -42,52 +41,58 @@
                 <ColumnDefinition Width="0.25*" />
                 <ColumnDefinition Width="0.75*" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
+            
             <ContentControl Margin="2"
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
                             Grid.Column="0"
                             cal:View.Model="{Binding SiteInformationItem}"
                             cal:View.Context="SiteInfoCardNew" />
 
-            <ScrollViewer Grid.Row="0"
-                          Grid.Column="1"
+            <ScrollViewer Grid.Column="1"
                           VerticalScrollBarVisibility="Auto">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
-                    <ItemsControl ItemsSource="{Binding PTTestViews}">
+                    <ItemsControl ItemsSource="{Binding PTTestViews}"
+                                  Grid.ColumnSpan="3">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Columns="3" />
+                                <UniformGrid Rows="1" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ContentControl cal:View.Model="{Binding }"
-                                                Margin="2"
-                                                cal:View.Context="CardNew" />
+                                <Border Style="{StaticResource SubSectionDividerBorder}"
+                                        BorderThickness="0 0 1 0"
+                                        Padding="4">
+                                    <ContentControl cal:View.Model="{Binding }"                                                    
+                                                    cal:View.Context="CardNew" />
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <ContentControl
-                        Margin="2"
-                        Grid.Row="1"
-                        cal:View.Model="{Binding VolumeTestView}" cal:View.Context="CardNew" />
+                    <Border Style="{StaticResource SubSectionDividerBorder}"                           
+                            Grid.Column="0" 
+                            Grid.ColumnSpan="3"
+                            Grid.Row="1"
+                            Padding="4">
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}" cal:View.Context="CardNew" />
+                    </Border>
                 </Grid>
 
             </ScrollViewer>
         </Grid>
 
         <Grid HorizontalAlignment="Right"
-              Grid.Row="2">
+              VerticalAlignment="Bottom"
+              Grid.Row="1">
             <materialDesign:Snackbar x:Name="SaveSnackbar"
                                      IsActive="{Binding ShowSaveSnackbar}">
                 <materialDesign:SnackbarMessage Content="SAVED TEST"

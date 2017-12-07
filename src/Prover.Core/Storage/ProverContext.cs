@@ -27,9 +27,8 @@ namespace Prover.Core.Storage
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-
+            
             Database.Log = s => Debug.WriteLine(s);
-            //Database.Log = s => _log.Trace(s);
         }
 
         public DbSet<VerificationTest> VerificationTests { get; set; }
@@ -52,6 +51,7 @@ namespace Prover.Core.Storage
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
 
             base.OnModelCreating(modelBuilder);            
         }
