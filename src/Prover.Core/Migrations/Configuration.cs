@@ -9,10 +9,6 @@ namespace Prover.Core.Migrations
         {
             AutomaticMigrationsEnabled = false;
             ContextKey = "Prover.Core.Storage.ProverContext";
-        }
-
-        protected override void Seed(ProverContext context)
-        {
-        }
+        }    
     }
 }

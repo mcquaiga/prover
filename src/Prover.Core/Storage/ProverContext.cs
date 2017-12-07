@@ -5,6 +5,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using Autofac;
 using NLog;
+using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -25,6 +26,8 @@ namespace Prover.Core.Storage
             _log.Trace("Starting Db Context...");
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            
             Database.Log = s => Debug.WriteLine(s);
         }
 
@@ -48,6 +51,7 @@ namespace Prover.Core.Storage
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
 
             modelBuilder.Entity<Instrument>()
                 .HasMany(i => i.VerificationTests)

@@ -47,17 +47,27 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 (testedBy, vt, client) => !string.IsNullOrEmpty(SelectedTestedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
 
+            
+           
+
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
-                client => _certificateService
-                            .GetInstrumentsWithNoCertificate(client.Id)
-                            .OrderBy(x => x.SerialNumber)
-                            .ToObservable()                            
-                            .DefaultIfEmpty(null));
+                client =>
+                {
+                    return _certificateService
+                        .GetInstrumentsWithNoCertificate(client.Id)
+                        .OrderBy(x => x.SerialNumber)
+                        .ToObservable()
+                        .DefaultIfEmpty(null);
+                });
 
             FilterObservable = new Subject<Predicate<Instrument>>();
             UpdateFilterCommand = ReactiveCommand.Create<string>(filter =>
             {
-                FilterObservable.OnNext(x => filter == "All" || string.IsNullOrEmpty(filter) || (filter == "Passed" && x.HasPassed) || (filter == "Failed" && !x.HasPassed));
+                FilterObservable
+                    .OnNext(x => filter == "All" 
+                        || string.IsNullOrEmpty(filter) 
+                        || (filter == "Passed" && x.HasPassed) 
+                        || (filter == "Failed" && !x.HasPassed));
             });
 
             LoadInstrumentsCommand
@@ -154,6 +164,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     ExportToCsvViewModel.Client = client;
                 });
 
+
             GetTestedByCommand = ReactiveCommand.CreateFromObservable(() => _certificateService.GetDistinctTestedBy().ToObservable());
             GetTestedByCommand
                 .Where(t => t != null)
@@ -163,6 +174,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 .ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
         }
+
+        
 
         #region Commands 
         public ReactiveCommand<Client, Instrument> LoadInstrumentsCommand { get; set; }
@@ -178,7 +191,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
         public ReactiveCommand CreateCertificateCommand { get; set; }
 
         public ReactiveCommand<Unit, string> GetTestedByCommand { get; set; }
-
         #endregion
 
         #region Fody Properties

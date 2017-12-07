@@ -59,10 +59,12 @@ namespace Prover.Core.Services
 
         public long GetNextCertificateNumber()
         {
-            var last = _certificateStore.GetAll()
-                .Select(x => x.Number)
-                .OrderByDescending(x => x)
-                .FirstOrDefault();
+            var qry = _certificateStore.GetAll();
+            var last = (long) 0;
+            if (qry.Any())
+            {
+                last = qry.Max(certificate => certificate.Number);
+            }
 
             return last + 1;
         }
@@ -128,10 +130,11 @@ namespace Prover.Core.Services
                 if (clientId == Guid.Empty)
                     clientId = null;
 
-                var results = _instrumentStore.Query(x => x.CertificateId == null 
-                        && x.ClientId == clientId
-                        && x.ArchivedDateTime == null);
-
+                var results = _instrumentStore.Query(x => 
+                        x.CertificateId == null 
+                    &&  x.ClientId == clientId
+                    &&  x.ArchivedDateTime == null);
+                
                 return results;
             }
             catch (Exception e)

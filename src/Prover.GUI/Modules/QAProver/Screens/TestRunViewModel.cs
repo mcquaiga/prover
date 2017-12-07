@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +14,6 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
-using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
@@ -285,7 +281,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
             try
             {
                 var commPort = GetCommPort();
-                _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                _qaRunTestManager = IoC.Get<IQaRunTestManager>();
                 _qaRunTestManager.TestStatus.Subscribe(statusObservable);
 
                 await _qaRunTestManager.InitializeTest(SelectedInstrumentType, commPort,  ct, _client);
@@ -364,7 +360,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
                 {
                     result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
-                        SaveTest().Wait();
+                        Task.Run(SaveTest);
 
                     if (result == MessageBoxResult.Cancel)
                     {
