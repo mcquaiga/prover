@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Prover.Core.Models.Instruments;
+using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Shared.Data;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Storage
-{   
+{
     public class InstrumentStore : ProverStore<Instrument>
     {
         public InstrumentStore(ProverContext dbContext) : base(dbContext)
@@ -22,9 +21,10 @@ namespace Prover.Core.Storage
         protected override IQueryable<Instrument> QueryCommand()
         {
             return Context.Instruments
-                .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
-                .Include(v => v.VerificationTests.Select(p => p.PressureTest))
-                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest));
+                .IncludeOptimized(v => v.VerificationTests)
+                .IncludeOptimized(v => v.VerificationTests.Select(t => t.TemperatureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(p => p.PressureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(vo => vo.VolumeTest));
         }
 
         public override async Task<bool> Delete(Instrument entity)

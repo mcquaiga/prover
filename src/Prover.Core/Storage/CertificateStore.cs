@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Shared.Data;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Storage
 {
@@ -17,7 +18,7 @@ namespace Prover.Core.Storage
         protected override IQueryable<Certificate> QueryCommand()
         {
             return Context.Certificates
-                .Include(c => c.Instruments);
+                .IncludeOptimized(c => c.Instruments);
         }
     }
 }
