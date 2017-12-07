@@ -28,7 +28,8 @@ namespace Prover.Core.Storage
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
 
-            Database.Log = s => _log.Trace(s);
+            Database.Log = s => Debug.WriteLine(s);
+            //Database.Log = s => _log.Trace(s);
         }
 
         public DbSet<VerificationTest> VerificationTests { get; set; }
