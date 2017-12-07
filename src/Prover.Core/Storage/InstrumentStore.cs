@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Storage
 {
@@ -19,7 +20,8 @@ namespace Prover.Core.Storage
         public IQueryable<Instrument> Query()
         {
             return _proverContext.Instruments
-                .Include(v => v.VerificationTests.Select(vt => vt.VolumeTest))
+                .IncludeOptimized(v => v.VerificationTests)
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
                 .AsQueryable();
         }
 
@@ -29,10 +31,10 @@ namespace Prover.Core.Storage
                 .FirstOrDefault(x => x.Id == id);
 
             i.VerificationTests = _proverContext.VerificationTests
-                .Include(v => v.TemperatureTest)
-                .Include(v => v.PressureTest)
-                .Include(v => v.VolumeTest)
-                .Include(v => v.FrequencyTest)
+                .IncludeOptimized(v => v.TemperatureTest)
+                .IncludeOptimized(v => v.PressureTest)
+                .IncludeOptimized(v => v.VolumeTest)
+                .IncludeOptimized(v => v.FrequencyTest)
                 .Where(v => v.InstrumentId == i.Id)
             .ToList();
 
