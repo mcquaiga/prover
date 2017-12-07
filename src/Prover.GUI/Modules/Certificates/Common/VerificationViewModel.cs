@@ -47,6 +47,7 @@ namespace Prover.GUI.Modules.Certificates.Common
 
         public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
 
+        public string DateTimePretty => $"{Instrument.TestDateTime:g}";
         public string DatePretty => $"{Instrument.TestDateTime:d}";
         public string TimePretty => $"{Instrument.TestDateTime:t}";
 

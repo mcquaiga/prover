@@ -74,40 +74,31 @@ namespace Prover.Core.VerificationTests
 
         public async Task InitializeTest(InstrumentType instrumentType, CancellationToken ct, Client client = null)
         {
-            try
-            {
-                ct.ThrowIfCancellationRequested();
+            ct.ThrowIfCancellationRequested();
 
-                _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
+            _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
 
-                await ConnectToInstrument(ct);
-                ct.ThrowIfCancellationRequested();
+            await ConnectToInstrument(ct);
+            ct.ThrowIfCancellationRequested();
 
-                _testStatus.OnNext("Downloading items...");
-                var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
-                Instrument = new Instrument(instrumentType, items, client);                
+            _testStatus.OnNext("Downloading items...");
+            var items = await _communicationClient.GetItemValues(
+                _communicationClient.ItemDetails.GetAllItemNumbers());
+            Instrument = new Instrument(instrumentType, items, client);
 
-                await RunVerifiers();
+            await RunVerifiers();
 
-                await DisconnectFromInstrument();
+            await DisconnectFromInstrument();
 
-                if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
-                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
-                    TestSettings.VolumeTestType.Manual)
-                    VolumeTestManager =
-                        new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
-                else
-                    VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient,
-                        Instrument.VolumeTest, _tachometerService);
-
-                
-            }
-            catch (Exception ex)
-            {
-                _communicationClient.Dispose();
-                Log.Error(ex);
-                throw;
-            }
+            if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
+                SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
+                TestSettings.VolumeTestType.Manual)
+                VolumeTestManager =
+                    new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
+            else
+                VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient,
+                    Instrument.VolumeTest, _tachometerService);
+         
         }
 
         private async Task DisconnectFromInstrument()
