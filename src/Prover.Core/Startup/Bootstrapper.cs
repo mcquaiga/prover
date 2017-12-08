@@ -14,6 +14,8 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests;
+using Prover.Core.VerificationTests.TestActions;
+using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 
 namespace Prover.Core.Startup
@@ -36,9 +38,14 @@ namespace Prover.Core.Startup
                 .As<TachometerService>();
 
             Builder.RegisterType<AutoVolumeTestManager>().As<VolumeTestManager>();
-            //Builder.RegisterType<ManualVolumeTestManager>().As<VolumeTestManager>();
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
+
+            Builder.Register(c =>
+            {
+                var resetItems = SettingsManager.SettingsInstance.TocResetItems;
+                return new TocItemUpdater(resetItems);
+            }).As<IPreTestAction>();
 
             Task.Run(SettingsManager.RefreshSettings);
         }

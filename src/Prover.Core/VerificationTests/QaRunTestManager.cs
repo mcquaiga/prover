@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -12,6 +13,7 @@ using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
+using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 
 namespace Prover.Core.VerificationTests
@@ -36,21 +38,23 @@ namespace Prover.Core.VerificationTests
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IValidator _validator;
         private readonly IEvcItemReset _itemResetter;
+        private readonly IEnumerable<IPreTestAction> _preTestActions;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
             IInstrumentStore<Instrument> instrumentStore,
             IReadingStabilizer readingStabilizer,
-            VolumeTestManager volumeTestManager,
+            VolumeTestManager volumeTestManager,            
             IValidator validator,
-            IEvcItemReset itemResetter = null
-        )
+            IEvcItemReset itemResetter = null,
+            IEnumerable<IPreTestAction> preTestActions = null)
         {
             VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
             _validator = validator;
             _itemResetter = itemResetter;
+            _preTestActions = preTestActions;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
@@ -76,6 +80,11 @@ namespace Prover.Core.VerificationTests
             var items = await _communicationClient.GetAllItems();
 
             Instrument = new Instrument(instrumentType, items);
+
+            foreach (var preTestAction in _preTestActions)
+            {
+                await preTestAction.Execute(_communicationClient, Instrument);
+            }
 
             await RunVerifier();
 

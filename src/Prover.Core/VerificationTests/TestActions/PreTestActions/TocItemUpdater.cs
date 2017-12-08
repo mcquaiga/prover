@@ -6,25 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.TestActions.PreTestActions
 {
     public class TocItemUpdater : IPreTestAction
     {
-        private IEnumerable<ItemValue> _itemResetValues = new List<ItemValue>();
+        private readonly Dictionary<int, string> _itemResetValues;
 
-        public TocItemUpdater()
+        public TocItemUpdater(Dictionary<int, string> resetValues)
         {
-            _itemResetValues = new List<ItemValue>()
-            {
-                new ItemValue(new ItemMetadata() { Number = 865 }, "")
-            };
+            _itemResetValues = resetValues;
         }
 
         public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
-            await commClient.SetItemValue()
+            if (instrument.InstrumentType.Id != 33)
+                return;
+
+            foreach (var item in _itemResetValues)
+            {
+                await commClient.SetItemValue(item.Key, item.Value);
+            }
         }
     }
 }
