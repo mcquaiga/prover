@@ -25,6 +25,9 @@ namespace Prover.Core.VerificationTests.TestActions.PreTestActions
             if (instrument.InstrumentType.Id != 33)
                 return;
 
+            if (_itemResetValues == null)
+                return;
+
             foreach (var item in _itemResetValues)
             {
                 await commClient.SetItemValue(item.Key, item.Value);

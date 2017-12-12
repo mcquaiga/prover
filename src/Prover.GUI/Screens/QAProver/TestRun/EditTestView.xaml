@@ -11,26 +11,23 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    
 
         <ContentControl Margin="2"
                         Grid.Column="0"
                         Grid.Row="0"
-                        Grid.RowSpan="2"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
                         cal:View.Model="{Binding SiteInformationItem}"
                         cal:View.Context="SiteInfoCard" />
+        
         <ScrollViewer Grid.Row="0"
                       Grid.Column="1"
                       VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <ItemsControl Grid.Row="0"
                               ItemsSource="{Binding TestViews}">

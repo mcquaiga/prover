@@ -17,7 +17,12 @@ namespace Prover.Core.Settings
 
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public bool UpdateAbsolutePressure { get; set; } = true;
-        public Dictionary<int, string> TocResetItems { get; set; }
+        public Dictionary<int, string> TocResetItems { get; set; } = new Dictionary<int, string>()
+        {
+            { 865, "0" },
+            { 866, "0" },
+            { 867, "0" }
+        };
 
         public void SetDefaults()
         {

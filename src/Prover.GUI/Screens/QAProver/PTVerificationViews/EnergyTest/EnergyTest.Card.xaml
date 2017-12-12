@@ -31,9 +31,9 @@
                         Text="{Binding EnergyTest.EnergyUnits}"
                                FontSize="10"/>
                     <UniformGrid Columns="2" HorizontalAlignment="Center">
-                        <controls1:ValueDescriptionControl Label="True Calculated" 
+                        <controls1:ValueDescriptionControl Label="True" 
                                                            Value="{Binding EnergyTest.ActualEnergy}" />
-                        <controls1:ValueDescriptionControl Label="EVC Calculated" 
+                        <controls1:ValueDescriptionControl Label="EVC" 
                                                            Value="{Binding EnergyTest.EvcEnergy}" />
                     </UniformGrid>
                     

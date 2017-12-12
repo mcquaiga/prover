@@ -1,11 +1,5 @@
-﻿using System.Data.Entity;
-using System.Threading.Tasks;
-using Akavache;
+﻿using Akavache;
 using Autofac;
-using Caliburn.Micro;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
@@ -17,6 +11,8 @@ using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
+using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace Prover.Core.Startup
 {
