@@ -45,10 +45,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient, 
                 (testedBy, vt, client) => !string.IsNullOrEmpty(SelectedTestedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
-            CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
-
-            
-           
+            CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);          
 
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
                 client =>
@@ -60,6 +57,19 @@ namespace Prover.GUI.Modules.Certificates.Screens
                         .DefaultIfEmpty(null);
                 });
 
+            LoadInstrumentsCommand
+                .ThrownExceptions
+                .Subscribe(ex => Console.WriteLine(ex.Message));
+
+            LoadInstrumentsCommand
+                .Where(i => i != null)
+                .Subscribe(i =>
+                {                    
+                    var item = ScreenManager.ResolveViewModel<TestListItemViewModel>();
+                    item.Initialize(i, FilterObservable);
+                    RootResults.Add(item);
+                });
+
             FilterObservable = new Subject<Predicate<Instrument>>();
             UpdateFilterCommand = ReactiveCommand.Create<string>(filter =>
             {
@@ -69,21 +79,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
                         || (filter == "Passed" && x.HasPassed) 
                         || (filter == "Failed" && !x.HasPassed));
             });
-
-            LoadInstrumentsCommand
-                .ThrownExceptions
-                .Subscribe(ex => Console.WriteLine(ex.Message));
-
-            LoadInstrumentsCommand
-                .Where(i => i != null)
-                .Subscribe(i =>
-                {
-                    var vvm = new VerificationViewModel(i);
-                    var item = ScreenManager.ResolveViewModel<TestListItemViewModel>();
-                    item.VerificationView = vvm;
-                    item.SetFilter(FilterObservable);
-                    RootResults.Add(item);
-                });
            
             ResultFilteredItems = RootResults.CreateDerivedCollection(
                 x => x, 
@@ -384,6 +379,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public override void Dispose()
         {
+            foreach (var viewModel in RootResults)
+            {
+                viewModel.Dispose();
+            }          
+            RootResults?.Clear();
             ResultFilteredItems?.Dispose();
             LoadInstrumentsCommand?.Dispose();
             CreateCertificateCommand?.Dispose();

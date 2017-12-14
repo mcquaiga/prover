@@ -49,7 +49,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private VerificationViewModel _verificationViewModel;
-
         public VerificationViewModel VerificationView
         {
             get { return _verificationViewModel; }
@@ -102,8 +101,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         #endregion
 
-        public void SetFilter(IObservable<Predicate<Instrument>> filterObservable)
+        public void Initialize(Instrument instrument, IObservable<Predicate<Instrument>> filterObservable)
         {
+            var vvm = new VerificationViewModel(instrument);
+            VerificationView = vvm;
+
             filterObservable.Subscribe(p =>
             {
                 IsDisplayed = p(Instrument);
@@ -119,6 +121,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             await _testRunService.ArchiveTest(VerificationView.Instrument);
             IsArchived = true;
+        }
+
+        public override void Dispose()
+        {
+            VerificationView = null;
+            base.Dispose();
         }
     }
 }

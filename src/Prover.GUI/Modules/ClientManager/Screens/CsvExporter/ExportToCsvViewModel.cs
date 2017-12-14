@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Dynamic;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Services;
-using Prover.Core.Storage;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;
 using ReactiveUI;
 using ReactiveUI.Legacy;
-using ReactiveCommand = ReactiveUI.ReactiveCommand;
-using System.IO;
+using System;
 using System.Diagnostics;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvExporter
 {
