@@ -44,18 +44,18 @@ namespace Prover.GUI.Modules.Certificates.Screens
         private ReactiveCommand _addTestToCertificate;
         public ReactiveCommand AddTestToCertificate
         {
-            get { return _addTestToCertificate; }
-            set { this.RaiseAndSetIfChanged(ref _addTestToCertificate, value); }
+            get => _addTestToCertificate;
+            set => this.RaiseAndSetIfChanged(ref _addTestToCertificate, value);
         }
 
         private VerificationViewModel _verificationViewModel;
         public VerificationViewModel VerificationView
         {
-            get { return _verificationViewModel; }
+            get => _verificationViewModel;
             set
             {
                 this.RaiseAndSetIfChanged(ref _verificationViewModel, value);
-                Instrument = _verificationViewModel.Instrument;
+                Instrument = _verificationViewModel?.Instrument;
             }
         }
 
@@ -63,32 +63,32 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         public Instrument Instrument
         {
-            get { return _instrument; }
-            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
+            get => _instrument;
+            set => this.RaiseAndSetIfChanged(ref _instrument, value);
         }
 
         private bool _isSelected;
 
         public bool IsSelected
         {
-            get { return _isSelected; }
-            set { this.RaiseAndSetIfChanged(ref _isSelected, value); }
+            get => _isSelected;
+            set => this.RaiseAndSetIfChanged(ref _isSelected, value);
         }
 
         private ReactiveCommand _viewQaTestReportCommand;
 
         public ReactiveCommand ViewQaTestReportCommand
         {
-            get { return _viewQaTestReportCommand; }
-            set { this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value); }
+            get => _viewQaTestReportCommand;
+            set => this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value);
         }
 
         private ReactiveCommand _archiveTestCommand;
 
         public ReactiveCommand ArchiveTestCommand
         {
-            get { return _archiveTestCommand; }
-            set { this.RaiseAndSetIfChanged(ref _archiveTestCommand, value); }
+            get => _archiveTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _archiveTestCommand, value);
         }
 
         private bool _isArchived;
