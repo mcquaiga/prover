@@ -291,10 +291,12 @@ namespace Prover.GUI.Modules.QAProver.Screens
             }
             catch (Exception ex)
             {
+                
                 if (ex is OperationCanceledException)
                     Log.Warn("Test init cancelled by user.");
                 else
                     throw;
+                _qaRunTestManager?.Dispose();
             }
             finally
             {
