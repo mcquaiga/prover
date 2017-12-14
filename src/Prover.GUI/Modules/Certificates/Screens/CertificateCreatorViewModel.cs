@@ -41,11 +41,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         {
             ExportToCsvViewModel = exportToCsvViewModel;
             _clientService = clientService;
-            _certificateService = certificateService;
-
-            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient, 
-                (testedBy, vt, client) => !string.IsNullOrEmpty(SelectedTestedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
-            CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);          
+            _certificateService = certificateService;           
 
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
                 client =>
@@ -113,7 +109,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
             LoadInstrumentsCommand
                 .Take(1)
                 .Subscribe(x => BlankStateText = "No tests found");
-            
 
             LoadClientsCommand = ReactiveCommand.CreateFromObservable(LoadClients);
             LoadClientsCommand
@@ -123,16 +118,14 @@ namespace Prover.GUI.Modules.Certificates.Screens
             FetchNextCertificateNumberCommand = ReactiveCommand.Create(_certificateService.GetNextCertificateNumber);
             FetchNextCertificateNumberCommand
                 .Subscribe(x => NextCertificateNumber = x);
-               
             FetchNextCertificateNumberCommand.ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
 
-            FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(client =>
-                _certificateService.GetAllCertificates(client)
-                    .ToObservable()
-                    .DefaultIfEmpty(null));
+            FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(client => _certificateService.GetAllCertificates(client)
+                .ToObservable()
+                .DefaultIfEmpty(null));
             FetchExistingClientCertificatesCommand.ThrownExceptions
-                .Subscribe(ex => Log.Error(ex));
+                .Subscribe(ex => Log.Error(ex));           
             FetchExistingClientCertificatesCommand
                 .Where( x=> x != null)
                 .Subscribe(x => ExistingClientCertificates.Add(x));                
@@ -146,11 +139,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
                 .Do(c =>
                 {                    
                     RootResults.Clear();
-                    ExistingClientCertificates.Clear(); 
+                    ExistingClientCertificates.Clear();
                 })
                 .Where(c => c != null);
 
             selectedClientChange
+                .ObserveOn(RxApp.MainThreadScheduler)                
                 .Delay(TimeSpan.FromMilliseconds(50))
                 .Subscribe(client =>
                 {
@@ -158,7 +152,6 @@ namespace Prover.GUI.Modules.Certificates.Screens
                     FetchExistingClientCertificatesCommand.Execute(client).Wait();
                     ExportToCsvViewModel.Client = client;
                 });
-
 
             GetTestedByCommand = ReactiveCommand.CreateFromObservable(() => _certificateService.GetDistinctTestedBy().ToObservable());
             GetTestedByCommand
@@ -168,9 +161,11 @@ namespace Prover.GUI.Modules.Certificates.Screens
             GetTestedByCommand
                 .ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
-        }
 
-        
+            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient,
+                (testedBy, vt, client) => !string.IsNullOrEmpty(SelectedTestedBy) && !string.IsNullOrEmpty(SelectedVerificationType) && client != null && client.Id != Guid.Empty);
+            CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
+        }      
 
         #region Commands 
         public ReactiveCommand<Client, Instrument> LoadInstrumentsCommand { get; set; }
@@ -357,8 +352,12 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             CertificateGenerator.GenerateXps(certificate);
 
-            RootResults.RemoveAll(items);
-            await FetchNextCertificateNumberCommand.Execute();            
+            await FetchNextCertificateNumberCommand.Execute();
+            var client = SelectedClient;
+            SelectedClient = null;
+            ExportToCsvViewModel.Client = null;
+            SelectedClient = client;
+            ExportToCsvViewModel.Client = client;
         }
 
         private async Task PrintExistingCertificate(Certificate certificate)
