@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Events;
 using Prover.Core.Settings;
+using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Settings
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase, INavigationItem
     {
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -82,5 +85,9 @@ namespace Prover.GUI.Screens.Settings
             EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
         }
+
+        public ReactiveCommand<Unit, Unit> NavigationCommand => ReactiveCommand.Create(() => ScreenManager.ChangeScreen(this));
+        public PackIconKind IconKind => PackIconKind.Settings;
+        public bool IsHome => false;
     }
 }

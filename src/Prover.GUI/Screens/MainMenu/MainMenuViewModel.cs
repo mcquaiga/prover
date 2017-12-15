@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
+using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 using Action = System.Action;
 
 namespace Prover.GUI.Screens.MainMenu
 {
-    public class MainMenuViewModel : ViewModelBase
+    public class MainMenuViewModel : ViewModelBase, INavigationItem
     {
         public MainMenuViewModel(IEnumerable<IHaveMainMenuItem> appMainMenus, ScreenManager screenManager,
             IEventAggregator eventAggregator)
@@ -23,5 +26,9 @@ namespace Prover.GUI.Screens.MainMenu
         {
             await Task.Run(openAction);
         }
+
+        public ReactiveCommand<Unit, Unit> NavigationCommand => ReactiveCommand.Create(() => ScreenManager.ChangeScreen(this));
+        public PackIconKind IconKind => PackIconKind.Home;
+        public bool IsHome => true;
     }
 }

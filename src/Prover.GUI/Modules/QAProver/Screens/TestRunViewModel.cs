@@ -35,8 +35,7 @@ namespace Prover.GUI.Modules.QAProver.Screens
         private string _selectedTachCommPort;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            ClientService clientService)
+        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService)
             : base(screenManager, eventAggregator)
         {
             eventAggregator.Subscribe(this);

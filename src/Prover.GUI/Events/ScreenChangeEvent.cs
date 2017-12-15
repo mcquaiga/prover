@@ -1,14 +1,15 @@
 ﻿using Caliburn.Micro.ReactiveUI;
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Events
 {
     public class ScreenChangeEvent
     {
-        public ScreenChangeEvent(ReactiveScreen viewModel)
+        public ScreenChangeEvent(ViewModelBase viewModel)
         {
             ViewModel = viewModel;
         }
 
-        public ReactiveScreen ViewModel { get; }
+        public ViewModelBase ViewModel { get; }
     }
 }

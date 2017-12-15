@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Windows;
+using Prover.Core.Settings;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell
@@ -13,8 +14,7 @@ namespace Prover.GUI.Screens.Shell
         public ShellView()
         {
             InitializeComponent();
-
-            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+            
             Style = (Style) FindResource(typeof(Window));
 
             this.WhenActivated(d =>
@@ -24,6 +24,9 @@ namespace Prover.GUI.Screens.Shell
                 d(this.WhenAnyValue(x => x.ViewModel.GoHomeCommand)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
+
+                d(this.Bind(ViewModel, model => model.WindowHeight, view => view.Height));
+                d(this.Bind(ViewModel, model => model.WindowWidth, view => view.Width));
             });
         }
 

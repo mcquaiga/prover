@@ -81,6 +81,8 @@ namespace Prover.Core.Settings
         public string InstrumentCommPort { get; set; }
         public int InstrumentBaudRate { get; set; }
         public bool InstrumentUseIrDaPort { get; set; }
+        public double WindowHeight { get; set; } = 800;
+        public double WindowWidth { get; set; } = 800;
     }
 
     public class SharedSettings

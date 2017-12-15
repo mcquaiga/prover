@@ -171,6 +171,10 @@
       <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
       <Name>Prover.CommProtocol.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
+      <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
+      <Name>Prover.CommProtocol.MiHoneywell</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
       <Project>{35FE4429-B8F5-4761-B401-A215D1B4EBA2}</Project>
       <Name>Prover.Core.Shared</Name>

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using Prover.Core.Settings;
 using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using Prover.GUI.Screens.MainMenu;
@@ -17,24 +20,29 @@ using ReactiveUI;
 namespace Prover.GUI.Screens.Shell
 {
     public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,
-        IHandle<DialogDisplayEvent>, IDisposable
+        IHandle<ScreenChangeEvent>, IDisposable
     {
+        public IEnumerable<INavigationItem> NavigationItems { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
         public string Title => $"EVC Prover - v{GetVersionNumber()}";
 
-        public ShellViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            MainMenuViewModel mainMenuViewModel, SettingsViewModel settingsViewModel,
-            IEnumerable<IToolbarItem> toolBarItems)
+        public ShellViewModel(IEventAggregator eventAggregator,
+            IEnumerable<INavigationItem> navigationItems, IEnumerable<IToolbarItem> toolBarItems)
         {
             eventAggregator.Subscribe(this);
             ToolbarItems = toolBarItems;
-            screenManager.Conductor = this;
 
-            GoHomeCommand = ReactiveCommand.Create(()
-                => screenManager.ChangeScreen(mainMenuViewModel));
+            NavigationItems = navigationItems.ToList().OrderByDescending(item => item.IsHome);
+            GoHomeCommand = NavigationItems.First().NavigationCommand;
 
-            OpenSettingsCommand = ReactiveCommand.Create(()
-                => screenManager.ChangeScreen(settingsViewModel));
+            _windowWidth = SettingsManager.LocalSettingsInstance.WindowWidth;
+            _windowHeight = SettingsManager.LocalSettingsInstance.WindowHeight;
+
+            this.WhenAnyValue(x => x.WindowHeight)
+                .Subscribe(h => SettingsManager.LocalSettingsInstance.WindowHeight = h);
+
+            this.WhenAnyValue(x => x.WindowWidth)
+                .Subscribe(w => SettingsManager.LocalSettingsInstance.WindowWidth = w);
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
@@ -54,7 +62,6 @@ namespace Prover.GUI.Screens.Shell
             base.ActivateItem(item);
         }
 
-        public ReactiveCommand<Unit, Unit> OpenSettingsCommand { get; set; }
         public ReactiveCommand<Unit, Unit> GoHomeCommand { get; set; }
 
         private static string GetVersionNumber()
@@ -62,23 +69,37 @@ namespace Prover.GUI.Screens.Shell
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fileVersionInfo.ProductVersion;
-        }
-
-        public void Handle(DialogDisplayEvent message)
-        {
-            DialogViewModel = message.ViewModel;
-        }
+        }    
 
         private IDialogViewModel _dialogViewModel;
-
         public IDialogViewModel DialogViewModel
         {
             get => _dialogViewModel;
             set => this.RaiseAndSetIfChanged(ref _dialogViewModel, value);
         }
 
+        private double _windowHeight;
+        public double WindowHeight
+        {
+            get => _windowHeight;
+            set => this.RaiseAndSetIfChanged(ref _windowHeight, value);
+        }
+
+        private double _windowWidth;
+        public double WindowWidth
+        {
+            get => _windowWidth;
+            set => this.RaiseAndSetIfChanged(ref _windowWidth, value);
+        }
+
         public void Dispose()
         {
+            (ActiveItem as IDisposable)?.Dispose();
+        }
+
+        public void Handle(ScreenChangeEvent message)
+        {
+            ActivateItem(message.ViewModel);
         }
     }
 }

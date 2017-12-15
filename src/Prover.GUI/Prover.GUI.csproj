@@ -205,7 +205,6 @@
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Events\ShowDialogEvent.cs" />
     <Compile Include="Events\VerificationTestEvent.cs" />
-    <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
@@ -352,6 +351,7 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Settings\SettingsViewModel.cs" />
+    <Compile Include="Screens\Shell\INavigationItem.cs" />
     <Compile Include="Screens\Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -406,7 +406,7 @@
     <Compile Include="Screens\StartScreen.xaml.cs">
       <DependentUpon>StartScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Toolbar\ToolbarItem.cs" />
+    <Compile Include="Screens\Toolbar\IToolbarItem.cs" />
     <Compile Include="Screens\ViewModelBase.cs" />
     <Compile Include="Screens\WindowSettings.cs" />
     <Page Include="Controls\ItemsFileView.xaml">

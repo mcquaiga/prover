@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
 using Prover.Core;
+using Prover.Core.Settings;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens;
+using Prover.GUI.Screens.MainMenu;
+using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
@@ -79,23 +83,16 @@ namespace Prover.GUI
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
-            if (!File.Exists(_moduleFilePath))
-                throw new Exception("Could not find a modules.conf file in the current directory.");
-
-            var modules = new List<string>();
-
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            var modulesString = File.ReadAllText(_moduleFilePath);
-            modules.AddRange(JsonConvert.DeserializeObject<List<string>>(modulesString));
+            if (!File.Exists(_moduleFilePath))
+                throw new Exception("Could not find a modules.conf file in the current directory.");
 
-            foreach (var module in modules)
-                if (File.Exists($"{module}.dll"))
-                {
-                    var ass = Assembly.LoadFrom($"{module}.dll");
-                    assemblies.Add(ass);
-                }
+            var modulesString = File.ReadAllText(_moduleFilePath);
+            assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)
+                                where File.Exists($"{module}.dll")
+                                select Assembly.LoadFrom($"{module}.dll"));
 
             _assemblies = assemblies.ToArray();
 
@@ -137,6 +134,12 @@ namespace Prover.GUI
             DisplayRootViewFor<ShellViewModel>();
 
             _splashScreen.Close();
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            Task.Run(SettingsManager.SaveLocalSettings);
+            base.OnExit(sender, e);
         }
     }
 }

@@ -3,15 +3,14 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using MaterialDesignThemes.Wpf;
+using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ViewLocator = ReactiveUI.ViewLocator;
 
 namespace Prover.GUI.Screens
 {
     public interface IScreenManager
-    {
-        IConductor Conductor { get; set; }
-
+    {      
         T ResolveViewModel<T>()
             where T : ViewModelBase;
 
@@ -36,14 +35,16 @@ namespace Prover.GUI.Screens
 
     public class ScreenManager : IScreenManager
     {
+        private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
 
-        public ScreenManager(IWindowManager windowManager)
+        public ScreenManager(IEventAggregator eventAggregator, IWindowManager windowManager)
         {
-            _windowManager = windowManager;
-        }
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
 
-        public IConductor Conductor { get; set; }
+            _windowManager = windowManager;
+        }      
 
         public T ResolveViewModel<T>()
             where T : ViewModelBase
@@ -58,7 +59,7 @@ namespace Prover.GUI.Screens
         /// <returns></returns>
         public void ChangeScreen(ViewModelBase viewModel)
         {
-            Conductor?.ActivateItem(viewModel);
+            _eventAggregator.PublishOnUIThreadAsync(new ScreenChangeEvent(viewModel));
         }
 
         public void ChangeScreen<T>(string key = null)
@@ -77,9 +78,7 @@ namespace Prover.GUI.Screens
 
         public bool? ShowDialog(ViewModelBase dialogViewModel)
         {
-            var windowsSettings = dialogViewModel as IWindowSettings;
-
-            if (windowsSettings != null)
+            if (dialogViewModel is IWindowSettings windowsSettings)
                 return _windowManager.ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
 
             return _windowManager.ShowDialog(dialogViewModel);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Expression.Blend.SampleData.MainMenuDataSource
+namespace Prover.GUI.DesignTime.SampleData.MainMenuDataSource
 {
 // To significantly reduce the sample data footprint in your production application, you can set
 // the DISABLE_SAMPLE_DATA conditional compilation constant and disable sample data at runtime.

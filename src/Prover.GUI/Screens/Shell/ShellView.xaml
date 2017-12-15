@@ -3,23 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
         Title="{Binding Title}"
-        Height="600" Width="600"
-        TextElement.FontWeight="Light"
-        TextElement.FontSize="16"
         Icon="pack://application:,,,/../Resources/clipboard-check.png"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Window.Resources>
-        <DataTemplate x:Key="ToolbarItem">
-            <ContentControl cal:View.Model="{Binding}" cal:View.Context="{Binding Path=ViewContext}"/>
-        </DataTemplate>
-    </Window.Resources>
-
     <DockPanel>
         <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                   Mode="PrimaryDark" DockPanel.Dock="Top">
             <DockPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <ItemsControl ItemsSource="{Binding Path=NavigationItems}"
+                              DockPanel.Dock="Left">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=NavigationCommand}"
+                                    Width="48"
+                                    Height="48">
+                                <materialDesign:PackIcon Kind="{Binding Path=IconKind}"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!--<StackPanel Orientation="Horizontal" >
                     <Button Command="{Binding GoHomeCommand}"
                             Width="48"
                             Height="48">
@@ -28,15 +36,17 @@
                     <Button Command="{Binding OpenSettingsCommand}"
                             Width="48" 
                             Height="48">
-                        <materialDesign:PackIcon Kind="Settings"
-                                                 />
+                        <materialDesign:PackIcon Kind="Settings" />
                     </Button>
-                </StackPanel>
+                </StackPanel>-->
 
                 <StackPanel DockPanel.Dock="Right">
-                    <ItemsControl
-                        ItemsSource="{Binding Path=ToolbarItems}"
-                        ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
+                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl cal:View.Model="{Binding}" cal:View.Context="{Binding Path=ViewContext}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
