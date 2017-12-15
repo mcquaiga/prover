@@ -359,11 +359,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
             CertificateGenerator.GenerateXps(certificate);
 
             await FetchNextCertificateNumberCommand.Execute();
-            var client = SelectedClient;
-            SelectedClient = null;
-            ExportToCsvViewModel.Client = null;
-            SelectedClient = client;
-            ExportToCsvViewModel.Client = client;
+            RootResults.RemoveAll(items);
         }
 
         private void PrintExistingCertificate(Certificate certificate)

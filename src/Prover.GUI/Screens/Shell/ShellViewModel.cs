@@ -17,7 +17,9 @@ using ReactiveUI;
 namespace Prover.GUI.Screens.Shell
 {
     public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,
-        IHandle<ScreenChangeEvent>, IHandle<NotificationEvent>, IDisposable
+        IHandle<ScreenChangeEvent>, 
+        IHandle<NotificationEvent>,
+        IHandle<DialogDisplayEvent>, IDisposable
     {
         public IEnumerable<INavigationItem> NavigationItems { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
@@ -136,6 +138,11 @@ namespace Prover.GUI.Screens.Shell
         public void Dispose()
         {
             GoHomeCommand?.Dispose();
+        }
+
+        public void Handle(DialogDisplayEvent message)
+        {
+            DialogViewModel = message.ViewModel;
         }
     }
 }

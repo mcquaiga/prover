@@ -130,13 +130,14 @@
                          IsIndeterminate="True"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center" />
-
             <ListBox x:Name="ResultFilteredItems"
                      Grid.Column="0"
                      VerticalContentAlignment="Stretch"
                      Grid.Row="2"
                      Margin="5"
                      SelectionMode="Multiple"
+                     VirtualizingStackPanel.IsVirtualizing="True"
+                     VirtualizingStackPanel.VirtualizationMode="Recycling"
                      Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}}"
                      HorizontalContentAlignment="Stretch">
                 <ListBox.ItemContainerStyle>
@@ -153,6 +154,12 @@
                         </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
             </ListBox>
 
             <!--  Certificate Information  -->

@@ -68,7 +68,8 @@ namespace Prover.GUI
             Builder.RegisterType<ScreenManager>()
                 .SingleInstance();
 
-            Builder.RegisterType<InstrumentReportGenerator>();
+            Builder.RegisterType<InstrumentReportGenerator>()
+                .SingleInstance();
             Builder.RegisterAssemblyModules(Assemblies);
 
             Builder.RegisterViewModels(Assemblies);

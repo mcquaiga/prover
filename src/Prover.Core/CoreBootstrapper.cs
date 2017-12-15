@@ -86,7 +86,8 @@ namespace Prover.Core
 
             builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
                 .InstancePerDependency();
-            builder.RegisterType<TestRunService>();
+            builder.RegisterType<TestRunService>()
+                .SingleInstance();
 
             builder.Register(c => new ProverStore<Client>(c.Resolve<ProverContext>()))
                 .As<IProverStore<Client>>()

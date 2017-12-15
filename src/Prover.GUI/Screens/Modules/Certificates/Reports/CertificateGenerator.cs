@@ -81,7 +81,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
                 using (var doc = new XpsDocument(package))
                 {
                     var writer = XpsDocument.CreateXpsDocumentWriter(doc);
-                    writer.WriteAsync(fixedDoc);
+                    writer.Write(fixedDoc);
                     doc.Close();
                 }
             }
@@ -94,7 +94,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
             using (var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite))
             {
                 var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
-                xw.WriteAsync(fixedDoc);
+                xw.Write(fixedDoc);
                 xpsWriter.Close();
             }
         }
