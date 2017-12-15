@@ -13,10 +13,10 @@ namespace Prover.GUI.Screens.Shell
         public ShellView()
         {
             InitializeComponent();
-            
+
             Application.Current.MainWindow.WindowState = WindowState.Maximized;
-            Style = (Style)FindResource(typeof(Window));
-            
+            Style = (Style) FindResource(typeof(Window));
+
             this.WhenActivated(d =>
             {
                 d(ViewModel = (ShellViewModel) DataContext);
@@ -29,11 +29,10 @@ namespace Prover.GUI.Screens.Shell
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ShellViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ShellViewModel) value;
         }
 
         public ShellViewModel ViewModel { get; set; }
-       
     }
 }

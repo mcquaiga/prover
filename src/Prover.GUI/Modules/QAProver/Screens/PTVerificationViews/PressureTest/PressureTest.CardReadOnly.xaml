@@ -8,8 +8,9 @@
              xmlns:cal="http://www.caliburnproject.org"
 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              
              TextElement.FontWeight="Medium"
@@ -26,35 +27,35 @@
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="3" Content="PressureTestRun" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
-            <controls1:PercentageControl HorizontalAlignment="Left" Margin="2"
+            <controls:PercentageControl HorizontalAlignment="Left" Margin="2"
                                          DisplayValue="{Binding TestRun.PercentError}"
                                          Passed="{Binding TestRun.HasPassed}" />
 
 
             <UniformGrid Columns="2" Margin="0">
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="Gauge"
                     Value="{Binding GasPressure}" />
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="EVC Reading"
                     Value="{Binding EvcGasPressure}" />
             </UniformGrid>
             <UniformGrid Columns="2" Margin="0"
                          Visibility="{Binding ShowATMValues, Converter={StaticResource BoolToHiddenConverter}}">
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="ATM Gauge"
                     Value="{Binding AtmosphericGauge}" />
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="EVC ATM Reading"
                     Value="{Binding EvcATMPressure}" />
             </UniformGrid>
             <UniformGrid Columns="2" Margin="0">
-                <controls1:ValueDescriptionControl LabelFontSize="10"
+                <controls:ValueDescriptionControl LabelFontSize="10"
                                                    ValueFontSize="20"
                                                    Label="Actual Factor"
                                                    Value="{Binding Test.ActualFactor}" />
 
-                <controls1:ValueDescriptionControl LabelFontSize="10"
+                <controls:ValueDescriptionControl LabelFontSize="10"
                                                    ValueFontSize="20"
                                                    Label="EVC Factor"
                                                    Value="{Binding EvcFactor}" />

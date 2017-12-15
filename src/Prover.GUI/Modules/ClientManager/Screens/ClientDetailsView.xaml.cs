@@ -16,7 +16,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
             this.WhenActivated(d =>
             {
-                d(ViewModel = (ClientDetailsViewModel)DataContext);
+                d(ViewModel = (ClientDetailsViewModel) DataContext);
 
                 d(this.WhenAnyValue(x => x.ViewModel.SwitchToDetailsContextCommand)
                     .SelectMany(x => x.Execute())
@@ -26,12 +26,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ClientDetailsViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ClientDetailsViewModel) value;
         }
 
         public ClientDetailsViewModel ViewModel { get; set; }
-
-     
     }
 }

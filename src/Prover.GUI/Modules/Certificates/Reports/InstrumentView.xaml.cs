@@ -16,8 +16,8 @@ namespace Prover.GUI.Modules.Certificates.Reports
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (VerificationViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (VerificationViewModel) value;
         }
 
         public VerificationViewModel ViewModel { get; set; }

@@ -3,13 +3,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
 using Prover.Core.Exports;
-using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Services;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Modules.Certificates.Screens;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.MainMenu;
 
 namespace Prover.GUI.Modules.Certificates
 {
@@ -31,8 +27,7 @@ namespace Prover.GUI.Modules.Certificates
                 })
                 .As<IHaveMainMenuItem>()
                 .SingleInstance();
-           
-            
+
 
             builder.RegisterType<ExportToCsvManager>()
                 .As<IExportCertificate>();

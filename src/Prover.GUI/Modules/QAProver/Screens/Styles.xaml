@@ -5,6 +5,10 @@
     <SolidColorBrush x:Key="PrimaryTextColor" Opacity=".87" Color="Black" />
     <SolidColorBrush x:Key="SecondaryTextColor" Opacity=".54" Color="Black" />
 
+    <Style TargetType="{x:Type Control}">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
     <Style x:Key="TestSectionOuterBorder" TargetType="{x:Type Border}">
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrushColor}" />
         <Setter Property="BorderThickness" Value="1" />

@@ -4,8 +4,7 @@ using System.Linq;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Modules.Clients.VerificationTestActions;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.ItemValidation
@@ -21,10 +20,11 @@ namespace Prover.GUI.Modules.ClientManager.Screens.ItemValidation
         }
 
         private Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> _invalidItems;
+
         public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidItems
         {
-            get { return _invalidItems; }
-            set { this.RaiseAndSetIfChanged(ref _invalidItems, value); }
+            get => _invalidItems;
+            set => this.RaiseAndSetIfChanged(ref _invalidItems, value);
         }
 
         #region Commands
@@ -33,16 +33,16 @@ namespace Prover.GUI.Modules.ClientManager.Screens.ItemValidation
 
         public ReactiveCommand SkipCommand
         {
-            get { return _skipCommand; }
-            set { this.RaiseAndSetIfChanged(ref _skipCommand, value); }
+            get => _skipCommand;
+            set => this.RaiseAndSetIfChanged(ref _skipCommand, value);
         }
 
         private ReactiveCommand _updateCommand;
 
         public ReactiveCommand UpdateCommand
         {
-            get { return _updateCommand; }
-            set { this.RaiseAndSetIfChanged(ref _updateCommand, value); }
+            get => _updateCommand;
+            set => this.RaiseAndSetIfChanged(ref _updateCommand, value);
         }
 
         public bool ShouldInvalidItemsBeChanged(Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> invalidItems)

@@ -23,13 +23,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.Designer
 
         public VerificationSetViewModel VolumeTestView => TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null);
 
-        public List<VerificationSetViewModel> PTTestViews => TestViews.Where(x => x.VolumeTestViewModel == null).ToList();
+        public List<VerificationSetViewModel> PTTestViews =>
+            TestViews.Where(x => x.VolumeTestViewModel == null).ToList();
 
         public VolumeTestViewModel VolumeInformationItem { get; set; }
-
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
         #region data
+
         private readonly string _json = @"{
   ""Certificate"": null,
   ""Client"": null,
@@ -2821,6 +2822,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.Designer
   ],
   ""Id"": ""8d1ee376-f0a3-4119-b649-aeb20e2add49""
 }";
-#endregion
+
+        #endregion
     }
 }

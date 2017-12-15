@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
 using Prover.GUI.Modules.Certificates.Common;
 using Prover.GUI.Reports;
+using Prover.GUI.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.Certificates.Screens
@@ -35,6 +32,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         #region Properties
 
         private bool _isDisplayed = true;
+
         public bool IsDisplayed
         {
             get => _isDisplayed;
@@ -42,6 +40,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private ReactiveCommand _addTestToCertificate;
+
         public ReactiveCommand AddTestToCertificate
         {
             get => _addTestToCertificate;
@@ -49,6 +48,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
         }
 
         private VerificationViewModel _verificationViewModel;
+
         public VerificationViewModel VerificationView
         {
             get => _verificationViewModel;
@@ -106,10 +106,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
             var vvm = new VerificationViewModel(instrument);
             VerificationView = vvm;
 
-            filterObservable.Subscribe(p =>
-            {
-                IsDisplayed = p(Instrument);
-            });
+            filterObservable.Subscribe(p => { IsDisplayed = p(Instrument); });
         }
 
         public async Task DisplayInstrumentReport()

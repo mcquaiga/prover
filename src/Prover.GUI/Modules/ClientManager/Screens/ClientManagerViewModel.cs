@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Models.Clients;
 using Prover.Core.Services;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens
@@ -36,7 +31,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
                 .Select(x => x.Sender)
                 .Subscribe(x => ClientList.Remove(x));
 
-            AddClientCommand = ReactiveCommand.CreateFromTask(AddClient);
+            AddClientCommand = ReactiveCommand.Create(AddClient);
         }
 
         public ReactiveCommand<Unit, Client> LoadClientsCommand { get; set; }
@@ -46,14 +41,14 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         private IObservable<Client> LoadClients()
         {
             return _clientService.GetActiveClients()
-                .ToObservable();            
+                .ToObservable();
         }
 
-        private async Task AddClient()
+        private void AddClient()
         {
             var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientService,
-                new Core.Models.Clients.Client());
-            await newClientVm.Edit();
+                new Client());
+            newClientVm.Edit();
         }
 
         #endregion
@@ -64,33 +59,34 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         public ReactiveCommand AddClientCommand
         {
-            get { return _addClientCommand; }
-            set { this.RaiseAndSetIfChanged(ref _addClientCommand, value); }
+            get => _addClientCommand;
+            set => this.RaiseAndSetIfChanged(ref _addClientCommand, value);
         }
 
         #endregion
 
         #region Properties
 
-        private ReactiveList<ClientDetailsViewModel> _clientList = new ReactiveList<ClientDetailsViewModel>() { ChangeTrackingEnabled = true };
+        private ReactiveList<ClientDetailsViewModel> _clientList =
+            new ReactiveList<ClientDetailsViewModel> {ChangeTrackingEnabled = true};
 
         public ReactiveList<ClientDetailsViewModel> ClientList
         {
-            get { return _clientList; }
-            set { this.RaiseAndSetIfChanged(ref _clientList, value); }
+            get => _clientList;
+            set => this.RaiseAndSetIfChanged(ref _clientList, value);
         }
 
         private string _viewContext;
 
         public string ViewContext
         {
-            get { return _viewContext; }
-            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+            get => _viewContext;
+            set => this.RaiseAndSetIfChanged(ref _viewContext, value);
         }
 
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             ClientList = null;
         }

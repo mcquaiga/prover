@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.VerificationTests.VolumeVerification;
-using Prover.GUI.Common.Screens.Dialogs;
+using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dialogs
@@ -17,7 +13,8 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dia
     {
         public VolumeTestManager TestManager { get; }
 
-        public ManualVolumeTestDialogViewModel(ManualVolumeTestManager testManager, IEventAggregator eventAggregator, Func<CancellationToken, Task> taskFunc)
+        public ManualVolumeTestDialogViewModel(ManualVolumeTestManager testManager, IEventAggregator eventAggregator,
+            Func<CancellationToken, Task> taskFunc)
         {
             TestManager = testManager;
 
@@ -60,14 +57,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dia
 
                 do
                 {
-
                 } while (CurrentTestStep == VolumeTestSteps.PreTest || CurrentTestStep == VolumeTestSteps.PostTest);
-
             }, cancellationToken);
         }
 
         public override void Dispose()
-        {            
+        {
         }
     }
 }

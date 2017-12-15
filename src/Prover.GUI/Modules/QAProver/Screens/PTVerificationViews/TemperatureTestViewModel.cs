@@ -1,8 +1,7 @@
 ﻿using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
-
+using Prover.GUI.Events;
+using Prover.GUI.Screens;
 using TemperatureTestRun = Prover.Core.Models.Instruments.TemperatureTest;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
@@ -17,7 +16,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public double Gauge
         {
-            get { return TestRun.Gauge; }
+            get => TestRun.Gauge;
             set
             {
                 TestRun.Gauge = value;

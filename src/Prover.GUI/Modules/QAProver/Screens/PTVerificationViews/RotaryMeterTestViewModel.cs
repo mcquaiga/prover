@@ -13,12 +13,12 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         //Meter properties
         public string DriveRateDescription => RotaryDriveType.Instrument.DriveRateDescription();
+
         public string MeterTypeDescription => RotaryDriveType.Meter.MeterTypeDescription;
         public decimal? MeterDisplacement => RotaryDriveType.Meter.MeterDisplacement;
         public decimal? EvcMeterDisplacement => RotaryDriveType.Meter.EvcMeterDisplacement;
         public decimal? MeterDisplacementPercentError => RotaryDriveType.Meter.MeterDisplacementPercentError;
         public bool MeterDisplacementHasPassed => RotaryDriveType.HasPassed;
-
         public RotaryDrive RotaryDriveType { get; }
     }
 }

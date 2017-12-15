@@ -1,12 +1,11 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;
 using Prover.Core.Settings;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
+using Prover.GUI.Events;
+using Prover.GUI.Screens;
 using ReactiveUI;
-using System;
-using System.Reactive.Linq;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -22,9 +21,11 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
     }
 
-    public class PressureTestViewModel : TestRunViewModelBase<Core.Models.Instruments.PressureTest>, IHandle<AtmosphericGaugePressureUpdateMessage>
+    public class PressureTestViewModel : TestRunViewModelBase<Core.Models.Instruments.PressureTest>,
+        IHandle<AtmosphericGaugePressureUpdateMessage>
     {
-        public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
+        public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+            Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
         {
             GaugePressure = TestRun.GasGauge;
             AtmosphericGauge = TestRun.AtmosphericGauge;
@@ -65,25 +66,25 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             }
 
             this.WhenAnyValue(x => x.GaugePressure)
-                .Subscribe(x => TestRun.GasGauge = x);  
-                //.Subscribe(x =>
-                //{
-                //    TestRun.AtmosphericGauge = x;
-                //    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-                //});
+                .Subscribe(x => TestRun.GasGauge = x);
+            //.Subscribe(x =>
+            //{
+            //    TestRun.AtmosphericGauge = x;
+            //    EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
+            //});
 
             GaugePressure = TestRun.GasGauge;
-            AtmosphericGauge = TestRun.AtmosphericGauge;                           
+            AtmosphericGauge = TestRun.AtmosphericGauge;
         }
 
         public bool LockGaugePressure { get; }
         private readonly ObservableAsPropertyHelper<decimal?> _absolutePressure;
         public decimal? AbsolutePressure => _absolutePressure.Value;
-
         private decimal? _gaugePressure;
+
         public decimal? GaugePressure
         {
-            get { return _gaugePressure; }
+            get => _gaugePressure;
             set
             {
                 this.RaiseAndSetIfChanged(ref _gaugePressure, value);
@@ -93,20 +94,19 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
         public bool ShowAbsolute => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
         public bool ShowGaugeOnly => !ShowAbsolute;
-
         private decimal? _atmosphericGauge;
+
         public decimal? AtmosphericGauge
         {
-            get { return _atmosphericGauge; }
-            set { this.RaiseAndSetIfChanged(ref _atmosphericGauge, value); }
+            get => _atmosphericGauge;
+            set => this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
         }
 
         public decimal? EvcGasPressure => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
-
         public decimal? EvcFactor => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
 
         public decimal? EvcAtmPressure =>
-                TestRun.VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
+            TestRun.VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
 
         protected override void RaisePropertyChangeEvents()
         {
@@ -123,11 +123,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public void Handle(AtmosphericGaugePressureUpdateMessage message)
         {
             if (message.Sender != this)
-            {
                 AtmosphericGauge = message.Value;
-            }
         }
     }
-
-  
 }

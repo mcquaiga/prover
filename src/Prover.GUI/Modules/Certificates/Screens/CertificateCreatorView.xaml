@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              mc:Ignorable="d"
              Background="White">
 

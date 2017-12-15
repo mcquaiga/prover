@@ -5,14 +5,13 @@ using Prover.Core.Extensions;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;
-using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Modules.Certificates.Common
 {
     public class VerificationViewModel : ViewModelBase
     {
         public Instrument Instrument { get; set; }
-
         public int? RowNumber { get; set; }
 
         public VerificationViewModel(Instrument instrument)
@@ -46,18 +45,13 @@ namespace Prover.GUI.Modules.Certificates.Common
         }
 
         public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
-
         public string DateTimePretty => $"{Instrument.TestDateTime:g}";
         public string DatePretty => $"{Instrument.TestDateTime:d}";
         public string TimePretty => $"{Instrument.TestDateTime:t}";
-
         public TemperatureInfoViewModel Temperature { get; protected set; }
-
         public PressureInfoViewModel Pressure { get; protected set; }
-
         public VolumeInfoViewModel Volume { get; protected set; }
-
-        public List<VerificationTestViewModel> VerificationTests { get; }            
+        public List<VerificationTestViewModel> VerificationTests { get; }
 
         public class VerificationTestViewModel
         {
@@ -72,54 +66,52 @@ namespace Prover.GUI.Modules.Certificates.Common
         }
 
         public bool ShowTemperature => Instrument.IsLiveTemperature;
-
         public bool ShowPressure => Instrument.IsLivePressure;
-
         public bool ShowSuperFactor => Instrument.IsLiveSuper;
 
-        public VolumeTest VolumeTest => 
+        public VolumeTest VolumeTest =>
             Instrument.VerificationTests.FirstOrDefault(v => v.VolumeTest != null)?.VolumeTest;
 
         public string UncorrectedUnits => Instrument.Items.GetItem(92).Description;
         public string CorrectedUnits => Instrument.Items.GetItem(90).Description;
-
         public bool IsMechanicalDrive => !IsRotaryDrive;
+
         public MechanicalDrive MechanicalDriveInfo =>
-            (MechanicalDrive) (Instrument?.VolumeTest?.DriveType is MechanicalDrive ? Instrument.VolumeTest.DriveType : null);
+            (MechanicalDrive) (Instrument?.VolumeTest?.DriveType is MechanicalDrive
+                ? Instrument.VolumeTest.DriveType
+                : null);
 
         public bool IsRotaryDrive => Instrument.DriveRateDescription().ToLower() == "rotary";
-        public RotaryDrive RotaryMeterInfo => 
+
+        public RotaryDrive RotaryMeterInfo =>
             (RotaryDrive) (Instrument?.VolumeTest?.DriveType is RotaryDrive ? Instrument.VolumeTest.DriveType : null);
 
         public class PressureInfoViewModel
         {
             private readonly Instrument _instrument;
+
             public PressureInfoViewModel(Instrument instrument)
             {
                 _instrument = instrument;
             }
 
             public string UnitsAndTransducer => $"{Units}";
-
             public string Units => _instrument.Items.GetItem(87).Description;
-
             public decimal Base => decimal.Round(_instrument.Items.GetItem(13).NumericValue, 2);
-
             public string TransducerType => _instrument.Items.GetItem(112).Description;
-
-            public string Range => $"{(int)_instrument.Items.GetItem(137).NumericValue} {UnitsAndTransducer}";
+            public string Range => $"{(int) _instrument.Items.GetItem(137).NumericValue} {UnitsAndTransducer}";
         }
 
         public class TemperatureInfoViewModel
         {
             private readonly Instrument _instrument;
+
             public TemperatureInfoViewModel(Instrument instrument)
             {
                 _instrument = instrument;
             }
 
             public string Units => _instrument.Items.GetItem(89).Description;
-
             public decimal Base => _instrument.Items.GetItem(34).NumericValue;
         }
 

@@ -15,7 +15,7 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
             this.WhenActivated(d =>
             {
-                d(ViewModel = (CertificateCreatorViewModel)DataContext);
+                d(ViewModel = (CertificateCreatorViewModel) DataContext);
 
                 d(this.BindCommand(
                     ViewModel,
@@ -39,8 +39,8 @@ namespace Prover.GUI.Modules.Certificates.Screens
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (CertificateCreatorViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (CertificateCreatorViewModel) value;
         }
 
         public CertificateCreatorViewModel ViewModel { get; set; }

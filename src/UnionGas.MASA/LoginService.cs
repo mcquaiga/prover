@@ -6,7 +6,7 @@ using System.Windows;
 using Caliburn.Micro;
 using NLog;
 using Prover.Core.Login;
-using Prover.GUI.Common;
+using Prover.GUI.Screens;
 using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA

@@ -11,16 +11,13 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
         {
             InitializeComponent();
 
-            this.WhenActivated(d =>
-            {
-                d(ViewModel = (ClientCsvTemplatesViewModel) DataContext);                
-            });
+            this.WhenActivated(d => { d(ViewModel = (ClientCsvTemplatesViewModel) DataContext); });
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ClientCsvTemplatesViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ClientCsvTemplatesViewModel) value;
         }
 
         public ClientCsvTemplatesViewModel ViewModel { get; set; }

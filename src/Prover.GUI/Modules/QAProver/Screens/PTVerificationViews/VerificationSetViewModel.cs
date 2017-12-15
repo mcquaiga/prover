@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -8,10 +7,9 @@ using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
-using Prover.GUI.Common.Screens;
-using Prover.GUI.Common.Screens.Dialogs;
+using Prover.GUI.Events;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
@@ -20,7 +18,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
     {
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {                   
+        {
             RunTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
         }
@@ -41,7 +39,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         public PressureTestViewModel PressureTestViewModel { get; private set; }
         public SuperFactorTestViewModel SuperFactorTestViewModel { get; private set; }
         public VolumeTestViewModel VolumeTestViewModel { get; private set; }
-
         public VerificationTest VerificationTest { get; set; }
 
         public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
@@ -49,7 +46,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
 
-            ShowDownloadButton = QaRunTestManager != null;            
+            ShowDownloadButton = QaRunTestManager != null;
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 SuperFactorTestViewModel =
@@ -57,34 +54,21 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T ||
                 VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-            {
                 TemperatureTestViewModel =
                     new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
-                //this.WhenAnyValue(x => x.TemperatureTestViewModel.Gauge)
-                //    .Where(x => QaRunTestManager != null)
-                //    .Subscribe(async y => await QaRunTestManager.SaveAsync());
-            }
-
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
                 VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-            {
                 PressureTestViewModel =
                     new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
 
-                //this.WhenAnyValue(x => x.PressureTestViewModel.AtmosphericGauge,
-                //        x => x.PressureTestViewModel.GaugePressure)
-                //    .Where(x => QaRunTestManager != null)
-                //    .Subscribe(async atm => await QaRunTestManager.SaveAsync());
-            }
-
             if (VerificationTest.VolumeTest != null)
-            {
                 VolumeTestViewModel =
-                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);                
-            }
+                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest,
+                        QaRunTestManager);
         }
-        public void Dispose()
+
+        public override void Dispose()
         {
             SuperFactorTestViewModel?.TryClose();
             TemperatureTestViewModel?.TryClose();
@@ -93,7 +77,6 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             _cancelTestCommand?.Dispose();
             _runTestCommand?.Dispose();
         }
-
 
         #region Properties
 
@@ -111,7 +94,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         {
             get => _showProgressDialog;
             set => this.RaiseAndSetIfChanged(ref _showProgressDialog, value);
-        }        
+        }
 
         private string _testStatusMessage;
 
@@ -122,6 +105,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         private ReactiveCommand _cancelTestCommand;
+
         public ReactiveCommand CancelTestCommand
         {
             get => _cancelTestCommand;
@@ -137,9 +121,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         #endregion
-       
+
         public async Task RunTest(IObserver<string> statusObserver, CancellationToken cancellationToken)
-        {            
+        {
             try
             {
                 QaRunTestManager.TestStatus.Subscribe(statusObserver);
@@ -151,11 +135,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                     $"An error occured during the verification test. See exception for details. {ex.Message}");
             }
             finally
-            {               
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(VerificationTest));                
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(VerificationTest));
             }
         }
-
-       
     }
 }

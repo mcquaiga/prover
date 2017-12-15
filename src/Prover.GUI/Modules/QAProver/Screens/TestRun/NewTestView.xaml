@@ -4,22 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.FontWeight="Light"
-             TextElement.FontSize="16"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             d:DesignHeight="500" d:DesignWidth="500">
-    <UserControl.Resources>
-        <ResourceDictionary>
-           
-            <!--<DataTemplate x:Key="InstrumentSelect">
-                <RadioButton Content="{Binding Path=Name}"
-                             GroupName="Instruments"
-                             VerticalAlignment="Center"                             
-                             IsChecked="{Binding Path=IsSelected}" />
-            </DataTemplate>-->
-        </ResourceDictionary>
-    </UserControl.Resources>
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <DockPanel>
         <materialDesign:ColorZone DockPanel.Dock="Top"
                                   Mode="PrimaryLight"
@@ -32,7 +17,7 @@
         <Grid>
             <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="250" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -49,31 +34,21 @@
                     <GroupBox Grid.Row="0"
                               BorderThickness="1"
                               Header="Instrument Type">
-                        <!--<ItemsControl x:Name="InstrumentTypes"
-                                      ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" Margin="4" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>-->
                         <ComboBox x:Name="InstrumentTypes"
-                                  DisplayMemberPath="Name"/>
+                                  DisplayMemberPath="Name" />
                     </GroupBox>
                     <GroupBox Grid.Row="1"
                               Header="Client"
                               BorderThickness="1">
-                        <StackPanel>
-                            <ComboBox x:Name="Clients" />
-                        </StackPanel>
+                        <ComboBox x:Name="Clients" />
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Grid.Row="0" 
-                          Grid.Column="1" 
+                <GroupBox Grid.Row="0"
+                          Grid.Column="1"
                           Header="Instrument Settings">
                     <StackPanel>
-                        <ComboBox x:Name="CommPort" materialDesign:HintAssist.Hint="Port"
+                        <ComboBox x:Name="CommPorts" materialDesign:HintAssist.Hint="Port"
                                   IsEnabled="{Binding DisableCommPortAndBaudRate}"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                         <ComboBox x:Name="BaudRate" materialDesign:HintAssist.Hint="Baud Rate"
@@ -82,13 +57,16 @@
                         <CheckBox x:Name="UseIrDaPort"
                                   Style="{StaticResource MaterialDesignCheckBox}"
                                   Margin="0 5"
-                                  Content="IrDA"/>
+                                  Content="IrDA" />
+                        <Button Content="Refresh Ports"
+                                Command="{Binding RefreshCommPortsCommand}"
+                                HorizontalAlignment="Right" />
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Grid.Row="0" Grid.Column="2" Header="Tach. Settings">
                     <StackPanel>
-                        <ComboBox x:Name="TachCommPort"
+                        <ComboBox x:Name="TachCommPorts"
                                   materialDesign:HintAssist.Hint="Port"
                                   IsEnabled="{Binding TachDisableCommPort}"
                                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
@@ -104,7 +82,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Command="{Binding StartTestCommand}"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}"    
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
                         FontSize="24"
                         Height="60"
                         Width="150"

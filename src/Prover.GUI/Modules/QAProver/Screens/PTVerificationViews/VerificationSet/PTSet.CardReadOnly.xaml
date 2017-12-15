@@ -9,7 +9,7 @@
     xmlns:cal="http://www.caliburnproject.org"
 
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+    xmlns:converters="clr-namespace:Prover.GUI.Converters"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     
     TextElement.FontWeight="Medium"

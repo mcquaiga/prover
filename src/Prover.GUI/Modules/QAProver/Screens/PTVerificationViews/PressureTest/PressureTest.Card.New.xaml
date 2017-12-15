@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,7 +18,7 @@
                        Text="Pressure" />
         </Border>
 
-        <controls:PercentageControlNew Grid.Row="1"
+        <controls1:PercentageControlNew Grid.Row="1"
                                        HorizontalAlignment="Center"
                                        DisplayValue="{Binding TestRun.PercentError}"
                                        Passed="{Binding TestRun.HasPassed}" />
@@ -26,36 +27,36 @@
             <UniformGrid Columns="2"
                          Visibility="{Binding ShowGaugeOnly, Converter={StaticResource BoolToHiddenConverter}}"
                          Margin="0">
-                <controls:ValueDescriptionControl Label="Gas Gauge"
+                <controls1:ValueDescriptionControl Label="Gas Gauge"
                                                   IsReadOnly="False"
                                                   Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <controls:ValueDescriptionControl Label="EVC Reading"
+                <controls1:ValueDescriptionControl Label="EVC Reading"
                                                   Value="{Binding EvcGasPressure}" />
             </UniformGrid>
             <UniformGrid Visibility="{Binding ShowAbsolute, Converter={StaticResource BoolToHiddenConverter}}"
                          Margin="0">
 
-                <controls:ValueDescriptionControl Label="Gas Gauge"
+                <controls1:ValueDescriptionControl Label="Gas Gauge"
                                                   IsReadOnly="False"
                                                   Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <controls:ValueDescriptionControl Label="Atmospheric"
+                <controls1:ValueDescriptionControl Label="Atmospheric"
                                                   IsReadOnly="False"
                                                   Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <controls:ValueDescriptionControl Label="Absolute"
+                <controls1:ValueDescriptionControl Label="Absolute"
                                                   IsReadOnly="True"
                                                   Value="{Binding AbsolutePressure}" />
 
-                <controls:ValueDescriptionControl Label="EVC Reading"
+                <controls1:ValueDescriptionControl Label="EVC Reading"
                                                   Value="{Binding EvcGasPressure}" />
             </UniformGrid>
             <UniformGrid Columns="2"
                          Margin="0">
-                <controls:ValueDescriptionControl Label="Actual Factor"
+                <controls1:ValueDescriptionControl Label="Actual Factor"
                                                   Value="{Binding TestRun.ActualFactor}" />
 
-                <controls:ValueDescriptionControl Label="EVC Factor"
+                <controls1:ValueDescriptionControl Label="EVC Factor"
                                                   Value="{Binding TestRun.EvcFactor}" />
 
             </UniformGrid>

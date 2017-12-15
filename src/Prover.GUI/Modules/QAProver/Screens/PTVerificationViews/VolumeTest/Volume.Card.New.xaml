@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,7 +18,7 @@
                 </Style.Triggers>
             </Style>-->
             <Style x:Key="VerifiedText"
-                   TargetType="controls:ValueDescriptionControl">
+                   TargetType="controls1:ValueDescriptionControl">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding ElementName=Value}" Value="True">
                         <Setter Property="Value" Value="Y" />
@@ -82,17 +81,17 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         VerticalAlignment="Bottom">
-                <controls:ValueDescriptionControl Label="Applied Input"
+                <controls1:ValueDescriptionControl Label="Applied Input"
                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
                                                   TabIndex="0"
                                                   IsReadOnly="False" />
 
-                <controls:ValueDescriptionControl Label="Uncor Pulses"
+                <controls1:ValueDescriptionControl Label="Uncor Pulses"
                                                   Value="{Binding UncorrectedPulseCount, Mode=TwoWay}"
                                                   TabIndex="1"
                                                   IsReadOnly="False" />
 
-                <controls:ValueDescriptionControl Label="Cor Pulses"
+                <controls1:ValueDescriptionControl Label="Cor Pulses"
                                                   Value="{Binding CorrectedPulseCount, Mode=TwoWay}"
                                                   TabIndex="2"
                                                   IsReadOnly="False" />
@@ -107,23 +106,23 @@
             <StackPanel Grid.Column="2">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Uncorrected" />
-                <controls:PercentageControlNew HorizontalAlignment="Center"
+                <controls1:PercentageControlNew HorizontalAlignment="Center"
                                                DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
                                                Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
 
                 <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Start Reading"
+                    <controls1:ValueDescriptionControl Label="Start Reading"
                                                       Value="{Binding StartUncorrected}" />
-                    <controls:ValueDescriptionControl Label="End Reading"
+                    <controls1:ValueDescriptionControl Label="End Reading"
                                                       Value="{Binding EndUncorrected}" />
 
-                    <controls:ValueDescriptionControl Label="True Calculated"
+                    <controls1:ValueDescriptionControl Label="True Calculated"
                                                       Value="{Binding TrueUncorrected}" />
-                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                    <controls1:ValueDescriptionControl Label="EVC Calculated"
                                                       Value="{Binding EvcUncorrected}" />
                     <!--<controls:ValueDescriptionControl Label="Multiplier"
                                                       Value="{Binding UnCorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified"
+                    <controls1:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
             </StackPanel>
@@ -137,21 +136,21 @@
             <StackPanel Grid.Column="4">
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Corrected" />
-                <controls:PercentageControlNew HorizontalAlignment="Center"
+                <controls1:PercentageControlNew HorizontalAlignment="Center"
                                                DisplayValue="{Binding Volume.CorrectedPercentError}"
                                                Passed="{Binding Volume.CorrectedHasPassed}" />
                 <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Start Reading"
+                    <controls1:ValueDescriptionControl Label="Start Reading"
                                                       Value="{Binding StartCorrected}" />
-                    <controls:ValueDescriptionControl Label="End Reading"
+                    <controls1:ValueDescriptionControl Label="End Reading"
                                                       Value="{Binding EndCorrected}" />
-                    <controls:ValueDescriptionControl Label="True Calculated"
+                    <controls1:ValueDescriptionControl Label="True Calculated"
                                                       Value="{Binding TrueCorrected}" />
-                    <controls:ValueDescriptionControl Label="EVC Calculated"
+                    <controls1:ValueDescriptionControl Label="EVC Calculated"
                                                       Value="{Binding EvcCorrected}" />
                     <!--<controls:ValueDescriptionControl Label="Multiplier"
                                                       Value="{Binding CorrectedMultiplierDescription}" />-->
-                    <controls:ValueDescriptionControl Label="Pulses Verified"
+                    <controls1:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
 

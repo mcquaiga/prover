@@ -8,8 +8,9 @@
              xmlns:cal="http://www.caliburnproject.org"
 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              
              TextElement.FontWeight="Light"
@@ -26,40 +27,40 @@
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Padding="3" Content="Pressure" Mode="PrimaryDark" Margin="2"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth0" />
-            <controls1:PercentageControl HorizontalAlignment="Center" Margin="2"
+            <controls:PercentageControl HorizontalAlignment="Center" Margin="2"
                                          DisplayValue="{Binding TestRun.PercentError}"
                                          Passed="{Binding TestRun.HasPassed}" />
 
             <UniformGrid Columns="2"
                          Margin="0"
                          Visibility="{Binding ShowGaugeOnly, Converter={StaticResource BoolToHiddenConverter}}">
-                <controls1:ValueDescriptionControl Label="Gauge"
+                <controls:ValueDescriptionControl Label="Gauge"
                                                    IsReadOnly="False"
                                                    Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <controls1:ValueDescriptionControl Label="EVC Reading"
+                <controls:ValueDescriptionControl Label="EVC Reading"
                                                    Value="{Binding EvcGasPressure}" />
             </UniformGrid>
 
             <UniformGrid Columns="2" 
                          Visibility="{Binding ShowAbsolute, Converter={StaticResource BoolToHiddenConverter}}"
                          Margin="0">
-                <controls1:ValueDescriptionControl Label="Gauge"
+                <controls:ValueDescriptionControl Label="Gauge"
                                                    IsReadOnly="{Binding LockGaugePressure}"
                                                    Value="{Binding GaugePressure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <controls1:ValueDescriptionControl Label="ATM Gauge" 
+                <controls:ValueDescriptionControl Label="ATM Gauge" 
                                                    IsReadOnly="False"
                                                    Value="{Binding AtmosphericGauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <controls1:ValueDescriptionControl Label="Absolute"
+                <controls:ValueDescriptionControl Label="Absolute"
                                                    Value="{Binding AbsolutePressure}" />
-                <controls1:ValueDescriptionControl Label="EVC Reading"
+                <controls:ValueDescriptionControl Label="EVC Reading"
                                                    Value="{Binding EvcGasPressure}" />
 
             </UniformGrid>
             <UniformGrid Columns="2" Margin="0">
-                <controls1:ValueDescriptionControl Label="Actual Factor"
+                <controls:ValueDescriptionControl Label="Actual Factor"
                                                    Value="{Binding TestRun.ActualFactor}" />
 
-                <controls1:ValueDescriptionControl Label="EVC Factor"
+                <controls:ValueDescriptionControl Label="EVC Factor"
                                                    Value="{Binding TestRun.EvcFactor}" />
 
             </UniformGrid>

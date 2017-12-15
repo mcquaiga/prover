@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments.DriveTypes;
-using Prover.GUI.Common.Events;
+using Prover.GUI.Events;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {

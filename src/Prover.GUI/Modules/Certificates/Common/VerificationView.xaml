@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls1="clr-namespace:Prover.GUI.Controls"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              FontWeight="Light"
              FontSize="12"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
@@ -463,7 +464,7 @@
                 CanUserResizeColumns="False"
                 CanUserResizeRows="False"-->
                 <DataGrid.Resources>
-                    <controls:BindingProxy x:Key="proxy"
+                    <controls1:BindingProxy x:Key="proxy"
                                            Data="{Binding}" />
                 </DataGrid.Resources>
                 <DataGrid.CellStyle>

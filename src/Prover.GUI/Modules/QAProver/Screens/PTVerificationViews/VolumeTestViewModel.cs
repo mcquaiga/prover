@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,13 +7,11 @@ using Caliburn.Micro;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;
-using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
-using Prover.GUI.Common.Screens.Dialogs;
-using Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.VolumeTest.Dialogs;
+using Prover.GUI.Events;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
@@ -44,9 +41,9 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 if (TestManager?.VolumeTestManager is ManualVolumeTestManager)
                 {
                     var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
-                        .Select(x => x == TestStep.PreTest);                                
+                        .Select(x => x == TestStep.PreTest);
                     PreVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                        "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);                
+                        "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);
 
                     var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
                         .Select(x => x == TestStep.PostTest || x == TestStep.PreTest);
@@ -57,17 +54,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 }
 
                 if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
-                {
                     RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
                         "Running Volume Test...", RunTest, canRunTestCommand);
-                }
 
                 this.WhenAnyValue(x => x.AppliedInput)
                     .Subscribe(value =>
                     {
                         Volume.AppliedInput = value;
                         EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-
                     });
 
                 this.WhenAnyValue(x => x.UncorrectedPulseCount)
@@ -84,17 +78,17 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                         EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     });
             }
-        }     
+        }
 
         public ReactiveCommand RunVolumeTestCommand { get; set; }
         public ReactiveCommand PreVolumeTestCommand { get; set; }
         public ReactiveCommand PostVolumeTestCommand { get; set; }
 
         #region Methods
-       
+
         private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
         {
-            TestManager.VolumeTestManager.StatusMessage.Subscribe(status);     
+            TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
             await TestManager.VolumeTestManager.PreTest(ct);
             ManualVolumeTestStep = TestStep.PostTest;
             EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
@@ -154,21 +148,22 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         #endregion
 
         #region Properties
+
         private TestStep _manualVolumeTestStep;
+
         internal TestStep ManualVolumeTestStep
         {
             get => _manualVolumeTestStep;
             set => this.RaiseAndSetIfChanged(ref _manualVolumeTestStep, value);
-        }        
+        }
 
         public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
         public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
-
         public IQaRunTestManager TestManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
         public Core.Models.Instruments.VolumeTest Volume { get; }
-
         private decimal _appliedInput;
+
         public decimal AppliedInput
         {
             get => _appliedInput;
@@ -176,13 +171,15 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         private int _uncorrectedPulseCount;
+
         public int UncorrectedPulseCount
         {
             get => _uncorrectedPulseCount;
             set => this.RaiseAndSetIfChanged(ref _uncorrectedPulseCount, value);
-        }       
+        }
 
         private int _correctedPulseCount;
+
         public int CorrectedPulseCount
         {
             get => _correctedPulseCount;
@@ -233,12 +230,14 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
             }
         }
+
         #endregion
+
         private readonly ObservableAsPropertyHelper<bool> _displayButtons;
         public bool DisplayButtons => _displayButtons.Value;
 
         protected override void RaisePropertyChangeEvents()
-        {          
+        {
             NotifyOfPropertyChange(() => TrueCorrected);
             NotifyOfPropertyChange(() => TrueUncorrected);
             NotifyOfPropertyChange(() => StartUncorrected);
@@ -247,7 +246,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => EndCorrected);
             NotifyOfPropertyChange(() => EvcUncorrected);
             NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected); 
+            NotifyOfPropertyChange(() => StartCorrected);
             NotifyOfPropertyChange(() => UnCorrectedPercentColour);
             NotifyOfPropertyChange(() => CorrectedPercentColour);
             NotifyOfPropertyChange(() => Volume);

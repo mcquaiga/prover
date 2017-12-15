@@ -7,7 +7,6 @@
              TextElement.FontSize="24"
              TextElement.FontWeight="Light"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="500" d:DesignWidth="500">
     <Grid>
         <ContentControl cal:View.Context="{Binding ViewContext, Mode=TwoWay}"

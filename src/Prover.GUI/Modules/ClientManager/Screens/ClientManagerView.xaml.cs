@@ -16,7 +16,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
             this.WhenActivated(d =>
             {
-                ViewModel = (ClientManagerViewModel)DataContext;
+                ViewModel = (ClientManagerViewModel) DataContext;
                 d(this.WhenAnyValue(x => x.ViewModel.LoadClientsCommand)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
@@ -25,8 +25,8 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ClientManagerViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ClientManagerViewModel) value;
         }
 
         public ClientManagerViewModel ViewModel { get; set; }

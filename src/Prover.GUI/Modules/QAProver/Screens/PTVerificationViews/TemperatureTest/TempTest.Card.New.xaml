@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="250">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,7 +18,7 @@
                        Style="{StaticResource SecondaryTestHeaderStyle}"
                        Text="Temperature" />
         </Border>
-        <controls1:PercentageControlNew DisplayValue="{Binding PercentError}"
+        <controls:PercentageControlNew DisplayValue="{Binding PercentError}"
                                         Grid.Row="1"
                                         HorizontalAlignment="Center"
                                         Passed="{Binding TestRun.HasPassed}"
@@ -27,17 +28,17 @@
                      Grid.Row="2"
                      Margin="4">
             <!--INstrument Report , Text display instead of the decimal control -->
-            <controls1:ValueDescriptionControl Label="Gauge"
+            <controls:ValueDescriptionControl Label="Gauge"
                                                IsReadOnly="False"
                                                Value="{Binding Gauge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
 
-            <controls1:ValueDescriptionControl Label="EVC Reading"
+            <controls:ValueDescriptionControl Label="EVC Reading"
                                                Value="{Binding EvcReading}" />
 
-            <controls1:ValueDescriptionControl Label="Actual Factor"
+            <controls:ValueDescriptionControl Label="Actual Factor"
                                                Value="{Binding TestRun.ActualFactor}" />
 
-            <controls1:ValueDescriptionControl Label="EVC Factor"
+            <controls:ValueDescriptionControl Label="EVC Factor"
                                                Value="{Binding EvcFactor}" />
         </UniformGrid>
     </Grid>

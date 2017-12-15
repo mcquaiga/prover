@@ -95,7 +95,7 @@
               Grid.Row="1">
             <materialDesign:Snackbar x:Name="SaveSnackbar"
                                      IsActive="{Binding ShowSaveSnackbar}">
-                <materialDesign:SnackbarMessage Content="SAVED TEST"
+                <materialDesign:SnackbarMessage Content="SAVE SUCCESSFUL"
                                                 HorizontalAlignment="Center" />
             </materialDesign:Snackbar>
         </Grid>

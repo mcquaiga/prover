@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Enums;
@@ -11,11 +10,11 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
     {
         public DesignTimeInstrumentInfoViewModel()
         {
-            var items = new List<ItemValue>()
+            var items = new List<ItemValue>
             {
-                new ItemValue(new ItemMetadata() {Number = 62}, "200000"),
-                new ItemValue(new ItemMetadata() {Number = 200}, "200000"),
-                new ItemValue(new ItemMetadata() {Number = 201}, "300000"),
+                new ItemValue(new ItemMetadata {Number = 62}, "200000"),
+                new ItemValue(new ItemMetadata {Number = 200}, "200000"),
+                new ItemValue(new ItemMetadata {Number = 201}, "300000")
             };
 
             //Instrument = new Instrument(HoneywellInstrumentTypes.MiniAt, items);
@@ -41,17 +40,15 @@ namespace Prover.GUI.Modules.QAProver.Screens.InstrumentInfo.Designer
 
         public string BasePressure
             =>
-            $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
-            ;
+                $"{Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
-
         public string TestDatePretty => $"{Instrument.TestDateTime:MMMM d, yyyy h:mm tt}";
 
-        public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
+        public string JobIdDisplay =>
+            !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
-        public bool EventLogChecked { get; set; }     
-
+        public bool EventLogChecked { get; set; }
         public bool CommPortChecked { get; set; }
 
         #region Data

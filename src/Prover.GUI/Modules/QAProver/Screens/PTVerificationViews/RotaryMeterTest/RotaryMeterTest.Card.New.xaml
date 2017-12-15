@@ -3,13 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d">
     <StackPanel VerticalAlignment="Top"
                 HorizontalAlignment="Center">
         <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                    Text="Meter Displacement" />
-        <controls:PercentageControlNew
+        <controls1:PercentageControlNew
             Margin="5"
             HorizontalAlignment="Center"
             DisplayValue="{Binding MeterDisplacementPercentError}"
@@ -18,8 +19,8 @@
             <TextBlock Text="{Binding MeterTypeDescription}" HorizontalAlignment="Center"
                        FontSize="24" />
             <StackPanel Orientation="Horizontal">
-                <controls:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
-                <controls:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
+                <controls1:ValueDescriptionControl Label="Expected" Value="{Binding MeterDisplacement}" />
+                <controls1:ValueDescriptionControl Label="EVC Value" Value="{Binding EvcMeterDisplacement}" />
             </StackPanel>
 
         </StackPanel>

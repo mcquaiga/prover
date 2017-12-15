@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              
              TextElement.FontWeight="Light"
@@ -19,7 +19,7 @@
                                           Mode="PrimaryLight">
                 Energy
             </materialDesign:ColorZone>
-            <controls1:PercentageControl
+            <controls:PercentageControl
                     Margin="5"
                     HorizontalAlignment="Center"
                     DisplayValue="{Binding EnergyTest.PercentError}"
@@ -29,8 +29,8 @@
                                Text="{Binding EnergyTest.EnergyUnits}"
                                FontSize="16" />
                 <UniformGrid Columns="2" HorizontalAlignment="Center">
-                    <controls1:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
-                    <controls1:ValueDescriptionControl Label="True Calculated" Value="{Binding EnergyTest.ActualEnergy}" />
+                    <controls:ValueDescriptionControl Label="EVC Calculated" Value="{Binding EnergyTest.EvcEnergy}" />
+                    <controls:ValueDescriptionControl Label="True Calculated" Value="{Binding EnergyTest.ActualEnergy}" />
                 </UniformGrid>
 
             </StackPanel>

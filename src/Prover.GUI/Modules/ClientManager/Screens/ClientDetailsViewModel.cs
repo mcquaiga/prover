@@ -8,16 +8,12 @@ using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
-using Prover.Core.Exports;
 using Prover.Core.Models.Clients;
 using Prover.Core.Services;
-using Prover.Core.Shared.Enums;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
 using Prover.GUI.Controls;
 using Prover.GUI.Modules.ClientManager.Screens.CsvExporter;
 using Prover.GUI.Modules.ClientManager.Screens.CsvTemplates;
+using Prover.GUI.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens
@@ -33,7 +29,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
             _clientService = clientService;
             _client = client;
 
-            EditCommand = ReactiveCommand.CreateFromTask(Edit);
+            EditCommand = ReactiveCommand.Create(Edit);
             ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveClient);
 
             var canSave = this.WhenAnyValue(c => c.Client, c => !string.IsNullOrEmpty(c.Name));
@@ -78,64 +74,64 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         public ReactiveCommand<Unit, Unit> SaveCommand
         {
-            get { return _saveCommand; }
-            set { this.RaiseAndSetIfChanged(ref _saveCommand, value); }
+            get => _saveCommand;
+            set => this.RaiseAndSetIfChanged(ref _saveCommand, value);
         }
 
         private ReactiveCommand _editCommand;
 
         public ReactiveCommand EditCommand
         {
-            get { return _editCommand; }
-            set { this.RaiseAndSetIfChanged(ref _editCommand, value); }
+            get => _editCommand;
+            set => this.RaiseAndSetIfChanged(ref _editCommand, value);
         }
 
         private ReactiveCommand _updateItemListCommand;
 
         public ReactiveCommand UpdateItemListCommand
         {
-            get { return _updateItemListCommand; }
-            set { this.RaiseAndSetIfChanged(ref _updateItemListCommand, value); }
+            get => _updateItemListCommand;
+            set => this.RaiseAndSetIfChanged(ref _updateItemListCommand, value);
         }
 
         private ReactiveCommand _goBackCommand;
 
         public ReactiveCommand GoBackCommand
         {
-            get { return _goBackCommand; }
-            set { this.RaiseAndSetIfChanged(ref _goBackCommand, value); }
+            get => _goBackCommand;
+            set => this.RaiseAndSetIfChanged(ref _goBackCommand, value);
         }
 
         private ReactiveCommand _deleteRowCommand;
 
         public ReactiveCommand DeleteRowCommand
         {
-            get { return _deleteRowCommand; }
-            set { this.RaiseAndSetIfChanged(ref _deleteRowCommand, value); }
+            get => _deleteRowCommand;
+            set => this.RaiseAndSetIfChanged(ref _deleteRowCommand, value);
         }
 
         private ReactiveCommand _addItemCommand;
 
         public ReactiveCommand AddItemCommand
         {
-            get { return _addItemCommand; }
-            set { this.RaiseAndSetIfChanged(ref _addItemCommand, value); }
+            get => _addItemCommand;
+            set => this.RaiseAndSetIfChanged(ref _addItemCommand, value);
         }
 
         private ReactiveCommand<Client, Unit> _goToCsvExporter;
 
         public ReactiveCommand<Client, Unit> GoToCsvExporter
         {
-            get { return _goToCsvExporter; }
-            set { this.RaiseAndSetIfChanged(ref _goToCsvExporter, value); }
+            get => _goToCsvExporter;
+            set => this.RaiseAndSetIfChanged(ref _goToCsvExporter, value);
         }
 
         private ReactiveCommand<ClientCsvTemplate, Unit> _goToCsvTemplateManager;
 
         public ReactiveCommand<ClientCsvTemplate, Unit> GoToCsvTemplateManager
         {
-            get { return _goToCsvTemplateManager; }
-            set { this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value); }
+            get => _goToCsvTemplateManager;
+            set => this.RaiseAndSetIfChanged(ref _goToCsvTemplateManager, value);
         }
 
         private ReactiveCommand<Unit, Unit> _switchToDetailsContextCommand;
@@ -150,7 +146,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         #region Properties   
 
-        private bool _isRemoved = false;
+        private bool _isRemoved;
 
         public bool IsRemoved
         {
@@ -162,16 +158,16 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         public ReactiveList<InstrumentType> InstrumentTypes
         {
-            get { return _instrumentTypes; }
-            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+            get => _instrumentTypes;
+            set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
         }
 
         private InstrumentType _selecedInstrumentType;
 
         public InstrumentType SelectedInstrumentType
         {
-            get { return _selecedInstrumentType; }
-            set { this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value); }
+            get => _selecedInstrumentType;
+            set => this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value);
         }
 
         public List<ClientItemType> ItemFileTypesList
@@ -202,19 +198,19 @@ namespace Prover.GUI.Modules.ClientManager.Screens
         }
 
         private ReactiveList<ClientCsvTemplate> _clientCsvTemplates =
-            new ReactiveList<ClientCsvTemplate>() {ChangeTrackingEnabled = true};
+            new ReactiveList<ClientCsvTemplate> {ChangeTrackingEnabled = true};
 
         public ReactiveList<ClientCsvTemplate> ClientCsvTemplates
         {
-            get { return _clientCsvTemplates; }
-            set { this.RaiseAndSetIfChanged(ref _clientCsvTemplates, value); }
+            get => _clientCsvTemplates;
+            set => this.RaiseAndSetIfChanged(ref _clientCsvTemplates, value);
         }
 
         #endregion
 
         #region Public Functions
 
-        public async Task Edit()
+        public void Edit()
         {
             ScreenManager.ChangeScreen(this);
         }
@@ -250,7 +246,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens
 
         private async Task ArchiveClient()
         {
-            await _clientService.ArchiveClient(this.Client);
+            await _clientService.ArchiveClient(Client);
             IsRemoved = true;
         }
 

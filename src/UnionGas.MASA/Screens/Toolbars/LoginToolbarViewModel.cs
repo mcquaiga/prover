@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Login;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
-using Prover.GUI.Common.Screens.Toolbar;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.Toolbar;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.LoginDialog;
 

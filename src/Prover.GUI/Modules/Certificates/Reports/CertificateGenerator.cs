@@ -68,9 +68,7 @@ namespace Prover.GUI.Modules.Certificates.Reports
                 Directory.CreateDirectory(CertificateFolderPath);
 
             if (File.Exists(filePath))
-            {
                 File.Delete(filePath);
-            }
 
             return filePath;
         }
@@ -78,22 +76,27 @@ namespace Prover.GUI.Modules.Certificates.Reports
         private static MemoryStream WriteDocumentToMemoryStream(FixedDocument fixedDoc)
         {
             var memoryStream = new MemoryStream();
-            var package = Package.Open(memoryStream, FileMode.Create);
-            var doc = new XpsDocument(package);
-            var writer = XpsDocument.CreateXpsDocumentWriter(doc);
-            writer.Write(fixedDoc);
-            doc.Close();
-            package.Close();
+            using (var package = Package.Open(memoryStream, FileMode.Create))
+            {
+                using (var doc = new XpsDocument(package))
+                {
+                    var writer = XpsDocument.CreateXpsDocumentWriter(doc);
+                    writer.WriteAsync(fixedDoc);
+                    doc.Close();
+                }
+            }
 
             return memoryStream;
         }
 
         private static void WriteDocumentToFile(FixedDocument fixedDoc, string filePath)
         {
-            var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
-            var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
-            xw.Write(fixedDoc);
-            xpsWriter.Close();
+            using (var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite))
+            {
+                var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
+                xw.WriteAsync(fixedDoc);
+                xpsWriter.Close();
+            }
         }
     }
 }

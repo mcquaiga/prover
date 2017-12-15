@@ -4,14 +4,12 @@ using System.Windows.Media.Imaging;
 using Autofac;
 using Prover.Core.Exports;
 using Prover.Core.Modules.Clients.VerificationTestActions;
-using Prover.Core.Services;
-using Prover.Core.Storage;
 using Prover.Core.VerificationTests.PreTestActions;
 using Prover.Core.VerificationTests.TestActions;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens.MainMenu;
 using Prover.GUI.Modules.ClientManager.Screens;
 using Prover.GUI.Modules.ClientManager.Screens.CsvExporter;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.MainMenu;
 
 namespace Prover.GUI.Modules.ClientManager
 {
@@ -23,7 +21,6 @@ namespace Prover.GUI.Modules.ClientManager
             => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/group.png"));
 
         public string MenuTitle => "Clients";
-
         public Action OpenAction => () => ScreenManager.ChangeScreen<ClientManagerViewModel>();
         public int Order => 2;
 

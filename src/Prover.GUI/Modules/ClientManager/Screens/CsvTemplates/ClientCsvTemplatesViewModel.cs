@@ -12,8 +12,7 @@ using Prover.Core.Exports;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Clients;
 using Prover.Core.Shared.Enums;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
@@ -36,7 +35,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                     ? null
                     : (VerificationTypeEnum?) Enum.Parse(typeof(VerificationTypeEnum),
                         SelectedVerificationType);
-                
+
                 ClientCsvTemplate.CorrectorType = string.IsNullOrEmpty(SelectedCorrectorType)
                     ? null
                     : (EvcCorrectorType?) Enum.Parse(typeof(EvcCorrectorType), SelectedCorrectorType);
@@ -66,7 +65,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
                     SelectedDriveType = y.DriveTypeString;
                     CsvTemplate = y.CsvTemplate;
                 });
-        }     
+        }
 
         #region Properties
 
@@ -74,10 +73,10 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
 
         public ClientCsvTemplate ClientCsvTemplate
         {
-            get { return _clientCsvTemplate; }
-            set { this.RaiseAndSetIfChanged(ref _clientCsvTemplate, value); }
+            get => _clientCsvTemplate;
+            set => this.RaiseAndSetIfChanged(ref _clientCsvTemplate, value);
         }
-        
+
         // Instrument Types      
 
         public List<InstrumentType> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
@@ -99,6 +98,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
             .ToList();
 
         private string _selectedVerificationType;
+
         public string SelectedVerificationType
         {
             get => _selectedVerificationType;
@@ -111,6 +111,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
             .ToList();
 
         private string _selectedCorrectorType;
+
         public string SelectedCorrectorType
         {
             get => _selectedCorrectorType;
@@ -130,13 +131,14 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
             set => this.RaiseAndSetIfChanged(ref _selectedDriveType, value);
         }
 
-        public List<string> FieldList 
+        public List<string> FieldList
             => new ExportFields()
                 .GetPropertyDescriptions()
                 .Select(x => x)
                 .OrderBy(x => x).ToList();
 
         private string _csvTemplate;
+
         public string CsvTemplate
         {
             get => _csvTemplate;
@@ -157,7 +159,7 @@ namespace Prover.GUI.Modules.ClientManager.Screens.CsvTemplates
 
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
             OkCommand?.Dispose();
             CancelCommand?.Dispose();

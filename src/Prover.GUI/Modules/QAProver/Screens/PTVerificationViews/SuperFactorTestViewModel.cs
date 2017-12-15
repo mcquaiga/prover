@@ -1,7 +1,5 @@
 ﻿using Caliburn.Micro;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
-
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -13,7 +11,7 @@ namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews
         }
 
         public decimal? EVCUnsqrFactor => TestRun.EvcUnsqrFactor;
-  
+
         protected override void RaisePropertyChangeEvents()
         {
             NotifyOfPropertyChange(() => TestRun);

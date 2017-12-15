@@ -1,17 +1,12 @@
-﻿using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
-using Prover.GUI.Common.Screens;
-using ReactiveUI;
+using Prover.GUI.Events;
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Modules.QAProver.Screens
 {
@@ -51,7 +46,8 @@ namespace Prover.GUI.Modules.QAProver.Screens
         public string AtmPressure =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
-        public string PressureRange => $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+        public string PressureRange =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
@@ -88,7 +84,6 @@ namespace Prover.GUI.Modules.QAProver.Screens
         }
 
         public string DriveRate => Instrument.Items.GetItem(98).Description;
-
         public IQaRunTestManager QaTestManager { get; set; }
 
         public void Handle(VerificationTestEvent message)

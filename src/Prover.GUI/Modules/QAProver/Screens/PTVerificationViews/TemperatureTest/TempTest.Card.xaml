@@ -8,8 +8,9 @@
              xmlns:cal="http://www.caliburnproject.org"
 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              
              TextElement.FontWeight="Light"
@@ -41,7 +42,7 @@
                                       Mode="PrimaryDark"
                                       Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth1" />
 
-            <controls1:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding TestRun.HasPassed}"
+            <controls:PercentageControl DisplayValue="{Binding PercentError}" Passed="{Binding TestRun.HasPassed}"
                                          HorizontalAlignment="Center" Margin="2 2" />
             <!--<StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center">
                 <TextBlock FontSize="12">Gauge</TextBlock>
@@ -57,18 +58,18 @@
             <!-- Instrument Report, textblock instead of displaying the button-->
             <UniformGrid Columns="2" Rows="2" Margin="0">
                 <!--INstrument Report , Text display instead of the decimal control -->
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="Gauge"
                     Value="{Binding Gauge}" />
 
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="EVC Reading"
                     Value="{Binding EvcReading}" />
 
-                <controls1:ValueDescriptionControl Label="Actual Factor"
+                <controls:ValueDescriptionControl Label="Actual Factor"
                                                    Value="{Binding TestRun.ActualFactor}" />
 
-                <controls1:ValueDescriptionControl
+                <controls:ValueDescriptionControl
                     Label="EVC Factor"
                     Value="{Binding EvcFactor}" />
             </UniformGrid>

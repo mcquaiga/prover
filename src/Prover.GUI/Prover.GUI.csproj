@@ -163,11 +163,36 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\BindingProxy.cs" />
+    <Compile Include="Controls\DesignViewModel.cs" />
+    <Compile Include="Controls\InputBindingsManager.cs" />
     <Compile Include="Controls\ItemsFileView.xaml.cs">
       <DependentUpon>ItemsFileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ItemsFileViewModel.cs" />
+    <Compile Include="Controls\LabelValueControl.xaml.cs">
+      <DependentUpon>LabelValueControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainMenuButton.xaml.cs">
+      <DependentUpon>MainMenuButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PercentageControl.xaml.cs">
+      <DependentUpon>PercentageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PercentageControlNew.xaml.cs">
+      <DependentUpon>PercentageControlNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ValueDescriptionControl.xaml.cs">
+      <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\BooleanToPassConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DialogTypeToSystemIconConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="DesignTime\DesignTimeViewModelLocator.cs" />
+    <Compile Include="DesignTime\SampleData\MainMenuDataSource\MainMenuDataSource.xaml.cs">
+      <DependentUpon>MainMenuDataSource.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\Dialog.cs" />
     <Compile Include="Dialogs\DialogResult.cs" />
     <Compile Include="Dialogs\DialogService.cs" />
@@ -176,6 +201,12 @@
     </Compile>
     <Compile Include="Dialogs\DialogViewModel.cs" />
     <Compile Include="Dialogs\IDialogViewModel.cs" />
+    <Compile Include="Events\NotificationEvent.cs" />
+    <Compile Include="Events\ScreenChangeEvent.cs" />
+    <Compile Include="Events\ShowDialogEvent.cs" />
+    <Compile Include="Events\VerificationTestEvent.cs" />
+    <Compile Include="Interfaces\IShell.cs" />
+    <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Modules\Certificates\Common\ValueLabelControl.xaml.cs">
       <DependentUpon>ValueLabelControl.xaml</DependentUpon>
     </Compile>
@@ -300,6 +331,23 @@
     <Compile Include="Modules\QAProver\Screens\InstrumentInfo\TemperatureInfo.Card.xaml.cs">
       <DependentUpon>TemperatureInfo.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="Screens\Dialogs\DialogDisplayHelpers.cs" />
+    <Compile Include="Screens\Dialogs\IDialogViewModel.cs" />
+    <Compile Include="Screens\Dialogs\InformationDialogView.xaml.cs">
+      <DependentUpon>InformationDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\InformationDialogViewModel.cs" />
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogView.xaml.cs">
+      <DependentUpon>ProgressStatusDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\ProgressStatusDialogViewModel.cs" />
+    <Compile Include="Screens\MainMenu\IHaveMainMenuItem.cs" />
+    <Compile Include="Screens\MainMenu\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Screens\SelectableViewModel.cs" />
     <Compile Include="Screens\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -358,9 +406,36 @@
     <Compile Include="Screens\StartScreen.xaml.cs">
       <DependentUpon>StartScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Toolbar\ToolbarItem.cs" />
+    <Compile Include="Screens\ViewModelBase.cs" />
+    <Compile Include="Screens\WindowSettings.cs" />
     <Page Include="Controls\ItemsFileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LabelValueControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainMenuButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PercentageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PercentageControlNew.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ValueDescriptionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DesignTime\SampleData\MainMenuDataSource\MainMenuDataSource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\DialogView.xaml">
       <SubType>Designer</SubType>
@@ -511,6 +586,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\Dialogs\InformationDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\MainMenu\MainMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Screens\Settings\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -626,6 +713,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="DesignTime\SampleData\MainMenuDataSource\MainMenuDataSource.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -657,10 +747,6 @@
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.GUI.Common\Prover.GUI.Common.csproj">
-      <Project>{904f99e1-2e5b-4c16-b900-7559d2e11553}</Project>
-      <Name>Prover.GUI.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

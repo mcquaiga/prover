@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls1="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
              Background="Transparent"
              TextElement.FontWeight="Light"
              TextElement.FontSize="16"
@@ -22,7 +23,7 @@
                            Style="{StaticResource SecondaryTestHeaderStyle}"
                            Text="Super. Factor" />
             </Border>
-            <controls1:PercentageControlNew Margin="16 0"                                            
+            <controls:PercentageControlNew Margin="16 0"                                            
                                             Grid.Row="1"
                                             HorizontalAlignment="Center"
                                             DisplayValue="{Binding PercentError}"
@@ -31,9 +32,9 @@
             <UniformGrid Columns="2"
                          Grid.Row="2"
                          Margin="4">
-                <controls1:ValueDescriptionControl Label="Actual Factor"
+                <controls:ValueDescriptionControl Label="Actual Factor"
                                                    Value="{Binding TestRun.ActualFactor}" />
-                <controls1:ValueDescriptionControl Label="EVC Factor"
+                <controls:ValueDescriptionControl Label="EVC Factor"
                                                    Value="{Binding EVCUnsqrFactor}" />
             </UniformGrid>
 

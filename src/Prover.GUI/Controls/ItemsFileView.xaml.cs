@@ -19,8 +19,8 @@ namespace Prover.GUI.Controls
 
         public string HeaderText
         {
-            get { return (string) GetValue(HeaderTextProperty); }
-            set { SetValue(HeaderTextProperty, value); }
+            get => (string) GetValue(HeaderTextProperty);
+            set => SetValue(HeaderTextProperty, value);
         }
 
         public static readonly DependencyProperty DescriptionTextProperty = DependencyProperty.Register(
@@ -28,15 +28,14 @@ namespace Prover.GUI.Controls
 
         public string DescriptionText
         {
-            get { return (string) GetValue(DescriptionTextProperty); }
-            set { SetValue(DescriptionTextProperty, value); }
+            get => (string) GetValue(DescriptionTextProperty);
+            set => SetValue(DescriptionTextProperty, value);
         }
-
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ItemsFileViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ItemsFileViewModel) value;
         }
 
         public ItemsFileViewModel ViewModel { get; set; }

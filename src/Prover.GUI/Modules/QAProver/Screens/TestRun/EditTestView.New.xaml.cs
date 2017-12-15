@@ -12,16 +12,13 @@ namespace Prover.GUI.Modules.QAProver.Screens.TestRun
         {
             InitializeComponent();
 
-            this.WhenActivated(d =>
-            {
-                d(ViewModel = (TestRunViewModel) DataContext);
-            });
+            this.WhenActivated(d => { d(ViewModel = (TestRunViewModel) DataContext); });
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (TestRunViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (TestRunViewModel) value;
         }
 
         public TestRunViewModel ViewModel { get; set; }

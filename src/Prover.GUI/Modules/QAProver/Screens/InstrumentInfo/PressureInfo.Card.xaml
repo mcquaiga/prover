@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="http://www.caliburnproject.org"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls="clr-namespace:Prover.GUI.Common.Controls;assembly=Prover.GUI.Common"
+             xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              
              TextElement.FontWeight="Light"
@@ -21,7 +20,7 @@
         </materialDesign:ColorZone>
 
         <StackPanel Margin="15" Orientation="Horizontal" HorizontalAlignment="Center">
-            <controls:ValueDescriptionControl Label="Base" Value="{Binding PressureBase}" />
+            <controls1:ValueDescriptionControl Label="Base" Value="{Binding PressureBase}" />
         </StackPanel>
     </StackPanel>
 </UserControl>
