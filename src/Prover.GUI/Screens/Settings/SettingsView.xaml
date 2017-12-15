@@ -19,8 +19,7 @@
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
                 <Setter Property="Margin"
-                        Value="8 4">
-                </Setter>
+                        Value="8 4" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -120,9 +119,7 @@
                         </StackPanel>
                     </TabItem.Content>
                 </TabItem>
-                <TabItem>
-
-                </TabItem>
+                <TabItem />
             </TabControl>
         </ScrollViewer>
         <Button Command="{Binding SaveSettingsCommand}"

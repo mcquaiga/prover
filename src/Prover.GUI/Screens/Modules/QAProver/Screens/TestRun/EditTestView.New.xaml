@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.Modules.QAProver.Screens.TestRun.EditTestViewNew"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control"
+                    Key="S"
+                    Command="{Binding SaveCommand}" />
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <materialDesign:ColorZone DockPanel.Dock="Top"
+                                  Grid.Row="0"
+                                  Mode="PrimaryLight"
+                                  Visibility="{Binding DisplayHeader, Converter={StaticResource BoolToHiddenConverter}}"
+                                  Padding="16 8">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="QA Test Run"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+                <Button HorizontalAlignment="Left"
+                        Command="{Binding SaveCommand}"
+                        Content="SAVE"
+                        Grid.Column="1"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+            </Grid>
+        </materialDesign:ColorZone>
+        <Grid Margin="5"
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.75*" />
+            </Grid.ColumnDefinitions>
+            
+            <ContentControl Margin="2"
+                            Grid.Column="0"
+                            cal:View.Model="{Binding SiteInformationItem}"
+                            cal:View.Context="SiteInfoCardNew" />
+
+            <ScrollViewer Grid.Column="1"
+                          VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ItemsControl ItemsSource="{Binding PTTestViews}"
+                                  Grid.ColumnSpan="3">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SubSectionDividerBorder}"
+                                        BorderThickness="0 0 1 0"
+                                        Padding="4">
+                                    <ContentControl cal:View.Model="{Binding }"                                                    
+                                                    cal:View.Context="CardNew" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Border Style="{StaticResource SubSectionDividerBorder}"                           
+                            Grid.Column="0" 
+                            Grid.ColumnSpan="3"
+                            Grid.Row="1"
+                            Padding="4">
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}" cal:View.Context="CardNew" />
+                    </Border>
+                </Grid>
+
+            </ScrollViewer>
+        </Grid>
+
+        <Grid HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              Grid.Row="1">
+            <materialDesign:Snackbar x:Name="SaveSnackbar"
+                                     IsActive="{Binding ShowSaveSnackbar}">
+                <materialDesign:SnackbarMessage Content="SAVE SUCCESSFUL"
+                                                HorizontalAlignment="Center" />
+            </materialDesign:Snackbar>
+        </Grid>
+    </Grid>
+
+
+</UserControl>

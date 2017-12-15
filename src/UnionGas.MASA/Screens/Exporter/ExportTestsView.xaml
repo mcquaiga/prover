@@ -3,10 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="http://www.caliburnproject.org"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
+             mc:Ignorable="d"             
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 <ResourceDictionary>
@@ -14,9 +11,7 @@
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
-        
-        <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
+        <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Style.Triggers>
                 <MultiTrigger>
@@ -43,9 +38,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type ListBoxItem}">
+        <!--<Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>
+        </Style>-->
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Margin" Value="5"/>
         </Style>
@@ -61,19 +56,23 @@
 
         <StackPanel Orientation="Vertical"
                     Grid.Row="0"
-                Margin="5">
+                    Margin="5">
             <TextBlock Text="Filter by instrument"/>
-            <StackPanel Orientation="Horizontal">
-                <Button Content="All"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="All"/>
-                <Button Content="Mini-AT"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="Mini-AT"/>
-                <Button Content="Mini-Max"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="Mini-Max"/>
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
+                          DockPanel.Dock="Left">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding .}"
+                                Command="{Binding Path=DataContext.FilterByTypeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
+                                CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </StackPanel>
         
         <ListBox  x:Name="VisibleTiles"

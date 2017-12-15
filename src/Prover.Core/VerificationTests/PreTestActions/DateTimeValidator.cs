@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Shared.Extensions;
 using Prover.Core.VerificationTests.TestActions;
 
 namespace Prover.Core.VerificationTests.PreTestActions

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
@@ -9,7 +8,6 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Data;
-using Prover.Core.Storage;
 
 namespace Prover.Core.Services
 {

@@ -22,18 +22,16 @@ namespace Prover.GUI.Converters
         {
             if (!(value is DialogType)) return null;
 
-            var messageType = (DialogType)value;
+            var messageType = (DialogType) value;
 
             Icon icon;
 
             if (messageType == DialogType.None) icon = SystemIcons.Application;
             else
-            {
-                icon = (Icon)typeof(SystemIcons)
+                icon = (Icon) typeof(SystemIcons)
                     .GetProperty(messageType.ToString(), BindingFlags.Public | BindingFlags.Static)
                     .GetValue(null, null);
-            }
-            BitmapSource bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle,
+            var bs = Imaging.CreateBitmapSourceFromHIcon(icon.Handle,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
 

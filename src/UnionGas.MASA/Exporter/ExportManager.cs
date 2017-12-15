@@ -8,7 +8,6 @@ using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
-using Prover.Core.Storage;
 using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Exporter

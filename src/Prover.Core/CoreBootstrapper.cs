@@ -1,6 +1,4 @@
-﻿using System.Data.Entity;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using NLog;
 using Prover.CommProtocol.Common;
@@ -9,7 +7,6 @@ using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -89,7 +86,8 @@ namespace Prover.Core
 
             builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
                 .InstancePerDependency();
-            builder.RegisterType<TestRunService>();
+            builder.RegisterType<TestRunService>()
+                .SingleInstance();
 
             builder.Register(c => new ProverStore<Client>(c.Resolve<ProverContext>()))
                 .As<IProverStore<Client>>()

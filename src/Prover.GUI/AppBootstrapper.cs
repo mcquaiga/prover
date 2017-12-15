@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using Newtonsoft.Json;
 using NLog;
 using Prover.Core;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Common.Screens.Toolbar;
+using Prover.Core.Settings;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens;
 using Prover.GUI.Screens.Shell;
-using ReactiveUI;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
+using StartScreen = Prover.GUI.Screens.Startup.StartScreen;
 
 namespace Prover.GUI
 {
@@ -27,14 +24,14 @@ namespace Prover.GUI
     {
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
-        private Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly StartScreen _splashScreen = new StartScreen();
 
         public AppBootstrapper()
         {
             try
             {
-                _log.Info("Starting EVC Prover Application...");               
+                _log.Info("Starting EVC Prover Application...");
                 _splashScreen.Show();
                 Initialize();
                 _log.Info("Finished starting application.");
@@ -71,7 +68,8 @@ namespace Prover.GUI
             Builder.RegisterType<ScreenManager>()
                 .SingleInstance();
 
-            Builder.RegisterType<InstrumentReportGenerator>();
+            Builder.RegisterType<InstrumentReportGenerator>()
+                .SingleInstance();
             Builder.RegisterAssemblyModules(Assemblies);
 
             Builder.RegisterViewModels(Assemblies);
@@ -81,31 +79,20 @@ namespace Prover.GUI
             Container = Builder.Build();
 
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
-        }      
+        }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
-            if (!File.Exists(_moduleFilePath))
-            {
-                throw new Exception("Could not find a modules.conf file in the current directory.");
-            }
-
-            var modules = new List<string>();
-
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            var modulesString = File.ReadAllText(_moduleFilePath);
-            modules.AddRange(JsonConvert.DeserializeObject<List<string>>(modulesString));
+            if (!File.Exists(_moduleFilePath))
+                throw new Exception("Could not find a modules.conf file in the current directory.");
 
-            foreach (var module in modules)
-            {
-                if (File.Exists($"{module}.dll"))
-                {
-                    var ass = Assembly.LoadFrom($"{module}.dll");
-                    assemblies.Add(ass);
-                }
-            }
+            var modulesString = File.ReadAllText(_moduleFilePath);
+            assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)
+                                where File.Exists($"{module}.dll")
+                                select Assembly.LoadFrom($"{module}.dll"));
 
             _assemblies = assemblies.ToArray();
 
@@ -132,22 +119,26 @@ namespace Prover.GUI
                     return Container.ResolveNamed(key, serviceType);
             }
 
-            return null;        
+            return null;
         }
 
         protected override void BuildUp(object instance)
         {
             Container.InjectProperties(instance);
         }
-        
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             _splashScreen.Hide();
-
-            DisplayRootViewFor<ShellViewModel>();       
-
+            DisplayRootViewFor<ShellViewModel>();
             _splashScreen.Close();
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            
+            SettingsManager.SaveLocalSettings();
+            base.OnExit(sender, e);
         }
     }
 }

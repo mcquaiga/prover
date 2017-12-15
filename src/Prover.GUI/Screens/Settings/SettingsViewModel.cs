@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Reactive;
 using Caliburn.Micro;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Events;
 using Prover.Core.Settings;
-using Prover.Core.Shared.Data;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Settings
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase, INavigationItem
     {
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -28,32 +23,35 @@ namespace Prover.GUI.Screens.Settings
                 SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)
                 .Subscribe(x =>
-                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType = (TestSettings.VolumeTestType)Enum.Parse(typeof(TestSettings.VolumeTestType), x));
-            
+                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType =
+                        (TestSettings.VolumeTestType) Enum.Parse(typeof(TestSettings.VolumeTestType), x));
+
             MechanicalUncorrectedTestLimits
                 .AddRange(SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
             this.WhenAnyValue(x => x.MechanicalUncorrectedTestLimits)
-                .Subscribe(x => SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
-            
+                .Subscribe(x =>
+                    SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
+
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                await SettingsManager.SaveLocalSettings();
+                await SettingsManager.SaveLocalSettingsAsync();
                 await SettingsManager.SaveSharedSettings();
             });
         }
-     
+
         #region Commands
 
-        public ReactiveCommand SaveSettingsCommand { get; private set; }
+        public ReactiveCommand SaveSettingsCommand { get; }
 
         #endregion
 
         #region Reactive Properties
 
         public List<string> MechanicalVolumeTestType =>
-            Enum.GetNames(typeof(TestSettings.VolumeTestType)).ToList();       
-      
+            Enum.GetNames(typeof(TestSettings.VolumeTestType)).ToList();
+
         private string _selectedMechanicalVolumeTestType;
+
         public string SelectedMechanicalVolumeTestType
         {
             get => _selectedMechanicalVolumeTestType;
@@ -62,27 +60,33 @@ namespace Prover.GUI.Screens.Settings
 
         public LocalSettings LocalSettings => SettingsManager.LocalSettingsInstance;
         public SharedSettings SharedSettings => SettingsManager.SharedSettingsInstance;
-
         private bool _stabilizeLiveReadings;
+
         public bool StabilizeLiveReadings
         {
             get => _stabilizeLiveReadings;
             set => this.RaiseAndSetIfChanged(ref _stabilizeLiveReadings, value);
         }
 
-        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits = new ReactiveList<MechanicalUncorrectedTestLimit>();
+        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits =
+            new ReactiveList<MechanicalUncorrectedTestLimit>();
+
         public ReactiveList<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
         {
             get => _mechanicalUncorrectedTestLimits;
             set => this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value);
-        }      
+        }
 
         #endregion
-        
+
         public override void CanClose(Action<bool> callback)
-        {           
+        {
             EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
             base.CanClose(callback);
-        }      
+        }
+
+        public ReactiveCommand<Unit, Unit> NavigationCommand => ReactiveCommand.Create(() => ScreenManager.ChangeScreen(this));
+        public PackIconKind IconKind => PackIconKind.Settings;
+        public bool IsHome => false;
     }
 }
