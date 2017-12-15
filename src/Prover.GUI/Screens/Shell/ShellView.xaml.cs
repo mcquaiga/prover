@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Windows;
-using Prover.Core.Settings;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell

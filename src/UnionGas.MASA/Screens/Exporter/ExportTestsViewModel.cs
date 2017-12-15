@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
 using ReactiveUI;

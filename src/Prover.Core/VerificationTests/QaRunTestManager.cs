@@ -16,7 +16,6 @@ using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
-using Prover.Core.VerificationTests.PreTestActions;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 using LogManager = NLog.LogManager;

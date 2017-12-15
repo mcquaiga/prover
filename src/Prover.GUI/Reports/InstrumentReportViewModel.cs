@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
-using Prover.GUI.Modules.QAProver.Screens;
 using Prover.GUI.Screens;
+using Prover.GUI.Screens.Modules.QAProver.Screens;
 
 namespace Prover.GUI.Reports
 {

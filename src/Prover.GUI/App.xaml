@@ -20,7 +20,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
 
-                <ResourceDictionary Source="Modules/QAProver/Screens/Styles.xaml" />
+                <ResourceDictionary Source="Screens/Modules/QAProver/Screens/Styles.xaml" />
 
                 <ResourceDictionary>
                     <gui:AppBootstrapper x:Key="AppBoot" />

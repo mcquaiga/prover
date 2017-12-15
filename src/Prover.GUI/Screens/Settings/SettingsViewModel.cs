@@ -6,7 +6,6 @@ using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.Core.Events;
 using Prover.Core.Settings;
-using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Settings
@@ -35,7 +34,7 @@ namespace Prover.GUI.Screens.Settings
 
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                await SettingsManager.SaveLocalSettings();
+                await SettingsManager.SaveLocalSettingsAsync();
                 await SettingsManager.SaveSharedSettings();
             });
         }

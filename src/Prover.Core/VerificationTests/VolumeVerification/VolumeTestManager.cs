@@ -4,7 +4,6 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using MccDaq;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.ExternalDevices.DInOutBoards;

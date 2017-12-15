@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
-using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Settings
 {
@@ -83,6 +80,7 @@ namespace Prover.Core.Settings
         public bool InstrumentUseIrDaPort { get; set; }
         public double WindowHeight { get; set; } = 800;
         public double WindowWidth { get; set; } = 800;
+        public string WindowState { get; set; } = "Normal";
     }
 
     public class SharedSettings

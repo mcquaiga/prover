@@ -1,5 +1,4 @@
-﻿using Caliburn.Micro.ReactiveUI;
-using Prover.GUI.Screens;
+﻿using Prover.GUI.Screens;
 
 namespace Prover.GUI.Events
 {

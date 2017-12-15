@@ -4,6 +4,8 @@
         xmlns:cal="http://www.caliburnproject.org"
         Title="{Binding Title}"
         Icon="pack://application:,,,/../Resources/clipboard-check.png"
+        WindowState="{Binding WindowState}"
+        WindowStartupLocation="CenterScreen"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <DockPanel>
@@ -27,18 +29,6 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                <!--<StackPanel Orientation="Horizontal" >
-                    <Button Command="{Binding GoHomeCommand}"
-                            Width="48"
-                            Height="48">
-                        <materialDesign:PackIcon Kind="Home"/>
-                    </Button>
-                    <Button Command="{Binding OpenSettingsCommand}"
-                            Width="48" 
-                            Height="48">
-                        <materialDesign:PackIcon Kind="Settings" />
-                    </Button>
-                </StackPanel>-->
 
                 <StackPanel DockPanel.Dock="Right">
                     <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
@@ -74,7 +64,18 @@
                 </materialDesign:DialogHost.DialogContent>
             
                 <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
-            </materialDesign:DialogHost>
+
+               
+            </materialDesign:DialogHost> 
+            
+            <Grid HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom">
+                    <materialDesign:Snackbar x:Name="NotificationSnackbar"
+                                             IsActive="{Binding ShowNotificationSnackbar}">
+                        <materialDesign:SnackbarMessage Content="{Binding NotificationMessage}"
+                                                        HorizontalAlignment="Center" />
+                    </materialDesign:Snackbar>
+                </Grid>
         </Grid>
         
     </DockPanel>

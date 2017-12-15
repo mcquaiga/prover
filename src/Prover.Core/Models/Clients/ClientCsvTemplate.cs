@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
 using Prover.Core.Extensions;
-using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Shared.Enums;
 

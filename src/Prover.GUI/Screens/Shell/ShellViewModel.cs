@@ -4,23 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Settings;
 using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
-using Prover.GUI.Screens.MainMenu;
-using Prover.GUI.Screens.Settings;
-using Prover.GUI.Screens.Toolbar;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell
 {
     public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,
-        IHandle<ScreenChangeEvent>, IDisposable
+        IHandle<ScreenChangeEvent>, IHandle<NotificationEvent>, IDisposable
     {
         public IEnumerable<INavigationItem> NavigationItems { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
@@ -35,14 +32,11 @@ namespace Prover.GUI.Screens.Shell
             NavigationItems = navigationItems.ToList().OrderByDescending(item => item.IsHome);
             GoHomeCommand = NavigationItems.First().NavigationCommand;
 
-            _windowWidth = SettingsManager.LocalSettingsInstance.WindowWidth;
-            _windowHeight = SettingsManager.LocalSettingsInstance.WindowHeight;
+            WindowWidth = SettingsManager.LocalSettingsInstance.WindowWidth;
+            WindowHeight = SettingsManager.LocalSettingsInstance.WindowHeight;
+            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), SettingsManager.LocalSettingsInstance.WindowState);
 
-            this.WhenAnyValue(x => x.WindowHeight)
-                .Subscribe(h => SettingsManager.LocalSettingsInstance.WindowHeight = h);
-
-            this.WhenAnyValue(x => x.WindowWidth)
-                .Subscribe(w => SettingsManager.LocalSettingsInstance.WindowWidth = w);
+            this.WhenAnyValue(x => x.ShowNotificationSnackbar);                
 
             RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
@@ -69,7 +63,11 @@ namespace Prover.GUI.Screens.Shell
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             return fileVersionInfo.ProductVersion;
-        }    
+        }
+
+        #region Properties        
+
+        public LocalSettings LocalSettings => SettingsManager.LocalSettingsInstance;
 
         private IDialogViewModel _dialogViewModel;
         public IDialogViewModel DialogViewModel
@@ -92,14 +90,52 @@ namespace Prover.GUI.Screens.Shell
             set => this.RaiseAndSetIfChanged(ref _windowWidth, value);
         }
 
-        public void Dispose()
+        private WindowState _windowState;
+        public WindowState WindowState
         {
-            (ActiveItem as IDisposable)?.Dispose();
+            get => _windowState;
+            set => this.RaiseAndSetIfChanged(ref _windowState, value);
         }
+
+        private bool _showNotificationSnackbar;
+        public bool ShowNotificationSnackbar
+        {
+            get => _showNotificationSnackbar;
+            set => this.RaiseAndSetIfChanged(ref _showNotificationSnackbar, value);
+        }
+
+        private string _notificationMessage;
+        public string NotificationMessage
+        {
+            get => _notificationMessage;
+            set => this.RaiseAndSetIfChanged(ref _notificationMessage, value);
+        }
+        #endregion
 
         public void Handle(ScreenChangeEvent message)
         {
             ActivateItem(message.ViewModel);
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            SettingsManager.LocalSettingsInstance.WindowHeight = WindowHeight;
+            SettingsManager.LocalSettingsInstance.WindowWidth = WindowWidth;
+            SettingsManager.LocalSettingsInstance.WindowState = WindowState.ToString();
+            (ActiveItem as IDisposable)?.Dispose();
+
+            base.OnDeactivate(close);
+        }
+
+        public void Handle(NotificationEvent message)
+        {
+            NotificationMessage = message.Message;
+            ShowNotificationSnackbar = true;
+        }
+
+        public void Dispose()
+        {
+            GoHomeCommand?.Dispose();
         }
     }
 }

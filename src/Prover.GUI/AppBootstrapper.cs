@@ -13,11 +13,10 @@ using Prover.Core;
 using Prover.Core.Settings;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens;
-using Prover.GUI.Screens.MainMenu;
-using Prover.GUI.Screens.Settings;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI.Autofac;
 using LogManager = NLog.LogManager;
+using StartScreen = Prover.GUI.Screens.Startup.StartScreen;
 
 namespace Prover.GUI
 {
@@ -130,15 +129,14 @@ namespace Prover.GUI
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             _splashScreen.Hide();
-
             DisplayRootViewFor<ShellViewModel>();
-
             _splashScreen.Close();
         }
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            Task.Run(SettingsManager.SaveLocalSettings);
+            
+            SettingsManager.SaveLocalSettings();
             base.OnExit(sender, e);
         }
     }

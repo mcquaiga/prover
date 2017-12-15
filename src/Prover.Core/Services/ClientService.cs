@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Clients;
 using Prover.Core.Shared.Data;
-using Prover.Core.Storage;
 
 namespace Prover.Core.Services
 {

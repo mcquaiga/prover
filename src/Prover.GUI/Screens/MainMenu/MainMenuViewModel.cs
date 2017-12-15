@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
-using Prover.GUI.Screens.Shell;
 using ReactiveUI;
 using Action = System.Action;
 

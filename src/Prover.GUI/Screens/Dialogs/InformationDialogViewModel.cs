@@ -1,5 +1,4 @@
-﻿using System.Reactive;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Prover.GUI.Screens.Dialogs
 {
