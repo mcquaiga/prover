@@ -15,6 +15,7 @@ using Prover.GUI.Reports;
 using Prover.GUI.Screens;
 using Prover.GUI.Screens.Shell;
 using ReactiveUI.Autofac;
+using Squirrel;
 using LogManager = NLog.LogManager;
 using StartScreen = Prover.GUI.Screens.Startup.StartScreen;
 
@@ -34,6 +35,15 @@ namespace Prover.GUI
                 _log.Info("Starting EVC Prover Application...");
                 _splashScreen.Show();
                 Initialize();
+
+                Task.Run(async () =>
+                {
+                    using (var mgr = new UpdateManager($"C:\\EvcProver\\Releases"))
+                    {
+                        await mgr.UpdateApp();
+                    }
+                });
+
                 _log.Info("Finished starting application.");
             }
             catch (Exception e)
