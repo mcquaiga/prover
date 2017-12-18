@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients

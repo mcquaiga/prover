@@ -15,8 +15,8 @@ namespace Prover.GUI.Reports
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (InstrumentReportViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (InstrumentReportViewModel) value;
         }
 
         public InstrumentReportViewModel ViewModel { get; set; }

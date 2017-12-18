@@ -7,7 +7,6 @@ using Prover.CommProtocol.Common;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
-using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 
 namespace Prover.Core.Modules.Clients.VerificationTestActions

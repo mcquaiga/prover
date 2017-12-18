@@ -14,9 +14,8 @@ namespace Prover.GUI.Screens.Shell
         {
             InitializeComponent();
             
-            Application.Current.MainWindow.WindowState = WindowState.Maximized;
-            Style = (Style)FindResource(typeof(Window));
-            
+            Style = (Style) FindResource(typeof(Window));
+
             this.WhenActivated(d =>
             {
                 d(ViewModel = (ShellViewModel) DataContext);
@@ -24,16 +23,18 @@ namespace Prover.GUI.Screens.Shell
                 d(this.WhenAnyValue(x => x.ViewModel.GoHomeCommand)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
+
+                d(this.Bind(ViewModel, model => model.WindowHeight, view => view.Height));
+                d(this.Bind(ViewModel, model => model.WindowWidth, view => view.Width));
             });
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (ShellViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (ShellViewModel) value;
         }
 
         public ShellViewModel ViewModel { get; set; }
-       
     }
 }

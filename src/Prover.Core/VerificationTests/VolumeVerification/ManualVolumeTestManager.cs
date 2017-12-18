@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Subjects;
-using System.Runtime.Remoting.Messaging;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using NLog;
-using NLog.Fluent;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Communication;
-using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
-using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {

@@ -56,17 +56,19 @@ namespace Prover.Core.Settings
             return JsonConvert.DeserializeObject<SharedSettings>(settingsKeyValue.Value);
         }
 
-        public static async Task SaveLocalSettings()
+        public static async Task SaveLocalSettingsAsync()
         {
-            await Task.Run(() =>
-            {
-                var fileSystem = new FileSystem();
+            await Task.Run(() => SaveLocalSettings());
+        }
 
-                if (!fileSystem.DirectoryExists(Path.GetDirectoryName(AppDirectory)))
-                    fileSystem.CreateDirectory(Path.GetDirectoryName(AppDirectory));
+        public static void SaveLocalSettings()
+        {           
+            var fileSystem = new FileSystem();
 
-                new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
-            });
+            if (!fileSystem.DirectoryExists(Path.GetDirectoryName(AppDirectory)))
+                fileSystem.CreateDirectory(Path.GetDirectoryName(AppDirectory));
+
+            new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
         }
 
         public static async Task SaveSharedSettings()

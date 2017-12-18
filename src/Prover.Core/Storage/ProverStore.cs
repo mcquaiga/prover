@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 using Prover.Core.Shared.Data;
 using Prover.Core.Shared.Domain;
 

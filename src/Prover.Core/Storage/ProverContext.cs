@@ -2,14 +2,14 @@
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.SqlServerCe;
 using System.Diagnostics;
-using Autofac;
 using NLog;
 using Prover.Core.Migrations;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Settings;
+using Z.EntityFramework.Plus;
 using Prover.Core.Shared.Domain;
 
 //using Prover.Core.Migrations;
@@ -24,6 +24,7 @@ namespace Prover.Core.Storage
             : base(@"name=ConnectionString")
         {
             _log.Trace("Starting Db Context...");
+
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
@@ -50,6 +51,9 @@ namespace Prover.Core.Storage
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            if (Database.Connection is SqlCeConnection)
+                QueryIncludeOptimizedManager.AllowQueryBatch = false;
+
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
 

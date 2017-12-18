@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Prover.Core.Events;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
 using ReactiveUI;
-using System.Linq.Expressions;
 using System.Reactive.Linq;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Services;
+using Prover.GUI.Screens;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
-    public class ExportTestsViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
+    public class ExportTestsViewModel : ViewModelBase
     {
         private readonly IExportTestRun _exportTestRun;
         private readonly TestRunService _testRunService;
@@ -27,10 +23,11 @@ namespace UnionGas.MASA.Screens.Exporter
             TestRunService testRunService, IExportTestRun exportTestRun = null) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
-            _testRunService = testRunService;                    
+            _testRunService = testRunService;
 
-            FilterObservable = new Subject<Predicate<Instrument>>();
+            InstrumentTypes.AddRange(HoneywellInstrumentTypes.GetAll().Select(i => i.Name).ToList());
             
+            FilterObservable = new Subject<Predicate<Instrument>>();            
             FilterByTypeCommand = ReactiveCommand.Create<string>(s =>
             {
                 FilterObservable.OnNext(Instrument.IsOfInstrumentType(s));
@@ -69,6 +66,12 @@ namespace UnionGas.MASA.Screens.Exporter
         public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
 
         #region Properties
+        private ReactiveList<string> _instrumentTypes = new ReactiveList<string>();
+        public ReactiveList<string> InstrumentTypes
+        {
+            get => _instrumentTypes;
+            set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
+        }
 
         public Subject<Predicate<Instrument>> FilterObservable { get; set; }
 
@@ -105,22 +108,5 @@ namespace UnionGas.MASA.Screens.Exporter
                 .OrderBy(i => i.TestDateTime)
                 .ToObservable();
         }
-
-        public void Handle(DataStorageChangeEvent message)
-        {
-            
-        }
     }
 }
-
-//this.WhenAnyValue(x => x.InstrumentItems, (vm, list) =>
-//    {
-//        return .InstrumentItems.Select(x => x.Select(y => y.Instrument)
-//                .Where(i => i.HasPassed && !string.IsNullOrEmpty(i.JobId) &&
-//                            !string.IsNullOrEmpty(i.EmployeeId))
-//                .ToList());
-//    });
-
-// .ToProperty(this, x => x.PassedInstrumentTests, new List<Instrument>());               
-
-// var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, (passed) => passed.Any());

@@ -8,7 +8,7 @@ using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
-using Prover.GUI.Common;
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Reports
 {
@@ -38,9 +38,9 @@ namespace Prover.GUI.Reports
             controlToPrint.DataContext = reportViewModel;
 
             var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
             var pageContent = new PageContent();
-            var fixedPage = new FixedPage {Width = 96*11, Height = 96*8.5};
+            var fixedPage = new FixedPage {Width = 96 * 11, Height = 96 * 8.5};
 
             //Create first page of document
             fixedPage.Children.Add(controlToPrint);

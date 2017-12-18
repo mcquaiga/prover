@@ -19,10 +19,6 @@
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-
-        <ResourceDictionary Source="/Prover;component/Modules/QAProver/Screens/Styles.xaml"/>
-        <ResourceDictionary Source="/Prover.GUI.Common;component/Resources/ResourceDictionary.xaml"/>
-        <ResourceDictionary Source="/Prover.GUI.Common;component/Resources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <!-- Resource dictionary entries should be defined here. -->
 </ResourceDictionary>
