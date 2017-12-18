@@ -146,7 +146,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                     SettingsManager.LocalSettingsInstance.TachIsNotUsed = _.Item5;
                     SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort = _.Item6;
                     SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = _.Item7?.Name;
-                    await SettingsManager.SaveLocalSettings();
+
                 });
 
             _viewContext = NewQaTestViewContext;
@@ -306,15 +306,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             try
             {
                 await SettingsManager.SaveLocalSettingsAsync();
-                var commPort = GetCommPort();
+ 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
-                _qaRunTestManager.TestStatus.Subscribe(statusObservable);
-
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, commPort,  ct, _client);
-                IsDirty = true;
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(),  ct, _client, statusObservable);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
+
+                IsDirty = true;
             }
             catch (Exception ex)
             {

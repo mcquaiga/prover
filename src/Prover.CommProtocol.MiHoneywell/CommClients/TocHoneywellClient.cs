@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
@@ -11,7 +12,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
     public sealed class TocHoneywellClient : HoneywellClient
     {
-        public static InstrumentType TurboMonitor = new InstrumentType()
+        internal static InstrumentType TurboMonitor = new InstrumentType()
         {
             Id = 6,
             AccessCode = 6,
@@ -22,9 +23,8 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
         };
 
-        public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
+        public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
-            
         }
 
         public override async Task<IFrequencyTestItems> GetFrequencyItems()

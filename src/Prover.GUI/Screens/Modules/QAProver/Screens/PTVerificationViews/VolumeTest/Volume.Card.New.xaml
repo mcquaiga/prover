@@ -6,18 +6,6 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <Style x:Key="VerifiedText"
-                   TargetType="controls1:ValueDescriptionControl">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ElementName=Value}" Value="True">
-                        <Setter Property="Value" Value="Y" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -73,6 +61,7 @@
             <StackPanel Grid.Column="0"
                         VerticalAlignment="Top"
                         Margin="0 75">
+                <controls1:ValueDescriptionControl Label="Applied Input"
                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
                                                   TabIndex="0"
                                                   IsReadOnly="False" />
@@ -113,7 +102,6 @@
                     <controls1:ValueDescriptionControl Label="EVC"
                                                       Value="{Binding EvcUncorrected}" />
                     <controls1:ValueDescriptionControl Label="Pulses Ver'd"
-                    <controls1:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
             </StackPanel>
@@ -141,7 +129,6 @@
                     <controls1:ValueDescriptionControl Label="EVC"
                                                       Value="{Binding EvcCorrected}" />
                     <controls1:ValueDescriptionControl Label="Pulses Ver'd"
-                    <controls1:ValueDescriptionControl Label="Pulses Verified"
                                                       Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
 
@@ -159,18 +146,15 @@
                 <ContentControl Margin="2" 
                                 VerticalAlignment="Top"
                                 cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="CardNew"
-                                Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
-                                Grid.Column="0"/>
+                                Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
                 <ContentControl Margin="2" 
                                 VerticalAlignment="Top"
                                 cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="CardNew" 
-                                Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}"
-                                Grid.Column="1"/>
+                                Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
                 <ContentControl Margin="2" 
                                 VerticalAlignment="Top"
                                 cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="CardNew" 
-                                Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}"
-                                Grid.Column="2"/>
+                                Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}" />
             </UniformGrid>
 
         </Grid>

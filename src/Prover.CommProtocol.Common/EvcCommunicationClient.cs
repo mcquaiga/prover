@@ -26,13 +26,22 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="instrumentType">Instrument type of device</param>
-        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType)
+        /// <param name="statusSubject">Subject for listening to status updates</param>
+        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject)
         {
             CommPort = commPort;
             InstrumentType = instrumentType;
 
-            StatusObservable
-                .Subscribe(s => Log.Info(s));
+            if (statusSubject != null)
+                StatusObservable?.Subscribe(statusSubject);
+
+            StatusObservable?.Subscribe(s => Log.Debug(s));
+
+            _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
+                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
+
+            _sentObservable = CommPort.DataSentObservable
+                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
         }
 
         protected ICommPort CommPort { get; }
@@ -89,30 +98,29 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public async Task Connect(CancellationToken ct, string accessCode = null, int retryAttempts = MaxConnectionAttempts)
         {
+            if (IsConnected)
+                return;
+
             var connectionAttempts = 1;
 
             ct.ThrowIfCancellationRequested();
 
             var result = Task.Run(async () =>
             {
-                _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
-
-                await CommPort.Open(ct);
-
-                _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
-
-                _sentObservable = CommPort.DataSentObservable
-                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
-
                 while (!IsConnected)
                 {
+                    _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+
                     if (ct.IsCancellationRequested)
                         ct.ThrowIfCancellationRequested();
                     
+                    if (!CommPort.IsOpen())
+                        await CommPort.Open(ct);
+
                     try
                     {
                         await ConnectToInstrument(ct, accessCode);
+                        IsConnected = true;
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -120,21 +128,16 @@ namespace Prover.CommProtocol.Common
                     }
                     catch (Exception ex)
                     {
-                        Log.Warn(ex.Message);
+                        if (connectionAttempts < retryAttempts)
+                        {
+                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}. Exception: {ex.Message}");
+                            Thread.Sleep(ConnectionRetryDelayMs);
+
+                            connectionAttempts++;
+                        }
+                        else
+                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} after {retryAttempts} retries. Exception {ex.Message}");
                     }
-
-                    if (IsConnected) continue;
-
-                    if (connectionAttempts < retryAttempts)
-                    {
-                        Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
-                        Thread.Sleep(ConnectionRetryDelayMs);
-
-                        connectionAttempts++;
-                        _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
-                    }                            
-                    else
-                        throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} in {retryAttempts} tries. Cancelling connection attempt.");
                 }
             }, ct);
 

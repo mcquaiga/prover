@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Prover.CommProtocol.Common;
@@ -18,11 +19,11 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         private const string ItemDefinitionFileName = "Items.json";
         private const string TypeFileName = "Type_";
 
-        private static HashSet<InstrumentType> _instrumentTypesCache = new HashSet<InstrumentType>();
+        private static HashSet<InstrumentType> _instrumentTypesCache;
 
         public static async Task<HashSet<InstrumentType>> GetInstrumentDefinitions()
         {
-            if (!_instrumentTypesCache.Any())
+            if (_instrumentTypesCache == null || !_instrumentTypesCache.Any())
                 await LoadInstrumentTypes();
 
             return _instrumentTypesCache;
@@ -30,6 +31,9 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
         public static async Task LoadInstrumentTypes()
         {
+            if (_instrumentTypesCache == null)
+                _instrumentTypesCache = new HashSet<InstrumentType>();
+
             _instrumentTypesCache.Clear();
 
             var items = await LoadGlobalItemDefinitions();
@@ -53,7 +57,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             }
         }
 
-        private static Func<ICommPort, EvcCommunicationClient> GetCommClientFactory(InstrumentType instrumentType)
+        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(InstrumentType instrumentType)
         {
             var commTypeName = instrumentType.CommClientType;
             if (string.IsNullOrEmpty(commTypeName))
@@ -64,7 +68,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (commType == null)
                 commType = typeof(HoneywellClient);
 
-            return port => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType);
+            return (port, statusSubject) => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType);
         }
 
         private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()

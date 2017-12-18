@@ -195,10 +195,6 @@
     <Compile Include="Migrations\201612301400385_AddClientItems.Designer.cs">
       <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.cs" />
-    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.Designer.cs">
-      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.cs" />
     <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.Designer.cs">
       <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>
@@ -358,9 +354,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612301400385_AddClientItems.resx">
       <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
-      </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711250817346_Modify-FrequencyTests.resx">
-      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.resx">
       <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
@@ -15,7 +16,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
     {
         protected Task LoadItemsTask { get; private set; }
 
-        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
+        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {            
         }
 
@@ -23,9 +24,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
       
         protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null)
         {
-            var connectTasks = new List<Task>();             
-
-            connectTasks.Add(Task.Run(async () =>
+            await Task.Run(async () =>
             {            
                 if (await WakeUpInstrument())
                 {
@@ -38,14 +37,16 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
                     }
                     else
                     {
+                        IsConnected = false;
+
                         if (response.ResponseCode == ResponseCode.FramingError)
                             await CommPort.Close();
-
+                        
                         throw new Exception($"Error response {response.ResponseCode}");
                     }
                 }
-            }, ct));          
-            await Task.WhenAll(connectTasks.ToArray());
+            }, ct);          
+         
         }
 
         public override async Task Disconnect()
@@ -136,14 +137,20 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             await ExecuteCommand(Commands.WakeupOne());
             Thread.Sleep(150);
 
-            var response = await ExecuteCommand(Commands.WakeupTwo());
-
-            if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
+            try
             {
-                return true;
-            }
+                var response = await ExecuteCommand(Commands.WakeupTwo());
 
-            await ExecuteCommand(Commands.OkayToSend());
+                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(200);
+                await ExecuteCommand(Commands.OkayToSend());
+            }
 
             return false;
         }

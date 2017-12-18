@@ -45,16 +45,4 @@ namespace Prover.Core.Models.Instruments
         Guid VerificationTestId { get; set; }
         VerificationTest VerificationTest { get; set; }
     }
-
-    public interface IHavePercentError
-    {
-        decimal? PercentError { get; }
-        bool HasPassed { get; }
-    }
-
-    public interface IHaveVerificationTest
-    {
-        Guid VerificationTestId { get; set; }
-        VerificationTest VerificationTest { get; set; }
-    }
 }

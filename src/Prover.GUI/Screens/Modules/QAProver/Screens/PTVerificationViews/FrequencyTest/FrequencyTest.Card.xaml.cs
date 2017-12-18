@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using ReactiveUI;
 
-namespace Prover.GUI.Modules.QAProver.Screens.PTVerificationViews.FrequencyTest
+namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.FrequencyTest
 {
     /// <summary>
     /// Interaction logic for FrequencyTest.xaml

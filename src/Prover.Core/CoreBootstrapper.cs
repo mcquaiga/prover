@@ -51,14 +51,14 @@ namespace Prover.Core
             builder.Register(c => new IrDAPort())
                 .Named<ICommPort>("IrDAPort");
 
-            builder.Register(c =>
-            {
-                var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
+            //builder.Register(c =>
+            //{
+            //    var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
 
-                return SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort
-                    ? new HoneywellClient(c.ResolveNamed<ICommPort>("IrDAPort"), instrument)
-                    : new HoneywellClient(c.ResolveNamed<ICommPort>("SerialPort"), instrument);
-            }).As<EvcCommunicationClient>();
+            //    return SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort
+            //        ? new HoneywellClient(c.ResolveNamed<ICommPort>("IrDAPort"), instrument)
+            //        : new HoneywellClient(c.ResolveNamed<ICommPort>("SerialPort"), instrument);
+            //}).As<EvcCommunicationClient>();
 
             //QA Test Runs
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");

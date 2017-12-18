@@ -29,7 +29,8 @@ namespace Prover.Core.VerificationTests
         IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null);
+        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, 
+            CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
         Task RunVolumeTest(CancellationToken ct);
@@ -69,24 +70,25 @@ namespace Prover.Core.VerificationTests
         public IObservable<string> TestStatus => _testStatus.AsObservable();
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null)
+        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
         {
-            
-                _communicationClient = instrumentType.ClientFactory.Invoke(commPort);
-            ct.ThrowIfCancellationRequested();
+            if (statusObserver != null)
+                TestStatus.Subscribe(statusObserver);
 
-            _communicationClient.StatusObservable.Subscribe(s => _testStatus.OnNext(s));
+            _communicationClient = instrumentType.ClientFactory.Invoke(commPort, _testStatus);
+            ct.ThrowIfCancellationRequested();
 
             await ConnectToInstrument(ct);
             ct.ThrowIfCancellationRequested();
 
             _testStatus.OnNext("Downloading items...");
-            	var items = await _communicationClient.GetAllItems();
+            var items = await _communicationClient.GetAllItems();
 
-                Instrument = new Instrument(instrumentType, items, client);           
+            Instrument = new Instrument(instrumentType, items, client);           
 
             await RunVerifiers();
-            	await DisconnectFromInstrument();
+            await DisconnectFromInstrument();
+
             if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
                 SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
                 TestSettings.VolumeTestType.Manual)
