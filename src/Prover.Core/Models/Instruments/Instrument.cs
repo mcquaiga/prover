@@ -80,7 +80,6 @@ namespace Prover.Core.Models.Instruments
             var dateFormat = Items.GetItem(262).Description;
             dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
             dateFormat = $"{dateFormat} HH mm ss";
-
             var time = Items.GetItem(203).RawValue;
             var date = Items.GetItem(204).RawValue;
 
@@ -98,7 +97,6 @@ namespace Prover.Core.Models.Instruments
         {
             return dateTime.ToString("HH mm ss");
         }
-
         public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
         {
             for (var i = 0; i < 3; i++)
@@ -119,7 +117,13 @@ namespace Prover.Core.Models.Instruments
                 }
 
                 if (i == defaultVolumeTestNumber)
+                {
                     verificationTest.VolumeTest = new VolumeTest(verificationTest);
+                    if (InstrumentType.Name == "TOC")
+                    {
+                        verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
+                    }
+                }
 
                 VerificationTests.Add(verificationTest);
             }

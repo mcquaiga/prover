@@ -125,6 +125,14 @@
     <Compile Include="Migrations\201711210642092_AddKeyValueTable.Designer.cs">
       <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711250153353_Add-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250153353_Add-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -219,6 +227,7 @@
     <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
+    <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
@@ -375,6 +384,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711210642092_AddKeyValueTable.resx">
       <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250153353_Add-FrequencyTests.resx">
+      <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250647351_Modify-FrequencyTests.resx">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

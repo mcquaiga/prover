@@ -55,12 +55,10 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                 VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 TemperatureTestViewModel =
                     new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
-
             if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
                 VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                 PressureTestViewModel =
                     new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
-
             if (VerificationTest.VolumeTest != null)
                 VolumeTestViewModel =
                     new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest,

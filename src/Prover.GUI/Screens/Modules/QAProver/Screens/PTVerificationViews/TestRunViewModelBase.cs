@@ -7,7 +7,7 @@ using ReactiveUI;
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public abstract class TestRunViewModelBase<T> : ViewModelBase, IHandle<VerificationTestEvent>
-        where T : BaseVerificationTest
+        where T : IHavePercentError, IHaveVerificationTest
     {
         protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun)
             : base(screenManager, eventAggregator)

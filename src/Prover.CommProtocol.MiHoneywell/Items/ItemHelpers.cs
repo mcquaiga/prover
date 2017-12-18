@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell.CommClients;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
 {
@@ -16,11 +19,11 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         private const string ItemDefinitionFileName = "Items.json";
         private const string TypeFileName = "Type_";
 
-        private static HashSet<InstrumentType> _instrumentTypesCache = new HashSet<InstrumentType>();
+        private static HashSet<InstrumentType> _instrumentTypesCache;
 
         public static async Task<HashSet<InstrumentType>> GetInstrumentDefinitions()
         {
-            if (!_instrumentTypesCache.Any())
+            if (_instrumentTypesCache == null || !_instrumentTypesCache.Any())
                 await LoadInstrumentTypes();
 
             return _instrumentTypesCache;
@@ -28,6 +31,9 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
         public static async Task LoadInstrumentTypes()
         {
+            if (_instrumentTypesCache == null)
+                _instrumentTypesCache = new HashSet<InstrumentType>();
+
             _instrumentTypesCache.Clear();
 
             var items = await LoadGlobalItemDefinitions();
@@ -38,7 +44,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                 var fileText = File.ReadAllText(file);
                 var instrJson = JObject.Parse(fileText);
                 var i = instrJson.ToObject<InstrumentType>();
-
+                i.ClientFactory = GetCommClientFactory(i);
                 var overrideItems = await GetItemDefinitions(fileText, "OverrideItems");
                 var excludeItems = await GetItemDefinitions(fileText, "ExcludeItems");
                 i.ItemsMetadata = items.Concat(overrideItems)
@@ -51,6 +57,20 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             }
         }
 
+        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(InstrumentType instrumentType)
+        {
+            var commTypeName = instrumentType.CommClientType;
+            if (string.IsNullOrEmpty(commTypeName))
+                commTypeName = "Prover.CommProtocol.MiHoneywell.CommClients.HoneywellClient";
+
+            var commType = Type.GetType(commTypeName);
+
+            if (commType == null)
+                commType = typeof(HoneywellClient);
+
+            return (port, statusSubject) => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType, statusSubject);
+        }
+
         private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
         {
             var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";           
@@ -61,10 +81,13 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         private static async Task<HashSet<ItemMetadata>> GetItemDefinitions(string itemDefinitionText, string attributeName)
         {
             var itemsJson = JObject.Parse(itemDefinitionText);
-            var items = itemsJson[attributeName].Children().ToList();
+            var items = itemsJson[attributeName]?.Children().ToList();
+
             var results = new HashSet<ItemMetadata>();
-            foreach(JToken item in items)
-            {                
+            if (items == null) return results;
+
+            foreach (JToken item in items)
+            {
                 var i = item.ToObject<ItemMetadata>();
 
                 JToken itemValues;
@@ -77,7 +100,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                     var type = Type.GetType(typeName);
                     itemValues = definitionsJObject["values"];
                     var values = itemValues?.Children().ToList();
-                    i.ItemDescriptions = values?.Select(v => (ItemMetadata.ItemDescription)v.ToObject(type));
+                    i.ItemDescriptions = values?.Select(v => (ItemMetadata.ItemDescription) v.ToObject(type));
                 }
                 else
                 {
@@ -106,11 +129,9 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (instrumentType == null)
                 throw new ArgumentNullException(nameof(instrumentType));
 
-            var metadata = instrumentType.ItemsMetadata;
-
             return itemValues
-                .Where(i => metadata.GetItem(i.Key) != null)
-                .Select(iv => new ItemValue(metadata.GetItem(iv.Key), iv.Value));
+                .Where(i => instrumentType.ItemsMetadata.GetItem(i.Key) != null)
+                .Select(iv => new ItemValue(instrumentType.ItemsMetadata.GetItem(iv.Key), iv.Value));
         }
     }
 }

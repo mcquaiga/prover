@@ -142,6 +142,11 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                 EnergyTestItem = new EnergyTestViewModel(EventAggregator, (MechanicalDrive) Volume.DriveType);
             else if (Volume?.DriveType is RotaryDrive)
                 MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Volume.DriveType);
+
+            if (Volume?.VerificationTest.FrequencyTest != null)
+            {
+                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest);
+            }
         }
 
         #endregion
@@ -187,6 +192,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
+        public FrequencyTestViewModel FrequencyTestItem { get; set; }
+
         public string DriveRateDescription => Instrument.DriveRateDescription();
         public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
         public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();

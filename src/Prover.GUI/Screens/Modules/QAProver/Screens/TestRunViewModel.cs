@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -45,8 +45,16 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             commPorts
                 .ToProperty(this, x => x.CommPorts, out _commPorts, new ReactiveList<string>() { ChangeTrackingEnabled = true});
             commPorts
-                .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});         
+                .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});
 
+            SelectedCommPort = SettingsManager.LocalSettingsInstance.InstrumentCommPort;
+            commPorts.Subscribe(list =>
+            {
+                SelectedCommPort = list.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
+                    ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
+                    : string.Empty;
+            });
+                
             #region Instruments
 
             /***  Setup Instruments list  ***/
@@ -57,14 +65,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
 
             this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);
-
-            CommPorts.Changed.Subscribe(args =>
-            {
-                _selectedCommPort = CommPorts.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
-                    ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
-                    : string.Empty;
-            });
+                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);        
 
             _selectedBaudRate = BaudRate.Contains(SettingsManager.LocalSettingsInstance.InstrumentBaudRate)
                 ? SettingsManager.LocalSettingsInstance.InstrumentBaudRate
@@ -136,8 +137,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             #endregion
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
-                    x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort)
-                .Subscribe(_ =>
+                    x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
+                .Subscribe( _ =>
                 {
                     SettingsManager.LocalSettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.LocalSettingsInstance.InstrumentCommPort = _.Item2;
@@ -145,6 +146,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                     SettingsManager.LocalSettingsInstance.LastClientSelected = _.Item4;
                     SettingsManager.LocalSettingsInstance.TachIsNotUsed = _.Item5;
                     SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort = _.Item6;
+                    SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = _.Item7?.Name;
+
                 });
 
             _viewContext = NewQaTestViewContext;
@@ -304,15 +307,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             try
             {
                 await SettingsManager.SaveLocalSettingsAsync();
-
+ 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
-                _qaRunTestManager.TestStatus.Subscribe(statusObservable);
-
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, ct, _client);
-                IsDirty = true;
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(),  ct, _client, statusObservable);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
+
+                IsDirty = true;
             }
             catch (Exception ex)
             {
@@ -326,6 +328,11 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             {
                 ShowDialog = false;
             }
+        }
+
+        private static ICommPort GetCommPort()
+        {
+            return new SerialPort(SettingsManager.LocalSettingsInstance.InstrumentCommPort, SettingsManager.LocalSettingsInstance.InstrumentBaudRate);
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)

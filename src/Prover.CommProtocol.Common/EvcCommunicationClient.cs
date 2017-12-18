@@ -26,25 +26,34 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="instrumentType">Instrument type of device</param>
-        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType)
+        /// <param name="statusSubject">Subject for listening to status updates</param>
+        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject)
         {
             CommPort = commPort;
             InstrumentType = instrumentType;
 
-            StatusObservable
-                .Subscribe(s => Log.Info(s));
+            if (statusSubject != null)
+                StatusObservable?.Subscribe(statusSubject);
+
+            StatusObservable?.Subscribe(s => Log.Debug(s));
+
+            _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
+                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
+
+            _sentObservable = CommPort.DataSentObservable
+                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
         }
 
         protected ICommPort CommPort { get; }
 
-        public InstrumentType InstrumentType { get; }
+        public InstrumentType InstrumentType { get; set; }
 
         public IObservable<string> StatusObservable => _statusSubject.AsObservable();
 
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
         /// </summary>
-        public virtual IEnumerable<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
+        public virtual List<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
         /// <summary>
         ///     Is this client already connected to an instrument
@@ -89,48 +98,46 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public async Task Connect(CancellationToken ct, string accessCode = null, int retryAttempts = MaxConnectionAttempts)
         {
+            if (IsConnected)
+                return;
+
             var connectionAttempts = 1;
 
             ct.ThrowIfCancellationRequested();
 
             var result = Task.Run(async () =>
             {
-                _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
-
-                await CommPort.Open(ct);
-
-                _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
-
-                _sentObservable = CommPort.DataSentObservable
-                        .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
-
                 while (!IsConnected)
                 {
+                    _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+
                     if (ct.IsCancellationRequested)
                         ct.ThrowIfCancellationRequested();
                     
+                    if (!CommPort.IsOpen())
+                        await CommPort.Open(ct);
+
                     try
                     {
                         await ConnectToInstrument(ct, accessCode);
+                        IsConnected = true;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        throw;
                     }
                     catch (Exception ex)
                     {
-                        Log.Warn(ex.Message);
+                        if (connectionAttempts < retryAttempts)
+                        {
+                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}. Exception: {ex.Message}");
+                            Thread.Sleep(ConnectionRetryDelayMs);
+
+                            connectionAttempts++;
+                        }
+                        else
+                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} after {retryAttempts} retries. Exception {ex.Message}");
                     }
-
-                    if (IsConnected) continue;
-
-                    if (connectionAttempts < retryAttempts)
-                    {
-                        Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
-                        Thread.Sleep(ConnectionRetryDelayMs);
-
-                        connectionAttempts++;
-                        _statusSubject.OnNext($"Connecting to {InstrumentType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
-                    }                            
-                    else
-                        throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} in {retryAttempts} tries. Cancelling connection attempt.");
                 }
             }, ct);
 
@@ -164,14 +171,14 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         /// <param name="itemNumber">Item number for the value to request</param>
         /// <returns></returns>
-        public abstract Task<ItemValue> GetItemValue(int itemNumber);
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
 
-        /// <summary>
-        ///     Read a group of items from instrument
-        /// </summary>
-        /// <param name="itemNumbers">Item numbers for the values to request</param>
-        /// <returns></returns>
-        public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
+        ///// <summary>
+        /////     Read a group of items from instrument
+        ///// </summary>
+        ///// <param name="itemNumbers">Item numbers for the values to request</param>
+        ///// <returns></returns>
+        //public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<int> itemNumbers);
 
         /// <summary>
         ///     Read a group of items from instrument
@@ -179,6 +186,48 @@ namespace Prover.CommProtocol.Common
         /// <param name="itemNumbers">Item numbers for the values to request</param>
         /// <returns></returns>
         public abstract Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
+
+        /// <summary>
+        ///     Read all items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetAllItems()
+        {
+            return await GetItemValues(InstrumentType.ItemsMetadata);
+        }
+
+        /// <summary>
+        ///     Read volume items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetVolumeItems()
+        {
+            return await GetItemValues(InstrumentType.ItemsMetadata.VolumeItems());
+        }
+
+        /// <summary>
+        ///     Read frequency test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public abstract Task<IFrequencyTestItems> GetFrequencyItems();
+
+        /// <summary>
+        ///     Read pressure test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetPressureTestItems()
+        {
+            return await GetItemValues(InstrumentType.ItemsMetadata.PressureItems());
+        }
+
+        /// <summary>
+        ///     Read temperature test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetTemperatureTestItems()
+        {
+            return await GetItemValues(InstrumentType.ItemsMetadata.TemperatureItems());
+        }
 
         /// <summary>
         ///     Write a value to an item

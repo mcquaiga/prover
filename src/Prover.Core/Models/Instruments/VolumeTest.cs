@@ -35,6 +35,8 @@ namespace Prover.Core.Models.Instruments
 
         public IDriveType DriveType { get; set; }
 
+        [NotMapped]
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
         public string TestInstrumentData
         {
             get => AfterTestItems.Serialize();
@@ -43,8 +45,7 @@ namespace Prover.Core.Models.Instruments
 
         public Instrument Instrument => VerificationTest.Instrument;
 
-        [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
+        
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
@@ -164,21 +165,29 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
+                return TotalCorrectionFactor * DriveType.UnCorrectedInputVolume(AppliedInput);
+            }
+        }
+
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
                     VerificationTest.TemperatureTest != null)
-                    return VerificationTest.TemperatureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.TemperatureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
                     VerificationTest.PressureTest != null)
-                    return VerificationTest.PressureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                     return VerificationTest.PressureTest?.ActualFactor *
                            VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                           VerificationTest.SuperFactorTest.SuperFactorSquared;
 
                 return null;
             }
@@ -209,6 +218,7 @@ namespace Prover.Core.Models.Instruments
                 
 
             if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
+            { 
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
@@ -219,7 +229,8 @@ namespace Prover.Core.Models.Instruments
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }
+                }               
+            }
             else
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
         }

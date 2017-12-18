@@ -13,7 +13,7 @@ namespace Prover.Core.Models.Instruments
 {
     public abstract class ProverTable : EntityWithId
     {
-        private string _instrumentData;
+        protected string _instrumentData;
 
         public string InstrumentData
         {
@@ -22,7 +22,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public ICollection<ItemValue> Items { get; set; }
+        public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
         public virtual InstrumentType InstrumentType { get; set; }
