@@ -68,7 +68,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (commType == null)
                 commType = typeof(HoneywellClient);
 
-            return (port, statusSubject) => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType);
+            return (port, statusSubject) => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType, statusSubject);
         }
 
         private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()

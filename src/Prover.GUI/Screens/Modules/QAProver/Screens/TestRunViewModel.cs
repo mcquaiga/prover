@@ -45,8 +45,16 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             commPorts
                 .ToProperty(this, x => x.CommPorts, out _commPorts, new ReactiveList<string>() { ChangeTrackingEnabled = true});
             commPorts
-                .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});         
+                .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});
 
+            SelectedCommPort = SettingsManager.LocalSettingsInstance.InstrumentCommPort;
+            commPorts.Subscribe(list =>
+            {
+                SelectedCommPort = list.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
+                    ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
+                    : string.Empty;
+            });
+                
             #region Instruments
 
             /***  Setup Instruments list  ***/
@@ -57,14 +65,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
 
             this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);
-
-            CommPorts.Changed.Subscribe(args =>
-            {
-                _selectedCommPort = CommPorts.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
-                    ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
-                    : string.Empty;
-            });
+                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);        
 
             _selectedBaudRate = BaudRate.Contains(SettingsManager.LocalSettingsInstance.InstrumentBaudRate)
                 ? SettingsManager.LocalSettingsInstance.InstrumentBaudRate
@@ -137,7 +138,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
-                .Subscribe(async _ =>
+                .Subscribe( _ =>
                 {
                     SettingsManager.LocalSettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.LocalSettingsInstance.InstrumentCommPort = _.Item2;

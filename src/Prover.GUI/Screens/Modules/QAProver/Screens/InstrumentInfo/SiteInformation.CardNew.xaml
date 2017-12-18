@@ -81,19 +81,19 @@
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.SiteNumber2, FallbackValue='123456789'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock Text="Company Number" 
+                            <TextBlock Text="Company No." 
                                        Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.SerialNumber, FallbackValue='987654321'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock Text="Serial Number" 
+                            <TextBlock Text="Serial No." 
                                        Style="{StaticResource LabelFontStyle}" />
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding Instrument.FirmwareVersion, FallbackValue='2.68765'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock Text="Firmware Version" 
+                            <TextBlock Text="Firm. Ver." 
                                        Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                     </UniformGrid>
@@ -183,13 +183,13 @@
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding AtmPressure, FallbackValue='N/A'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock Text="Atmospheric"
+                            <TextBlock Text="Atm"
                                        Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock Text="{Binding PressureRange, FallbackValue='100 PSIA'}"
                                        HorizontalAlignment="Center" />
-                            <TextBlock Text="Transducer Range" 
+                            <TextBlock Text="Range" 
                                        Style="{StaticResource LabelFontStyle}"/>
                         </StackPanel>
                     </UniformGrid>
