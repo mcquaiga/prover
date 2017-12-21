@@ -35,11 +35,6 @@ namespace Prover.Core
             {
                 await ItemHelpers.LoadInstrumentTypes();
             });
-
-            //builder.RegisterBuildCallback(async container =>
-            //{
-            //    await SettingsManager.Initialize(container.Resolve<KeyValueStore>());
-            //});
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
@@ -48,7 +43,7 @@ namespace Prover.Core
             builder.Register(c =>
                 {
                     var ss = c.Resolve<ISettingsService>();
-                    return new SerialPort(ss.LocalSettingsInstance.InstrumentCommPort, ss.LocalSettingsInstance.InstrumentBaudRate);
+                    return new SerialPort(ss.Local.InstrumentCommPort, ss.Local.InstrumentBaudRate);
                 })
                 .Named<ICommPort>("SerialPort");
 
@@ -59,7 +54,7 @@ namespace Prover.Core
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
                 .Named<IDInOutBoard>("TachDaqBoard");
 
-            builder.Register(c => new TachometerService(c.Resolve<ISettingsService>().LocalSettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            builder.Register(c => new TachometerService(c.Resolve<ISettingsService>().Local.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();

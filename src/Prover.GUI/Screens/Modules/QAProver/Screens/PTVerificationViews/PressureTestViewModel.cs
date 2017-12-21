@@ -36,7 +36,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
             if (ShowAbsolute)
             {
-                if (_settingsService.SharedSettingsInstance.TestSettings.UpdateAbsolutePressure)
+                if (_settingsService.Shared.TestSettings.UpdateAbsolutePressure)
                 {
                     LockGaugePressure = false;
                     this.WhenAnyValue(x => x.GaugePressure, x => x.AtmosphericGauge,

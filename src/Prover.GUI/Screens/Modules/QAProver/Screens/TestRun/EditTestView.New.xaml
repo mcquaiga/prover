@@ -30,15 +30,15 @@
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
                 <Button HorizontalAlignment="Left"
                         Command="{Binding SaveCommand}"
-                        Content="SAVE"
                         Grid.Column="1"
-                        Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                        Content="{materialDesign:PackIcon ContentSave}"/>
                 <Button HorizontalAlignment="Right"
                         Command="{Binding PrintReportCommand}"                        
                         Grid.Column="1"
-                        Style="{StaticResource MaterialDesignRaisedAccentButton}">
-                    <materialDesign:PackIcon Kind="Printer3d"/>
-                </Button>
+                        Height="32" Width="48"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                        Content="{materialDesign:PackIcon Printer}"/>
             </Grid>
         </materialDesign:ColorZone>
         <Grid Margin="5"

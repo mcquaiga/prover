@@ -19,20 +19,20 @@ namespace Prover.GUI.Screens.Settings
         {
             _settingsService = settingsService;
 
-            StabilizeLiveReadings = _settingsService.SharedSettingsInstance.TestSettings.StabilizeLiveReadings;
+            StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
             this.WhenAnyValue(x => x.StabilizeLiveReadings)
-                .Subscribe(x => _settingsService.SharedSettingsInstance.TestSettings.StabilizeLiveReadings = x);
+                .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
 
-            SelectedMechanicalVolumeTestType = _settingsService.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType.ToString();
+            SelectedMechanicalVolumeTestType = _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)
-                .Subscribe(x => _settingsService.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType =
+                .Subscribe(x => _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType =
                         (TestSettings.VolumeTestType) Enum.Parse(typeof(TestSettings.VolumeTestType), x));
 
             MechanicalUncorrectedTestLimits
-                .AddRange(_settingsService.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits.ToList());
+                .AddRange(_settingsService.Shared.TestSettings.MechanicalUncorrectedTestLimits.ToList());
             this.WhenAnyValue(x => x.MechanicalUncorrectedTestLimits)
                 .Subscribe(x =>
-                    _settingsService.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
+                    _settingsService.Shared.TestSettings.MechanicalUncorrectedTestLimits = x.ToList());
 
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -59,8 +59,8 @@ namespace Prover.GUI.Screens.Settings
             set => this.RaiseAndSetIfChanged(ref _selectedMechanicalVolumeTestType, value);
         }
 
-        public LocalSettings LocalSettings => _settingsService.LocalSettingsInstance;
-        public SharedSettings SharedSettings => _settingsService.SharedSettingsInstance;
+        public LocalSettings LocalSettings => _settingsService.Local;
+        public SharedSettings SharedSettings => _settingsService.Shared;
 
         private bool _stabilizeLiveReadings;
         public bool StabilizeLiveReadings
@@ -79,6 +79,12 @@ namespace Prover.GUI.Screens.Settings
         }
 
         #endregion
+
+        protected override void OnActivate()
+        {
+            _settingsService.RefreshSettings();
+            base.OnActivate();
+        }
 
         public override void CanClose(Action<bool> callback)
         {

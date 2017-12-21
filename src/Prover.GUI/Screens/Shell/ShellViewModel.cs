@@ -34,9 +34,9 @@ namespace Prover.GUI.Screens.Shell
             NavigationItems = navigationItems.ToList().OrderByDescending(item => item.IsHome);
             GoHomeCommand = NavigationItems.First().NavigationCommand;
 
-            WindowWidth = _settingsService.LocalSettingsInstance.WindowWidth;
-            WindowHeight = _settingsService.LocalSettingsInstance.WindowHeight;
-            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), _settingsService.LocalSettingsInstance.WindowState);
+            WindowWidth = _settingsService.Local.WindowWidth;
+            WindowHeight = _settingsService.Local.WindowHeight;
+            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), _settingsService.Local.WindowState);
 
             this.WhenAnyValue(x => x.ShowNotificationSnackbar);                
 
@@ -69,7 +69,7 @@ namespace Prover.GUI.Screens.Shell
 
         #region Properties        
 
-        public LocalSettings LocalSettings => _settingsService.LocalSettingsInstance;
+        public LocalSettings LocalSettings => _settingsService.Local;
 
         private IDialogViewModel _dialogViewModel;
         public IDialogViewModel DialogViewModel
@@ -121,9 +121,9 @@ namespace Prover.GUI.Screens.Shell
 
         protected override void OnDeactivate(bool close)
         {
-            _settingsService.LocalSettingsInstance.WindowHeight = WindowHeight;
-            _settingsService.LocalSettingsInstance.WindowWidth = WindowWidth;
-            _settingsService.LocalSettingsInstance.WindowState = WindowState.ToString();
+            _settingsService.Local.WindowHeight = WindowHeight;
+            _settingsService.Local.WindowWidth = WindowWidth;
+            _settingsService.Local.WindowState = WindowState.ToString();
             (ActiveItem as IDisposable)?.Dispose();
 
             base.OnDeactivate(close);

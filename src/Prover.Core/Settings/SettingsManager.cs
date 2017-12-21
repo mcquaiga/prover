@@ -13,8 +13,8 @@ namespace Prover.Core.Settings
 {
     public interface ISettingsService
     {
-        LocalSettings LocalSettingsInstance { get; }
-        SharedSettings SharedSettingsInstance { get; }
+        LocalSettings Local { get; }
+        SharedSettings Shared { get; }
         void RefreshSettings();
 
         Task SaveLocalSettingsAsync();
@@ -25,9 +25,12 @@ namespace Prover.Core.Settings
     public class SettingsService : ISettingsService
     {
         private const string SettingsFileName = "settings.conf";
+        private const string SettingsKey = "SharedSettings";
+
         private static readonly string AppDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EvcProver");
         private static readonly string SettingsPath = Path.Combine(AppDirectory, SettingsFileName);
-        private readonly KeyValueStore _keyValueStore;
+
+        private readonly KeyValueStore _keyValueStore;        
 
         public SettingsService(KeyValueStore keyValueStore)
         {
@@ -35,15 +38,15 @@ namespace Prover.Core.Settings
             RefreshSettings();
         }
 
-        public LocalSettings LocalSettingsInstance { get; private set; }
-        public SharedSettings SharedSettingsInstance { get; private set; }
+        public LocalSettings Local { get; private set; }
+        public SharedSettings Shared { get; private set; }
 
         public void RefreshSettings()
         {
-            LocalSettingsInstance = LoadLocalSettings();
+            Local = LoadLocalSettings();
 
             if (_keyValueStore != null)
-                SharedSettingsInstance = LoadSharedSettings(_keyValueStore);
+                Shared = LoadSharedSettings(_keyValueStore);
         }
 
         public async Task SaveLocalSettingsAsync()
@@ -58,23 +61,20 @@ namespace Prover.Core.Settings
             if (!fileSystem.DirectoryExists(Path.GetDirectoryName(AppDirectory)))
                 fileSystem.CreateDirectory(Path.GetDirectoryName(AppDirectory));
 
-            new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
+            new SettingsWriter(fileSystem).Write(SettingsPath, Local);
         }
 
         public async Task SaveSharedSettings()
         {
-            var kv = new KeyValue() { Id = "SharedSettings", Value = JsonConvert.SerializeObject(SharedSettingsInstance) };
+            var kv = new KeyValue() { Id = SettingsKey, Value = JsonConvert.SerializeObject(Shared) };
             await _keyValueStore.Upsert(kv);
         }
 
         private static SharedSettings LoadSharedSettings(KeyValueStore keyValueStore)
         {
-            var settingsKeyValue = keyValueStore.Query(k => k.Id == "SharedSettings").FirstOrDefault();
+            var settings = keyValueStore.GetValue<SharedSettings>(SettingsKey) ?? SharedSettings.Create();
 
-            if (string.IsNullOrEmpty(settingsKeyValue?.Value))
-                return SharedSettings.Create();
-
-            return JsonConvert.DeserializeObject<SharedSettings>(settingsKeyValue.Value);
+            return settings;
         }
 
         private static LocalSettings LoadLocalSettings()
@@ -87,75 +87,6 @@ namespace Prover.Core.Settings
             return settings;
         }
     }
-
-    //public static class SettingsManager
-    //{    
-    //    private const string SettingsFileName = "settings.conf";
-    //    private static readonly string AppDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EvcProver");
-    //    private static readonly string SettingsPath = Path.Combine(AppDirectory, SettingsFileName);
-    //    private static KeyValueStore _keyValueStore;
-
-    //    public static LocalSettings LocalSettingsInstance { get; set; }
-    //    public static SharedSettings SharedSettingsInstance { get; set; }
-
-    //    public static void Initialize(KeyValueStore keyValueStore)
-    //    {
-    //        _keyValueStore = keyValueStore;
-    //        Task.Run(async () => await RefreshSettings());
-    //    }
-
-    //    public static async Task RefreshSettings()
-    //    {
-    //        LocalSettingsInstance = await LoadLocalSettings();
-
-    //        if (_keyValueStore != null)
-    //            SharedSettingsInstance = await LoadSharedSettings(_keyValueStore);
-    //    }
-
-    //    private static async Task<LocalSettings> LoadLocalSettings()
-    //    {
-    //        return await Task.Run(() =>
-    //        {
-    //            var fileSystem = new FileSystem();
-    //            Directory.CreateDirectory(AppDirectory);
-    //            var settings = (fileSystem.FileExists(SettingsPath)
-    //                               ? new SettingsReader(fileSystem).Read(SettingsPath)
-    //                               : null) ?? new LocalSettings();
-    //            return settings;
-    //        });
-    //    }
-
-    //    private static async Task<SharedSettings> LoadSharedSettings(KeyValueStore keyValueStore)
-    //    {
-    //        var settingsKeyValue = await keyValueStore.Query(k => k.Id == "SharedSettings").FirstOrDefaultAsync();
-
-    //        if (string.IsNullOrEmpty(settingsKeyValue?.Value))
-    //            return SharedSettings.Create();
-
-    //        return JsonConvert.DeserializeObject<SharedSettings>(settingsKeyValue.Value);
-    //    }
-
-    //    public static async Task SaveLocalSettingsAsync()
-    //    {
-    //        await Task.Run(() => SaveLocalSettings());
-    //    }
-
-    //    public static void SaveLocalSettings()
-    //    {           
-    //        var fileSystem = new FileSystem();
-
-    //        if (!fileSystem.DirectoryExists(Path.GetDirectoryName(AppDirectory)))
-    //            fileSystem.CreateDirectory(Path.GetDirectoryName(AppDirectory));
-
-    //        new SettingsWriter(fileSystem).Write(SettingsPath, LocalSettingsInstance);
-    //    }
-
-    //    public static async Task SaveSharedSettings()
-    //    {
-    //        var kv = new KeyValue() { Id = "SharedSettings", Value = JsonConvert.SerializeObject(SharedSettingsInstance)};
-    //        await _keyValueStore.Upsert(kv);
-    //    }
-    //}
 
     public class SettingsReader
     {

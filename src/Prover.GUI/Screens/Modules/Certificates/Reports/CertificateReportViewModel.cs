@@ -32,7 +32,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
         public Client Client => Instruments.First().Client;
         public Certificate Certificate { get; set; }
 
-        public string McRegistrationNumber => _settingsService.SharedSettingsInstance.CertificateSettings.McRegistrationNumber;
+        public string McRegistrationNumber => _settingsService.Shared.CertificateSettings.McRegistrationNumber;
 
         public string CertificateDate => $"{Certificate.CreatedDateTime:dd/MM/yyyy}";
         public long NumberOfTestsPassed => Certificate.Instruments.Count(i => i.HasPassed);

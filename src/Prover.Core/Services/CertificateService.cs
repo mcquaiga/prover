@@ -77,7 +77,7 @@ namespace Prover.Core.Services
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
-                Apparatus = _settingsService.SharedSettingsInstance.CertificateSettings.MeasurementApparatus,
+                Apparatus = _settingsService.Shared.CertificateSettings.MeasurementApparatus,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,

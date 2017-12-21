@@ -29,14 +29,9 @@ namespace Prover.Core.Settings
             Automatic,
             Manual
         }
-
-        private List<TestPointSetting> _testPoints = new List<TestPointSetting>();
-        public List<TestPointSetting> TestPoints
-        {
-            get { return _testPoints.OrderBy(t => t.Level).ToList(); }
-            set => _testPoints = value;
-        }
-
+        
+        public List<TestPointSetting> TestPoints { get; set; }
+      
         public bool StabilizeLiveReadings { get; set; }
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }

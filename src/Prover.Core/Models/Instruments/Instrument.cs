@@ -24,10 +24,6 @@ namespace Prover.Core.Models.Instruments
 
     public partial class Instrument : ProverTable
     {
-        public Instrument()
-        {
-        }
-
         public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
             TestSettings testSettings, Client client = null)
         {
@@ -104,8 +100,6 @@ namespace Prover.Core.Models.Instruments
             return dateTime.ToString("HH mm ss");
         }
 
-        
-
         #region NotMapped Properties
 
         [NotMapped]
@@ -122,8 +116,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live"
-                    && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
+                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live" && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
                     return EvcCorrectorType.PTZ;
 
                 if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
@@ -208,10 +201,7 @@ namespace Prover.Core.Models.Instruments
 
         public override string ToString()
         {
-            return $@"{
-                    JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-                        {ReferenceLoopHandling = ReferenceLoopHandling.Ignore})
-                }";
+            return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}) }";
         }
     }
 
