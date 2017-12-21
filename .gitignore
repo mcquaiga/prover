@@ -184,3 +184,4 @@ src/.vs/EvcProver/v15/*
 src/.vs/EvcProver/v15/sqlite3/storage.ide
 /src/Prover.GUI/connections.config
 **/*/connections.config
+/src/Prover.GUI/connections.config
