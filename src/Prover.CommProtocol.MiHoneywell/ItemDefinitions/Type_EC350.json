@@ -279,7 +279,51 @@
           "numericvalue": "1000"
         }
       ]
+    },
+    {
+      "number": "109",
+      "code": "FIXED_PRESS_FACTOR",
+      "shortDescription": "F Press Factor",
+      "description": "Fixed Pressure Factor",
+      "isPressure": "true",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Fixed",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "Live",
+          "numericvalue": "1"
+        }
+      ]
+    },
+    {
+      "number": "111",
+      "code": "FIXED_TEMP_FACTOR",
+      "shortDescription": "F Temp Factor",
+      "description": "Fixed Temp Factor",
+      "isTemperature": "true",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Fixed",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "Live",
+          "numericvalue": "1"
+        }
+      ]
     }
   ],
-  "ExcludeItems": []
+  "ExcludeItems": [
+    {
+      "number": "110",
+      "description":  "Fixed Super. Factor" 
+    }]
 }

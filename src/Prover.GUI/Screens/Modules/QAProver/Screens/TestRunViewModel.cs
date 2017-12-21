@@ -18,6 +18,7 @@ using Prover.Core.Settings;
 using Prover.Core.Shared.Extensions;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
+using Prover.GUI.Reports;
 using Prover.GUI.Screens.Dialogs;
 using Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews;
 using ReactiveUI;
@@ -26,6 +27,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 {
     public class TestRunViewModel : ViewModelBase, IHandle<VerificationTestEvent>
     {
+        private readonly InstrumentReportGenerator _instrumentReportGenerator;
+        private readonly ISettingsService _settingsService;
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestViewNew";
         private IQaRunTestManager _qaRunTestManager;
@@ -34,9 +37,15 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
         private string _selectedTachCommPort;
         private string _viewContext;
 
-        public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ClientService clientService)
+        public TestRunViewModel(ScreenManager screenManager, 
+            IEventAggregator eventAggregator, 
+            ClientService clientService, 
+            InstrumentReportGenerator instrumentReportGenerator,
+            ISettingsService settingsService) 
             : base(screenManager, eventAggregator)
         {
+            _instrumentReportGenerator = instrumentReportGenerator;
+            _settingsService = settingsService;
             eventAggregator.Subscribe(this);
 
             RefreshCommPortsCommand = ReactiveCommand.Create(() => SerialPort.GetPortNames().ToList());
@@ -47,11 +56,11 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             commPorts
                 .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});
 
-            SelectedCommPort = SettingsManager.LocalSettingsInstance.InstrumentCommPort;
+            SelectedCommPort = _settingsService.Local.InstrumentCommPort;
             commPorts.Subscribe(list =>
             {
-                SelectedCommPort = list.Contains(SettingsManager.LocalSettingsInstance.InstrumentCommPort)
-                    ? SettingsManager.LocalSettingsInstance.InstrumentCommPort
+                SelectedCommPort = list.Contains(_settingsService.Local.InstrumentCommPort)
+                    ? _settingsService.Local.InstrumentCommPort
                     : string.Empty;
             });
                 
@@ -62,19 +71,19 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             InstrumentTypes.AddRange(HoneywellInstrumentTypes.GetAll());
 
             _selectedInstrumentType =
-                HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
+                HoneywellInstrumentTypes.GetByName(_settingsService.Local.LastInstrumentTypeUsed);
 
             this.WhenAnyValue(x => x.SelectedInstrumentType)
-                .Subscribe(x => SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = x?.Name);        
+                .Subscribe(x => _settingsService.Local.LastInstrumentTypeUsed = x?.Name);        
 
-            _selectedBaudRate = BaudRate.Contains(SettingsManager.LocalSettingsInstance.InstrumentBaudRate)
-                ? SettingsManager.LocalSettingsInstance.InstrumentBaudRate
+            _selectedBaudRate = BaudRate.Contains(_settingsService.Local.InstrumentBaudRate)
+                ? _settingsService.Local.InstrumentBaudRate
                 : -1;
 
             this.WhenAnyValue(x => x.UseIrDaPort)
                 .Select(x => !x)
                 .ToProperty(this, x => x.DisableCommPortAndBaudRate, out _disableCommPortAndBaudRate);
-            UseIrDaPort = SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort;
+            UseIrDaPort = _settingsService.Local.InstrumentUseIrDaPort;
 
             #endregion
 
@@ -85,15 +94,15 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
              * Tachometer Settings
              *
              **/
-            _selectedTachCommPort = TachCommPorts.Contains(SettingsManager.LocalSettingsInstance.TachCommPort)
-                ? SettingsManager.LocalSettingsInstance.TachCommPort
+            _selectedTachCommPort = TachCommPorts.Contains(_settingsService.Local.TachCommPort)
+                ? _settingsService.Local.TachCommPort
                 : string.Empty;
 
             this.WhenAnyValue(x => x.TachIsNotUsed)
                 .Select(x => !x)
                 .ToProperty(this, x => x.TachDisableCommPort, out _tachDisableCommPort, false);
 
-            TachIsNotUsed = SettingsManager.LocalSettingsInstance.TachIsNotUsed;
+            TachIsNotUsed = _settingsService.Local.TachIsNotUsed;
 
             #endregion
 
@@ -113,6 +122,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 .StepInterval(TimeSpan.FromSeconds(2))
                 .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
 
+            PrintReportCommand = ReactiveCommand.CreateFromTask(PrintTest);
             #endregion
 
             #region Clients
@@ -130,8 +140,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
-            SelectedClient = Clients.Contains(SettingsManager.LocalSettingsInstance.LastClientSelected)
-                ? SettingsManager.LocalSettingsInstance.LastClientSelected
+            SelectedClient = Clients.Contains(_settingsService.Local.LastClientSelected)
+                ? _settingsService.Local.LastClientSelected
                 : string.Empty;
 
             #endregion
@@ -140,25 +150,28 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
                 .Subscribe( _ =>
                 {
-                    SettingsManager.LocalSettingsInstance.InstrumentBaudRate = _.Item1;
-                    SettingsManager.LocalSettingsInstance.InstrumentCommPort = _.Item2;
-                    SettingsManager.LocalSettingsInstance.TachCommPort = _.Item3;
-                    SettingsManager.LocalSettingsInstance.LastClientSelected = _.Item4;
-                    SettingsManager.LocalSettingsInstance.TachIsNotUsed = _.Item5;
-                    SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort = _.Item6;
-                    SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed = _.Item7?.Name;
+                    _settingsService.Local.InstrumentBaudRate = _.Item1;
+                    _settingsService.Local.InstrumentCommPort = _.Item2;
+                    _settingsService.Local.TachCommPort = _.Item3;
+                    _settingsService.Local.LastClientSelected = _.Item4;
+                    _settingsService.Local.TachIsNotUsed = _.Item5;
+                    _settingsService.Local.InstrumentUseIrDaPort = _.Item6;
+                    _settingsService.Local.LastInstrumentTypeUsed = _.Item7?.Name;
 
                 });
 
             _viewContext = NewQaTestViewContext;
         }
 
+       
+
         #region Commands
 
         public ReactiveCommand SaveCommand { get; }
+        public ReactiveCommand PrintReportCommand { get; }
         public ReactiveCommand StartTestCommand { get; }
-        private ReactiveCommand<Unit, List<string>> _refreshCommPortsCommand;
 
+        private ReactiveCommand<Unit, List<string>> _refreshCommPortsCommand;
         public ReactiveCommand<Unit, List<string>> RefreshCommPortsCommand
         {
             get => _refreshCommPortsCommand;
@@ -288,6 +301,11 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
         #region Methods
 
+        private async Task PrintTest()
+        {
+            await _instrumentReportGenerator.GenerateAndViewReport(_qaRunTestManager.Instrument);
+        }
+
         private async Task SaveTest()
         {
             if (_qaRunTestManager != null)
@@ -306,10 +324,10 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
             try
             {
-                await SettingsManager.SaveLocalSettingsAsync();
+                await _settingsService.SaveLocalSettingsAsync();
  
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(),  ct, _client, statusObservable);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService.Shared.TestSettings, ct, _client, statusObservable);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -330,9 +348,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             }
         }
 
-        private static ICommPort GetCommPort()
+        private ICommPort GetCommPort()
         {
-            return new SerialPort(SettingsManager.LocalSettingsInstance.InstrumentCommPort, SettingsManager.LocalSettingsInstance.InstrumentBaudRate);
+            return new SerialPort(_settingsService.Local.InstrumentCommPort, _settingsService.Local.InstrumentBaudRate);
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
@@ -387,8 +405,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 {
                     result = MessageBox.Show($"Save changes?", "Save", MessageBoxButton.YesNoCancel,
                         MessageBoxImage.Question);
+
                     if (result == MessageBoxResult.Yes)
-                        Task.Run(SaveTest);
+                        SaveTest().ConfigureAwait(false);
 
                     if (result == MessageBoxResult.Cancel)
                     {

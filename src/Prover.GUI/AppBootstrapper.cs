@@ -32,8 +32,11 @@ namespace Prover.GUI
             try
             {
                 _log.Info("Starting EVC Prover Application...");
+
                 _splashScreen.Show();
+
                 Initialize();
+
                 _log.Info("Finished starting application.");
             }
             catch (Exception e)
@@ -136,8 +139,7 @@ namespace Prover.GUI
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            
-            SettingsManager.SaveLocalSettings();
+            Container.Resolve<ISettingsService>().SaveLocalSettings();
             base.OnExit(sender, e);
         }
     }

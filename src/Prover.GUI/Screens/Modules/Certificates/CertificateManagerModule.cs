@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Exports;
 using Prover.GUI.Screens.MainMenu;
 using Prover.GUI.Screens.Modules.Certificates.Screens;
@@ -12,8 +13,7 @@ namespace Prover.GUI.Screens.Modules.Certificates
     {
         protected ScreenManager ScreenManager;
 
-        public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/certificate.png"));
+        public PackIconKind MenuIconKind => PackIconKind.ClipboardText;
 
         public string MenuTitle => "Certificates";
 

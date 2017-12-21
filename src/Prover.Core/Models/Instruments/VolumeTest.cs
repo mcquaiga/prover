@@ -8,6 +8,7 @@ using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments.DriveTypes;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
@@ -16,17 +17,21 @@ namespace Prover.Core.Models.Instruments
     {
         private string _testInstrumentData;
 
-        public VolumeTest()
-        {
-        }
+        private VolumeTest() { }
 
-        public VolumeTest(VerificationTest verificationTest)
+        public static VolumeTest Create(VerificationTest verificationTest,
+            TestSettings testSettings)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = VerificationTest.Id;
+            var volume = new VolumeTest()
+            {
+                Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
+                VerificationTest = verificationTest,
+                VerificationTestId = verificationTest.Id,
+            };
 
-            CreateDriveType();
+            volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
+
+            return volume;
         }
 
         public int PulseACount { get; set; }
@@ -44,8 +49,6 @@ namespace Prover.Core.Models.Instruments
         }
 
         public Instrument Instrument => VerificationTest.Instrument;
-
-        
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
@@ -204,7 +207,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
-        private void CreateDriveType()
+        private void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {
@@ -215,7 +218,6 @@ namespace Prover.Core.Models.Instruments
                 if (InstrumentType.Id == 12)
                     DriveTypeDiscriminator = "Rotary";                
             }
-                
 
             if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
             { 
@@ -225,7 +227,7 @@ namespace Prover.Core.Models.Instruments
                         DriveType = new RotaryDrive(Instrument);
                         break;
                     case "Mechanical":
-                        DriveType = new MechanicalDrive(Instrument);
+                        DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

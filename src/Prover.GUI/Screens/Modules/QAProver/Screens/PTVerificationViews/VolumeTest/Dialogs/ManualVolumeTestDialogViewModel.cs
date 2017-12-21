@@ -18,9 +18,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.Volume
         {
             TestManager = testManager;
 
-            TestManager.TestStepsObservable
-                .Subscribe(ts => CurrentTestStep = ts);
-
             //var preTestCommand =
             //    DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Starting Volume test...",
             //        ShowPrePostTestStatus);

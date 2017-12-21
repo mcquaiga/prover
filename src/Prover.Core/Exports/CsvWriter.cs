@@ -92,7 +92,7 @@ namespace Prover.Core.Exports
                     if (rowFormat.Contains($"[{name}]"))
                     {
                         var value = recordType.GetProperty(property.Name)?.GetValue(record)?.ToString();
-                        if (value != null)
+                        if (!string.IsNullOrEmpty(value))
                             rowFormat = rowFormat.Replace($"[{name}]", value);
                     }
                 }

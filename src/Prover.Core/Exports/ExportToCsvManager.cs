@@ -11,12 +11,6 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
 {
-    public enum VerificationTypeEnum
-    {
-        New,
-        Reverified
-    }
-
     public interface IFileWriter
     {
         void Write();

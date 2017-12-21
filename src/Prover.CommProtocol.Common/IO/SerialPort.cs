@@ -101,22 +101,22 @@ namespace Prover.CommProtocol.Common.IO
             _serialStream.Dispose();
         }
 
-        private static List<string> _commPorts;
-        public static IObservable<string[]> PortsWatcher()
-        {
-            return Observable.Create<string[]>(observer =>
-            {
-                return Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(
-                        _ =>
-                        {
-                            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-                            if (!_commPorts.SequenceEqual(ports))
-                                observer.OnNext(ports.ToArray());
-                        });
-            });
-        }
+        //private static List<string> _commPorts;
+        //public static IObservable<string[]> PortsWatcher()
+        //{
+        //    return Observable.Create<string[]>(observer =>
+        //    {
+        //        return Observable
+        //            .Interval(TimeSpan.FromSeconds(1))
+        //            .Subscribe(
+        //                _ =>
+        //                {
+        //                    var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
+        //                    if (!_commPorts.SequenceEqual(ports))
+        //                        observer.OnNext(ports.ToArray());
+        //                });
+        //    });
+        //}
 
         public static IEnumerable<string> GetPortNames()
         {

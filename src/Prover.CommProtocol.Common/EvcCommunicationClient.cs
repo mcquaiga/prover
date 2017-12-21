@@ -120,7 +120,6 @@ namespace Prover.CommProtocol.Common
                     try
                     {
                         await ConnectToInstrument(ct, accessCode);
-                        IsConnected = true;
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -128,15 +127,19 @@ namespace Prover.CommProtocol.Common
                     }
                     catch (Exception ex)
                     {
+                        Log.Warn(ex);
+                    }
+
+                    if (!IsConnected)
+                    {
                         if (connectionAttempts < retryAttempts)
                         {
-                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}. Exception: {ex.Message}");
+                            Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
                             Thread.Sleep(ConnectionRetryDelayMs);
-
                             connectionAttempts++;
                         }
                         else
-                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} after {retryAttempts} retries. Exception {ex.Message}");
+                            throw new Exception($"{CommPort.Name} Could not connect to {InstrumentType.Name} after {retryAttempts} retries.");
                     }
                 }
             }, ct);

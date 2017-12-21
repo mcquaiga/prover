@@ -2,6 +2,8 @@
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Storage
@@ -10,11 +12,26 @@ namespace Prover.Core.Storage
     {
         public KeyValueStore(ProverContext dbContext) : base(dbContext)
         {
+            
+        }
+
+        public KeyValue GetKeyValue(string key)
+        {
+            return Query(k => k.Id == key).FirstOrDefault();
+        }
+
+        public T GetValue<T>(string key)
+        {
+            var kv = GetKeyValue(key);
+
+            if (string.IsNullOrEmpty(kv?.Value))
+                return default(T);
+
+            return JsonConvert.DeserializeObject<T>(kv.Value);
         }
 
         public override async Task<KeyValue> Upsert(KeyValue entity)
         {
-            var state = Context.Entry(entity).State;
             var existing = GetExistingKeyValue(entity);
             if (existing == null)
             {

@@ -10,6 +10,7 @@ using Prover.CommProtocol.Common.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
@@ -18,7 +19,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         private readonly IDInOutBoard _outputBoard;            
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm) : base(eventAggregator, commClient, volumeTest)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, ISettingsService settingsService) 
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
             _tachometerCommunicator = tachComm;
 
@@ -77,15 +79,10 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await _tachometerCommunicator?.ResetTach();
             }
             ResetPulseCounts(VolumeTest);
-
-            TestStep.OnNext(VolumeTestSteps.PreTest);
         }
 
         public override async Task ExecutingTest(CancellationToken ct)
         {
-            var statusFormat = $"Waiting for pulse inputs... {Environment.NewLine}" +
-                               $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
-                               $"   CorVol => {VolumeTest.CorPulseCount}";
             try
             {
                 ct.ThrowIfCancellationRequested();                
@@ -118,13 +115,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             finally
             {
                 _outputBoard?.StopMotor();
-                TestStep.OnNext(VolumeTestSteps.ExecutingTest);
             }
         }
 
         public override async Task PostTest(CancellationToken ct)
         {
-            TestStep.OnNext(VolumeTestSteps.PostTest);
             ct.ThrowIfCancellationRequested();
             Status.OnNext("Completing volume test...");
             await Task.Run(async () =>
@@ -176,6 +171,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             Log.Debug($"Applied Input: {result.Value}");
 
             VolumeTest.AppliedInput = result.Value;
-        }      
+        } 
+        
+
     }
 }
