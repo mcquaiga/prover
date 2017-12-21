@@ -314,13 +314,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dcrwebservice.xml" />
-    <None Include="Resources\success.png" />
-    <None Include="Resources\settings-light.png" />
-    <None Include="Resources\Home.png" />
-    <None Include="Resources\error_36.png" />
-    <Resource Include="Resources\cloud-upload.png" />
-    <Resource Include="Resources\clipboard-text.png" />
-    <None Include="Resources\clipboard-check.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
