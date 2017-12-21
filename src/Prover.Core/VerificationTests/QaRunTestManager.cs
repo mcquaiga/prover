@@ -29,7 +29,7 @@ namespace Prover.Core.VerificationTests
         IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, 
+        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
@@ -46,7 +46,7 @@ namespace Prover.Core.VerificationTests
         private readonly TestRunService _testRunService;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly TachometerService _tachometerService;
-        private readonly Subject<string> _testStatus = new Subject<string>();
+        private readonly ISettingsService _settingsService;
         private readonly IEnumerable<IPreTestValidation> _validators;
         private readonly IEnumerable<IPostTestAction> _postTestCommands;
 
@@ -55,6 +55,7 @@ namespace Prover.Core.VerificationTests
             TestRunService testRunService,
             IReadingStabilizer readingStabilizer,
             TachometerService tachometerService,
+            ISettingsService settingsService,
             IEnumerable<IPreTestValidation> validators = null,
             IEnumerable<IPostTestAction> postTestCommands = null)
         {
@@ -62,15 +63,19 @@ namespace Prover.Core.VerificationTests
             _testRunService = testRunService;
             _readingStabilizer = readingStabilizer;
             _tachometerService = tachometerService;
+            _settingsService = settingsService;
             _validators = validators;
             _postTestCommands = postTestCommands;
         }
 
         public VolumeTestManager VolumeTestManager { get; set; }
+
+        private readonly Subject<string> _testStatus = new Subject<string>();
         public IObservable<string> TestStatus => _testStatus.AsObservable();
+
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
+        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings, CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
         {
             if (statusObserver != null)
                 TestStatus.Subscribe(statusObserver);
@@ -84,21 +89,19 @@ namespace Prover.Core.VerificationTests
             _testStatus.OnNext("Downloading items...");
             var items = await _communicationClient.GetAllItems();
 
-            Instrument = new Instrument(instrumentType, items, client);           
+            Instrument = Instrument.Create(instrumentType, items, testSettings, client);              
 
             await RunVerifiers();
             await DisconnectFromInstrument();
 
             if (Instrument.VolumeTest.DriveType is MechanicalDrive &&
-                SettingsManager.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
+                _settingsService.SharedSettingsInstance.TestSettings.MechanicalDriveVolumeTestType ==
                 TestSettings.VolumeTestType.Manual)
-                VolumeTestManager =
-                    new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest);
+                VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _settingsService);
             else
-                VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient,
-                    Instrument.VolumeTest, _tachometerService);
+                VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _tachometerService, _settingsService);
                 
-        }
+        }       
 
         private async Task DisconnectFromInstrument()
         {
@@ -119,7 +122,7 @@ namespace Prover.Core.VerificationTests
 
             try
             {
-                if (SettingsManager.SharedSettingsInstance.TestSettings.StabilizeLiveReadings)
+                if (_settingsService.SharedSettingsInstance.TestSettings.StabilizeLiveReadings)
                 {
                     _testStatus.OnNext($"Stabilizing live readings...");
                     await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct, _testStatus);

@@ -11,7 +11,6 @@ namespace Prover.GUI.Screens.Modules.Certificates.Common
     public class VerificationViewModel : ViewModelBase
     {
         public Instrument Instrument { get; set; }
-        public int? RowNumber { get; set; }
 
         public VerificationViewModel(Instrument instrument)
         {
@@ -35,13 +34,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Common
                 .ToList();
         }
 
-        public SuperFactorInfoViewModel SuperFactor { get; protected set; }
-
-        public VerificationViewModel(Instrument instrument, int rowNumber)
-            : this(instrument)
-        {
-            RowNumber = rowNumber;
-        }
+        public SuperFactorInfoViewModel SuperFactor { get; protected set; }    
 
         public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
         public string DateTimePretty => $"{Instrument.TestDateTime:g}";

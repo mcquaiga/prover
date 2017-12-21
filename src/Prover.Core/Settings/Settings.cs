@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.Settings
 {
@@ -27,13 +29,20 @@ namespace Prover.Core.Settings
             Automatic,
             Manual
         }
-       
+
+        private List<TestPointSetting> _testPoints = new List<TestPointSetting>();
+        public List<TestPointSetting> TestPoints
+        {
+            get { return _testPoints.OrderBy(t => t.Level).ToList(); }
+            set => _testPoints = value;
+        }
+
         public bool StabilizeLiveReadings { get; set; }
         public VolumeTestType MechanicalDriveVolumeTestType { get; set; }
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
-        public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
+        
         public bool UpdateAbsolutePressure { get; set; } = true;
-        public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
+        
         public bool RunVolumeSyncTest { get; set; }
 
         public static TestSettings CreateDefault()
@@ -42,29 +51,32 @@ namespace Prover.Core.Settings
             {
                 StabilizeLiveReadings = false,
                 RunVolumeSyncTest = false,
-                MechanicalDriveVolumeTestType = TestSettings.VolumeTestType.Automatic,
-                TemperatureGaugeDefaults = new List<GaugeDefaults>
-                {
-                    new GaugeDefaults {Level = 0, Value = 32.0m},
-                    new GaugeDefaults {Level = 1, Value = 60.0m},
-                    new GaugeDefaults {Level = 2, Value = 90.0m}
-                },
-                PressureGaugeDefaults = new List<GaugeDefaults>
-                {
-                    new GaugeDefaults {Level = 0, Value = 80.0m},
-                    new GaugeDefaults {Level = 1, Value = 50.0m},
-                    new GaugeDefaults {Level = 2, Value = 20.0m}
-                },
+                MechanicalDriveVolumeTestType = VolumeTestType.Automatic,
 
                 MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
                 {
-                    new MechanicalUncorrectedTestLimit {CuFtValue = 1, UncorrectedPulses = 1000},
-                    new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 100},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 1, UncorrectedPulses = 100},
+                    new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 100, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
+                },
+
+                TestPoints = new List<TestPointSetting>()
+                {
+                    new TestPointSetting() { Level = 0, PressureGaugePercent = 80.0m, TemperatureGauge = 32, IsVolumeTest = true },
+                    new TestPointSetting() { Level = 1, PressureGaugePercent = 50.0m, TemperatureGauge = 60, IsVolumeTest = false },
+                    new TestPointSetting() { Level = 2, PressureGaugePercent = 20.0m, TemperatureGauge = 90, IsVolumeTest = false },
                 }
             };
-        }       
+        }
+
+        public class TestPointSetting
+        {
+            public int Level { get; set; }
+            public bool IsVolumeTest { get; set; } = false;
+            public decimal PressureGaugePercent { get; set; }
+            public decimal TemperatureGauge { get; set; }
+        }
     }
 
     public class LocalSettings

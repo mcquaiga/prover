@@ -23,9 +23,12 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
     public class PressureTestViewModel : TestRunViewModelBase<Core.Models.Instruments.PressureTest>,
         IHandle<AtmosphericGaugePressureUpdateMessage>
     {
+        private readonly ISettingsService _settingsService;
+
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.PressureTest testRun) : base(screenManager, eventAggregator, testRun)
+            Core.Models.Instruments.PressureTest testRun, ISettingsService settingsService) : base(screenManager, eventAggregator, testRun)
         {
+            _settingsService = settingsService;
             GaugePressure = TestRun.GasGauge;
             AtmosphericGauge = TestRun.AtmosphericGauge;
             //_gaugePressure = TestRun.GasGauge;
@@ -33,7 +36,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
             if (ShowAbsolute)
             {
-                if (SettingsManager.SharedSettingsInstance.TestSettings.UpdateAbsolutePressure)
+                if (_settingsService.SharedSettingsInstance.TestSettings.UpdateAbsolutePressure)
                 {
                     LockGaugePressure = false;
                     this.WhenAnyValue(x => x.GaugePressure, x => x.AtmosphericGauge,

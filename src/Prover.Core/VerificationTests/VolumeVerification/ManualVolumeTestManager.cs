@@ -5,12 +5,14 @@ using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class ManualVolumeTestManager : VolumeTestManager
     {
-        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest) : base(eventAggregator, commClient, volumeTest)
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService) 
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
         }
 

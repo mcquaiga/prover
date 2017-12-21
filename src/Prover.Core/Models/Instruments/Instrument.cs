@@ -28,18 +28,24 @@ namespace Prover.Core.Models.Instruments
         {
         }
 
-        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items, Client client = null)
+        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+            TestSettings testSettings, Client client = null)
         {
-            TestDateTime = DateTime.Now;
-            CertificateId = null;
-            Type = instrumentType.Id;
-            InstrumentType = instrumentType;
-            Items = items.ToList();
+            var i = new Instrument()
+            {
+                TestDateTime = DateTime.Now,
+                CertificateId = null,
+                Type = instrumentType.Id,
+                InstrumentType = instrumentType,
+                Items = itemValues.ToList(),
 
-            Client = client;
-            ClientId = client?.Id;
+                Client = client,
+                ClientId = client?.Id
+            };
 
-            CreateVerificationTests();
+            i.VerificationTests = VerificationTest.Create(i, testSettings);
+
+            return i;
         }
 
         public DateTime TestDateTime { get; set; }
@@ -97,55 +103,8 @@ namespace Prover.Core.Models.Instruments
         {
             return dateTime.ToString("HH mm ss");
         }
-        public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
-        {
-            for (var i = 0; i < 3; i++)
-            {
-                var verificationTest = new VerificationTest(i, this);
 
-                if (CompositionType == EvcCorrectorType.P)
-                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
-
-                if (CompositionType == EvcCorrectorType.T)
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
-
-                if (CompositionType == EvcCorrectorType.PTZ)
-                {
-                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
-                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
-                }
-
-                if (i == defaultVolumeTestNumber)
-                {
-                    verificationTest.VolumeTest = new VolumeTest(verificationTest);
-                    if (InstrumentType.Name == "TOC")
-                    {
-                        verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
-                    }
-                }
-
-                VerificationTests.Add(verificationTest);
-            }
-        }
-
-        public decimal GetGaugeTemp(int testNumber)
-        {
-            var result = SettingsManager.SharedSettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)?.Value;
-            return result.HasValue ? TemperatureTest.ConvertTo(result.Value, "F", this.TemperatureUnits()) : 0m;
-        }
-
-        public decimal GetGaugePressure(int testNumber)
-        {
-            var value = SettingsManager.SharedSettingsInstance.TestSettings.PressureGaugeDefaults
-                .FirstOrDefault(p => p.Level == testNumber)?.Value;
-            
-            if (value > 1)
-                value = value / 100;
-
-            var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return value * evcPressureRange ?? 0.0m;
-        }
+        
 
         #region NotMapped Properties
 

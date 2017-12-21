@@ -9,33 +9,27 @@
              FontSize="10"
              FontWeight="Light"
              Background="White"
-             Height="816" Width="1056">
-    <UserControl.Resources>
-
-    </UserControl.Resources>
-
-    <Viewbox Stretch="Uniform"
              Width="1056"
              Height="816">
+    <Viewbox Stretch="Uniform"
+             Width="1056"
+             Height="816"
+             Margin="4 8">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
-                <RowDefinition Height="665" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="120" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="65" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1040" />
-            </Grid.ColumnDefinitions>
             <Border Grid.Row="0"
                     BorderBrush="{StaticResource BorderBrushColor}"
-                    BorderThickness="0 0 0 2"
+                    BorderThickness="0 0 0 1"
+                    VerticalAlignment="Top"
                     Margin="2 5 0 2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <!--<RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />-->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
@@ -168,34 +162,6 @@
                                     Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
                                     District: London
                                 </TextBlock>
-
-                                <!--<StackPanel Margin="2 2"
-                                            HorizontalAlignment="Left"
-                                            Grid.Row="2"
-                                            Grid.Column="2">
-                                    <TextBlock FontSize="10" 
-                                               HorizontalAlignment="Right"
-                                               Text="{Binding MCRegistrationNumber}" />
-                                    <TextBlock Foreground="{StaticResource PrimaryTextColor}"
-                                               FontSize="8"
-                                               VerticalAlignment="Bottom"
-                                               HorizontalAlignment="Right"
-                                               Text="M.C. Reg. #: "/>
-                                </StackPanel>-->
-                                <!--<StackPanel Orientation="Vertical"
-                                            Margin="2 2"
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Left">
-                                    <TextBlock FontSize="10"
-                                               Text="M.C. Reg. #: ">
-                                        <TextBlock FontSize="10" 
-                                                   Text="XXXXX" />
-                                    </TextBlock>
-
-                                   
-                                </StackPanel>-->
-
-
                             </Grid>
                         </StackPanel>
                     </materialDesign:Card>
@@ -204,7 +170,7 @@
 
             <Viewbox Grid.Row="1"
                      Stretch="Uniform"
-                     VerticalAlignment="Top">
+                     VerticalAlignment="Stretch">
                 <ListBox HorizontalContentAlignment="Stretch"
                          VerticalContentAlignment="Top"
                          VerticalAlignment="Top"
@@ -213,7 +179,6 @@
                         <DataTemplate>
                             <ContentControl cal:View.Model="{Binding}"
                                             Width="Auto" />
-
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -222,7 +187,7 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                                         <Border BorderThickness="0 0 0 1"
-                                                BorderBrush="Gray">
+                                                BorderBrush="{StaticResource BorderBrushColor}">
                                             <ContentPresenter />
                                         </Border>
                                     </ControlTemplate>
@@ -234,8 +199,9 @@
             </Viewbox>
 
             <Border Grid.Row="2"
-                    BorderThickness="0 2 0 0"
+                    BorderThickness="0 1 0 0"
                     BorderBrush="{StaticResource BorderBrushColor}"
+                    VerticalAlignment="Bottom"
                     Margin="2">
                 <Grid Margin="0 2 0 0">
                     <Grid.ColumnDefinitions>
@@ -253,7 +219,7 @@
                                        HorizontalAlignment="Center"
                                        FontSize="8"
                                         VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}" />
+                                       Foreground="{StaticResource PrimaryTextColor}" />
                             <TextBlock Text="{Binding Path=Certificate.VerificationType, FallbackValue=New}"
                                        VerticalAlignment="Center"
                                        FontSize="10"
@@ -264,7 +230,7 @@
                              <TextBlock Text="Inspected" 
                                         FontSize="8"
                                         VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}"/>
+                                       Foreground="{StaticResource PrimaryTextColor}"/>
                             <TextBlock Text="{Binding Path=Certificate.InstrumentCount, FallbackValue=8}"
                                        VerticalAlignment="Center"
                                        FontSize="10"
@@ -276,7 +242,7 @@
                               HorizontalAlignment="Center">
                             <TextBlock Text="Ver'd./Vérifié" 
                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        FontSize="8"/>
                             <TextBlock Text="{Binding NumberOfTestsPassed, FallbackValue=5}"
                                        VerticalAlignment="Center"
@@ -289,7 +255,7 @@
                              <TextBlock Text="Rej'd./Rejecte" 
                                         FontSize="8"
                                         VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}"/>
+                                       Foreground="{StaticResource PrimaryTextColor}"/>
                             <TextBlock Text="{Binding NumberOfTestsFailed, FallbackValue=3}"
                                        HorizontalAlignment="Center"
                                        FontSize="10"
@@ -300,19 +266,19 @@
 
                     <Border Grid.Column="1"
                             Margin="4 2"
-                            BorderThickness="2 0"
+                            BorderThickness="1 0"
                             VerticalAlignment="Stretch"
                             BorderBrush="{StaticResource BorderBrushColor}">
                         <Grid VerticalAlignment="Stretch"
                               Margin="2 0">
                             <TextBlock Text="Comments"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        VerticalAlignment="Top"
                                        HorizontalAlignment="Left"
                                        FontSize="8" />
                             <TextBlock VerticalAlignment="Bottom"
                                        Text="L1 = P-high T-low | L2 = P-mid T-mid | L3 = P-low T-high"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        HorizontalAlignment="Center"                                       
                                        FontSize="10"/>
                         </Grid>
@@ -332,7 +298,7 @@
                                     Grid.Column="0">
                             <TextBlock Text="Tested By/Vérifié(s)"
                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        FontSize="8"/>
                             <TextBlock Text="{Binding Path=Certificate.TestedBy, FallbackValue='Adam McQuaig'}"
                                        VerticalAlignment="Center"/>
@@ -342,18 +308,18 @@
                                     Margin="2 2">
                             <TextBlock Text="Acting on behalf of Accredited Meter Verifier, C.R. Wall and Co. Inc."
                                        VerticalAlignment="Bottom"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        FontSize="7"/>
                             <TextBlock Text="Signature" 
                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        FontSize="8"/>
                         </Grid>
                         <Grid Grid.Column="2"
                                     VerticalAlignment="Stretch"
                                     Margin="2 2">
                             <TextBlock Text="Print" 
-                                       Foreground="{StaticResource SecondaryTextColor}"
+                                       Foreground="{StaticResource PrimaryTextColor}"
                                        VerticalAlignment="Top"
                                        FontSize="8"/>
                         </Grid>

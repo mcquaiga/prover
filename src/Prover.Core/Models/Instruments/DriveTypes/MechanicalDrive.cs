@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Extensions;
@@ -75,10 +76,18 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
     public class MechanicalDrive : IDriveType
     {
+        private readonly List<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits;
+
         public MechanicalDrive(Instrument instrument)
         {
             Instrument = instrument;
             Energy = new Energy(instrument);
+        }
+
+        public MechanicalDrive(Instrument instrument, List<MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
+            : this(instrument)
+        {
+            _mechanicalUncorrectedTestLimits = mechanicalUncorrectedTestLimits;         
         }
 
         public Energy Energy { get; set; }
@@ -91,10 +100,10 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
         public int MaxUncorrectedPulses()
         {
-            var uncorPulseTable = SettingsManager.SharedSettingsInstance.TestSettings.MechanicalUncorrectedTestLimits;
             var uncorUnitValue = (int) Instrument.Items.GetItem(98).NumericValue;
 
-            return uncorPulseTable.FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
+            return _mechanicalUncorrectedTestLimits?
+                       .FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)

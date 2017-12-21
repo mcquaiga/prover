@@ -33,6 +33,12 @@
                         Content="SAVE"
                         Grid.Column="1"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+                <Button HorizontalAlignment="Right"
+                        Command="{Binding PrintReportCommand}"                        
+                        Grid.Column="1"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                    <materialDesign:PackIcon Kind="Printer3d"/>
+                </Button>
             </Grid>
         </materialDesign:ColorZone>
         <Grid Margin="5"

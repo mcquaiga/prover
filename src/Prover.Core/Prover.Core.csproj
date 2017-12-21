@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="Exports\VerificationTypeEnum.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
       <DependentUpon>201711010030152_Indexes.cs</DependentUpon>

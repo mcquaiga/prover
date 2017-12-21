@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using Prover.Core.Exports;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -19,12 +20,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
 {
     public class CertificateCreatorViewModel : ViewModelBase, IDisposable
     {
-        public List<string> VerificationType => new List<string>
-        {
-            "New",
-            "Re-Verified"
-        };
-
+        public List<string> VerificationType => Enum.GetNames(typeof(VerificationTypeEnum)).ToList();
         private readonly ClientService _clientService;
         private readonly ICertificateService _certificateService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};

@@ -28,18 +28,20 @@ namespace Prover.Core.VerificationTests.VolumeVerification
     public abstract class VolumeTestManager : IDisposable
     {
         public VolumeTest VolumeTest { get; }
+        public ISettingsService SettingsService { get; }
+
         protected Logger Log = LogManager.GetCurrentClassLogger();
         protected IEventAggregator EventAggreator;
         protected readonly EvcCommunicationClient CommClient;
         protected readonly Subject<string> Status = new Subject<string>();
-        protected readonly Subject<VolumeTestSteps> TestStep = new Subject<VolumeTestSteps>();
 
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;               
 
-        protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest)
+        protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
         {
             VolumeTest = volumeTest;
+            SettingsService = settingsService;
             EventAggreator = eventAggregator;
             CommClient = commClient;
 
@@ -50,7 +52,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public IObservable<string> StatusMessage => Status.AsObservable();
-        public IObservable<VolumeTestSteps> TestStepsObservable => TestStep.AsObservable();
 
         public bool RunningTest { get; set; }
 
@@ -63,19 +64,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
                 await Task.Run(async () =>
                 {
-                    if (SettingsManager.SharedSettingsInstance.TestSettings.RunVolumeSyncTest)
+                    if (SettingsService.SharedSettingsInstance.TestSettings.RunVolumeSyncTest)
                     {
-                        TestStep.OnNext(VolumeTestSteps.RunningSyncTest);
                         await ExecuteSyncTest(ct);
                     }
-
-                    TestStep.OnNext(VolumeTestSteps.PreTest);
+            
                     await PreTest(ct);
-
-                    TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+             
                     await ExecutingTest(ct);
-
-                    TestStep.OnNext(VolumeTestSteps.PostTest);
+           
                     await PostTest(ct);
 
                     Status.OnNext("Finished volume test.");
@@ -99,7 +96,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public virtual void Dispose()
         {
-            TestStep?.Dispose();
             Status?.Dispose();
         }
 

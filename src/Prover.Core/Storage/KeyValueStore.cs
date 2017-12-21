@@ -2,6 +2,7 @@
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Threading.Tasks;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Storage
@@ -10,6 +11,7 @@ namespace Prover.Core.Storage
     {
         public KeyValueStore(ProverContext dbContext) : base(dbContext)
         {
+            
         }
 
         public override async Task<KeyValue> Upsert(KeyValue entity)

@@ -30,11 +30,13 @@ namespace Prover.Core.Services
     {
         private readonly IProverStore<Certificate> _certificateStore;
         private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly ISettingsService _settingsService;
 
-        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
+        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore, ISettingsService settingsService)
         {
             _certificateStore = certificateStore;
             _instrumentStore = instrumentStore;
+            _settingsService = settingsService;
         }
 
         public Certificate GetCertificate(long number)
@@ -67,21 +69,19 @@ namespace Prover.Core.Services
             return last + 1;
         }
 
-        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType,
-            List<Instrument> instruments)
+        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, List<Instrument> instruments)
         {
             var client = instruments.First().Client;
-
+            
             var certificate = new Certificate
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
-                Apparatus = SettingsManager.SharedSettingsInstance.CertificateSettings.MeasurementApparatus,
+                Apparatus = _settingsService.SharedSettingsInstance.CertificateSettings.MeasurementApparatus,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
-                Number =  number,
-                Instruments = new Collection<Instrument>()
+                Number =  number
             };
 
             instruments.ForEach(i =>
