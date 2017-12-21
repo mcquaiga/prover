@@ -20,7 +20,7 @@ namespace Prover.Core.Models.Instruments
         private VolumeTest() { }
 
         public static VolumeTest Create(VerificationTest verificationTest,
-            List<MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
+            TestSettings testSettings)
         {
             var volume = new VolumeTest()
             {
@@ -29,7 +29,7 @@ namespace Prover.Core.Models.Instruments
                 VerificationTestId = verificationTest.Id,
             };
 
-            volume.CreateDriveType(mechanicalUncorrectedTestLimits);
+            volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
 
             return volume;
         }
@@ -207,7 +207,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
-        private void CreateDriveType(List<MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
+        private void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {

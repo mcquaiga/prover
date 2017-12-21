@@ -233,6 +233,7 @@
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\TestRunService.cs" />
+    <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Storage\GenericRepository.cs" />
     <Compile Include="Storage\KeyValueStore.cs" />
     <Compile Include="Storage\NLogCommandInterceptor.cs" />

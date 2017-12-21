@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
         Title="{Binding Title}"
-        Icon="pack://application:,,,/../Resources/clipboard-check.png"
+        Icon="pack://application:,,,/../Resources/clipboard-check-white.ico"
         WindowState="{Binding WindowState}"
         WindowStartupLocation="CenterScreen"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"

@@ -69,10 +69,10 @@ namespace Prover.GUI.Screens.Settings
             set => this.RaiseAndSetIfChanged(ref _stabilizeLiveReadings, value);
         }
 
-        private ReactiveList<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits =
-            new ReactiveList<MechanicalUncorrectedTestLimit>();
+        private ReactiveList<TestSettings.MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits =
+            new ReactiveList<TestSettings.MechanicalUncorrectedTestLimit>();
 
-        public ReactiveList<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
+        public ReactiveList<TestSettings.MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits
         {
             get => _mechanicalUncorrectedTestLimits;
             set => this.RaiseAndSetIfChanged(ref _mechanicalUncorrectedTestLimits, value);

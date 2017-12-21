@@ -76,7 +76,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
     public class MechanicalDrive : IDriveType
     {
-        private readonly List<MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits;
+        private readonly List<TestSettings.MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits;
 
         public MechanicalDrive(Instrument instrument)
         {
@@ -84,7 +84,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
             Energy = new Energy(instrument);
         }
 
-        public MechanicalDrive(Instrument instrument, List<MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
+        public MechanicalDrive(Instrument instrument, List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
             : this(instrument)
         {
             _mechanicalUncorrectedTestLimits = mechanicalUncorrectedTestLimits;         

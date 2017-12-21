@@ -38,20 +38,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvExporter
 
             ExportCommand.ThrownExceptions
                 .Subscribe(ex => { MessageBox.Show(ex.Message); });
-
-            GetCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(
-                client => certificateService.GetAllCertificates(client).ToObservable());
-            GetCertificatesCommand
-                .Subscribe(c => ClientCertificates.Add(c));
-
-            FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
-            ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);
-
-            this.WhenAnyValue(x => x.Client)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(c => { ClientCertificates.Clear(); })
-                .Where(c => c != null)
-                .InvokeCommand(GetCertificatesCommand);
+         
         }
 
         private static string GetExportDirectory()
@@ -78,12 +65,8 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvExporter
             set => this.RaiseAndSetIfChanged(ref _client, value);
         }
 
-        //private readonly ObservableAsPropertyHelper<ReactiveList<Certificate>> _clientCertificates;
-        //public ReactiveList<Certificate> ClientCertificates => _clientCertificates.Value;
-        private ReactiveList<Certificate> _clientCertificates =
-            new ReactiveList<Certificate> {ChangeTrackingEnabled = true};
-
-        public ReactiveList<Certificate> ClientCertificates
+        private IReactiveDerivedList<Certificate> _clientCertificates;
+        public IReactiveDerivedList<Certificate> ClientCertificates
         {
             get => _clientCertificates;
             set => this.RaiseAndSetIfChanged(ref _clientCertificates, value);
@@ -129,6 +112,14 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvExporter
         public ReactiveCommand<Client, Certificate> GetCertificatesCommand { get; set; }
 
         #endregion
+
+        public void SetClientCertificatesList(IReactiveDerivedList<Certificate> certificatesList)
+        {
+            ClientCertificates = certificatesList;
+
+            FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
+            ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);
+        }
 
         public dynamic WindowSettings
         {

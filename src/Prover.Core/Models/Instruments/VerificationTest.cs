@@ -47,7 +47,7 @@ namespace Prover.Core.Models.Instruments
 
                 if (vt.IsVolumeTest)
                 {
-                    verificationTest.VolumeTest = VolumeTest.Create(verificationTest, testSettings.MechanicalUncorrectedTestLimits);
+                    verificationTest.VolumeTest = VolumeTest.Create(verificationTest, testSettings);
 
                     if (instrument.InstrumentType.Name == "TOC")
                     {

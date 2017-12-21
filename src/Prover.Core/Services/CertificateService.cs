@@ -19,9 +19,11 @@ namespace Prover.Core.Services
         IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
 
         long GetNextCertificateNumber();
-        Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, List<Instrument> instruments);
-        IEnumerable<Certificate> GetAllCertificates(Client client);
-        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, CertificateSettings.MeasurementApparatus measurementApparatus, List<Instrument> instruments);
+
+        IEnumerable<Certificate> GetAllCertificates();
+        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber = 0, long toNumber = 0);
+
         IEnumerable<long> GetCertificateNumbers(Client client);
         IEnumerable<string> GetDistinctTestedBy();
     }
@@ -69,15 +71,14 @@ namespace Prover.Core.Services
             return last + 1;
         }
 
-        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, List<Instrument> instruments)
+        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, CertificateSettings.MeasurementApparatus measurementApparatus, List<Instrument> instruments)
         {
             var client = instruments.First().Client;
-            
             var certificate = new Certificate
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
-                Apparatus = _settingsService.Shared.CertificateSettings.MeasurementApparatus,
+                Apparatus = measurementApparatus.SerialNumbers,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
@@ -102,15 +103,19 @@ namespace Prover.Core.Services
                 .Select(c => c.Number);
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client)
+        public IEnumerable<Certificate> GetAllCertificates()
         {
-            return GetAllCertificates(client, 0, 0);
+            return _certificateStore.GetAll().ToList();
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber)
+        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber = 0, long toNumber = 0)
         {
-            return _certificateStore.Query(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
-                         && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
+            if (client == null)
+                return GetAllCertificates();
+
+            return _certificateStore.Query(c => c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id
+                                                && (fromNumber == 0 || c.Number >= fromNumber) 
+                                                && (toNumber == 0 || c.Number <= toNumber))
                 .OrderBy(i => i.Number);
         }
 

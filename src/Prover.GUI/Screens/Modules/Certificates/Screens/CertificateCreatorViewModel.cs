@@ -12,6 +12,7 @@ using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
+using Prover.Core.Settings;
 using Prover.GUI.Screens.Modules.Certificates.Reports;
 using Prover.GUI.Screens.Modules.ClientManager.Screens.CsvExporter;
 using ReactiveUI;
@@ -23,16 +24,19 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
         public List<string> VerificationType => Enum.GetNames(typeof(VerificationTypeEnum)).ToList();
         private readonly ClientService _clientService;
         private readonly ICertificateService _certificateService;
+        private readonly ISettingsService _settingsService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             ClientService clientService, ICertificateService certificateService,
-            ExportToCsvViewModel exportToCsvViewModel)
+            ExportToCsvViewModel exportToCsvViewModel, ISettingsService settingsService)
             : base(screenManager, eventAggregator)
         {
             ExportToCsvViewModel = exportToCsvViewModel;
+            
             _clientService = clientService;
             _certificateService = certificateService;
+            _settingsService = settingsService;
 
             LoadInstrumentsCommand = ReactiveCommand.CreateFromObservable<Client, Instrument>(
                 client =>
@@ -113,15 +117,23 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
             FetchNextCertificateNumberCommand.ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
 
-            FetchExistingClientCertificatesCommand = ReactiveCommand.CreateFromObservable<Client, Certificate>(client =>
-                _certificateService.GetAllCertificates(client)
+            Certificates = new ReactiveList<Certificate>() { ChangeTrackingEnabled = true };
+            FetchExistingCertificatesCommand = ReactiveCommand.CreateFromObservable<Certificate>(() =>
+                _certificateService.GetAllCertificates()
                     .ToObservable()
                     .DefaultIfEmpty(null));
-            FetchExistingClientCertificatesCommand.ThrownExceptions
+            FetchExistingCertificatesCommand.ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
-            FetchExistingClientCertificatesCommand
+            FetchExistingCertificatesCommand
                 .Where(x => x != null)
-                .Subscribe(x => ExistingClientCertificates.Add(x));
+                .Subscribe(x => Certificates.Add(x));
+
+            ExistingClientCertificates = Certificates.CreateDerivedCollection(
+                c => c,
+                c => SelectedClient != null && c.ClientId == SelectedClient.Id,
+                (x, y) => x.Number.CompareTo(y.Number));
+
+            ExportToCsvViewModel.SetClientCertificatesList(ExistingClientCertificates);
 
             var canExecutePrintCommand = this.WhenAnyValue(x => x.SelectedExistingClientCertificate)
                 .Select(c => c != null);
@@ -132,7 +144,6 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
                 .Do(c =>
                 {
                     RootResults.Clear();
-                    ExistingClientCertificates.Clear();
                 })
                 .Where(c => c != null);
 
@@ -141,9 +152,18 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
                 .Delay(TimeSpan.FromMilliseconds(50))
                 .Subscribe(client =>
                 {
-                    LoadInstrumentsCommand.Execute(client).Wait();
-                    FetchExistingClientCertificatesCommand.Execute(client).Wait();
-                    ExportToCsvViewModel.Client = client;
+                    LoadInstrumentsCommand.Execute(client).Wait();                      
+                });
+
+            selectedClientChange                    
+                .Subscribe(client =>
+                {
+                    ExistingClientCertificates = Certificates.CreateDerivedCollection(
+                        c => c,
+                        c => client != null && c.ClientId == client.Id,
+                        (x, y) => x.Number.CompareTo(y.Number));
+
+                    ExportToCsvViewModel.SetClientCertificatesList(ExistingClientCertificates);
                 });
 
             GetTestedByCommand =
@@ -156,12 +176,15 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
                 .ThrownExceptions
                 .Subscribe(ex => Log.Error(ex));
 
-            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType,
-                x => x.SelectedClient,
-                (testedBy, vt, client) => !string.IsNullOrEmpty(SelectedTestedBy) &&
-                                          !string.IsNullOrEmpty(SelectedVerificationType) && client != null &&
+            var canCreateCertificate = this.WhenAnyValue(x => x.TestedBy, x => x.SelectedVerificationType, x => x.SelectedClient, x => x.SelectedMeasurementApparatus,
+                (testedBy, vt, client, measurement) => !string.IsNullOrEmpty(SelectedTestedBy) &&
+                                          !string.IsNullOrEmpty(SelectedVerificationType) && 
+                                          SelectedMeasurementApparatus != null &&
+                                          client != null &&
                                           client.Id != Guid.Empty);
             CreateCertificateCommand = ReactiveCommand.CreateFromTask(CreateCertificate, canCreateCertificate);
+
+            MeasurementApparatuses = _settingsService.Shared.CertificateSettings.MeasurementApparatuses;
         }
 
         #region Commands 
@@ -170,7 +193,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
         public ReactiveCommand<Certificate, Unit> PrintExistingCertificateCommand { get; set; }
         public ReactiveCommand<Unit, long> FetchNextCertificateNumberCommand { get; set; }
         public ReactiveCommand<Unit, Client> LoadClientsCommand { get; protected set; }
-        public ReactiveCommand<Client, Certificate> FetchExistingClientCertificatesCommand { get; set; }
+        public ReactiveCommand<Unit, Certificate> FetchExistingCertificatesCommand { get; set; }
         public ReactiveCommand CreateCertificateCommand { get; set; }
         public ReactiveCommand<Unit, string> GetTestedByCommand { get; set; }
 
@@ -234,26 +257,28 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
             set => this.RaiseAndSetIfChanged(ref _blankStateText, value);
         }
 
-        //private readonly ObservableAsPropertyHelper<long> _nextCertificateNumber;
-        //public long NextCertificateNumber => _nextCertificateNumber.Value;
         private long _nextCertificateNumber;
-
         public long NextCertificateNumber
         {
             get => _nextCertificateNumber;
             set => this.RaiseAndSetIfChanged(ref _nextCertificateNumber, value);
         }
 
-        private ReactiveList<Certificate> _existingClientCertificates = new ReactiveList<Certificate>();
+        private ReactiveList<Certificate> _certificates;
+        public ReactiveList<Certificate> Certificates
+        {
+            get => _certificates;
+            set => this.RaiseAndSetIfChanged(ref _certificates, value);
+        }
 
-        public ReactiveList<Certificate> ExistingClientCertificates
+        private IReactiveDerivedList<Certificate> _existingClientCertificates;
+        public IReactiveDerivedList<Certificate> ExistingClientCertificates
         {
             get => _existingClientCertificates;
             set => this.RaiseAndSetIfChanged(ref _existingClientCertificates, value);
         }
 
         private Certificate _selectedExistingClientCertificate;
-
         public Certificate SelectedExistingClientCertificate
         {
             get => _selectedExistingClientCertificate;
@@ -282,6 +307,20 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
         {
             get => _testedBy;
             set => this.RaiseAndSetIfChanged(ref _testedBy, value);
+        }
+
+        private List<CertificateSettings.MeasurementApparatus> _measurementApparatus;
+        public List<CertificateSettings.MeasurementApparatus> MeasurementApparatuses
+        {
+            get => _measurementApparatus;
+            set => this.RaiseAndSetIfChanged(ref _measurementApparatus, value);
+        }
+
+        private CertificateSettings.MeasurementApparatus _selectedMeasurementApparatus;
+        public CertificateSettings.MeasurementApparatus SelectedMeasurementApparatus
+        {
+            get => _selectedMeasurementApparatus;
+            set => this.RaiseAndSetIfChanged(ref _selectedMeasurementApparatus, value);
         }
 
         private ReactiveList<Client> _clients =
@@ -350,11 +389,12 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
                 NextCertificateNumber,
                 SelectedTestedBy,
                 SelectedVerificationType,
+                SelectedMeasurementApparatus,
                 instruments);
 
             CertificateGenerator.GenerateXps(certificate);
-
-            await FetchNextCertificateNumberCommand.Execute();
+            Certificates.Add(certificate);
+            NextCertificateNumber++;
             RootResults.RemoveAll(items);
         }
 

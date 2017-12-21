@@ -214,17 +214,31 @@
                                   HorizontalAlignment="Stretch"
                                   materialDesign:HintAssist.Hint="Tested By"
                                   Margin="2" />
+
                         <materialDesign:PackIcon Grid.Row="2"
                                                  Grid.Column="0"
                                                  Kind="Verified"
                                                  Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
-
                         <ComboBox x:Name="VerificationType"
                                   Grid.Row="2"
                                   Grid.Column="1"
                                   HorizontalAlignment="Stretch"
                                   Style="{StaticResource MaterialDesignComboBox}"
                                   materialDesign:HintAssist.Hint="Inspection Type"
+                                  Margin="2" />
+
+                        <materialDesign:PackIcon Grid.Row="3"
+                                                 Grid.Column="0"
+                                                 Kind="Verified"
+                                                 Foreground="{Binding ElementName=VerificationType, Path=BorderBrush}" />
+                        <ComboBox ItemsSource="{Binding MeasurementApparatuses}"
+                                  SelectedItem="{Binding SelectedMeasurementApparatus}"
+                                  DisplayMemberPath="Description"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  HorizontalAlignment="Stretch"
+                                  Style="{StaticResource MaterialDesignComboBox}"
+                                  materialDesign:HintAssist.Hint="Measurement Apparatuses"
                                   Margin="2" />
 
                         <Button Command="{Binding CreateCertificateCommand}"

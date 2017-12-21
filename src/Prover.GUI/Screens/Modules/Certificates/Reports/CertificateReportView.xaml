@@ -7,24 +7,22 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              FontSize="10"
-             FontWeight="Light"
-             Background="White"
-             Width="1056"
-             Height="816">
+             Height="816" Width="1056">
     <Viewbox Stretch="Uniform"
              Width="1056"
-             Height="816"
-             Margin="4 8">
+             Height="816">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="120" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="65" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="665" />
+                <RowDefinition Height="50" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1040" />
+            </Grid.ColumnDefinitions>
             <Border Grid.Row="0"
                     BorderBrush="{StaticResource BorderBrushColor}"
                     BorderThickness="0 0 0 1"
-                    VerticalAlignment="Top"
                     Margin="2 5 0 2">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -41,17 +39,21 @@
                                          materialDesign:ShadowAssist.ShadowDepth="Depth0">
                         <StackPanel Orientation="Vertical"
                                     Margin="2">
-                            <materialDesign:ColorZone Background="{StaticResource BorderBrushColor}"
-                                                      Padding="2">
-                                <TextBlock FontSize="10">Owner</TextBlock>
-                            </materialDesign:ColorZone>
+                            <Border Background="{StaticResource BorderBrushColor}"
+                                    Padding="2">
+                                <TextBlock FontSize="10"
+                                           Text="Owner"/>
+                            </Border>
                             <TextBlock Text="{Binding Client.Name}"
                                        FontWeight="DemiBold"
-                                       FontSize="10" />
+                                       FontSize="10" 
+                                       Margin="2 0"/>
                             <TextBlock Text="{Binding Client.Address}"
                                        TextWrapping="WrapWithOverflow"
-                                       FontSize="10" />
-                            <TextBlock Text="Contractors Reg. #: ">
+                                       FontSize="10" 
+                                       Margin="2 0"/>
+                            <TextBlock Text="Contractors Reg. #: "
+                                       Margin="2 0">
                                 <TextBlock Text="{Binding Client.RegistrationNumber}"
                                            TextWrapping="WrapWithOverflow"
                                            FontSize="10" />
@@ -124,7 +126,7 @@
                             <TextBlock Text="Measuring apparatus (Std) no. - Nº des appareils (étalon)"
                                        VerticalAlignment="Bottom"
                                        HorizontalAlignment="Center"
-                                       Foreground="{StaticResource PrimaryTextColor}"
+                                       Foreground="{StaticResource SecondaryTextColor}"
                                        FontSize="8"/>
 
                         </StackPanel>
@@ -136,10 +138,11 @@
                                          Grid.Row="0">
                         <StackPanel Orientation="Vertical"
                                     Margin="2">
-                            <materialDesign:ColorZone Background="{StaticResource BorderBrushColor}"
-                                                      Padding="2">
-                                <TextBlock FontSize="10">Accredited Meter Verifier</TextBlock>
-                            </materialDesign:ColorZone>
+                            <Border Background="{StaticResource BorderBrushColor}"
+                                    Padding="2">
+                                <TextBlock FontSize="10"
+                                           Text="Accredited Meter Verifier"/>
+                            </Border>
 
                             <Grid HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
@@ -151,8 +154,7 @@
                                        VerticalAlignment="Center"
                                        Source="Resources/crwall_logo.jpg" />
                                 <TextBlock Margin="4 2"
-                                           Grid.Column="1"
-                                           >
+                                           Grid.Column="1">
                                     <TextBlock FontWeight="DemiBold">
                                         C.R. Wall and Co. Inc.
                                     </TextBlock><LineBreak />
@@ -162,6 +164,9 @@
                                     Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
                                     District: London
                                 </TextBlock>
+
+
+
                             </Grid>
                         </StackPanel>
                     </materialDesign:Card>
@@ -170,7 +175,7 @@
 
             <Viewbox Grid.Row="1"
                      Stretch="Uniform"
-                     VerticalAlignment="Stretch">
+                     VerticalAlignment="Top">
                 <ListBox HorizontalContentAlignment="Stretch"
                          VerticalContentAlignment="Top"
                          VerticalAlignment="Top"
@@ -179,6 +184,7 @@
                         <DataTemplate>
                             <ContentControl cal:View.Model="{Binding}"
                                             Width="Auto" />
+
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -201,7 +207,6 @@
             <Border Grid.Row="2"
                     BorderThickness="0 1 0 0"
                     BorderBrush="{StaticResource BorderBrushColor}"
-                    VerticalAlignment="Bottom"
                     Margin="2">
                 <Grid Margin="0 2 0 0">
                     <Grid.ColumnDefinitions>
@@ -278,7 +283,7 @@
                                        FontSize="8" />
                             <TextBlock VerticalAlignment="Bottom"
                                        Text="L1 = P-high T-low | L2 = P-mid T-mid | L3 = P-low T-high"
-                                       Foreground="{StaticResource PrimaryTextColor}"
+                                       Foreground="{StaticResource SecondaryTextColor}"
                                        HorizontalAlignment="Center"                                       
                                        FontSize="10"/>
                         </Grid>
