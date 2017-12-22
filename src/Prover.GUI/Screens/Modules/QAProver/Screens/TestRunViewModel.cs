@@ -350,6 +350,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
         private ICommPort GetCommPort()
         {
+           if (UseIrDaPort)
+               return new IrDAPort();
+
             return new SerialPort(_settingsService.Local.InstrumentCommPort, _settingsService.Local.InstrumentBaudRate);
         }
 

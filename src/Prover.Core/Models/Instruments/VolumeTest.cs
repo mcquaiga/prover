@@ -219,7 +219,7 @@ namespace Prover.Core.Models.Instruments
                     DriveTypeDiscriminator = "Rotary";                
             }
 
-            if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
+            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
             { 
                 switch (DriveTypeDiscriminator)
                 {
