@@ -22,17 +22,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             _settingsService = settingsService;
-            RunTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
+            RunTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
         }
 
         public IQaRunTestManager QaRunTestManager;
 
-        public ColorZoneMode HeaderZoneColor
-            => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
+        public ColorZoneMode HeaderZoneColor => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
 
-        public Brush HeaderColour
-            => VerificationTest.TestNumber == 0
+        public Brush HeaderColour => VerificationTest.TestNumber == 0
                 ? new SolidColorBrush(Colors.DarkRed)
                 : new SolidColorBrush(Colors.Orange);
 

@@ -377,13 +377,13 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
         public override void Dispose()
         {
-            foreach (var testView in TestViews)
-            {
-                testView.Dispose();
-                testView.TryClose();
-            }
-            SiteInformationItem = null;
-            _qaRunTestManager?.Dispose();
+            //foreach (var testView in TestViews)
+            //{
+            //    testView.Dispose();
+            //    testView.TryClose();
+            //}
+            //SiteInformationItem = null;
+            //_qaRunTestManager?.Dispose();
         }
 
         public override void CanClose(Action<bool> callback)
