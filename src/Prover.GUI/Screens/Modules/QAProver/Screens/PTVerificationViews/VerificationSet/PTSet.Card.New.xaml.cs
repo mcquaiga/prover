@@ -6,7 +6,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.Verifi
     /// <summary>
     ///     Interaction logic for PTVerificationSet.xaml
     /// </summary>
-    public partial class CardNew : UserControl, IViewFor<VerificationSetViewModel>
+    public partial class CardNew : IViewFor<VerificationSetViewModel>
     {
         public CardNew()
         {
