@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +33,9 @@ namespace Prover.GUI
             try
             {
                 _log.Info("Starting EVC Prover Application...");
+
                 _splashScreen.Show();
+
                 Initialize();
 
                 Task.Run(async () =>
@@ -146,8 +148,7 @@ namespace Prover.GUI
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            
-            SettingsManager.SaveLocalSettings();
+            Container.Resolve<ISettingsService>().SaveLocalSettings();
             base.OnExit(sender, e);
         }
     }

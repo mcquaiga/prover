@@ -10,7 +10,6 @@ namespace Prover.Core.Models.Certificates
 {
     public class Certificate : EntityWithId
     {
-
         public DateTime CreatedDateTime { get; set; }
 
         public string VerificationType { get; set; }
@@ -26,7 +25,7 @@ namespace Prover.Core.Models.Certificates
 
         public long Number { get; set; }
 
-        public virtual ICollection<Instrument> Instruments { get; set; }
+        public virtual ICollection<Instrument> Instruments { get; set; } = new List<Instrument>();
 
         [NotMapped]
         public string SealExpirationDate

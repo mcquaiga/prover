@@ -37,6 +37,7 @@
             <converters:BooleanToPassConverter x:Key="BoolToYesNoConverter"
                                                TrueValue="Yes"
                                                FalseValue="No"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
             <SolidColorBrush x:Key="PrimaryTextColor"
                              Opacity=".87" 

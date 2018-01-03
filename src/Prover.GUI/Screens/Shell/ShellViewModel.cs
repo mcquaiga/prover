@@ -16,27 +16,27 @@ using ReactiveUI;
 
 namespace Prover.GUI.Screens.Shell
 {
-    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive,
-        IHandle<ScreenChangeEvent>, 
-        IHandle<NotificationEvent>,
-        IHandle<DialogDisplayEvent>, IDisposable
+    public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, IDisposable,
+        IHandle<ScreenChangeEvent>, IHandle<NotificationEvent>, IHandle<DialogDisplayEvent>
     {
+        private readonly ISettingsService _settingsService;
         public IEnumerable<INavigationItem> NavigationItems { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
         public string Title => $"EVC Prover - v{GetVersionNumber()}";
 
         public ShellViewModel(IEventAggregator eventAggregator,
-            IEnumerable<INavigationItem> navigationItems, IEnumerable<IToolbarItem> toolBarItems)
+            IEnumerable<INavigationItem> navigationItems, IEnumerable<IToolbarItem> toolBarItems, ISettingsService settingsService)
         {
+            _settingsService = settingsService;
             eventAggregator.Subscribe(this);
             ToolbarItems = toolBarItems;
 
             NavigationItems = navigationItems.ToList().OrderByDescending(item => item.IsHome);
             GoHomeCommand = NavigationItems.First().NavigationCommand;
 
-            WindowWidth = SettingsManager.LocalSettingsInstance.WindowWidth;
-            WindowHeight = SettingsManager.LocalSettingsInstance.WindowHeight;
-            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), SettingsManager.LocalSettingsInstance.WindowState);
+            WindowWidth = _settingsService.Local.WindowWidth;
+            WindowHeight = _settingsService.Local.WindowHeight;
+            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), _settingsService.Local.WindowState);
 
             this.WhenAnyValue(x => x.ShowNotificationSnackbar);                
 
@@ -69,7 +69,7 @@ namespace Prover.GUI.Screens.Shell
 
         #region Properties        
 
-        public LocalSettings LocalSettings => SettingsManager.LocalSettingsInstance;
+        public LocalSettings LocalSettings => _settingsService.Local;
 
         private IDialogViewModel _dialogViewModel;
         public IDialogViewModel DialogViewModel
@@ -121,9 +121,9 @@ namespace Prover.GUI.Screens.Shell
 
         protected override void OnDeactivate(bool close)
         {
-            SettingsManager.LocalSettingsInstance.WindowHeight = WindowHeight;
-            SettingsManager.LocalSettingsInstance.WindowWidth = WindowWidth;
-            SettingsManager.LocalSettingsInstance.WindowState = WindowState.ToString();
+            _settingsService.Local.WindowHeight = WindowHeight;
+            _settingsService.Local.WindowWidth = WindowWidth;
+            _settingsService.Local.WindowState = WindowState.ToString();
             (ActiveItem as IDisposable)?.Dispose();
 
             base.OnDeactivate(close);

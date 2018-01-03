@@ -6,36 +6,56 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <DataTemplate x:Key="TestTemplate">
-            <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
-        </DataTemplate>
-    </UserControl.Resources>
-    <ScrollViewer VerticalAlignment="Stretch" 
-                  HorizontalAlignment="Stretch"
-                  VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto">
-        <StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <ContentControl Margin="2" cal:View.Model="{Binding SiteInformationItem}"
-                                cal:View.Context="SiteInfoCard" />
-                <!--<ContentControl Margin="2"
-                                cal:View.Model="{Binding EventLogCommPortItem}"
-                                cal:View.Context="EventLogCommPortCard" />-->
-            </StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <ItemsControl HorizontalAlignment="Center"
-                          ItemTemplate="{StaticResource ResourceKey=TestTemplate}"
-                          ItemsSource="{Binding TestViews}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </StackPanel>
-           
-    </ScrollViewer>
+        <ContentControl Margin="2"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        cal:View.Model="{Binding SiteInformationItem}"
+                        cal:View.Context="SiteInfoCard" />
+        <ScrollViewer Grid.Row="0"
+                      Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ItemsControl Grid.Row="0"
+                              ItemsSource="{Binding TestViews}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+
+                <!-- Column 2 - Volume Verification -->
+                <ContentControl cal:View.Model="{Binding VolumeTestView}"
+                                cal:View.Context="Card"
+                                Grid.Row="1"
+                                Margin="2" />
+            </Grid>
+
+        </ScrollViewer>
+    </Grid>
 
 
 </UserControl>

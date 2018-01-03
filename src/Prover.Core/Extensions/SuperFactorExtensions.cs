@@ -25,10 +25,5 @@ namespace Prover.Core.Extensions
         {
             return instrument.Items.GetItem(N2_NUMBER).NumericValue;
         }
-
-        public static SuperFactorTable SuperTable(this Instrument instrument)
-        {
-            return (SuperFactorTable) instrument.Items.GetItem(SUPER_TABLE_NUMBER).NumericValue;
-        }
     }
 }

@@ -43,10 +43,9 @@
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto">
             <TabControl Margin="5">
-                <TabItem Header="Test Configuration">
+                <TabItem Header="Certificates">
                     <TabItem.Content>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="16">
+                        <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
                                 <TextBlock Text="M.C. Registration #" 
@@ -55,10 +54,21 @@
                             </StackPanel>
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
-                                <TextBlock Text="Measurement Apparatus" 
+                                <TextBlock Text="Measurement Apparatuses" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                <TextBox Text="{Binding SharedSettings.CertificateSettings.MeasurementApparatus}" />
+                                <DataGrid Margin="5"
+                                          ItemsSource="{Binding SharedSettings.CertificateSettings.MeasurementApparatuses, NotifyOnSourceUpdated=True}"
+                                          CanUserSortColumns="True"
+                                          CanUserAddRows="True"
+                                          CanUserDeleteRows="True" />
                             </StackPanel>
+                        </StackPanel>
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Test Configuration">
+                    <TabItem.Content>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="16">
 
                             <CheckBox IsChecked="{Binding SharedSettings.TestSettings.StabilizeLiveReadings}"
                                       Content="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
@@ -69,6 +79,12 @@
                                       Content="Update absolute pressure value for absolute transducers. Updates gauge value based on the atmospheric and absolute instead."
                                       Style="{StaticResource MaterialDesignCheckBox}"
                                       Margin="0 8" />
+
+                            <DataGrid Margin="5"
+                                      ItemsSource="{Binding SharedSettings.TestSettings.TestPoints, NotifyOnSourceUpdated=True}"
+                                      CanUserSortColumns="True"
+                                      CanUserAddRows="True"
+                                      CanUserDeleteRows="True" />
 
                             <WrapPanel>
                                 <materialDesign:Card Margin="8">

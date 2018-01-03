@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using InTheHand.Net;
 using InTheHand.Net.Sockets;
+using PubSub;
 
 namespace Prover.CommProtocol.Common.IO
 {
@@ -40,6 +41,9 @@ namespace Prover.CommProtocol.Common.IO
             _client = new IrDAClient();
             _client.Client.SetSocketOption(
                 IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+            
+            _dataReceivedConnectableObservable = new Subject<char>().Publish();
+            DataReceivedObservable.Connect();
 
             DataSentObservable = new Subject<string>();
         }

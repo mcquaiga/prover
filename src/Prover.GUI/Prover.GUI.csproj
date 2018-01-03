@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -30,7 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,7 +57,7 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>clipbooard_check_white_qeW_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -303,6 +303,9 @@
     <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\PressureTest\PressureTest.Card.New.xaml.cs">
       <DependentUpon>PressureTest.Card.New.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.New.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.New.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\RotaryMeterTest\RotaryMeterTest.Card.New.xaml.cs">
       <DependentUpon>RotaryMeterTest.Card.New.xaml</DependentUpon>
     </Compile>
@@ -341,6 +344,10 @@
     </Compile>
     <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VerificationSet\PTSet.Card.New.xaml.cs">
       <DependentUpon>PTSet.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTestViewModel.cs" />
+    <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml.cs">
       <DependentUpon>Volume.Card.New.xaml</DependentUpon>
@@ -507,6 +514,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.New.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Screens\Modules\ClientManager\Screens\CsvExporter\ExportToCsvView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -571,6 +582,10 @@
     <Page Include="Screens\Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Modules\Certificates\Common\VerificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -707,35 +722,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="Resources\chemistry_4C5_icon.ico" />
-    <Content Include="Resources\science.svg" />
-    <Resource Include="Resources\chemistry.png" />
-    <Resource Include="Resources\clipboard-check.ico" />
-    <Resource Include="Resources\clipbooard-check-white.png" />
-    <Resource Include="Resources\app-icon-dark.ico" />
-    <Resource Include="Resources\app-icon-light.ico" />
-    <Resource Include="Resources\group.png" />
-    <Resource Include="Resources\certificate.png" />
-    <Resource Include="Resources\ic_info_black_48dp_1x.png" />
     <Resource Include="Screens\Modules\QAProver\Screens\Designer\sample_instrument.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\clipboard-error.png" />
-    <Resource Include="Resources\success.png" />
-    <Resource Include="Resources\error_36.png" />
-    <Resource Include="Resources\cloud-upload.png" />
-    <Resource Include="Resources\clipboard-text.png" />
-    <Resource Include="Resources\settings-light.png" />
     <Resource Include="settings-light.png" />
-    <Resource Include="Resources\Home.png" />
-    <Resource Include="Resources\clipboard-check.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Resource Include="clipboard-check.ico" />
-    <Resource Include="clipbooard_check_white_qeW_icon.ico" />
+    <Resource Include="Resources\clipboard-check-white.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\clipboard-check-blue.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Screens\Modules\Certificates\Reports\Resources\crwall_logo.jpg" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

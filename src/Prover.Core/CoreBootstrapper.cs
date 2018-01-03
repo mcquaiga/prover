@@ -4,6 +4,7 @@ using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
@@ -26,49 +27,44 @@ namespace Prover.Core
 
         public static void RegisterServices(ContainerBuilder builder)
         {
-            SettingsManager.RefreshSettings().Wait();
-
             SetupDatabase(builder);
 
             RegisterCommunications(builder);
 
-            builder.RegisterBuildCallback(container =>
+            builder.RegisterBuildCallback(async container =>
             {
-                SettingsManager.Initialize(container.Resolve<KeyValueStore>());
-                SettingsManager.RefreshSettings().Wait();
+                await ItemHelpers.LoadInstrumentTypes();
             });
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
         {
             //EVC Communcation
-            Task.Run(ItemHelpers.LoadInstrumentTypes);
-
-            builder.Register(c => new SerialPort(SettingsManager.LocalSettingsInstance.InstrumentCommPort, SettingsManager.LocalSettingsInstance.InstrumentBaudRate))
+            builder.Register(c =>
+                {
+                    var ss = c.Resolve<ISettingsService>();
+                    return new SerialPort(ss.Local.InstrumentCommPort, ss.Local.InstrumentBaudRate);
+                })
                 .Named<ICommPort>("SerialPort");
 
             builder.Register(c => new IrDAPort())
                 .Named<ICommPort>("IrDAPort");
 
-            builder.Register(c =>
-            {
-                var instrument = HoneywellInstrumentTypes.GetByName(SettingsManager.LocalSettingsInstance.LastInstrumentTypeUsed);
-
-                return SettingsManager.LocalSettingsInstance.InstrumentUseIrDaPort
-                    ? new HoneywellClient(c.ResolveNamed<ICommPort>("IrDAPort"), instrument)
-                    : new HoneywellClient(c.ResolveNamed<ICommPort>("SerialPort"), instrument);
-            }).As<EvcCommunicationClient>();
-
             //QA Test Runs
-            builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
-            builder.Register(c => new TachometerService(SettingsManager.LocalSettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
+                .Named<IDInOutBoard>("TachDaqBoard");
+
+            builder.Register(c => new TachometerService(c.Resolve<ISettingsService>().Local.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();
             builder.RegisterType<ManualVolumeTestManager>();
 
-            builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
-            builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
+            builder.RegisterType<AverageReadingStabilizer>()
+                .As<IReadingStabilizer>();
+
+            builder.RegisterType<QaRunTestManager>()
+                .As<IQaRunTestManager>();
         }
 
         private static void SetupDatabase(ContainerBuilder builder)
@@ -83,6 +79,11 @@ namespace Prover.Core
             builder.Register(c => new KeyValueStore(c.Resolve<ProverContext>()))
                 .As<KeyValueStore>()
                 .InstancePerDependency();
+          
+            builder.RegisterType<SettingsService>()
+                .AsImplementedInterfaces()
+                .SingleInstance()
+                .AutoActivate();
 
             builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
                 .InstancePerDependency();

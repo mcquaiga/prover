@@ -8,6 +8,7 @@ using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments.DriveTypes;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
@@ -16,17 +17,21 @@ namespace Prover.Core.Models.Instruments
     {
         private string _testInstrumentData;
 
-        public VolumeTest()
-        {
-        }
+        private VolumeTest() { }
 
-        public VolumeTest(VerificationTest verificationTest)
+        public static VolumeTest Create(VerificationTest verificationTest,
+            TestSettings testSettings)
         {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = VerificationTest.Id;
+            var volume = new VolumeTest()
+            {
+                Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
+                VerificationTest = verificationTest,
+                VerificationTestId = verificationTest.Id,
+            };
 
-            CreateDriveType();
+            volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
+
+            return volume;
         }
 
         public int PulseACount { get; set; }
@@ -35,6 +40,8 @@ namespace Prover.Core.Models.Instruments
 
         public IDriveType DriveType { get; set; }
 
+        [NotMapped]
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
         public string TestInstrumentData
         {
             get => AfterTestItems.Serialize();
@@ -42,9 +49,6 @@ namespace Prover.Core.Models.Instruments
         }
 
         public Instrument Instrument => VerificationTest.Instrument;
-
-        [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
 
         [NotMapped]
         public decimal? UnCorrectedPercentError
@@ -164,21 +168,29 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
+                return TotalCorrectionFactor * DriveType.UnCorrectedInputVolume(AppliedInput);
+            }
+        }
+
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
                     VerificationTest.TemperatureTest != null)
-                    return VerificationTest.TemperatureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.TemperatureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
                     VerificationTest.PressureTest != null)
-                    return VerificationTest.PressureTest.ActualFactor *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
                     return VerificationTest.PressureTest?.ActualFactor *
                            VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared *
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                           VerificationTest.SuperFactorTest.SuperFactorSquared;
 
                 return null;
             }
@@ -195,7 +207,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public override InstrumentType InstrumentType => Instrument.InstrumentType;
 
-        private void CreateDriveType()
+        private void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {
@@ -206,20 +218,21 @@ namespace Prover.Core.Models.Instruments
                 if (InstrumentType.Id == 12)
                     DriveTypeDiscriminator = "Rotary";                
             }
-                
 
-            if (DriveType == null && DriveTypeDiscriminator != null && VerificationTest != null)
+            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
+            { 
                 switch (DriveTypeDiscriminator)
                 {
                     case "Rotary":
                         DriveType = new RotaryDrive(Instrument);
                         break;
                     case "Mechanical":
-                        DriveType = new MechanicalDrive(Instrument);
+                        DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }
+                }               
+            }
             else
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
         }

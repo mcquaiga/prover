@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
+using MaterialDesignThemes.Wpf;
 using Prover.Core.Exports;
 using Prover.Core.Modules.Clients.VerificationTestActions;
 using Prover.Core.VerificationTests.PreTestActions;
@@ -16,8 +17,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager
     {
         protected ScreenManager ScreenManager { get; private set; }
 
-        public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/group.png"));
+        public PackIconKind MenuIconKind => PackIconKind.AccountMultiple;
 
         public string MenuTitle => "Clients";
         public Action OpenAction => () => ScreenManager.ChangeScreen<ClientManagerViewModel>();

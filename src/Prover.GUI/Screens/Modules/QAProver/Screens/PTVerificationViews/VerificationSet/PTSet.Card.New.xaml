@@ -18,8 +18,8 @@
         <Grid>
             <TextBlock Text="{Binding Level, FallbackValue='Level 1'}"
                        Style="{StaticResource PrimaryTestHeaderStyle}" />
-                
-            <Button Command="{Binding RunTestCommand}"
+
+            <Button x:Name="RunTestButton"
                     Content="Download"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"

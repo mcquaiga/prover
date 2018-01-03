@@ -129,6 +129,7 @@
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialPort.cs" />
     <Compile Include="IO\SerialPortWatcher.cs" />
+    <Compile Include="Items\IFrequencyTestItems.cs" />
     <Compile Include="Items\ItemCodes.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
     <Compile Include="Items\ItemMetadataExtentions.cs" />

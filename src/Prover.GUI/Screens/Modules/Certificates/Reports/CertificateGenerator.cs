@@ -5,11 +5,12 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
+using Caliburn.Micro;
 using Prover.Core.Models.Certificates;
 
 namespace Prover.GUI.Screens.Modules.Certificates.Reports
 {
-    public static class CertificateGenerator
+    public class CertificateGenerator
     {
         private static string FileName(long certNumber)
         {
@@ -24,27 +25,22 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
 
             var fixedDoc = CreateFixedDocument(certificate);
 
-            // Save document
+                // Save document
             WriteDocumentToFile(fixedDoc, filePath);
 
             //View the document
             Process.Start(filePath);
-        }
 
-        public static void GeneratePdf()
-        {
-            //var fixedDoc = CreateFixedDocument();
-            //var memStream = WriteDocumentToMemoryStream(fixedDoc);         
-            //var pdfXpsDoc = PdfSharp.Xps.XpsModel.XpsDocument.Open(memStream);
-            //PdfSharp.Xps.XpsConverter.Convert(pdfXpsDoc, _filePath, 0);
         }
 
         private static FixedDocument CreateFixedDocument(Certificate certificate)
         {
             //Set up the WPF Control to be printed
+            var viewModel = IoC.Get<CertificateReportViewModel>();
+            viewModel.Initialize(certificate);
             var controlToPrint = new CertificateReportView
             {
-                DataContext = new CertificateReportViewModel(certificate)
+                DataContext = viewModel
             };
 
             var fixedDoc = new FixedDocument();
@@ -96,6 +92,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
                 var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
                 xw.Write(fixedDoc);
                 xpsWriter.Close();
+                fixedDoc = null;
             }
         }
     }

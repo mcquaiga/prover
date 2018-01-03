@@ -91,9 +91,8 @@
             <Style TargetType="{x:Type DataGridColumnHeader}"
                    x:Key="DataGridHeaderStyle">
                 <Setter Property="Background" Value="Transparent" />
-                <!--<Setter Property="Margin" Value="2" />-->
-                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignLightForeground}" />
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="FontSize" Value="10" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
 
@@ -457,12 +456,6 @@
                       materialDesign:DataGridAssist.CellPadding="3 1"
                       Background="Transparent"
                       materialDesign:DataGridAssist.ColumnHeaderPadding="5 3">
-                <!--CanUserSortColumns="False"
-                CanUserReorderColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                CanUserResizeColumns="False"
-                CanUserResizeRows="False"-->
                 <DataGrid.Resources>
                     <controls1:BindingProxy x:Key="proxy"
                                            Data="{Binding}" />

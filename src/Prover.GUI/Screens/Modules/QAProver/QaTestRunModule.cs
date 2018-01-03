@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
+using MaterialDesignThemes.Wpf;
 using Prover.GUI.Screens.MainMenu;
 using Prover.GUI.Screens.Modules.QAProver.Screens;
 
@@ -9,9 +10,7 @@ namespace Prover.GUI.Screens.Modules.QAProver
 {
     public class QaTestRunModule : Module, IHaveMainMenuItem
     {
-        public ImageSource MenuIconSource
-            => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/clipboard-check.png"));
-
+        public PackIconKind MenuIconKind => PackIconKind.ClipboardCheck;
         public string MenuTitle => "New QA Test Run";
 
         protected override void Load(ContainerBuilder builder)

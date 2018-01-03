@@ -5,6 +5,7 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
@@ -15,20 +16,20 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase, IDisposable
     {
-        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+        private readonly ISettingsService _settingsService;
+
+        public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ISettingsService settingsService)
             : base(screenManager, eventAggregator)
         {
-            RunTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
+            _settingsService = settingsService;
+            RunTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
         }
 
         public IQaRunTestManager QaRunTestManager;
 
-        public ColorZoneMode HeaderZoneColor
-            => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
+        public ColorZoneMode HeaderZoneColor => VerificationTest.TestNumber == 0 ? ColorZoneMode.PrimaryDark : ColorZoneMode.Accent;
 
-        public Brush HeaderColour
-            => VerificationTest.TestNumber == 0
+        public Brush HeaderColour => VerificationTest.TestNumber == 0
                 ? new SolidColorBrush(Colors.DarkRed)
                 : new SolidColorBrush(Colors.Orange);
 
@@ -47,24 +48,17 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
             ShowDownloadButton = QaRunTestManager != null;
 
-            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                SuperFactorTestViewModel =
-                    new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
+            if (VerificationTest.SuperFactorTest != null)
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
 
-            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T ||
-                VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                TemperatureTestViewModel =
-                    new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
+            if (VerificationTest.TemperatureTest != null)
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
-            if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P ||
-                VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                PressureTestViewModel =
-                    new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest);
+            if (VerificationTest.PressureTest != null)
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest, _settingsService);
 
             if (VerificationTest.VolumeTest != null)
-                VolumeTestViewModel =
-                    new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest,
-                        QaRunTestManager);
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
         }
 
         public override void Dispose()
