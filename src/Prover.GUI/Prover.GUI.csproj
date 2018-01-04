@@ -128,6 +128,7 @@
     <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.7.8\lib\Net45\NuGet.Squirrel.dll</HintPath>
     </Reference>
+    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
     <Reference Include="PresentationFramework">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\PresentationFramework.dll</HintPath>
     </Reference>
@@ -810,6 +811,6 @@
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="..\.nuget\nuget.exe pack EvcProver.nuspec -Version $([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="squirrel --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
+    <Exec Command="@(squirrelPackage->'%(fullpath)') --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
   </Target>
 </Project>
