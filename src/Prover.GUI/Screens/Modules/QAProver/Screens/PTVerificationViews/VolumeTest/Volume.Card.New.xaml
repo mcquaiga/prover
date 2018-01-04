@@ -143,16 +143,13 @@
             <UniformGrid Grid.Column="6"
                         Rows="1"
                         VerticalAlignment="Top">
-                <ContentControl Margin="2" 
-                                VerticalAlignment="Top"
+                <ContentControl VerticalAlignment="Top"
                                 cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="CardNew"
                                 Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
-                <ContentControl Margin="2" 
-                                VerticalAlignment="Top"
+                <ContentControl VerticalAlignment="Top"
                                 cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="CardNew" 
                                 Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
-                <ContentControl Margin="2" 
-                                VerticalAlignment="Top"
+                <ContentControl VerticalAlignment="Top"
                                 cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="CardNew" 
                                 Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}" />
             </UniformGrid>

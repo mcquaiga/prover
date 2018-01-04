@@ -89,7 +89,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await Task.Run(() =>
                 {
                     using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(250))
+                        .Interval(TimeSpan.FromMilliseconds(100))
                         .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
                                                       $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                       $"   CorVol => {VolumeTest.CorPulseCount}")))
