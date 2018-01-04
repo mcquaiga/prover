@@ -1,9 +1,13 @@
 ﻿using System;
-using System.IO.Ports;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Messaging;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.Communication
@@ -15,44 +19,36 @@ namespace Prover.Core.Communication
         private readonly SerialPort _serialPort;
 
         public TachometerService(string portName, IDInOutBoard outputBoard)
-        {
-            if (string.IsNullOrEmpty(portName))
-            {
-                _serialPort = null;
-                _outputBoard = null;
-            }
-            else
+        {            
+            _serialPort = null;
+            
+            if (SerialPort.GetPortNames().Contains(portName))            
             {
                 _serialPort = new SerialPort(portName, 9600);
-                if (!_serialPort.IsOpen)
-                    _serialPort.Open();
-
-                _outputBoard = outputBoard;
             }
-               
+
+            _outputBoard = outputBoard;
         }
 
         public void Dispose()
         {
             _serialPort?.Close();
+            _serialPort?.Dispose();
             _outputBoard?.Dispose();
         }
 
         public async Task ResetTach()
         {
-            await Task.Run(() =>
+            if (_serialPort != null)
             {
-                if (_serialPort == null)
-                    return;
+                if (!_serialPort.IsOpen())
+                    await _serialPort.Open(new CancellationToken());
 
-                if (!_serialPort.IsOpen) _serialPort.Open();
-
-                _serialPort.Write($"@T1{(char)13}");
+                await _serialPort.Send($"@T1{(char)13}");
                 Thread.Sleep(50);
-                _serialPort.Write($"6{(char)13}");
-                _serialPort.DiscardInBuffer();
-            });
-
+                await _serialPort.Send($"6{(char)13}");
+            }
+                        
             await Task.Run(() =>
             {
                 _outputBoard?.StartMotor();
@@ -66,31 +62,37 @@ namespace Prover.Core.Communication
 
         public async Task<int> ReadTach()
         {
+            var cts = new CancellationTokenSource(2000);           
+            
             if (_serialPort == null)
                 return -1;
-
-            return await Task.Run(() =>
+            
+            try
             {
-                try
+                if (!_serialPort.IsOpen())
+                    await _serialPort.Open(cts.Token);
+
+                var response = new LineProcessor().ResponseObservable(_serialPort.DataReceivedObservable)
+                    .Timeout(TimeSpan.FromSeconds(5))
+                    .FirstAsync()
+                    .PublishLast();
+
+                using (response.Connect())
                 {
-                    if (!_serialPort.IsOpen)
-                        _serialPort.Open();
+                    await _serialPort.Send("@D0");
+                    await _serialPort.Send(((char)13).ToString());
 
-                    _serialPort.DiscardInBuffer();
-                    _serialPort.Write("@D0");
-                    _serialPort.Write(((char) 13).ToString());
-                    Thread.Sleep(100);
+                    var result = await response;
 
-                    var tachString = _serialPort.ReadExisting();
-
-                    Log.Debug($"Read data from Tach: {tachString}");
-                    return ParseTachValue(tachString);
+                    Log.Debug($"Read data from Tach: {result}");
+                    return ParseTachValue(result);
                 }
-                finally
-                {
-                    _serialPort.Close();
-                }
-            });
+            }
+            finally
+            {
+                await _serialPort.Close();
+            }
+           
         }
 
         public static int ParseTachValue(string value)
@@ -107,4 +109,46 @@ namespace Prover.Core.Communication
             return -1;
         }
     }
+
+    //public class TachometerResponseProcessor : ResponseProcessor<long>
+    //{
+    //    public override IObservable<long> ResponseObservable(IObservable<char> source)
+    //    {
+    //        return Observable.Create<long>(observer =>
+    //        {
+    //            var msgChars = new List<char>();
+
+    //            Action emitPacket = () =>
+    //            {
+    //                if (msgChars.Count > 0)
+    //                {
+    //                    var msg = string.Concat(msgChars.ToArray());
+
+    //                    //observer.OnNext(msg);
+    //                    msgChars.Clear();
+    //                }
+    //            };
+
+    //            return source.Subscribe(
+    //                c =>
+    //                {
+    //                    //if (c) emitPacket();
+
+    //                    msgChars.Add(c);
+
+    //                    if (c.IsAcknowledgement())
+    //                        emitPacket();
+
+    //                    if (c.IsEndOfTransmission())
+    //                        emitPacket();
+    //                },
+    //                observer.OnError,
+    //                () =>
+    //                {
+    //                    emitPacket();
+    //                    observer.OnCompleted();
+    //                });
+    //        });
+    //    }
+    //}
 }

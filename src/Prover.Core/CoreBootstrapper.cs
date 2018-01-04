@@ -54,7 +54,13 @@ namespace Prover.Core
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
                 .Named<IDInOutBoard>("TachDaqBoard");
 
-            builder.Register(c => new TachometerService(c.Resolve<ISettingsService>().Local.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            builder.Register(c =>
+                {
+                    var tach = c.Resolve<ISettingsService>().Local.TachIsNotUsed == false
+                        ? c.Resolve<ISettingsService>().Local.TachCommPort
+                        : string.Empty;
+                    return new TachometerService(tach, c.ResolveNamed<IDInOutBoard>("TachDaqBoard"));
+                })
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();

@@ -19,6 +19,43 @@ namespace Prover.CommProtocol.Common.Messaging
         public abstract IObservable<T> ResponseObservable(IObservable<char> source);
     }
 
+    public class LineProcessor : ResponseProcessor<string>
+    {
+        public override IObservable<string> ResponseObservable(IObservable<char> source)
+        {
+            return Observable.Create<string>(observer =>
+            {
+                var msgChars = new List<char>();
+
+                Action emitPacket = () =>
+                {
+                    if (msgChars.Count > 0)
+                    {
+                        var msg = string.Concat(msgChars.ToArray());
+
+                        observer.OnNext(msg);
+                        msgChars.Clear();
+                    }
+                };
+
+                return source.Subscribe(
+                    c =>
+                    {
+                        if (c == (char)13 || c == (char)10)
+                            emitPacket();
+
+                        msgChars.Add(c);
+                    },
+                    observer.OnError,
+                    () =>
+                    {
+                        emitPacket();
+                        observer.OnCompleted();
+                    });
+            });
+        }
+    }
+
     public class PacketProcessor : ResponseProcessor<string>
     {
         public override IObservable<string> ResponseObservable(IObservable<char> source)

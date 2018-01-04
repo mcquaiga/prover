@@ -173,6 +173,7 @@ namespace Prover.Core.VerificationTests
         public void Dispose()
         {
             _communicationClient?.Dispose();
+            _tachometerService?.Dispose();
             VolumeTestManager?.Dispose();
         }
 
