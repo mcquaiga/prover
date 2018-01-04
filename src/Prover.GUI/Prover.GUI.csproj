@@ -59,8 +59,8 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
- 
-  <ItemGroup>    
+
+  <ItemGroup>
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -103,18 +103,6 @@
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -785,16 +773,8 @@
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <NuGetCommandLine Include="..\packages\NuGet.CommandLine.*\tools\nuget.exe">
-      <InProject>False</InProject>
-    </NuGetCommandLine>
-    <Squirrel Include="..\packages\Squirrel.Windows.*\tools\squirrel.exe">
-      <InProject>False</InProject>
-    </Squirrel>
-  </ItemGroup>
-  <ItemGroup />
+  </ItemGroup>   
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
@@ -803,6 +783,7 @@
     if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
     xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
+
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -814,12 +795,26 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
+
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
-    </GetAssemblyIdentity>
-    <Exec Command="..\.nuget\nuget.exe pack EvcProver.nuspec -Version $([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Message Text="Squirrel Path: &quot;@(Squirrel->'%(FullPath)')&quot;"/>
-    <Exec Command="&quot;@(Squirrel->'%(FullPath)')&quot; --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
+    </GetAssemblyIdentity>  
+    <ItemGroup>
+      <NuGetExe Include="..\packages\NuGet.CommandLine.*\tools\nuget.exe">
+        <InProject>False</InProject>
+      </NuGetExe>
+      <SquirrelExe Include="..\packages\Squirrel.Windows.*\tools\squirrel.exe">
+        <InProject>False</InProject>
+      </SquirrelExe>
+    </ItemGroup>
+    <PropertyGroup>
+      <ReleaseDir>..\Releases\</ReleaseDir>
+      <!-- Extra optional params for squirrel. can be empty -->
+      <SquirrelParams>--no-msi</SquirrelParams>
+      <SemVerNumber>$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3))</SemVerNumber>
+    </PropertyGroup>
+    <Exec Command="%(NuGetExe.FullPath) pack EvcProver.nuspec -Version $(SemVerNumber) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
+    <Exec Command="%(SquirrelExe.FullPath) --releasify $(OutDir)EvcProver.$(SemVerNumber).nupkg -r $(OutDir)..\Releases" />
   </Target>
 </Project>
