@@ -786,8 +786,13 @@
       <Name>Prover.Core</Name>
     </ProjectReference>
   </ItemGroup>
-   <ItemGroup>
-    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
+  <ItemGroup>
+    <NuGetCommandLine Include="..\packages\NuGet.CommandLine.*\tools\nuget.exe">
+      <InProject>False</InProject>
+    </NuGetCommandLine>
+    <Squirrel Include="..\packages\Squirrel.Windows.*\tools\squirrel.exe">
+      <InProject>False</InProject>
+    </Squirrel>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -814,7 +819,7 @@
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="..\.nuget\nuget.exe pack EvcProver.nuspec -Version $([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Message Text="Squirrel Path: &quot;@(SquirrelPackage->'%(fullpath)')&quot;"/>
-    <Exec Command="&quot;@(SquirrelPackage->'%(fullpath)')&quot; --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
+    <Message Text="Squirrel Path: &quot;@(Squirrel->'%(FullPath)')&quot;"/>
+    <Exec Command="&quot;@(Squirrel->'%(FullPath)')&quot; --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
   </Target>
 </Project>
