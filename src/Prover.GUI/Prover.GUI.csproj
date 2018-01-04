@@ -59,6 +59,7 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
+ 
   <ItemGroup>    
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
@@ -145,7 +146,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
     </Reference>
-    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
     <Reference Include="Squirrel, Version=1.7.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.7.8\lib\Net45\Squirrel.dll</HintPath>
     </Reference>
@@ -786,6 +786,9 @@
       <Name>Prover.Core</Name>
     </ProjectReference>
   </ItemGroup>
+   <ItemGroup>
+    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -811,7 +814,7 @@
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="..\.nuget\nuget.exe pack EvcProver.nuspec -Version $([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Message Text="Squirrel Path: @(SquirrelPackage->'%(fullpath)')"/>
-    <Exec Command="@(SquirrelPackage->'%(fullpath)') --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
+    <Message Text="Squirrel Path: &quot;@(SquirrelPackage->'%(fullpath)')&quot;"/>
+    <Exec Command="&quot;@(SquirrelPackage->'%(fullpath)')&quot; --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
   </Target>
 </Project>
