@@ -26,8 +26,9 @@ namespace Prover.CommProtocol.Common.Messaging
             return Observable.Create<string>(observer =>
             {
                 var msgChars = new List<char>();
+                var cr = new char[2];
 
-                Action emitPacket = () =>
+                void EmitPacket()
                 {
                     if (msgChars.Count > 0)
                     {
@@ -36,20 +37,20 @@ namespace Prover.CommProtocol.Common.Messaging
                         observer.OnNext(msg);
                         msgChars.Clear();
                     }
-                };
+                }
 
                 return source.Subscribe(
                     c =>
                     {
-                        if (c == (char)13 || c == (char)10)
-                            emitPacket();
-
                         msgChars.Add(c);
+
+                        if (c.Equals((char)13) || c == (char)10 || c.Equals('r') || c.Equals('n'))
+                            EmitPacket();
                     },
                     observer.OnError,
                     () =>
                     {
-                        emitPacket();
+                        EmitPacket();
                         observer.OnCompleted();
                     });
             });
