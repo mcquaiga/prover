@@ -272,7 +272,7 @@
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\PressureTest.cs" />
     <Compile Include="Models\Instruments\SuperFactorTest.cs" />
-    <Compile Include="Models\Instruments\TemperatureTests.cs" />
+    <Compile Include="Models\Instruments\TemperatureTest.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\Settings.cs" />

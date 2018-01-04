@@ -55,14 +55,6 @@ namespace Prover.Core.Storage
 
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-
-            modelBuilder.Entity<Instrument>()
-                .HasMany(i => i.VerificationTests)
-                .WithRequired(i => i.Instrument);
-
-            modelBuilder.Entity<VerificationTest>()
-                .HasOptional(i => i.PressureTest);
-
             base.OnModelCreating(modelBuilder);            
         }
     }

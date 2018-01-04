@@ -101,8 +101,10 @@ namespace Prover.Core.Models.Instruments
 
         public override void OnInitializing()
         {
+            base.OnInitializing();
+
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
-                SuperFactorTest = new SuperFactorTest(this);
+                SuperFactorTest = new SuperFactorTest(this);            
         }
     }
 }

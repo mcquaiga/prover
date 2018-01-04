@@ -25,7 +25,6 @@ namespace Prover.Core.Models.Instruments
 
             TemperatureTest = VerificationTest.TemperatureTest;
             PressureTest = VerificationTest.PressureTest;
-            ActualFactor = CalculateFpv();
         }
         
         private TemperatureTest TemperatureTest { get; }
@@ -40,7 +39,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? EvcUnsqrFactor => PressureTest.Items.GetItem(ItemCodes.Pressure.UnsqrFactor).NumericValue;
 
-        public override decimal? ActualFactor { get; }
+        public override decimal? ActualFactor => CalculateFpv();
         public override decimal? EvcFactor => EvcUnsqrFactor;
         public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?) Math.Pow((double) ActualFactor, 2) : null;
 
