@@ -22,7 +22,7 @@ using StartScreen = Prover.GUI.Screens.Startup.StartScreen;
 namespace Prover.GUI
 {
     public class AppBootstrapper : BootstrapperBase
-    {
+    {       
         private readonly string _moduleFilePath = $"{Environment.CurrentDirectory}\\modules.json";
         private Assembly[] _assemblies;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
@@ -37,15 +37,7 @@ namespace Prover.GUI
                 _splashScreen.Show();
 
                 Initialize();
-
-                Task.Run(async () =>
-                {
-                    using (var mgr = new UpdateManager($"C:\\EvcProver\\Releases"))
-                    {
-                        await mgr.UpdateApp();
-                    }
-                });
-
+           
                 _log.Info("Finished starting application.");
             }
             catch (Exception e)
@@ -80,14 +72,14 @@ namespace Prover.GUI
             Builder.RegisterType<ScreenManager>()
                 .SingleInstance();
 
-            Builder.RegisterType<InstrumentReportGenerator>()
-                .SingleInstance();
+            Builder.RegisterType<InstrumentReportGenerator>().SingleInstance();
+
             Builder.RegisterAssemblyModules(Assemblies);
 
             Builder.RegisterViewModels(Assemblies);
             Builder.RegisterViews(Assemblies);
             Builder.RegisterScreen(Assemblies);
-
+          
             Container = Builder.Build();
 
             RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
@@ -143,6 +135,18 @@ namespace Prover.GUI
         {
             _splashScreen.Hide();
             DisplayRootViewFor<ShellViewModel>();
+            Task.Run(async () =>
+            {
+                //using (var mgr = new UpdateManager(ReleasesPath))
+                //{
+                //    await mgr.UpdateApp();
+                //}
+
+                //using (var mgr = UpdateManager.GitHubUpdateManager(RepoUrl))
+                //{
+                //    await mgr.Result.UpdateApp();
+                //}
+            });
             _splashScreen.Close();
         }
 

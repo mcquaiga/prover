@@ -6,20 +6,27 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using NLog;
 using Prover.Core.Settings;
 using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
+using Squirrel;
+using LogManager = NLog.LogManager;
 
 namespace Prover.GUI.Screens.Shell
 {
     public class ShellViewModel : ReactiveConductor<ReactiveObject>.Collection.OneActive, IDisposable,
         IHandle<ScreenChangeEvent>, IHandle<NotificationEvent>, IHandle<DialogDisplayEvent>
     {
+        private const string RepoUrl = "https://github.com/mcquaiga/EvcProver";
         private readonly ISettingsService _settingsService;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public IEnumerable<INavigationItem> NavigationItems { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }
         public string Title => $"EVC Prover - v{GetVersionNumber()}";
@@ -114,9 +121,22 @@ namespace Prover.GUI.Screens.Shell
         }
         #endregion
 
-        public void Handle(ScreenChangeEvent message)
+        protected override void OnActivate()
         {
-            ActivateItem(message.ViewModel);
+            Task.Run(async () => 
+            {
+                using (var mgr = await UpdateManager.GitHubUpdateManager(RepoUrl))
+                {
+                    var installed = mgr.CurrentlyInstalledVersion();
+                    var latest = await mgr.UpdateApp();
+                    if (latest != null && (installed == null || !latest.Version.Equals(installed)))
+                    {
+                        _log.Info("New update found.");
+                    }
+                }
+            });
+
+            base.OnActivate();
         }
 
         protected override void OnDeactivate(bool close)
@@ -128,6 +148,11 @@ namespace Prover.GUI.Screens.Shell
 
             base.OnDeactivate(close);
         }
+       
+        public void Dispose()
+        {
+            GoHomeCommand?.Dispose();
+        }
 
         public void Handle(NotificationEvent message)
         {
@@ -135,9 +160,9 @@ namespace Prover.GUI.Screens.Shell
             ShowNotificationSnackbar = true;
         }
 
-        public void Dispose()
+        public void Handle(ScreenChangeEvent message)
         {
-            GoHomeCommand?.Dispose();
+            ActivateItem(message.ViewModel);
         }
 
         public void Handle(DialogDisplayEvent message)
