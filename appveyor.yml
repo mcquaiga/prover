@@ -13,7 +13,7 @@ platform: Any CPU
 
 build:
   project: src\EvcProver.sln
-  verbosity: normal
+  verbosity: minimal
 assembly_info:
   patch: true
   file: AssemblyInfo.cs
