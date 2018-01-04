@@ -142,8 +142,8 @@ Global
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|Any CPU.Build.0 = MiProtocolConsole|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|x64.ActiveCfg = MiProtocolConsole|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.MiProtocolConsole|x86.ActiveCfg = MiProtocolConsole|Any CPU
-		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.ActiveCfg = Release - Union Gas|Any CPU
-		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.Build.0 = Release - Union Gas|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x64.ActiveCfg = Release - Union Gas|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x64.Build.0 = Release - Union Gas|Any CPU
 		{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}.Release - Union Gas|x86.ActiveCfg = Release - Union Gas|Any CPU

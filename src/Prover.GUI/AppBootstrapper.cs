@@ -134,19 +134,9 @@ namespace Prover.GUI
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             _splashScreen.Hide();
-            DisplayRootViewFor<ShellViewModel>();
-            Task.Run(async () =>
-            {
-                //using (var mgr = new UpdateManager(ReleasesPath))
-                //{
-                //    await mgr.UpdateApp();
-                //}
 
-                //using (var mgr = UpdateManager.GitHubUpdateManager(RepoUrl))
-                //{
-                //    await mgr.Result.UpdateApp();
-                //}
-            });
+            DisplayRootViewFor<ShellViewModel>();
+           
             _splashScreen.Close();
         }
 

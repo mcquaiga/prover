@@ -59,7 +59,7 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup>    
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -128,7 +128,6 @@
     <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.7.8\lib\Net45\NuGet.Squirrel.dll</HintPath>
     </Reference>
-    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
     <Reference Include="PresentationFramework">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\PresentationFramework.dll</HintPath>
     </Reference>
@@ -146,6 +145,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
     </Reference>
+    <SquirrelPackage Include="..\packages\squirrel.windows.*\tools\Squirrel.exe" />
     <Reference Include="Squirrel, Version=1.7.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.7.8\lib\Net45\Squirrel.dll</HintPath>
     </Reference>
@@ -811,6 +811,7 @@
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
     <Exec Command="..\.nuget\nuget.exe pack EvcProver.nuspec -Version $([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="@(squirrelPackage->'%(fullpath)') --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
+    <Message Text="Squirrel Path: @(SquirrelPackage->'%(fullpath)')"/>
+    <Exec Command="@(SquirrelPackage->'%(fullpath)') --releasify $(OutDir)EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(OutDir)..\Releases" />
   </Target>
 </Project>
