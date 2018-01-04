@@ -815,6 +815,6 @@
       <SemVerNumber>$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3))</SemVerNumber>
     </PropertyGroup>
     <Exec Command="%(NuGetExe.FullPath) pack EvcProver.nuspec -Version $(SemVerNumber) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="%(SquirrelExe.FullPath) --releasify $(OutDir)EvcProver.$(SemVerNumber).nupkg -r $(OutDir)..\Releases" />
+    <Exec Command="%(SquirrelExe.FullPath) --releasify $(OutDir)EvcProver.$(SemVerNumber).nupkg -r $(OutDir)..\Releases $(SquirrelParams)" />
   </Target>
 </Project>
