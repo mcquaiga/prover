@@ -30,6 +30,10 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             Volume = volumeTest;
             TestManager = qaRunTestManager;
 
+            AppliedInput = (long)Volume.AppliedInput;
+            UncorrectedPulseCount = Volume.UncPulseCount;
+            CorrectedPulseCount = Volume.CorPulseCount;
+
             var canRunTestCommand = this.WhenAny(x => x.TestManager, tm => tm != null);
             canRunTestCommand.ToProperty(this, model => model.DisplayButtons, out _displayButtons);
 
@@ -121,9 +125,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             {
                 TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.RunVolumeTest(ct);
-                AppliedInput = Volume.AppliedInput;
-                UncorrectedPulseCount = Volume.UncPulseCount;
-                CorrectedPulseCount = Volume.CorPulseCount;
             }
             catch (Exception ex)
             {
@@ -132,6 +133,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             }
             finally
             {
+                AppliedInput = (long)Volume.AppliedInput;
+                UncorrectedPulseCount = Volume.UncPulseCount;
+                CorrectedPulseCount = Volume.CorPulseCount;
                 EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
             }
         }
@@ -166,9 +170,10 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         public IQaRunTestManager TestManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
         public Core.Models.Instruments.VolumeTest Volume { get; }
-        private decimal _appliedInput;
 
-        public decimal AppliedInput
+        private long _appliedInput;
+
+        public long AppliedInput
         {
             get => _appliedInput;
             set => this.RaiseAndSetIfChanged(ref _appliedInput, value);
