@@ -5,12 +5,12 @@ Automated testing for rotary, mechanical and frequency inputs.
 
 Devices Supported:
 
-* Honeywell/Mercury Instruments
-** Mini-Max
-** Mini-AT
-** EC-350
-** TCI
-** Turbo Corrector
+- Honeywell/Mercury Instruments
+  - Mini-Max
+  - Mini-AT
+  - EC-350
+  - TCI
+  - Turbo Corrector
 
 ## Install Belkin USB-Serial adapter - Windows 10
 As of Windows 10, drivers must be digitally signed. Unfortunately, there's no easy way around this.
