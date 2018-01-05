@@ -18,17 +18,11 @@ namespace Prover.Core.Models.Instruments
                 throw new NullReferenceException(nameof(verificationTest));
 
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true).ToList();
-            VerificationTest = verificationTest;
-
-            if (VerificationTest?.PressureTest == null || VerificationTest?.TemperatureTest == null)
-                return;
-
-            TemperatureTest = VerificationTest.TemperatureTest;
-            PressureTest = VerificationTest.PressureTest;
+            VerificationTest = verificationTest;          
         }
-        
-        private TemperatureTest TemperatureTest { get; }
-        private PressureTest PressureTest { get; }
+
+        private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
+        private PressureTest PressureTest => VerificationTest.PressureTest;
 
         [NotMapped]
         public decimal GaugeTemp => TemperatureTest.GaugeFahrenheit;

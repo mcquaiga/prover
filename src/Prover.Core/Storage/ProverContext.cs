@@ -26,6 +26,10 @@ namespace Prover.Core.Storage
             _log.Trace("Starting Db Context...");
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Database.Initialize(false);
+
+            this.Configuration.LazyLoadingEnabled = false;
+
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
             
             Database.Log = s => Debug.WriteLine(s);
