@@ -57,10 +57,16 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 .ToProperty(this, x => x.TachCommPorts, out _tachCommPorts, new ReactiveList<string>() {ChangeTrackingEnabled = true});
 
             SelectedCommPort = _settingsService.Local.InstrumentCommPort;
+            SelectedTachCommPort = _settingsService.Local.TachCommPort;
+
             commPorts.Subscribe(list =>
             {
                 SelectedCommPort = list.Contains(_settingsService.Local.InstrumentCommPort)
                     ? _settingsService.Local.InstrumentCommPort
+                    : string.Empty;
+
+                SelectedTachCommPort = list.Contains(_settingsService.Local.TachCommPort)
+                    ? _settingsService.Local.TachCommPort
                     : string.Empty;
             });
                 
@@ -94,9 +100,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
              * Tachometer Settings
              *
              **/
-            _selectedTachCommPort = TachCommPorts.Contains(_settingsService.Local.TachCommPort)
-                ? _settingsService.Local.TachCommPort
-                : string.Empty;
 
             this.WhenAnyValue(x => x.TachIsNotUsed)
                 .Select(x => !x)
@@ -114,6 +117,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
+            StartTestCommand.ThrownExceptions
+                .Subscribe(ex => MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error));
 
             var canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
@@ -336,11 +341,12 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
             }
             catch (Exception ex)
             {
+                _qaRunTestManager?.Dispose();
+
                 if (ex is OperationCanceledException)
                     Log.Warn("Test init cancelled by user.");
                 else
                     throw;
-                _qaRunTestManager?.Dispose();
             }
             finally
             {
@@ -377,13 +383,16 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
         public override void Dispose()
         {
-            //foreach (var testView in TestViews)
-            //{
-            //    testView.Dispose();
-            //    testView.TryClose();
-            //}
-            //SiteInformationItem = null;
-            //_qaRunTestManager?.Dispose();
+            if (ViewContext == EditQaTestViewContext)
+            {
+                foreach (var testView in TestViews)
+                {
+                    testView.Dispose();
+                    testView.TryClose();
+                }
+                SiteInformationItem = null;
+                _qaRunTestManager?.Dispose();
+            }
         }
 
         public override void CanClose(Action<bool> callback)

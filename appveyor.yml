@@ -13,7 +13,7 @@ platform: Any CPU
 
 build:
   project: src\EvcProver.sln
-  verbosity: normal
+  verbosity: minimal
 assembly_info:
   patch: true
   file: AssemblyInfo.cs
@@ -36,6 +36,7 @@ image: Visual Studio 2017
 artifacts:
   - path: build\Release
     name: EvcProver-v$(appveyor_build_version)-$(APPVEYOR_REPO_BRANCH)
+
 services:
   - mssql2014           # start SQL Server 2014 Express
 

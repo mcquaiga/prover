@@ -45,9 +45,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             EventAggreator = eventAggregator;
             CommClient = commClient;
 
-            StatusMessage
-                .Subscribe(x => Log.Info(x));
-
             CommClient.StatusObservable.Subscribe(Status);
         }
 

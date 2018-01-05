@@ -18,18 +18,11 @@ namespace Prover.Core.Models.Instruments
                 throw new NullReferenceException(nameof(verificationTest));
 
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true).ToList();
-            VerificationTest = verificationTest;
-
-            if (VerificationTest?.PressureTest == null || VerificationTest?.TemperatureTest == null)
-                return;
-
-            TemperatureTest = VerificationTest.TemperatureTest;
-            PressureTest = VerificationTest.PressureTest;
-            ActualFactor = CalculateFpv();
+            VerificationTest = verificationTest;          
         }
-        
-        private TemperatureTest TemperatureTest { get; }
-        private PressureTest PressureTest { get; }
+
+        private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
+        private PressureTest PressureTest => VerificationTest.PressureTest;
 
         [NotMapped]
         public decimal GaugeTemp => TemperatureTest.GaugeFahrenheit;
@@ -40,7 +33,7 @@ namespace Prover.Core.Models.Instruments
         [NotMapped]
         public decimal? EvcUnsqrFactor => PressureTest.Items.GetItem(ItemCodes.Pressure.UnsqrFactor).NumericValue;
 
-        public override decimal? ActualFactor { get; }
+        public override decimal? ActualFactor => CalculateFpv();
         public override decimal? EvcFactor => EvcUnsqrFactor;
         public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?) Math.Pow((double) ActualFactor, 2) : null;
 

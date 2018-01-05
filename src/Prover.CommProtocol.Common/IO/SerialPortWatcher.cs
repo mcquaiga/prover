@@ -83,4 +83,21 @@ namespace Prover.CommProtocol.Common.IO
         private ManagementEventWatcher _watcher;
         private TaskScheduler _taskScheduler;
     }
+
+    //private static List<string> _commPorts;
+    //public static IObservable<string[]> PortsWatcher()
+    //{
+    //    return Observable.Create<string[]>(observer =>
+    //    {
+    //        return Observable
+    //            .Interval(TimeSpan.FromSeconds(1))
+    //            .Subscribe(
+    //                _ =>
+    //                {
+    //                    var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
+    //                    if (!_commPorts.SequenceEqual(ports))
+    //                        observer.OnNext(ports.ToArray());
+    //                });
+    //    });
+    //}
 }

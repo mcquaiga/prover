@@ -7,7 +7,7 @@ using Caliburn.Micro;
 using MccDaq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
@@ -89,7 +89,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await Task.Run(() =>
                 {
                     using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(250))
+                        .Interval(TimeSpan.FromMilliseconds(100))
                         .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
                                                       $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                       $"   CorVol => {VolumeTest.CorPulseCount}")))
