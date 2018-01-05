@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Messaging;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
 namespace Prover.Core.ExternalDevices
@@ -38,16 +37,19 @@ namespace Prover.Core.ExternalDevices
 
         public async Task ResetTach()
         {
-            if (_serialPort != null)
+            await Task.Run(() =>
             {
-                if (!_serialPort.IsOpen())
-                    await _serialPort.Open(new CancellationToken());
+                if (_serialPort == null)
+                    return;
 
-                await _serialPort.Send($"@T1{(char)13}");
+                if (!_serialPort.IsOpen) _serialPort.Open();
+
+                _serialPort.Write($"@T1{(char)13}");
                 Thread.Sleep(50);
-                await _serialPort.Send($"6{(char)13}");
-            }
-                        
+                _serialPort.Write($"6{(char)13}");
+                _serialPort.DiscardInBuffer();
+            });
+
             await Task.Run(() =>
             {
                 _outputBoard?.StartMotor();
@@ -56,42 +58,36 @@ namespace Prover.Core.ExternalDevices
                 Thread.Sleep(100);
             });
 
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
         }
 
         public async Task<int> ReadTach()
         {
-            var cts = new CancellationTokenSource(2000);           
-            
             if (_serialPort == null)
                 return -1;
-            
-            try
+
+            return await Task.Run(() =>
             {
-                if (!_serialPort.IsOpen())
-                    await _serialPort.Open(cts.Token);
-
-                var response = new LineProcessor().ResponseObservable(_serialPort.DataReceivedObservable)
-                    .Timeout(TimeSpan.FromSeconds(5))
-                    .FirstAsync()
-                    .PublishLast();
-
-                using (response.Connect())
+                try
                 {
-                    await _serialPort.Send("@D0");
-                    await _serialPort.Send(((char)13).ToString());
+                    if (!_serialPort.IsOpen)
+                        _serialPort.Open();
 
-                    var result = await response;
+                    _serialPort.DiscardInBuffer();
+                    _serialPort.Write("@D0");
+                    _serialPort.Write(((char) 13).ToString());
+                    Thread.Sleep(100);
 
-                    Log.Debug($"Read data from Tach: {result}");
-                    return ParseTachValue(result);
+                    var tachString = _serialPort.ReadExisting();
+
+                    Log.Debug($"Read data from Tach: {tachString}");
+                    return ParseTachValue(tachString);
                 }
-            }
-            finally
-            {
-                await _serialPort.Close();
-            }
-           
+                finally
+                {
+                    _serialPort.Close();
+                }
+            });
         }
 
         public static int ParseTachValue(string value)
@@ -108,46 +104,4 @@ namespace Prover.Core.ExternalDevices
             return -1;
         }
     }
-
-    //public class TachometerResponseProcessor : ResponseProcessor<long>
-    //{
-    //    public override IObservable<long> ResponseObservable(IObservable<char> source)
-    //    {
-    //        return Observable.Create<long>(observer =>
-    //        {
-    //            var msgChars = new List<char>();
-
-    //            Action emitPacket = () =>
-    //            {
-    //                if (msgChars.Count > 0)
-    //                {
-    //                    var msg = string.Concat(msgChars.ToArray());
-
-    //                    //observer.OnNext(msg);
-    //                    msgChars.Clear();
-    //                }
-    //            };
-
-    //            return source.Subscribe(
-    //                c =>
-    //                {
-    //                    //if (c) emitPacket();
-
-    //                    msgChars.Add(c);
-
-    //                    if (c.IsAcknowledgement())
-    //                        emitPacket();
-
-    //                    if (c.IsEndOfTransmission())
-    //                        emitPacket();
-    //                },
-    //                observer.OnError,
-    //                () =>
-    //                {
-    //                    emitPacket();
-    //                    observer.OnCompleted();
-    //                });
-    //        });
-    //    }
-    //}
 }
