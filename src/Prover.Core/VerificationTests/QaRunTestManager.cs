@@ -12,7 +12,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;

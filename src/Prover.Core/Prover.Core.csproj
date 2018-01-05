@@ -249,7 +249,7 @@
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
-    <Compile Include="Communication\TachometerService.cs" />
+    <Compile Include="ExternalDevices\TachometerService.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\Helpers.cs" />

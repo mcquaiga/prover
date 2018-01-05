@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
@@ -10,7 +9,7 @@ using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
-namespace Prover.Core.Communication
+namespace Prover.Core.ExternalDevices
 {
     public class TachometerService : IDisposable
     {

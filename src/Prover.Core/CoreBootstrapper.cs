@@ -6,7 +6,7 @@ using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;

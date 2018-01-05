@@ -7,7 +7,7 @@ using Caliburn.Micro;
 using MccDaq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;

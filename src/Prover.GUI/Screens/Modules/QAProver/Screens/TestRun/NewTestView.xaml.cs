@@ -16,12 +16,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.TestRun
 
             this.WhenActivated(d =>
             {
-                d(ViewModel = (TestRunViewModel) DataContext);
+                ViewModel = (TestRunViewModel)DataContext;
 
                 d(this.WhenAnyValue(x => x.ViewModel.RefreshCommPortsCommand)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
             });
+
+            
         }
 
         object IViewFor.ViewModel
