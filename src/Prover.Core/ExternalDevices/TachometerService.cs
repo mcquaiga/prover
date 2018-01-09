@@ -58,7 +58,7 @@ namespace Prover.Core.ExternalDevices
                 Thread.Sleep(100);
             });
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
         }
 
         public async Task<int> ReadTach()
