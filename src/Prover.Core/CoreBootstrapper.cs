@@ -101,7 +101,8 @@ namespace Prover.Core
                 .InstancePerDependency();
             builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>())).As<IProverStore<ClientCsvTemplate>>()
                 .InstancePerDependency();
-            builder.RegisterType<ClientService>();
+            builder.RegisterType<ClientService>()
+                .As<IClientService>();
 
             builder.RegisterType<CertificateStore>().As<IProverStore<Certificate>>()
                 .InstancePerDependency();

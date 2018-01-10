@@ -15,10 +15,10 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
     public class ItemVerificationManager : IPreTestValidation
     {
         private readonly IHandleInvalidItemVerification _invalidItemHandler;
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
         private readonly TestRunService _testRunService;
 
-        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, ClientService clientService,
+        public ItemVerificationManager(IHandleInvalidItemVerification invalidItemHandler, IClientService clientService,
             TestRunService testRunService)
         {
             _invalidItemHandler = invalidItemHandler;

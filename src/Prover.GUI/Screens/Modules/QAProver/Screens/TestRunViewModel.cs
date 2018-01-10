@@ -38,8 +38,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
         private string _viewContext;
 
         public TestRunViewModel(ScreenManager screenManager, 
-            IEventAggregator eventAggregator, 
-            ClientService clientService, 
+            IEventAggregator eventAggregator,
+            IClientService clientService, 
             InstrumentReportGenerator instrumentReportGenerator,
             ISettingsService settingsService) 
             : base(screenManager, eventAggregator)

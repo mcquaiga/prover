@@ -111,7 +111,7 @@ namespace Prover.Core.Services
         public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber = 0, long toNumber = 0)
         {
             if (client == null)
-                return GetAllCertificates();
+                throw new ArgumentNullException(nameof(client));
 
             return _certificateStore.Query(c => c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id
                                                 && (fromNumber == 0 || c.Number >= fromNumber) 
