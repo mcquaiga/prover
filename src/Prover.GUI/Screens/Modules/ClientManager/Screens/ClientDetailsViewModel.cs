@@ -19,10 +19,10 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
 {
     public class ClientDetailsViewModel : ViewModelBase
     {
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
 
         public ClientDetailsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            ClientService clientService, Client client = null)
+            IClientService clientService, Client client = null)
             : base(screenManager, eventAggregator)
         {
             _clientService = clientService;
@@ -40,8 +40,11 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
 
             GoToCsvTemplateManager = ReactiveCommand.Create<ClientCsvTemplate>(OpenCsvTemplateEditor);
 
-            SwitchToDetailsContextCommand = ReactiveCommand.Create(() =>
+            SwitchToDetailsContextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
+                if (Client != null)
+                    Client = await _clientService.GetById(Client.Id);
+
                 IsDirty = true;
                 InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
 

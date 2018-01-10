@@ -6,7 +6,7 @@ using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
@@ -54,7 +54,13 @@ namespace Prover.Core
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
                 .Named<IDInOutBoard>("TachDaqBoard");
 
-            builder.Register(c => new TachometerService(c.Resolve<ISettingsService>().Local.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
+            builder.Register(c =>
+                {
+                    var tach = c.Resolve<ISettingsService>().Local.TachIsNotUsed == false
+                        ? c.Resolve<ISettingsService>().Local.TachCommPort
+                        : string.Empty;
+                    return new TachometerService(tach, c.ResolveNamed<IDInOutBoard>("TachDaqBoard"));
+                })
                 .As<TachometerService>();
 
             builder.RegisterType<AutoVolumeTestManager>();
@@ -95,7 +101,8 @@ namespace Prover.Core
                 .InstancePerDependency();
             builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>())).As<IProverStore<ClientCsvTemplate>>()
                 .InstancePerDependency();
-            builder.RegisterType<ClientService>();
+            builder.RegisterType<ClientService>()
+                .As<IClientService>();
 
             builder.RegisterType<CertificateStore>().As<IProverStore<Certificate>>()
                 .InstancePerDependency();

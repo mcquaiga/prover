@@ -26,6 +26,10 @@ namespace Prover.Core.Storage
             _log.Trace("Starting Db Context...");
 
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Database.Initialize(false);
+
+            this.Configuration.LazyLoadingEnabled = false;
+
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
             
             Database.Log = s => Debug.WriteLine(s);
@@ -54,14 +58,6 @@ namespace Prover.Core.Storage
                 QueryIncludeOptimizedManager.AllowQueryBatch = false;
 
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-
-
-            modelBuilder.Entity<Instrument>()
-                .HasMany(i => i.VerificationTests)
-                .WithRequired(i => i.Instrument);
-
-            modelBuilder.Entity<VerificationTest>()
-                .HasOptional(i => i.PressureTest);
 
             base.OnModelCreating(modelBuilder);            
         }

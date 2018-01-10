@@ -10,7 +10,7 @@
       "shortDescription": "Press Units",
       "description": "Pressure Units",
       "isPressure": "true",
-      "value": [
+      "values": [
         {
           "id": "0",
           "description": "PSI",

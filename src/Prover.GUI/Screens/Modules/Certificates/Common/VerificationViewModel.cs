@@ -36,7 +36,6 @@ namespace Prover.GUI.Screens.Modules.Certificates.Common
 
         public SuperFactorInfoViewModel SuperFactor { get; protected set; }    
 
-        public string HasPassed => Instrument.HasPassed ? "PASS" : "FAIL";
         public string DateTimePretty => $"{Instrument.TestDateTime:g}";
         public string DatePretty => $"{Instrument.TestDateTime:d}";
         public string TimePretty => $"{Instrument.TestDateTime:t}";

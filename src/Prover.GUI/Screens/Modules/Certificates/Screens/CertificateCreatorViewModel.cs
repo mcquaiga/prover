@@ -22,13 +22,13 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
     public class CertificateCreatorViewModel : ViewModelBase, IDisposable
     {
         public List<string> VerificationType => Enum.GetNames(typeof(VerificationTypeEnum)).ToList();
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
         private readonly ICertificateService _certificateService;
         private readonly ISettingsService _settingsService;
         private readonly Client _allClient = new Client {Id = Guid.Empty, Name = "(No client)"};
 
         public CertificateCreatorViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            ClientService clientService, ICertificateService certificateService,
+            IClientService clientService, ICertificateService certificateService,
             ExportToCsvViewModel exportToCsvViewModel, ISettingsService settingsService)
             : base(screenManager, eventAggregator)
         {

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using InTheHand.Net;
+using InTheHand.Net.Sockets;
+using NLog;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reactive.Concurrency;
@@ -8,15 +11,12 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using InTheHand.Net;
-using InTheHand.Net.Sockets;
-using PubSub;
 
 namespace Prover.CommProtocol.Common.IO
 {
-   
+
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public sealed class IrDAPort : CommPort
+    public sealed class IrDAPort : ICommPort
     {
         private const int DevicePeerIndex = 0;
         private const string ServiceName = "IrDA:IrCOMM";
@@ -26,6 +26,7 @@ namespace Prover.CommProtocol.Common.IO
         private IrDADeviceInfo _device;
         private IConnectableObservable<char> _dataReceivedConnectableObservable;
         private IDisposable _dataReceivedObs;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public IrDAPort()
         {
@@ -50,10 +51,10 @@ namespace Prover.CommProtocol.Common.IO
 
         public int RetryCount { get; } = 30;
 
-        public override string Name => "IrDA";
+        public string Name => "IrDA";
 
-        public override IConnectableObservable<char> DataReceivedObservable => _dataReceivedConnectableObservable;
-        public override ISubject<string> DataSentObservable { get; }
+        public IConnectableObservable<char> DataReceivedObservable => _dataReceivedConnectableObservable;
+        public ISubject<string> DataSentObservable { get; }
 
         private IObservable<char> DataReceived(Stream sourceStream)
         {
@@ -123,12 +124,12 @@ namespace Prover.CommProtocol.Common.IO
             });
         }
 
-        public override bool IsOpen()
+        public bool IsOpen()
         {
             return _client.Connected;
         }
 
-        public override async Task Open(CancellationToken ct)
+        public async Task Open(CancellationToken ct)
         {
             _client = new IrDAClient();
             _client.Client.SetSocketOption(
@@ -151,7 +152,7 @@ namespace Prover.CommProtocol.Common.IO
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex);
+                            _log.Error(ex);
                             throw;
                         }
                     }, _device),
@@ -164,12 +165,12 @@ namespace Prover.CommProtocol.Common.IO
             }
         }
 
-        public override async Task Close()
+        public async Task Close()
         {
             await Task.Run(() => _client.Close());
         }
 
-        public override async Task Send(string data)
+        public async Task Send(string data)
         {
             var strm = _client.GetStream();
             if (strm.CanWrite)
@@ -181,7 +182,7 @@ namespace Prover.CommProtocol.Common.IO
             }
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             _dataReceivedObs?.Dispose();
 

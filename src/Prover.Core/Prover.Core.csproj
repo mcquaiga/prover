@@ -232,6 +232,7 @@
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\TestRunService.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Storage\GenericRepository.cs" />
@@ -249,7 +250,7 @@
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
-    <Compile Include="Communication\TachometerService.cs" />
+    <Compile Include="ExternalDevices\TachometerService.cs" />
     <Compile Include="Events\LiveReadEvent.cs" />
     <Compile Include="Events\SettingsChangeEvent.cs" />
     <Compile Include="Extensions\Helpers.cs" />
@@ -272,7 +273,7 @@
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\PressureTest.cs" />
     <Compile Include="Models\Instruments\SuperFactorTest.cs" />
-    <Compile Include="Models\Instruments\TemperatureTests.cs" />
+    <Compile Include="Models\Instruments\TemperatureTest.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\Settings.cs" />

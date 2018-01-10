@@ -114,8 +114,9 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvExporter
         #endregion
 
         public void SetClientCertificatesList(IReactiveDerivedList<Certificate> certificatesList)
-        {
+        {            
             ClientCertificates = certificatesList;
+            Client = ClientCertificates.FirstOrDefault()?.Client;
 
             FromCertificates = ClientCertificates.CreateDerivedCollection(x => x);
             ToCertificates = ClientCertificates.CreateDerivedCollection(x => x);

@@ -84,16 +84,16 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
+                var volumePass = VolumeTest == null || VolumeTest.HasPassed;
+
                 if (Instrument.CompositionType == EvcCorrectorType.T && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                    return TemperatureTest.HasPassed && volumePass;
 
                 if (Instrument.CompositionType == EvcCorrectorType.P && PressureTest != null)
-                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                    return PressureTest.HasPassed && volumePass;
 
-                if (Instrument.CompositionType == EvcCorrectorType.PTZ && PressureTest != null &&
-                    TemperatureTest != null)
-                    return TemperatureTest.HasPassed && PressureTest.HasPassed &&
-                           (VolumeTest == null || VolumeTest.HasPassed);
+                if (Instrument.CompositionType == EvcCorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
+                    return TemperatureTest.HasPassed && PressureTest.HasPassed && SuperFactorTest.HasPassed && volumePass;
 
                 return false;
             }
@@ -101,8 +101,10 @@ namespace Prover.Core.Models.Instruments
 
         public override void OnInitializing()
         {
+            base.OnInitializing();
+
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
-                SuperFactorTest = new SuperFactorTest(this);
+                SuperFactorTest = new SuperFactorTest(this);            
         }
     }
 }

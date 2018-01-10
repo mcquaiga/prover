@@ -47,15 +47,18 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
-            <ContentControl Margin="2"
-                            Grid.Column="0"
+
+            <ScrollViewer Grid.Column="0"
+                          VerticalScrollBarVisibility="Auto">
+                <ContentControl Margin="4 8"
                             cal:View.Model="{Binding SiteInformationItem}"
-                            cal:View.Context="SiteInfoCardNew" />
+                            cal:View.Context="SiteInfoCardNew" 
+                            VerticalAlignment="Top"/>
+            </ScrollViewer>
 
             <ScrollViewer Grid.Column="1"
                           VerticalScrollBarVisibility="Auto">
-                <Grid>
+                <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -84,12 +87,15 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
                     <Border Style="{StaticResource SubSectionDividerBorder}"                           
                             Grid.Column="0" 
                             Grid.ColumnSpan="3"
                             Grid.Row="1"
-                            Padding="4">
-                        <ContentControl cal:View.Model="{Binding VolumeTestView}" cal:View.Context="CardNew" />
+                            Padding="4"
+                            VerticalAlignment="Stretch">
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}" 
+                                        cal:View.Context="CardNew" />
                     </Border>
                 </Grid>
 

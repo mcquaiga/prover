@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
@@ -27,7 +28,7 @@ namespace Prover.Core.Models.Instruments
             _totalGauge = GetGaugePressure(percentOfGauge);
             AtmosphericGauge = default(decimal?);
 
-            switch (VerificationTest?.Instrument?.Transducer)
+            switch (Transducer)
             {
                 case TransducerType.Gauge:
                     GasGauge = TotalGauge;
@@ -41,6 +42,9 @@ namespace Prover.Core.Models.Instruments
         }
 
         private readonly decimal? _totalGauge;
+
+        [NotMapped]
+        public TransducerType? Transducer => VerificationTest?.Instrument?.Transducer;
 
         [NotMapped]
         public decimal TotalGauge => _totalGauge ?? 0;
@@ -138,7 +142,7 @@ namespace Prover.Core.Models.Instruments
                 percentOfGauge = percentOfGauge / 100;
 
             var evcPressureRange = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return percentOfGauge * evcPressureRange;
+            return Decimal.Round(percentOfGauge * evcPressureRange, 2);
         }
 
         public decimal? GasGauge { get; set; }

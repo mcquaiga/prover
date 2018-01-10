@@ -9,13 +9,19 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         {
         }
 
-        public decimal? EVCUnsqrFactor => TestRun.EvcUnsqrFactor;
+        private decimal _lastGaugeTemp;
+        private decimal _lastGaugePressure;
 
         protected override void RaisePropertyChangeEvents()
         {
+            if (_lastGaugeTemp != TestRun.GaugeTemp || _lastGaugePressure != TestRun.GaugePressure.Value)
+                TestRun.Calculate();
+
+            _lastGaugeTemp = TestRun.GaugeTemp;
+            _lastGaugePressure = TestRun.GaugePressure ?? 0;
+            
             NotifyOfPropertyChange(() => TestRun);
-            NotifyOfPropertyChange(() => PercentError);
-            NotifyOfPropertyChange(() => EVCUnsqrFactor);
+            NotifyOfPropertyChange(() => PercentError);          
         }
     }
 }

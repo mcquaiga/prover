@@ -11,19 +11,21 @@
     <Viewbox Stretch="Uniform"
              Width="1056"
              Height="816">
-        <Grid>
+        <Grid Margin="4">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
-                <RowDefinition Height="665" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="660" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1040" />
             </Grid.ColumnDefinitions>
+            
             <Border Grid.Row="0"
                     BorderBrush="{StaticResource BorderBrushColor}"
-                    BorderThickness="0 0 0 1"
-                    Margin="2 5 0 2">
+                    BorderThickness="0 0 0 1"                    
+                    Padding="6"
+                    Margin="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -35,7 +37,45 @@
                         <ColumnDefinition Width="0.2*" />
                     </Grid.ColumnDefinitions>
 
+                    <materialDesign:Card Grid.Column="0"
+                                         HorizontalAlignment="Stretch"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                         Grid.Row="0">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="2">
+                            <Border Background="{StaticResource BorderBrushColor}"
+                                    Padding="2">
+                                <TextBlock FontSize="10"
+                                           Text="Accredited Meter Verifier"/>
+                            </Border>
+
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Width="36"
+                                       Margin="4"
+                                       VerticalAlignment="Center"
+                                       Source="Resources/crwall_logo.jpg" />
+                                <TextBlock Margin="4 2"
+                                           Grid.Column="1">
+                                    <TextBlock FontWeight="DemiBold">
+                                        C.R. Wall and Co. Inc.
+                                    </TextBlock><LineBreak />
+                                    55 Thompson Dr. <LineBreak />
+                                    Cambridge, ON
+                                    N1T 2E4 <LineBreak/>
+                                    Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
+                                    District: London
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
                     <materialDesign:Card Grid.Column="2"
+                                         Grid.Row="0"
+                                         HorizontalAlignment="Stretch"
                                          materialDesign:ShadowAssist.ShadowDepth="Depth0">
                         <StackPanel Orientation="Vertical"
                                     Margin="2">
@@ -58,9 +98,6 @@
                                            TextWrapping="WrapWithOverflow"
                                            FontSize="10" />
                             </TextBlock>
-                          
-
-
                         </StackPanel>
                     </materialDesign:Card>
 
@@ -117,8 +154,7 @@
                                     Grid.Column="0"
                                     Grid.ColumnSpan="3"
                                     HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    Margin="2 2">
+                                    VerticalAlignment="Bottom">
                             <TextBlock Text="{Binding Certificate.Apparatus}"
                                        HorizontalAlignment="Center"
                                        FontSize="10"
@@ -128,48 +164,10 @@
                                        HorizontalAlignment="Center"
                                        Foreground="{StaticResource SecondaryTextColor}"
                                        FontSize="8"/>
-
                         </StackPanel>
                     </Grid>
 
-                    <materialDesign:Card Grid.Column="0"
-                                         HorizontalAlignment="Stretch"
-                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                         Grid.Row="0">
-                        <StackPanel Orientation="Vertical"
-                                    Margin="2">
-                            <Border Background="{StaticResource BorderBrushColor}"
-                                    Padding="2">
-                                <TextBlock FontSize="10"
-                                           Text="Accredited Meter Verifier"/>
-                            </Border>
-
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image Width="36"
-                                       Margin="4"
-                                       VerticalAlignment="Center"
-                                       Source="Resources/crwall_logo.jpg" />
-                                <TextBlock Margin="4 2"
-                                           Grid.Column="1">
-                                    <TextBlock FontWeight="DemiBold">
-                                        C.R. Wall and Co. Inc.
-                                    </TextBlock><LineBreak />
-                                    55 Thompson Dr. <LineBreak />
-                                    Cambridge, ON
-                                    N1T 2E4 <LineBreak/>
-                                    Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
-                                    District: London
-                                </TextBlock>
-
-
-
-                            </Grid>
-                        </StackPanel>
-                    </materialDesign:Card>
+                   
                 </Grid>
             </Border>
 
@@ -207,8 +205,9 @@
             <Border Grid.Row="2"
                     BorderThickness="0 1 0 0"
                     BorderBrush="{StaticResource BorderBrushColor}"
-                    Margin="2">
-                <Grid Margin="0 2 0 0">
+                    Padding="4"
+                    Margin="2 4 2 2">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*" />
                         <ColumnDefinition Width="0.35*" />

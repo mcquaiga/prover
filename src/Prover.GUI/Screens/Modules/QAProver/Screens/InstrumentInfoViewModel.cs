@@ -48,6 +48,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
         public string PressureRange =>
             $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
+        public string PressureTransducerType => $"{Instrument.Items.GetItem(ItemCodes.Pressure.TransducerType).Description}"; //.Substring(0, 1).ToUpper()
+
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
 
         public string TemperatureRange =>

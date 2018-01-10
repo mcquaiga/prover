@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Prover.Core.ExternalDevices.DInOutBoards;
 
-namespace Prover.Core.Communication
+namespace Prover.Core.ExternalDevices
 {
     public class TachometerService : IDisposable
     {
@@ -15,26 +17,21 @@ namespace Prover.Core.Communication
         private readonly SerialPort _serialPort;
 
         public TachometerService(string portName, IDInOutBoard outputBoard)
-        {
-            if (string.IsNullOrEmpty(portName))
-            {
-                _serialPort = null;
-                _outputBoard = null;
-            }
-            else
+        {            
+            _serialPort = null;
+            
+            if (SerialPort.GetPortNames().Contains(portName))            
             {
                 _serialPort = new SerialPort(portName, 9600);
-                if (!_serialPort.IsOpen)
-                    _serialPort.Open();
-
-                _outputBoard = outputBoard;
             }
-               
+
+            _outputBoard = outputBoard;
         }
 
         public void Dispose()
         {
             _serialPort?.Close();
+            _serialPort?.Dispose();
             _outputBoard?.Dispose();
         }
 

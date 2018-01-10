@@ -13,10 +13,10 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 {
     public class ClientPostTestResetManager : IPostTestAction
     {
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
         private readonly TestRunService _testRunService;
 
-        public ClientPostTestResetManager(ClientService clientService, TestRunService testRunService)
+        public ClientPostTestResetManager(IClientService clientService, TestRunService testRunService)
         {
             _clientService = clientService;
             _testRunService = testRunService;
@@ -30,7 +30,12 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
         public async Task Execute(EvcCommunicationClient commClient, Instrument instrument,
             Subject<string> statusUpdates)
         {
-            var resetItems = instrument?.Client?.Items?
+            if (instrument.Client == null)
+                return;
+
+            var client = await _clientService.GetById(instrument.Client.Id);
+
+            var resetItems = client.Items
                 .FirstOrDefault(c => c.ItemFileType == ClientItemType.Reset &&
                                      c.InstrumentType == instrument.InstrumentType)
                 ?.Items.ToList();
