@@ -32,9 +32,12 @@ namespace Prover.GUI.Controls
                 .Subscribe(i =>
                 {
                     AvailableItems.Clear();
-                    AvailableItems.AddRange(i.ItemsMetadata.Where(item =>
-                        ItemsFileType == ClientItemType.Reset && item.CanReset
-                        || ItemsFileType == ClientItemType.Verify && item.CanVerify));
+                    AvailableItems.AddRange(
+                        i.ItemsMetadata.Where(item => 
+                            (ItemsFileType == ClientItemType.Reset && item.CanReset)
+                        || (ItemsFileType == ClientItemType.Verify && item.CanVerify))
+                        .OrderBy(im => im.Number));
+
                 });
 
             ActiveItems.Changed

@@ -13,7 +13,8 @@ namespace Prover.Core.Storage
         protected override IQueryable<Certificate> QueryCommand()
         {
             return Context.Certificates
-                .IncludeOptimized(c => c.Instruments);
+                .IncludeOptimized(c => c.Instruments)
+                .IncludeOptimized(c => c.Client);
         }
     }
 }
