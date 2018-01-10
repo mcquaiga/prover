@@ -14,7 +14,7 @@ namespace Prover.GUI.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool && (bool) value)
+            if (value is bool b && b)
                 return TrueValue;
 
             return FalseValue;
@@ -25,7 +25,7 @@ namespace Prover.GUI.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((string) value == "P")
+            if (value is string s && s == TrueValue)
                 return true;
 
             return false;

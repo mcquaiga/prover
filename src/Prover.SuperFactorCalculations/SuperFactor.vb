@@ -40,7 +40,6 @@
             Return sCO2
         End Get
         Set
-            value = value
             sCO2 = value
         End Set
     End Property
@@ -50,7 +49,6 @@
             Return sN2
         End Get
         Set
-            value = value
             sN2 = value
         End Set
     End Property

@@ -35,7 +35,7 @@
                 <controls:ValueDescriptionControl Label="Actual Factor"
                                                    Value="{Binding TestRun.ActualFactor}" />
                 <controls:ValueDescriptionControl Label="EVC Factor"
-                                                   Value="{Binding EVCUnsqrFactor}" />
+                                                   Value="{Binding TestRun.EvcUnsqrFactor}" />
             </UniformGrid>
 
         </Grid>

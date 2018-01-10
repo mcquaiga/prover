@@ -6,12 +6,9 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:controls1="clr-namespace:Prover.GUI.Controls"
              mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+    <StackPanel Orientation="Vertical">
+        
+        <Grid>
             <TextBlock Text="Volume"
                        Style="{StaticResource PrimaryTestHeaderStyle}" />
             <Grid Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}"
@@ -36,10 +33,9 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="1"
-              VerticalAlignment="Top"
-              Margin="0">
-            <Grid.Resources>
+        <Grid Margin="0"
+              VerticalAlignment="Top">
+            <!--<Grid.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="VerticalAlignment" Value="Bottom" />
                     <Setter Property="Margin" Value="4 0" />
@@ -48,7 +44,7 @@
                     <Setter Property="VerticalAlignment" Value="Bottom" />
                     <Setter Property="Margin" Value="4 0" />
                 </Style>
-            </Grid.Resources>
+            </Grid.Resources>-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -60,7 +56,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         VerticalAlignment="Top"
-                        Margin="0 75">
+                        Margin="0 60 0 0">
                 <controls1:ValueDescriptionControl Label="Applied Input"
                                                   Value="{Binding AppliedInput, Mode=TwoWay}"
                                                   TabIndex="0"
@@ -155,6 +151,6 @@
             </UniformGrid>
 
         </Grid>
-    </Grid>
+    </StackPanel>
 
 </UserControl>
