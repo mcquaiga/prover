@@ -39,41 +39,42 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 
         private async Task<bool> IsValid(Instrument instrument)
         {
-            return await Task.Run(() =>
+            if (instrument.Client == null)
+                return true;
+
+            var client = await _clientService.GetById(instrument.Client.Id);
+
+            InvalidInstrumentValues.Clear();
+            ValidationItems.Clear();
+
+            ValidationItems = client.Items
+                .FirstOrDefault(c => c.ItemFileType == ClientItemType.Verify && c.InstrumentType == instrument.InstrumentType)?
+                .Items
+                .ToList();
+
+            if (ValidationItems == null)
+                return true;
+
+            foreach (var validItem in ValidationItems)
             {
-                if (instrument.Client == null) return true;
+                var instrumentItem =
+                    instrument.Items.FirstOrDefault(i => i.Metadata.Number == validItem.Metadata.Number);
 
-                InvalidInstrumentValues.Clear();
-
-                ValidationItems.Clear();
-                ValidationItems = instrument.Client.Items
-                    .FirstOrDefault(c => c.ItemFileType == ClientItemType.Verify &&
-                                         c.InstrumentType == instrument.InstrumentType)?
-                    .Items
-                    .ToList();
-
-                if (ValidationItems == null) return true;
-
-                foreach (var validItem in ValidationItems)
+                if (instrumentItem != null && !Equals(instrumentItem.NumericValue, validItem.NumericValue))
                 {
-                    var instrumentItem =
-                        instrument.Items.FirstOrDefault(i => i.Metadata.Number == validItem.Metadata.Number);
-
-                    if (instrumentItem != null && !Equals(instrumentItem.NumericValue, validItem.NumericValue))
-                    {
-                        var values = new Tuple<ItemValue, ItemValue>(validItem, instrumentItem);
-                        InvalidInstrumentValues.Add(validItem.Metadata, values);
-                    }
+                    var values = new Tuple<ItemValue, ItemValue>(validItem, instrumentItem);
+                    InvalidInstrumentValues.Add(validItem.Metadata, values);
                 }
+            }
 
-                return !InvalidInstrumentValues.Any();
-            });
+            return !InvalidInstrumentValues.Any();
+         
         }
 
         /// <summary>
         ///     Contains the ItemMetada and the valid & invalid value for that item
-        ///     T1 = Client value
-        ///     T2 = Instrument value
+        ///     T1 = Client value (Expected)
+        ///     T2 = Instrument value (Actual)
         /// </summary>
         public Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>> InvalidInstrumentValues =
             new Dictionary<ItemMetadata, Tuple<ItemValue, ItemValue>>();
