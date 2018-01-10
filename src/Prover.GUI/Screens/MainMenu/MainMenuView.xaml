@@ -8,21 +8,20 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
     <Grid>
         <ItemsControl ItemsSource="{Binding Path=AppMainMenus}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Width="128" Height="150">
                         <StackPanel>
-                            <materialDesign:PackIcon Kind="{Binding Path=MenuIconKind}" 
+                            <materialDesign:PackIcon Kind="{Binding Path=MenuIconKind}"
+                                                     Foreground="White"
                                                      Width="48" Height="48" 
                                                      HorizontalAlignment="Center"/>
                             <TextBlock TextAlignment="Center" 
                                        HorizontalAlignment="Center"
                                        TextWrapping="WrapWithOverflow"
+                                       Foreground="White"
                                        Text="{Binding Path=MenuTitle}" />
                         </StackPanel>
                         <i:Interaction.Triggers>

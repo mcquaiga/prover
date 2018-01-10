@@ -567,7 +567,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">
                     <TextBlock
-                        Text="{Binding VolumeTest.HasPassed, FallbackValue=PASS, Converter={StaticResource BooleanToPass}}"
+                        Text="{Binding Instrument.HasPassed, Converter={StaticResource BooleanToPass}}"
                         Style="{StaticResource ValueStyle}"
                         FontSize="18" />
                     <TextBlock Text="status"

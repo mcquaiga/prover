@@ -23,7 +23,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
         };
 
-        public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public TocHoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
         }
 

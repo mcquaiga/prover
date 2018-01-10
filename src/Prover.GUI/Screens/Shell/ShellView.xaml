@@ -19,7 +19,8 @@
                             <Button Command="{Binding Path=NavigationCommand}"
                                     Width="48"
                                     Height="48">
-                                <materialDesign:PackIcon Kind="{Binding Path=IconKind}"/>
+                                <materialDesign:PackIcon Kind="{Binding Path=IconKind}"
+                                                         Foreground="White"/>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

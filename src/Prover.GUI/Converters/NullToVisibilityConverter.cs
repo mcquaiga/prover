@@ -10,6 +10,9 @@ namespace Prover.GUI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is string)
+                value = string.IsNullOrEmpty((string) value) ? null : value;
+
             return value == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
