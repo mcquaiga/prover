@@ -5,9 +5,7 @@ using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.MainMenu;
-using ReactiveUI;
 using Splat;
-using IScreen = ReactiveUI.IScreen;
 
 namespace Prover.GUI.Common
 {

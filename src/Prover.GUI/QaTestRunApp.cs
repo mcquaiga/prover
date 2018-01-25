@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens;

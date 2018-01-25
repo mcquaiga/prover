@@ -6,6 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              TextElement.Foreground="Black"
              TextElement.FontWeight="Light"
              TextElement.FontSize="18"
@@ -22,6 +23,9 @@
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
 
             <BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"
+                                                 NullValue="Visible"
+                                                  NotNullValue="Collapsed"/>
 
             <DataTemplate x:Key="TestTemplate">
                 <ContentControl cal:View.Model="{Binding }" cal:View.Context="Grid" />
@@ -54,6 +58,7 @@
                 <ColumnDefinition Width="64" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <materialDesign:PackIcon x:Name="Icon"
@@ -69,25 +74,49 @@
                     <TextBlock Text=" | " />
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator}" />
                 </StackPanel>
-
             </StackPanel>
-            <StackPanel Grid.Column="2" Margin="10 5" Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel Grid.Column="2" 
+                        Margin="10 5" 
+                        Orientation="Vertical" 
+                        VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock>C/N: </TextBlock><TextBlock FontSize="18" Text="{Binding Instrument.SiteNumber2}" />
+                    <TextBlock>C/N: </TextBlock>
+                    <TextBlock Text="{Binding Instrument.SiteNumber2}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>S/N:</TextBlock>
-                    <TextBlock FontSize="18" Text="{Binding Instrument.SerialNumber}" />
+                    <TextBlock Text="{Binding Instrument.SerialNumber}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock>Job #</TextBlock>
                     <TextBlock Text="{Binding Instrument.JobId}" />
                 </StackPanel>
             </StackPanel>
+            <StackPanel Grid.Column="3" 
+                        Margin="5" 
+                        Orientation="Horizontal" 
+                        VerticalAlignment="Center"
+                        Visibility="{Binding Instrument.EmployeeId, Converter={StaticResource NullToVisibilityConverter}}">
+                <materialDesign:PackIcon Kind="Alert"
+                                         Foreground="Red"
+                                         Width="32" Height="32"
+                                         VerticalAlignment="Center"/>
+                <TextBlock VerticalAlignment="Center"
+                           Text="No user assigned."/>
+                <Button Command="{Binding AddCurrentUserCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionButton}"
+                        ToolTip="Add currently logged in user"
+                        Visibility="{Binding Instrument.EmployeeId, Converter={StaticResource NullToVisibilityConverter}}"
+                        Height="48"
+                        Margin="8 0">
+                    <materialDesign:PackIcon Kind="AccountPlus"/>
+                </Button>
+            </StackPanel>
 
-            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+            <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
                         Margin="5">
 
+           
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                         Height="48"
                         Command="{Binding ExportQaTestRunCommand}"
@@ -105,7 +134,8 @@
                                              Height="36"
                                              Width="36"/>
                 </Button>
-                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="15 0 0 0"
+                <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                        Margin="15 0 0 0"
                         Height="48"
                         Command="{Binding ArchiveTestCommand}"
                         ToolTip="Archive Test">

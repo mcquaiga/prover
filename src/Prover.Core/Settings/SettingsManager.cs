@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Akavache;
 using Newtonsoft.Json;
 using Prover.Core.IO;
 

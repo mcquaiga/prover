@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using NLog;
-using NLog.Fluent;
 using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
@@ -35,6 +34,22 @@ namespace UnionGas.MASA
         
         public EmployeeDTO User { get; private set; }
 
+        public bool IsLoggedIn => !string.IsNullOrEmpty(User?.Id);
+
+        public async Task<bool> GetLoginDetails()
+        {
+            var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
+            var result = _screenManager.ShowDialog(loginViewModel);
+            var userId = result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
+
+            if (userId != null)
+            {
+                return await Login(userId);
+            }
+
+            return false;
+        }
+
         public async Task<bool> Login(string username, string password = null)
         {
             User = null;
@@ -49,17 +64,19 @@ namespace UnionGas.MASA
                 var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
                 var response = 
                     await Task.Run(async () => await _webService.GetEmployeeAsync(employeeRequest), ct);
-
+                
                 User = response.Body.GetEmployeeResult;
             }
             catch (EndpointNotFoundException)
             {
                 MessageBox.Show("Couldn't connect to web service.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _log.Error("Endpoint could not be found.");
             }
             catch (Exception ex)
             {
                 _log.Error(ex);
             }
+
 
             return User?.Id != null;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,12 +9,9 @@ using Caliburn.Micro;
 using Prover.Core.Startup;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Reports;
 using Prover.GUI.Screens.Shell;
-using ReactiveUI;
 using ReactiveUI.Autofac;
-using Splat;
 
 namespace Prover.GUI
 {

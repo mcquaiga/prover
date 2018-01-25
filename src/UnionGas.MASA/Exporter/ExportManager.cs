@@ -31,9 +31,7 @@ namespace UnionGas.MASA.Exporter
         }
 
         public async Task<bool> Export(IEnumerable<Instrument> instrumentsForExport)
-        {
-            try
-            {
+        {          
                 var forExport = instrumentsForExport as Instrument[] ?? instrumentsForExport.ToArray();
                 var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
 
@@ -49,11 +47,7 @@ namespace UnionGas.MASA.Exporter
                     await _instrumentStore.UpsertAsync(instr);
                 }
                 return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+           
         }
 
         private async Task<bool> SendResultsToWebService(IEnumerable<QARunEvcTestResult> evcQaRuns)

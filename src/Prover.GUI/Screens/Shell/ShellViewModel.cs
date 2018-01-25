@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
-using Prover.Core.Login;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Interfaces;
-using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.Toolbar;
 using Prover.GUI.Dialogs;
 using Prover.GUI.Screens.Settings;

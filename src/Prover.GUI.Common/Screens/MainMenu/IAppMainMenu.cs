@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
-using Caliburn.Micro;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Action = System.Action;
 
 namespace Prover.GUI.Common.Screens.MainMenu
