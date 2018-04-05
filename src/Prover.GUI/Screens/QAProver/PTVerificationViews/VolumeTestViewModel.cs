@@ -15,9 +15,12 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
+        private readonly IQaRunTestManager _testRunManager;
+
         public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
+            Core.Models.Instruments.VolumeTest testRun, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
+            _testRunManager = testRunManager;
             Volume = testRun;
 
             if (Volume?.DriveType is MechanicalDrive)
@@ -38,6 +41,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         }
 
         public ReactiveCommand PostVolumeTestCommand { get; set; }
+        public bool ShowPostTestButton => PostVolumeTestCommand != null && _testRunManager != null;
 
         public QaRunTestManager InstrumentManager { get; set; }
         public Instrument Instrument => Volume.Instrument;

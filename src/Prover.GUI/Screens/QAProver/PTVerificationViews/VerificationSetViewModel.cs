@@ -57,7 +57,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             }
 
             if (VerificationTest.VolumeTest != null)
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest);
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
         }
 
         public bool ShowDownloadButton => QaRunTestManager != null;

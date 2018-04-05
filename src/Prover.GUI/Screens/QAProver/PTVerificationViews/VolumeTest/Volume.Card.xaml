@@ -25,10 +25,11 @@
                                       Content="Volume"
                                       Mode="PrimaryDark"
                                       materialDesign:ShadowAssist.ShadowDepth="Depth1" />
-            <StackPanel Orientation="Horizontal">
-                <Button Content="DOWNLOAD END RESULTS"
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Download End"
                         Margin="15 5"
-                        Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                        Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}"
                         Command="{Binding PostVolumeTestCommand}" />
             </StackPanel>
