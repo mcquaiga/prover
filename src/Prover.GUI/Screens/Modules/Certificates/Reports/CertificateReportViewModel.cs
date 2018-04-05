@@ -23,7 +23,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Reports
 
             Instruments = new List<VerificationViewModel>();
 
-            foreach (var instr in Certificate.Instruments.OrderBy(x => x.TestDateTime))
+            foreach (var instr in Certificate.Instruments.OrderBy(x => x.SerialNumber))
             {
                 Instruments.Add(new VerificationViewModel(instr));
             }

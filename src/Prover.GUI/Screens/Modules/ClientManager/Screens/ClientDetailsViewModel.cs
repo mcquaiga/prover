@@ -31,7 +31,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
             EditCommand = ReactiveCommand.Create(Edit);
             ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveClient);
 
-            var canSave = this.WhenAnyValue(c => c.Client, c => !string.IsNullOrEmpty(c.Name));
+            var canSave = this.WhenAnyValue(c => c.Client, c => !string.IsNullOrEmpty(c?.Name));
             SaveCommand = ReactiveCommand.CreateFromTask(Save, canSave);
 
             GoBackCommand = ReactiveCommand.CreateFromTask(GoBack);
@@ -42,15 +42,15 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
 
             SwitchToDetailsContextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                if (Client != null)
-                    Client = await _clientService.GetById(Client.Id);
-
+                //if (Client.Name != null)
+                //    Client = await _clientService.GetById(Client.Id);
+    
                 IsDirty = true;
                 InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
 
                 var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
 
-                VerifyItemList = new ItemsFileViewModel(_client, ClientItemType.Verify, instrumentSelected,
+                VerifyItemList = new ItemsFileViewModel(Client, ClientItemType.Verify, instrumentSelected,
                     "These items will be compared to the instruments values at the beginning of the test");
 
                 ResetItemList = new ItemsFileViewModel(_client, ClientItemType.Reset, instrumentSelected,

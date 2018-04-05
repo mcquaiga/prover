@@ -2,6 +2,7 @@
 using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.GUI.Events;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -12,8 +13,13 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             eventAggregator.Subscribe(this);
             EnergyTest = mechanicalDriveType.Energy;
         }
-
-        public Energy EnergyTest { get; set; }
+        
+        private Energy _energyTest;
+        public Energy EnergyTest
+        {
+            get => _energyTest;
+            set => this.RaiseAndSetIfChanged(ref _energyTest, value);
+        }
 
         public void Handle(VerificationTestEvent message)
         {

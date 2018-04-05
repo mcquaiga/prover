@@ -89,6 +89,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Common
             public string UnitsAndTransducer => $"{Units}";
             public string Units => _instrument.Items.GetItem(87).Description;
             public decimal Base => decimal.Round(_instrument.Items.GetItem(13).NumericValue, 2);
+            public decimal Atm => decimal.Round(_instrument.Items.GetItem(14).NumericValue, 2);
             public string TransducerType => _instrument.Items.GetItem(112).Description;
             public string Range => $"{(int) _instrument.Items.GetItem(137).NumericValue} {UnitsAndTransducer}";
         }

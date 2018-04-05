@@ -150,21 +150,42 @@
                             Compteurs de Gaz
                         </TextBlock>
 
-                        <StackPanel Grid.Row="2"
+                        <UniformGrid Rows="1"
+                                    Grid.Row="2"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="3"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom">
-                            <TextBlock Text="{Binding Certificate.Apparatus}"
-                                       HorizontalAlignment="Center"
-                                       FontSize="10"
-                                       TextWrapping="WrapWithOverflow"/>
-                            <TextBlock Text="Measuring apparatus (Std) no. - Nº des appareils (étalon)"
-                                       VerticalAlignment="Bottom"
-                                       HorizontalAlignment="Center"
-                                       Foreground="{StaticResource SecondaryTextColor}"
-                                       FontSize="8"/>
-                        </StackPanel>
+                                    HorizontalAlignment="Stretch">
+                            <StackPanel Grid.Row="2"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding Certificate.Apparatus}"
+                                           HorizontalAlignment="Center"
+                                           FontSize="10"
+                                           TextWrapping="WrapWithOverflow"/>
+                                <TextBlock Text="Measuring apparatus (Std) no. - Nº des appareils (étalon)"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Center"
+                                           Foreground="{StaticResource SecondaryTextColor}"
+                                           FontSize="8"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2"
+                                        Grid.Column="2"                                    
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Bottom">
+                                <TextBlock Text="Honeywell Mercury Instruments"
+                                           HorizontalAlignment="Center"
+                                           FontSize="10"
+                                           TextWrapping="WrapWithOverflow"/>
+                                <TextBlock Text="Device Manufacturer - Fabricant de l'appareil "
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Center"
+                                           Foreground="{StaticResource SecondaryTextColor}"
+                                           FontSize="8"/>
+                            </StackPanel>
+                        </UniformGrid>
+                        
                     </Grid>
 
                    
