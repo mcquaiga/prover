@@ -346,7 +346,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
                 if (ex is OperationCanceledException)
                     Log.Warn("Test init cancelled by user.");
                 else
-                    throw;
+                    Log.Error(ex);
             }
             finally
             {
