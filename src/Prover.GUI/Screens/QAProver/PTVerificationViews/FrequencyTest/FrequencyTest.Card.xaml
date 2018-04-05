@@ -40,16 +40,16 @@
                                                            Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                            IsReadOnly="False"/>
                         
-                        <controls1:ValueDescriptionControl Label="True Adj." 
+                        <controls1:ValueDescriptionControl Label="True Adjusted" 
                                                            Value="{Binding AdjustedVolume}" />
                         
-                        <controls1:ValueDescriptionControl Label="EVC Adj." 
+                        <controls1:ValueDescriptionControl Label="EVC Adjusted" 
                                                            Value="{Binding EvcAdjustedVolume}" />
                         
-                        <controls1:ValueDescriptionControl Label="True Unadj." 
+                        <controls1:ValueDescriptionControl Label="True Unadjusted" 
                                                            Value="{Binding UnadjustedVolume}" />
                         
-                        <controls1:ValueDescriptionControl Label="EVC Unadj." 
+                        <controls1:ValueDescriptionControl Label="EVC Unadjusted" 
                                                            Value="{Binding EvcUnadjustedVolume}"/>
                     </UniformGrid>
 

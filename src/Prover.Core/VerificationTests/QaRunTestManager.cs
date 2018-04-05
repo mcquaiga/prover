@@ -23,6 +23,7 @@ namespace Prover.Core.VerificationTests
         Instrument Instrument { get; }
         Task InitializeTest(InstrumentType instrumentType, CommPort commPort);
         Task RunTest(int level, CancellationToken ct = new CancellationToken());
+        Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken());
         Task SaveAsync();
         Task RunVerifier();
 
@@ -118,6 +119,11 @@ namespace Prover.Core.VerificationTests
             {
                 Log.Info("Test run cancelled.");
             }            
+        }
+
+        public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
+        {
+            await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
         }
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)

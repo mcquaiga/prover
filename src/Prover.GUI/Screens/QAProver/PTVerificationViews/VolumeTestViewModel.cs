@@ -1,4 +1,7 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 using Caliburn.Micro;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
@@ -6,6 +9,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
@@ -28,8 +32,12 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             if (Volume?.VerificationTest.FrequencyTest != null)
             {
                 FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest);
+                
+                PostVolumeTestCommand = ReactiveCommand.CreateFromTask(RunPostVolumeTest);
             }
         }
+
+        public ReactiveCommand PostVolumeTestCommand { get; set; }
 
         public QaRunTestManager InstrumentManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
@@ -94,6 +102,23 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             {
                 var rotaryDrive = Volume?.DriveType as RotaryDrive;
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+            }
+        }
+
+        private async Task RunPostVolumeTest()
+        {
+            try
+            {
+                await InstrumentManager.DownloadPostVolumeTest();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
             }
         }
 

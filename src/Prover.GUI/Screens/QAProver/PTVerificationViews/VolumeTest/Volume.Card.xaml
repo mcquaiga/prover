@@ -19,16 +19,30 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <materialDesign:ColorZone Padding="2"
-                                  Margin="2"
-                                  Content="Volume"
-                                  Mode="PrimaryDark"
-                                  materialDesign:ShadowAssist.ShadowDepth="Depth1" />
+        <Grid>   
+            <materialDesign:ColorZone Padding="2"
+                                      Margin="2"
+                                      Content="Volume"
+                                      Mode="PrimaryDark"
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth1" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="DOWNLOAD END RESULTS"
+                        Margin="15 5"
+                        Visibility="{Binding IsManualVolumeTest, Converter={StaticResource BoolToHiddenConverter}}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding PostVolumeTestCommand}" />
+            </StackPanel>
+        </Grid>
+     
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
             <StackPanel Grid.Column="0">
                 <controls1:ValueDescriptionControl Label="Applied Input"
@@ -36,9 +50,15 @@
                                                    VerticalAlignment="Bottom" />
             </StackPanel>
 
-            <UniformGrid Grid.Column="1"
-                         Columns="3">
-                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+            <Grid Grid.Column="1"
+                  Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                     Grid.Column="0">
                     <StackPanel>
                         <materialDesign:ColorZone
                             Padding="5"
@@ -68,7 +88,8 @@
                         </UniformGrid>
                     </StackPanel>
                 </materialDesign:Card>
-                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                     Grid.Column="1">
                     <StackPanel>
                         <materialDesign:ColorZone
                             Padding="5"
@@ -100,7 +121,9 @@
 
                     </StackPanel>
                 </materialDesign:Card>
-                <UniformGrid Rows="1">
+
+                <UniformGrid Rows="1"
+                             Grid.Column="2">
                     <ContentControl cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card"
                                     Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
                     <ContentControl cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card"
@@ -108,8 +131,8 @@
                     <ContentControl cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card"
                                     Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}" />
                 </UniformGrid>
-            </UniformGrid>
-
+            </Grid>
+           
         </Grid>
     </Grid>
 

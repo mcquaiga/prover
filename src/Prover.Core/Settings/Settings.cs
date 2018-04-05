@@ -11,25 +11,16 @@ namespace Prover.Core.Settings
         public int InstrumentBaudRate { get; set; }
         public string TachCommPort { get; set; }
         public string ExportServiceAddress { get; set; }
+        public bool UpdateAbsolutePressure { get; set; } = true;
 
         public List<GaugeDefaults> TemperatureGaugeDefaults { get; set; }
         public List<GaugeDefaults> PressureGaugeDefaults { get; set; }
-
-        public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
-        public bool UpdateAbsolutePressure { get; set; } = true;
-        public Dictionary<int, string> TocResetItems { get; set; } = new Dictionary<int, string>()
-        {
-            { 865, "0" },
-            { 866, "0" },
-            { 867, "0" }
-        };
+        public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }        
+        public Dictionary<int, string> TocResetItems { get; set; }
 
         public void SetDefaults()
         {
             ExportServiceAddress = "";
-
-            //if (UpdateAbsolutePressure.HasValue == false)
-            //    UpdateAbsolutePressure = true;
 
             if (TemperatureGaugeDefaults == null)
                 TemperatureGaugeDefaults = new List<GaugeDefaults>
@@ -55,6 +46,15 @@ namespace Prover.Core.Settings
                     new MechanicalUncorrectedTestLimit { CuFtValue = 100, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit { CuFtValue = 1000, UncorrectedPulses = 1}  
                 };
+
+            if (TocResetItems == null)
+            {
+                TocResetItems = new Dictionary<int, string>()
+                {
+                    { 859, "0" },
+                    { 860, "0" }
+                };
+            }
         }
     }
 
