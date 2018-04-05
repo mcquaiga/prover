@@ -235,7 +235,7 @@ namespace Prover.GUI.Controls
 
         private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
         {
-            return _client.Items
+            return _client?.Items
                 .FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
         }
 

@@ -58,7 +58,7 @@
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" x:Key="ValueStyle">
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="10" />
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
             </Style>
@@ -130,10 +130,11 @@
         </Grid.Resources>
         <StackPanel Grid.Column="1"
                     Orientation="Vertical"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center">           
             <TextBlock FontSize="14"
                        HorizontalAlignment="Center"
-                       Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" />
+                       Margin="0 1"
+                       Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" />            
             <Border BorderThickness="0 1 0 0"
                     BorderBrush="Gray"
                     Margin="5 0">
@@ -244,6 +245,19 @@
                     <TextBlock Text="base"
                                Style="{StaticResource LabelStyle}" />
                 </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Pressure.Atm, FallbackValue=14.4}"
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text=" "
+                                   Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text="{Binding Pressure.Units, FallbackValue=PSIG}"
+                                   Style="{StaticResource ValueStyle}" />
+                    </StackPanel>
+                    <TextBlock Text="atm"
+                               Style="{StaticResource LabelStyle}" />
+                </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding Pressure.Range, FallbackValue=[N]}"
                                Style="{StaticResource ValueStyle}" />
@@ -303,27 +317,43 @@
                                Style="{StaticResource HeaderOneStyle}"
                                HorizontalAlignment="Center" />
                 </materialDesign:ColorZone>
-                <StackPanel Orientation="Vertical"
+                <UniformGrid Columns="2">
+                    <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
-                               Style="{StaticResource ValueStyle}" />
-                    <TextBlock Text="spec. gr."
-                               Style="{StaticResource LabelStyle}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
-                               Style="{StaticResource ValueStyle}" />
-                    <TextBlock Text="n2"
-                               Style="{StaticResource LabelStyle}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical"
-                            HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
-                               Style="{StaticResource ValueStyle}" />
-                    <TextBlock Text="co2"
-                               Style="{StaticResource LabelStyle}" />
-                </StackPanel>
+                        <TextBlock Text="NX-19"
+                                    Style="{StaticResource ValueStyle}" />
+                        <TextBlock Text="fpv"
+                                    Style="{StaticResource LabelStyle}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                Margin="2 0 0 0"
+                                HorizontalAlignment="Right">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
+                                        Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="sg"
+                                        Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
+                                        Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="n²"
+                                        Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
+                                        Style="{StaticResource ValueStyle}" />
+                            <TextBlock Text="co²"
+                                        Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                    </StackPanel>
+                    
+                </UniformGrid>
+                
+               
             </StackPanel>
         </Grid>
 
@@ -471,11 +501,12 @@
                     </Style>
                 </DataGrid.CellStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Description}"
+                    <DataGridTextColumn Binding="{Binding Description}"                                        
                                         IsReadOnly="True">
                         <DataGridTextColumn.CellStyle>
                             <Style>
                                 <Setter Property="DataGridCell.HorizontalAlignment" Value="Left" />
+                                <Setter Property="DataGridCell.FontSize" Value="10" />
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
