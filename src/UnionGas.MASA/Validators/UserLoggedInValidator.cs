@@ -23,6 +23,9 @@ namespace UnionGas.MASA.Validators
 
         public async Task<object> Validate(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
+            if (string.IsNullOrEmpty(_loginService.User?.Id))
+                await _loginService.GetLoginDetails();
+
             if (!string.IsNullOrEmpty(_loginService.User?.Id))
             {
                 instrument.EmployeeId = _loginService.User.Id;

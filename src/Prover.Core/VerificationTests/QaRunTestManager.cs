@@ -116,17 +116,19 @@ namespace Prover.Core.VerificationTests
             if (!_communicationClient.IsConnected)
                 await _communicationClient.Connect();
 
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+            switch (Instrument.CompositionType)
             {
-                await DownloadTemperatureTestItems(level);
-                await DownloadPressureTestItems(level);
+                case CorrectorType.PTZ:
+                    await DownloadTemperatureTestItems(level);
+                    await DownloadPressureTestItems(level);
+                    break;
+                case CorrectorType.T:
+                    await DownloadTemperatureTestItems(level);
+                    break;
+                case CorrectorType.P:
+                    await DownloadPressureTestItems(level);
+                    break;
             }
-
-            if (Instrument.CompositionType == CorrectorType.T)
-                await DownloadTemperatureTestItems(level);
-
-            if (Instrument.CompositionType == CorrectorType.P)
-                await DownloadPressureTestItems(level);
 
             await _communicationClient.Disconnect();
         }
