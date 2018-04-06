@@ -76,7 +76,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
 
         public abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcPostTestItemReset);
+            IEvcItemReset evcPostTestItemReset, bool readTach = true);
 
         public abstract void Dispose();
 

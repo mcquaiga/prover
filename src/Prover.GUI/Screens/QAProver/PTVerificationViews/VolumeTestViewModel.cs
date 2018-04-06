@@ -110,10 +110,10 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         }
 
         private async Task RunPostVolumeTest()
-        {
+        {        
             try
             {
-                await InstrumentManager.DownloadPostVolumeTest();
+                await _testRunManager.DownloadPostVolumeTest();
             }
             catch (Exception ex)
             {

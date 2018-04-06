@@ -110,10 +110,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
-        {
-            await Task.Run(async () =>
-            {
+        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
+        {            
                 try
                 {
                     await commClient.Connect();
@@ -131,8 +129,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     await commClient.Disconnect();
                 }
 
-                await GetAppliedInput(volumeTest);
-            });
+                if (readTach) await GetAppliedInput(volumeTest);          
         }
 
         public override void Dispose()
