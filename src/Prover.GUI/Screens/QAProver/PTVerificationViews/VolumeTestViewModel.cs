@@ -8,6 +8,7 @@ using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews

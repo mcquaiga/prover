@@ -8,6 +8,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens.QAProver.InstrumentInfo;
 
 namespace Prover.GUI.Screens.QAProver
 {
@@ -19,7 +20,20 @@ namespace Prover.GUI.Screens.QAProver
             eventAggregator.Subscribe(this);
         }
 
+        public void Initialize(Instrument instrument, IQaRunTestManager qaRunTestManager)
+        {
+            Instrument = instrument;
+            QaTestManager = qaRunTestManager;
+
+            if (Instrument.InstrumentType.Name == "TOC")
+            {
+                TocInfoItem = new TocInfoViewModel(Instrument);
+            }
+        }
+
         public Instrument Instrument { get; set; }
+
+        public TocInfoViewModel TocInfoItem { get; set; }
 
         public string CorrectorType
         {

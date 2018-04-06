@@ -61,7 +61,7 @@ namespace Prover.GUI.Screens.QAProver
                     SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Name;
                 });
 
-            CommProtocol.MiHoneywell.Instruments.GetAll().ForEach(
+            CommProtocol.MiHoneywell.Instruments.GetAll().ToList().ForEach(
                 x => Instruments.Add(new SelectableInstrumentType
                 {
                     Instrument = x,
@@ -218,8 +218,7 @@ namespace Prover.GUI.Screens.QAProver
             await Task.Run(() =>
             {
                 SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-                SiteInformationItem.QaTestManager = qaTestRunTestManager;
-                SiteInformationItem.Instrument = instrument;
+                SiteInformationItem.Initialize(instrument, qaTestRunTestManager);              
 
                 foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
                 {
