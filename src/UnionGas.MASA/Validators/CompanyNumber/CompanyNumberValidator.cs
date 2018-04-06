@@ -15,18 +15,14 @@ namespace UnionGas.MASA.Validators.CompanyNumber
 {
     public class CompanyNumberValidator : IValidator
     {
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly DCRWebServiceSoap _webService;
         private readonly IUpdater _updater;
-        private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public CompanyNumberValidator(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap webService, IUpdater updater, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidator(DCRWebServiceSoap webService, IUpdater updater)
         {
-            _instrumentStore = instrumentStore;
             _webService = webService;
             _updater = updater;
-            _loginService = loginService;
         }
        
         public async Task<object> Validate(EvcCommunicationClient commClient, Instrument instrument)
@@ -42,12 +38,8 @@ namespace UnionGas.MASA.Validators.CompanyNumber
             {
                 meterDto = await VerifyWithWebService(companyNumber);
 
-                if (meterDto != null 
-                    && (
-                            (meterDto?.InventoryCode == null || meterDto.InventoryCode != companyNumber)
-                        ||  (meterDto?.SerialNumber.TrimStart('0') != serialNumber)
-                       )
-                   )
+                if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
+                    || meterDto.InventoryCode != companyNumber || meterDto.SerialNumber.TrimStart('0') != serialNumber)                   
                 {
                     _log.Warn($"Company number {companyNumber} not found in an open job.");
                     companyNumber = (string) await _updater.Update(commClient, instrument);
@@ -58,16 +50,14 @@ namespace UnionGas.MASA.Validators.CompanyNumber
                 }
             } while (!string.IsNullOrEmpty(companyNumber));
             
-            await UpdateInstrumentValues(instrument, meterDto);
+            UpdateInstrumentValues(instrument, meterDto);
 
             return meterDto;
-        }
+        }     
 
-        private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)
+        private void UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)
         {
             instrument.JobId = meterDto?.JobNumber.ToString();
-            instrument.EmployeeId = _loginService.User?.Id;
-            await _instrumentStore.UpsertAsync(instrument);
         }
 
         public async Task<MeterDTO> VerifyWithWebService(string companyNumber)

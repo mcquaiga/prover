@@ -44,18 +44,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akavache, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\akavache.core.5.0.0\lib\net45\Akavache.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Akavache.Sqlite3, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\akavache.sqlite3.5.0.0\lib\Portable-Net45+Win8+WP8+Wpa81\Akavache.Sqlite3.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Akka, Version=1.1.2.29, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
@@ -115,10 +103,6 @@
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ReactiveUI, Version=7.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
@@ -128,22 +112,6 @@
     </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_e_sqlite3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=17faffbb2a73a73f, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.1.1.1\lib\net45\SQLitePCLRaw.batteries_e_sqlite3.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_v2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.1.1.1\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.core.1.1.1\lib\net45\SQLitePCLRaw.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.1\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -190,7 +158,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AkavacheSqliteLinkerOverride.cs" />
     <Compile Include="Collections\FixedSizeQueue.cs" />
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />

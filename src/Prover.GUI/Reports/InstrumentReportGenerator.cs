@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
-using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Common;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Prover.Core.Models.Instruments;
+﻿using Prover.Core.Models.Instruments;
 
 namespace Prover.GUI.Common.Events
 {

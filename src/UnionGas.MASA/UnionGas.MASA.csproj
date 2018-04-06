@@ -192,6 +192,7 @@
     <Compile Include="Exporter\Translate.cs" />
     <Compile Include="Validators\CompanyNumber\CompanyNumberValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\UserLoggedInValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">

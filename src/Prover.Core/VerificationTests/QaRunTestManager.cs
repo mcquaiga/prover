@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -32,7 +33,7 @@ namespace Prover.Core.VerificationTests
         private readonly EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IValidator _validator;
+        private readonly IEnumerable<IValidator> _validators;
         private readonly IEvcItemReset _itemResetter;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
@@ -41,7 +42,7 @@ namespace Prover.Core.VerificationTests
             EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
             VolumeTestManagerBase volumeTestManager,
-            IValidator validator,
+            IEnumerable<IValidator> validators,
             IEvcItemReset itemResetter = null
         )
         {
@@ -49,7 +50,7 @@ namespace Prover.Core.VerificationTests
             _instrumentStore = instrumentStore;
             _communicationClient = commClient;
             _readingStabilizer = readingStabilizer;
-            _validator = validator;
+            _validators = validators;
             _itemResetter = itemResetter;
         }
 
@@ -80,8 +81,8 @@ namespace Prover.Core.VerificationTests
 
             Instrument = new Instrument(instrumentType, items);
 
-            await SaveAsync();
             await RunVerifier();
+            await SaveAsync();
         }
 
         public async Task RunTest(int level, CancellationToken ct)
@@ -162,11 +163,14 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            if (_validator != null)
+            if (_validators != null && _validators.Any())
             {
-                _testStatus.OnNext($"Verifying items...");
-                await _validator.Validate(_communicationClient, Instrument);  
-            }       
+                foreach (var validator in _validators)
+                {
+                    _testStatus.OnNext($"Verifying items...");
+                    await validator.Validate(_communicationClient, Instrument);
+                }
+            }
         }
     }
 }
