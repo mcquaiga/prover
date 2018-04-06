@@ -37,7 +37,7 @@ namespace Prover.Core.VerificationTests
         private EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
-        private readonly IValidator _validator;
+        private readonly IEnumerable<IValidator> _validators;
         private readonly IEvcItemReset _itemResetter;
         private readonly IEnumerable<IPreTestAction> _preTestActions;
         private readonly Subject<string> _testStatus = new Subject<string>();
@@ -46,14 +46,14 @@ namespace Prover.Core.VerificationTests
             IInstrumentStore<Instrument> instrumentStore,
             IReadingStabilizer readingStabilizer,
             VolumeTestManager volumeTestManager,            
-            IValidator validator,
+            IEnumerable<IValidator> validators,
             IEvcItemReset itemResetter = null,
             IEnumerable<IPreTestAction> preTestActions = null)
         {
             VolumeTestManager = volumeTestManager;
             _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
-            _validator = validator;
+            _validators = validators;
             _itemResetter = itemResetter;
             _preTestActions = preTestActions;
         }
@@ -131,17 +131,19 @@ namespace Prover.Core.VerificationTests
             if (!_communicationClient.IsConnected)
                 await _communicationClient.Connect();
 
-            if (Instrument.CompositionType == CorrectorType.PTZ)
+            switch (Instrument.CompositionType)
             {
-                await DownloadTemperatureTestItems(level);
-                await DownloadPressureTestItems(level);
+                case CorrectorType.PTZ:
+                    await DownloadTemperatureTestItems(level);
+                    await DownloadPressureTestItems(level);
+                    break;
+                case CorrectorType.T:
+                    await DownloadTemperatureTestItems(level);
+                    break;
+                case CorrectorType.P:
+                    await DownloadPressureTestItems(level);
+                    break;
             }
-
-            if (Instrument.CompositionType == CorrectorType.T)
-                await DownloadTemperatureTestItems(level);
-
-            if (Instrument.CompositionType == CorrectorType.P)
-                await DownloadPressureTestItems(level);
 
             await _communicationClient.Disconnect();
         }
@@ -178,11 +180,14 @@ namespace Prover.Core.VerificationTests
 
         public async Task RunVerifier()
         {
-            if (_validator != null)
+            if (_validators != null && _validators.Any())
             {
-                _testStatus.OnNext($"Verifying items...");
-                await _validator.Validate(_communicationClient, Instrument);  
-            }       
+                foreach (var validator in _validators)
+                {
+                    _testStatus.OnNext($"Verifying items...");
+                    await validator.Validate(_communicationClient, Instrument);
+                }
+            }
         }
     }
 }

@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Linq.Expressions;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.DriveTypes;
-using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Settings;
 

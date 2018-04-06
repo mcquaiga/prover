@@ -1,5 +1,4 @@
-﻿using Akavache;
-using Autofac;
+﻿using Autofac;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;
@@ -20,8 +19,6 @@ namespace Prover.Core.Startup
     {
         public CoreBootstrapper()
         {
-            BlobCache.ApplicationName = "EvcProver";
-
             //Database registrations
             Builder.RegisterInstance(new ProverContext());
             Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();

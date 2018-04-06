@@ -62,6 +62,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         public bool ShowDownloadButton => QaRunTestManager != null;
 
+        public bool ShowDownloadButton => QaRunTestManager != null;
         private bool _showProgressDialog;
         public bool ShowProgressDialog
         {

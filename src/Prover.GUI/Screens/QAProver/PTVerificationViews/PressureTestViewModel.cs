@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core;

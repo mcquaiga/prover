@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using Prover.CommProtocol.Common.IO;
 using Prover.Core.Events;
 using Prover.Core.Settings;
 using Prover.GUI.Common;
