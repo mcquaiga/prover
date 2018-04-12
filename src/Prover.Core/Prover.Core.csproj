@@ -162,8 +162,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="DriveTypes\Energy.cs" />
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="DriveTypes\PulseInputSensor.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\ConnectionStatusEvent.cs" />

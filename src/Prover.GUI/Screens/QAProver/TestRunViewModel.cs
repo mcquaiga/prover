@@ -28,7 +28,6 @@ namespace Prover.GUI.Screens.QAProver
         private const string EditQaTestViewContext = "EditTestView";
 
         private string _connectionStatusMessage;
-        
 
         private IQaRunTestManager _qaTestRunManager;
 

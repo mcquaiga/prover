@@ -63,6 +63,7 @@
                     <ColumnDefinition Width=".3*"/>
                     <ColumnDefinition Width=".4*"/>
                 </Grid.ColumnDefinitions>
+
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                      Grid.Column="0">
                     <StackPanel>
@@ -130,8 +131,7 @@
 
                 <UniformGrid Rows="1"
                              Grid.Column="2">
-                    <ContentControl cal:View.Model="{Binding FrequencyTestItem}" cal:View.Context="Card"
-                                    Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
+                    
                     <ContentControl cal:View.Model="{Binding EnergyTestItem}" cal:View.Context="Card"
                                     Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
                     <ContentControl cal:View.Model="{Binding MeterDisplacementItem}" cal:View.Context="Card"

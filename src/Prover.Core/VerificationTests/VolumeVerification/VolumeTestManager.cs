@@ -34,7 +34,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public bool RunningTest { get; set; }
 
-        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset, CancellationToken ct)
+        public virtual async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset, CancellationToken ct)
         {
             try
             {
@@ -70,7 +71,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
-        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+        public abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcTestItemReset);
 
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);

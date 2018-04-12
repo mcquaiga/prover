@@ -32,7 +32,6 @@ namespace Prover.GUI.Screens.QAProver
         }
 
         public Instrument Instrument { get; set; }
-
         public TocInfoViewModel TocInfoItem { get; set; }
 
         public string CorrectorType
@@ -51,19 +50,19 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        public string BasePressure
-            =>
-            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
-            ;
+        public string BasePressure =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string PressureRange =>
-            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue,0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
-
         public string TestDatePretty => $"{Instrument.TestDateTime:g}"; //MMMM d, yyyy h:mm tt
 
-        public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
+        public string MeterIndexDescription => Instrument.MeterIndexDescription();
+
+        public string JobIdDisplay =>
+            !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
         public bool EventLogChecked
         {
@@ -90,6 +89,7 @@ namespace Prover.GUI.Screens.QAProver
         }
 
         public IQaRunTestManager QaTestManager { get; set; }
+
         public void Handle(VerificationTestEvent message)
         {
             NotifyOfPropertyChange(() => Instrument);

@@ -27,7 +27,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             return;
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
+        public override async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset,
+            CancellationToken ct)
+        {
+            return;
+        }
+
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
         {
             await commClient.Connect();
 
@@ -38,7 +45,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
             }
 
-            await commClient.Disconnect();
+            await commClient.Disconnect();            
         }
 
         protected override async Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct)
@@ -47,23 +54,20 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
-        {
-            await Task.Run(async () =>
-            {
-                try
-                {                    
-                    await commClient.Connect();
-                    volumeTest.AfterTestItems = await commClient.GetVolumeItems();
-                    if (volumeTest.VerificationTest.FrequencyTest != null)
-                    {
-                        volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
-                    }
-                }
-                finally
+        {           
+            try
+            {                    
+                await commClient.Connect();
+                volumeTest.AfterTestItems = await commClient.GetVolumeItems();
+                if (volumeTest.VerificationTest.FrequencyTest != null)
                 {
-                    await commClient.Disconnect();
+                    volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
                 }
-            });
+            }
+            finally
+            {
+                await commClient.Disconnect();
+            }           
         }
 
         public override void Dispose()

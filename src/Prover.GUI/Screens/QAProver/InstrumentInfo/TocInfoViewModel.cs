@@ -13,7 +13,7 @@ namespace Prover.GUI.Screens.QAProver.InstrumentInfo
         public Instrument Instrument { get; }
 
         public string MeterSerialNumber => Instrument.Items.GetItem(863)?.RawValue;
-        public string TurbineSize => Instrument.Items.GetItem(864)?.RawValue;
+        public string TurbineSize => Instrument.Items.GetItem(864)?.Description;
         public decimal Kmo => decimal.Round(Instrument.Items.GetItem(868).NumericValue, 2);
         public decimal Km => decimal.Round(Instrument.Items.GetItem(865).NumericValue, 2);
         public decimal Ks => decimal.Round(Instrument.Items.GetItem(866).NumericValue, 2);

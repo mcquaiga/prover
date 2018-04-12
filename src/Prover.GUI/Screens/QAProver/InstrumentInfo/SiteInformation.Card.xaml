@@ -18,56 +18,56 @@
                                                   FalseValue="Collapsed" />
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"
                                                   NotNullValue="Visible"
-                                                  NullValue="Collapsed"/>
+                                                  NullValue="Collapsed" />
             <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="FontSize" Value="18"/>
-                <Setter Property="FontWeight" Value="Light"/>
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Light" />
             </Style>
-            
+
             <Style TargetType="controls:ValueDescriptionControl">
-                <Setter Property="ValueFontSize" Value="18"/>
-                <Setter Property="LabelFontSize" Value="12"/>
+                <Setter Property="ValueFontSize" Value="18" />
+                <Setter Property="LabelFontSize" Value="12" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal">
             <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
                 <controls:PercentageControl Passed="{Binding Instrument.HasPassed}"
-                                            HidePercentage="True"/>
+                                            HidePercentage="True" />
             </StackPanel>
             <StackPanel Margin="5"
                         Grid.Row="0"
                         VerticalAlignment="Center">
-                <TextBlock Margin="1" Text="{Binding TestDatePretty}"/>
+                <TextBlock Margin="1" Text="{Binding TestDatePretty}" />
                 <TextBlock FontSize="28"
                            Margin="0 2"
                            Text="{Binding Instrument.InstrumentType.Name}"
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center" />
 
                 <TextBlock HorizontalAlignment="Center">
-                    <TextBlock Text="{Binding CorrectorType, FallbackValue='Rotary'}"/>
+                    <TextBlock Text="{Binding CorrectorType, FallbackValue='Rotary'}" />
                     |
-                    <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator, FallbackValue='PTZ'}"/>
+                    <TextBlock Text="{Binding Instrument.VolumeTest.DriveType.Discriminator, FallbackValue='PTZ'}" />
                 </TextBlock>
 
-                <TextBlock Text="{Binding JobIdDisplay}" 
-                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding JobIdDisplay}"
+                           HorizontalAlignment="Center" />
 
-                <ContentControl Margin="2 0" 
-                                cal:View.Model="{Binding}"                            
+                <ContentControl Margin="2 0"
+                                cal:View.Model="{Binding}"
                                 Visibility="{Binding DisplayEventLogCommPortView, Converter={StaticResource BoolToHiddenConverter}}"
                                 cal:View.Context="EventLogCommPortCard" />
             </StackPanel>
         </StackPanel>
-        
+
 
         <StackPanel Grid.Row="1"
                     Orientation="Vertical">
@@ -84,7 +84,9 @@
                 <controls:ValueDescriptionControl Label="Pressure Range" Value="{Binding PressureRange}" />
                 <controls:ValueDescriptionControl Label="Base Temperature" Value="{Binding BaseTemperature}" />
             </UniformGrid>
-            
+            <UniformGrid Columns="2">
+                <controls:ValueDescriptionControl Label="Meter Index" Value="{Binding MeterIndexDescription}" />               
+            </UniformGrid>
             <UniformGrid Columns="2">
                 <controls:ValueDescriptionControl Label="Pulser A Select"
                                                   Value="{Binding Instrument.PulseASelect}" />
@@ -99,9 +101,8 @@
 
         <ContentControl Grid.Row="2"
                         Margin="0 5"
-                        cal:View.Model="{Binding TocInfoItem}"                            
-                        Visibility="{Binding TocInfoItem, Converter={StaticResource NullToVisibilityConverter}}"
-                        />
-       
+                        cal:View.Model="{Binding TocInfoItem}"
+                        Visibility="{Binding TocInfoItem, Converter={StaticResource NullToVisibilityConverter}}" />
+
     </Grid>
 </UserControl> 

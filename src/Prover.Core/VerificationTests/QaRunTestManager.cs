@@ -5,16 +5,19 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
@@ -28,6 +31,8 @@ namespace Prover.Core.VerificationTests
         Task RunVerifier();
 
         IObservable<string> TestStatus { get; }
+
+        Task DownloadPreVolumeTest();
     }
 
     public class QaRunTestManager : IQaRunTestManager
@@ -43,6 +48,7 @@ namespace Prover.Core.VerificationTests
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
+            IEventAggregator eventAggregator,
             IInstrumentStore<Instrument> instrumentStore,
             IReadingStabilizer readingStabilizer,
             VolumeTestManager volumeTestManager,            
@@ -51,6 +57,7 @@ namespace Prover.Core.VerificationTests
             IEnumerable<IPreTestAction> preTestActions = null)
         {
             VolumeTestManager = volumeTestManager;
+            EventAggregator = eventAggregator;
             _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
             _validators = validators;
@@ -59,6 +66,8 @@ namespace Prover.Core.VerificationTests
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
+
+        public IEventAggregator EventAggregator { get; }
 
         public VolumeTestManager VolumeTestManager { get; set; }
 
@@ -91,7 +100,12 @@ namespace Prover.Core.VerificationTests
 
             _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await _communicationClient.Disconnect();
-            
+
+            if (Instrument.VolumeTest.DriveType is PulseInputSensor)
+            {
+                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
+            }
+
             await SaveAsync();
         }
 
@@ -124,6 +138,11 @@ namespace Prover.Core.VerificationTests
         public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
         {
             await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter, false);
+        }
+
+        public async Task DownloadPreVolumeTest()
+        {
+            await VolumeTestManager.PreTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
         }
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)

@@ -54,7 +54,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcTestItemReset)
         {
             await commClient.Connect();

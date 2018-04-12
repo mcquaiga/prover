@@ -46,7 +46,7 @@
 
                 <!-- Column 2 - Volume Verification -->
                 <ContentControl cal:View.Model="{Binding VolumeTestView}"
-                                cal:View.Context="Card"
+                                cal:View.Context="Volume"
                                 Grid.Row="1"
                                 Margin="2" />
             </Grid>

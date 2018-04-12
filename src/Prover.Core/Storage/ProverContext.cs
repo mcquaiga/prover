@@ -18,8 +18,6 @@ namespace Prover.Core.Storage
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-           
-
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
             Database.Initialize(false);
             ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;

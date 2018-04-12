@@ -123,6 +123,12 @@ Global
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{904F99E1-2E5B-4C16-B900-7559D2E11553}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC9E26C2-0818-4BD8-9C88-A777A31C25FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

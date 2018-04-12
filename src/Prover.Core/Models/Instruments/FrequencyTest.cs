@@ -52,7 +52,7 @@ namespace Prover.Core.Models.Instruments
             set => _postTestItemData = value;
         }
 
-        public decimal? PercentError
+        public decimal? AdjustedVolumePercentError
         {
             get
             {
@@ -63,8 +63,23 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        public decimal? UnadjustedVolumePercentError
+        {
+            get
+            {
+                if (UnadjustedVolume() == 0) return null;
+
+                var result = (EvcUnadjustedVolume() - UnadjustedVolume()) / UnadjustedVolume() * 100;
+                return result.HasValue ? decimal.Round(result.Value, 2) : default(decimal?);
+            }
+        }
+
+        public decimal? PercentError { get; }
+
         [NotMapped]
-        public bool HasPassed => PercentError.HasValue && PercentError < 1 && PercentError > -1;
+        public bool HasPassed => 
+            (AdjustedVolumePercentError.HasValue && AdjustedVolumePercentError < 1 && AdjustedVolumePercentError > -1)
+        && (UnadjustedVolumePercentError.HasValue && UnadjustedVolumePercentError < 1 && UnadjustedVolumePercentError > -1);
 
         public decimal AdjustedVolume()
         {
@@ -89,12 +104,16 @@ namespace Prover.Core.Models.Instruments
 
         public decimal? EvcAdjustedVolume()
         {
-            return PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading;
+            var result = (PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+
+            return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
         public decimal? EvcUnadjustedVolume()
         {
-            return PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading;
+            var result = (PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            //
+            return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
         
         public override void OnInitializing()

@@ -230,6 +230,12 @@
     <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
       <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml.cs">
+      <DependentUpon>Volume.Base.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml.cs">
+      <DependentUpon>Volume.PulseInputCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
     </Compile>
@@ -351,6 +357,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
