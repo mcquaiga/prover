@@ -73,6 +73,7 @@ namespace Prover.Core.VerificationTests
 
         public void Dispose()
         {
+            Task.Run(SaveAsync);
             _communicationClient?.Dispose();
             VolumeTestManager?.Dispose();
         }
@@ -189,7 +190,8 @@ namespace Prover.Core.VerificationTests
         {
             try
             {
-                await _instrumentStore.UpsertAsync(Instrument);
+                if (Instrument != null)
+                    await _instrumentStore.UpsertAsync(Instrument);
             }
             catch (Exception ex)
             {
