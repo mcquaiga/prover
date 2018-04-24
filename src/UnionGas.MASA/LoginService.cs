@@ -9,6 +9,7 @@ using Prover.Core.Login;
 using Prover.GUI.Common;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Dialogs.LoginDialog;
+using UnionGas.MASA.Screens.Toolbars;
 
 namespace UnionGas.MASA
 {
@@ -29,6 +30,7 @@ namespace UnionGas.MASA
         public bool Logout()
         {
             User = null;
+            _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
             return true;
         }
         
@@ -46,6 +48,8 @@ namespace UnionGas.MASA
             {
                 return await Login(userId);
             }
+
+            await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
 
             return false;
         }
@@ -77,6 +81,12 @@ namespace UnionGas.MASA
                 _log.Error(ex);
             }
 
+            if (User?.Id != null)
+                await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedIn));
+            else
+            {
+                await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
+            }
 
             return User?.Id != null;
         }
