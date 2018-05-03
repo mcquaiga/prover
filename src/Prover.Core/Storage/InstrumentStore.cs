@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Prover.Core.Models.Instruments;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Storage
 {
@@ -19,20 +20,35 @@ namespace Prover.Core.Storage
         public IQueryable<Instrument> Query()
         {
             return _proverContext.Instruments
-                .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
-                .Include(v => v.VerificationTests.Select(p => p.PressureTest))
-                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
+                .IncludeOptimized(v => v.VerificationTests)
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
                 .AsQueryable();
         }
 
         public Instrument Get(Guid id)
         {
-            return Query().FirstOrDefault(x => x.Id == id);
+            var i = Query()
+                .FirstOrDefault(x => x.Id == id);
+
+            i.VerificationTests = _proverContext.VerificationTests
+                .IncludeOptimized(v => v.TemperatureTest)
+                .IncludeOptimized(v => v.PressureTest)
+                .IncludeOptimized(v => v.VolumeTest)
+                .IncludeOptimized(v => v.FrequencyTest)
+                .Where(v => v.InstrumentId == i.Id)
+            .ToList();
+
+            return i;
+        }
+
+        public IEnumerable<Instrument> GetAll(Predicate<Instrument> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Instrument> UpsertAsync(Instrument instrument)
         {
-            if (Get(instrument.Id) != null)
+            if (await _proverContext.Instruments.FindAsync(instrument.Id) != null)
             {
                 _proverContext.Instruments.Attach(instrument);
                 _proverContext.Entry(instrument).State = EntityState.Modified;

@@ -5,83 +5,108 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 using Prover.Core.Storage;
+using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
+using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
     public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-        Task InitializeTest(InstrumentType instrumentType);
+        Task InitializeTest(InstrumentType instrumentType, CommPort commPort);
         Task RunTest(int level, CancellationToken ct = new CancellationToken());
+        Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken());
         Task SaveAsync();
         Task RunVerifier();
 
         IObservable<string> TestStatus { get; }
+
+        Task DownloadPreVolumeTest();
     }
 
     public class QaRunTestManager : IQaRunTestManager
     {
         private const int VolumeTestNumber = 0;
         protected static Logger Log = LogManager.GetCurrentClassLogger();
-        private readonly EvcCommunicationClient _communicationClient;
+        private EvcCommunicationClient _communicationClient;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IEnumerable<IValidator> _validators;
         private readonly IEvcItemReset _itemResetter;
+        private readonly IEnumerable<IPreTestAction> _preTestActions;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
+            IEventAggregator eventAggregator,
             IInstrumentStore<Instrument> instrumentStore,
-            EvcCommunicationClient commClient,
             IReadingStabilizer readingStabilizer,
-            VolumeTestManagerBase volumeTestManager,
+            VolumeTestManager volumeTestManager,            
             IEnumerable<IValidator> validators,
-            IEvcItemReset itemResetter = null
-        )
+            IEvcItemReset itemResetter = null,
+            IEnumerable<IPreTestAction> preTestActions = null)
         {
             VolumeTestManager = volumeTestManager;
-            _instrumentStore = instrumentStore;
-            _communicationClient = commClient;
+            EventAggregator = eventAggregator;
+            _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
             _validators = validators;
             _itemResetter = itemResetter;
+            _preTestActions = preTestActions;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
 
-        public VolumeTestManagerBase VolumeTestManager { get; set; }
+        public IEventAggregator EventAggregator { get; }
+
+        public VolumeTestManager VolumeTestManager { get; set; }
 
         public void Dispose()
         {
-            _communicationClient.Dispose();
-            VolumeTestManager.Dispose();
+            Task.Run(SaveAsync);
+            _communicationClient?.Dispose();
+            VolumeTestManager?.Dispose();
         }
 
         public Instrument Instrument { get; private set; }
 
-        public async Task InitializeTest(InstrumentType instrumentType)
+        public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort)
         {
-            _communicationClient.Initialize(instrumentType);
+            _communicationClient = instrumentType.ClientFactory.Invoke(commPort);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
             await _communicationClient.Connect();
 
             _testStatus.OnNext("Downloading items...");
-            var items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.GetAllItemNumbers());
+            var items = await _communicationClient.GetAllItems();
+
+            Instrument = new Instrument(instrumentType, items);
+
+            foreach (var preTestAction in _preTestActions)
+            {
+                await preTestAction.Execute(_communicationClient, Instrument);
+            }
+
+            await RunVerifier();
 
             _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await _communicationClient.Disconnect();
 
-            Instrument = new Instrument(instrumentType, items);
+            if (Instrument.VolumeTest.DriveType is PulseInputSensor)
+            {
+                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
+            }
 
-            await RunVerifier();
             await SaveAsync();
         }
 
@@ -109,6 +134,16 @@ namespace Prover.Core.VerificationTests
             {
                 Log.Info("Test run cancelled.");
             }            
+        }
+
+        public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
+        {
+            await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter, false);
+        }
+
+        public async Task DownloadPreVolumeTest()
+        {
+            await VolumeTestManager.PreTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
         }
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
@@ -140,7 +175,7 @@ namespace Prover.Core.VerificationTests
 
             if (test != null)
                 test.Items =
-                    await _communicationClient.GetItemValues(_communicationClient.ItemDetails.TemperatureItems());
+                    await _communicationClient.GetTemperatureTestItems();
         }
 
         public async Task DownloadPressureTestItems(int level)
@@ -148,14 +183,15 @@ namespace Prover.Core.VerificationTests
             var firstOrDefault = Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
             var test = firstOrDefault?.PressureTest;
             if (test != null)
-                test.Items = await _communicationClient.GetItemValues(_communicationClient.ItemDetails.PressureItems());
+                test.Items = await _communicationClient.GetPressureTestItems();
         }
 
         public async Task SaveAsync()
         {
             try
             {
-                await _instrumentStore.UpsertAsync(Instrument);
+                if (Instrument != null)
+                    await _instrumentStore.UpsertAsync(Instrument);
             }
             catch (Exception ex)
             {

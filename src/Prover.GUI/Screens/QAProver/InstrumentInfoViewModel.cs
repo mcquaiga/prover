@@ -8,6 +8,7 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens.QAProver.InstrumentInfo;
 
 namespace Prover.GUI.Screens.QAProver
 {
@@ -19,7 +20,19 @@ namespace Prover.GUI.Screens.QAProver
             eventAggregator.Subscribe(this);
         }
 
+        public void Initialize(Instrument instrument, IQaRunTestManager qaRunTestManager)
+        {
+            Instrument = instrument;
+            QaTestManager = qaRunTestManager;
+
+            if (Instrument.InstrumentType.Name == "TOC")
+            {
+                TocInfoItem = new TocInfoViewModel(Instrument);
+            }
+        }
+
         public Instrument Instrument { get; set; }
+        public TocInfoViewModel TocInfoItem { get; set; }
 
         public string CorrectorType
         {
@@ -37,16 +50,19 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        public string BasePressure
-            =>
-            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}"
-            ;
+        public string BasePressure =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue, 2)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
+
+        public string PressureRange =>
+            $"{decimal.Round(Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue, 0)} {Instrument.Items.GetItem(ItemCodes.Pressure.Units).Description}";
 
         public string BaseTemperature => $"{Instrument.EvcBaseTemperature()} {Instrument.TemperatureUnits()}";
-
         public string TestDatePretty => $"{Instrument.TestDateTime:g}"; //MMMM d, yyyy h:mm tt
 
-        public string JobIdDisplay => !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
+        public string MeterIndexDescription => Instrument.MeterIndexDescription();
+
+        public string JobIdDisplay =>
+            !string.IsNullOrEmpty(Instrument.JobId) ? $"Job #{Instrument.JobId}" : string.Empty;
 
         public bool EventLogChecked
         {
@@ -73,6 +89,7 @@ namespace Prover.GUI.Screens.QAProver
         }
 
         public IQaRunTestManager QaTestManager { get; set; }
+
         public void Handle(VerificationTestEvent message)
         {
             NotifyOfPropertyChange(() => Instrument);

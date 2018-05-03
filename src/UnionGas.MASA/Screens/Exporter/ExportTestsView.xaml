@@ -73,6 +73,9 @@
                 <Button Content="Mini-Max"
                         Command="{Binding FilterByTypeCommand}"
                         CommandParameter="Mini-Max"/>
+                <Button Content="TOC"
+                        Command="{Binding FilterByTypeCommand}"
+                        CommandParameter="TOC"/>
             </StackPanel>
         </StackPanel>
         

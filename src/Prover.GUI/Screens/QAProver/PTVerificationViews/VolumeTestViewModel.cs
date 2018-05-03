@@ -1,29 +1,59 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 using Caliburn.Micro;
 using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
+using Prover.GUI.Common.Events;
+using ReactiveUI;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
+        private const string StandardCardViewContext = "Card";
+        private const string PulseInputCardViewContext = "PulseInputCard";
+
+        private readonly IQaRunTestManager _testRunManager;
+
         public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.VolumeTest testRun) : base(screenManager, eventAggregator, testRun)
+            Core.Models.Instruments.VolumeTest testRun, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
+            _testRunManager = testRunManager;
             Volume = testRun;
 
-            if (Volume?.DriveType is MechanicalDrive)
-                EnergyTestItem =
-                    new EnergyTestViewModel(EventAggregator, (MechanicalDrive)Volume.DriveType);
+            ViewContext = StandardCardViewContext;
+
+            if (Volume?.DriveType.Energy != null)
+                EnergyTestItem = new EnergyTestViewModel(EventAggregator, Volume?.DriveType.Energy);
 
             if (Volume?.DriveType is RotaryDrive)
-                MeterDisplacementItem =
-                    new RotaryMeterTestViewModel(
-                        (RotaryDrive)Volume.DriveType);
+                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Volume.DriveType);
+
+            if (Volume?.VerificationTest.FrequencyTest != null)
+            {
+                ViewContext = PulseInputCardViewContext;
+                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest);
+                PreVolumeTestCommand = ReactiveCommand.CreateFromTask(StartVolumeTest);                
+                PostVolumeTestCommand = ReactiveCommand.CreateFromTask(RunPostVolumeTest);
+            }
         }
+
+        private string _viewContext;
+        public string ViewContext
+        {
+            get { return _viewContext; }
+            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+        }
+
+        public ReactiveCommand PostVolumeTestCommand { get; set; }
+        public ReactiveCommand PreVolumeTestCommand { get; set; }
+
+        public bool ShowPostTestButton => PostVolumeTestCommand != null && _testRunManager != null;
 
         public QaRunTestManager InstrumentManager { get; set; }
         public Instrument Instrument => Volume.Instrument;
@@ -41,6 +71,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         }
 
         public EnergyTestViewModel EnergyTestItem { get; set; }
+        public FrequencyTestViewModel FrequencyTestItem { get; set; }
         public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
 
         public string DriveRateDescription => Instrument.DriveRateDescription();
@@ -87,6 +118,40 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             {
                 var rotaryDrive = Volume?.DriveType as RotaryDrive;
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+            }
+        }
+
+        private async Task StartVolumeTest()
+        {
+            try
+            {
+                await _testRunManager.DownloadPreVolumeTest();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
+            }
+        }
+
+        private async Task RunPostVolumeTest()
+        {        
+            try
+            {
+                await _testRunManager.DownloadPostVolumeTest();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex,
+                    $"An error occured during the verification test. See exception for details. {ex.Message}");
+            }
+            finally
+            {
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
             }
         }
 

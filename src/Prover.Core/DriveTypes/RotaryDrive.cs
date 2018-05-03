@@ -16,14 +16,13 @@ namespace Prover.Core.DriveTypes
         public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
-        public string Discriminator => "Rotary";
+        public string Discriminator => DriveTypes.Rotary;
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
-        {
-            
-            return Meter.MeterDisplacement*appliedInput;
+        {            
+            return Meter.MeterDisplacement * appliedInput;
         }
 
         public int MaxUncorrectedPulses()
@@ -36,6 +35,8 @@ namespace Prover.Core.DriveTypes
 
             return 10; //Low standard number if we can't find anything
         }
+
+        public Energy Energy => null;
     }
 
     public class MeterTest

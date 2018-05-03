@@ -102,11 +102,10 @@ namespace Prover.CommProtocol.Common.IO
         }
 
         private static List<string> _commPorts;
-        public static IObservable<string> PortsWatcherObservable()
+        public static IObservable<string[]> PortsWatcher()
         {
-            return Observable.Create<string>(observer =>
+            return Observable.Create<string[]>(observer =>
             {
-                _commPorts = System.IO.Ports.SerialPort.GetPortNames().ToList();
                 return Observable
                     .Interval(TimeSpan.FromSeconds(1))
                     .Subscribe(
@@ -114,9 +113,14 @@ namespace Prover.CommProtocol.Common.IO
                         {
                             var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
                             if (!_commPorts.SequenceEqual(ports))
-                                ports.ForEach(observer.OnNext);
+                                observer.OnNext(ports.ToArray());
                         });
             });
+        }
+
+        public static IEnumerable<string> GetPortNames()
+        {
+            return SerialPortStream.GetPortNames();
         }
     }
 }
