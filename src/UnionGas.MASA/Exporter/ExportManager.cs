@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using NLog;
 using Prover.Core.ExternalIntegrations;
+using Prover.Core.Login;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Storage;
 using UnionGas.MASA.DCRWebService;
+using UnionGas.MASA.Validators.CompanyNumber;
 
 namespace UnionGas.MASA.Exporter
 {
@@ -17,11 +19,15 @@ namespace UnionGas.MASA.Exporter
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly DCRWebServiceSoap _dcrWebService;
         private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly CompanyNumberValidator _companyNumberValidator;
+        private readonly ILoginService<EmployeeDTO> _loginService;
 
-        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService)
+        public ExportManager(IInstrumentStore<Instrument> instrumentStore, DCRWebServiceSoap dcrWebService, CompanyNumberValidator companyNumberValidator, ILoginService<EmployeeDTO> loginService)
         {
             _instrumentStore = instrumentStore;
             _dcrWebService = dcrWebService;
+            _companyNumberValidator = companyNumberValidator;
+            _loginService = loginService;
         }
 
         public async Task<bool> Export(Instrument instrumentForExport)
@@ -46,8 +52,23 @@ namespace UnionGas.MASA.Exporter
                     instr.ExportedDateTime = DateTime.Now;
                     await _instrumentStore.UpsertAsync(instr);
                 }
+
+                return true;           
+        }
+
+        public async Task<bool> ExportFailedTest(string companyNumber)
+        {
+            var meterDto = await _companyNumberValidator.VerifyWithWebService(companyNumber);
+
+            if (meterDto != null)
+            {
+                var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.EmployeeNbr);
+                var isSuccess = await SendResultsToWebService(new[] {failedTest});
+
                 return true;
-           
+            }
+
+            return false;
         }
 
         private async Task<bool> SendResultsToWebService(IEnumerable<QARunEvcTestResult> evcQaRuns)

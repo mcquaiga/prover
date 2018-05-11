@@ -100,13 +100,19 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <Button Margin="8"
+        <!--<Button Margin="8"
                 Grid.Row="2"
                 HorizontalAlignment="Left"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Command="{Binding ExportAllPassedQaRunsCommand}"
                 Content="Export all passed">
-        </Button>
+        </Button>-->
 
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="FailedCompanyNumber"/>
+                <Button Command="{Binding ExportFailedTestCommand}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

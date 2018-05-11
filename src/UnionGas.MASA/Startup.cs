@@ -22,7 +22,7 @@ namespace UnionGas.MASA
             builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>()
                 .SingleInstance();
 
-            builder.RegisterType<CompanyNumberValidator>().As<IValidator>();
+            builder.RegisterType<CompanyNumberValidator>().As<IValidator>().AsSelf();
             builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
             builder.RegisterType<NewCompanyNumberPopupRequestor>().As<IGetValue>();
 
