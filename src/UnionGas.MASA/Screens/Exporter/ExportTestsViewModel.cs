@@ -97,6 +97,13 @@ namespace UnionGas.MASA.Screens.Exporter
             set => this.RaiseAndSetIfChanged(ref _exportFailedTestCommand, value);
         }
 
+        private string _failedCompanyNumber;
+        public string FailedCompanyNumber
+        {
+            get => _failedCompanyNumber;
+            set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value);
+        }
+
         #endregion
 
         public async Task ExportAllPassedQaRuns()
@@ -106,7 +113,7 @@ namespace UnionGas.MASA.Screens.Exporter
 
         private async Task ExportFailedTest()
         {
-
+            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
         }
 
         private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
