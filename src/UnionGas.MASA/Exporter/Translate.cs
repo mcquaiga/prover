@@ -105,67 +105,76 @@ namespace UnionGas.MASA.Exporter
 
         public static QARunEvcTestResult CreateFailedTestForExport(MeterDTO meterDto, string employeeId)
         {
-            var qaRun = new QARunEvcTestResult
+            try
             {
-                InstrumentType = meterDto.ModelName,
-                InventoryCode = meterDto.InventoryCode.PadLeft(7, '0'),
-                TestDate = DateTime.Now,
-                DriveType = string.Empty,
-                MeterType = string.Empty,
-                MeterDisplacement = 0,
-                ConfirmedStatus = "FAIL",
-                FirmwareVersion = 0d,
-                SerialNumber = string.Empty,
-                InstrumentData = string.Empty,
-                InstrumentComposition = string.Empty,
-                EmployeeId = employeeId,
-                EventLogPassedInd = "N",
-                CommPortPassedInd = "N",
-                PressureInfo = new PressureHeader
+                var qaRun = new QARunEvcTestResult
                 {
-                    BasePressure = 0,
-                    PressureRange = 0,
-                    PressureUnits = string.Empty,
-                    TransducerType = string.Empty,
-                    ProgrammedAtmosphericPressure = 0
-                },
-                TemperatureInfo = new TemperatureHeader
-                {
-                    BaseTemperature = 0,
-                    TemperatureRange = "-40 to 170",
-                    TemperatureUnits = $"degF"
-                },
-                SuperFactorInfo = new SuperFactorHeader
-                {
-                    CO2 = 0,
-                    SpecGr = 0,
-                    N2 = 0,
-                    FPVTable = "NX19"
-                },
-                VolumeInfo = new VolumeHeader
-                {
-                    CorrectedMultiplierDescription = string.Empty,
-                    CorrectedMultiplierValue = 0,
-                    UncorrectedMultiplierDescription = string.Empty,
-                    UncorrectedMultiplierValue = 0,
-                    DriveRateDescription = string.Empty,
-                    PulseASelect = string.Empty,
-                    PulseBSelect = string.Empty
-                },
+                    InstrumentType = meterDto.ModelName,
+                    InventoryCode = meterDto.InventoryCode.PadLeft(7, '0'),
+                    TestDate = DateTime.Now,
+                    DriveType = string.Empty,
+                    MeterType = string.Empty,
+                    MeterDisplacement = 0,
+                    ConfirmedStatus = "FAIL",
+                    FirmwareVersion = 0d,
+                    SerialNumber = string.Empty,
+                    InstrumentData = string.Empty,
+                    InstrumentComposition = string.Empty,
+                    EmployeeId = employeeId,
+                    EventLogPassedInd = "N",
+                    CommPortPassedInd = "N",
+                    PressureInfo = new PressureHeader
+                    {
+                        BasePressure = 0,
+                        PressureRange = 0,
+                        PressureUnits = string.Empty,
+                        TransducerType = string.Empty,
+                        ProgrammedAtmosphericPressure = 0
+                    },
+                    TemperatureInfo = new TemperatureHeader
+                    {
+                        BaseTemperature = 0,
+                        TemperatureRange = "-40 to 170",
+                        TemperatureUnits = $"degF"
+                    },
+                    SuperFactorInfo = new SuperFactorHeader
+                    {
+                        CO2 = 0,
+                        SpecGr = 0,
+                        N2 = 0,
+                        FPVTable = "NX19"
+                    },
+                    VolumeInfo = new VolumeHeader
+                    {
+                        CorrectedMultiplierDescription = string.Empty,
+                        CorrectedMultiplierValue = 0,
+                        UncorrectedMultiplierDescription = string.Empty,
+                        UncorrectedMultiplierValue = 0,
+                        DriveRateDescription = string.Empty,
+                        PulseASelect = string.Empty,
+                        PulseBSelect = string.Empty
+                    },
 
-                VerificationTests = null,
+                    VerificationTests = null,
 
-                IndexReading = 0,
-                Comments = string.Empty,
-                JobNumber = meterDto.JobNumber.Value,
-                ProverNumber = ProverNumberId.ToString(), //
-                MeterClassCode = "EV",
-                TestReason = "6",
-                FieldMeterDesc = string.Empty,
-                SubmitRunIndicator = "Y"
-            };
-
-            return qaRun;
+                    IndexReading = 0,
+                    Comments = string.Empty,
+                    JobNumber = meterDto.JobNumber.Value,
+                    ProverNumber = ProverNumberId.ToString(), //
+                    MeterClassCode = "EV",
+                    TestReason = "6",
+                    FieldMeterDesc = string.Empty,
+                    SubmitRunIndicator = "Y"
+                };
+                Log.Info("Failed Object:" + JsonConvert.SerializeObject(qaRun).ToString());
+                return qaRun;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
+            
+            
         }
 
         private static VerificationTest TranslateVerificationTest(Prover.Core.Models.Instruments.VerificationTest vt)
