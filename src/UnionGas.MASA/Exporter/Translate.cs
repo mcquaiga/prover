@@ -167,14 +167,14 @@ namespace UnionGas.MASA.Exporter
                     SubmitRunIndicator = "Y"
                 };
                 Log.Info("Failed Object:" + JsonConvert.SerializeObject(qaRun).ToString());
-                return qaRun;
+                
             }
             catch(Exception ex)
             {
                 Log.Error(ex);
             }
             
-            
+            return qaRun;
         }
 
         private static VerificationTest TranslateVerificationTest(Prover.Core.Models.Instruments.VerificationTest vt)
