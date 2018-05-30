@@ -118,7 +118,7 @@ namespace UnionGas.MASA.Exporter
                     MeterDisplacement = 0,
                     ConfirmedStatus = "FAIL",
                     FirmwareVersion = 0d,
-                    SerialNumber = string.Empty,
+                    SerialNumber = meterDto.SerialNumber,
                     InstrumentData = string.Empty,
                     InstrumentComposition = string.Empty,
                     EmployeeId = employeeId,
