@@ -105,6 +105,7 @@ namespace UnionGas.MASA.Exporter
 
         public static QARunEvcTestResult CreateFailedTestForExport(MeterDTO meterDto, string employeeId)
         {
+            Log.Info(JsonConvert.SerializeObject(meterDto));
             try
             {
                 var qaRun = new QARunEvcTestResult
