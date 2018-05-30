@@ -109,9 +109,13 @@
         </Button>-->
 
         <Grid Grid.Row="2">
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="FailedCompanyNumber"/>
-                <Button Command="{Binding ExportFailedTestCommand}"/>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Export Failed Test:"/>
+                <TextBox Text="{Binding FailedCompanyNumber}" 
+                         Width="300" Height="75"
+                         Margin="5"/>
+                <Button Command="{Binding ExportFailedTestCommand}"
+                        Content="Export Failed"/>
             </StackPanel>
         </Grid>
     </Grid>
