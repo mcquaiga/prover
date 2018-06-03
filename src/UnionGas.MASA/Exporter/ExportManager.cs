@@ -62,12 +62,8 @@ namespace UnionGas.MASA.Exporter
 
             if (meterDto != null)
             {
-                Log.Info("Company number verified.");
-                var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.Id);
-               
-                var isSuccess = await SendResultsToWebService(new[] {failedTest});
-
-                return true;
+                var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.Id);               
+                return await SendResultsToWebService(new[] {failedTest});               
             }
             Log.Error("Company number not recognized.");
             return false;

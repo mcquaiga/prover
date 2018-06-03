@@ -114,6 +114,7 @@ namespace UnionGas.MASA.Screens.Exporter
         private async Task ExportFailedTest()
         {
             await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
+            FailedCompanyNumber = null;
         }
 
         private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
