@@ -112,9 +112,11 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Export Failed Test:"/>
                 <TextBox Text="{Binding FailedCompanyNumber}" 
-                         Width="300" Height="75"
+                         Width="250" Height="75"
                          Margin="5"/>
                 <Button Command="{Binding ExportFailedTestCommand}"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}"
+                        Width="150"
                         Content="Export Failed"/>
             </StackPanel>
         </Grid>
