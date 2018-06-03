@@ -23,6 +23,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -30,7 +31,8 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0"
-                                Grid.Column="0" Grid.RowSpan="2"
+                                Grid.Column="0" 
+                                Grid.RowSpan="2"
                                 VerticalAlignment="Top">
                         <controls1:ValueDescriptionControl Label="KMO (AAT Sim)"
                                                            Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -44,28 +46,34 @@
                     </StackPanel>
 
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="1"
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                         Grid.Row="0"
+                                Grid.Column="1">
+                        <StackPanel 
                                 Margin="4">
-                        <materialDesign:ColorZone Content="Adjusted"
+                            <materialDesign:ColorZone Content="Adjusted"
                                                   Mode="Light"
                                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Padding="2"
                                                   />
-                        <controls1:PercentageControl
+                            <controls1:PercentageControl
                             Margin="5"
                             HorizontalAlignment="Center"
                             DisplayValue="{Binding TestRun.AdjustedVolumePercentError}"
                             Passed="{Binding TestRun.HasPassed}" />
-                        <UniformGrid Columns="2">
-                            <controls1:ValueDescriptionControl Label="True Adj."
+                            <UniformGrid Columns="2">
+                                <controls1:ValueDescriptionControl Label="Start Reading"
+                                                               Value="{Binding AdjustedVolume}" />
+                                <controls1:ValueDescriptionControl Label="End Reading"
                                                                Value="{Binding AdjustedVolume}" />
 
-                            <controls1:ValueDescriptionControl Label="EVC Adj."
+                                <controls1:ValueDescriptionControl Label="True Value"
+                                                               Value="{Binding AdjustedVolume}" />
+                                <controls1:ValueDescriptionControl Label="EVC Value"
                                                                Value="{Binding EvcAdjustedVolume}" />
-
-                        </UniformGrid>
-                    </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+                    </materialDesign:Card>
 
                     <StackPanel Grid.Row="1"
                                 Grid.Column="1"
@@ -80,15 +88,17 @@
                             DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
                             Passed="{Binding TestRun.HasPassed}" />
                         <UniformGrid Columns="2">
-                            <controls1:ValueDescriptionControl Label="True Unadj."
+                            <controls1:ValueDescriptionControl Label="Start Reading"
+                                                               Value="{Binding AdjustedVolume}" />
+                            <controls1:ValueDescriptionControl Label="End Reading"
+                                                               Value="{Binding AdjustedVolume}" />
+                            
+                            <controls1:ValueDescriptionControl Label="True Value"
                                                                Value="{Binding UnadjustedVolume}" />
-
-                            <controls1:ValueDescriptionControl Label="EVC Unadj."
+                            <controls1:ValueDescriptionControl Label="EVC Value"
                                                                Value="{Binding EvcUnadjustedVolume}" />
                         </UniformGrid>
                     </StackPanel>
-
-
                 </Grid>
 
             </StackPanel>
