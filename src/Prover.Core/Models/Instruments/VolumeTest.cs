@@ -12,7 +12,7 @@ using Prover.Core.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : BaseVerificationTest
+    public class VolumeTest : BaseVerificationTest
     {
         private string _testInstrumentData;
 
@@ -35,6 +35,8 @@ namespace Prover.Core.Models.Instruments
 
         public IDriveType DriveType { get; set; }
 
+        [NotMapped]
+        public IEnumerable<ItemValue> AfterTestItems { get; set; }
         public string TestInstrumentData
         {
             get { return AfterTestItems.Serialize(); }
@@ -44,14 +46,11 @@ namespace Prover.Core.Models.Instruments
         public Instrument Instrument => VerificationTest.Instrument;
 
         [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
-
-        [NotMapped]
         public decimal? UnCorrectedPercentError
         {
             get
             {
-                if ((EvcUncorrected != null) && (TrueUncorrected != 0) && TrueUncorrected.HasValue)
+                if (EvcUncorrected != null && TrueUncorrected != 0 && TrueUncorrected.HasValue)
                 {
                     var o = (EvcUncorrected - TrueUncorrected)/TrueUncorrected;
                     if (o != null)
@@ -63,14 +62,14 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
+        public virtual decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         [NotMapped]
         public decimal? CorrectedPercentError
         {
             get
             {
-                if ((EvcCorrected != null) && (TrueCorrected != 0) && (TrueCorrected != null))
+                if (EvcCorrected != null && TrueCorrected != 0 && TrueCorrected != null)
                 {
                     var o = (EvcCorrected - TrueCorrected)/TrueCorrected*100;
                     if (o != null)
@@ -141,26 +140,35 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueCorrected
+        public virtual decimal? TrueCorrected
         {
             get
             {
                 if (VerificationTest == null) return null;
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.T) &&
-                    (VerificationTest.TemperatureTest != null))
-                    return VerificationTest.TemperatureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                return TotalCorrectionFactor * DriveType.UnCorrectedInputVolume(AppliedInput);
+            }
+        }
 
-                if ((VerificationTest.Instrument.CompositionType == CorrectorType.P) &&
-                    (VerificationTest.PressureTest != null))
-                    return VerificationTest.PressureTest.ActualFactor*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.T &&
+                    VerificationTest.TemperatureTest != null)
+                    return VerificationTest.TemperatureTest.ActualFactor;
+
+                if (VerificationTest.Instrument.CompositionType == CorrectorType.P &&
+                    VerificationTest.PressureTest != null)
+                    return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == CorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor*VerificationTest.TemperatureTest?.ActualFactor*
-                           VerificationTest.SuperFactorTest.SuperFactorSquared*
-                           DriveType.UnCorrectedInputVolume(AppliedInput);
+                    return VerificationTest.PressureTest?.ActualFactor *
+                           VerificationTest.TemperatureTest?.ActualFactor *
+                           VerificationTest.SuperFactorTest.SuperFactorSquared;
 
                 return null;
             }
@@ -180,20 +188,34 @@ namespace Prover.Core.Models.Instruments
         private void CreateDriveType()
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
-                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
+            {
+                if (Instrument.Items?.GetItem(182)?.Description != "Normal")
+                {
+                    DriveTypeDiscriminator = DriveTypes.DriveTypes.PulseInput;
+                }
+                else
+                {
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
+                }                
+            }
             
-            if ((DriveType == null) && (DriveTypeDiscriminator != null) && (VerificationTest != null))
+            if (DriveType == null && VerificationTest != null)
+            {
                 switch (DriveTypeDiscriminator)
                 {
-                    case "Rotary":
-                        DriveType = new RotaryDrive(this.Instrument);
+                    case DriveTypes.DriveTypes.Rotary:
+                        DriveType = new RotaryDrive(Instrument);
                         break;
-                    case "Mechanical":
+                    case DriveTypes.DriveTypes.Mechanical:
                         DriveType = new MechanicalDrive(Instrument);
+                        break;
+                    case DriveTypes.DriveTypes.PulseInput:
+                        DriveType = new PulseInputSensor(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }
+                }               
+            }
             else
             {
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");

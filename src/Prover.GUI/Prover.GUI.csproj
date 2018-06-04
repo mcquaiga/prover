@@ -195,7 +195,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="QaTestRunApp.cs" />
-    <Compile Include="ConnectionDialogManager.cs" />
     <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
@@ -219,9 +218,23 @@
     <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
       <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\QAProver\InstrumentInfo\TocInfoView.xaml.cs">
+      <DependentUpon>TocInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\InstrumentInfo\TocInfoViewModel.cs" />
     <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTestViewModel.cs" />
     <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
       <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml.cs">
+      <DependentUpon>Volume.Base.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml.cs">
+      <DependentUpon>Volume.PulseInputCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
@@ -331,6 +344,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\QAProver\InstrumentInfo\TocInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\QAProver\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -338,6 +355,18 @@
     <Page Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\QAProver\TestRunView.xaml">
       <SubType>Designer</SubType>

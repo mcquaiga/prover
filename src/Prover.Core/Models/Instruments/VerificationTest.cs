@@ -37,6 +37,7 @@ namespace Prover.Core.Models.Instruments
         public PressureTest PressureTest { get; set; }
         public TemperatureTest TemperatureTest { get; set; }
         public VolumeTest VolumeTest { get; set; }
+        public FrequencyTest FrequencyTest { get; set; }
 
         [NotMapped]
         public SuperFactorTest SuperFactorTest { get; set; }

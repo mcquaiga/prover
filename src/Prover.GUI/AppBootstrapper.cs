@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -56,13 +57,18 @@ namespace Prover.GUI
 
             foreach (var module in _moduleFileNames)
             {
-                var ass = Assembly.LoadFrom($"{module}.dll");
-                if (ass != null)
+                if (File.Exists($"{module}.dll"))
                 {
-                    var type = ass.GetType($"{module}.Startup");
-                    type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
-                    assemblies.Add(ass);
+                    var ass = Assembly.LoadFrom($"{module}.dll");
+                    if (ass != null)
+                    {
+                        var type = ass.GetType($"{module}.Startup");
+                        type?.GetMethod("Initialize").Invoke(null, new object[] { Builder });
+                        assemblies.Add(ass);
+                    }
+                    
                 }
+                
             }
 
             RegisterMainMenuApps(assemblies.ToArray());

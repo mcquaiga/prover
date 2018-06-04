@@ -12,12 +12,7 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
-        <DataTemplate x:Key="InstrumentSelect">
-            <RadioButton Content="{Binding Path=Instrument.Name}"
-                         GroupName="Instruments"
-                         IsChecked="{Binding Path=IsSelected}"
-                         FontSize="16"/>
-        </DataTemplate>
+        
     </UserControl.Resources>
     <StackPanel Orientation="Vertical" Margin="15 10">
         <StackPanel>
@@ -47,13 +42,20 @@
                     <GroupBox Grid.Row="0" 
                               BorderThickness="1" 
                               Header="Instrument Type" >
-                        <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
-                                        ItemTemplate="{StaticResource ResourceKey=InstrumentSelect}">
+                        <ItemsControl ItemsSource="{Binding Path=Instruments}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" Margin="4" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <RadioButton Content="{Binding Path=Instrument.Name}"
+                                                 GroupName="Instruments"
+                                                 IsChecked="{Binding Path=IsSelected}"
+                                                 FontSize="16"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </GroupBox>
                     <!--<GroupBox Grid.Row="1"
