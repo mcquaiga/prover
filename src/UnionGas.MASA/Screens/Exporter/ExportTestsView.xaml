@@ -100,13 +100,25 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <Button Margin="8"
+        <!--<Button Margin="8"
                 Grid.Row="2"
                 HorizontalAlignment="Left"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Command="{Binding ExportAllPassedQaRunsCommand}"
                 Content="Export all passed">
-        </Button>
+        </Button>-->
 
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Export Failed Test:"/>
+                <TextBox Text="{Binding FailedCompanyNumber}" 
+                         Width="250" Height="75"
+                         Margin="5"/>
+                <Button Command="{Binding ExportFailedTestCommand}"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}"
+                        Width="150"
+                        Content="Export Failed"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

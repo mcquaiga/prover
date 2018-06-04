@@ -61,7 +61,7 @@ namespace UnionGas.MASA.Screens.Exporter
                      && !string.IsNullOrEmpty(x.Instrument.EmployeeId));
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
-            
+            ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
         }
 
         public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
@@ -90,11 +90,31 @@ namespace UnionGas.MASA.Screens.Exporter
 
         public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
 
+        private ReactiveCommand _exportFailedTestCommand;
+        public ReactiveCommand ExportFailedTestCommand
+        {
+            get => _exportFailedTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _exportFailedTestCommand, value);
+        }
+
+        private string _failedCompanyNumber;
+        public string FailedCompanyNumber
+        {
+            get => _failedCompanyNumber;
+            set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value);
+        }
+
         #endregion
 
         public async Task ExportAllPassedQaRuns()
         {
             await _exportTestRun.Export(PassedTests);
+        }
+
+        private async Task ExportFailedTest()
+        {
+            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
+            FailedCompanyNumber = null;
         }
 
         private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
