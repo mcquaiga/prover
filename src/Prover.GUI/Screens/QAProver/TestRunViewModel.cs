@@ -229,7 +229,9 @@ namespace Prover.GUI.Screens.QAProver
                 }
 
                 if (instrument.InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
+                {
                     EventLogCommPortItem = SiteInformationItem;
+                }
             });
         }
 

@@ -24,15 +24,32 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0"
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Grid.Row="0"
+                                Grid.ColumnSpan="4">
+                        <Button Content="Download Start Readings"
+                                Margin="15 5"                    
+                                Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PreTestCommand}" />
+
+                        <Button Content="Finish"  
+                                Margin="15 5"
+                                Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PostTestCommand}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1"
                                 Grid.Column="0" 
-                                Grid.RowSpan="2"
                                 VerticalAlignment="Top">
                         <controls1:ValueDescriptionControl Label="KMO (AAT Sim)"
                                                            Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -47,8 +64,8 @@
 
 
                     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                         Grid.Row="0"
-                                Grid.Column="1">
+                                         Grid.Row="1"
+                                         Grid.Column="1">
                         <StackPanel 
                                 Margin="4">
                             <materialDesign:ColorZone Content="Adjusted"
@@ -63,9 +80,9 @@
                             Passed="{Binding TestRun.HasPassed}" />
                             <UniformGrid Columns="2">
                                 <controls1:ValueDescriptionControl Label="Start Reading"
-                                                               Value="{Binding AdjustedVolume}" />
+                                                               Value="{Binding TestRun.AdjustedStartReading}" />
                                 <controls1:ValueDescriptionControl Label="End Reading"
-                                                               Value="{Binding AdjustedVolume}" />
+                                                               Value="{Binding TestRun.AdjustedEndReading}" />
 
                                 <controls1:ValueDescriptionControl Label="True Value"
                                                                Value="{Binding AdjustedVolume}" />
@@ -75,8 +92,8 @@
                         </StackPanel>
                     </materialDesign:Card>
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="1"
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="2"
                                 Margin="4">
                         <materialDesign:ColorZone Content="Unadjusted"
                                                   Mode="Light"
@@ -89,9 +106,9 @@
                             Passed="{Binding TestRun.HasPassed}" />
                         <UniformGrid Columns="2">
                             <controls1:ValueDescriptionControl Label="Start Reading"
-                                                               Value="{Binding AdjustedVolume}" />
+                                                               Value="{Binding TestRun.UnadjustedStartReading}" />
                             <controls1:ValueDescriptionControl Label="End Reading"
-                                                               Value="{Binding AdjustedVolume}" />
+                                                               Value="{Binding TestRun.UnadjustedEndReading}" />
                             
                             <controls1:ValueDescriptionControl Label="True Value"
                                                                Value="{Binding UnadjustedVolume}" />

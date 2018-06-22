@@ -3,8 +3,8 @@ using Prover.GUI.Common.Events;
 using ReactiveUI;
 using System;
 using System.Reactive.Linq;
-using Caliburn.Micro.ReactiveUI;
-using Prover.Core.Models.Instruments;
+using System.Threading.Tasks;
+using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
@@ -15,9 +15,16 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
     }
 
     public class FrequencyTestViewModel : TestRunViewModelBase<Core.Models.Instruments.FrequencyTest>
-    {       
-        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun) : base(screenManager, eventAggregator, testRun)
+    {
+        private readonly IQaRunTestManager _testRunManager;
+
+        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun
+            , IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
+            _testRunManager = testRunManager;
+            PreTestCommand = ReactiveCommand.CreateFromTask(PreTest);
+            PostTestCommand = ReactiveCommand.CreateFromTask(PostTest);
+
             _mainRotorPulses = testRun.MainRotorPulseCount;
             _senseRotorPulses = testRun.SenseRotorPulseCount;
             _mechanicalOutputFactor = testRun.MechanicalOutputFactor;
@@ -32,6 +39,22 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
                     eventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
                     eventAggregator.PublishOnUIThread(new SaveTestEvent());
                 });
+        }
+
+        #region Properties
+        
+        private ReactiveCommand _preTestCommand;
+        public ReactiveCommand PreTestCommand
+        {
+            get => _preTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _preTestCommand, value);
+        }
+
+        private ReactiveCommand _postTestCommand;
+        public ReactiveCommand PostTestCommand
+        {
+            get => _postTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _postTestCommand, value);
         }
 
         private long? _mechanicalOutputFactor;
@@ -86,6 +109,22 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             get { return _evcAdjustedVolume; }
             set { this.RaiseAndSetIfChanged(ref _evcAdjustedVolume, value); }
         }
+
+        #endregion
+
+        #region Methods
+
+        private async Task PreTest()
+        {
+            await _testRunManager.DownloadPreVolumeTest();
+        }
+
+        private async Task PostTest()
+        {
+            await _testRunManager.DownloadPostVolumeTest();
+        }
+
+        #endregion
 
         protected sealed override void RaisePropertyChangeEvents()
         {

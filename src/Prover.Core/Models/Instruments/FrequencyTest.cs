@@ -104,17 +104,22 @@ namespace Prover.Core.Models.Instruments
 
         public decimal? EvcAdjustedVolume()
         {
-            var result = (PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            var result = (AdjustedEndReading - AdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
 
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
         public decimal? EvcUnadjustedVolume()
         {
-            var result = (PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
-            //
+            var result = (UnadjustedEndReading - UnadjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;           
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
+
+        public decimal? AdjustedStartReading => PreTestItemValues?.AdjustedVolumeReading;
+        public decimal? AdjustedEndReading => PostTestItemValues?.AdjustedVolumeReading;
+
+        public decimal? UnadjustedStartReading => PreTestItemValues?.UnadjustVolumeReading;
+        public decimal? UnadjustedEndReading => PostTestItemValues?.UnadjustVolumeReading;
         
         public override void OnInitializing()
         {
