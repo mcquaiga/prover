@@ -189,13 +189,15 @@ namespace Prover.Core.Models.Instruments
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {
-                if (Instrument.Items?.GetItem(182)?.Description != "Normal")
+                if (Instrument.Items?.GetItem(182)?.NumericValue > 0)
                 {
                     DriveTypeDiscriminator = DriveTypes.DriveTypes.PulseInput;
                 }
                 else
                 {
-                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary" ? "Rotary" : "Mechanical";
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == DriveTypes.DriveTypes.Rotary.ToLower()
+                        ? DriveTypes.DriveTypes.Rotary
+                        : DriveTypes.DriveTypes.Mechanical;
                 }                
             }
             
