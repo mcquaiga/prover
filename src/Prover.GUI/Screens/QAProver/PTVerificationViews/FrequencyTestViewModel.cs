@@ -46,15 +46,29 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
         private ReactiveCommand _preTestCommand;
         public ReactiveCommand PreTestCommand
         {
-            get => _preTestCommand;
-            set => this.RaiseAndSetIfChanged(ref _preTestCommand, value);
+            get
+            {
+                return _preTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _preTestCommand, value);
+            }
         }
 
         private ReactiveCommand _postTestCommand;
         public ReactiveCommand PostTestCommand
         {
-            get => _postTestCommand;
-            set => this.RaiseAndSetIfChanged(ref _postTestCommand, value);
+            get
+            {
+                return _postTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _postTestCommand, value);
+            }
         }
 
         private long? _mechanicalOutputFactor;
