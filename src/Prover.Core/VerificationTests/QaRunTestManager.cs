@@ -31,6 +31,7 @@ namespace Prover.Core.VerificationTests
         Task RunVerifier();
 
         IObservable<string> TestStatus { get; }
+        VolumeTestManager VolumeTestManager { get; }
 
         Task DownloadPreVolumeTest();
     }
@@ -69,7 +70,7 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; }
 
-        public VolumeTestManager VolumeTestManager { get; set; }
+        public VolumeTestManager VolumeTestManager { get; private set; }
 
         public void Dispose()
         {
@@ -104,7 +105,7 @@ namespace Prover.Core.VerificationTests
 
             if (Instrument.VolumeTest.DriveType is PulseInputSensor)
             {
-                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
+                VolumeTestManager = new FrequencyVolumeTestManager(EventAggregator);
             }
 
             await SaveAsync();

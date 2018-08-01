@@ -22,8 +22,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             , IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
             _testRunManager = testRunManager;
-            PreTestCommand = ReactiveCommand.CreateFromTask(PreTest);
-            PostTestCommand = ReactiveCommand.CreateFromTask(PostTest);
+            PreTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPreVolumeTest);
+            PostTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPostVolumeTest);
 
             _mainRotorPulses = testRun.MainRotorPulseCount;
             _senseRotorPulses = testRun.SenseRotorPulseCount;
@@ -128,16 +128,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         #region Methods
 
-        private async Task PreTest()
-        {
-            await _testRunManager.DownloadPreVolumeTest();
-        }
-
-        private async Task PostTest()
-        {
-            await _testRunManager.DownloadPostVolumeTest();
-        }
-
+     
         #endregion
 
         protected sealed override void RaisePropertyChangeEvents()

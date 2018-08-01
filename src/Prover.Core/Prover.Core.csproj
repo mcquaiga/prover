@@ -228,6 +228,7 @@
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="VerificationTests\TestActions\ITestAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\FrequencyVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />

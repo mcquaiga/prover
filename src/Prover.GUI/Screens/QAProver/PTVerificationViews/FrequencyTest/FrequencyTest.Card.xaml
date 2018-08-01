@@ -25,13 +25,9 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                    </Grid.ColumnDefinitions>              
 
-                    <StackPanel Orientation="Horizontal"
+                    <!--<StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0"
                                 Grid.ColumnSpan="4">
@@ -46,10 +42,9 @@
                                 Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                                 Style="{StaticResource MaterialDesignRaisedDarkButton}"
                                 Command="{Binding PostTestCommand}" />
-                    </StackPanel>
+                    </StackPanel>-->
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="0" 
+                    <StackPanel                                 Grid.Column="0" 
                                 VerticalAlignment="Top">
                         <controls1:ValueDescriptionControl Label="KMO (AAT Sim)"
                                                            Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -64,7 +59,7 @@
 
 
                     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                         Grid.Row="1"
+                                        
                                          Grid.Column="1">
                         <StackPanel 
                                 Margin="4">
@@ -92,8 +87,7 @@
                         </StackPanel>
                     </materialDesign:Card>
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="2"
+                    <StackPanel                                Grid.Column="2"
                                 Margin="4">
                         <materialDesign:ColorZone Content="Unadjusted"
                                                   Mode="Light"

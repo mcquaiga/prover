@@ -5,6 +5,7 @@
     using Prover.Core.Extensions;
     using Prover.Core.Models.Instruments;
     using Prover.Core.VerificationTests;
+    using Prover.Core.VerificationTests.VolumeVerification;
     using Prover.GUI.Common;
     using Prover.GUI.Common.Events;
     using ReactiveUI;
@@ -43,14 +44,14 @@
             Core.Models.Instruments.VolumeTest testRun, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
             _testRunManager = testRunManager;
-            Volume = testRun;
+            Volume = testRun;          
 
             ViewContext = StandardCardViewContext;
 
             if (Volume?.VerificationTest.FrequencyTest != null)
             {
                 ViewContext = PulseInputCardViewContext;
-                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest);
+                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest, _testRunManager);
                 PreVolumeTestCommand = ReactiveCommand.CreateFromTask(StartVolumeTest);
                 PostVolumeTestCommand = ReactiveCommand.CreateFromTask(RunPostVolumeTest);
             }
@@ -236,6 +237,8 @@
                 return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
             }
         }
+
+        public IVolumeTestManager VolumeTestManager { get; }
 
         /// <summary>
         /// The StartVolumeTest
