@@ -3,17 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:cal="http://www.caliburnproject.org"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
-             TextElement.FontWeight="Medium"
-             TextElement.FontSize="14"
+             xmlns:cal="http://www.caliburnproject.org"  
+             TextElement.FontSize="10"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d"
              Height="816" Width="1056">
    
-    <Viewbox Width="1056" Height="816" Stretch="Uniform">
+    <Viewbox Width="1056" Height="816" Stretch="Fill">
         <ContentControl cal:View.Model="{Binding QaTestRunViewItem}"
                         Margin="3" />
     </Viewbox>
