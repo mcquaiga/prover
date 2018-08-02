@@ -6,6 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -14,9 +15,11 @@
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
-        
-        <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+            <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Style.Triggers>
                 <MultiTrigger>
@@ -76,9 +79,22 @@
             </StackPanel>
         </StackPanel>
         
+        <ProgressBar Grid.Row="1"                         
+                         Width="56"
+                         Height="56"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
+                         Value="0"
+                         Panel.ZIndex="5"
+                         IsIndeterminate="True"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center" />
+        
         <ListBox  x:Name="VisibleTiles"
                   Margin="5"
                   Grid.Row="1"
+                  Panel.ZIndex="0"    
+                  Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
                  HorizontalContentAlignment="Stretch"
                  VerticalContentAlignment="Stretch">
             <ListBox.ItemContainerStyle>

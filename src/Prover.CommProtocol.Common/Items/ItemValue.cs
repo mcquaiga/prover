@@ -56,7 +56,7 @@ namespace Prover.CommProtocol.Common.Items
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
             var result = items.FirstOrDefault(x => x.Metadata.Code.ToLower() == code.ToLower());
-            if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
+            //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
 
             return result;
         }
@@ -65,7 +65,7 @@ namespace Prover.CommProtocol.Common.Items
         {
             var result = items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
 
-            if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");         
+            //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");         
 
             return result;
         }
