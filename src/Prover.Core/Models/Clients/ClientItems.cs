@@ -23,7 +23,7 @@ namespace Prover.Core.Models.Clients
 
         public ClientItems(Client client)
         {
-            Client = client;
+            Client = client ?? throw new NullReferenceException(nameof(client));
             ClientId = client.Id;
             Items = new List<ItemValue>();
         }

@@ -196,7 +196,43 @@
                     </UniformGrid>
                 </Grid>
             </Border>
-
+            <!--<Border Style="{StaticResource SubSectionDividerBorder}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon
+                        Kind="Sunglasses" Width="48" Height="48" Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center" />
+                    <UniformGrid Grid.Column="1" Columns="2"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch">
+                        <StackPanel>
+                            <TextBlock Text="{Binding , FallbackValue='60.0 F'}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Table" 
+                                       Style="{StaticResource LabelFontStyle}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TemperatureRange}" HorizontalAlignment="Center" />
+                            <TextBlock Text="Spec Gr." 
+                                       Style="{StaticResource LabelFontStyle}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TemperatureRange}" HorizontalAlignment="Center" />
+                            <TextBlock Text="N2" 
+                                       Style="{StaticResource LabelFontStyle}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TemperatureRange}" HorizontalAlignment="Center" />
+                            <TextBlock Text="CO2" 
+                                       Style="{StaticResource LabelFontStyle}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Grid>
+            </Border>-->
             <Border Style="{StaticResource SubSectionDividerBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>

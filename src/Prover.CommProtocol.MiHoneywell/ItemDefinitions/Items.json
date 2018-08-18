@@ -752,7 +752,13 @@
       "code": "SUPER_TABLE",
       "shortDescription": "Super Compress. Table",
       "description": "Super Compress. Table",
-      "isVolume": "true"
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "NX-19"
+        }
+      ]
     },
     {
       "number": "200",
