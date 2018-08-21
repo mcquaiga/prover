@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters;assembly=Prover"
              mc:Ignorable="d"             
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -11,7 +12,11 @@
         <ResourceDictionary
             Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
     </ResourceDictionary.MergedDictionaries>
-        <Style TargetType="{x:Type ListBoxItem}">
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
+                                                  TrueValue="Visible"
+                                                  FalseValue="Collapsed" />
+            <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Style.Triggers>
                 <MultiTrigger>
@@ -41,7 +46,7 @@
         <!--<Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         </Style>-->
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Style x:Key="Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Setter Property="Margin" Value="5"/>
         </Style>
 </ResourceDictionary>
@@ -75,9 +80,22 @@
             </ItemsControl>
         </StackPanel>
         
+        <ProgressBar Grid.Row="1"                         
+                         Width="56"
+                         Height="56"
+                         Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
+                         Value="0"
+                         Panel.ZIndex="5"
+                         IsIndeterminate="True"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center" />
+        
         <ListBox  x:Name="VisibleTiles"
                   Margin="5"
                   Grid.Row="1"
+                  Panel.ZIndex="0"    
+                  Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
                  HorizontalContentAlignment="Stretch"
                  VerticalContentAlignment="Stretch">
             <ListBox.ItemContainerStyle>

@@ -45,8 +45,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
 
         private void AddClient()
         {
-            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientService,
-                new Client());
+            var newClientVm = new ClientDetailsViewModel(ScreenManager, EventAggregator, _clientService);
             newClientVm.Edit();
         }
 

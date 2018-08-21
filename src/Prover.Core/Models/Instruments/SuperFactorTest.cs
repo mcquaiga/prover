@@ -55,6 +55,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+
+
         public override decimal? EvcFactor => EvcUnsqrFactor;
 
         public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?) Math.Pow((double) ActualFactor, 2) : null;
