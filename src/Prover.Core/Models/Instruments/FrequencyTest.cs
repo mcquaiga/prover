@@ -81,11 +81,22 @@ namespace Prover.Core.Models.Instruments
             (AdjustedVolumePercentError.HasValue && AdjustedVolumePercentError < 1 && AdjustedVolumePercentError > -1)
         && (UnadjustedVolumePercentError.HasValue && UnadjustedVolumePercentError < 1 && UnadjustedVolumePercentError > -1);
 
+        public decimal? TotalCorrection()
+        {
+            return VerificationTest.SuperFactorTest.SuperFactorSquared * VerificationTest.PressureTest.ActualFactor
+                * VerificationTest.TemperatureTest.ActualFactor;
+        }       
+
         public decimal AdjustedVolume()
         {
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
+        }
+        
+        public decimal AdjustedCorrectedVolume()
+        {
+            return AdjustedVolume() * TotalCorrection().Value;
         }
 
         public long RoundedAdjustedVolume()
