@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
 using Z.EntityFramework.Plus;
@@ -19,26 +20,18 @@ namespace Prover.Core.Storage
 
         public IQueryable<Instrument> Query()
         {
-            return _proverContext.Instruments
-                .IncludeOptimized(v => v.VerificationTests)
-                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
-                .AsQueryable();
-        }
+            return _proverContext.Instruments  
+                .IncludeOptimized(v => v.VerificationTests)               
+                .IncludeOptimized(v => v.VerificationTests.Select(t => t.TemperatureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(p => p.PressureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest));
+
+        }     
 
         public Instrument Get(Guid id)
         {
-            var i = Query()
-                .FirstOrDefault(x => x.Id == id);
-
-            i.VerificationTests = _proverContext.VerificationTests
-                .IncludeOptimized(v => v.TemperatureTest)
-                .IncludeOptimized(v => v.PressureTest)
-                .IncludeOptimized(v => v.VolumeTest)
-                .IncludeOptimized(v => v.FrequencyTest)
-                .Where(v => v.InstrumentId == i.Id)
-            .ToList();
-
-            return i;
+            return Query()                  
+                .FirstOrDefault(x => x.Id == id);          
         }
 
         public IEnumerable<Instrument> GetAll(Predicate<Instrument> predicate)
@@ -46,18 +39,18 @@ namespace Prover.Core.Storage
             throw new NotImplementedException();
         }
 
-        public async Task<Instrument> UpsertAsync(Instrument instrument)
+        public async Task<Instrument> UpsertAsync(Instrument entity)
         {
-            if (await _proverContext.Instruments.FindAsync(instrument.Id) != null)
+            if (await _proverContext.Instruments.FindAsync(entity.Id) != null)
             {
-                _proverContext.Instruments.Attach(instrument);
-                _proverContext.Entry(instrument).State = EntityState.Modified;
+                _proverContext.Instruments.Attach(entity);
+                _proverContext.Entry(entity).State = EntityState.Modified;
             }
             else
-                _proverContext.Instruments.Add(instrument);
+                _proverContext.Instruments.Add(entity);
 
             await _proverContext.SaveChangesAsync();
-            return instrument;
+            return entity;
         }
 
         public async Task Delete(Instrument entity)
