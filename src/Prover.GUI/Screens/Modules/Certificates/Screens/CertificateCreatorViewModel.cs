@@ -74,7 +74,17 @@ namespace Prover.GUI.Screens.Modules.Certificates.Screens
             ResultFilteredItems = RootResults.CreateDerivedCollection(
                 x => x,
                 x => x.IsDisplayed,
-                (x, y) => x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime));
+                (x, y) =>
+                {
+                    var sn = x.Instrument.SerialNumber.CompareTo(y.Instrument.SerialNumber);
+
+                    if (sn == 0)
+                    {
+                         return x.Instrument.TestDateTime.CompareTo(y.Instrument.TestDateTime);
+                    }
+
+                    return sn;
+                });                   
 
             ResultFilteredItems.ChangeTrackingEnabled = true;
 

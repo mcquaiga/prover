@@ -119,6 +119,7 @@ namespace Prover.GUI.Screens.Modules.Certificates.Common
             public decimal Co2 => _instrument.Items.GetItem(55).NumericValue;
             public decimal N2 => _instrument.Items.GetItem(54).NumericValue;
             public decimal SpecGr => _instrument.Items.GetItem(53).NumericValue;
+            public string SuperTable => _instrument.Items.GetItem(147).Description;
         }
 
         public class VolumeInfoViewModel
