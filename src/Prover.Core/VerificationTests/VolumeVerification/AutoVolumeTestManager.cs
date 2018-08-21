@@ -30,6 +30,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
                 Log.Info("Running volume sync test...");
 
+
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(volumeTest);
@@ -90,12 +91,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await Task.Run(() =>
                 {
                     _outputBoard?.StartMotor();
-                    do
-                    {
-                        //TODO: Raise events so the UI can respond
-                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
+                    ct = ListenForPulseInputs(volumeTest, ct);
                 }, ct);
                 ct.ThrowIfCancellationRequested();
             }         
@@ -108,6 +104,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 _outputBoard?.StopMotor();
             }
+        }
+
+        private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        {
+            do
+            {
+                //TODO: Raise events so the UI can respond
+                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+            } while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested);
+            return ct;
         }
 
         public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
