@@ -18,7 +18,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
