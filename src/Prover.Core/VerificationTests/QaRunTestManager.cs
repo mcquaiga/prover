@@ -138,7 +138,7 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
         {
-            await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter, false);
+            await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter, ct,  false);
         }
 
         public async Task DownloadPreVolumeTest()

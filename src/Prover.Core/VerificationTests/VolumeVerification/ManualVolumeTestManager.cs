@@ -53,7 +53,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             return;
         }
 
-        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
+        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, CancellationToken ct,  bool readTach = true)
         {           
             try
             {                    

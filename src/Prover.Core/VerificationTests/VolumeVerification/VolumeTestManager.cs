@@ -53,7 +53,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     await ExecutingTest(volumeTest, ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await PostTest(commClient, volumeTest, evcTestItemReset);
+                    await PostTest(commClient, volumeTest, evcTestItemReset, ct);
 
                     Log.Info("Volume test finished!");
                 }, ct);
@@ -77,7 +77,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
 
         public abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcPostTestItemReset, bool readTach = true);
+            IEvcItemReset evcPostTestItemReset, CancellationToken ct, bool readTach = true);
 
         public abstract void Dispose();
 

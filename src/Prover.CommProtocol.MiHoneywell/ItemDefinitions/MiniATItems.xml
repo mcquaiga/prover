@@ -3,8 +3,9 @@
         isVolumeTest="true" />
   <item number="2" code="UNCOR_VOL" shortDescription="UnCor Vol" description="Uncorrected Volume" isVolume="true"
         isVolumeTest="true" />
-  <item number="5" code="PULSER_A" shortDescription="Pulser A #" description="Pulser A # o" />
-  <item number="6" code="PULSER_B" shortDescription="Pulser B #" description="Pulser B # o" />
+  <item number="5" code="PULSER_A_COUNT" shortDescription="Pulser A #" description="Pulser A Count Waiting" />
+  <item number="6" code="PULSER_B_COUNT" shortDescription="Pulser B #" description="Pulser B Count Waiting" />
+  <item number="7" code="PULSER_C_COUNT" shortDescription="Pulser C #" description="Pulser C Count Waiting" />
   <item number="8" code="GAS_PRESS" shortDescription="Gas Press" description="Gas Pressure" isPressureTest="true" />
   <item number="10" shortDescription="Press High A" description="Pressure High Alarm" isAlarm="true" />
   <item number="11" shortDescription="Press Low A" description="Pressure Low Alarm" isAlarm="true" />
