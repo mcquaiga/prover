@@ -70,7 +70,8 @@
                 await commClient.Connect();
                 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
-                                               
+                          
+                 volumeTest.Items = await commClient.GetVolumeItems();
                 //if (volumeTest.VerificationTest.FrequencyTest != null)
                 //{
                 //    volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
