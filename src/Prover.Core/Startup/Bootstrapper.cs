@@ -1,4 +1,8 @@
-﻿using Autofac;
+using System.Data.Entity;
+using Autofac;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Migrations;

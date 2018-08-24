@@ -71,7 +71,9 @@
                 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
                                
-                volumeTest.AfterTestItems = await commClient.GetVolumeItems();
+                FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+                FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+
 
                 //if (volumeTest.VerificationTest.FrequencyTest != null)
                 //{
@@ -192,7 +194,7 @@
                 _outputBoard?.StopMotor();
             }
         }
-
+        
         /// <summary>
         /// The ResetPulseCounts
         /// </summary>
@@ -224,7 +226,7 @@
                 {
                     pulsesWaiting += (int)i.NumericValue;
                 }
-
+                    
                 if (pulsesWaiting > 0)
                 {
                     await commClient.Disconnect();
