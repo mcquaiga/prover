@@ -155,6 +155,8 @@
             {
                 _outputBoard.StopMotor();
             }
+
+            await Task.Delay(new TimeSpan(0, 0, 60));
         }
 
         /// <summary>
