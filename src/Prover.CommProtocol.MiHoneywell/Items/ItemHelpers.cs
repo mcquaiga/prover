@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
@@ -48,9 +47,9 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                                  (x.Attribute("isTemperatureTest") != null) &&
                                  Convert.ToBoolean(x.Attribute("isTemperatureTest").Value),
                              IsVolume = (x.Attribute("isVolume") != null) && Convert.ToBoolean(x.Attribute("isVolume").Value),
-                             IsVolumeTest =
-                                 (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
+                             IsVolumeTest = (x.Attribute("isVolumeTest") != null) && Convert.ToBoolean(x.Attribute("isVolumeTest").Value),
                              IsSuperFactor = (x.Attribute("isSuper") != null) && Convert.ToBoolean(x.Attribute("isSuper").Value),
+                             IsFrequencyTest = (x.Attribute("isFrequencyTest") != null) && Convert.ToBoolean(x.Attribute("isFrequencyTest").Value),
                              ItemDescriptions =
                                  (from y in x.Descendants("value")
                                   select new ItemMetadata.ItemDescription

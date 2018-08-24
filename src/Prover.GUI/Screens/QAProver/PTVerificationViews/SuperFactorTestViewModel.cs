@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
 
 namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 {

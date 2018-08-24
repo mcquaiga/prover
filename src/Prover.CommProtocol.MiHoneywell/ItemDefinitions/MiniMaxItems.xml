@@ -153,7 +153,7 @@
   <item number="122" code="FIRMWARE" shortDescription="Firm. Ver." description="Firmware Version" />
   <item number="137" code="PRESS_RANGE" shortDescription="Pressure Range" description="Pressure Range"
         isPressure="true" />
-  <item number="140" code="ENERGY" shortDescription="Energy" description="Energy" isVolume="true" />
+  <item number="140" code="ENERGY" shortDescription="Energy" description="Energy" isVolume="true" isVolumeTest="true" />
   <item number="141" code="ENERGY_UNITS" shortDescription="Energy Units" description="Energy Units" isVolume="true">
     <value id="0" description="Therms" />
     <value id="1" description="DecaTherms" />

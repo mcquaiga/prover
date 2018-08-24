@@ -6,8 +6,8 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
-using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Storage;
 using Prover.GUI.Common;
 
 namespace Prover.GUI.Reports
@@ -15,16 +15,20 @@ namespace Prover.GUI.Reports
     public class InstrumentReportGenerator
     {
         private readonly ScreenManager _screenManager;
+        private readonly IInstrumentStore<Instrument> _instrumentStore;
 
-        public InstrumentReportGenerator(ScreenManager screenManager)
+        public InstrumentReportGenerator(ScreenManager screenManager, IInstrumentStore<Instrument> instrumentStore)
         {
             _screenManager = screenManager;
+            _instrumentStore = instrumentStore;
         }
 
         public string OutputFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
 
         public async Task GenerateAndViewReport(Instrument instrument)
         {
+            instrument = _instrumentStore.Get(instrument.Id);
+
             var filePath = CreateFileName(instrument);
 
             //Set up the WPF Control to be printed
@@ -66,6 +70,11 @@ namespace Prover.GUI.Reports
 
         private string WriteDocument(FixedDocument fixedDoc, string filePath)
         {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
             var xpsWriter = new XpsDocument(filePath, FileAccess.ReadWrite);
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
             xw.Write(fixedDoc);

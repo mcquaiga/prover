@@ -10,7 +10,7 @@ using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManager : VolumeTestManagerBase
+    public class AutoVolumeTestManager : VolumeTestManager
     {
         private readonly IDInOutBoard _outputBoard;
         private readonly TachometerService _tachometerCommunicator;
@@ -29,14 +29,14 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await commClient.Disconnect();
 
                 Log.Info("Running volume sync test...");
-
+                
                 FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
                 FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
 
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(volumeTest);
-                    _outputBoard.StartMotor();
+                    _outputBoard?.StartMotor();
                     do
                     {
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
@@ -57,12 +57,21 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        protected override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcTestItemReset)
         {
             await commClient.Connect();
-            if (evcTestItemReset != null) await evcTestItemReset.PreReset(commClient);
-            volumeTest.Items = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+
+            if (evcTestItemReset != null)
+                await evcTestItemReset.PreReset(commClient);
+
+            volumeTest.Items = await commClient.GetVolumeItems();
+
+            if (volumeTest.VerificationTest.FrequencyTest != null)
+            {
+                volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
+            }
+
             await commClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -103,15 +112,19 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 _outputBoard?.StopMotor();
             }
         }
-
-        protected override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset)
-        {
-            await Task.Run(async () =>
-            {
+        
+        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
+        {            
                 try
                 {
                     await commClient.Connect();
-                    volumeTest.AfterTestItems = await commClient.GetItemValues(commClient.ItemDetails.VolumeItems());
+                    volumeTest.AfterTestItems = await commClient.GetVolumeItems();
+
+                    if (volumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
+                    }
+                    
                     if (evcPostTestItemReset != null) await evcPostTestItemReset.PostReset(commClient);
                 }
                 finally
@@ -119,8 +132,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     await commClient.Disconnect();
                 }
 
-                await GetAppliedInput(volumeTest);
-            });
+                if (readTach) await GetAppliedInput(volumeTest);          
         }
 
         public override void Dispose()
@@ -152,16 +164,6 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             Log.Debug($"Applied Input: {result.Value}");
 
             volumeTest.AppliedInput = result.Value;
-        }
-
-        //protected override async Task ZeroInstrumentVolumeItems()
-        //{
-        //    await InstrumentCommunicator.Connect();
-        //    await InstrumentCommunicator.SetItemValue(264, "20140867");
-        //    await InstrumentCommunicator.SetItemValue(434, "0");
-        //    await InstrumentCommunicator.SetItemValue(113, "0");
-        //    await InstrumentCommunicator.SetItemValue(892, "0");
-        //    await base.ZeroInstrumentVolumeItems();
-        //}
+        }   
     }
 }

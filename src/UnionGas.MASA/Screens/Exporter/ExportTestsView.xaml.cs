@@ -17,11 +17,13 @@ namespace UnionGas.MASA.Screens.Exporter
             this.WhenActivated(d =>
             {
                 ViewModel = (ExportTestsViewModel)DataContext;
+
                 d(this.WhenAnyValue(x => x.ViewModel.ExecuteTestSearch)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
-                //d(this.WhenAnyValue(x => x.ViewModel.RootResults)
-                //    .InvokeCommand(this.ViewModel, model => model.FilterByTypeCommand));
+                //d(this.WhenAnyValue(x => x.ViewModel.FilterByTypeCommand)
+                //    .SelectMany(x => x.Execute("All"))
+                //    .Subscribe());            
             });
         }
 

@@ -157,6 +157,7 @@
     <Compile Include="Screens\Toolbars\LoginToolbar\WaitingForLogin.xaml.cs">
       <DependentUpon>WaitingForLogin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Toolbars\UserLoggedInEvent.cs" />
     <Compile Include="Validators\CompanyNumber\NewCompanyNumberPopupRequestor.cs" />
     <Compile Include="Validators\CompanyNumber\CompanyNumberUpdater.cs" />
     <Compile Include="Dialogs\CompanyNumberDialog\CompanyNumberDialogViewModel.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Exporter\Translate.cs" />
     <Compile Include="Validators\CompanyNumber\CompanyNumberValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\UserLoggedInValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">

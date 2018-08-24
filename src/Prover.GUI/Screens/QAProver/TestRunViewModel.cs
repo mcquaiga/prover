@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Akka.Util.Internal;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Events;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
 using Prover.GUI.Common;
-using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Screens.QAProver.PTVerificationViews;
 using ReactiveUI;
@@ -23,15 +21,15 @@ using Splat;
 
 namespace Prover.GUI.Screens.QAProver
 {
-    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<ConnectionStatusEvent>
+    public class TestRunViewModel : ViewModelBase, IDisposable, IHandle<ConnectionStatusEvent>, IHandle<SaveTestEvent>
     {
+        
         private const string NewQaTestViewContext = "NewTestView";
         private const string EditQaTestViewContext = "EditTestView";
 
         private string _connectionStatusMessage;
-        private ReactiveList<SelectableInstrumentType> _instrumentTypes;
 
-        private IQaRunTestManager _qaRunTestManager;
+        private IQaRunTestManager _qaTestRunManager;
 
         private int _selectedBaudRate;
         private string _selectedCommPort;
@@ -43,30 +41,36 @@ namespace Prover.GUI.Screens.QAProver
 
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
-        {
-            eventAggregator.Subscribe(this);
-
+        {           
             /***  Setup Instruments list  ***/
-            InstrumentTypes = new ReactiveList<SelectableInstrumentType>
+            Instruments = new ReactiveList<SelectableInstrumentType>
             {
                 ChangeTrackingEnabled = true
             };
 
-            Instruments.GetAll().ForEach(
-                x => InstrumentTypes.Add(new SelectableInstrumentType
+            Instruments.ItemChanged
+                .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)              
+                .Select(x => x.Sender.Instrument)
+                .ToProperty(this, x => x.SelectedInstrument, out _selectedInstrument);
+
+            this.WhenAnyValue(x => x.SelectedInstrument)
+                .Where(i => i != null)
+                .Subscribe(x =>
+                {
+                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Name;
+                });
+
+            CommProtocol.MiHoneywell.Instruments.GetAll().ToList().ForEach(
+                x => Instruments.Add(new SelectableInstrumentType
                 {
                     Instrument = x,
-                    IsSelected = x.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed
+                    IsSelected = false
                 }));
 
-            InstrumentTypes.ItemChanged
-                .Where(x => x.PropertyName == "IsSelected" && x.Sender.IsSelected)
-                .Select(x => x.Sender)
-                .Subscribe(async x =>
-                {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = x.Instrument.Name;
-                    await SettingsManager.Save();
-                });
+            var lastInstrument = Instruments.FirstOrDefault(x =>
+                x.Instrument.Name == SettingsManager.SettingsInstance.LastInstrumentTypeUsed);
+            if (lastInstrument != null)
+                lastInstrument.IsSelected = true;
 
             /***  Setup Comm Ports and Baud Rate settings ***/
             _selectedCommPort = CommPort.Contains(SettingsManager.SettingsInstance.InstrumentCommPort)
@@ -86,7 +90,6 @@ namespace Prover.GUI.Screens.QAProver
                     SettingsManager.SettingsInstance.InstrumentBaudRate = _.Item1;
                     SettingsManager.SettingsInstance.InstrumentCommPort = _.Item2;
                     SettingsManager.SettingsInstance.TachCommPort = _.Item3;
-                    await SettingsManager.Save();
                 });
 
             /*** Commands ***/
@@ -99,6 +102,7 @@ namespace Prover.GUI.Screens.QAProver
             _viewContext = NewQaTestViewContext;
         }
 
+        #region Properties
         public ReactiveCommand StartTestCommand { get; }
 
         public InstrumentInfoViewModel SiteInformationItem { get; set; }
@@ -106,7 +110,8 @@ namespace Prover.GUI.Screens.QAProver
         public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
             new ObservableCollection<VerificationSetViewModel>();
 
-        public VolumeTestViewModel VolumeInformationItem { get; set; }
+        public VolumeTestViewModel VolumeTestView =>
+            TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
 
         public InstrumentInfoViewModel EventLogCommPortItem { get; set; }
 
@@ -116,12 +121,14 @@ namespace Prover.GUI.Screens.QAProver
             set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
         }
 
-        public InstrumentType SelectedInstrument => InstrumentTypes?.FirstOrDefault(i => i.IsSelected)?.Instrument;
+        private readonly ObservableAsPropertyHelper<InstrumentType> _selectedInstrument;
+        public InstrumentType SelectedInstrument => _selectedInstrument.Value;
 
-        public ReactiveList<SelectableInstrumentType> InstrumentTypes
+        private ReactiveList<SelectableInstrumentType> _instruments;
+        public ReactiveList<SelectableInstrumentType> Instruments
         {
-            get { return _instrumentTypes; }
-            set { this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+            get { return _instruments; }
+            set { this.RaiseAndSetIfChanged(ref _instruments, value); }
         }
 
         public List<string> CommPort => SerialPort.GetPortNames().ToList();
@@ -159,6 +166,7 @@ namespace Prover.GUI.Screens.QAProver
             get { return _connectionStatusMessage; }
             set { this.RaiseAndSetIfChanged(ref _connectionStatusMessage, value); }
         }
+#endregion
 
         public void Handle(ConnectionStatusEvent message)
         {
@@ -175,15 +183,15 @@ namespace Prover.GUI.Screens.QAProver
             ShowConnectionDialog = true;
 
             if (SelectedInstrument != null)
+            {
                 try
                 {
-                    SettingsManager.SettingsInstance.LastInstrumentTypeUsed = SelectedInstrument.Name;
                     await SettingsManager.Save();
-
-                    _qaRunTestManager = Locator.Current.GetService<IQaRunTestManager>();
-                    _testStatusSubscription = _qaRunTestManager.TestStatus.Subscribe(OnTestStatusChange);
-                    await _qaRunTestManager.InitializeTest(SelectedInstrument);
-                    await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+                    var commPort = GetCommPort();
+                    _qaTestRunManager = Locator.Current.GetService<IQaRunTestManager>();
+                    _testStatusSubscription = _qaTestRunManager.TestStatus.Subscribe(OnTestStatusChange);
+                    await _qaTestRunManager.InitializeTest(SelectedInstrument, commPort);
+                    await InitializeViews(_qaTestRunManager, _qaTestRunManager.Instrument);
                     ViewContext = EditQaTestViewContext;
                 }
                 catch (Exception ex)
@@ -195,6 +203,13 @@ namespace Prover.GUI.Screens.QAProver
                 {
                     ShowConnectionDialog = false;
                 }
+            }
+               
+        }
+
+        private static CommPort GetCommPort()
+        {
+            return new SerialPort(SettingsManager.SettingsInstance.InstrumentCommPort, SettingsManager.SettingsInstance.InstrumentBaudRate);
         }
 
         public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
@@ -202,8 +217,7 @@ namespace Prover.GUI.Screens.QAProver
             await Task.Run(() =>
             {
                 SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-                SiteInformationItem.QaTestManager = qaTestRunTestManager;
-                SiteInformationItem.Instrument = instrument;
+                SiteInformationItem.Initialize(instrument, qaTestRunTestManager);              
 
                 foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
                 {
@@ -214,7 +228,7 @@ namespace Prover.GUI.Screens.QAProver
                     TestViews.Add(item);
                 }
 
-                if (instrument.InstrumentType == Instruments.MiniAt)
+                if (instrument.InstrumentType == CommProtocol.MiHoneywell.Instruments.MiniAt)
                     EventLogCommPortItem = SiteInformationItem;
             });
         }
@@ -224,19 +238,28 @@ namespace Prover.GUI.Screens.QAProver
             ConnectionStatusMessage = status;
         }
 
-        public class SelectableInstrumentType
+        public class SelectableInstrumentType : ReactiveObject
         {
-            public InstrumentType Instrument { get; set; }
-            public bool IsSelected { get; set; }
+            private bool _isSelected;
+            public bool IsSelected
+            {
+                get { return _isSelected; }
+                set { this.RaiseAndSetIfChanged(ref _isSelected, value); }
+            }
+
+            public InstrumentType Instrument { get; set; }            
         }
 
         public void Dispose()
         {
             _testStatusSubscription?.Dispose();
-            _qaRunTestManager?.Dispose();
+            _qaTestRunManager?.Dispose();
         }
 
-     
+        public void Handle(SaveTestEvent message)
+        {
+            _qaTestRunManager?.SaveAsync();
+        }
     }
 }
 

@@ -39,32 +39,53 @@ namespace Prover.Core.Models.Instruments
         public decimal? EvcUnsqrFactor => PressureTest.Items.GetItem(ItemCodes.Pressure.UnsqrFactor).NumericValue;
 
         [NotMapped]
-        public override decimal? ActualFactor => decimal.Round((decimal) CalculateFPV(), 4);
+        public override decimal? ActualFactor
+        {
+            get
+            {
+                var fpv = (decimal?)CalculateFpv();
+                return fpv.HasValue ? decimal.Round(fpv.Value, 4) : default(decimal?);
+            }
+        }
 
-        public decimal SuperFactorSquared => (decimal) Math.Pow((double) ActualFactor, 2);
+        public decimal SuperFactorSquared
+        {
+            get
+            {
+                var af = ActualFactor.HasValue ? (double) ActualFactor.Value : 0;
+                return (decimal)Math.Pow(af, 2);
+            }
+        }
 
         public override decimal? PercentError
         {
             get
             {
-                if ((EvcUnsqrFactor == null) || (ActualFactor == 0)) return null;
-                return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor)/ActualFactor*100), 2);
+                if (EvcUnsqrFactor == null || ActualFactor == null || (ActualFactor == 0)) return null;
+
+                return decimal.Round((decimal) ((EvcUnsqrFactor - ActualFactor) / ActualFactor * 100), 2);                
             }
         }
-
-        public VerificationTest VerificationTest { get; }
 
         [NotMapped]
         public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 
-        private double? CalculateFPV()
+        private double? CalculateFpv()
         {
             if (!GaugePressure.HasValue) return null;
 
-            var super = new FactorCalculations((double) VerificationTest.Instrument.SpecGr().Value,
-                (double) VerificationTest.Instrument.CO2().Value, (double) VerificationTest.Instrument.N2().Value,
-                (double) GaugeTemp, (double) GaugePressure);
-            return super.SuperFactor;
+            var specGr = VerificationTest?.Instrument?.SpecGr();
+            var co2 = VerificationTest?.Instrument?.CO2();
+            var n2 = VerificationTest?.Instrument.N2();
+
+            if (specGr.HasValue && co2.HasValue && n2.HasValue)
+            {               
+                var super = new FactorCalculations((double)specGr, (double) co2, (double) n2,
+                    (double) GaugeTemp, (double) GaugePressure);
+                return super.SuperFactor;               
+            }
+
+            return null;
         }
     }
 }

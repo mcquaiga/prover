@@ -1,52 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using Prover.Core.Events;
-using Prover.Core.ExternalIntegrations;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
-using ReactiveUI;
-using System.Linq.Expressions;
-
-namespace UnionGas.MASA.Screens.Exporter
+﻿namespace UnionGas.MASA.Screens.Exporter
 {
+    using Caliburn.Micro;
+    using Prover.Core.Events;
+    using Prover.Core.ExternalIntegrations;
+    using Prover.Core.Models.Instruments;
+    using Prover.Core.Storage;
+    using Prover.GUI.Common;
+    using Prover.GUI.Common.Screens;
+    using ReactiveUI;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reactive;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="ExportTestsViewModel" />
+    /// </summary>
     public class ExportTestsViewModel : ViewModelBase, IHandle<DataStorageChangeEvent>
     {
+        #region Fields
+
+        /// <summary>
+        /// Defines the _exportTestRun
+        /// </summary>
         private readonly IExportTestRun _exportTestRun;
+
+        /// <summary>
+        /// Defines the _instrumentStore
+        /// </summary>
         private readonly IInstrumentStore<Instrument> _instrumentStore;
 
+        /// <summary>
+        /// Defines the _showLoadingIndicator
+        /// </summary>
+        private readonly ObservableAsPropertyHelper<bool> _showLoadingIndicator;
+
+        /// <summary>
+        /// Defines the _showTestViewListBox
+        /// </summary>
+        private readonly ObservableAsPropertyHelper<bool> _showTestViewListBox;
+
+        /// <summary>
+        /// Defines the _rootResults
+        /// </summary>
+        private ReactiveList<QaTestRunGridViewModel> _rootResults = new ReactiveList<QaTestRunGridViewModel>() { ChangeTrackingEnabled = true };
+
+        /// <summary>
+        /// Defines the _visibleTiles
+        /// </summary>
+        private IReactiveDerivedList<QaTestRunGridViewModel> _visibleTiles;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportTestsViewModel"/> class.
+        /// </summary>
+        /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
+        /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             IExportTestRun exportTestRun,
             IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
-            _instrumentStore = instrumentStore;                    
+            _instrumentStore = instrumentStore;
 
             FilterObservable = new Subject<Predicate<Instrument>>();
-            
+
             FilterByTypeCommand = ReactiveCommand.Create<string>(s =>
             {
                 FilterObservable.OnNext(Instrument.IsOfInstrumentType(s));
-            });           
+            });
+            
+            ExecuteTestSearch = ReactiveCommand.CreateFromTask(LoadTests, outputScheduler: RxApp.TaskpoolScheduler);            
 
-            ExecuteTestSearch = ReactiveCommand.CreateFromObservable(()
-                => LoadTests(Instrument.CanExport()));
+            ExecuteTestSearch.IsExecuting
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToProperty(this, x => x.ShowLoadingIndicator, out _showLoadingIndicator, true);
+            
+            ExecuteTestSearch.IsExecuting
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Select(e => !e)                
+                .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox, false);
+
             ExecuteTestSearch
-                .Subscribe(i =>
-                {
-                    var item = ScreenManager.ResolveViewModel<QaTestRunGridViewModel>();
-                    item.Instrument = i;
-                    item.SetFilter(FilterObservable);
-                    RootResults.Add(item);
-                });
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(async i => await CreateInstrumentViews(i));
 
             VisibleTiles = RootResults.CreateDerivedCollection(t => t,
                 model => model.IsShowing,
@@ -64,66 +109,136 @@ namespace UnionGas.MASA.Screens.Exporter
                      && !string.IsNullOrEmpty(x.Instrument.EmployeeId));
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
-            
+            ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
         }
-
-        public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
-
-        #region Properties
-
-        public Subject<Predicate<Instrument>> FilterObservable { get; set; }
-
-        private IReactiveDerivedList<QaTestRunGridViewModel>_visibleTiles;
-        public IReactiveDerivedList<QaTestRunGridViewModel> VisibleTiles
-        {
-            get => _visibleTiles;
-            set => this.RaiseAndSetIfChanged(ref _visibleTiles, value);
-        }
-       
-        public IReactiveDerivedList<Instrument> PassedTests { get; set; }
-        
-        private ReactiveList<QaTestRunGridViewModel> _rootResults = new ReactiveList<QaTestRunGridViewModel>() { ChangeTrackingEnabled = true };
-        public ReactiveList<QaTestRunGridViewModel> RootResults
-        {
-            get => _rootResults;
-            set => this.RaiseAndSetIfChanged(ref _rootResults, value);
-        }
-
-        public ReactiveCommand<Unit, Instrument> ExecuteTestSearch { get; protected set; }
-
-        public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the ExecuteTestSearch
+        /// </summary>
+        public ReactiveCommand<Unit, IEnumerable<Instrument>> ExecuteTestSearch { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the ExportAllPassedQaRunsCommand
+        /// </summary>
+        public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
+
+        /// <summary>
+        /// Gets the FilterByTypeCommand
+        /// </summary>
+        public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the FilterObservable
+        /// </summary>
+        public Subject<Predicate<Instrument>> FilterObservable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PassedTests
+        /// </summary>
+        public IReactiveDerivedList<Instrument> PassedTests { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RootResults
+        /// </summary>
+        public ReactiveList<QaTestRunGridViewModel> RootResults { get => _rootResults; set => this.RaiseAndSetIfChanged(ref _rootResults, value); }
+
+        /// <summary>
+        /// Gets a value indicating whether ShowLoadingIndicator
+        /// </summary>
+        public bool ShowLoadingIndicator => _showLoadingIndicator.Value;
+
+        /// <summary>
+        /// Gets a value indicating whether ShowTestViewListBox
+        /// </summary>
+        public bool ShowTestViewListBox => _showTestViewListBox.Value;
+
+        /// <summary>
+        /// Gets or sets the VisibleTiles
+        /// </summary>
+        public IReactiveDerivedList<QaTestRunGridViewModel> VisibleTiles { get => _visibleTiles; set => this.RaiseAndSetIfChanged(ref _visibleTiles, value); }
+
+        private ReactiveCommand _exportFailedTestCommand;
+        public ReactiveCommand ExportFailedTestCommand
+        {
+            get => _exportFailedTestCommand;
+            set => this.RaiseAndSetIfChanged(ref _exportFailedTestCommand, value);
+        }
+
+        private string _failedCompanyNumber;
+        public string FailedCompanyNumber
+        {
+            get => _failedCompanyNumber;
+            set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The ExportAllPassedQaRuns
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task ExportAllPassedQaRuns()
         {
             await _exportTestRun.Export(PassedTests);
         }
 
-        private IObservable<Instrument> LoadTests(Predicate<Instrument> whereFunc)
+        private async Task ExportFailedTest()
         {
-            return _instrumentStore.Query()
-                .AsEnumerable()               
-                .Where(whereFunc.Invoke)
-                .OrderBy(i => i.TestDateTime)
-                .ToObservable();
+            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
+            FailedCompanyNumber = null;
         }
 
+        /// <summary>
+        /// The Handle
+        /// </summary>
+        /// <param name="message">The message<see cref="DataStorageChangeEvent"/></param>
         public void Handle(DataStorageChangeEvent message)
         {
+        }
+
+        /// <summary>
+        /// The CreateInstrumentViews
+        /// </summary>
+        /// <param name="instruments">The instruments<see cref="IEnumerable{Instrument}"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task CreateInstrumentViews(IEnumerable<Instrument> instruments)
+        {
+            foreach (var i in instruments)
+            {
+                await Task.Run(() =>
+                {
+                    var item = ScreenManager.ResolveViewModel<QaTestRunGridViewModel>();
+                    item.Instrument = i;
+                    item.SetFilter(FilterObservable);
+                    RootResults.Add(item);
+                });
+            }
+        }
+
+
+        ///// <summary>
+        ///// The LoadTests
+        ///// </summary>
+        ///// <returns>The <see cref="IObservable{Instrument}"/></returns>
+        private async Task<IEnumerable<Instrument>> LoadTests()
+        {
+            return await Task.Run(() => 
+            { 
+                return _instrumentStore.Query()
+                .Where(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue)
+                .OrderBy(i => i.TestDateTime)
+                .AsQueryable();                      
+            });
             
         }
+    
+
+        #endregion
     }
 }
-
-//this.WhenAnyValue(x => x.InstrumentItems, (vm, list) =>
-//    {
-//        return .InstrumentItems.Select(x => x.Select(y => y.Instrument)
-//                .Where(i => i.HasPassed && !string.IsNullOrEmpty(i.JobId) &&
-//                            !string.IsNullOrEmpty(i.EmployeeId))
-//                .ToList());
-//    });
-
-// .ToProperty(this, x => x.PassedInstrumentTests, new List<Instrument>());               
-
-// var canExportAllPassed = this.WhenAnyValue(x => x.PassedInstrumentTests, (passed) => passed.Any());

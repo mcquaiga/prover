@@ -4,8 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Name="parent"
+             x:Name="PercentUserControl"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -24,10 +25,15 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+            
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Collapsed"
+                                                  FalseValue="Visible" />
         </ResourceDictionary>
+
     </UserControl.Resources>
     <!---->
-    <Grid DataContext="{Binding ElementName=parent}">
+    <Grid DataContext="{Binding ElementName=PercentUserControl}">
         <Grid Height="42">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="42" />
@@ -41,7 +47,8 @@
             <!--<Grid Grid.Column="0" Background="{Binding Path=IconBackground}">
                 <Image x:Name="Icon" Source="{Binding Path=IconSource}" Width="36" Height="36" />
             </Grid>-->
-            <Grid Grid.Column="1" Margin="6 0">
+            <Grid Grid.Column="1" Margin="6 0"
+                  Visibility="{Binding HidePercentage, Converter={StaticResource BoolToHiddenConverter}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <TextBlock Text="{Binding Path=DisplayValue}"
                                FontSize="30"

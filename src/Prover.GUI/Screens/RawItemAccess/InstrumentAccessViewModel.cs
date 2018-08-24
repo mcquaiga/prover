@@ -53,9 +53,9 @@ namespace Prover.GUI.Screens.RawItemAccess
 
         public async Task ReadInstrumentValue()
         {
-            await InstrumentCommunicator.Connect();
-            var result = await InstrumentCommunicator.GetItemValue(ItemNumber);
-            ItemValue = result.RawValue;
+            //await InstrumentCommunicator.Connect();
+            //var result = await InstrumentCommunicator.GetItemValue(ItemNumber);
+            //ItemValue = result.RawValue;
             NotifyOfPropertyChange(() => ItemValue);
         }
 

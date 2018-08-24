@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Storage
 {
@@ -17,30 +20,37 @@ namespace Prover.Core.Storage
 
         public IQueryable<Instrument> Query()
         {
-            return _proverContext.Instruments
-                .Include(v => v.VerificationTests.Select(t => t.TemperatureTest))
-                .Include(v => v.VerificationTests.Select(p => p.PressureTest))
-                .Include(v => v.VerificationTests.Select(vo => vo.VolumeTest))
-                .AsQueryable();
-        }
+            return _proverContext.Instruments  
+                .IncludeOptimized(v => v.VerificationTests)               
+                .IncludeOptimized(v => v.VerificationTests.Select(t => t.TemperatureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(p => p.PressureTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest));
+
+        }     
 
         public Instrument Get(Guid id)
         {
-            return Query().FirstOrDefault(x => x.Id == id);
+            return Query()                  
+                .FirstOrDefault(x => x.Id == id);          
         }
 
-        public async Task<Instrument> UpsertAsync(Instrument instrument)
+        public IEnumerable<Instrument> GetAll(Predicate<Instrument> predicate)
         {
-            if (Get(instrument.Id) != null)
+            throw new NotImplementedException();
+        }
+
+        public async Task<Instrument> UpsertAsync(Instrument entity)
+        {
+            if (await _proverContext.Instruments.FindAsync(entity.Id) != null)
             {
-                _proverContext.Instruments.Attach(instrument);
-                _proverContext.Entry(instrument).State = EntityState.Modified;
+                _proverContext.Instruments.Attach(entity);
+                _proverContext.Entry(entity).State = EntityState.Modified;
             }
             else
-                _proverContext.Instruments.Add(instrument);
+                _proverContext.Instruments.Add(entity);
 
             await _proverContext.SaveChangesAsync();
-            return instrument;
+            return entity;
         }
 
         public async Task Delete(Instrument entity)

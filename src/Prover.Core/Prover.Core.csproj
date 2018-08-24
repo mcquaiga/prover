@@ -44,10 +44,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.1.2.29, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
@@ -107,10 +103,6 @@
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ReactiveUI, Version=7.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
@@ -164,11 +156,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.7.9.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.7.9\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="DriveTypes\Energy.cs" />
     <Compile Include="DriveTypes\IDriveType.cs" />
     <Compile Include="DriveTypes\MechanicalDrive.cs" />
+    <Compile Include="DriveTypes\PulseInputSensor.cs" />
     <Compile Include="DriveTypes\RotaryDrive.cs" />
     <Compile Include="Events\CommunicationStatusEvent.cs" />
     <Compile Include="Events\ConnectionStatusEvent.cs" />
@@ -217,11 +214,21 @@
     <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711180713513_Add-FrequencyTest.cs" />
+    <Compile Include="Migrations\201711180713513_Add-FrequencyTest.Designer.cs">
+      <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
+    <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\TestActions\ITestAction.cs" />
+    <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManagerBase.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
@@ -262,6 +269,7 @@
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ItemDefinitions\MiniATItems.xml">
@@ -270,7 +278,6 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="..\..\..\..\Desktop\EvcProver.cd" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -331,6 +338,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
       <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711180713513_Add-FrequencyTest.resx">
+      <DependentUpon>201711180713513_Add-FrequencyTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250817346_Modify-FrequencyTests.resx">
+      <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

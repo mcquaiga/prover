@@ -11,7 +11,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public abstract class VolumeTestManagerBase : IDisposable
+    public abstract class VolumeTestManager : IDisposable
     {
         protected IEventAggregator EventAggreator;
         protected IDInOutBoard FirstPortAInputBoard;
@@ -22,8 +22,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         protected bool RequestStopTest;
         protected CancellationTokenSource TestCancellationToken;
 
-        protected VolumeTestManagerBase(
-            IEventAggregator eventAggregator)
+        protected VolumeTestManager(IEventAggregator eventAggregator)
         {
             Log = LogManager.GetCurrentClassLogger();
             EventAggreator = eventAggregator;
@@ -35,7 +34,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         public bool RunningTest { get; set; }
 
-        public async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset, CancellationToken ct)
+        public virtual async Task RunTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcTestItemReset, CancellationToken ct)
         {
             try
             {
@@ -71,19 +71,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
         protected abstract Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
-        protected abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+        public abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             IEvcItemReset evcTestItemReset);
 
         protected abstract Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct);
 
-        protected abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-            IEvcItemReset evcPostTestItemReset);
+        public abstract Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
+            IEvcItemReset evcPostTestItemReset, bool readTach = true);
 
         public abstract void Dispose();
 
-    }
-
-    public interface IPulseInputService
-    {
     }
 }

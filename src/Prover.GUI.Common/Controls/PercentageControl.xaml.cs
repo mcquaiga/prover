@@ -20,7 +20,6 @@ namespace Prover.GUI.Common.Controls
             DependencyProperty.Register(nameof(IconBackground), typeof(Brush), typeof(PercentageControl),
                 new FrameworkPropertyMetadata(null));
 
-
         // Using a DependencyProperty as the backing store for Passed.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PassedProperty =
             DependencyProperty.Register(nameof(Passed), typeof(bool), typeof(PercentageControl),
@@ -31,9 +30,17 @@ namespace Prover.GUI.Common.Controls
             DependencyProperty.Register(nameof(DisplayValue), typeof(decimal?), typeof(PercentageControl),
                 new PropertyMetadata(0.0m));
 
-
         public static readonly DependencyProperty IconKindProperty = DependencyProperty.Register(
             "IconKind", typeof(PackIconKind), typeof(PercentageControl), new PropertyMetadata(default(PackIconKind)));
+
+        public static readonly DependencyProperty HidePercentageProperty = DependencyProperty.Register(
+            "HidePercentage", typeof(bool), typeof(PercentageControl), new PropertyMetadata(false));
+
+        public bool HidePercentage
+        {
+            get { return (bool) GetValue(HidePercentageProperty); }
+            set { SetValue(HidePercentageProperty, value); }
+        }
 
         public PercentageControl()
         {

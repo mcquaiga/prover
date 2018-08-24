@@ -3,12 +3,9 @@ using Autofac;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
-using Prover.GUI.Common.Screens.MainMenu;
-using Prover.GUI.Common.Screens.Toolbar;
-using ReactiveUI.Autofac;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
-using UnionGas.MASA.Screens.Toolbars;
+using UnionGas.MASA.Validators;
 using UnionGas.MASA.Validators.CompanyNumber;
 
 namespace UnionGas.MASA
@@ -18,15 +15,18 @@ namespace UnionGas.MASA
         public static void Initialize(ContainerBuilder builder)
         {
             var assembly = Assembly.GetExecutingAssembly();
-
-            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient());
+            
+            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
 
             //Login service
-            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>().SingleInstance();
+            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>()
+                .SingleInstance();
 
-            builder.RegisterType<CompanyNumberValidator>().As<IValidator>();
+            builder.RegisterType<CompanyNumberValidator>().As<IValidator>().AsSelf();
             builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
             builder.RegisterType<NewCompanyNumberPopupRequestor>().As<IGetValue>();
+
+            builder.RegisterType<UserLoggedInValidator>().As<IValidator>();
 
             builder.RegisterType<ExportManager>().As<IExportTestRun>();
             

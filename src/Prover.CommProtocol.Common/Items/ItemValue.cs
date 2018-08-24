@@ -23,7 +23,15 @@ namespace Prover.CommProtocol.Common.Items
         public ItemMetadata Metadata { get; }
 
         public virtual decimal NumericValue
-            => RawValue != "!Unsupported" ? ItemDescription?.Value ?? decimal.Parse(RawValue) : 0;
+        {
+            get
+            {
+                if (RawValue.Contains("Unsupported"))
+                    return 0;
+
+                return ItemDescription?.Value ?? decimal.Parse(RawValue);
+            }
+        }
 
         public virtual string Description => ItemDescription?.Description ?? "[NULL]";
 
@@ -55,25 +63,36 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            var result = items.FirstOrDefault(x => x.Metadata.Code.ToLower() == code.ToLower());
-            if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
+            var result = items?.FirstOrDefault(x => x.Metadata?.Code.ToLower() == code.ToLower());
+            //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
 
             return result;
         }
 
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, int itemNumber)
         {
-            var result = items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
+            var result = items?.FirstOrDefault(x => x.Metadata?.Number == itemNumber);
 
-            if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");         
+            //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");         
 
             return result;
         }
 
         public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
         {
-            if (items == null) return new Dictionary<int, string>();
-            return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
+            try
+            {
+                if (items == null) return new Dictionary<int, string>();
+                return items
+                    .Where(i => i.Metadata != null)
+                    .ToDictionary(k => k.Metadata.Number, v => v.RawValue);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
 
         public static string Serialize(this IEnumerable<ItemValue> items)

@@ -1,9 +1,6 @@
 ﻿namespace Prover.Core.Extensions
 {
     using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Collections.Generic;
 
     public static class PredicateBuilder
     {

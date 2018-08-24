@@ -55,10 +55,6 @@
     <StartupObject>Prover.GUI.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.1.2.29, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Akka.1.1.2\lib\net45\Akka.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
@@ -125,10 +121,6 @@
     <Reference Include="PresentationFramework">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\PresentationFramework.dll</HintPath>
     </Reference>
-    <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ReachFramework" />
     <Reference Include="Reactive.EventAggregator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Reactive.EventAggregator.2.0.0\lib\net45\Reactive.EventAggregator.dll</HintPath>
@@ -194,10 +186,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="ToastinetWPF, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Toastinet.2.8\lib\net45\ToastinetWPF.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
   </ItemGroup>
@@ -207,7 +195,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="QaTestRunApp.cs" />
-    <Compile Include="ConnectionDialogManager.cs" />
     <Compile Include="Dialogs\ConnectionView.xaml.cs">
       <DependentUpon>ConnectionView.xaml</DependentUpon>
     </Compile>
@@ -231,9 +218,23 @@
     <Compile Include="Screens\QAProver\InstrumentInfo\EventLogCommPort.Card.xaml.cs">
       <DependentUpon>EventLogCommPort.Card.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\QAProver\InstrumentInfo\TocInfoView.xaml.cs">
+      <DependentUpon>TocInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\InstrumentInfo\TocInfoViewModel.cs" />
     <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTestViewModel.cs" />
     <Compile Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml.cs">
       <DependentUpon>EnergyTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTestViewModel.cs" />
+    <Compile Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml.cs">
+      <DependentUpon>FrequencyTest.Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml.cs">
+      <DependentUpon>Volume.Base.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml.cs">
+      <DependentUpon>Volume.PulseInputCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\QAProver\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
@@ -343,6 +344,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\QAProver\InstrumentInfo\TocInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\QAProver\LiveReadView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -350,6 +355,18 @@
     <Page Include="Screens\QAProver\PTVerificationViews\EnergyTest\EnergyTest.Card.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.Base.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\QAProver\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\QAProver\TestRunView.xaml">
       <SubType>Designer</SubType>
