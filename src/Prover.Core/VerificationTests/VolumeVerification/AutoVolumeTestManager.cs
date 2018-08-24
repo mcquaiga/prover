@@ -222,7 +222,7 @@
 
                 foreach (var i in await commClient.GetPulseOutputItems())
                 {
-                    pulsesWaiting =+ (int)i.NumericValue;
+                    pulsesWaiting += (int)i.NumericValue;
                 }
 
                 if (pulsesWaiting > 0)
