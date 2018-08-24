@@ -70,11 +70,7 @@
                 await commClient.Connect();
                 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
-                               
-                FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
-                FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
-
-
+                                               
                 //if (volumeTest.VerificationTest.FrequencyTest != null)
                 //{
                 //    volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
@@ -134,7 +130,6 @@
                 await commClient.Disconnect();
 
                 Log.Info("Running volume sync test...");
-
 
                 await Task.Run(() =>
                 {
@@ -199,8 +194,11 @@
         /// The ResetPulseCounts
         /// </summary>
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        private static void ResetPulseCounts(VolumeTest volumeTest)
+        private void ResetPulseCounts(VolumeTest volumeTest)
         {
+            FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+            FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+
             volumeTest.PulseACount = 0;
             volumeTest.PulseBCount = 0;
         }
