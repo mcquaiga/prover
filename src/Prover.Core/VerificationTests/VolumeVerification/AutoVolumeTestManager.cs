@@ -102,7 +102,7 @@
             if (evcTestItemReset != null)
                 await evcTestItemReset.PreReset(commClient);
 
-            volumeTest.Items = await commClient.GetVolumeItems();
+            volumeTest.AfterTestItems = await commClient.GetVolumeItems();
 
             if (volumeTest.VerificationTest.FrequencyTest != null)
             {
