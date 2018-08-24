@@ -228,7 +228,7 @@
                 if (pulsesWaiting > 0)
                 {
                     await commClient.Disconnect();
-                    await Task.Delay(new TimeSpan(0, 0, 30), ct);                    
+                    await Task.Delay(new TimeSpan(0, 0, 60), ct);                    
                 }                
 
             } while (pulsesWaiting > 0 && !ct.IsCancellationRequested);
