@@ -13,7 +13,7 @@ namespace Prover.GUI.Controls
 {
     public class ItemsFileViewModel : ReactiveScreen
     {
-        private readonly Client _client;
+        private Client _client;
         public ClientItemType ItemsFileType { get; }
 
         public ItemsFileViewModel(Client client, ClientItemType itemsFileType,
@@ -213,9 +213,10 @@ namespace Prover.GUI.Controls
             using (ActiveItems.SuppressChangeNotifications())
             {
                 ActiveItems.Clear();
+                                   
                 var clientItems = GetItemList(instrumentType, ItemsFileType);
                 if (clientItems == null)
-                {
+                {                 
                     var clientItem = new ClientItems(_client)
                     {
                         InstrumentType = instrumentType,
