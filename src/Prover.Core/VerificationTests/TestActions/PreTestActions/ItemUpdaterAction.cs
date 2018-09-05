@@ -2,23 +2,38 @@
 {
     using Prover.CommProtocol.Common;
     using Prover.Core.Models.Instruments;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Defines the <see cref="TocItemUpdater" />
+    /// Defines the <see cref="ItemUpdaterAction" />
     /// </summary>
-    public class TocItemUpdater : ItemUpdaterAction
+    public class ItemUpdaterAction : IInstrumentAction
     {
+        #region Fields
+
+        /// <summary>
+        /// Defines the _itemsForUpdate
+        /// </summary>
+        private readonly Dictionary<int, string> _itemsForUpdate;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TocItemUpdater"/> class.
+        /// Initializes a new instance of the <see cref="ItemUpdaterAction"/> class.
         /// </summary>
         /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
-        public TocItemUpdater(Dictionary<int, string> itemsForUpdate) : base(itemsForUpdate)
+        public ItemUpdaterAction(Dictionary<int, string> itemsForUpdate)
         {
+            if (itemsForUpdate == null || !itemsForUpdate.Any())
+                throw new ArgumentNullException(nameof(itemsForUpdate));
+
+            _itemsForUpdate = itemsForUpdate;
         }
 
         #endregion
@@ -32,10 +47,12 @@
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        public virtual async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
-            if (instrument.InstrumentType.Id == 33)
-                await base.Execute(commClient, instrument, statusUpdates);
+            foreach (var item in _itemsForUpdate)
+            {
+                await commClient.SetItemValue(item.Key, item.Value);
+            }
         }
 
         #endregion

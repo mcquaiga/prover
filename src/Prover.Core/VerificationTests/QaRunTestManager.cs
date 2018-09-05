@@ -44,7 +44,7 @@ namespace Prover.Core.VerificationTests
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IEnumerable<IValidator> _validators;
         private readonly IEvcItemReset _itemResetter;
-        private readonly IEnumerable<IPreTestAction> _preTestActions;
+        private readonly IEnumerable<IPreVolumeTestAction> _preTestActions;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
@@ -54,7 +54,7 @@ namespace Prover.Core.VerificationTests
             VolumeTestManager volumeTestManager,            
             IEnumerable<IValidator> validators,
             IEvcItemReset itemResetter = null,
-            IEnumerable<IPreTestAction> preTestActions = null)
+            IEnumerable<IPreVolumeTestAction> preTestActions = null)
         {
             VolumeTestManager = volumeTestManager;
             EventAggregator = eventAggregator;

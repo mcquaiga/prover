@@ -16,6 +16,7 @@ using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Prover.Core.Startup
 {
@@ -41,8 +42,23 @@ namespace Prover.Core.Startup
             Builder.Register(c =>
             {
                 var resetItems = SettingsManager.SettingsInstance.TocResetItems;
-                return new TocItemUpdater(resetItems);
-            }).As<IPreTestAction>();
+                return new ItemUpdaterAction(resetItems);
+            })
+            .As<IPreVolumeTestAction>()
+            .Named<IPreVolumeTestAction>("TocVolPulsesWaitingReset");
+
+            Builder.Register(c =>
+            {
+                var resetItems = new Dictionary<int, string>
+                {                  
+                    {5, "0" },
+                    {6, "0" },
+                    {7, "0" }                
+                };
+                return new ItemUpdaterAction(resetItems);
+            })
+            .As<IPreVolumeTestAction>()
+            .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
 
             Task.Run(SettingsManager.RefreshSettings);
         }
