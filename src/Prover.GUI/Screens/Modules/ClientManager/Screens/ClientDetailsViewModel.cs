@@ -42,9 +42,12 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
 
             SwitchToDetailsContextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                //if (Client.Name != null)
-                //    Client = await _clientService.GetById(Client.Id);
-    
+                if (Client == null)
+                    Client = new Client();
+
+                if (Client.Name != null)
+                    Client = await _clientService.GetById(Client.Id);
+
                 IsDirty = true;
                 InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
 
