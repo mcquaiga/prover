@@ -29,7 +29,7 @@ namespace Prover.Core.Startup
             Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-            
+
             ////QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
             Builder.Register(c => new TachometerService(SettingsManager.SettingsInstance.TachCommPort, c.ResolveNamed<IDInOutBoard>("TachDaqBoard")))
@@ -39,10 +39,19 @@ namespace Prover.Core.Startup
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
 
+            RegisterTestActions();
+
+            Task.Run(SettingsManager.RefreshSettings);
+        }
+
+        private void RegisterTestActions()
+        {
+            Builder.RegisterType<TestActionsManager>().As<ITestActionsManager>();
+
             Builder.Register(c =>
             {
                 var resetItems = SettingsManager.SettingsInstance.TocResetItems;
-                return new ItemUpdaterAction(resetItems);
+                return new TocItemUpdaterAction(resetItems);
             })
             .As<IPreVolumeTestAction>()
             .Named<IPreVolumeTestAction>("TocVolPulsesWaitingReset");
@@ -50,17 +59,17 @@ namespace Prover.Core.Startup
             Builder.Register(c =>
             {
                 var resetItems = new Dictionary<int, string>
-                {                  
+                {
                     {5, "0" },
                     {6, "0" },
-                    {7, "0" }                
+                    {7, "0" }
                 };
                 return new ItemUpdaterAction(resetItems);
             })
             .As<IPreVolumeTestAction>()
             .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
 
-            Task.Run(SettingsManager.RefreshSettings);
+            
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();

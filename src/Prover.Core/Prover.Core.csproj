@@ -226,6 +226,9 @@
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\IQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\ITestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActionsManager.cs" />
     <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />

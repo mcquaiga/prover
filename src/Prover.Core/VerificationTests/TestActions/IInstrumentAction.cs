@@ -62,6 +62,5 @@
     public interface IPreVolumeTestAction : IInstrumentAction
     {
     }
-
     #endregion
 }

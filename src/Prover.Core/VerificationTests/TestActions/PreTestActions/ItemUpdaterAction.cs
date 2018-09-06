@@ -1,6 +1,7 @@
 ﻿namespace Prover.Core.VerificationTests.TestActions.PreTestActions
 {
     using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.Items;
     using Prover.Core.Models.Instruments;
     using System;
     using System.Collections.Generic;
@@ -11,7 +12,7 @@
     /// <summary>
     /// Defines the <see cref="ItemUpdaterAction" />
     /// </summary>
-    public class ItemUpdaterAction : IInstrumentAction
+    public class ItemUpdaterAction : IPreVerificationAction, IPreVolumeTestAction, IPostVerificationAction, IPostVolumeTestAction
     {
         #region Fields
 
@@ -52,6 +53,9 @@
             foreach (var item in _itemsForUpdate)
             {
                 await commClient.SetItemValue(item.Key, item.Value);
+
+                if (instrument.Items.GetItem(item.Key) != null)
+                    instrument.Items.GetItem(item.Key).RawValue = item.Value;
             }
         }
 

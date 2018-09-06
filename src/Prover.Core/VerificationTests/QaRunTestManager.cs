@@ -21,19 +21,6 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IQaRunTestManager : IDisposable
-    {
-        Instrument Instrument { get; }
-        Task InitializeTest(InstrumentType instrumentType, CommPort commPort);
-        Task RunTest(int level, CancellationToken ct = new CancellationToken());
-        Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken());
-        Task SaveAsync();
-        Task RunVerifier();
-
-        IObservable<string> TestStatus { get; }
-
-        Task DownloadPreVolumeTest();
-    }
 
     public class QaRunTestManager : IQaRunTestManager
     {
@@ -43,8 +30,6 @@ namespace Prover.Core.VerificationTests
         private readonly IInstrumentStore<Instrument> _instrumentStore;
         private readonly IReadingStabilizer _readingStabilizer;
         private readonly IEnumerable<IValidator> _validators;
-        private readonly IEvcItemReset _itemResetter;
-        private readonly IEnumerable<IPreVolumeTestAction> _preTestActions;
         private readonly Subject<string> _testStatus = new Subject<string>();
 
         public QaRunTestManager(
@@ -53,16 +38,14 @@ namespace Prover.Core.VerificationTests
             IReadingStabilizer readingStabilizer,
             VolumeTestManager volumeTestManager,            
             IEnumerable<IValidator> validators,
-            IEvcItemReset itemResetter = null,
-            IEnumerable<IPreVolumeTestAction> preTestActions = null)
+            ITestActionsManager testActionsManager )
         {
             VolumeTestManager = volumeTestManager;
             EventAggregator = eventAggregator;
             _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
-            _validators = validators;
-            _itemResetter = itemResetter;
-            _preTestActions = preTestActions;
+            _validators = validators;      
+            TestActionsManager = testActionsManager;
         }
 
         public IObservable<string> TestStatus => _testStatus.AsObservable();
@@ -79,6 +62,7 @@ namespace Prover.Core.VerificationTests
         }
 
         public Instrument Instrument { get; private set; }
+        public ITestActionsManager TestActionsManager { get; }
 
         public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort)
         {
@@ -90,12 +74,9 @@ namespace Prover.Core.VerificationTests
             _testStatus.OnNext("Downloading items...");
             var items = await _communicationClient.GetAllItems();
 
-            Instrument = new Instrument(instrumentType, items);
+            Instrument = new Instrument(instrumentType, items);          
 
-            foreach (var preTestAction in _preTestActions)
-            {
-                await preTestAction.Execute(_communicationClient, Instrument);
-            }
+            await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
 
             await RunVerifier();
 
@@ -125,8 +106,9 @@ namespace Prover.Core.VerificationTests
                 if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
                 {
                     _testStatus.OnNext($"Running volume test...");
-                    await VolumeTestManager.RunTest(_communicationClient, Instrument.VolumeTest, _itemResetter, ct);
+                    await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
                 }
+
                 _testStatus.OnNext($"Saving test...");
                 await SaveAsync();
             }
@@ -138,12 +120,12 @@ namespace Prover.Core.VerificationTests
 
         public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
         {
-            await VolumeTestManager.PostTest(_communicationClient, Instrument.VolumeTest, _itemResetter, ct,  false);
+            await VolumeTestManager.CompleteTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct,  false);
         }
 
         public async Task DownloadPreVolumeTest()
         {
-            await VolumeTestManager.PreTest(_communicationClient, Instrument.VolumeTest, _itemResetter);
+            await VolumeTestManager.InitializeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager);
         }
 
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)

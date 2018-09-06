@@ -9,7 +9,7 @@
     /// <summary>
     /// Defines the <see cref="TocItemUpdater" />
     /// </summary>
-    public class TocItemUpdater : ItemUpdaterAction
+    public class TocItemUpdaterAction : ItemUpdaterAction
     {
         #region Constructors
 
@@ -17,7 +17,7 @@
         /// Initializes a new instance of the <see cref="TocItemUpdater"/> class.
         /// </summary>
         /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
-        public TocItemUpdater(Dictionary<int, string> itemsForUpdate) : base(itemsForUpdate)
+        public TocItemUpdaterAction(Dictionary<int, string> itemsForUpdate) : base(itemsForUpdate)
         {
         }
 
