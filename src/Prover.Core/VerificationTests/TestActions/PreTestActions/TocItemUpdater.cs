@@ -1,37 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
-using Prover.Core.Models.Instruments;
-
-namespace Prover.Core.VerificationTests.TestActions.PreTestActions
+﻿namespace Prover.Core.VerificationTests.TestActions.PreTestActions
 {
-    public class TocItemUpdater : IPreTestAction
+    using Prover.CommProtocol.Common;
+    using Prover.Core.Models.Instruments;
+    using System.Collections.Generic;
+    using System.Reactive.Subjects;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="TocItemUpdater" />
+    /// </summary>
+    public class TocItemUpdaterAction : ItemUpdaterAction
     {
-        private readonly Dictionary<int, string> _itemResetValues;
+        #region Constructors
 
-        public TocItemUpdater(Dictionary<int, string> resetValues)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TocItemUpdater"/> class.
+        /// </summary>
+        /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
+        public TocItemUpdaterAction(Dictionary<int, string> itemsForUpdate) : base(itemsForUpdate)
         {
-            _itemResetValues = resetValues;
         }
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The Execute
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
+        /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
-            if (instrument.InstrumentType.Id != 33)
-                return;
-
-            if (_itemResetValues == null)
-                return;
-
-            foreach (var item in _itemResetValues)
-            {
-                await commClient.SetItemValue(item.Key, item.Value);
-            }
+            if (instrument.InstrumentType.Id == 33)
+                await base.Execute(commClient, instrument, statusUpdates);
         }
+
+        #endregion
     }
 }
