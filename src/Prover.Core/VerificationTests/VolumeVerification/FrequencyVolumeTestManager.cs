@@ -21,7 +21,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             
         }
 
-        public override async Task PostTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcPostTestItemReset, bool readTach = true)
+       public override async Task CompleteTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct, bool readTach = true)
         {
              try
             {                    
@@ -38,7 +38,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }           
         }
 
-        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, IEvcItemReset evcTestItemReset)
+       public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
         {
             await commClient.Connect();
 
@@ -50,14 +50,15 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await commClient.Disconnect();     
         }
 
-        protected override async Task ExecuteSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task RunSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             return;
         }
 
-        protected override async Task ExecutingTest(VolumeTest volumeTest, CancellationToken ct)
+        protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
         {
             return;
         }
+    
     }
 }

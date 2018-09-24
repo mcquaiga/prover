@@ -20,8 +20,7 @@ using Prover.Core.VerificationTests.VolumeVerification;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
-{
-        VolumeTestManager VolumeTestManager { get; }
+{ 
 
     public class QaRunTestManager : IQaRunTestManager
     {
