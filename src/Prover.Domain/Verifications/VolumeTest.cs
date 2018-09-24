@@ -5,7 +5,7 @@ using Prover.Domain.Model.Helpers;
 
 namespace Prover.Domain.Model.Verifications
 {
-    public abstract class VolumeTest : Entity
+    public abstract class VolumeTest : EntityWithId
     {
         protected VolumeTest() : base(Guid.NewGuid())
         {

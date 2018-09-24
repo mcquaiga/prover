@@ -4,11 +4,12 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Clients;
-using Prover.Core.Storage;
+using Prover.Core.Shared.Data;
+using Z.EntityFramework.Plus;
 
 namespace Prover.Core.Services
 {
-    public class ClientService
+    public class ClientService : IClientService
     {
         private readonly IProverStore<Client> _clientStore;
         private readonly IProverStore<ClientCsvTemplate> _csvTemplateStore;
@@ -25,6 +26,19 @@ namespace Prover.Core.Services
             return clients
                 .OrderBy(c => c.Name)
                 .ToList();                
+        }
+
+        public async Task<Client> GetById(Guid id)
+        {
+            //var client = await _clientStore.Get(id);
+
+            var client = await _clientStore.Query(c => c.Id == id)
+                .IncludeOptimized(c => c.CsvTemplates)
+                .IncludeOptimized(c => c.Items)
+                .FirstOrDefaultAsync();
+
+            //client.CsvTemplates = _csvTemplateStore.Query(csv => csv.ClientId == id).ToList();
+            return client;
         }
 
         public IEnumerable<Client> GetActiveClients()

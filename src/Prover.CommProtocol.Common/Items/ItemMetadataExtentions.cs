@@ -5,7 +5,7 @@ using System.Linq;
 namespace Prover.CommProtocol.Common.Items
 {
     public static class ItemMetadataExtentions
-    {
+    {    
         public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items)
             => items.Select(i => i.Number);
 
@@ -63,5 +63,8 @@ namespace Prover.CommProtocol.Common.Items
 
         public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsTemperatureTest == true);
+
+        public static IEnumerable<ItemMetadata> FrequencyTestItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.IsFrequencyTest == true);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -93,7 +92,7 @@ namespace Prover.Core.Exports
                     if (rowFormat.Contains($"[{name}]"))
                     {
                         var value = recordType.GetProperty(property.Name)?.GetValue(record)?.ToString();
-                        if (value != null)
+                        if (!string.IsNullOrEmpty(value))
                             rowFormat = rowFormat.Replace($"[{name}]", value);
                     }
                 }

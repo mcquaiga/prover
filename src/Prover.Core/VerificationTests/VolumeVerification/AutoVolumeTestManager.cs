@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using MccDaq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Communication;
+using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
@@ -20,7 +19,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         private readonly IDInOutBoard _outputBoard;            
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm) : base(eventAggregator, commClient, volumeTest)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, ISettingsService settingsService) 
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
             _tachometerCommunicator = tachComm;
 
@@ -64,7 +64,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             CommClient.StatusObservable.Subscribe(Status);
             await CommClient.Connect(ct);
-            VolumeTest.Items = (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            VolumeTest.Items = await CommClient.GetVolumeItems();
+
+            if (VolumeTest.VerificationTest.FrequencyTest != null)
+            {
+                VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
+            }
+
             await CommClient.Disconnect();
 
             if (_tachometerCommunicator != null)
@@ -73,22 +79,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 await _tachometerCommunicator?.ResetTach();
             }
             ResetPulseCounts(VolumeTest);
-
-            TestStep.OnNext(VolumeTestSteps.PreTest);
         }
 
         public override async Task ExecutingTest(CancellationToken ct)
         {
-            var statusFormat = $"Waiting for pulse inputs... {Environment.NewLine}" +
-                               $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
-                               $"   CorVol => {VolumeTest.CorPulseCount}";
             try
             {
                 ct.ThrowIfCancellationRequested();                
                 await Task.Run(() =>
                 {
                     using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(250))
+                        .Interval(TimeSpan.FromMilliseconds(100))
                         .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
                                                       $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                       $"   CorVol => {VolumeTest.CorPulseCount}")))
@@ -114,13 +115,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             finally
             {
                 _outputBoard?.StopMotor();
-                TestStep.OnNext(VolumeTestSteps.ExecutingTest);
             }
         }
 
         public override async Task PostTest(CancellationToken ct)
         {
-            TestStep.OnNext(VolumeTestSteps.PostTest);
             ct.ThrowIfCancellationRequested();
             Status.OnNext("Completing volume test...");
             await Task.Run(async () =>
@@ -128,7 +127,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 try
                 {
                     await CommClient.Connect(ct);
-                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
+                    if (VolumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
+                    }
                 }
                 finally
                 {
@@ -168,6 +171,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             Log.Debug($"Applied Input: {result.Value}");
 
             VolumeTest.AppliedInput = result.Value;
-        }      
+        } 
+        
+
     }
 }

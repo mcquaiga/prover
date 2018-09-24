@@ -2,8 +2,9 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Autofac;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens.MainMenu;
+using MaterialDesignThemes.Wpf;
+using Prover.GUI.Screens;
+using Prover.GUI.Screens.MainMenu;
 using UnionGas.MASA.Screens.Exporter;
 using Action = System.Action;
 
@@ -20,8 +21,7 @@ namespace UnionGas.MASA
 
         public ScreenManager ScreenManager { get; set; }
 
-        public ImageSource MenuIconSource => new BitmapImage(new Uri("pack://application:,,,/Prover;component/Resources/cloud-upload.png"));
-
+        public PackIconKind MenuIconKind => PackIconKind.CloudUpload;
         public string MenuTitle => "Export Test Runs";
 
         public Action OpenAction => () => ScreenManager.ChangeScreen<ExportTestsViewModel>();

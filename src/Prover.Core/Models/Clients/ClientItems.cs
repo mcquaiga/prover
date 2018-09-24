@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
@@ -24,7 +23,7 @@ namespace Prover.Core.Models.Clients
 
         public ClientItems(Client client)
         {
-            Client = client;
+            Client = client ?? throw new NullReferenceException(nameof(client));
             ClientId = client.Id;
             Items = new List<ItemValue>();
         }

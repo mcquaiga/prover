@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.Modules.ClientManager.Screens.CsvTemplates.ClientCsvTemplatesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <UniformGrid Rows="1" >
+            <GroupBox Header="Instrument Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="InstrumentTypes" DisplayMemberPath="Name" />
+            </GroupBox>
+            <GroupBox Header="Drive Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="DriveTypes"/>
+            </GroupBox>
+            <GroupBox Header="Corrector Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="CorrectorTypes"/>
+            </GroupBox>
+            <GroupBox Header="Verification Type"
+                      BorderThickness="1">
+                <ComboBox x:Name="VerificationTypes"/>
+            </GroupBox>
+        </UniformGrid>
+        
+        <StackPanel Grid.Row="1"
+                    Margin="5 15">
+
+            <ItemsControl x:Name="FieldButtons" ItemsSource="{Binding Path=FieldList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <!--<TextBlock Margin="1">
+                            [<TextBlock Text="{Binding }"
+                                        FontSize="14" />]
+                        </TextBlock>-->
+                        <Button Content="{Binding }"
+                                Command="{Binding Path=DataContext.AddFieldToTemplateCommand,
+                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding }"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="10">
+                <TextBlock Text="CSV Template"
+                           FontWeight="DemiBold"/>
+                <TextBox x:Name="CsvTemplate"
+                         TextWrapping="WrapWithOverflow"
+                         VerticalAlignment="Stretch"
+                         AcceptsReturn="True"
+                         FontWeight="Regular"
+                         FontSize="16"
+                         VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="2"               
+                    Margin="8"
+                    HorizontalAlignment="Stretch">
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    HorizontalAlignment="Left"/>
+            <Button Content="OK"
+                    Command="{Binding OkCommand}"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    HorizontalAlignment="Right"/>
+        </Grid>
+    </Grid>
+</UserControl>
+

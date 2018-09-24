@@ -39,16 +39,13 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public int ReadInput()
         {
-            short value = 0;
-
-            var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex,
-                FunctionType.AiFunction);
+            var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex, FunctionType.AiFunction);
             if (boardStatus.Value != ErrorInfo.ErrorCode.NoErrors)
             {
                 throw new Exception("DAQ board could not be found or is not configured correctly.");
             }
 
-            _ulStatErrorInfo = _board.DIn(_channelType, out value);
+            _ulStatErrorInfo = _board.DIn(_channelType, out short value);
 
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
@@ -78,17 +75,16 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         public void Dispose()
         {
             _board = null;
-            GC.SuppressFinalize(this);
         }
 
         public short InputValue { get; private set; }
 
         private void Out(MotorValues outputValue)
         {
-            _ulStatErrorInfo = _board.AOut(_channelNum, Range.UniPt05Volts, (short) outputValue);
-            if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors &&
-                _ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
-                _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo.Message);
+            _ulStatErrorInfo = _board?.AOut(_channelNum, Range.UniPt05Volts, (short) outputValue);
+
+            if (_ulStatErrorInfo?.Value != ErrorInfo.ErrorCode.NoErrors && _ulStatErrorInfo?.Value != ErrorInfo.ErrorCode.BadBoard)
+                _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo?.Message);
         }
 
         private enum MotorValues

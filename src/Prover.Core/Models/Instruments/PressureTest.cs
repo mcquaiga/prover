@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
@@ -14,22 +15,20 @@ namespace Prover.Core.Models.Instruments
 
     public sealed class PressureTest : BaseVerificationTest
     {
-        private const decimal DefaultAtmGauge = 0m;
-
         public PressureTest()
         {
         }
 
-        public PressureTest(VerificationTest verificationTest, decimal gauge)
+        public PressureTest(VerificationTest verificationTest, decimal percentOfGauge)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
-            _totalGauge = decimal.Round(gauge, 2);
+            _totalGauge = GetGaugePressure(percentOfGauge);
             AtmosphericGauge = default(decimal?);
 
-            switch (VerificationTest?.Instrument?.Transducer)
+            switch (Transducer)
             {
                 case TransducerType.Gauge:
                     GasGauge = TotalGauge;
@@ -43,6 +42,9 @@ namespace Prover.Core.Models.Instruments
         }
 
         private readonly decimal? _totalGauge;
+
+        [NotMapped]
+        public TransducerType? Transducer => VerificationTest?.Instrument?.Transducer;
 
         [NotMapped]
         public decimal TotalGauge => _totalGauge ?? 0;
@@ -132,6 +134,15 @@ namespace Prover.Core.Models.Instruments
             }
 
             return decimal.Round(result, 2);
+        }
+
+        public decimal GetGaugePressure(decimal percentOfGauge)
+        {
+            if (percentOfGauge > 1)
+                percentOfGauge = percentOfGauge / 100;
+
+            var evcPressureRange = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
+            return Decimal.Round(percentOfGauge * evcPressureRange, 2);
         }
 
         public decimal? GasGauge { get; set; }

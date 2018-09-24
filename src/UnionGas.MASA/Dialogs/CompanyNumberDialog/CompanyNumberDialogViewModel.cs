@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
+using Prover.GUI.Screens;
 
 namespace UnionGas.MASA.Dialogs.CompanyNumberDialog
 {

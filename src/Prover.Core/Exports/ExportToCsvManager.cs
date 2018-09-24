@@ -2,23 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Storage;
 using System.Collections.Generic;
 using Prover.Core.Services;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Exports
 {
-    public enum VerificationTypeEnum
-    {
-        New,
-        Reverified
-    }
-
     public interface IFileWriter
     {
         void Write();
@@ -28,11 +20,13 @@ namespace Prover.Core.Exports
     {
         private readonly ICertificateService _certificateService;
         private readonly TestRunService _testRunService;
+        private readonly IClientService _clientService;
 
-        public ExportToCsvManager(ICertificateService certificateService, TestRunService testRunService)
+        public ExportToCsvManager(ICertificateService certificateService, TestRunService testRunService, IClientService clientService)
         {
             _certificateService = certificateService;
             _testRunService = testRunService;
+            _clientService = clientService;
         }
 
         public async Task<string[]> Export(Client client, long fromCertificateNumber, long toCertificateNumber, string exportPath)
@@ -48,32 +42,31 @@ namespace Prover.Core.Exports
 
         public async Task<string> Export(Certificate certificate, string exportPath)
         {
-            return await Task.Run(async () =>
-            {
-                if (!certificate.Instruments.Any())
-                    throw new NullReferenceException("Certificate does not contain any instruments.");
+            if (!certificate.Instruments.Any())
+                throw new NullReferenceException("Certificate does not contain any instruments.");
                
-                var client = certificate.Client;
-                var fileName = GetFilePath(exportPath, certificate, client);
+            var client = certificate.Client;
+            var fileName = GetFilePath(exportPath, certificate, client);
 
-                var instruments = _testRunService.GetTestRunByCertificate(certificate.Id).ToList();
+            var instruments = _testRunService.GetTestRunByCertificate(certificate.Id).ToList();
 
-                var exportInstrumentsDictonary = new Dictionary<ExportFields, string>();
-                foreach (var instrument in instruments)
-                {
-                    var csvFormat = FindCsvTemplate(certificate, instrument, client);
-                    var exportType = TranslateToExport.Translate(certificate, instrument);
+            var exportInstrumentsDictonary = new Dictionary<ExportFields, string>();
+            foreach (var instrument in instruments)
+            {
+                var csvFormat = await FindCsvTemplate(certificate, instrument, client);
+                var exportType = TranslateToExport.Translate(certificate, instrument);
 
-                    exportInstrumentsDictonary.Add(exportType, csvFormat);
-                }
-                await CsvWriter.Write(fileName, exportInstrumentsDictonary);
+                exportInstrumentsDictonary.Add(exportType, csvFormat);
+            }
+            await CsvWriter.Write(fileName, exportInstrumentsDictonary);
 
-                return fileName;
-            });
+            return fileName;
         }
 
-        private static string FindCsvTemplate(Certificate certificate, Instrument instrument, Client client)
+        private async Task<string> FindCsvTemplate(Certificate certificate, Instrument instrument, Client client)
         {
+            client = await _clientService.GetById(client.Id);
+
             var matchingCsvFormats = client.CsvTemplates
                 .Where(c =>                    
                     c.InstrumentType == instrument.InstrumentType &&

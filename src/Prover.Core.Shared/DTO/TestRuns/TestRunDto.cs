@@ -9,7 +9,7 @@ using Prover.Core.Shared.DTO.Instrument;
 
 namespace Prover.Core.Shared.DTO.TestRuns
 {
-    public class TestRunDto : Entity
+    public class TestRunDto : EntityWithId
     {
         public InstrumentDto Instrument { get; set; }
         public DateTime TestDateTime { get; set; }

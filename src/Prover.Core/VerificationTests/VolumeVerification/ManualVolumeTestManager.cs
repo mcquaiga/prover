@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Subjects;
-using System.Runtime.Remoting.Messaging;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using NLog;
-using NLog.Fluent;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Communication;
-using Prover.Core.ExternalDevices.DInOutBoards;
 using Prover.Core.Models.Instruments;
-using LogManager = NLog.LogManager;
+using Prover.Core.Settings;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class ManualVolumeTestManager : VolumeTestManager
     {
-        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest) : base(eventAggregator, commClient, volumeTest)
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService) 
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
         }
 
@@ -26,8 +20,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
             await CommClient.Connect(ct);
             
-            VolumeTest.Items =
-                (ICollection<ItemValue>) await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+            VolumeTest.Items = await CommClient.GetVolumeItems();
+       
+            if (VolumeTest.VerificationTest.FrequencyTest != null)
+            {
+                VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
+            }
+
             await CommClient.Disconnect();            
         }
 
@@ -42,8 +41,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
 
                 }                
-            }, ct);
-            TestStep.OnNext(VolumeTestSteps.ExecutingTest);
+            }, ct);            
         }
 
         public override async Task PostTest(CancellationToken ct)
@@ -54,7 +52,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     ct.ThrowIfCancellationRequested();
                     await CommClient.Connect(ct);
-                    VolumeTest.AfterTestItems = await CommClient.GetItemValues(CommClient.ItemDetails.VolumeItems());
+                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
+                    if (VolumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
+                    }
                 }
                 finally
                 {

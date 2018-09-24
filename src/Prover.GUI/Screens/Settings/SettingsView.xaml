@@ -19,8 +19,7 @@
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
                 <Setter Property="Margin"
-                        Value="8 4">
-                </Setter>
+                        Value="8 4" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -44,32 +43,48 @@
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto">
             <TabControl Margin="5">
-                <TabItem Header="Test Configuration">
+                <TabItem Header="Certificates">
                     <TabItem.Content>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="16">
+                        <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
                                 <TextBlock Text="M.C. Registration #" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                <TextBox Text="{Binding Settings.TestSettings.McRegistrationNumber}" />
+                                <TextBox Text="{Binding SharedSettings.CertificateSettings.McRegistrationNumber}" />
                             </StackPanel>
                             <StackPanel Orientation="Vertical"
                                         Margin="0 8">
-                                <TextBlock Text="Measurement Apparatus" 
+                                <TextBlock Text="Measurement Apparatuses" 
                                            Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
-                                <TextBox Text="{Binding Settings.TestSettings.MeasurementApparatus}" />
+                                <DataGrid Margin="5"
+                                          ItemsSource="{Binding SharedSettings.CertificateSettings.MeasurementApparatuses, NotifyOnSourceUpdated=True}"
+                                          CanUserSortColumns="True"
+                                          CanUserAddRows="True"
+                                          CanUserDeleteRows="True" />
                             </StackPanel>
+                        </StackPanel>
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Test Configuration">
+                    <TabItem.Content>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="16">
 
-                            <CheckBox IsChecked="{Binding Settings.TestSettings.StabilizeLiveReadings}"
+                            <CheckBox IsChecked="{Binding SharedSettings.TestSettings.StabilizeLiveReadings}"
                                       Content="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
                                       Style="{StaticResource MaterialDesignCheckBox}"
                                       Margin="0 8"/>
 
-                            <CheckBox IsChecked="{Binding Settings.TestSettings.UpdateAbsolutePressure}"
+                            <CheckBox IsChecked="{Binding SharedSettings.TestSettings.UpdateAbsolutePressure}"
                                       Content="Update absolute pressure value for absolute transducers. Updates gauge value based on the atmospheric and absolute instead."
                                       Style="{StaticResource MaterialDesignCheckBox}"
                                       Margin="0 8" />
+
+                            <DataGrid Margin="5"
+                                      ItemsSource="{Binding SharedSettings.TestSettings.TestPoints, NotifyOnSourceUpdated=True}"
+                                      CanUserSortColumns="True"
+                                      CanUserAddRows="True"
+                                      CanUserDeleteRows="True" />
 
                             <WrapPanel>
                                 <materialDesign:Card Margin="8">
@@ -120,9 +135,7 @@
                         </StackPanel>
                     </TabItem.Content>
                 </TabItem>
-                <TabItem>
-
-                </TabItem>
+                <TabItem />
             </TabControl>
         </ScrollViewer>
         <Button Command="{Binding SaveSettingsCommand}"

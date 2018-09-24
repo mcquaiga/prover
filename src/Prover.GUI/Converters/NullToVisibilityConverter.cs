@@ -1,0 +1,24 @@
+﻿using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+namespace Prover.GUI.Converters
+{
+    [ValueConversion(typeof(object), typeof(Visibility))]
+    public sealed class NullToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string)
+                value = string.IsNullOrEmpty((string) value) ? null : value;
+
+            return value == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -3,40 +3,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
         Title="{Binding Title}"
-        Height="600" Width="600"
-        TextElement.FontWeight="Light"
-        TextElement.FontSize="16"
-        Icon="pack://application:,,,/../Resources/clipboard-check.png"
+        Icon="pack://application:,,,/../Resources/clipboard-check-white.ico"
+        WindowState="{Binding WindowState}"
+        WindowStartupLocation="CenterScreen"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Window.Resources>
-        <DataTemplate x:Key="ToolbarItem">
-            <ContentControl cal:View.Model="{Binding}" cal:View.Context="{Binding Path=ViewContext}"/>
-        </DataTemplate>
-    </Window.Resources>
-
     <DockPanel>
         <materialDesign:ColorZone Padding="4" materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                   Mode="PrimaryDark" DockPanel.Dock="Top">
             <DockPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                    <Button Command="{Binding GoHomeCommand}"
-                            Width="48"
-                            Height="48">
-                        <materialDesign:PackIcon Kind="Home"/>
-                    </Button>
-                    <Button Command="{Binding OpenSettingsCommand}"
-                            Width="48" 
-                            Height="48">
-                        <materialDesign:PackIcon Kind="Settings"
-                                                 />
-                    </Button>
-                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Path=NavigationItems}"
+                              DockPanel.Dock="Left">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=NavigationCommand}"
+                                    Width="48"
+                                    Height="48">
+                                <materialDesign:PackIcon Kind="{Binding Path=IconKind}"
+                                                         Foreground="White"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
 
                 <StackPanel DockPanel.Dock="Right">
-                    <ItemsControl
-                        ItemsSource="{Binding Path=ToolbarItems}"
-                        ItemTemplate="{StaticResource ResourceKey=ToolbarItem}">
+                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl cal:View.Model="{Binding}" cal:View.Context="{Binding Path=ViewContext}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
@@ -64,7 +65,18 @@
                 </materialDesign:DialogHost.DialogContent>
             
                 <ContentControl DockPanel.Dock="Bottom" x:Name="ActiveItem" />
-            </materialDesign:DialogHost>
+
+               
+            </materialDesign:DialogHost> 
+            
+            <Grid HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom">
+                    <materialDesign:Snackbar x:Name="NotificationSnackbar"
+                                             IsActive="{Binding ShowNotificationSnackbar}">
+                        <materialDesign:SnackbarMessage Content="{Binding NotificationMessage}"
+                                                        HorizontalAlignment="Center" />
+                    </materialDesign:Snackbar>
+                </Grid>
         </Grid>
         
     </DockPanel>

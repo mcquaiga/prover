@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using NLog;
 using Prover.Core.ExternalIntegrations;
 using Prover.Core.Login;
 using Prover.Core.VerificationTests.TestActions;

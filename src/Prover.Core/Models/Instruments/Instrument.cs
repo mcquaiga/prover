@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Linq.Expressions;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Enums;
-using Prover.Core.Shared.Extensions;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -28,22 +24,24 @@ namespace Prover.Core.Models.Instruments
 
     public partial class Instrument : ProverTable
     {
-        public Instrument()
+        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+            TestSettings testSettings, Client client = null)
         {
-        }
+            var i = new Instrument()
+            {
+                TestDateTime = DateTime.Now,
+                CertificateId = null,
+                Type = instrumentType.Id,
+                InstrumentType = instrumentType,
+                Items = itemValues.ToList(),
 
-        public Instrument(InstrumentType instrumentType, IEnumerable<ItemValue> items, Client client = null)
-        {
-            TestDateTime = DateTime.Now;
-            CertificateId = null;
-            Type = instrumentType.Id;
-            InstrumentType = instrumentType;
-            Items = items.ToList();
+                Client = client,
+                ClientId = client?.Id
+            };
 
-            Client = client;
-            ClientId = client?.Id;
+            i.VerificationTests = VerificationTest.Create(i, testSettings);
 
-            CreateVerificationTests();
+            return i;
         }
 
         public DateTime TestDateTime { get; set; }
@@ -84,7 +82,6 @@ namespace Prover.Core.Models.Instruments
             var dateFormat = Items.GetItem(262).Description;
             dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
             dateFormat = $"{dateFormat} HH mm ss";
-
             var time = Items.GetItem(203).RawValue;
             var date = Items.GetItem(204).RawValue;
 
@@ -103,50 +100,6 @@ namespace Prover.Core.Models.Instruments
             return dateTime.ToString("HH mm ss");
         }
 
-        public void CreateVerificationTests(int defaultVolumeTestNumber = 0)
-        {
-            for (var i = 0; i < 3; i++)
-            {
-                var verificationTest = new VerificationTest(i, this);
-
-                if (CompositionType == EvcCorrectorType.P)
-                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
-
-                if (CompositionType == EvcCorrectorType.T)
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
-
-                if (CompositionType == EvcCorrectorType.PTZ)
-                {
-                    verificationTest.PressureTest = new PressureTest(verificationTest, GetGaugePressure(i));
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, GetGaugeTemp(i));
-                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
-                }
-
-                if (i == defaultVolumeTestNumber)
-                    verificationTest.VolumeTest = new VolumeTest(verificationTest);
-
-                VerificationTests.Add(verificationTest);
-            }
-        }
-
-        public decimal GetGaugeTemp(int testNumber)
-        {
-            var result = SettingsManager.SettingsInstance.TestSettings.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber)?.Value;
-            return result.HasValue ? TemperatureTest.ConvertTo(result.Value, "F", this.TemperatureUnits()) : 0m;
-        }
-
-        public decimal GetGaugePressure(int testNumber)
-        {
-            var value = SettingsManager.SettingsInstance.TestSettings.PressureGaugeDefaults
-                .FirstOrDefault(p => p.Level == testNumber)?.Value;
-            
-            if (value > 1)
-                value = value / 100;
-
-            var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
-            return value * evcPressureRange ?? 0.0m;
-        }
-
         #region NotMapped Properties
 
         [NotMapped]
@@ -163,8 +116,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live"
-                    && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
+                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live" && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
                     return EvcCorrectorType.PTZ;
 
                 if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
@@ -249,10 +201,7 @@ namespace Prover.Core.Models.Instruments
 
         public override string ToString()
         {
-            return $@"{
-                    JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-                        {ReferenceLoopHandling = ReferenceLoopHandling.Ignore})
-                }";
+            return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore}) }";
         }
     }
 

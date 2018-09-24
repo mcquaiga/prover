@@ -8,7 +8,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Shared.DTO.TestRuns
 {
-    public class TestPointDto : Entity
+    public class TestPointDto : EntityWithId
     {
         public TestPointDto() : base(Guid.NewGuid())
         {

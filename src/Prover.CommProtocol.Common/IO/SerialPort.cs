@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NLog;
+using RJCP.IO.Ports;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -6,16 +8,16 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using RJCP.IO.Ports;
 
 namespace Prover.CommProtocol.Common.IO
 {
-    public sealed class SerialPort : CommPort
+    public sealed class SerialPort : ICommPort
     {
         public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
 
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
         private readonly SerialPortStream _serialStream;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
         {
@@ -26,7 +28,8 @@ namespace Prover.CommProtocol.Common.IO
                 throw new ArgumentException($"{portName} does not exist.");
 
             if (!BaudRates.Contains(baudRate))
-                throw new ArgumentException($"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
+                throw new ArgumentException(
+                    $"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
 
             _serialStream = new SerialPortStream
             {
@@ -45,9 +48,9 @@ namespace Prover.CommProtocol.Common.IO
             DataSentObservable = new Subject<string>();
         }
 
-        public override IConnectableObservable<char> DataReceivedObservable { get; }
-        public override ISubject<string> DataSentObservable { get; }
-        public override string Name => _serialStream.PortName;
+        public IConnectableObservable<char> DataReceivedObservable { get; }
+        public ISubject<string> DataSentObservable { get; }
+        public string Name => _serialStream.PortName;
 
         private IObservable<char> DataReceived()
         {
@@ -65,58 +68,43 @@ namespace Prover.CommProtocol.Common.IO
                 });
         }
 
-        public override bool IsOpen() => _serialStream.IsOpen;
+        public bool IsOpen() => _serialStream.IsOpen;
 
-        public override async Task Open(CancellationToken ct)
+        public async Task Open(CancellationToken ct)
         {
             if (_serialStream.IsOpen) return;
 
             await Task.Run(() => _serialStream.Open(), ct);
         }
 
-        public override async Task Close()
+        public async Task Close()
         {
             await Task.Run(() => _serialStream.Close());
         }
 
-        public override async Task Send(string data)
+        public async Task Send(string data)
         {
-            await Task.Run(() =>
-            {
-                _serialStream.DiscardInBuffer();
-                _serialStream.DiscardOutBuffer();
+            _serialStream.DiscardInBuffer();
+            _serialStream.DiscardOutBuffer();
 
-                var content = new List<byte>();
-                content.AddRange(Encoding.ASCII.GetBytes(data));
+            var content = new List<byte>();
+            content.AddRange(Encoding.ASCII.GetBytes(data));
 
-                var buffer = content.ToArray();
-                _serialStream.Write(buffer, 0, buffer.Length);
+            var buffer = content.ToArray();
+            await _serialStream.WriteAsync(buffer, 0, buffer.Length);
 
-                DataSentObservable.OnNext(data);
-            });
+            DataSentObservable.OnNext(data);
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
-            _serialStream.Dispose();
+            _serialStream?.Close();
+            _serialStream?.Dispose();
         }
 
-        private static List<string> _commPorts;
-        public static IObservable<string> PortsWatcherObservable()
+        public static IEnumerable<string> GetPortNames()
         {
-            return Observable.Create<string>(observer =>
-            {
-                _commPorts = System.IO.Ports.SerialPort.GetPortNames().ToList();
-                return Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(
-                        _ =>
-                        {
-                            var ports = System.IO.Ports.SerialPort.GetPortNames().ToList();
-                            if (!_commPorts.SequenceEqual(ports))
-                                ports.ForEach(observer.OnNext);
-                        });
-            });
+            return SerialPortStream.GetPortNames();
         }
     }
 }

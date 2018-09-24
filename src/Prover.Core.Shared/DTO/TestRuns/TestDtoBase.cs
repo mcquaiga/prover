@@ -8,7 +8,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Shared.DTO.TestRuns
 {
-    public abstract class TestDtoBase : Entity
+    public abstract class TestDtoBase : EntityWithId
     {
         protected TestDtoBase() : base(Guid.NewGuid())
         {

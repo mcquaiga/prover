@@ -1,32 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VerificationTest : Entity
+    public sealed class VerificationTest : EntityWithId
     {
         public VerificationTest()
         {
         }
 
-        public VerificationTest(int testNumber, Instrument instrument, bool hasVolumeTest = false)
+        public VerificationTest(int testNumber, Instrument instrument)
         {
             TestNumber = testNumber;
             Instrument = instrument;
             InstrumentId = Instrument.Id;
         }
 
-        public VerificationTest(int testNumber, Instrument instrument, PressureTest pressureTest,
-            TemperatureTest temperatureTest, SuperFactorTest superTest, VolumeTest volumeTest)
-            : this(testNumber, instrument)
+        public static List<VerificationTest> Create(Instrument instrument, TestSettings testSettings)
         {
-            PressureTest = pressureTest;
-            TemperatureTest = temperatureTest;
-            SuperFactorTest = superTest;
-            VolumeTest = volumeTest;
+            var results = new List<VerificationTest>();
+            foreach (var vt in testSettings.TestPoints)
+            {
+                var verificationTest = new VerificationTest(vt.Level, instrument);
+
+                if (instrument.CompositionType == EvcCorrectorType.P)
+                {
+                    verificationTest.PressureTest = new PressureTest(verificationTest, vt.PressureGaugePercent);
+                }
+
+                if (instrument.CompositionType == EvcCorrectorType.T)
+                {
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, vt.TemperatureGauge);
+                }
+
+                if (instrument.CompositionType == EvcCorrectorType.PTZ)
+                {
+                    verificationTest.PressureTest = new PressureTest(verificationTest, vt.PressureGaugePercent);
+                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, vt.TemperatureGauge);
+                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
+                }
+
+                if (vt.IsVolumeTest)
+                {
+                    verificationTest.VolumeTest = VolumeTest.Create(verificationTest, testSettings);
+
+                    if (instrument.InstrumentType.Name == "TOC")
+                    {
+                        verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
+                    }
+                }
+
+                results.Add(verificationTest);
+            }
+
+            return results;
         }
 
         public int TestNumber { get; set; }
@@ -39,6 +71,7 @@ namespace Prover.Core.Models.Instruments
         public PressureTest PressureTest { get; set; }
         public TemperatureTest TemperatureTest { get; set; }
         public VolumeTest VolumeTest { get; set; }
+        public FrequencyTest FrequencyTest { get; set; }
 
         [NotMapped]
         public string TestLevel => $"L{TestNumber + 1}";
@@ -51,16 +84,16 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
+                var volumePass = VolumeTest == null || VolumeTest.HasPassed;
+
                 if (Instrument.CompositionType == EvcCorrectorType.T && TemperatureTest != null)
-                    return TemperatureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                    return TemperatureTest.HasPassed && volumePass;
 
                 if (Instrument.CompositionType == EvcCorrectorType.P && PressureTest != null)
-                    return PressureTest.HasPassed && (VolumeTest == null || VolumeTest.HasPassed);
+                    return PressureTest.HasPassed && volumePass;
 
-                if (Instrument.CompositionType == EvcCorrectorType.PTZ && PressureTest != null &&
-                    TemperatureTest != null)
-                    return TemperatureTest.HasPassed && PressureTest.HasPassed &&
-                           (VolumeTest == null || VolumeTest.HasPassed);
+                if (Instrument.CompositionType == EvcCorrectorType.PTZ && PressureTest != null && TemperatureTest != null)
+                    return TemperatureTest.HasPassed && PressureTest.HasPassed && SuperFactorTest.HasPassed && volumePass;
 
                 return false;
             }
@@ -68,8 +101,10 @@ namespace Prover.Core.Models.Instruments
 
         public override void OnInitializing()
         {
+            base.OnInitializing();
+
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
-                SuperFactorTest = new SuperFactorTest(this);
+                SuperFactorTest = new SuperFactorTest(this);            
         }
     }
 }

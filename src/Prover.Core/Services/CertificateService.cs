@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
-using Prover.Core.Storage;
+using Prover.Core.Shared.Data;
 
 namespace Prover.Core.Services
 {
@@ -20,9 +19,11 @@ namespace Prover.Core.Services
         IEnumerable<Instrument> GetInstrumentsWithNoCertificate(Guid? clientId = null, bool showArchived = false);
 
         long GetNextCertificateNumber();
-        Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, List<Instrument> instruments);
-        IEnumerable<Certificate> GetAllCertificates(Client client);
-        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber);
+        Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, CertificateSettings.MeasurementApparatus measurementApparatus, List<Instrument> instruments);
+
+        IEnumerable<Certificate> GetAllCertificates();
+        IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber = 0, long toNumber = 0);
+
         IEnumerable<long> GetCertificateNumbers(Client client);
         IEnumerable<string> GetDistinctTestedBy();
     }
@@ -31,11 +32,13 @@ namespace Prover.Core.Services
     {
         private readonly IProverStore<Certificate> _certificateStore;
         private readonly IProverStore<Instrument> _instrumentStore;
+        private readonly ISettingsService _settingsService;
 
-        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore)
+        public CertificateService(IProverStore<Certificate> certificateStore, IProverStore<Instrument> instrumentStore, ISettingsService settingsService)
         {
             _certificateStore = certificateStore;
             _instrumentStore = instrumentStore;
+            _settingsService = settingsService;
         }
 
         public Certificate GetCertificate(long number)
@@ -58,29 +61,28 @@ namespace Prover.Core.Services
 
         public long GetNextCertificateNumber()
         {
-            var last = _certificateStore.GetAll()
-                .Select(x => x.Number)
-                .OrderByDescending(x => x)
-                .FirstOrDefault();
+            var qry = _certificateStore.GetAll();
+            var last = (long) 0;
+            if (qry.Any())
+            {
+                last = qry.Max(certificate => certificate.Number);
+            }
 
             return last + 1;
         }
 
-        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType,
-            List<Instrument> instruments)
+        public async Task<Certificate> CreateCertificate(long number, string testedBy, string verificationType, CertificateSettings.MeasurementApparatus measurementApparatus, List<Instrument> instruments)
         {
             var client = instruments.First().Client;
-
             var certificate = new Certificate
             {
                 CreatedDateTime = DateTime.Now,
                 VerificationType = verificationType,
-                Apparatus = SettingsManager.SettingsInstance.TestSettings.MeasurementApparatus,
+                Apparatus = measurementApparatus.SerialNumbers,
                 TestedBy = testedBy,
                 Client = client,
                 ClientId = client.Id,
-                Number =  number,
-                Instruments = new Collection<Instrument>()
+                Number =  number
             };
 
             instruments.ForEach(i =>
@@ -101,15 +103,19 @@ namespace Prover.Core.Services
                 .Select(c => c.Number);
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client)
+        public IEnumerable<Certificate> GetAllCertificates()
         {
-            return GetAllCertificates(client, 0, 0);
+            return _certificateStore.GetAll().ToList();
         }
 
-        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber, long toNumber)
+        public IEnumerable<Certificate> GetAllCertificates(Client client, long fromNumber = 0, long toNumber = 0)
         {
-            return _certificateStore.Query(c => (c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id)
-                         && (fromNumber == 0 || c.Number >= fromNumber) && (toNumber == 0 || c.Number <= toNumber))
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+
+            return _certificateStore.Query(c => c.ClientId.HasValue && client.Id != Guid.Empty && c.ClientId.Value == client.Id
+                                                && (fromNumber == 0 || c.Number >= fromNumber) 
+                                                && (toNumber == 0 || c.Number <= toNumber))
                 .OrderBy(i => i.Number);
         }
 
@@ -127,10 +133,11 @@ namespace Prover.Core.Services
                 if (clientId == Guid.Empty)
                     clientId = null;
 
-                var results = _instrumentStore.Query(x => x.CertificateId == null 
-                        && x.ClientId == clientId
-                        && x.ArchivedDateTime == null);
-
+                var results = _instrumentStore.Query(x => 
+                        x.CertificateId == null 
+                    &&  x.ClientId == clientId
+                    &&  x.ArchivedDateTime == null);
+                
                 return results;
             }
             catch (Exception e)

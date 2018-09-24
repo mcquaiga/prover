@@ -6,7 +6,7 @@ using SuperFactorCalculations;
 
 namespace Prover.Domain.Model.Verifications
 {
-    public class SuperFactorTest : Entity, ISuperFactorItems
+    public class SuperFactorTest : EntityWithId, ISuperFactorItems
     {
         public SuperFactorTest() : base(Guid.NewGuid())
         {

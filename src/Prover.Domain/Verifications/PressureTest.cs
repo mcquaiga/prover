@@ -5,7 +5,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Domain.Model.Verifications
 {
-    public class PressureTest : Entity, IPressureItems
+    public class PressureTest : EntityWithId, IPressureItems
     {
         public PressureTest() : base(Guid.NewGuid())
         {

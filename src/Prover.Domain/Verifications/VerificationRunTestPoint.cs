@@ -4,7 +4,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Domain.Model.Verifications
 {
-    public class VerificationRunTestPoint : Entity
+    public class VerificationRunTestPoint : EntityWithId
     {
         public VerificationRunTestPoint() : base(Guid.NewGuid())
         {
