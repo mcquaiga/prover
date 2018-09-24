@@ -8,10 +8,10 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class EnergyTestViewModel : ReactiveScreen, IHandle<VerificationTestEvent>
     {
-        public EnergyTestViewModel(IEventAggregator eventAggregator, MechanicalDrive mechanicalDriveType)
+        public EnergyTestViewModel(IEventAggregator eventAggregator, Energy energy)
         {
             eventAggregator.Subscribe(this);
-            EnergyTest = mechanicalDriveType.Energy;
+            EnergyTest = energy;
         }
         
         private Energy _energyTest;

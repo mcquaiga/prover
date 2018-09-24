@@ -212,7 +212,16 @@ namespace Prover.CommProtocol.Common
         ///     Read frequency test items defined in items xml definitions
         /// </summary>
         /// <returns></returns>
-        public abstract Task<IFrequencyTestItems> GetFrequencyItems();
+        public abstract Task<IFrequencyTestItems> GetFrequencyItems();       
+
+         /// <summary>
+        ///     Read temperature test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetPulseOutputItems()
+        {
+            return await GetItemValues(ItemDetails.PulseOutputItems());
+        }
 
         /// <summary>
         ///     Read pressure test items defined in items xml definitions

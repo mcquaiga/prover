@@ -5,7 +5,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.Core.Extensions;
 using Prover.Core.Models.Certificates;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments.DriveTypes;
@@ -168,6 +167,9 @@ namespace Prover.Core.Models.Instruments
 
         [NotMapped]
         public string PulseBSelect => Items.GetItem(94).Description;
+
+        [NotMapped]
+        public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
 
         [NotMapped]
         public decimal PulseCScaling => Items.GetItem(58).NumericValue;

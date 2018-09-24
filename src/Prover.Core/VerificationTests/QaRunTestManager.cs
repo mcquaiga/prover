@@ -12,6 +12,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.ExternalDevices;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
@@ -25,10 +26,6 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
-    public interface IQaRunTestManager : IDisposable
-    {
-        Instrument Instrument { get; }
-        IObservable<string> TestStatus { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
         Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings,
@@ -38,7 +35,6 @@ namespace Prover.Core.VerificationTests
         Task RunVolumeTest(CancellationToken ct);
         Task SaveAsync();
         Task RunVerifiers();
-    }
 
     public class QaRunTestManager : IQaRunTestManager
     {
@@ -57,6 +53,8 @@ namespace Prover.Core.VerificationTests
             TestRunService testRunService,
             IReadingStabilizer readingStabilizer,
             TachometerService tachometerService,
+            IEnumerable<IValidator> validators,
+            ITestActionsManager testActionsManager,
             ISettingsService settingsService,
             IEnumerable<IPreTestValidation> validators = null,
             IEnumerable<IPostTestAction> postTestCommands = null)
@@ -65,17 +63,22 @@ namespace Prover.Core.VerificationTests
             _testRunService = testRunService;
             _readingStabilizer = readingStabilizer;
             _tachometerService = tachometerService;
-            _settingsService = settingsService;
+            _settingsService = settingsService;   
+            TestActionsManager = testActionsManager;
             _validators = validators;
             _postTestCommands = postTestCommands;
         }
+
+        public IEventAggregator EventAggregator { get; }
 
         public VolumeTestManager VolumeTestManager { get; set; }
 
         private readonly Subject<string> _testStatus = new Subject<string>();
         public IObservable<string> TestStatus => _testStatus.AsObservable();
+            Task.Run(SaveAsync);
 
         public Instrument Instrument { get; private set; }
+        public ITestActionsManager TestActionsManager { get; }
 
         public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings, 
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
@@ -95,12 +98,19 @@ namespace Prover.Core.VerificationTests
             Instrument = Instrument.Create(instrumentType, items, testSettings, client);
 
             await RunVerifiers();
+            await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
+
             await _communicationClient.Disconnect();
 
             if (Instrument.VolumeTest.DriveType is MechanicalDrive && _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType == TestSettings.VolumeTestType.Manual)
                 VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _settingsService);
             else
                 VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _tachometerService, _settingsService);                
+            if (Instrument.VolumeTest.DriveType is PulseInputSensor)
+            {
+                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
+            }
+
         }    
        
 
@@ -128,11 +138,11 @@ namespace Prover.Core.VerificationTests
         public async Task RunVolumeTest(CancellationToken ct)
         {
             try
-            {
+            {        
                 if (Instrument.VerificationTests.Any(x => x.VolumeTest != null))
                 {
                     VolumeTestManager.StatusMessage.Subscribe(_testStatus);
-                    await VolumeTestManager.RunTest(ct);
+                    await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
                     //Execute any Post test clean up methods
                     foreach (var command in _postTestCommands)
@@ -160,6 +170,11 @@ namespace Prover.Core.VerificationTests
             }
         }
 
+        public async Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken())
+        {
+            await VolumeTestManager.CompleteTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct,  false);
+        }
+        
         public async Task RunVerifiers()
         {
             if (_validators != null && _validators.Any())
@@ -168,6 +183,11 @@ namespace Prover.Core.VerificationTests
                     _testStatus.OnNext($"Verifying items...");
                     await validator.Validate(_communicationClient, Instrument);
                 }
+        }
+
+        public async Task DownloadPreVolumeTest()
+        {
+            await VolumeTestManager.InitializeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager);
         }
 
         public void Dispose()

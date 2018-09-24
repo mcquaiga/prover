@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Reactive;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Prover.Core.ExternalIntegrations;
+using Prover.Core.Login;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Reports;
 using ReactiveUI;
 using Prover.Core.Services;
 using Prover.GUI.Screens;
+using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Screens.Exporter
 {
@@ -14,26 +18,50 @@ namespace UnionGas.MASA.Screens.Exporter
     {
         private readonly IExportTestRun _exportManager;
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
+        private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly TestRunService _testRunService;
+
+        public ReactiveCommand<Unit, Unit> AddCurrentUserCommand { get; private set; }
+
 
         public QaTestRunGridViewModel(ScreenManager screenManager, 
                 IEventAggregator eventAggregator,
                 IExportTestRun exportManager,
                 TestRunService testRunService,
-                InstrumentReportGenerator instrumentReportGenerator) 
+                InstrumentReportGenerator instrumentReportGenerator,
+                ILoginService<EmployeeDTO> loginService) 
             : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;
             _testRunService = testRunService;
             _instrumentReportGenerator = instrumentReportGenerator;
+            _loginService = loginService;
+
+            //var canAddUser = this.WhenAnyValue(x => x._loginService.User, dto => !string.IsNullOrEmpty(dto?.Id));
+            AddCurrentUserCommand = ReactiveCommand.CreateFromTask(AddCurrentUserToTest);
 
             var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
                 (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
+
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
 
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
 
             ViewQaTestReportCommand = ReactiveCommand.CreateFromTask(DisplayInstrumentReport);
+        }
+
+        private async Task AddCurrentUserToTest()
+        {
+            if (_loginService.IsLoggedIn)
+            {
+                Instrument.EmployeeId = _loginService.User.Id;
+                await _instrumentStore.UpsertAsync(Instrument);
+                this.RaisePropertyChanged($"Instrument");
+            }
+            else
+            {
+                MessageBox.Show("Please login to webservice first.");
+            }
         }
 
         #region Properties
@@ -103,7 +131,5 @@ namespace UnionGas.MASA.Screens.Exporter
 
             IsRemoved = await _exportManager.Export(Instrument);            
         }
-
-        
     }
 }

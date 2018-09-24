@@ -13,7 +13,7 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : BaseVerificationTest
+    public class VolumeTest : BaseVerificationTest
     {
         private string _testInstrumentData;
 
@@ -66,7 +66,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
+        public virtual decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         [NotMapped]
         public decimal? CorrectedPercentError
@@ -162,7 +162,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueCorrected
+        public virtual decimal? TrueCorrected
         {
             get
             {
@@ -211,23 +211,33 @@ namespace Prover.Core.Models.Instruments
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {
-                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
-                    ? "Rotary"
-                    : "Mechanical";
-
-                if (InstrumentType.Id == 12)
-                    DriveTypeDiscriminator = "Rotary";                
+                if (Instrument.Items?.GetItem(182)?.NumericValue > 0)
+                {
+                    DriveTypeDiscriminator = DriveTypes.DriveTypes.PulseInput;
+                }
+                else
+                {
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == DriveTypes.DriveTypes.Rotary.ToLower()
+                        ? DriveTypes.DriveTypes.Rotary
+                        : DriveTypes.DriveTypes.Mechanical;
+                }                
             }
+
+            if (InstrumentType.Id == 12)
+	            DriveTypeDiscriminator = "Rotary";                
 
             if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
             { 
                 switch (DriveTypeDiscriminator)
                 {
-                    case "Rotary":
+                    case DriveTypes.DriveTypes.Rotary:
                         DriveType = new RotaryDrive(Instrument);
                         break;
-                    case "Mechanical":
+                    case DriveTypes.DriveTypes.Mechanical:
                         DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
+                        break;
+                    case DriveTypes.DriveTypes.PulseInput:
+                        DriveType = new PulseInputSensor(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

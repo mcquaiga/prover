@@ -6,7 +6,7 @@ namespace Prover.Core.Settings
     {
         public CertificateSettings CertificateSettings { get; set; }
         public TestSettings TestSettings { get; set; }
-
+        public bool UpdateAbsolutePressure { get; set; } = true;
         public static SharedSettings Create()
         {
             return new SharedSettings()
@@ -31,7 +31,6 @@ namespace Prover.Core.Settings
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public bool UpdateAbsolutePressure { get; set; } = true;
         public bool RunVolumeSyncTest { get; set; }
-
         public static TestSettings CreateDefault()
         {
             return new TestSettings()
@@ -48,6 +47,14 @@ namespace Prover.Core.Settings
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
                 },
 
+            if (TocResetItems == null)
+            {
+                TocResetItems = new Dictionary<int, string>()
+                {
+                    { 859, "0" },
+                    { 860, "0" }
+                };
+            }
                 TestPoints = new List<TestPointSetting>()
                 {
                     new TestPointSetting()

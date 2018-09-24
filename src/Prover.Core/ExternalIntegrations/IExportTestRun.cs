@@ -8,5 +8,6 @@ namespace Prover.Core.ExternalIntegrations
     {
         Task<bool> Export(Instrument instrumentForExport);
         Task<bool> Export(IEnumerable<Instrument> instrumentsForExport);
+        Task<bool> ExportFailedTest(string companyNumber);
     }
 }

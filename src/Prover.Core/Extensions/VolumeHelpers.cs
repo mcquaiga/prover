@@ -84,6 +84,10 @@ namespace Prover.Core.Extensions
         {
             return instrument.Items.GetItem(98).NumericValue;
         }
+        public static string MeterIndexDescription(this Instrument instrument)
+            => instrument.Items.GetItem(98).Description;
+
+        public static decimal MeterIndexRate(this Instrument instrument) => instrument.Items.GetItem(98).NumericValue;
 
         public static decimal CorrectedMultiplier(this Instrument instrument)
         {

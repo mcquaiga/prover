@@ -20,8 +20,9 @@ namespace UnionGas.MASA.Screens.Exporter
                 d(this.WhenAnyValue(x => x.ViewModel.ExecuteTestSearch)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
-                
-                //d(this.Bind(ViewModel, model => model.FilterByTypeCommand, view => view.))
+                //d(this.WhenAnyValue(x => x.ViewModel.FilterByTypeCommand)
+                //    .SelectMany(x => x.Execute("All"))
+                //    .Subscribe());            
             });
         }
 

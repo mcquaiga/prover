@@ -94,7 +94,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
         public Instrument Instrument { get; }
 
-        public string Discriminator => "Mechanical";
+        public string Discriminator => DriveTypes.Mechanical;
 
         public bool HasPassed => Energy.HasPassed;
 

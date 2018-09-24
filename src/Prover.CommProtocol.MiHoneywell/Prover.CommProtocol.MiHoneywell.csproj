@@ -112,6 +112,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="Instruments.cs" />
+    <Compile Include="Items\DeviceItems.cs" />
     <Compile Include="Items\FrequencyTestItems.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
     <Compile Include="Messaging\Requests\Commands.cs" />

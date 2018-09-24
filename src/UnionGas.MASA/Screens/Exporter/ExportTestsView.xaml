@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Prover.GUI.Converters;assembly=Prover"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              mc:Ignorable="d"             
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -114,13 +115,25 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <Button Margin="8"
+        <!--<Button Margin="8"
                 Grid.Row="2"
                 HorizontalAlignment="Left"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Command="{Binding ExportAllPassedQaRunsCommand}"
                 Content="Export all passed">
-        </Button>
+        </Button>-->
 
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Export Failed Test:"/>
+                <TextBox Text="{Binding FailedCompanyNumber}" 
+                         Width="250" Height="75"
+                         Margin="5"/>
+                <Button Command="{Binding ExportFailedTestCommand}"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}"
+                        Width="150"
+                        Content="Export Failed"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

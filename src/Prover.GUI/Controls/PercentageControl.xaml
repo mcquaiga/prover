@@ -6,6 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              x:Name="PercentUserControl"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -13,7 +14,12 @@
             <ImageSource x:Key="FailIcon">..\Resources\error_36.png</ImageSource>
             <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+            
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+                                                  TrueValue="Collapsed"
+                                                  FalseValue="Visible" />
         </ResourceDictionary>
+
     </UserControl.Resources>
     <!--"-->
     <Grid DataContext="{Binding ElementName=PercentUserControl}">
@@ -30,7 +36,8 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" />
 
-            <Grid Grid.Column="1" Margin="6 0">
+            <Grid Grid.Column="1" Margin="6 0"
+                  Visibility="{Binding HidePercentage, Converter={StaticResource BoolToHiddenConverter}}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <TextBlock Text="{Binding Path=DisplayValue, ElementName=PercentUserControl}"
                                FontSize="30"

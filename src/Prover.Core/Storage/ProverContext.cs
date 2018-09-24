@@ -57,6 +57,7 @@ namespace Prover.Core.Storage
             if (Database.Connection is SqlCeConnection)
                 QueryIncludeOptimizedManager.AllowQueryBatch = false;
 
+
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             base.OnModelCreating(modelBuilder);            

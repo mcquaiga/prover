@@ -1,57 +1,146 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using MccDaq;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.Core.ExternalDevices;
-using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Models.Instruments;
-using Prover.Core.Settings;
-
-namespace Prover.Core.VerificationTests.VolumeVerification
+﻿namespace Prover.Core.VerificationTests.VolumeVerification
 {
-    public sealed class AutoVolumeTestManager : VolumeTestManager
+    using Caliburn.Micro;
+    using Prover.CommProtocol.Common;
+    using Prover.Core.Communication;
+    using Prover.Core.ExternalDevices.DInOutBoards;
+    using Prover.Core.Models.Instruments;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="AutoVolumeTestManager" />
+    /// </summary>
+    public class AutoVolumeTestManager : VolumeTestManager
     {
-        private readonly IDInOutBoard _outputBoard;            
+        #region Fields
+
+        /// <summary>
+        /// Defines the _outputBoard
+        /// </summary>
+        private readonly IDInOutBoard _outputBoard;
+
+        /// <summary>
+        /// Defines the _tachometerCommunicator
+        /// </summary>
         private readonly TachometerService _tachometerCommunicator;
 
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, ISettingsService settingsService) 
-            : base(eventAggregator, commClient, volumeTest, settingsService)
+        /// <summary>
+        /// Defines the _pulseInputsCancellationTokenSource
+        /// </summary>
+        private CancellationTokenSource _pulseInputsCancellationTokenSource;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoVolumeTestManager"/> class.
+        /// </summary>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="tachComm">The tachComm<see cref="TachometerService"/></param>
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
+            : base(eventAggregator)
         {
             _tachometerCommunicator = tachComm;
-
-            FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
-            FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
-
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-        public override async Task ExecuteSyncTest(CancellationToken ct)
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The PostTest
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="readTach">The readTach<see cref="bool"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        public override async Task CompleteTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct, bool readTach = true)
         {
             try
-            {            
-                Status.OnNext("Running volume sync test...");                
+            {
+                await commClient.Connect();
 
-                await CommClient.Disconnect();                
+                await CheckForResidualPulses(commClient, volumeTest, ct);
+
+                volumeTest.AfterTestItems = await commClient.GetVolumeItems();
+
+                await testActionsManager?.RunVolumeTestCompleteActions(commClient, volumeTest.Instrument);
+            }
+            finally
+            {
+                await commClient.Disconnect();
+            }
+
+            if (readTach) await GetAppliedInput(volumeTest);
+        }
+
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        public override void Dispose()
+        {
+            _tachometerCommunicator.Dispose();
+        }
+
+        /// <summary>
+        /// The PreTest
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
+        {
+            await commClient.Connect();
+
+            await testActionsManager.RunVolumeTestInitActions(commClient, volumeTest.Instrument);
+
+            volumeTest.Items = await commClient.GetVolumeItems();
+
+            await commClient.Disconnect();
+
+            await _tachometerCommunicator?.ResetTach();
+
+            ResetPulseCounts(volumeTest);
+        }
+
+        /// <summary>
+        /// The ExecuteSyncTest
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        protected override async Task RunSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
+        {
+            try
+            {
+                await commClient.Disconnect();
+
+                Log.Info("Running volume sync test...");
 
                 await Task.Run(() =>
                 {
-                    ResetPulseCounts(VolumeTest);
-                    _outputBoard.StartMotor();
+                    ResetPulseCounts(volumeTest);
+                    _outputBoard?.StartMotor();
                     do
                     {
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
-                }, ct);          
+                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                    } while (volumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
+                }, ct);
+
+                ct.ThrowIfCancellationRequested();
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-                Status.OnNext("Volume Sync test cancelled.");
+                Log.Info("Cancelling volume sync test.");
                 throw;
             }
             finally
@@ -60,55 +149,33 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        public override async Task PreTest(CancellationToken ct)
-        {
-            CommClient.StatusObservable.Subscribe(Status);
-            await CommClient.Connect(ct);
-            VolumeTest.Items = await CommClient.GetVolumeItems();
-
-            if (VolumeTest.VerificationTest.FrequencyTest != null)
-            {
-                VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
-            }
-
-            await CommClient.Disconnect();
-
-            if (_tachometerCommunicator != null)
-            {
-                Status.OnNext("Resetting Tachometer...");
-                await _tachometerCommunicator?.ResetTach();
-            }
-            ResetPulseCounts(VolumeTest);
-        }
-
-        public override async Task ExecutingTest(CancellationToken ct)
+        /// <summary>
+        /// The ExecutingTest
+        /// </summary>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
         {
             try
             {
-                ct.ThrowIfCancellationRequested();                
                 await Task.Run(() =>
                 {
-                    using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(100))
-                        .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
-                                                      $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
-                                                      $"   CorVol => {VolumeTest.CorPulseCount}")))
-                    {
-                        _outputBoard?.StartMotor();
-                        do
-                        {
-                            //TODO: Raise events so the UI can respond
-                            VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                            VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                        } while (VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses() &&
-                                    !ct.IsCancellationRequested);
-                    }
-                }, ct);
+                    _outputBoard?.StartMotor();
 
-                ct.ThrowIfCancellationRequested();                
+                    _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
+
+                    while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
+                    {
+                    }
+
+                }, ct);
+                ct.ThrowIfCancellationRequested();
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
+                _pulseInputsCancellationTokenSource.Cancel();
                 Log.Info("Cancelling volume test.");
                 throw;
             }
@@ -118,37 +185,46 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        public override async Task PostTest(CancellationToken ct)
+        /// <summary>
+        /// The CheckForResidualPulses
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task CheckForResidualPulses(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
-            Status.OnNext("Completing volume test...");
-            await Task.Run(async () =>
+            int pulsesWaiting;
+
+            do
             {
-                try
+                pulsesWaiting = 0;
+
+                if (!commClient.IsConnected)
+                    await commClient.Connect();
+
+                foreach (var i in await commClient.GetPulseOutputItems())
                 {
-                    await CommClient.Connect(ct);
-                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
-                    if (VolumeTest.VerificationTest.FrequencyTest != null)
-                    {
-                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
-                    }
-                }
-                finally
-                {
-                    await CommClient.Disconnect();
+                    pulsesWaiting += (int)i.NumericValue;
                 }
 
-                await GetAppliedInput();
-            }, ct);
+                if (pulsesWaiting > 0)
+                {
+                    await commClient.Disconnect();
+                    await Task.Delay(new TimeSpan(0, 0, 20), ct);
+                }
+
+            } while (pulsesWaiting > 0 && !ct.IsCancellationRequested);
+
+            _pulseInputsCancellationTokenSource.Cancel();
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            _tachometerCommunicator?.Dispose();
-        }
-
-        private async Task GetAppliedInput()
+        /// <summary>
+        /// The GetAppliedInput
+        /// </summary>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task GetAppliedInput(VolumeTest volumeTest)
         {
             if (_tachometerCommunicator == null) return;
 
@@ -160,19 +236,51 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     tries++;
                     Log.Debug($"Reading tachometer .... Attempt {tries} of 10");
-                    result = await _tachometerCommunicator?.ReadTach();
+                    result = await _tachometerCommunicator.ReadTach();
                 }
                 catch (Exception ex)
                 {
                     Log.Error($"An error occured communication with the tachometer: {ex}");
+
                 }
             } while (!result.HasValue && tries < 10);
 
             Log.Debug($"Applied Input: {result.Value}");
 
-            VolumeTest.AppliedInput = result.Value;
-        } 
-        
+            volumeTest.AppliedInput = result.Value;
+        }
 
+        /// <summary>
+        /// The ListenForPulseInputs
+        /// </summary>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="CancellationToken"/></returns>
+        private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        {
+            do
+            {
+                //TODO: Raise events so the UI can respond
+                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+            } while (!ct.IsCancellationRequested);
+
+            return ct;
+        }
+
+        /// <summary>
+        /// The ResetPulseCounts
+        /// </summary>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        private void ResetPulseCounts(VolumeTest volumeTest)
+        {
+            FirstPortAInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+            FirstPortBInputBoard.PulseTiming = volumeTest.Instrument.PulseOutputTiming;
+
+            volumeTest.PulseACount = 0;
+            volumeTest.PulseBCount = 0;
+        }
+
+        #endregion
     }
 }

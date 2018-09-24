@@ -2,12 +2,22 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using Newtonsoft.Json;
 
 namespace Prover.GUI.Converters
 {
     [ValueConversion(typeof(object), typeof(Visibility))]
     public sealed class NullToVisibilityConverter : IValueConverter
     {
+        public NullToVisibilityConverter()
+        {
+            NullValue = Visibility.Collapsed;
+            NotNullValue = Visibility.Visible;
+        }
+
+        public Visibility NullValue { get; set; }
+        public Visibility NotNullValue { get; set; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is string)

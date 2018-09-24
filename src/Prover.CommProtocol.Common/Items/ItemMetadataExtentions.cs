@@ -55,6 +55,9 @@ namespace Prover.CommProtocol.Common.Items
             return result;
         }
 
+        public static IEnumerable<ItemMetadata> PulseOutputItems(this IEnumerable<ItemMetadata> items)
+            => items.Where(i => i.Number == 5 || i.Number == 6 || i.Number == 7);
+
         public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsVolumeTest == true);
 

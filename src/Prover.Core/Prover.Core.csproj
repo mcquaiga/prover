@@ -118,7 +118,7 @@
     <Compile Include="Exports\VerificationTypeEnum.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
-      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>    
     </Compile>
     <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.cs" />
     <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.Designer.cs">
@@ -140,6 +140,9 @@
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
     <Compile Include="Models\Instruments\DriveTypes\RotaryDrive.cs" />
+    <Compile Include="DriveTypes\RotaryDrive.cs" />
+    <Compile Include="Events\CommunicationStatusEvent.cs" />
+    <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\CsvWriter.cs" />
     <Compile Include="Exports\ExportFields.cs" />
@@ -247,6 +250,12 @@
     <Compile Include="Modules\Clients\VerificationTestActions\IHandleInvalidItemVerification.cs" />
     <Compile Include="VerificationTests\PreTestActions\DateTimeValidator.cs" />
     <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
+    <Compile Include="VerificationTests\IQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\ITestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
+    <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
+    <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />

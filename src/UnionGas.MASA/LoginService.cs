@@ -8,6 +8,7 @@ using NLog;
 using Prover.Core.Login;
 using Prover.GUI.Screens;
 using UnionGas.MASA.DCRWebService;
+using UnionGas.MASA.Screens.Toolbars;
 
 namespace UnionGas.MASA
 {
@@ -28,10 +29,29 @@ namespace UnionGas.MASA
         public bool Logout()
         {
             User = null;
+            _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
             return true;
         }
         
         public EmployeeDTO User { get; private set; }
+
+        public bool IsLoggedIn => !string.IsNullOrEmpty(User?.Id);
+
+        public async Task<bool> GetLoginDetails()
+        {
+            var loginViewModel = _screenManager.ResolveViewModel<LoginDialogViewModel>();
+            var result = _screenManager.ShowDialog(loginViewModel);
+            var userId = result.HasValue && result.Value ? loginViewModel.EmployeeId : null;
+
+            if (userId != null)
+            {
+                return await Login(userId);
+            }
+
+            await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
+
+            return false;
+        }
 
         public async Task<bool> Login(string username, string password = null)
         {
@@ -47,16 +67,24 @@ namespace UnionGas.MASA
                 var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
                 var response = 
                     await Task.Run(async () => await _webService.GetEmployeeAsync(employeeRequest), ct);
-
+                
                 User = response.Body.GetEmployeeResult;
             }
             catch (EndpointNotFoundException)
             {
                 MessageBox.Show("Couldn't connect to web service.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _log.Error("Endpoint could not be found.");
             }
             catch (Exception ex)
             {
                 _log.Error(ex);
+            }
+
+            if (User?.Id != null)
+                await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedIn));
+            else
+            {
+                await _eventAggregator.PublishOnUIThreadAsync(new UserLoggedInEvent(UserLoggedInEvent.LogInState.LoggedOut));
             }
 
             return User?.Id != null;
