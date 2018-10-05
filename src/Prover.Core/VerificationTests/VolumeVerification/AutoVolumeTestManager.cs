@@ -2,9 +2,10 @@
 {
     using Caliburn.Micro;
     using Prover.CommProtocol.Common;
-    using Prover.Core.Communication;
+    using Prover.Core.ExternalDevices;
     using Prover.Core.ExternalDevices.DInOutBoards;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Settings;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,6 +28,16 @@
         private readonly TachometerService _tachometerCommunicator;
 
         /// <summary>
+        /// Defines the FirstPortAInputBoard
+        /// </summary>
+        protected IDInOutBoard FirstPortAInputBoard;
+
+        /// <summary>
+        /// Defines the FirstPortBInputBoard
+        /// </summary>
+        protected IDInOutBoard FirstPortBInputBoard;
+
+        /// <summary>
         /// Defines the _pulseInputsCancellationTokenSource
         /// </summary>
         private CancellationTokenSource _pulseInputsCancellationTokenSource;
@@ -39,9 +50,12 @@
         /// Initializes a new instance of the <see cref="AutoVolumeTestManager"/> class.
         /// </summary>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="tachComm">The tachComm<see cref="TachometerService"/></param>
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
-            : base(eventAggregator)
+        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, ISettingsService settingsService)
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
             _tachometerCommunicator = tachComm;
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
@@ -64,7 +78,7 @@
         {
             try
             {
-                await commClient.Connect();
+                await commClient.Connect(ct);
 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
 
@@ -94,10 +108,11 @@
         /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
+        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
-            await commClient.Connect();
+            await commClient.Connect(ct);
 
             await testActionsManager.RunVolumeTestInitActions(commClient, volumeTest.Instrument);
 
@@ -201,7 +216,7 @@
                 pulsesWaiting = 0;
 
                 if (!commClient.IsConnected)
-                    await commClient.Connect();
+                    await commClient.Connect(ct);
 
                 foreach (var i in await commClient.GetPulseOutputItems())
                 {

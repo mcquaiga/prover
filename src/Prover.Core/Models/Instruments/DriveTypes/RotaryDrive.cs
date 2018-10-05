@@ -17,6 +17,8 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
 
+        public Energy Energy => null;
+
         public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
             return Meter.MeterDisplacement * appliedInput;

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Data.Entity;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prover.Core.IO;
-using Prover.Core.Shared.Data;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Storage;
 

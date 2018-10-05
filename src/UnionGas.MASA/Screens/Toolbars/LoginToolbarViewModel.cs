@@ -3,7 +3,6 @@ using Caliburn.Micro;
 using Prover.Core.Login;
 using Prover.GUI.Screens;
 using UnionGas.MASA.DCRWebService;
-using UnionGas.MASA.Dialogs.LoginDialog;
 
 namespace UnionGas.MASA.Screens.Toolbars
 {

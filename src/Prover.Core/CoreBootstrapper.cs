@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using NLog;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.MiHoneywell;
-using Prover.CommProtocol.MiHoneywell.CommClients;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;

@@ -3,11 +3,10 @@ using System.Data.Entity.Core;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Storage
-{   
+{
     public class KeyValueStore : ProverStore<KeyValue, string>
     {
         public KeyValueStore(ProverContext dbContext) : base(dbContext)

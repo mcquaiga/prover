@@ -33,6 +33,15 @@ namespace Prover.Core.Settings
         public bool RunVolumeSyncTest { get; set; }
         public static TestSettings CreateDefault()
         {
+            //if (TocResetItems == null)
+            //{
+            //    TocResetItems = new Dictionary<int, string>()
+            //    {
+            //        { 859, "0" },
+            //        { 860, "0" }
+            //    };
+            //}
+
             return new TestSettings()
             {
                 StabilizeLiveReadings = false,
@@ -47,14 +56,6 @@ namespace Prover.Core.Settings
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
                 },
 
-            if (TocResetItems == null)
-            {
-                TocResetItems = new Dictionary<int, string>()
-                {
-                    { 859, "0" },
-                    { 860, "0" }
-                };
-            }
                 TestPoints = new List<TestPointSetting>()
                 {
                     new TestPointSetting()
@@ -79,7 +80,7 @@ namespace Prover.Core.Settings
                         IsVolumeTest = false
                     },
                 }
-            };
+            };         
         }
 
         public class TestPointSetting

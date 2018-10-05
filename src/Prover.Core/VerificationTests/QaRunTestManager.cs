@@ -6,12 +6,9 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Newtonsoft.Json;
 using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.DriveTypes;
 using Prover.Core.ExternalDevices;
 using Prover.Core.Models.Clients;
@@ -26,16 +23,7 @@ using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 {
-        VolumeTestManager VolumeTestManager { get; set; }
-
-        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings,
-            CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null);
-
-        Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
-        Task RunVolumeTest(CancellationToken ct);
-        Task SaveAsync();
-        Task RunVerifiers();
-
+   
     public class QaRunTestManager : IQaRunTestManager
     {
         protected static Logger Log = LogManager.GetCurrentClassLogger();
@@ -52,8 +40,7 @@ namespace Prover.Core.VerificationTests
             IEventAggregator eventAggregator,
             TestRunService testRunService,
             IReadingStabilizer readingStabilizer,
-            TachometerService tachometerService,
-            IEnumerable<IValidator> validators,
+            TachometerService tachometerService,  
             ITestActionsManager testActionsManager,
             ISettingsService settingsService,
             IEnumerable<IPreTestValidation> validators = null,
@@ -75,8 +62,6 @@ namespace Prover.Core.VerificationTests
 
         private readonly Subject<string> _testStatus = new Subject<string>();
         public IObservable<string> TestStatus => _testStatus.AsObservable();
-            Task.Run(SaveAsync);
-
         public Instrument Instrument { get; private set; }
         public ITestActionsManager TestActionsManager { get; }
 
@@ -106,9 +91,10 @@ namespace Prover.Core.VerificationTests
                 VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _settingsService);
             else
                 VolumeTestManager = new AutoVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _tachometerService, _settingsService);                
+            
             if (Instrument.VolumeTest.DriveType is PulseInputSensor)
             {
-                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
+                VolumeTestManager = new ManualVolumeTestManager(_eventAggregator, _communicationClient, Instrument.VolumeTest, _settingsService);
             }
 
         }    
@@ -185,9 +171,9 @@ namespace Prover.Core.VerificationTests
                 }
         }
 
-        public async Task DownloadPreVolumeTest()
+        public async Task DownloadPreVolumeTest(CancellationToken ct)
         {
-            await VolumeTestManager.InitializeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager);
+            await VolumeTestManager.InitializeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
         }
 
         public void Dispose()

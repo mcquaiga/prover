@@ -1,12 +1,13 @@
 ﻿namespace Prover.Core.VerificationTests.VolumeVerification
 {
     using Caliburn.Micro;
-    using MccDaq;
     using NLog;
     using Prover.CommProtocol.Common;
-    using Prover.Core.ExternalDevices.DInOutBoards;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Settings;
     using System;
+    using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
@@ -19,19 +20,19 @@
         #region Fields
 
         /// <summary>
+        /// Defines the CommClient
+        /// </summary>
+        protected readonly EvcCommunicationClient CommClient;
+
+        /// <summary>
+        /// Defines the Status
+        /// </summary>
+        protected readonly Subject<string> Status = new Subject<string>();
+
+        /// <summary>
         /// Defines the EventAggreator
         /// </summary>
         protected IEventAggregator EventAggreator;
-
-        /// <summary>
-        /// Defines the FirstPortAInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortAInputBoard;
-
-        /// <summary>
-        /// Defines the FirstPortBInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortBInputBoard;
 
         /// <summary>
         /// Defines the IsFirstVolumeTest
@@ -41,7 +42,7 @@
         /// <summary>
         /// Defines the Log
         /// </summary>
-        protected Logger Log;
+        protected Logger Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Defines the RequestStopTest
@@ -61,14 +62,17 @@
         /// Initializes a new instance of the <see cref="VolumeTestManager"/> class.
         /// </summary>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        protected VolumeTestManager(IEventAggregator eventAggregator)
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
+        protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
         {
-            Log = LogManager.GetCurrentClassLogger();
+            VolumeTest = volumeTest;
+            SettingsService = settingsService;
             EventAggreator = eventAggregator;
+            CommClient = commClient;
 
-            //DaqService = daqService;
-            FirstPortAInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortA, 0);
-            FirstPortBInputBoard = DInOutBoardFactory.CreateBoard(0, DigitalPortType.FirstPortB, 1);
+            CommClient.StatusObservable.Subscribe(Status);
         }
 
         #endregion
@@ -80,6 +84,18 @@
         /// </summary>
         public bool RunningTest { get; set; }
 
+        /// <summary>
+        /// Gets the SettingsService
+        /// </summary>
+        public ISettingsService SettingsService { get; }
+
+        /// <summary>
+        /// Gets the VolumeTest
+        /// </summary>
+        public VolumeTest VolumeTest { get; }
+
+
+        public IObservable<string> StatusMessage => Status.AsObservable();
         #endregion
 
         #region Methods
@@ -107,8 +123,9 @@
         /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public abstract Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager);
+        public abstract Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct);
 
         /// <summary>
         /// The RunTest
@@ -132,7 +149,7 @@
                     await RunSyncTest(commClient, volumeTest, ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await InitializeTest(commClient, volumeTest, testActionsManager);
+                    await InitializeTest(commClient, volumeTest, testActionsManager, ct);
 
                     await StartRunningVolumeTest(volumeTest, ct);
                     ct.ThrowIfCancellationRequested();

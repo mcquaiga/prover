@@ -115,10 +115,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
     <Compile Include="Exports\VerificationTypeEnum.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
-      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>    
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.cs" />
     <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.Designer.cs">
@@ -140,9 +142,6 @@
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
     <Compile Include="Models\Instruments\DriveTypes\RotaryDrive.cs" />
-    <Compile Include="DriveTypes\RotaryDrive.cs" />
-    <Compile Include="Events\CommunicationStatusEvent.cs" />
-    <Compile Include="Events\ConnectionStatusEvent.cs" />
     <Compile Include="Events\DataStorageChangeEvent.cs" />
     <Compile Include="Exports\CsvWriter.cs" />
     <Compile Include="Exports\ExportFields.cs" />

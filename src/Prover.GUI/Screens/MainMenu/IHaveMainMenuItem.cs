@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 
 namespace Prover.GUI.Screens.MainMenu

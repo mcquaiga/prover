@@ -10,7 +10,6 @@ using Prover.Core.Login;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using UnionGas.MASA.DCRWebService;
-using UnionGas.MASA.Validators.CompanyNumber;
 
 namespace UnionGas.MASA.Exporter
 {

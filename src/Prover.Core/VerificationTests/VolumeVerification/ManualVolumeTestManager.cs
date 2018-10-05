@@ -3,6 +3,7 @@
     using Caliburn.Micro;
     using Prover.CommProtocol.Common;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Settings;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -17,7 +18,8 @@
         /// Initializes a new instance of the <see cref="ManualVolumeTestManager"/> class.
         /// </summary>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        public ManualVolumeTestManager(IEventAggregator eventAggregator) : base(eventAggregator)
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService) 
+            : base(eventAggregator, commClient, volumeTest, settingsService)
         {
         }
 
@@ -38,7 +40,7 @@
         {
             try
             {
-                await commClient.Connect();
+                await commClient.Connect(ct);
 
                 volumeTest.AfterTestItems = await commClient.GetVolumeItems();
 
@@ -69,9 +71,9 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
+        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
-            await commClient.Connect();
+            await commClient.Connect(ct);
 
             await testActionsManager.RunVolumeTestInitActions(commClient, volumeTest.Instrument);
 

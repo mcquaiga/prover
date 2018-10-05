@@ -568,10 +568,7 @@
     <Page Include="Screens\QAProver\InstrumentInfo\TocInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    </Page>   
     <Page Include="Screens\Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;

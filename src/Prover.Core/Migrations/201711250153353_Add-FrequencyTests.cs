@@ -1,8 +1,7 @@
 namespace Prover.Core.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class AddFrequencyTests : DbMigration
     {
         public override void Up()
