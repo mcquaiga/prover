@@ -89,6 +89,29 @@
 
                     <StackPanel                                Grid.Column="2"
                                 Margin="4">
+                        <materialDesign:ColorZone Content="Corrected Adjusted"
+                                                  Mode="Light"
+                                                  materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Padding="2"/>
+                        <controls1:PercentageControl
+                            Margin="5"
+                            HorizontalAlignment="Center"
+                            DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
+                            Passed="{Binding TestRun.HasPassed}" />
+                        <UniformGrid Columns="2">
+                            <controls1:ValueDescriptionControl Label="Start Reading"
+                                                               Value="{Binding TestRun.UnadjustedStartReading}" />
+                            <controls1:ValueDescriptionControl Label="End Reading"
+                                                               Value="{Binding TestRun.UnadjustedEndReading}" />
+
+                            <controls1:ValueDescriptionControl Label="True Value"
+                                                               Value="{Binding UnadjustedVolume}" />
+                            <controls1:ValueDescriptionControl Label="EVC Value"
+                                                               Value="{Binding EvcUnadjustedVolume}" />
+                        </UniformGrid>
+                    </StackPanel>
+                    <StackPanel                                Grid.Column="3"
+                                Margin="4">
                         <materialDesign:ColorZone Content="Unadjusted"
                                                   Mode="Light"
                                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -110,6 +133,7 @@
                                                                Value="{Binding EvcUnadjustedVolume}" />
                         </UniformGrid>
                     </StackPanel>
+                   
                 </Grid>
 
             </StackPanel>

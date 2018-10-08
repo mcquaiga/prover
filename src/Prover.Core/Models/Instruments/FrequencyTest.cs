@@ -74,6 +74,14 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        public decimal? CorrectedAdjustedVolumePercentError
+        {
+            get
+            {
+
+            }
+        }
+
         public decimal? PercentError { get; }
 
         [NotMapped]
@@ -92,6 +100,11 @@ namespace Prover.Core.Models.Instruments
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
+        }
+
+        public decimal CorrectedAdjustedVolume()
+        {
+            return 
         }
         
         public decimal AdjustedCorrectedVolume()
