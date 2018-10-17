@@ -24,7 +24,8 @@ namespace Prover.Core.Storage
                 .IncludeOptimized(v => v.VerificationTests)               
                 .IncludeOptimized(v => v.VerificationTests.Select(t => t.TemperatureTest))
                 .IncludeOptimized(v => v.VerificationTests.Select(p => p.PressureTest))
-                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest));
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
+                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.FrequencyTest));
 
         }     
 

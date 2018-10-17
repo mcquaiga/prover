@@ -22,7 +22,6 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             : base(screenManager, eventAggregator)
         {
             CancelTestCommand = ReactiveCommand.Create(CancelTest);
-
         }
 
         public string Level => $"Level {VerificationTest.TestNumber + 1}";

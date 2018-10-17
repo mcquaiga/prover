@@ -91,6 +91,11 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        public Guid? ParentTestId {get; set;}
+        public virtual Instrument ParentTest {get; set;}
+
+        public virtual ICollection<Instrument> ChildTests { get; set; }
+
         public decimal GetGaugeTemp(int testNumber)
         {
             return SettingsManager.SettingsInstance.TemperatureGaugeDefaults.FirstOrDefault(t => t.Level == testNumber).Value;

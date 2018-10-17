@@ -45,7 +45,43 @@ namespace Prover.Core.Storage
 
             modelBuilder.Entity<Instrument>()
                 .HasMany(i => i.VerificationTests)
-                .WithRequired(i => i.Instrument);
+                .WithRequired(i => i.Instrument);          
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(i => i.RelatedInstruments)
+            //    .WithMany()
+            //    .HasForeignKey(r => r.Id);   
+            
+             modelBuilder.Entity<Instrument>() 
+                .HasOptional(i => i.ParentTest)
+                .WithMany(t => t.ChildTests);
+
+             //modelBuilder.Entity<Instrument>() 
+             //   .HasOptional(i => i.ChildTests)
+             //   .WithMany();
+
+            //modelBuilder.Entity<Instrument>()                
+            //    .HasMany(i => i.ChildTests)
+            //    .WithMany()
+            //    .Map(m =>
+            //    {
+            //        m.MapLeftKey("ParentTestId");
+            //        m.MapRightKey("ChildTestId");                   
+            //        m.ToTable("RelatedInstruments");
+            //    });
+    //        modelBuilder.Entity<Member>().HasMany(m => m.Friends).WithMany().Map(m =>
+    //    {
+    //        m.MapLeftKey("MemberId");
+    //        m.MapRightKey("FriendId");
+    //        m.ToTable("MembersFriends");
+    //    }
+    //);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(i => i.MasterInstrument);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(i => i.SlaveInstruments);
 
             modelBuilder.Entity<VerificationTest>()
                 .HasOptional(i => i.PressureTest);

@@ -9,7 +9,12 @@ namespace Prover.Core.Models.Instruments
 {
     public class FrequencyTest : BaseEntity, IHaveVerificationTest, IHavePercentError
     {
-        public FrequencyTest() { }
+        public FrequencyTest() 
+        {
+            //MainRotorPulseCount = 2600;
+            //SenseRotorPulseCount = 260;
+            //MechanicalOutputFactor = 70;
+        }
 
         public FrequencyTest(VerificationTest verificationTest)
         {
@@ -78,7 +83,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-
+                return 100;
             }
         }
 
@@ -100,12 +105,7 @@ namespace Prover.Core.Models.Instruments
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
-        }
-
-        public decimal CorrectedAdjustedVolume()
-        {
-            return 
-        }
+        }      
         
         public decimal AdjustedCorrectedVolume()
         {

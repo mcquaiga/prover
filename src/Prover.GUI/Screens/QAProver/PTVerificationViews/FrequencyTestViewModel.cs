@@ -22,13 +22,15 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             , IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
             _testRunManager = testRunManager;
-            PreTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPreVolumeTest);
-            PostTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPostVolumeTest);
+            if (_testRunManager != null)
+            {
+                PreTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPreVolumeTest);
+                PostTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPostVolumeTest);
+            }
 
             _mainRotorPulses = testRun.MainRotorPulseCount;
             _senseRotorPulses = testRun.SenseRotorPulseCount;
             _mechanicalOutputFactor = testRun.MechanicalOutputFactor;
-            RaisePropertyChangeEvents();
 
             this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
                 .Subscribe(x =>
