@@ -91,8 +91,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public Guid? ParentTestId {get; set;}
-        public virtual Instrument ParentTest {get; set;}
+        //public Guid? ParentTestId {get; set;}
+        //public virtual Instrument ParentTest {get; set;}
 
         public virtual ICollection<Instrument> ChildTests { get; set; }
 
