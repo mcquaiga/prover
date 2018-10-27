@@ -62,7 +62,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
             Out(MotorValues.Stop);
         }
 
-        public int ReadInput()
+        public async Task<int> ReadInput()
         {
             var pulseOutputWaitTimeSpan = TimeSpan.FromMilliseconds(Convert.ToDouble(PulseTiming) * 1000);
 
@@ -74,7 +74,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
                 {
                     _log.Trace($"Pulse value read -> value = {value}");
 
-                    Task.Run(() =>
+                    await Task.Run(() =>
                         {
                             _isPulseWaitTimeOver = false;
 

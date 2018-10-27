@@ -125,14 +125,14 @@
 
                 Log.Info("Running volume sync test...");
 
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     ResetPulseCounts(volumeTest);
                     _outputBoard?.StartMotor();
                     do
                     {
-                        volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                        volumeTest.PulseACount += await FirstPortAInputBoard.ReadInput();
+                        volumeTest.PulseBCount += await FirstPortBInputBoard.ReadInput();
                     } while (volumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
                 }, ct);
 
@@ -256,13 +256,13 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="CancellationToken"/></returns>
-        private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        private async Task<CancellationToken> ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
             do
             {
                 //TODO: Raise events so the UI can respond
-                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                volumeTest.PulseACount += await FirstPortAInputBoard.ReadInput();
+                volumeTest.PulseBCount += await FirstPortBInputBoard.ReadInput();
             } while (!ct.IsCancellationRequested);
 
             return ct;
