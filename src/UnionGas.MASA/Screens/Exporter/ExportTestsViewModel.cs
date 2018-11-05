@@ -231,7 +231,7 @@
             return await Task.Run(() => 
             { 
                 return _instrumentStore.Query()
-                .Where(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue)
+                .Where(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue && !i.LinkedTestId.HasValue)
                 .OrderBy(i => i.TestDateTime)
                 .AsQueryable();                      
             });

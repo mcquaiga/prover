@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
@@ -28,30 +29,47 @@ namespace Prover.GUI.Reports
         public async Task GenerateAndViewReport(Instrument instrument)
         {
             instrument = _instrumentStore.Get(instrument.Id);
+            var linkedInstrument = _instrumentStore.Query().FirstOrDefault(i => i.LinkedTestId == instrument.Id);
 
             var filePath = CreateFileName(instrument);
 
-            //Set up the WPF Control to be printed
-            var controlToPrint = new InstrumentReportView();
-            var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
-            await reportViewModel.Initialize(instrument);
-            controlToPrint.DataContext = reportViewModel;
-
             var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96*11, 96*8.5);
-            var pageContent = new PageContent();
-            var fixedPage = new FixedPage {Width = 96*11, Height = 96*8.5};
+            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
+                    
+            var instrumentControl = await CreateReportControl(instrument);                                 
+            fixedDoc.Pages.Add(CreatePage(instrumentControl));
 
-            //Create first page of document
-            fixedPage.Children.Add(controlToPrint);
-            ((IAddChild) pageContent).AddChild(fixedPage);
-            fixedDoc.Pages.Add(pageContent);
+            if (linkedInstrument != null)
+            {                
+                instrumentControl = await CreateReportControl(linkedInstrument);                                 
+                fixedDoc.Pages.Add(CreatePage(instrumentControl));
+            }
 
             // Save document
             WriteDocument(fixedDoc, filePath);
 
             //View the document
             Process.Start(filePath);
+        }
+
+        private PageContent CreatePage(InstrumentReportView instrumentControl)
+        {
+            var pageContent = new PageContent();
+            var fixedPage = new FixedPage { Width = 96 * 11, Height = 96 * 8.5 };
+             //Create first page of document
+            fixedPage.Children.Add(instrumentControl);
+            ((IAddChild)pageContent).AddChild(fixedPage);
+            return pageContent;
+        }
+
+        private async Task<InstrumentReportView> CreateReportControl(Instrument instrument)
+        {
+            //Set up the WPF Control to be printed
+            var controlToPrint = new InstrumentReportView();
+            var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
+            await reportViewModel.Initialize(instrument);
+            controlToPrint.DataContext = reportViewModel;
+            return controlToPrint;
         }
 
         private string CreateFileName(Instrument instrument)

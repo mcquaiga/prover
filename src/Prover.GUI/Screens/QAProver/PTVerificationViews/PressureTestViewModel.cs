@@ -114,7 +114,8 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         public void Handle(AtmosphericGaugePressureUpdateMessage message)
         {
-            if (message.Sender != this)
+            if (message.Sender != this 
+                && message.Sender.TestRun.VerificationTest.InstrumentId == this.TestRun.VerificationTest.InstrumentId)
             {
                 AtmosphericGauge = message.Value;
             }

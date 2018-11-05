@@ -10,6 +10,7 @@ using NLog;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.DriveTypes;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Models.Instruments;
@@ -17,10 +18,50 @@ using Prover.Core.Settings;
 using Prover.Core.Storage;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
+using Splat;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core.VerificationTests
 { 
+    public static class TestRunManager
+    {        
+        public static IQaRunTestManager MiniAtTestManager {get; set;}
+        public static IQaRunTestManager TocTestManager { get; private set; }
+
+        public static async Task<IQaRunTestManager> CreateTestRun(InstrumentType instrumentType, CommPort commPort, Action<string> statusAction = null)
+        {
+            var qaTestRunManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
+            qaTestRunManager.TestStatus.Subscribe(statusAction);
+
+            if (instrumentType == Instruments.Toc)
+            {
+                MiniAtTestManager = qaTestRunManager;
+                instrumentType = Instruments.MiniAt;
+            }
+
+            await qaTestRunManager.InitializeTest(instrumentType, commPort);                     
+
+            return qaTestRunManager;
+        }
+
+        public static async Task<IQaRunTestManager> CreateNextTestRun(InstrumentType instrumentType, CommPort commPort, Action<string> statusAction = null)
+        {
+            if (instrumentType == Instruments.Toc)
+            {
+                TocTestManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
+                TocTestManager.TestStatus.Subscribe(statusAction);
+
+                await TocTestManager.InitializeTest(instrumentType, commPort); 
+                
+                MiniAtTestManager.Instrument.LinkedTest = TocTestManager.Instrument;
+                MiniAtTestManager.Instrument.LinkedTestId = TocTestManager.Instrument.Id;
+
+                return TocTestManager;
+            }
+
+            return null;
+        }
+    }
 
     public class QaRunTestManager : IQaRunTestManager
     {
