@@ -222,8 +222,13 @@
     <Compile Include="Migrations\201711250817346_Modify-FrequencyTests.Designer.cs">
       <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810281911496_AddLinkedTestColumn.cs" />
+    <Compile Include="Migrations\201810281911496_AddLinkedTestColumn.Designer.cs">
+      <DependentUpon>201810281911496_AddLinkedTestColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
+    <Compile Include="Models\Instruments\GroupedInstruments.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="VerificationTests\IQaRunTestManager.cs" />
@@ -349,6 +354,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711250817346_Modify-FrequencyTests.resx">
       <DependentUpon>201711250817346_Modify-FrequencyTests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810281911496_AddLinkedTestColumn.resx">
+      <DependentUpon>201810281911496_AddLinkedTestColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

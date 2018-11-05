@@ -31,6 +31,8 @@ namespace Prover.Core.Storage
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Instrument> Instruments { get; set; }
 
+        //public DbSet<GroupedInstruments> GroupedInstruments {get; set;}
+
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
             (e.Entity as BaseEntity)?.OnInitializing();
@@ -48,41 +50,67 @@ namespace Prover.Core.Storage
                 .WithRequired(i => i.Instrument);
 
             modelBuilder.Entity<Instrument>()
-                .HasMany(i => i.ChildTests)
-                .WithMany()
-                .Map(m =>
-                {
-                    m.MapLeftKey("Id");
-                    m.MapRightKey("ChildTestId");
-                    m.ToTable("GroupedInstruments");
-                });
+                .HasOptional(i => i.LinkedTest);
 
-            //        modelBuilder.Entity<Member>().HasMany(m => m.Friends).WithMany().Map(m =>
+            //modelBuilder.Entity<GroupedInstruments>()
+            //    .HasKey(g => new { g.ParentId, g.ChildId });
+
+            //modelBuilder.Entity<GroupedInstruments>()
+            //    .HasRequired(p => p.Parent)
+            //    .WithMany(c => c.ChildTests)
+            //    .HasForeignKey(g => g.ParentId);
+
+            //modelBuilder.Entity<GroupedInstruments>()
+            //  .HasRequired(c => c.Child)
+            //  .WithRequiredPrincipal(p => p.ParentTest);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(c => c.ChildTests)
+            //    .WithRequired(i => i.Parent)                
+            //    .HasForeignKey(f => f.ParentId);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(p => p.ParentTest)
+            //    .WithMany();           
+            ;
+
+            //.Map(m =>
+            //{
+            //    m.MapKey(new[] { "ChildId" });
+            //    m.ToTable("GroupedInstruments");
+            //});
+            //.WithRequiredPrincipal(p => p.ParentTest);
+
+            //modelBuilder.Entity<Instrument>()
+            // .HasOptional(i => i.ParentTest)
+            // .WithOptionalPrincipal()
+            // .Map(m =>
+            // {
+            //     m.MapKey(new [] { "ParentId"});
+            //     m.ToTable("GroupedInstruments");
+            // });             
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(i => i.ChildTests)
+            //    .WithOptionalDependent()
+            //    .Map(m =>
             //    {
-            //        m.MapLeftKey("MemberId");
-            //        m.MapRightKey("FriendId");
-            //        m.ToTable("MembersFriends");
-            //    }
-            //);
-                  //modelBuilder.Entity<Instrument>()
-            //    .HasOptional(i => i.RelatedInstruments)
-            //    .WithMany()
-            //    .HasForeignKey(r => r.Id);   
+            //        m.MapKey("ChildId");                    
+            //        m.ToTable("GroupedInstruments");
+            //    });
 
             //modelBuilder.Entity<Instrument>()
-            //   .HasOptional(i => i.ParentTest)
-            //   .Map(m => {
+            //    .HasMany(m => m.)
+            //    .WithMany().Map(m =>
+            //      {
+            //          m.MapLeftKey("MemberId");
+            //          m.MapRightKey("FriendId");
+            //          m.ToTable("MembersFriends");
+            //      }
+            //  );              
 
-            //   });
 
-            //modelBuilder.Entity<Instrument>() 
-            //   .HasOptional(i => i.ChildTests)
-            //   .WithMany();
-            //modelBuilder.Entity<Instrument>()
-            //    .HasOptional(i => i.MasterInstrument);
 
-            //modelBuilder.Entity<Instrument>()
-            //    .HasMany(i => i.SlaveInstruments);
 
             modelBuilder.Entity<VerificationTest>()
                 .HasOptional(i => i.PressureTest);

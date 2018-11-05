@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Certificates;
@@ -91,10 +92,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        //public Guid? ParentTestId {get; set;}
-        //public virtual Instrument ParentTest {get; set;}
-
-        public virtual ICollection<Instrument> ChildTests { get; set; }
+        public Guid? LinkedTestId { get; set; }
+        public virtual Instrument LinkedTest { get; set; }      
 
         public decimal GetGaugeTemp(int testNumber)
         {
@@ -110,7 +109,7 @@ namespace Prover.Core.Models.Instruments
 
             var evcPressureRange = Items.GetItem(ItemCodes.Pressure.Range).NumericValue;
             return value*evcPressureRange;
-        }
+        }     
 
         #region NotMapped Properties
 
