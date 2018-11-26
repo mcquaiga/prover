@@ -56,7 +56,8 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         {
             get
             {
-                if (!_instrument.VolumeTest.EvcCorrected.HasValue) return null;
+                if (!_instrument.VolumeTest.EvcCorrected.HasValue) return 0.0m;
+
                 var energyValue = _instrument.Items.GetItem(142).NumericValue;
                 switch (EnergyUnits)
                 {
@@ -70,9 +71,9 @@ namespace Prover.Core.Models.Instruments.DriveTypes
                          return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000;
                     case KiloCals:
                         return Math.Round(energyValue * 0.0283168m * _instrument.VolumeTest.EvcCorrected.Value);
-                }
-
-                return null;
+                    default:
+                        throw new Exception(string.Format("Energy units not supported: {0}", EnergyUnits));
+                }              
             }
         }
     }
