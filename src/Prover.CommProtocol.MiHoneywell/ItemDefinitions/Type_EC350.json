@@ -319,11 +319,45 @@
           "numericvalue": "1"
         }
       ]
+    },
+    {
+      "number": "141",
+      "code": "ENERGY_UNITS",
+      "shortDescription": "Energy Units",
+      "description": "Energy Units",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Therms"
+        },
+        {
+          "id": "1",
+          "description": "DecaTherms"
+        },
+        {
+          "id": "2",
+          "description": "MegaJoules"
+        },
+        {
+          "id": "3",
+          "description": "GigaJoules"
+        },
+        {
+          "id": "4",
+          "description": "KiloCals"
+        },
+        {
+          "id": "5",
+          "description": "KiloWattHours"
+        }
+      ]
     }
   ],
   "ExcludeItems": [
     {
       "number": "110",
-      "description":  "Fixed Super. Factor" 
-    }]
+      "description": "Fixed Super. Factor"
+    }
+  ]
 }

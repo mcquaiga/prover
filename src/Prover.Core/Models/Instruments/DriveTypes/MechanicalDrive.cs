@@ -11,7 +11,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
     {
         private const string Therms = "Therms";
         private const string Dktherms = "DecaTherms";
-        private const string MegaJoules = " MegaJoules";
+        private const string MegaJoules = "MegaJoules";
         private const string GigaJoules = "GigaJoules";
         private const string KiloCals = "KiloCals";
         private const string KiloWattHours = "KiloWattHours";
@@ -56,23 +56,31 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         {
             get
             {
-                if (!_instrument.VolumeTest.EvcCorrected.HasValue) return null;
+                if (!_instrument.VolumeTest.EvcCorrected.HasValue || _instrument.VolumeTest.EvcCorrected == 0) 
+                    return 0.0m;
+
                 var energyValue = _instrument.Items.GetItem(142).NumericValue;
+
                 switch (EnergyUnits)
                 {
                     case Therms:
                         return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
+
                     case Dktherms:
                         return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000000;
+
                     case GigaJoules:
                         return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
+
                     case MegaJoules:
-                         return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000;
+
                     case KiloCals:
                         return Math.Round(energyValue * 0.0283168m * _instrument.VolumeTest.EvcCorrected.Value);
-                }
 
-                return null;
+                    default:
+                        throw new Exception(string.Format("Energy units not supported: {0}", EnergyUnits));
+                }
             }
         }
     }
