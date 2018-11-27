@@ -64,16 +64,16 @@ namespace Prover.Core.Models.Instruments.DriveTypes
                 switch (EnergyUnits)
                 {
                     case Therms:
-                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 100000);
 
                     case Dktherms:
-                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000000;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000000) ;
 
                     case GigaJoules:
-                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 100000;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000000);
 
                     case MegaJoules:
-                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value) / 1000;
+                        return Math.Round(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000);
 
                     case KiloCals:
                         return Math.Round(energyValue * 0.0283168m * _instrument.VolumeTest.EvcCorrected.Value);
