@@ -209,13 +209,13 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
-                if (pulsesWaiting > 0)
+                if (pulsesWaiting > 1)
                 {
                     await commClient.Disconnect();
                     await Task.Delay(new TimeSpan(0, 0, 20), ct);
                 }
 
-            } while (pulsesWaiting > 0 && !ct.IsCancellationRequested);
+            } while (pulsesWaiting > 1 && !ct.IsCancellationRequested);
 
             _pulseInputsCancellationTokenSource.Cancel();
         }
