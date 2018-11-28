@@ -264,7 +264,7 @@
                 .Subscribe(
                     x =>
                     {
-                       Log.Debug($"UnCor Pulses = {volumeTest.PulseACount}; Cor Pulses = {volumeTest.PulseBCount}");
+                       Log.Debug($"Pulser A = {volumeTest.PulseACount}; Pulser B = {volumeTest.PulseBCount}");
                     });
 
             do
