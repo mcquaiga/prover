@@ -6,6 +6,7 @@
     using Prover.Core.ExternalDevices.DInOutBoards;
     using Prover.Core.Models.Instruments;
     using System;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -258,6 +259,14 @@
         /// <returns>The <see cref="CancellationToken"/></returns>
         private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
+             Observable
+                .Interval(TimeSpan.FromSeconds(5))
+                .Subscribe(
+                    x =>
+                    {
+                       Log.Debug($"UnCor Pulses = {volumeTest.PulseACount}; Cor Pulses = {volumeTest.PulseBCount}");
+                    });
+
             do
             {
                 //TODO: Raise events so the UI can respond
