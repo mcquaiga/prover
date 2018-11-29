@@ -159,19 +159,19 @@
         protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
         {
             try
-            {
-                await Task.Run(() =>
-                {
+            {                
+                    await _tachometerCommunicator?.ResetTach();
+
                     _outputBoard?.StartMotor();
 
                     _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
+                    var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                    while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
+                    while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
-                    }
-
-                }, ct);
+                        Thread.Sleep(500);
+                    }  
+                    
                 ct.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ex)
