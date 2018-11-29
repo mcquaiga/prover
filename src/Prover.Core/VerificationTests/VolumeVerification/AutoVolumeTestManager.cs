@@ -259,20 +259,18 @@
         /// <returns>The <see cref="CancellationToken"/></returns>
         private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
-             Observable
+            using (Observable
                 .Interval(TimeSpan.FromSeconds(5))
-                .Subscribe(
-                    x =>
-                    {
-                       Log.Debug($"Pulser A = {volumeTest.PulseACount}; Pulser B = {volumeTest.PulseBCount}");
-                    });
-
-            do
+                .Subscribe(_ => Log.Debug($"Pulser A = {volumeTest.PulseACount}; Pulser B = {volumeTest.PulseBCount}")))
             {
-                //TODO: Raise events so the UI can respond
-                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-            } while (!ct.IsCancellationRequested);
+                do
+                {
+                    //TODO: Raise events so the UI can respond
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                } 
+                while (!ct.IsCancellationRequested);
+            }           
 
             return ct;
         }
