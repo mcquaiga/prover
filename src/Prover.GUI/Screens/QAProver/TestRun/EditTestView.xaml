@@ -17,8 +17,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        
+            <ColumnDefinition Width="*" />        
         </Grid.ColumnDefinitions>    
 
         <ContentControl Margin="2"
@@ -31,47 +30,52 @@
         <StackPanel Grid.Row="0"
                       Grid.Column="1"
                     Orientation="Vertical">
-            
-        
-        <Button Grid.Column="1"
+
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="1">
+                <Button Grid.Column="1"
                 Content="Next Test"
                 HorizontalAlignment="Right"
                 Margin="2"
                 Width="150"
                 Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                 Command="{Binding NextTestCommand}"/>
-        
-        <ScrollViewer Grid.Row="0"
+
+
+                <ScrollViewer Grid.Row="0"
                       Grid.Column="1"
                       VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>                   
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ItemsControl Grid.Row="0"
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ItemsControl Grid.Row="0"
                               ItemsSource="{Binding TestViews}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="3" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
 
-                <!-- Column 2 - Volume Verification -->
-                <ContentControl cal:View.Model="{Binding VolumeTestView}"
+                        <!-- Column 2 - Volume Verification -->
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}"
                                 cal:View.Context="Volume"
                                 Grid.Row="1"
                                 Margin="2" />
-            </Grid>
+                    </Grid>
 
-        </ScrollViewer>
+                </ScrollViewer>
+            </StackPanel>
+        
         </StackPanel>
 
     </Grid>
