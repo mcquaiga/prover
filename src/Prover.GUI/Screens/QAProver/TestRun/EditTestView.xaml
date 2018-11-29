@@ -27,56 +27,48 @@
                         VerticalAlignment="Top"
                         cal:View.Model="{Binding SiteInformationItem}"
                         cal:View.Context="SiteInfoCard" />
-        <StackPanel Grid.Row="0"
-                      Grid.Column="1"
-                    Orientation="Vertical">
-
-            <StackPanel Orientation="Vertical"
-                        Grid.Column="1">
-                <Button Grid.Column="1"
-                Content="Next Test"
-                HorizontalAlignment="Right"
-                Margin="2"
-                Width="150"
-                Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
-                Command="{Binding NextTestCommand}"/>
-
-
-                <ScrollViewer Grid.Row="0"
-                      Grid.Column="1"
-                      VerticalScrollBarVisibility="Visible">
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <ItemsControl Grid.Row="0"
-                              ItemsSource="{Binding TestViews}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-
-                        <!-- Column 2 - Volume Verification -->
-                        <ContentControl cal:View.Model="{Binding VolumeTestView}"
-                                cal:View.Context="Volume"
-                                Grid.Row="1"
-                                Margin="2" />
-                    </Grid>
-
-                </ScrollViewer>
-            </StackPanel>
         
-        </StackPanel>
+        <ScrollViewer Grid.Row="0"
+                      Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0"
+                            Content="Next Test"
+                            HorizontalAlignment="Right"
+                            Margin="2"
+                            Width="150"
+                            Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                            Command="{Binding NextTestCommand}"/>
+
+                <ItemsControl Grid.Row="1"
+                              ItemsSource="{Binding TestViews}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Margin="5" cal:View.Model="{Binding }" cal:View.Context="Card" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Column 2 - Volume Verification -->
+                <ContentControl cal:View.Model="{Binding VolumeTestView}"
+                                cal:View.Context="Volume"
+                                Grid.Row="2"
+                                Margin="2" />
+            </Grid>
+
+        </ScrollViewer>
 
     </Grid>
 
