@@ -164,7 +164,7 @@
                     _outputBoard?.StartMotor();
 
                     _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token)).Start();
+                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
                     while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
