@@ -160,18 +160,16 @@
         {
             try
             {
-                await Task.Run(() =>
-                {
+                
                     _outputBoard?.StartMotor();
 
                     _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
+                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token)).Start();
 
-                    while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
+                    while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
-                    }
-
-                }, ct);
+                    }  
+                    
                 ct.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ex)
