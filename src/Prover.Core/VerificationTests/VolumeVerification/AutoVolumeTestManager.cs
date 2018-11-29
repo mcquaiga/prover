@@ -168,6 +168,7 @@
 
                     while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
+                        Thread.Sleep(1000);
                     }  
                     
                 ct.ThrowIfCancellationRequested();
