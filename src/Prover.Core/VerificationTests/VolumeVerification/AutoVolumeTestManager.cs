@@ -161,6 +161,8 @@
             try
             {
                 
+                    await _tachometerCommunicator?.ResetTach();
+
                     _outputBoard?.StartMotor();
 
                     _pulseInputsCancellationTokenSource = new CancellationTokenSource();
@@ -168,7 +170,7 @@
 
                     while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(500);
                     }  
                     
                 ct.ThrowIfCancellationRequested();
