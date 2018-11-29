@@ -6,6 +6,7 @@
     using Prover.Core.ExternalDevices.DInOutBoards;
     using Prover.Core.Models.Instruments;
     using System;
+    using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -158,19 +159,19 @@
         protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
         {
             try
-            {
-                await Task.Run(() =>
-                {
+            {                
+                    await _tachometerCommunicator?.ResetTach();
+
                     _outputBoard?.StartMotor();
 
                     _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                    Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
+                    var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                    while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
+                    while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                     {
-                    }
-
-                }, ct);
+                        Thread.Sleep(500);
+                    }  
+                    
                 ct.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ex)
@@ -208,13 +209,13 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
-                if (pulsesWaiting > 0)
+                if (pulsesWaiting > 1)
                 {
                     await commClient.Disconnect();
                     await Task.Delay(new TimeSpan(0, 0, 20), ct);
                 }
 
-            } while (pulsesWaiting > 0 && !ct.IsCancellationRequested);
+            } while (pulsesWaiting > 1 && !ct.IsCancellationRequested);
 
             _pulseInputsCancellationTokenSource.Cancel();
         }
@@ -258,12 +259,18 @@
         /// <returns>The <see cref="CancellationToken"/></returns>
         private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
-            do
+            using (Observable
+                .Interval(TimeSpan.FromSeconds(5))
+                .Subscribe(_ => Log.Debug($"Pulser A = {volumeTest.PulseACount}; Pulser B = {volumeTest.PulseBCount}")))
             {
-                //TODO: Raise events so the UI can respond
-                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-            } while (!ct.IsCancellationRequested);
+                do
+                {
+                    //TODO: Raise events so the UI can respond
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                } 
+                while (!ct.IsCancellationRequested);
+            }           
 
             return ct;
         }

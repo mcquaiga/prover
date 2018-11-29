@@ -33,6 +33,7 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         private MccBoard _board;
+        private bool _pulseIsCleared;
         private bool _isPulseWaitTimeOver;
         private ErrorInfo _ulStatErrorInfo;
 
@@ -64,39 +65,36 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public int ReadInput()
         {
-            var pulseOutputWaitTimeSpan = TimeSpan.FromMilliseconds(Convert.ToDouble(PulseTiming) * 1000);
-
-            short value = 0;
-            _ulStatErrorInfo = _board.DIn(_channelType, out value);
-            if (_isPulseWaitTimeOver && _ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
+             var boardStatus = _board.GetStatus(out var status, out var curCount, out var curIndex, FunctionType.AiFunction);
+            if (boardStatus.Value != ErrorInfo.ErrorCode.NoErrors)
             {
-                if ((SignalValues) value != SignalValues.Off)
+                throw new Exception("DAQ board could not be found or is not configured correctly.");
+            }
+
+            _ulStatErrorInfo = _board.DIn(_channelType, out short value);
+
+            if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
+            {
+                if (value != 255)
                 {
-                    _log.Trace($"Pulse value read -> value = {value}");
-
-                    Task.Run(() =>
-                        {
-                            _isPulseWaitTimeOver = false;
-
-                            var watch = Stopwatch.StartNew();
-                            Thread.Sleep(pulseOutputWaitTimeSpan);
-                            return watch;
-                        })
-                        .ContinueWith(watch =>
-                        {
-                            _isPulseWaitTimeOver = true;
-                            _log.Trace($@"Pulse Output Wait Time over - Channel: {this._channelNum} in { watch.Result.ElapsedMilliseconds} ms");
-                        });
-
-                    return 1;
+                    if (_pulseIsCleared)
+                    {
+                        _log.Trace($"Pulse value read -> value = {value}");
+                        _pulseIsCleared = false;
+                        return 1;
+                    }
+                }
+                else
+                {
+                    _pulseIsCleared = true;
                 }
             }
             else
             {
-                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.NoErrors)
+                if (_ulStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)
                     _log.Warn("DAQ Input error: {0} - {1}", _ulStatErrorInfo.Message, _ulStatErrorInfo.Value);
             }
-            return 0;
+            return 0;         
         }
 
         public void Dispose()
