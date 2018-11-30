@@ -37,6 +37,9 @@ namespace Prover.Core.VerificationTests
             {
                 MiniAtTestManager = qaTestRunManager;
                 instrumentType = Instruments.MiniAt;
+
+                // Item 182 (Input Vol to Corrector)  needs to be changed to value 0 ( SW 1& 2)
+                //
             }
 
             await qaTestRunManager.InitializeTest(instrumentType, commPort);                     
@@ -50,6 +53,8 @@ namespace Prover.Core.VerificationTests
             {
                 TocTestManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
                 TocTestManager.TestStatus.Subscribe(statusAction);
+
+                // Item 182 (Input Vol to Corrector)  needs to be changed to value 2 ( 
 
                 await TocTestManager.InitializeTest(instrumentType, commPort); 
                 
