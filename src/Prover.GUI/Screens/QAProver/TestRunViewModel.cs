@@ -59,7 +59,7 @@
         /// <summary>
         /// Defines the _qaTestRunManager
         /// </summary>
-        private IQaRunTestManager _qaTestRunManager;
+        private ITestRunManager _qaTestRunManager;
 
         /// <summary>
         /// Defines the _selectedBaudRate
@@ -348,10 +348,10 @@
         /// <summary>
         /// The InitializeViews
         /// </summary>
-        /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="IQaRunTestManager"/></param>
+        /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="ITestRunManager"/></param>
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public void InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
+        public void InitializeViews(ITestRunManager qaTestRunTestManager, Instrument instrument)
         {
             SiteInformationItem = null;
             TestViews.Clear();
@@ -413,7 +413,7 @@
                     await SettingsManager.Save();
 
                     _commPort = GetCommPort();
-                    _qaTestRunManager = await TestRunManager.CreateTestRun(SelectedInstrument, _commPort, OnTestStatusChange);
+                    _qaTestRunManager = await TestRunCreator.CreateTestRun(SelectedInstrument, _commPort, OnTestStatusChange);
 
                     InitializeViews(_qaTestRunManager, _qaTestRunManager.Instrument);
                     ViewContext = EditQaTestViewContext;
@@ -440,7 +440,7 @@
 
             try
             {
-                _qaTestRunManager = await TestRunManager.CreateNextTestRun(SelectedInstrument, _commPort, OnTestStatusChange);
+                _qaTestRunManager = await TestRunCreator.CreateNextTestRun(SelectedInstrument, _commPort, OnTestStatusChange);
                 InitializeViews(_qaTestRunManager, _qaTestRunManager.Instrument);
                 ShowNextTestButton = false;
                 ViewContext = EditQaTestViewContext;

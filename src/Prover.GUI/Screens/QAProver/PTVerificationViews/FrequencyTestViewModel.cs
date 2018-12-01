@@ -16,10 +16,10 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
     public class FrequencyTestViewModel : TestRunViewModelBase<Core.Models.Instruments.FrequencyTest>
     {
-        private readonly IQaRunTestManager _testRunManager;
+        private readonly ITestRunManager _testRunManager;
 
         public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun
-            , IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
+            , ITestRunManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
             _testRunManager = testRunManager;
             if (_testRunManager != null)

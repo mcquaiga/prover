@@ -16,7 +16,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
     {
         private CancellationTokenSource _cancellationTokenSource;
 
-        public IQaRunTestManager QaRunTestManager;
+        public ITestRunManager QaRunTestManager;
 
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
             : base(screenManager, eventAggregator)
@@ -33,7 +33,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
 
         public VerificationTest VerificationTest { get; set; }
 
-        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
+        public void InitializeViews(VerificationTest verificationTest, ITestRunManager qaTestRunTestManager = null)
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;

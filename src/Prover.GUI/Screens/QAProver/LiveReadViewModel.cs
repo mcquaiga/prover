@@ -18,14 +18,14 @@ namespace Prover.GUI.Screens.QAProver
         IHandle<InstrumentUpdateEvent>
     {
         private readonly IContainer _container;
-        private QaRunTestManager _qaRunTestManager;
+        private TestRunManager _qaRunTestManager;
 
         public LiveReadViewModel(IContainer container)
         {
             _container = container;
             _container.Resolve<IEventAggregator>().Subscribe(this);
 
-            _qaRunTestManager = _container.Resolve<QaRunTestManager>();
+            _qaRunTestManager = _container.Resolve<TestRunManager>();
         }
 
         public ObservableCollection<LiveReadDisplay> LiveReadItems { get; set; } =
