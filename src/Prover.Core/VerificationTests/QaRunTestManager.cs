@@ -98,9 +98,7 @@
         /// <summary>
         /// Gets the EventAggregator
         /// </summary>
-        public IEventAggregator EventAggregator { get; }
-
-        public VolumeTestManager VolumeTestManager { get; private set; }
+        public IEventAggregator EventAggregator { get; }       
         
         /// <summary>
         /// Gets the Instrument
@@ -245,7 +243,7 @@
             }
             else if (Instrument.VolumeTest.DriveType is PulseInputSensor)
             {
-                VolumeTestManager = new FrequencyVolumeTestManager(EventAggregator);
+                VolumeTestManager = IoC.Get<FrequencyVolumeTestManager>();
             }
         }
 

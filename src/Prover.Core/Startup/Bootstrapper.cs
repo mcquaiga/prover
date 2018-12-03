@@ -38,6 +38,7 @@ namespace Prover.Core.Startup
             Builder.RegisterType<ManualVolumeTestManager>().As<ManualVolumeTestManager>();
             Builder.RegisterType<RotaryAutoVolumeTestManager>();
             Builder.RegisterType<MechanicalAutoVolumeTestManager>();
+            Builder.RegisterType<FrequencyVolumeTestManager>();
 
             Builder.RegisterType<AverageReadingStabilizer>().As<IReadingStabilizer>();
             Builder.RegisterType<QaRunTestManager>().As<IQaRunTestManager>();
