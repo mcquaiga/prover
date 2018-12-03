@@ -290,36 +290,4 @@
 
         #endregion
     }
-
-    public class MechanicalAutoVolumeTestManager : AutoVolumeTestManager
-    {
-        public MechanicalAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm) : base(eventAggregator, tachComm)
-        {
-        }      
-
-        protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {
-            while (await TachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
-            {
-                Thread.Sleep(500);
-            }  
-        }
-    }
-
-    public class RotaryAutoVolumeTestManager : AutoVolumeTestManager
-    {
-        public RotaryAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm) : base(eventAggregator, tachComm)
-        {
-        }       
-
-        protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {
-            await Task.Run(() =>
-            {
-                while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
-                {
-                }
-            }, ct);            
-        }
-    }
 }
