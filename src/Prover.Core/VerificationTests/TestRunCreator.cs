@@ -52,17 +52,20 @@
         {
             if (instrumentType == Instruments.Toc)
             {
-                TocTestManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
+                TocTestManager = Locator.Current.GetService<IQaRunTestManager>();
                 TocTestManager.TestStatus.Subscribe(statusAction);
-
-                // Item 182 (Input Vol to Corrector)  needs to be changed to value 2 ( 
-                var setItemValues = new Dictionary<int, decimal>()
+                            
+                Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
                 {
-                    {182, 1},
-                    {855, 1}
+                    await comm.SetItemValue(182, 1);
+                    await comm.SetItemValue(855, 1);
                 };
 
-                await TocTestManager.InitializeTest(instrumentType, commPort, setItemValues);
+                IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
+
+                await TocTestManager.InitializeTest(instrumentType, commPort);
+                IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
+
 
                 MiniAtTestManager.Instrument.LinkedTest = TocTestManager.Instrument;
                 MiniAtTestManager.Instrument.LinkedTestId = TocTestManager.Instrument.Id;
@@ -106,13 +109,15 @@
             MiniAtTestManager = qaTestRunManager;
             instrumentType = Instruments.MiniAt;
 
-            var setItemValues = new Dictionary<int, decimal>()
-            {
-                {182, 0},
-                {855, 0}
-            };
+            Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
+                {
+                    await comm.SetItemValue(182, 0);
+                    await comm.SetItemValue(855, 0);
+                };
 
-            await qaTestRunManager.InitializeTest(instrumentType, commPort, setItemValues);           
+            IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
+            await qaTestRunManager.InitializeTest(instrumentType, commPort);           
+            IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
 
             return qaTestRunManager;
         }

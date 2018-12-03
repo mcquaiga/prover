@@ -82,7 +82,7 @@ namespace Prover.Core.Models.Instruments
                 if (i == defaultVolumeTestNumber)
                 {
                     verificationTest.VolumeTest = new VolumeTest(verificationTest);
-                    if (InstrumentType.Name == "TOC")
+                    if (InstrumentType == CommProtocol.MiHoneywell.Instruments.Toc)
                     {
                         verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
                     }

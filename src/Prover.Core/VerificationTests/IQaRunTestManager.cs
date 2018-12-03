@@ -55,9 +55,7 @@
         /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        Task InitializeTest(InstrumentType instrumentType, CommPort commPort);
-
-        Task InitializeTest(InstrumentType instrumentType, CommPort commPort, Dictionary<int, decimal> setItemValues);
+        Task InitializeTest(InstrumentType instrumentType, CommPort commPort);       
 
         /// <summary>
         /// The RunTest

@@ -189,37 +189,17 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort)
         {
-            await InitializeTest(instrumentType, commPort, null);
-        }
-
-        /// <summary>
-        /// The InitializeTest
-        /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
-        /// <param name="commPort">The commPort<see cref="CommPort"/></param>
-        /// <param name="setItemValues">The setItemValues<see cref="Dictionary{int, int}"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public async Task InitializeTest(InstrumentType instrumentType, CommPort commPort, Dictionary<int, decimal> setItemValues)
-        {
-            CommunicationClient = instrumentType.ClientFactory.Invoke(commPort);
+             CommunicationClient = instrumentType.ClientFactory.Invoke(commPort);
 
             _testStatus.OnNext($"Connecting to {instrumentType.Name}...");
-            await CommunicationClient.Connect();
+            await CommunicationClient.Connect();           
 
-            if (setItemValues != null)
-            {
-                foreach (var item in setItemValues)
-                {
-                    await CommunicationClient.SetItemValue(item.Key, item.Value);
-                }
-            }            
+             await TestActionsManager.RunVerificationInitActions(CommunicationClient, null);
 
             _testStatus.OnNext("Downloading items...");
-            var items = await CommunicationClient.GetAllItems();
+            var items = await CommunicationClient.GetAllItems();            
 
-            Instrument = new Instrument(instrumentType, items);
-
-            await TestActionsManager.RunVerificationInitActions(CommunicationClient, Instrument);
+            Instrument = new Instrument(instrumentType, items);           
 
             await RunVerifier();
 
@@ -229,7 +209,7 @@
             CreateVolumeTestManager();
 
             await SaveAsync();
-        }
+        }      
 
         private void CreateVolumeTestManager()
         {

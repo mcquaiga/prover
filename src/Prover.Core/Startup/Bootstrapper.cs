@@ -49,9 +49,8 @@ namespace Prover.Core.Startup
         }
 
         private void RegisterTestActions()
-        {
-            Builder.RegisterType<TestActionsManager>().As<ITestActionsManager>();
-
+        {       
+           
             Builder.Register(c =>
             {
                 var resetItems = SettingsManager.SettingsInstance.TocResetItems;
@@ -73,7 +72,9 @@ namespace Prover.Core.Startup
             .As<IPreVolumeTestAction>()
             .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
 
-            
+             Builder.RegisterType<TestActionsManager>()
+                .As<ITestActionsManager>()
+                .SingleInstance();
         }
 
         public ContainerBuilder Builder { get; } = new ContainerBuilder();
