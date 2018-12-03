@@ -35,12 +35,10 @@ namespace Prover.Core.VerificationTests
         public QaRunTestManager(
             IEventAggregator eventAggregator,
             IInstrumentStore<Instrument> instrumentStore,
-            IReadingStabilizer readingStabilizer,
-            VolumeTestManager volumeTestManager,            
+            IReadingStabilizer readingStabilizer,                        
             IEnumerable<IValidator> validators,
             ITestActionsManager testActionsManager )
-        {
-            VolumeTestManager = volumeTestManager;
+        {           
             EventAggregator = eventAggregator;
             _instrumentStore = instrumentStore;           
             _readingStabilizer = readingStabilizer;
@@ -52,7 +50,7 @@ namespace Prover.Core.VerificationTests
 
         public IEventAggregator EventAggregator { get; }
 
-        public VolumeTestManager VolumeTestManager { get; set; }
+        public VolumeTestManager VolumeTestManager { get; private set; }
 
         public void Dispose()
         {
@@ -74,7 +72,7 @@ namespace Prover.Core.VerificationTests
             _testStatus.OnNext("Downloading items...");
             var items = await _communicationClient.GetAllItems();
 
-            Instrument = new Instrument(instrumentType, items);          
+            Instrument = new Instrument(instrumentType, items);
 
             await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
 
@@ -83,12 +81,25 @@ namespace Prover.Core.VerificationTests
             _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await _communicationClient.Disconnect();
 
-            if (Instrument.VolumeTest.DriveType is PulseInputSensor)
-            {
-                VolumeTestManager = new ManualVolumeTestManager(EventAggregator);
-            }
+            CreateVolumeTestManager();
 
             await SaveAsync();
+        }
+
+        private void CreateVolumeTestManager()
+        {
+            if (Instrument.VolumeTest.DriveType is RotaryDrive)
+            {
+                VolumeTestManager = IoC.Get<RotaryAutoVolumeTestManager>();
+            }
+            else if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+            {
+                VolumeTestManager = IoC.Get<MechanicalAutoVolumeTestManager>();
+            }
+            else if (Instrument.VolumeTest.DriveType is PulseInputSensor)
+            {
+                VolumeTestManager = IoC.Get<ManualVolumeTestManager>();
+            }
         }
 
         public async Task RunTest(int level, CancellationToken ct)
