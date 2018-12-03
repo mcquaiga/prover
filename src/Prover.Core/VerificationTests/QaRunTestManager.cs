@@ -19,9 +19,9 @@
     using LogManager = NLog.LogManager;
 
     /// <summary>
-    /// Defines the <see cref="TestRunManager" />
+    /// Defines the <see cref="QaRunTestManager" />
     /// </summary>
-    public class TestRunManager : ITestRunManager
+    public class QaRunTestManager : IQaRunTestManager
     {
         #region Constants
 
@@ -64,7 +64,7 @@
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestRunManager"/> class.
+        /// Initializes a new instance of the <see cref="QaRunTestManager"/> class.
         /// </summary>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
@@ -72,7 +72,7 @@
         /// <param name="volumeTestManager">The volumeTestManager<see cref="VolumeTestManager"/></param>
         /// <param name="validators">The validators<see cref="IEnumerable{IValidator}"/></param>
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        public TestRunManager(
+        public QaRunTestManager(
             IEventAggregator eventAggregator,
             IInstrumentStore<Instrument> instrumentStore,
             IReadingStabilizer readingStabilizer,

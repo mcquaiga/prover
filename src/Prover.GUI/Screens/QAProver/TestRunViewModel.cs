@@ -59,7 +59,7 @@
         /// <summary>
         /// Defines the _qaTestRunManager
         /// </summary>
-        private ITestRunManager _qaTestRunManager;
+        private IQaRunTestManager _qaTestRunManager;
 
         /// <summary>
         /// Defines the _selectedBaudRate
@@ -348,10 +348,10 @@
         /// <summary>
         /// The InitializeViews
         /// </summary>
-        /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="ITestRunManager"/></param>
+        /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="IQaRunTestManager"/></param>
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public void InitializeViews(ITestRunManager qaTestRunTestManager, Instrument instrument)
+        public void InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
         {
             SiteInformationItem = null;
             TestViews.Clear();

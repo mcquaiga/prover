@@ -231,14 +231,14 @@
     <Compile Include="Models\Instruments\GroupedInstruments.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
+    <Compile Include="VerificationTests\IQaRunTestManager.cs" />
     <Compile Include="VerificationTests\ITestActionsManager.cs" />
-    <Compile Include="VerificationTests\ITestRunManager.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\TestActionsManager.cs" />
     <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
     <Compile Include="VerificationTests\TestRunCreator.cs" />
-    <Compile Include="VerificationTests\TestRunManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\FrequencyVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />

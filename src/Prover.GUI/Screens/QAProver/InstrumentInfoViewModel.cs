@@ -20,7 +20,7 @@ namespace Prover.GUI.Screens.QAProver
             eventAggregator.Subscribe(this);
         }
 
-        public void Initialize(Instrument instrument, ITestRunManager qaRunTestManager)
+        public void Initialize(Instrument instrument, IQaRunTestManager qaRunTestManager)
         {
             Instrument = instrument;
             QaTestManager = qaRunTestManager;
@@ -88,7 +88,7 @@ namespace Prover.GUI.Screens.QAProver
             }
         }
 
-        public ITestRunManager QaTestManager { get; set; }
+        public IQaRunTestManager QaTestManager { get; set; }
 
         public void Handle(VerificationTestEvent message)
         {

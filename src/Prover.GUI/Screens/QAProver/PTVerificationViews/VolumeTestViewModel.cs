@@ -31,7 +31,7 @@
         /// <summary>
         /// Defines the _testRunManager
         /// </summary>
-        private readonly ITestRunManager _testRunManager;
+        private readonly IQaRunTestManager _testRunManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VolumeTestViewModel"/> class.
@@ -39,9 +39,9 @@
         /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="testRun">The testRun<see cref="Core.Models.Instruments.VolumeTest"/></param>
-        /// <param name="testRunManager">The testRunManager<see cref="ITestRunManager"/></param>
+        /// <param name="testRunManager">The testRunManager<see cref="IQaRunTestManager"/></param>
         public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.VolumeTest testRun, ITestRunManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
+            Core.Models.Instruments.VolumeTest testRun, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
         {
             _testRunManager = testRunManager;
             Volume = testRun;          
@@ -97,7 +97,7 @@
         /// <summary>
         /// Gets or sets the InstrumentManager
         /// </summary>
-        public TestRunManager InstrumentManager { get; set; }
+        public QaRunTestManager InstrumentManager { get; set; }
 
         /// <summary>
         /// Gets the Instrument

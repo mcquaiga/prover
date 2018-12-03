@@ -11,9 +11,9 @@
     #region Interfaces
 
     /// <summary>
-    /// Defines the <see cref="ITestRunManager" />
+    /// Defines the <see cref="IQaRunTestManager" />
     /// </summary>
-    public interface ITestRunManager : IDisposable
+    public interface IQaRunTestManager : IDisposable
     {
         #region Properties
 
