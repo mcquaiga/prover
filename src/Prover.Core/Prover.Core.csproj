@@ -241,7 +241,6 @@
     <Compile Include="VerificationTests\TestRunCreator.cs" />
     <Compile Include="VerificationTests\VolumeVerification\FrequencyVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
-    <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
     <Compile Include="Communication\TachometerService.cs" />
@@ -279,6 +278,8 @@
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\MechanicalAutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\RotaryAutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
   </ItemGroup>
   <ItemGroup>

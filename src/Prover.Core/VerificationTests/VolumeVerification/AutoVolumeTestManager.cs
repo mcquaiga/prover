@@ -13,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="AutoVolumeTestManager" />
     /// </summary>
-    public class AutoVolumeTestManager : VolumeTestManager
+    public abstract class AutoVolumeTestManager : VolumeTestManager
     {
         #region Fields
 
@@ -25,7 +25,7 @@
         /// <summary>
         /// Defines the _tachometerCommunicator
         /// </summary>
-        private readonly TachometerService _tachometerCommunicator;
+        protected readonly TachometerService TachometerCommunicator;
 
         /// <summary>
         /// Defines the _pulseInputsCancellationTokenSource
@@ -44,7 +44,7 @@
         public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm)
             : base(eventAggregator)
         {
-            _tachometerCommunicator = tachComm;
+            TachometerCommunicator = tachComm;
             _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
@@ -86,7 +86,7 @@
         /// </summary>
         public override void Dispose()
         {
-            _tachometerCommunicator.Dispose();
+            TachometerCommunicator.Dispose();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@
 
             await commClient.Disconnect();
 
-            await _tachometerCommunicator?.ResetTach();
+            await TachometerCommunicator?.ResetTach();
 
             ResetPulseCounts(volumeTest);
         }
@@ -159,18 +159,16 @@
         protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
         {
             try
-            {                
-                    await _tachometerCommunicator?.ResetTach();
+            {      
+                ResetPulseCounts(volumeTest);
+                await TachometerCommunicator?.ResetTach();
 
-                    _outputBoard?.StartMotor();
+                _outputBoard?.StartMotor();
 
-                    _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                    var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
+                _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+                var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                    while (await _tachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
-                    {
-                        Thread.Sleep(500);
-                    }  
+                await WaitForTestComplete(volumeTest, ct);                  
                     
                 ct.ThrowIfCancellationRequested();
             }
@@ -185,6 +183,8 @@
                 _outputBoard?.StopMotor();
             }
         }
+
+        protected abstract Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct);      
 
         /// <summary>
         /// The CheckForResidualPulses
@@ -227,7 +227,7 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task GetAppliedInput(VolumeTest volumeTest)
         {
-            if (_tachometerCommunicator == null) return;
+            if (TachometerCommunicator == null) return;
 
             int? result = null;
             var tries = 0;
@@ -237,7 +237,7 @@
                 {
                     tries++;
                     Log.Debug($"Reading tachometer .... Attempt {tries} of 10");
-                    result = await _tachometerCommunicator.ReadTach();
+                    result = await TachometerCommunicator.ReadTach();
                 }
                 catch (Exception ex)
                 {

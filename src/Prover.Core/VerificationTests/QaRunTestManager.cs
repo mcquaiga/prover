@@ -75,12 +75,10 @@
         public QaRunTestManager(
             IEventAggregator eventAggregator,
             IInstrumentStore<Instrument> instrumentStore,
-            IReadingStabilizer readingStabilizer,
-            VolumeTestManager volumeTestManager,
+            IReadingStabilizer readingStabilizer,                        
             IEnumerable<IValidator> validators,
             ITestActionsManager testActionsManager)
-        {
-            VolumeTestManager = volumeTestManager;
+        {           
             EventAggregator = eventAggregator;
             _instrumentStore = instrumentStore;
             _readingStabilizer = readingStabilizer;
@@ -102,6 +100,8 @@
         /// </summary>
         public IEventAggregator EventAggregator { get; }
 
+        public VolumeTestManager VolumeTestManager { get; private set; }
+        
         /// <summary>
         /// Gets the Instrument
         /// </summary>
@@ -228,12 +228,25 @@
             _testStatus.OnNext($"Disconnecting from {instrumentType.Name}...");
             await CommunicationClient.Disconnect();
 
-            if (Instrument.VolumeTest.DriveType is PulseInputSensor)
+            CreateVolumeTestManager();
+
+            await SaveAsync();
+        }
+
+        private void CreateVolumeTestManager()
+        {
+            if (Instrument.VolumeTest.DriveType is RotaryDrive)
+            {
+                VolumeTestManager = IoC.Get<RotaryAutoVolumeTestManager>();
+            }
+            else if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+            {
+                VolumeTestManager = IoC.Get<MechanicalAutoVolumeTestManager>();
+            }
+            else if (Instrument.VolumeTest.DriveType is PulseInputSensor)
             {
                 VolumeTestManager = new FrequencyVolumeTestManager(EventAggregator);
             }
-
-            await SaveAsync();
         }
 
         /// <summary>
