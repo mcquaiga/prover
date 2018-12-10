@@ -138,7 +138,7 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             AdjustedVolume = TestRun.AdjustedVolume();
             TestRun.RoundedAdjustedVolume();
             UnadjustedVolume = TestRun.UnadjustedVolume();
-            EvcAdjustedVolume = TestRun.EvcAdjustedVolume() ?? 0;
+            EvcAdjustedVolume = TestRun.TibAdjustedVolume() ?? 0;
             EvcUnadjustedVolume = TestRun.EvcUnadjustedVolume() ?? 0;
 
             NotifyOfPropertyChange(() => TestRun);

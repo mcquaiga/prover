@@ -63,7 +63,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (AdjustedVolume() == 0) return null;
 
-                var result = (EvcAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
+                var result = (TibAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
                 return result.HasValue ? decimal.Round(result.Value, 2) : default(decimal?);
             }
         }
@@ -126,9 +126,9 @@ namespace Prover.Core.Models.Instruments
             return decimal.Round((decimal) MainRotorPulseCount / MechanicalOutputFactor, 4);
         }
 
-        public decimal? EvcAdjustedVolume()
+        public decimal? TibAdjustedVolume()
         {
-            var result = (AdjustedEndReading - AdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            var result = (TibAdjustedEndReading - TibAdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
 
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
@@ -139,8 +139,11 @@ namespace Prover.Core.Models.Instruments
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
-        public decimal? AdjustedStartReading => PreTestItemValues?.AdjustedVolumeReading;
-        public decimal? AdjustedEndReading => PostTestItemValues?.AdjustedVolumeReading;
+        public decimal? TibAdjustedStartReading => PreTestItemValues?.TibAdjustedVolumeReading;
+        public decimal? TibAdjustedEndReading => PostTestItemValues?.TibAdjustedVolumeReading;
+
+        public decimal? EvcAdjustedStartReading => PreTestItemValues?.MainAdjustedVolumeReading;
+        public decimal? EvcAdjustedEndReading => PostTestItemValues?.MainAdjustedVolumeReading;
 
         public decimal? UnadjustedStartReading => PreTestItemValues?.UnadjustVolumeReading;
         public decimal? UnadjustedEndReading => PostTestItemValues?.UnadjustVolumeReading;

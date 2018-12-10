@@ -12,15 +12,17 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         [JsonConstructor]
         private FrequencyTestItems() { }
 
-        public FrequencyTestItems(IEnumerable<ItemValue> itemValues)
+        public FrequencyTestItems(IEnumerable<ItemValue> mainItemValues, IEnumerable<ItemValue> tibItemValues)
         {
-            var items = itemValues.ToList();
+            var mainItems = mainItemValues.ToList();
 
-            AdjustedVolumeReading = GetHighResolutionValue(items, 850, 851);
-            UnadjustVolumeReading = (long)items.GetItem(852).NumericValue;
+            TibAdjustedVolumeReading = GetHighResolutionValue(tibItemValues.ToList(), 850, 851);
+            MainAdjustedVolumeReading = (long)mainItems.GetItem(850).NumericValue;
+            UnadjustVolumeReading = (long)mainItems.GetItem(852).NumericValue;
         }
 
-        public decimal AdjustedVolumeReading { get; set; }
+        public decimal TibAdjustedVolumeReading { get; set; }
+        public long MainAdjustedVolumeReading { get; set; }
         public long UnadjustVolumeReading { get; set; }
     }
 }

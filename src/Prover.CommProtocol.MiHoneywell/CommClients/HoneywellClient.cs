@@ -189,10 +189,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 
             InstrumentType = Instruments.Toc;
 
-            var values = results.ToList();
-            values.AddRange(tibResults.ToList());
-
-            return new FrequencyTestItems(values);
+            return new FrequencyTestItems(results, tibResults);
         }
     }
 }
