@@ -58,7 +58,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <UniformGrid Columns="2"
+        <UniformGrid Rows="1"
                      HorizontalAlignment="Stretch">
          
             <StackPanel Orientation="Vertical"
@@ -84,12 +84,24 @@
             <StackPanel Orientation="Horizontal"
                         Grid.Column="1"
                         HorizontalAlignment="Right">
-                <TextBlock Text="Export Failed Test:"/>
+                <TextBlock Text="Export Failed Test"/>
                 <TextBox Text="{Binding FailedCompanyNumber}" 
                         Width="250"                    />
                 <Button Command="{Binding ExportFailedTestCommand}"
                     Style="{StaticResource MaterialDesignFlatAccentButton}"
                     Content="Export Failed"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="View outstanding tests"/>
+                <TextBox Text="{Binding UntestedByJobNumber}"
+                            Width="250"
+                         />
+                <Button Command="{Binding GetUntestedByJobNumberCommand}"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    Content="View Untested"/>
             </StackPanel>
         </UniformGrid>
        

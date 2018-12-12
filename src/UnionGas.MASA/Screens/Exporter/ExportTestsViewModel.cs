@@ -65,11 +65,11 @@
         /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
         /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportTestRun,
-            IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
+            IExportTestRun exportTestRun, DCRWebServiceCommunicator dcrWebService, IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
+            _dcrWebService = dcrWebService;
 
             FilterObservable = new Subject<Predicate<Instrument>>();
 
@@ -110,7 +110,12 @@
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
             ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
+
+            GetUntestedByJobNumberCommand = ReactiveCommand.CreateFromTask(GetUntestedByJobNumber);
+
         }
+
+       
 
         #endregion
 
@@ -130,6 +135,8 @@
         /// Gets the FilterByTypeCommand
         /// </summary>
         public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
+
+        public ReactiveCommand GetUntestedByJobNumberCommand {get;}
 
         /// <summary>
         /// Gets or sets the FilterObservable
@@ -169,6 +176,8 @@
         }
 
         private string _failedCompanyNumber;
+        private readonly DCRWebServiceCommunicator _dcrWebService;
+
         public string FailedCompanyNumber
         {
             get => _failedCompanyNumber;
@@ -221,6 +230,12 @@
             }
         }
 
+        private async Task GetUntestedByJobNumber()
+        {
+            var jn = 100000;
+            var results = await _dcrWebService.GetOutstandingMeterTestsByJobNumber(jn);
+
+        }
 
         ///// <summary>
         ///// The LoadTests
