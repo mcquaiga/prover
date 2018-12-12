@@ -196,7 +196,8 @@
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
         {
             int pulsesWaiting;
-
+            int lastPulsesWaiting = 0;
+            bool keepWaiting = true;
             do
             {
                 pulsesWaiting = 0;
@@ -209,13 +210,18 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
-                if (pulsesWaiting > 1)
-                {
+                if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
+                {             
                     await commClient.Disconnect();
                     await Task.Delay(new TimeSpan(0, 0, 20), ct);
+                    lastPulsesWaiting = pulsesWaiting;
+                }
+                else
+                {
+                    keepWaiting = false;
                 }
 
-            } while (pulsesWaiting > 1 && !ct.IsCancellationRequested);
+            } while (keepWaiting && !ct.IsCancellationRequested);
 
             _pulseInputsCancellationTokenSource.Cancel();
         }
