@@ -1,11 +1,8 @@
 ﻿<UserControl x:Class="UnionGas.MASA.Screens.Exporter.ExportTestsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="http://www.caliburnproject.org"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -59,28 +56,43 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="0"
-                    Margin="8">
-            <TextBlock Text="Filter by instrument"/>
-            <StackPanel Orientation="Horizontal">
-                <Button Content="All"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="All"/>
-                <Button Content="Mini-AT"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="Mini-AT"/>
-                <Button Content="Mini-Max"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="Mini-Max"/>
-                <Button Content="TOC"
-                        Command="{Binding FilterByTypeCommand}"
-                        CommandParameter="TOC"/>
+
+        <UniformGrid Columns="2"
+                     HorizontalAlignment="Stretch">
+         
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="0"
+                        Margin="8">
+                <TextBlock Text="Filter by instrument"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="All"
+                            Command="{Binding FilterByTypeCommand}"
+                            CommandParameter="All"/>
+                    <Button Content="Mini-AT"
+                            Command="{Binding FilterByTypeCommand}"
+                            CommandParameter="Mini-AT"/>
+                    <Button Content="Mini-Max"
+                            Command="{Binding FilterByTypeCommand}"
+                            CommandParameter="Mini-Max"/>
+                    <Button Content="TOC"
+                            Command="{Binding FilterByTypeCommand}"
+                            CommandParameter="TOC"/>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Export Failed Test:"/>
+                <TextBox Text="{Binding FailedCompanyNumber}" 
+                        Width="250"                    />
+                <Button Command="{Binding ExportFailedTestCommand}"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}"
+                    Content="Export Failed"/>
+            </StackPanel>
+        </UniformGrid>
+       
         
         <ProgressBar Grid.Row="1"                         
                          Width="56"
@@ -124,17 +136,6 @@
                 Content="Export all passed">
         </Button>-->
 
-        <Grid Grid.Row="2">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="Export Failed Test:"/>
-                <TextBox Text="{Binding FailedCompanyNumber}" 
-                         Width="250" Height="75"
-                         Margin="5"/>
-                <Button Command="{Binding ExportFailedTestCommand}"
-                        Style="{StaticResource MaterialDesignFlatAccentButton}"
-                        Width="150"
-                        Content="Export Failed"/>
-            </StackPanel>
-        </Grid>
+       
     </Grid>
 </UserControl>
