@@ -20,7 +20,7 @@
         /// <summary>
         /// Defines the _outputBoard
         /// </summary>
-        private readonly IDInOutBoard _outputBoard;
+        protected readonly IDInOutBoard OutputBoard;
 
         /// <summary>
         /// Defines the _tachometerCommunicator
@@ -45,7 +45,7 @@
             : base(eventAggregator)
         {
             TachometerCommunicator = tachComm;
-            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
+            OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
         #endregion
@@ -129,7 +129,7 @@
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(volumeTest);
-                    _outputBoard?.StartMotor();
+                    OutputBoard?.StartMotor();
                     do
                     {
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
@@ -146,7 +146,7 @@
             }
             finally
             {
-                _outputBoard.StopMotor();
+                OutputBoard.StopMotor();
             }
         }
 
@@ -163,7 +163,7 @@
                 ResetPulseCounts(volumeTest);
                 await TachometerCommunicator?.ResetTach();
 
-                _outputBoard?.StartMotor();
+                OutputBoard?.StartMotor();
 
                 _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                 var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
@@ -180,7 +180,7 @@
             }
             finally
             {
-                _outputBoard?.StopMotor();
+                OutputBoard?.StopMotor();
             }
         }
 
