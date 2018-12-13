@@ -17,12 +17,15 @@
         }       
 
         protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {            
-            while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
-            {
-            }
-            OutputBoard.StopMotor();
-            Log.Debug($"Test stopped at {volumeTest.UncPulseCount}");
+        {         
+           await Task.Run(() =>
+           {
+               while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
+               {
+               }
+               OutputBoard.StopMotor();
+               Log.Debug($"Test stopped at {volumeTest.UncPulseCount}");
+           });           
         }
     }
 }
