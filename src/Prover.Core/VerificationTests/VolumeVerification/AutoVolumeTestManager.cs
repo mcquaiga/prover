@@ -65,6 +65,8 @@
         {
             try
             {
+                Thread.Sleep(1000);
+
                 await commClient.Connect();
 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
@@ -168,8 +170,7 @@
                 _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                 var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                await WaitForTestComplete(volumeTest, ct);   
-                System.Threading.Thread.Sleep(250);
+                await WaitForTestComplete(volumeTest, ct);                   
                
                 ct.ThrowIfCancellationRequested();
             }
