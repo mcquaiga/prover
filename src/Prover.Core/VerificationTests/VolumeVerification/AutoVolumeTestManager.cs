@@ -168,7 +168,8 @@
                 _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                 var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                await WaitForTestComplete(volumeTest, ct);                  
+                await WaitForTestComplete(volumeTest, ct);   
+                System.Threading.Thread.Sleep(250);
                
                 ct.ThrowIfCancellationRequested();
             }
