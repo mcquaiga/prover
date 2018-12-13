@@ -169,7 +169,7 @@
                 var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
                 await WaitForTestComplete(volumeTest, ct);                  
-                    
+               
                 ct.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ex)
@@ -198,6 +198,9 @@
             int pulsesWaiting;
             int lastPulsesWaiting = 0;
             bool keepWaiting = true;
+
+            Log.Debug("Waiting for residual pulses...");
+            
             do
             {
                 pulsesWaiting = 0;
@@ -210,6 +213,7 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
+                Log.Debug($"Pulses still waiting - {pulsesWaiting}.");
                 if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                 {             
                     await commClient.Disconnect();
