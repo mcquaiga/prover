@@ -157,39 +157,4 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             return IsAwake;
         }
     }
-
-    public sealed class TocHoneywellClient : HoneywellClient
-    {
-        public static InstrumentType TurboMonitor = new InstrumentType()
-        {
-            Id = 6,
-            AccessCode = 6,
-            Name = "Turbo Monitor",
-            ItemFilePath = "TurboMonitorItems.xml"
-        };
-
-        private readonly IEnumerable<ItemMetadata> _tibBoardItems;
-
-        public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
-        {
-            _tibBoardItems = ItemHelpers.LoadItems(TurboMonitor);
-        }
-
-        public override async Task<IFrequencyTestItems> GetFrequencyItems()
-        {
-            var results = await GetItemValues(ItemDetails.FrequencyTestItems());
-            await Disconnect();
-            Thread.Sleep(1000);
-
-            InstrumentType = TurboMonitor;
-            await Connect();
-            var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
-            await Disconnect();
-            Thread.Sleep(1000);
-
-            InstrumentType = Instruments.Toc;
-
-            return new FrequencyTestItems(results, tibResults);
-        }
-    }
 }

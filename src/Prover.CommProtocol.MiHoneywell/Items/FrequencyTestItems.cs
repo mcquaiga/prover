@@ -17,11 +17,13 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             var mainItems = mainItemValues.ToList();
 
             TibAdjustedVolumeReading = GetHighResolutionValue(tibItemValues.ToList(), 850, 851);
+            TibUnadjustedVolumeReading = (long)tibItemValues.GetItem(852).NumericValue;
             MainAdjustedVolumeReading = (long)mainItems.GetItem(850).NumericValue;
             UnadjustVolumeReading = (long)mainItems.GetItem(852).NumericValue;
         }
 
         public decimal TibAdjustedVolumeReading { get; set; }
+        public long TibUnadjustedVolumeReading { get; }
         public long MainAdjustedVolumeReading { get; set; }
         public long UnadjustVolumeReading { get; set; }
     }

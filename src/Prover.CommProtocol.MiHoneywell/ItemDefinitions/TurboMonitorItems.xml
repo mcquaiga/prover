@@ -1,4 +1,5 @@
 <InstrumentItems>
   <item number="850" code="ADJVOLUME" shortDescription="Adjusted Volume" description="Adjusted Volume" isFrequencyTest="true" />
-  <item number="851" code="HIGHRESADJVOLUME" shortDescription="High Res. Adjusted Volume" description="High Res. Adjusted Volume" isFrequencyTest="true" /> 
+  <item number="851" code="HIGHRESADJVOLUME" shortDescription="High Res. Adjusted Volume" description="High Res. Adjusted Volume" isFrequencyTest="true" />  
+  <item number="852" code="UNADJVOLUME" shortDescription="Unadjusted Volume" description="Unadjusted Volume" isFrequencyTest="true" />
 </InstrumentItems>

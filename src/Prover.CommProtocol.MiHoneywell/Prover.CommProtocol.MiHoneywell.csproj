@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommClients\TocHoneywellClient.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="Instruments.cs" />

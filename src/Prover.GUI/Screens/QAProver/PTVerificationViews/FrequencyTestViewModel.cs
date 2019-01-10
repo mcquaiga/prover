@@ -126,11 +126,27 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews
             set { this.RaiseAndSetIfChanged(ref _evcAdjustedVolume, value); }
         }
 
+        private decimal _adjustedStartReading;
+
+        public decimal AdjustedStartReading
+        {
+            get { return _adjustedStartReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedStartReading, value); }
+        }
+
+        private decimal _adjustedEndReading;
+
+        public decimal AdjustedEndReading
+        {
+            get { return _adjustedEndReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedEndReading, value); }
+        }
+
         #endregion
 
         #region Methods
 
-     
+
         #endregion
 
         protected sealed override void RaisePropertyChangeEvents()

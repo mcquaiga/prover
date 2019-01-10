@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Instruments;
 
 namespace Prover.Core.VerificationTests.VolumeVerification
@@ -24,7 +25,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
        public override async Task CompleteTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct, bool readTach = true)
         {
              try
-            {                    
+            {       
+                commClient.InstrumentType= Instruments.Toc;
                 await commClient.Connect();
                 volumeTest.AfterTestItems = await commClient.GetVolumeItems();
                 if (volumeTest.VerificationTest.FrequencyTest != null)
@@ -41,12 +43,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
         {
             await commClient.Connect();
-
             volumeTest.Items = await commClient.GetVolumeItems();
-       
-            volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
-           
-
+            volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();          
             await commClient.Disconnect();     
         }
 

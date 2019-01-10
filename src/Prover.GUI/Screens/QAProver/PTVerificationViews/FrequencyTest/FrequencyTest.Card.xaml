@@ -75,9 +75,9 @@
                             Passed="{Binding TestRun.HasPassed}" />
                             <UniformGrid Columns="2">
                                 <controls1:ValueDescriptionControl Label="Start Reading"
-                                                               Value="{Binding TestRun.AdjustedStartReading}" />
+                                                               Value="{Binding TestRun.EvcAdjustedStartReading}" />
                                 <controls1:ValueDescriptionControl Label="End Reading"
-                                                               Value="{Binding TestRun.AdjustedEndReading}" />
+                                                               Value="{Binding TestRun.EvcAdjustedEndReading}" />
 
                                 <controls1:ValueDescriptionControl Label="True Value"
                                                                Value="{Binding AdjustedVolume}" />
