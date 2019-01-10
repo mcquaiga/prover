@@ -11,8 +11,6 @@ namespace UnionGas.MASA.Screens.TestsByJobNumber
     {
         public FindTestsByJobNumberViewModel(Prover.GUI.Common.ScreenManager screenManager, Caliburn.Micro.IEventAggregator eventAggregator) : base(screenManager, eventAggregator)
         {
-        }
-        
-
+        }        
     }
 }

@@ -96,9 +96,8 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right">
                 <TextBlock Text="View outstanding tests"/>
-                <TextBox Text="{Binding UntestedByJobNumber}"
-                            Width="250"
-                         />
+                <ComboBox x:Name="{Binding OpenJobNumbers}"
+                          Width="250"/>
                 <Button Command="{Binding GetUntestedByJobNumberCommand}"
                     Style="{StaticResource MaterialDesignFlatAccentButton}"
                     Content="View Untested"/>
