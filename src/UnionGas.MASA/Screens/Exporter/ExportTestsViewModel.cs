@@ -15,6 +15,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
+    using UnionGas.MASA.Screens.TestsByJobNumber;
 
     /// <summary>
     /// Defines the <see cref="ExportTestsViewModel" />
@@ -65,7 +66,8 @@
         /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
         /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportTestRun, DCRWebServiceCommunicator dcrWebService, IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
+            IExportTestRun exportTestRun, DCRWebServiceCommunicator dcrWebService, IInstrumentStore<Instrument> instrumentStore
+            , TestsByJobNumberViewModel testsByJobNumber) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
@@ -110,12 +112,9 @@
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
             ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
-
-            GetUntestedByJobNumberCommand = ReactiveCommand.CreateFromTask(GetUntestedByJobNumber);
-
-        }
-
-       
+          
+            TestsByJobNumber = testsByJobNumber;
+        }       
 
         #endregion
 
@@ -183,6 +182,7 @@
             get => _failedCompanyNumber;
             set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value);
         }
+        public TestsByJobNumberViewModel TestsByJobNumber { get; }
 
         #endregion
 

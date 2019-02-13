@@ -80,7 +80,7 @@
                             CommandParameter="TOC"/>
                 </StackPanel>
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal"
                         Grid.Column="1"
                         HorizontalAlignment="Right">
@@ -92,16 +92,7 @@
                     Content="Export Failed"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right">
-                <TextBlock Text="View outstanding tests"/>
-                <ComboBox x:Name="{Binding OpenJobNumbers}"
-                          Width="250"/>
-                <Button Command="{Binding GetUntestedByJobNumberCommand}"
-                    Style="{StaticResource MaterialDesignFlatAccentButton}"
-                    Content="View Untested"/>
-            </StackPanel>
+            <ContentControl x:Name="TestsByJobNumber"/>
         </UniformGrid>
        
         
