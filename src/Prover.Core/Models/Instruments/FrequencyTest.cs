@@ -145,8 +145,8 @@ namespace Prover.Core.Models.Instruments
         public decimal? EvcAdjustedStartReading => PreTestItemValues?.MainAdjustedVolumeReading;
         public decimal? EvcAdjustedEndReading => PostTestItemValues?.MainAdjustedVolumeReading;
 
-        public decimal? UnadjustedStartReading => PreTestItemValues?.UnadjustVolumeReading;
-        public decimal? UnadjustedEndReading => PostTestItemValues?.UnadjustVolumeReading;
+        public decimal? UnadjustedStartReading => PreTestItemValues?.MainUnadjustVolumeReading;
+        public decimal? UnadjustedEndReading => PostTestItemValues?.MainUnadjustVolumeReading;
         
 
 

@@ -51,7 +51,10 @@ namespace Prover.Core.Settings
                 TocResetItems = new Dictionary<int, string>()
                 {
                     { 859, "0" },
-                    { 860, "0" }
+                    { 860, "0" },
+                    { 850, "0" },
+                    { 851, "0" },
+                    { 852, "0" }          
                 };
             }
         }

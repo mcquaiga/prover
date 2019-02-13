@@ -166,7 +166,7 @@
   </item>
   <item number="200" code="SITENUMBER1" shortDescription="Site Number 1" description="Site Number 1" />
   <item number="201" code="SITENUMBER2" shortDescription="Site Number 2" description="Site Number 2" />
-
+  
   <item number="850" code="ADJVOLUME" shortDescription="Adjusted Volume" description="Adjusted Volume" isFrequencyTest="true" />
   <item number="852" code="UNADJVOLUME" shortDescription="Unadjusted Volume" description="Unadjusted Volume" isFrequencyTest="true" />
   <item number="855" code="TURBINE_CONFIG" shortDescription="Turbine Configuration" description="Turbine Configuration">
@@ -174,6 +174,8 @@
     <value id="1" description="Turbo Monitor Mode" />
     <value id="2" description="Accutest Mode" />
   </item>
+  <item number="859" code="ADJVOLUME_PULSES_WAITING" shortDescription="Adjusted Volume Pulses Waiting" description="Adjusted Volume Pulses Waiting" />
+  <item number="860" code="UNADJVOLUME_PULSES_WAITING" shortDescription="Unadjusted Volume Pulses Waiting" description="Unadjusted Volume Pulses Waiting" />
   <item number="863" code="METERSERIALNUBER" shortDescription="Meter Serial Number" description="Meter Serial Number" />
   <item number="864" code="TURBINEMETERSIZE" shortDescription="Turbine Meter Size" description="Turbine Meter Size">
     <value id="0" description="AAT-18" />

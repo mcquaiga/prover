@@ -20,17 +20,6 @@
         /// </summary>
         private readonly IEnumerable<ItemMetadata> _tibBoardItems;
 
-        /// <summary>
-        /// Defines the TurboMonitor
-        /// </summary>
-        public static InstrumentType TurboMonitor = new InstrumentType()
-        {
-            Id = 6,
-            AccessCode = 6,
-            Name = "Turbo Monitor",
-            ItemFilePath = "TurboMonitorItems.xml"
-        };
-
         #endregion
 
         #region Constructors
@@ -42,7 +31,7 @@
         /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
         public TocHoneywellClient(CommPort commPort, InstrumentType instrumentType) : base(commPort, instrumentType)
         {
-            _tibBoardItems = ItemHelpers.LoadItems(TurboMonitor);
+            _tibBoardItems = ItemHelpers.LoadItems(Instruments.TurboMonitor);
         }
 
         #endregion
@@ -61,7 +50,7 @@
 
             try
             {
-                InstrumentType = TurboMonitor;
+                InstrumentType = Instruments.TurboMonitor;
                 await Connect();
                 var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
 
@@ -82,7 +71,7 @@
         /// <returns>The <see cref="Task{IEnumerable{ItemValue}}"/></returns>
         public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
         {
-            if (InstrumentType == TurboMonitor)
+            if (InstrumentType == Instruments.TurboMonitor)
             {
                 var results = new List<ItemValue>();
 

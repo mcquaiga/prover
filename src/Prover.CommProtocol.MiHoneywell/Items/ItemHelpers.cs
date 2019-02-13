@@ -20,7 +20,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         }
 
         public static IEnumerable<ItemMetadata> LoadItems(InstrumentType type)
-        {
+        {            
             if (ItemFileCache.ContainsKey(type))
                 return ItemFileCache[type];
 

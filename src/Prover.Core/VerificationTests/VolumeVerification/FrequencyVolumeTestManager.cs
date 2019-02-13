@@ -43,6 +43,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager)
         {
             await commClient.Connect();
+            await testActionsManager.RunVolumeTestInitActions(commClient, volumeTest.Instrument);
             volumeTest.Items = await commClient.GetVolumeItems();
             volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();          
             await commClient.Disconnect();     

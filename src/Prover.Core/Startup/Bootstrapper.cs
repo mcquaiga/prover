@@ -1,7 +1,5 @@
 using System.Data.Entity;
 using Autofac;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Communication;
 using Prover.Core.ExternalDevices.DInOutBoards;
@@ -14,7 +12,6 @@ using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -29,6 +26,8 @@ namespace Prover.Core.Startup
             Builder.RegisterType<InstrumentStore>().As<IInstrumentStore<Instrument>>();
             Builder.RegisterType<CertificateStore>().As<ICertificateStore<Certificate>>();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+
+            Task.Run(()=> Instruments.LoadInstrumentTypes());
 
             ////QA Test Runs
             Builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1)).Named<IDInOutBoard>("TachDaqBoard");
