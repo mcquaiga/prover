@@ -20,7 +20,7 @@
         /// <summary>
         /// Defines the _outputBoard
         /// </summary>
-        private readonly IDInOutBoard _outputBoard;
+        protected readonly IDInOutBoard OutputBoard;
 
         /// <summary>
         /// Defines the _tachometerCommunicator
@@ -45,7 +45,7 @@
             : base(eventAggregator)
         {
             TachometerCommunicator = tachComm;
-            _outputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
+            OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
         #endregion
@@ -65,6 +65,8 @@
         {
             try
             {
+                Thread.Sleep(1000);
+
                 await commClient.Connect();
 
                 await CheckForResidualPulses(commClient, volumeTest, ct);
@@ -129,7 +131,7 @@
                 await Task.Run(() =>
                 {
                     ResetPulseCounts(volumeTest);
-                    _outputBoard?.StartMotor();
+                    OutputBoard?.StartMotor();
                     do
                     {
                         volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
@@ -146,7 +148,7 @@
             }
             finally
             {
-                _outputBoard.StopMotor();
+                OutputBoard.StopMotor();
             }
         }
 
@@ -163,13 +165,13 @@
                 ResetPulseCounts(volumeTest);
                 await TachometerCommunicator?.ResetTach();
 
-                _outputBoard?.StartMotor();
+                OutputBoard?.StartMotor();
 
                 _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                 var listen = Task.Run(() => ListenForPulseInputs(volumeTest, _pulseInputsCancellationTokenSource.Token));
 
-                await WaitForTestComplete(volumeTest, ct);                  
-                    
+                await WaitForTestComplete(volumeTest, ct);                   
+               
                 ct.ThrowIfCancellationRequested();
             }
             catch (OperationCanceledException ex)
@@ -180,7 +182,7 @@
             }
             finally
             {
-                _outputBoard?.StopMotor();
+                OutputBoard?.StopMotor();
             }
         }
 
@@ -198,6 +200,9 @@
             int pulsesWaiting;
             int lastPulsesWaiting = 0;
             bool keepWaiting = true;
+
+            Log.Debug("Waiting for residual pulses...");
+            
             do
             {
                 pulsesWaiting = 0;
@@ -210,6 +215,7 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
+                Log.Debug($"Pulses still waiting - {pulsesWaiting}.");
                 if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                 {             
                     await commClient.Disconnect();
