@@ -83,9 +83,16 @@
             var canExecuteFetchTestsByJobNumber = this.WhenAnyValue(x => x.SelectedJobNumber, jobNumber => !string.IsNullOrEmpty(jobNumber));
             FetchTestsByJobNumberCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                MeterDtoList = await _dcrWebService.GetOutstandingMeterTestsByJobNumber(Int32.Parse(SelectedJobNumber));
-                var mdViewModel = new MeterDtoListDialogViewModel(ScreenManager, EventAggregator, MeterDtoList);
-                ScreenManager.ShowDialog(mdViewModel);
+                if (!string.IsNullOrEmpty(SelectedJobNumber))
+                {
+                    MeterDtoList = await _dcrWebService.GetOutstandingMeterTestsByJobNumber(Int32.Parse(SelectedJobNumber));
+
+                    if (MeterDtoList.Any())
+                    {
+                        var mdViewModel = new MeterDtoListDialogViewModel(ScreenManager, EventAggregator, MeterDtoList);
+                        ScreenManager.ShowDialog(mdViewModel);
+                    }                    
+                }                
             }, canExecuteFetchTestsByJobNumber);
         }
 
