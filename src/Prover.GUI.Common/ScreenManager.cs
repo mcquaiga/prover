@@ -5,6 +5,7 @@ using Caliburn.Micro.ReactiveUI;
 using Prover.GUI.Common.Events;
 using Prover.GUI.Common.Screens;
 using Prover.GUI.Common.Screens.MainMenu;
+using ReactiveUI;
 using Splat;
 
 namespace Prover.GUI.Common
@@ -28,10 +29,14 @@ namespace Prover.GUI.Common
 
         bool? ShowDialog(ViewModelBase dialogViewModel);
 
-        bool? ShowDialog<T>(string key = null)
-            where T : ViewModelBase;
+        bool? ShowDialog<T>(string key = null) where T : ViewModelBase;
+
+        bool? ShowDialog<T>(T dialogViewModel, IViewFor<T> dialogView) where T : class;
 
         void ShowWindow(ViewModelBase dialogViewModel);
+        
+
+        IWindowManager WindowManager { get; }
     }
 
     public class ScreenManager : IScreenManager
@@ -56,6 +61,8 @@ namespace Prover.GUI.Common
         {
             return IoC.Get<T>();
         }
+
+        public IWindowManager WindowManager { get { return _windowManager; } }
 
         /// <summary>
         ///     Changes screen or page in the ShellView
@@ -83,10 +90,10 @@ namespace Prover.GUI.Common
 
         public bool? ShowDialog(ViewModelBase dialogViewModel)
         {
-            var windowsSettings = dialogViewModel as IWindowSettings;
 
-            if (windowsSettings != null)
+            if (dialogViewModel is IWindowSettings windowsSettings)
                 return _windowManager.ShowDialog(dialogViewModel, null, windowsSettings.WindowSettings);
+
             return _windowManager.ShowDialog(dialogViewModel);
         }
 
@@ -96,6 +103,15 @@ namespace Prover.GUI.Common
             var viewModel = IoC.Get<T>();
             return ShowDialog(viewModel);
         }
+
+
+        public bool? ShowDialog<T>(T dialogViewModel, IViewFor<T> dialogView)
+            where T : class
+        {
+             _windowManager.ShowPopup(dialogViewModel, dialogView);
+            return true;
+        }
+        
 
         public void ShowWindow(ViewModelBase dialogViewModel)
         {

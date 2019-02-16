@@ -17,6 +17,8 @@ namespace UnionGas.MASA
             var assembly = Assembly.GetExecutingAssembly();
             
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
+            
+            builder.RegisterType<DCRWebServiceCommunicator>();
 
             //Login service
             builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>()
