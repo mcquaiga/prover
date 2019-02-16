@@ -58,7 +58,7 @@
                 <DockPanel MinWidth="212">
                     <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                                         DockPanel.Dock="Top"
-                                        HorizontalAlignment="Right" Margin="16"
+                                        HorizontalAlignment="Right" Margin="8"
                                         IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
                     <!--<ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16" SelectedIndex="0"                         
                                  ItemsSource="{Binding DemoItems}"
@@ -69,22 +69,21 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>-->
-                    <Grid>
-                        <StackPanel Orientation="Horizontal"
+                <Grid>
+                    <StackPanel Orientation="Horizontal"
                                     Grid.Column="1"
                                     HorizontalAlignment="Right">
-                            <TextBlock Text="Export Failed Test"/>
-                            <TextBox Text="{Binding FailedCompanyNumber}"
+                        <TextBlock Text="Export Failed Test"/>
+                        <TextBox Text="{Binding FailedCompanyNumber}"
                                      Width="250"/>
-                            <Button Command="{Binding ExportFailedTestCommand}"
+                        <Button Command="{Binding ExportFailedTestCommand}"
                                     Style="{StaticResource MaterialDesignFlatAccentButton}"
                                     Content="Export Failed"/>
-                        </StackPanel>
-                        
-                        <ContentControl x:Name="TestsByJobNumber"/>
-                    </Grid>
-                   
-                </DockPanel>
+                    </StackPanel>
+
+                    <ContentControl x:Name="TestsByJobNumber"/>
+                </Grid>
+            </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
             <Grid>
                 
