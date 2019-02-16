@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NLog;
+using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,7 @@ namespace UnionGas.MASA
 {
     public class DCRWebServiceCommunicator
     {
+        private readonly Logger _log ;
         private readonly DCRWebServiceSoap _dcrWebService;
 
         public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService)
@@ -21,7 +24,7 @@ namespace UnionGas.MASA
             var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber));
 
             var response = await _dcrWebService.GetMeterListByJobNumberAsync(request);
-
+            _log.Debug(JsonConvert.SerializeObject(response.Body.GetMeterListByJobNumberResult.ToList()));
             return response.Body.GetMeterListByJobNumberResult.ToList();
         }
     }
