@@ -19,15 +19,15 @@
     <id>4</id>
     <id>84</id>
   </value>
-  <value description="Roots11M" UnCorPulsesX10="100" UnCorPulsesX100="10" MeterDisplacement="0.1000000">
+  <value description="Roots11M" UnCorPulsesX10="103" UnCorPulsesX100="10" MeterDisplacement="0.1000000">
     <id>5</id>
     <id>85</id>
   </value>
-  <value description="Roots16M" UnCorPulsesX10="150" UnCorPulsesX100="15" MeterDisplacement="0.1481500">
+  <value description="Roots16M" UnCorPulsesX10="152" UnCorPulsesX100="15" MeterDisplacement="0.1481500">
     <id>6</id>
     <id>86</id>
   </value>
-  <value description="Roots23M" UnCorPulsesX10="270" UnCorPulsesX100="27" MeterDisplacement="0.2624500">
+  <value description="Roots23M" UnCorPulsesX10="274" UnCorPulsesX100="27" MeterDisplacement="0.2624500">
     <id>7</id>
     <id>87</id>
   </value>
@@ -74,19 +74,19 @@
     <id>16</id>
     <id>146</id>
   </value>
-  <value description="RM11000" UnCorPulsesX10="100" UnCorPulsesX100="10" MeterDisplacement="0.0993789">
+  <value description="RM11000" UnCorPulsesX10="102" UnCorPulsesX100="10" MeterDisplacement="0.0993789">
     <id>17</id>
     <id>147</id>
   </value>
-  <value description="RM16000" UnCorPulsesX10="150" UnCorPulsesX100="15" MeterDisplacement="0.1408163">
+  <value description="RM16000" UnCorPulsesX10="152" UnCorPulsesX100="15" MeterDisplacement="0.1408163">
     <id>18</id>
     <id>148</id>
   </value>
-  <value description="RM 16000 New" UnCorPulsesX10="110" UnCorPulsesX100="11" MeterDisplacement="0.1085343">
+  <value description="RM 16000 New" UnCorPulsesX10="112" UnCorPulsesX100="11" MeterDisplacement="0.1085343">
     <id>34</id>
     <id>149</id>
   </value>
-  <value description="RM 23000" UnCorPulsesX10="150" UnCorPulsesX100="15" MeterDisplacement="0.1408163">
+  <value description="RM 23000" UnCorPulsesX10="152" UnCorPulsesX100="15" MeterDisplacement="0.1408163">
     <id>35</id>
     <id>150</id>
   </value>
@@ -110,15 +110,15 @@
     <id>25</id>
     <id>67</id>
   </value>
-  <value description="Roots 11M B3" UnCorPulsesX10="100" UnCorPulsesX100="10" MeterDisplacement="0.1000000">
+  <value description="Roots 11M B3" UnCorPulsesX10="103" UnCorPulsesX100="10" MeterDisplacement="0.1000000">
     <id>26</id>
     <id>68</id>
   </value>
-  <value description="Roots 16M B3" UnCorPulsesX10="150" UnCorPulsesX100="15" MeterDisplacement="0.1481480">
+  <value description="Roots 16M B3" UnCorPulsesX10="152" UnCorPulsesX100="15" MeterDisplacement="0.1481480">
     <id>27</id>
     <id>69</id>
   </value>
-  <value description="Roots 23M B3" UnCorPulsesX10="370" UnCorPulsesX100="37" MeterDisplacement="0.3703700">
+  <value description="Roots 23M B3" UnCorPulsesX10="389" UnCorPulsesX100="37" MeterDisplacement="0.3703700">
     <id>28</id>
     <id>71</id>
   </value>
