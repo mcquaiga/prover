@@ -11,7 +11,7 @@ namespace UnionGas.MASA
 {
     public class DCRWebServiceCommunicator
     {
-        private readonly Logger _log ;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly DCRWebServiceSoap _dcrWebService;
 
         public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService)
