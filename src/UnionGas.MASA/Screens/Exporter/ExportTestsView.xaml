@@ -70,7 +70,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>-->
                     <Grid>
-                        <!--<StackPanel Orientation="Horizontal"
+                        <StackPanel Orientation="Horizontal"
                                     Grid.Column="1"
                                     HorizontalAlignment="Right">
                             <TextBlock Text="Export Failed Test"/>
@@ -79,7 +79,7 @@
                             <Button Command="{Binding ExportFailedTestCommand}"
                                     Style="{StaticResource MaterialDesignFlatAccentButton}"
                                     Content="Export Failed"/>
-                        </StackPanel>-->
+                        </StackPanel>
                         
                         <ContentControl x:Name="TestsByJobNumber"/>
                     </Grid>
