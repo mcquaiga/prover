@@ -4,6 +4,7 @@
     using Prover.Core.Models.Instruments;
     using Prover.Core.VerificationTests.TestActions;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -113,7 +114,7 @@
         private async Task ExecuteActions(IEnumerable<IInstrumentAction> actions, EvcCommunicationClient commClient, Instrument instrument)
         {
             if (!commClient.IsConnected)
-                await commClient.Connect();
+                await commClient.Connect(new CancellationToken());
 
             foreach (var testAction in actions)
             {

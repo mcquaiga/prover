@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="BorderBrushColor" Color="Black" Opacity=".12" />
-    <SolidColorBrush x:Key="PrimaryTextColor" Opacity=".87" Color="Black" />
-    <SolidColorBrush x:Key="SecondaryTextColor" Opacity=".54" Color="Black" />
+    <SolidColorBrush x:Key="PrimaryTextColor" Opacity=".90" Color="Black" />
+    <SolidColorBrush x:Key="SecondaryTextColor" Opacity=".80" Color="Black" />
 
     <Style TargetType="{x:Type Control}">
         <Setter Property="FontSize" Value="14" />
@@ -25,6 +25,7 @@
     <Style x:Key="PrimaryTestHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
         <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="4"/>
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -33,7 +34,7 @@
     <Style x:Key="SecondaryTestHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
         <Setter Property="FontSize" Value="20" />
-        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="FontWeight" Value="Regular" />
         <Setter Property="Margin" Value="2 4 0 0" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Left" />

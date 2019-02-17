@@ -4,6 +4,8 @@
     using Prover.Core.Events;
     using Prover.Core.ExternalIntegrations;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Storage;
+    using Prover.GUI.Screens;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;
@@ -28,7 +30,7 @@
         /// <summary>
         /// Defines the _instrumentStore
         /// </summary>
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly InstrumentStore _instrumentStore;
 
         /// <summary>
         /// Defines the _showLoadingIndicator
@@ -39,6 +41,16 @@
         /// Defines the _showTestViewListBox
         /// </summary>
         private readonly ObservableAsPropertyHelper<bool> _showTestViewListBox;
+
+        /// <summary>
+        /// Defines the _exportFailedTestCommand
+        /// </summary>
+        private ReactiveCommand _exportFailedTestCommand;
+
+        /// <summary>
+        /// Defines the _failedCompanyNumber
+        /// </summary>
+        private string _failedCompanyNumber;
 
         /// <summary>
         /// Defines the _rootResults
@@ -62,8 +74,7 @@
         /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
         /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportTestRun,
-            IInstrumentStore<Instrument> instrumentStore) : base(screenManager, eventAggregator)
+            IExportTestRun exportTestRun, InstrumentStore instrumentStore) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _instrumentStore = instrumentStore;
@@ -74,16 +85,16 @@
             {
                 FilterObservable.OnNext(Instrument.IsOfInstrumentType(s));
             });
-            
-            ExecuteTestSearch = ReactiveCommand.CreateFromTask(LoadTests, outputScheduler: RxApp.TaskpoolScheduler);            
+
+            ExecuteTestSearch = ReactiveCommand.CreateFromTask(LoadTests, outputScheduler: RxApp.TaskpoolScheduler);
 
             ExecuteTestSearch.IsExecuting
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, x => x.ShowLoadingIndicator, out _showLoadingIndicator, true);
-            
+
             ExecuteTestSearch.IsExecuting
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Select(e => !e)                
+                .Select(e => !e)
                 .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox, false);
 
             ExecuteTestSearch
@@ -124,6 +135,16 @@
         public ReactiveCommand ExportAllPassedQaRunsCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the ExportFailedTestCommand
+        /// </summary>
+        public ReactiveCommand ExportFailedTestCommand { get => _exportFailedTestCommand; set => this.RaiseAndSetIfChanged(ref _exportFailedTestCommand, value); }
+
+        /// <summary>
+        /// Gets or sets the FailedCompanyNumber
+        /// </summary>
+        public string FailedCompanyNumber { get => _failedCompanyNumber; set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value); }
+
+        /// <summary>
         /// Gets the FilterByTypeCommand
         /// </summary>
         public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
@@ -158,20 +179,6 @@
         /// </summary>
         public IReactiveDerivedList<QaTestRunGridViewModel> VisibleTiles { get => _visibleTiles; set => this.RaiseAndSetIfChanged(ref _visibleTiles, value); }
 
-        private ReactiveCommand _exportFailedTestCommand;
-        public ReactiveCommand ExportFailedTestCommand
-        {
-            get => _exportFailedTestCommand;
-            set => this.RaiseAndSetIfChanged(ref _exportFailedTestCommand, value);
-        }
-
-        private string _failedCompanyNumber;
-        public string FailedCompanyNumber
-        {
-            get => _failedCompanyNumber;
-            set => this.RaiseAndSetIfChanged(ref _failedCompanyNumber, value);
-        }
-
         #endregion
 
         #region Methods
@@ -183,12 +190,6 @@
         public async Task ExportAllPassedQaRuns()
         {
             await _exportTestRun.Export(PassedTests);
-        }
-
-        private async Task ExportFailedTest()
-        {
-            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
-            FailedCompanyNumber = null;
         }
 
         /// <summary>
@@ -218,23 +219,28 @@
             }
         }
 
+        /// <summary>
+        /// The ExportFailedTest
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task ExportFailedTest()
+        {
+            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
+            FailedCompanyNumber = null;
+        }
 
-        ///// <summary>
-        ///// The LoadTests
-        ///// </summary>
-        ///// <returns>The <see cref="IObservable{Instrument}"/></returns>
+        /// <summary>
+        /// The LoadTests
+        /// </summary>
+        /// <returns>The <see cref="IObservable{Instrument}"/></returns>
         private async Task<IEnumerable<Instrument>> LoadTests()
         {
-            return await Task.Run(() => 
-            { 
-                return _instrumentStore.Query()
-                .Where(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue)
-                .OrderBy(i => i.TestDateTime)
-                .AsQueryable();                      
+            return await Task.Run(() =>
+            {
+                return _instrumentStore.Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue)
+                    .OrderBy(i => i.TestDateTime);
             });
-            
         }
-    
 
         #endregion
     }

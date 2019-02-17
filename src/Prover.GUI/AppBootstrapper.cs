@@ -138,7 +138,7 @@ namespace Prover.GUI
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            Container.Resolve<ISettingsService>().SaveLocalSettings();
+            Container.Resolve<ISettingsService>().SaveSettings();
             base.OnExit(sender, e);
         }
     }

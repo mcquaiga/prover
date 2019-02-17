@@ -35,6 +35,8 @@ namespace Prover.Core.VerificationTests
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
         Task RunVolumeTest(CancellationToken ct);
+        Task DownloadPreVolumeTest(CancellationToken ct);
+        Task DownloadPostVolumeTest(CancellationToken ct);
         Task SaveAsync();
         Task RunVerifiers();
     }

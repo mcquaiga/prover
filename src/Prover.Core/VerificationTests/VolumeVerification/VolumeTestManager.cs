@@ -1,70 +1,43 @@
-﻿namespace Prover.Core.VerificationTests.VolumeVerification
-{
-    using Caliburn.Micro;
-    using NLog;
-    using Prover.CommProtocol.Common;
-    using Prover.Core.Models.Instruments;
-    using Prover.Core.Settings;
-    using System;
-    using System.Reactive.Linq;
-    using System.Reactive.Subjects;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using LogManager = NLog.LogManager;
+﻿using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using NLog;
+using Prover.CommProtocol.Common;
+using Prover.Core.ExternalDevices.DInOutBoards;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
+using LogManager = NLog.LogManager;
 
-    /// <summary>
-    /// Defines the <see cref="VolumeTestManager" />
-    /// </summary>
+namespace Prover.Core.VerificationTests.VolumeVerification
+{
+    public enum VolumeTestSteps
+    {
+        PreTest,
+        RunningSyncTest,
+        ExecutingTest,
+        PostTest
+    }
+
+    public interface IPulseInputService
+    {
+    }
+
     public abstract class VolumeTestManager : IDisposable
     {
-        #region Fields
+        public VolumeTest VolumeTest { get; }
+        public ISettingsService SettingsService { get; }
 
-        /// <summary>
-        /// Defines the CommClient
-        /// </summary>
+        protected Logger Log = LogManager.GetCurrentClassLogger();
+        protected IEventAggregator EventAggreator;
         protected readonly EvcCommunicationClient CommClient;
-
-        /// <summary>
-        /// Defines the Status
-        /// </summary>
         protected readonly Subject<string> Status = new Subject<string>();
 
-        /// <summary>
-        /// Defines the EventAggreator
-        /// </summary>
-        protected IEventAggregator EventAggreator;
+        protected IDInOutBoard FirstPortAInputBoard;
+        protected IDInOutBoard FirstPortBInputBoard;
 
-        /// <summary>
-        /// Defines the IsFirstVolumeTest
-        /// </summary>
-        protected bool IsFirstVolumeTest = true;
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        protected Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the RequestStopTest
-        /// </summary>
-        protected bool RequestStopTest;
-
-        /// <summary>
-        /// Defines the TestCancellationToken
-        /// </summary>
-        protected CancellationTokenSource TestCancellationToken;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VolumeTestManager"/> class.
-        /// </summary>
-        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
         protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
         {
             VolumeTest = volumeTest;
@@ -75,57 +48,43 @@
             CommClient.StatusObservable.Subscribe(Status);
         }
 
-        #endregion
+        public IObservable<string> StatusMessage => Status.AsObservable();
 
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether RunningTest
-        /// </summary>
         public bool RunningTest { get; set; }
 
-        /// <summary>
-        /// Gets the SettingsService
-        /// </summary>
-        public ISettingsService SettingsService { get; }
+        //public virtual async Task RunTest(CancellationToken ct, Subject<string> testStatus = null)
+        //{
+        //    try
+        //    {
+        //        RunningTest = true;
+        //        Status.OnNext("Starting volume test...");
 
-        /// <summary>
-        /// Gets the VolumeTest
-        /// </summary>
-        public VolumeTest VolumeTest { get; }
+        //        await Task.Run(async () =>
+        //        {
+        //            if (SettingsService.Shared.TestSettings.RunVolumeSyncTest)
+        //            {
+        //                await ExecuteSyncTest(ct);
+        //            }
 
+        //            await PreTest(ct);
 
-        public IObservable<string> StatusMessage => Status.AsObservable();
-        #endregion
+        //            await RunTest(ct);
 
-        #region Methods
+        //            await CompleteTest(ct);
 
-        /// <summary>
-        /// The CompleteTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <param name="readTach">The readTach<see cref="bool"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public abstract Task CompleteTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
-           ITestActionsManager testActionsManager, CancellationToken ct, bool readTach = true);
-
-        /// <summary>
-        /// The Dispose
-        /// </summary>
-        public abstract void Dispose();
-
-        /// <summary>
-        /// The InitializeTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public abstract Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct);
+        //            Status.OnNext("Finished volume test.");
+        //        }, ct);
+        //    }
+        //    catch (OperationCanceledException)
+        //    {
+        //        Status.OnNext("Volume test cancelled.");
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        RunningTest = false;
+        //    }
+        //}
 
         /// <summary>
         /// The RunTest
@@ -146,15 +105,15 @@
                 {
                     Log.Info("Volume test started!");
 
-                    await RunSyncTest(commClient, volumeTest, ct);
+                    await ExecuteSyncTest(ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await InitializeTest(commClient, volumeTest, testActionsManager, ct);
+                    await PreTest(testActionsManager, ct);
 
-                    await StartRunningVolumeTest(volumeTest, ct);
+                    await RunTest(ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await CompleteTest(commClient, volumeTest, testActionsManager, ct);
+                    await CompleteTest(testActionsManager, ct);
 
                     Log.Info("Volume test finished!");
                 }, ct);
@@ -170,23 +129,20 @@
             }
         }
 
-        /// <summary>
-        /// The RunSyncTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        protected abstract Task RunSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
+        public abstract Task ExecuteSyncTest(CancellationToken ct);
+        public abstract Task PreTest(ITestActionsManager testActionsManager, CancellationToken ct);
+        public abstract Task RunTest(CancellationToken ct);
+        public abstract Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct);
 
-        /// <summary>
-        /// The StartRunningVolumeTest
-        /// </summary>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        protected abstract Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct);
+        public virtual void Dispose()
+        {
+            Status?.Dispose();
+        }
 
-        #endregion
+        protected static void ResetPulseCounts(VolumeTest volumeTest)
+        {
+            volumeTest.PulseACount = 0;
+            volumeTest.PulseBCount = 0;
+        }
     }
 }

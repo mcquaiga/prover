@@ -33,7 +33,8 @@
       "code": "GAS_PRESS",
       "shortDescription": "Gas Press",
       "description": "Gas Pressure",
-      "isPressureTest": "true"
+      "isPressureTest": "true",
+      "isLiveReadPressure":  true
     },
     {
       "number": "10",
@@ -71,7 +72,8 @@
       "code": "GAS_TEMP",
       "shortDescription": "Gas Temperat",
       "description": "EVC Gas Temperature",
-      "isTemperatureTest": "true"
+      "isTemperatureTest": "true",
+      "isLiveReadTemperature":  true
     },
     {
       "number": "27",

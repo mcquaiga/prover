@@ -38,7 +38,7 @@ namespace Prover.CommProtocol.Common.Items
 
         private ItemMetadata.ItemDescription ItemDescription
         {
-            get { return Metadata.GetItemDescription(RawValue); }
+            get { return Metadata?.GetItemDescription(RawValue); }
         }
 
         public override string ToString()
@@ -54,7 +54,7 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            var result = items?.FirstOrDefault(x => x.Metadata?.Code.ToLower() == code.ToLower());
+            var result = items?.FirstOrDefault(x => x.Metadata?.Code?.ToLower() == code.ToLower());
             //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
 
             return result;

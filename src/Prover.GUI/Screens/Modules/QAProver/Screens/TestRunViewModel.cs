@@ -329,7 +329,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens
 
             try
             {
-                await _settingsService.SaveLocalSettingsAsync();
+                await _settingsService.SaveSettings();
  
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
                 await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService.Shared.TestSettings, ct, _client, statusObservable);

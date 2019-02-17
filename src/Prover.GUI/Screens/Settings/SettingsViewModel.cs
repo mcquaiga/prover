@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using Caliburn.Micro;
@@ -17,7 +18,7 @@ namespace Prover.GUI.Screens.Settings
             : base(screenManager, eventAggregator)
         {
             _settingsService = settingsService;
-
+           
             StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
             this.WhenAnyValue(x => x.StabilizeLiveReadings)
                 .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
@@ -35,7 +36,7 @@ namespace Prover.GUI.Screens.Settings
 
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                await _settingsService.SaveSharedSettings();
+                await _settingsService.SaveSettings();
             });
         }
 

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Prover.GUI.Controls;assembly=Prover"
+             xmlns:controls="clr-namespace:Prover.GUI.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
@@ -19,18 +19,18 @@
                                   Mode="PrimaryLight"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth0" />
         <UniformGrid Columns="2">
-            <controls:ValueDescriptionControl Label="Meter Serial No. (863)"
-                                              Value="{Binding MeterSerialNumber}" />
-            <controls:ValueDescriptionControl Label="Turbine Meter Size (864)"
+            <!--<controls:LabelValueControl Label="Meter Serial No. (863)" 
+                                        Value="{Binding MeterSerialNumber}" />
+            <controls:LabelValueControl Label="Turbine Meter Size (864)"
                                               Value="{Binding TurbineSize}" />
-            <controls:ValueDescriptionControl Label="Km (865)"
+            <controls:LabelValueControl Label="Km (865)"
                                               Value="{Binding Km}" />
-            <controls:ValueDescriptionControl Label="Ks (866)"
+            <controls:LabelValueControl Label="Ks (866)"
                                               Value="{Binding Km}" />
-            <controls:ValueDescriptionControl Label="ABar (867)"
+            <controls:LabelValueControl Label="ABar (867)"
                                               Value="{Binding ABar}" />
-            <controls:ValueDescriptionControl Label="Kmo (868)"
-                                              Value="{Binding Kmo}" />                           
+            <controls:LabelValueControl Label="Kmo (868)"
+                                              Value="{Binding Kmo}" />-->                           
         </UniformGrid>
     </StackPanel>
 

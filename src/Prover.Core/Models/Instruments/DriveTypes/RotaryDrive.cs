@@ -13,7 +13,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         public Instrument Instrument { get; set; }
         public MeterTest Meter { get; set; }
 
-        public string Discriminator => "Rotary";
+        public string Discriminator => Drives.Rotary;
 
         public bool HasPassed => Meter.MeterDisplacementHasPassed;
 

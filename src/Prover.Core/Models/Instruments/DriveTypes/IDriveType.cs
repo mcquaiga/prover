@@ -1,6 +1,6 @@
 ﻿namespace Prover.Core.Models.Instruments.DriveTypes
 {
-    public static class DriveTypes
+    public static class Drives
     {
         public const string PulseInput = "Pulse Input";
         public const string Mechanical = "Mechanical";
@@ -8,7 +8,7 @@
     }
 
     public interface IDriveType
-    {
+    {        
         string Discriminator { get; }
         bool HasPassed { get; }
         decimal? UnCorrectedInputVolume(decimal appliedInput);

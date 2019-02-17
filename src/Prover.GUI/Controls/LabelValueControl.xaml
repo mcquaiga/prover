@@ -15,11 +15,12 @@
                            FontSize="{Binding ValueFontSize}"
                            HorizontalAlignment="Left"
                            Foreground="{DynamicResource PrimaryHueDarkBrush}" />
-                <Border Margin="0 3" BorderBrush="Gray" BorderThickness="0 1 0 0" />
+                <Border Margin="0 3" BorderBrush="SlateGray" BorderThickness="0 1 0 0" />
                 <TextBlock Text="{Binding Path=Label}"
                            HorizontalAlignment="Left"
                            FontSize="8"
-                           Foreground="LightSlateGray" />
+                           FontWeight="Medium"
+                           Foreground="{DynamicResource SecondaryTextColor}" />
             </StackPanel>
         </Grid>
 

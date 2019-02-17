@@ -1,128 +1,74 @@
-﻿namespace Prover.Core.VerificationTests.VolumeVerification
-{
-    using Caliburn.Micro;
-    using Prover.CommProtocol.Common;
-    using Prover.Core.Models.Instruments;
-    using Prover.Core.Settings;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using Prover.CommProtocol.Common;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
 
-    /// <summary>
-    /// Defines the <see cref="ManualVolumeTestManager" />
-    /// </summary>
+namespace Prover.Core.VerificationTests.VolumeVerification
+{
     public sealed class ManualVolumeTestManager : VolumeTestManager
     {
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ManualVolumeTestManager"/> class.
-        /// </summary>
-        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService) 
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
             : base(eventAggregator, commClient, volumeTest, settingsService)
         {
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// The CompleteTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <param name="readTach">The readTach<see cref="bool"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public override async Task CompleteTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct, bool readTach = true)
+        public override async Task PreTest(ITestActionsManager testActionsManager, CancellationToken ct)
         {
-            try
+            await CommClient.Connect(ct);
+
+            VolumeTest.Items = await CommClient.GetVolumeItems();
+
+            if (VolumeTest.VerificationTest.FrequencyTest != null)
             {
-                await commClient.Connect(ct);
+                VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
+            }
 
-                volumeTest.AfterTestItems = await commClient.GetVolumeItems();
+            await CommClient.Disconnect();
+        }
 
-                if (volumeTest.VerificationTest.FrequencyTest != null)
+        public override async Task RunTest(CancellationToken ct)
+        {
+            RunningTest = true;
+            ResetPulseCounts(VolumeTest);
+
+            await Task.Run(() =>
+            {
+                while (RunningTest || ct.IsCancellationRequested)
                 {
-                    volumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await commClient.GetFrequencyItems();
+
                 }
+            }, ct);
+        }
 
-                await testActionsManager?.RunVolumeTestCompleteActions(commClient, volumeTest.Instrument);
-            }
-            finally
+        public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
+        {
+            await Task.Run(async () =>
             {
-                await commClient.Disconnect();
-            }
+                try
+                {
+                    ct.ThrowIfCancellationRequested();
+                    await CommClient.Connect(ct);
+                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
+                    if (VolumeTest.VerificationTest.FrequencyTest != null)
+                    {
+                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
+                    }
+                }
+                finally
+                {
+                    await CommClient.Disconnect();
+                }
+            }, ct);
         }
 
-        /// <summary>
-        /// The Dispose
-        /// </summary>
-        public override void Dispose()
+        public override async Task ExecuteSyncTest(CancellationToken ct)
         {
-        }
-
-        /// <summary>
-        /// The InitializeTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public override async Task InitializeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
-        {
-            await commClient.Connect(ct);
-
-            await testActionsManager.RunVolumeTestInitActions(commClient, volumeTest.Instrument);
-
-            volumeTest.Items = await commClient.GetVolumeItems();
-
-            if (volumeTest.VerificationTest.FrequencyTest != null)
+            await Task.Run(() =>
             {
-                volumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await commClient.GetFrequencyItems();
-            }
-
-            await commClient.Disconnect();
+            }, ct);
         }
-
-        /// <summary>
-        /// The RunTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        public override async Task RunFullVolumeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
-        {
-            return;
-        }
-
-        /// <summary>
-        /// The RunSyncTest
-        /// </summary>
-        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        protected override async Task RunSyncTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct)
-        {
-            return;
-        }
-
-        /// <summary>
-        /// The StartRunningVolumeTest
-        /// </summary>
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        protected override async Task StartRunningVolumeTest(VolumeTest volumeTest, CancellationToken ct)
-        {
-            return;
-        }
-
-        #endregion
     }
 }
+

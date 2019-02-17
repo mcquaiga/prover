@@ -2,20 +2,6 @@
 
 namespace Prover.Core.Settings
 {
-    public class SharedSettings
-    {
-        public CertificateSettings CertificateSettings { get; set; }
-        public TestSettings TestSettings { get; set; }
-        public bool UpdateAbsolutePressure { get; set; } = true;
-        public static SharedSettings Create()
-        {
-            return new SharedSettings()
-            {
-                CertificateSettings = new CertificateSettings(),
-                TestSettings = TestSettings.CreateDefault()
-            };
-        }
-    }
 
     public class TestSettings
     {
@@ -31,16 +17,10 @@ namespace Prover.Core.Settings
         public List<MechanicalUncorrectedTestLimit> MechanicalUncorrectedTestLimits { get; set; }
         public bool UpdateAbsolutePressure { get; set; } = true;
         public bool RunVolumeSyncTest { get; set; }
+        public Dictionary<int, string> TocResetItems { get; set; }
+
         public static TestSettings CreateDefault()
-        {
-            //if (TocResetItems == null)
-            //{
-            //    TocResetItems = new Dictionary<int, string>()
-            //    {
-            //        { 859, "0" },
-            //        { 860, "0" }
-            //    };
-            //}
+        {         
 
             return new TestSettings()
             {
@@ -54,6 +34,12 @@ namespace Prover.Core.Settings
                     new MechanicalUncorrectedTestLimit {CuFtValue = 10, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 100, UncorrectedPulses = 10},
                     new MechanicalUncorrectedTestLimit {CuFtValue = 1000, UncorrectedPulses = 1}
+                },
+                
+                TocResetItems = new Dictionary<int, string>()
+                {
+                    { 859, "0" },
+                    { 860, "0" }
                 },
 
                 TestPoints = new List<TestPointSetting>()
@@ -95,18 +81,6 @@ namespace Prover.Core.Settings
         {
             public decimal CuFtValue { get; set; }
             public int UncorrectedPulses { get; set; }
-        }
-    }
-
-    public class CertificateSettings
-    {
-        public string McRegistrationNumber { get; set; } = string.Empty;
-        public List<MeasurementApparatus> MeasurementApparatuses { get; set; } = new List<MeasurementApparatus>();
-
-        public class MeasurementApparatus
-        {            
-            public string Description { get; set; }
-            public string SerialNumbers { get; set; }
         }
     }
 }

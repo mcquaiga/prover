@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
+using Caliburn.Micro.ReactiveUI;
 using Prover.Core.Settings;
 using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;

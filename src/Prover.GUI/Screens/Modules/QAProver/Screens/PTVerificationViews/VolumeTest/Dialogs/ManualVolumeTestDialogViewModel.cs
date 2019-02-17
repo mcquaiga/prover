@@ -44,19 +44,19 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.Volume
         }
 
         public ReactiveCommand<Unit, Unit> DoneCommand { get; set; }
-        public VolumeTestSteps CurrentTestStep { get; set; }
+        //public VolumeTestSteps CurrentTestStep { get; set; }
 
-        private async Task ShowPrePostTestStatus(IObserver<string> statusObserver, CancellationToken cancellationToken)
-        {
-            await Task.Run(() =>
-            {
-                TestManager.StatusMessage.Subscribe(statusObserver);
+        //private async Task ShowPrePostTestStatus(IObserver<string> statusObserver, CancellationToken cancellationToken)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        TestManager.StatusMessage.Subscribe(statusObserver);
 
-                do
-                {
-                } while (CurrentTestStep == VolumeTestSteps.PreTest || CurrentTestStep == VolumeTestSteps.PostTest);
-            }, cancellationToken);
-        }
+        //        do
+        //        {
+        //        } while (CurrentTestStep == VolumeTestSteps.PreTest || CurrentTestStep == VolumeTestSteps.PostTest);
+        //    }, cancellationToken);
+        //}
 
         public override void Dispose()
         {

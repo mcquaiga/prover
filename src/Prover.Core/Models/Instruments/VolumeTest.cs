@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Settings;
@@ -179,18 +180,18 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
-                    VerificationTest.TemperatureTest != null)
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T && VerificationTest.TemperatureTest != null)
                     return VerificationTest.TemperatureTest.ActualFactor;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
-                    VerificationTest.PressureTest != null)
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P && VerificationTest.PressureTest != null)
                     return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor *
-                           VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared;
+                {
+                    return VerificationTest.PressureTest?.ActualFactor
+                          * VerificationTest.TemperatureTest?.ActualFactor
+                          * VerificationTest.SuperFactorTest.SuperFactorSquared;
+                }
 
                 return null;
             }
@@ -213,13 +214,13 @@ namespace Prover.Core.Models.Instruments
             {
                 if (Instrument.Items?.GetItem(182)?.NumericValue > 0)
                 {
-                    DriveTypeDiscriminator = DriveTypes.DriveTypes.PulseInput;
+                    DriveTypeDiscriminator = Drives.PulseInput;
                 }
                 else
                 {
-                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == DriveTypes.DriveTypes.Rotary.ToLower()
-                        ? DriveTypes.DriveTypes.Rotary
-                        : DriveTypes.DriveTypes.Mechanical;
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == Drives.Rotary.ToLower()
+                        ? Drives.Rotary
+                        : Drives.Mechanical;
                 }                
             }
 
@@ -230,13 +231,13 @@ namespace Prover.Core.Models.Instruments
             { 
                 switch (DriveTypeDiscriminator)
                 {
-                    case DriveTypes.DriveTypes.Rotary:
+                    case Drives.Rotary:
                         DriveType = new RotaryDrive(Instrument);
                         break;
-                    case DriveTypes.DriveTypes.Mechanical:
+                    case Drives.Mechanical:
                         DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
                         break;
-                    case DriveTypes.DriveTypes.PulseInput:
+                    case Drives.PulseInput:
                         DriveType = new PulseInputSensor(Instrument);
                         break;
                     default:
