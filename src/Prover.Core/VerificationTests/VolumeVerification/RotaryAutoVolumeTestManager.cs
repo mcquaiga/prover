@@ -8,7 +8,8 @@
 
     public class RotaryAutoVolumeTestManager : AutoVolumeTestManager
     {
-        public RotaryAutoVolumeTestManager(IEventAggregator eventAggregator, CommProtocol.Common.EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, Settings.ISettingsService settingsService) : base(eventAggregator, commClient, volumeTest, tachComm, settingsService)
+        public RotaryAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, Settings.ISettingsService settingsService) 
+            : base(eventAggregator, tachComm, settingsService)
         {
         }
 

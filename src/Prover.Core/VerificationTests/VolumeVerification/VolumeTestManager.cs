@@ -27,25 +27,22 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 
     public abstract class VolumeTestManager : IDisposable
     {
-        public VolumeTest VolumeTest { get; }
+        public VolumeTest VolumeTest { get; set; }
         public ISettingsService SettingsService { get; }
 
         protected Logger Log = LogManager.GetCurrentClassLogger();
         protected IEventAggregator EventAggreator;
-        protected readonly EvcCommunicationClient CommClient;
+        protected EvcCommunicationClient CommClient { get; set; }
         protected readonly Subject<string> Status = new Subject<string>();
 
         protected IDInOutBoard FirstPortAInputBoard;
         protected IDInOutBoard FirstPortBInputBoard;
 
-        protected VolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
+        protected VolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
         {
-            VolumeTest = volumeTest;
+     
             SettingsService = settingsService;
             EventAggreator = eventAggregator;
-            CommClient = commClient;
-
-            CommClient.StatusObservable.Subscribe(Status);
         }
 
         public IObservable<string> StatusMessage => Status.AsObservable();
@@ -100,15 +97,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             try
             {
                 RunningTest = true;
-
+                CommClient = commClient;
                 await Task.Run(async () =>
                 {
                     Log.Info("Volume test started!");
 
+                    commClient.StatusObservable.Subscribe(Status);
+
                     await ExecuteSyncTest(ct);
                     ct.ThrowIfCancellationRequested();
 
-                    await PreTest(testActionsManager, ct);
+                    await PreTest(commClient, volumeTest, testActionsManager, ct);
 
                     await RunTest(ct);
                     ct.ThrowIfCancellationRequested();
@@ -130,7 +129,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         }
 
         public abstract Task ExecuteSyncTest(CancellationToken ct);
-        public abstract Task PreTest(ITestActionsManager testActionsManager, CancellationToken ct);
+        public abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct);
         public abstract Task RunTest(CancellationToken ct);
         public abstract Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct);
 

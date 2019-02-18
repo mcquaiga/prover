@@ -9,12 +9,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class ManualVolumeTestManager : VolumeTestManager
     {
-        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService)
-            : base(eventAggregator, commClient, volumeTest, settingsService)
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
+            : base(eventAggregator, settingsService)
         {
         }
 
-        public override async Task PreTest(ITestActionsManager testActionsManager, CancellationToken ct)
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
             await CommClient.Connect(ct);
 

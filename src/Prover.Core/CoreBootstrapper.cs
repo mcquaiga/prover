@@ -70,7 +70,8 @@ namespace Prover.Core
 
            
 
-            builder.RegisterType<AutoVolumeTestManager>();
+            builder.RegisterType<MechanicalAutoVolumeTestManager>();
+            builder.RegisterType<RotaryAutoVolumeTestManager>();
             builder.RegisterType<ManualVolumeTestManager>();
 
             builder.RegisterType<AverageReadingStabilizer>()

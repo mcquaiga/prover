@@ -252,11 +252,10 @@
                 .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
 
             /** Auto Save logic*/
-            this.WhenAnyValue(x => x.IsDirty)
-                 .Where(dirty => dirty && !_isLoading && _settingsService.Local.AutoSave)   
-                 .Select(x => new Unit())
-                 .Throttle(TimeSpan.FromSeconds(2))
-                 .InvokeCommand(this, x => x.SaveCommand);
+            //this.WhenAnyValue(x => x.IsDirty)
+            //     .Where(dirty => dirty && !_isLoading && _settingsService.Local.AutoSave)   
+            //     .Select(x => new Unit())                                 
+            //     .InvokeCommand(this, x => x.SaveCommand);
 
             PrintReportCommand = ReactiveCommand.CreateFromTask(PrintTest);
 
@@ -275,9 +274,7 @@
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
             SelectedClient = Clients.Contains(_settingsService.Local.LastClientSelected)
                 ? _settingsService.Local.LastClientSelected
-                : string.Empty;
-
-         
+                : string.Empty;         
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
@@ -357,7 +354,7 @@
         /// <summary>
         /// Gets the SaveCommand
         /// </summary>
-        public ReactiveCommand SaveCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; }
 
         /// <summary>
         /// Gets or sets the SelectedBaudRate
@@ -515,6 +512,10 @@
         public void Handle(VerificationTestEvent message)
         {
             IsDirty = true;
+            this.WhenAnyValue(x => x.SaveCommand)
+                .Where(x => !_isLoading && _settingsService.Local.AutoSave)
+                .SelectMany(x => x.Execute())
+                .Subscribe();
         }
 
         /// <summary>

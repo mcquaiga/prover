@@ -188,7 +188,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task DownloadPreVolumeTest(CancellationToken ct)
         {
-            await VolumeTestManager.PreTest(TestActionsManager, ct);
+            await VolumeTestManager.PreTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
         }
 
         /// <summary>
@@ -262,6 +262,12 @@
                 }
 
                 await DownloadVerificationTestItems(level, ct);
+
+                if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+                {
+                    _testStatus.OnNext($"Running volume test...");
+                    await RunVolumeTest(ct);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -291,16 +297,14 @@
         public async Task RunVolumeTest(CancellationToken ct)
         {
             try
-            {
-                if (Instrument.VerificationTests.Any(x => x.VolumeTest != null))
-                {
-                    VolumeTestManager.StatusMessage.Subscribe(_testStatus);
-                    await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
+            {              
+                VolumeTestManager.StatusMessage.Subscribe(_testStatus);
+                await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
-                    //Execute any Post test clean up methods
-                    foreach (var command in _postTestCommands)
-                        await command.Execute(_communicationClient, Instrument, _testStatus);
-                }
+                //Execute any Post test clean up methods
+                foreach (var command in _postTestCommands)
+                    await command.Execute(_communicationClient, Instrument, _testStatus);
+              
             }
             catch (OperationCanceledException)
             {

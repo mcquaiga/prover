@@ -46,8 +46,8 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="tachComm">The tachComm<see cref="TachometerService"/></param>
         /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
-        public AutoVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, TachometerService tachComm, ISettingsService settingsService)
-            : base(eventAggregator, commClient, volumeTest, settingsService)
+        public AutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, ISettingsService settingsService)
+            : base(eventAggregator, settingsService)
         {
             TachometerCommunicator = tachComm;
 
@@ -148,8 +148,11 @@
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task PreTest(ITestActionsManager testActionsManager, CancellationToken ct)
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
+            CommClient = commClient;
+            VolumeTest = volumeTest;
+
             CommClient.StatusObservable.Subscribe(Status);
 
             await CommClient.Connect(ct);
