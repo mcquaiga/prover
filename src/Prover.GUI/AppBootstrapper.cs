@@ -89,7 +89,7 @@ namespace Prover.GUI
             assemblies.AddRange(base.SelectAssemblies());
 
             if (!File.Exists(_moduleFilePath))
-                throw new Exception("Could not find a modules.conf file in the current directory.");
+                throw new Exception("Could not find a modules.json in the current directory.");
 
             var modulesString = File.ReadAllText(_moduleFilePath);
             assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)

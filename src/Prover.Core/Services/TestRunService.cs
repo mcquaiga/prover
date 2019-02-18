@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Data;
@@ -18,12 +19,13 @@ namespace Prover.Core.Services
         public IEnumerable<Instrument> GetAllUnexported()
         {
             return _instrumentStore
-                .Query(i => i.ExportedDateTime == null);
+                .Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue);
         }
 
         public IEnumerable<Instrument> GetTestRunByCertificate(Guid certificateId)
         {
-            return _instrumentStore.Query(i => i.CertificateId == certificateId);
+            return _instrumentStore
+                .Query(i => i.CertificateId == certificateId);
         }
 
         public async Task ArchiveTest(Instrument instrument)

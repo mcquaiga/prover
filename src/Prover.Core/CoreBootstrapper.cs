@@ -66,9 +66,7 @@ namespace Prover.Core
                         : string.Empty;
                     return new TachometerService(tach, c.Resolve<IDInOutBoard>());
                 })
-                .As<TachometerService>();
-
-           
+                .As<TachometerService>();           
 
             builder.RegisterType<MechanicalAutoVolumeTestManager>();
             builder.RegisterType<RotaryAutoVolumeTestManager>();

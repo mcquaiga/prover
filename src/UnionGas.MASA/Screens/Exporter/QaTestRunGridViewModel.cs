@@ -55,13 +55,14 @@ namespace UnionGas.MASA.Screens.Exporter
             if (_loginService.IsLoggedIn)
             {
                 Instrument.EmployeeId = _loginService.User.Id;
-                await _instrumentStore.UpsertAsync(Instrument);
-                this.RaisePropertyChanged($"Instrument");
+                await _testRunService.Save(Instrument);
+                this.RaisePropertyChanged($"Instrument");                
             }
             else
             {
-                MessageBox.Show("Please login to webservice first.");
-            }
+                await _loginService.GetLoginDetails();
+                await AddCurrentUserToTest();
+            }  
         }
 
         #region Properties

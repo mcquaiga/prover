@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Prover.Core.ExternalIntegrations;
+using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
 using Prover.Core.VerificationTests.TestActions;
 using UnionGas.MASA.DCRWebService;
@@ -17,13 +18,12 @@ namespace UnionGas.MASA
             builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
 
             //Login service
-            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>()
-            builder.RegisterType<CompanyNumberValidationManager>().As<IPreTestValidation>();
+            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>();                       
             builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
-            builder.RegisterType<CompanyNumberValidator>().As<IValidator>().AsSelf();
-            builder.RegisterType<CompanyNumberUpdater>().As<IUpdater>();
-            builder.RegisterType<NewCompanyNumberPopupRequestor>().As<IGetValue>();
-
+            
+            builder.RegisterType<CompanyNumberValidationManager>()
+                .As<IPreTestValidation>()
+                .AsSelf();
             builder.RegisterType<UserLoggedInValidator>().As<IValidator>();
            
         }

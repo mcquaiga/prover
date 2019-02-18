@@ -4,6 +4,7 @@
     using Prover.Core.Events;
     using Prover.Core.ExternalIntegrations;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Services;
     using Prover.Core.Storage;
     using Prover.GUI.Screens;
     using ReactiveUI;
@@ -30,7 +31,7 @@
         /// <summary>
         /// Defines the _instrumentStore
         /// </summary>
-        private readonly InstrumentStore _instrumentStore;
+        private readonly TestRunService _testRunService;
 
         /// <summary>
         /// Defines the _showLoadingIndicator
@@ -72,12 +73,12 @@
         /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
-        /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
+        /// <param name="testRunService">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportTestRun, InstrumentStore instrumentStore) : base(screenManager, eventAggregator)
+            IExportTestRun exportTestRun, TestRunService testRunService) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
 
             FilterObservable = new Subject<Predicate<Instrument>>();
 
@@ -97,9 +98,12 @@
                 .Select(e => !e)
                 .ToProperty(this, x => x.ShowTestViewListBox, out _showTestViewListBox, false);
 
+            CreateTestsViewsCommand = ReactiveCommand.CreateFromTask<IEnumerable<Instrument>>(CreateInstrumentViews);
+
             ExecuteTestSearch
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(async i => await CreateInstrumentViews(i));
+                .InvokeCommand(CreateTestsViewsCommand);
+                //.Subscribe(async i => await CreateInstrumentViews(i));
 
             VisibleTiles = RootResults.CreateDerivedCollection(t => t,
                 model => model.IsShowing,
@@ -178,6 +182,7 @@
         /// Gets or sets the VisibleTiles
         /// </summary>
         public IReactiveDerivedList<QaTestRunGridViewModel> VisibleTiles { get => _visibleTiles; set => this.RaiseAndSetIfChanged(ref _visibleTiles, value); }
+        public ReactiveCommand<IEnumerable<Instrument>, Unit> CreateTestsViewsCommand { get; private set; }
 
         #endregion
 
@@ -237,7 +242,8 @@
         {
             return await Task.Run(() =>
             {
-                return _instrumentStore.Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue)
+                return _testRunService
+                    .GetAllUnexported()
                     .OrderBy(i => i.TestDateTime);
             });
         }

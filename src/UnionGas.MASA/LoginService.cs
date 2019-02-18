@@ -8,6 +8,7 @@ using NLog;
 using Prover.Core.Login;
 using Prover.GUI.Screens;
 using UnionGas.MASA.DCRWebService;
+using UnionGas.MASA.Dialogs.LoginDialog;
 using UnionGas.MASA.Screens.Toolbars;
 
 namespace UnionGas.MASA

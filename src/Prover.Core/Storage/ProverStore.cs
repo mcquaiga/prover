@@ -26,7 +26,7 @@ namespace Prover.Core.Storage
         public virtual IQueryable<T> Query(Expression<Func<T, bool>> predicate)
         {
             return QueryCommand().Where(predicate);
-        }
+        }        
 
         public virtual async Task<T> Get(TId id)
         {
