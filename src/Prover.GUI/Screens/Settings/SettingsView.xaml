@@ -69,7 +69,10 @@
                     <TabItem.Content>
                         <StackPanel Orientation="Vertical"
                                     Margin="16">
-
+                            <CheckBox IsChecked="{Binding LocalSettings.AutoSave}"
+                                      Content="Auto Save tests."
+                                      Style="{StaticResource MaterialDesignCheckBox}"
+                                      Margin="0 8"/>
                             <CheckBox IsChecked="{Binding SharedSettings.TestSettings.StabilizeLiveReadings}"
                                       Content="Wait for EVC readings to stabilize within accepted tolerance before downloading correction data."
                                       Style="{StaticResource MaterialDesignCheckBox}"

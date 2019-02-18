@@ -75,7 +75,7 @@
         /// </summary>
         public IEventAggregator EventAggregator { get; set; }
 
-        public IObservable<>
+        public ReplaySubject<LiveReadEvent> LiveReadStatusUpdates = new ReplaySubject<LiveReadEvent>();
         #endregion
 
         #region Methods
@@ -93,21 +93,32 @@
         {
             try
             {
+                LiveReadStatusUpdates = new ReplaySubject<LiveReadEvent>();
+
                 var liveReadItems = GetLiveReadItemNumbers(instrument, level);
+                
                 await commClient.Connect(ct);
                 statusUpdates.OnNext("Waiting for readings to stabilize...");
+                
                 ct.ThrowIfCancellationRequested();
                 do
                 {
+                    string status = string.Empty;
                     foreach (var item in liveReadItems)
                     {
                         var liveValue = await commClient.LiveReadItemValue(item.Key.Metadata.Number);
                         item.Value.Add(liveValue.NumericValue);
-                        EventAggregator.PublishOnBackgroundThread(new LiveReadEvent(item.Key.Metadata, liveValue.NumericValue));
+                        
+                        LiveReadStatusUpdates.OnNext(new LiveReadEvent(item.Key.Metadata, liveValue.NumericValue));
+                        status += $"{Environment.NewLine} {item.Key.Metadata.ShortDescription} >> {liveValue.NumericValue}";
                     }
+
+                    statusUpdates.OnNext($"Waiting for readings to stabilize... {status}");
 
                     ct.ThrowIfCancellationRequested();
                 } while (liveReadItems.Any(x => !x.Value.IsStable));
+
+                LiveReadStatusUpdates.OnCompleted();
             }
             catch (OperationCanceledException)
             {

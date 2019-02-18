@@ -11,6 +11,8 @@
     {
         #region Properties
 
+        public bool AutoSave { get; set; }
+
         /// <summary>
         /// Gets or sets the InstrumentBaudRate
         /// </summary>
@@ -74,21 +76,21 @@
         {
             var fileSystem = new FileSystem();
             
-            return await new SettingsReader(fileSystem).Read(filePath);
+            return await new SettingsReader(fileSystem).Read(filePath).ConfigureAwait(false);
         }
 
         /// <summary>
         /// The SaveLocalSettings
         /// </summary>
         /// <param name="filePath">The filePath<see cref="string"/></param>
-        public void SaveLocalSettings(string filePath)
+        public async Task SaveLocalSettings(string filePath)
         {
             var fileSystem = new FileSystem();
 
             if (!fileSystem.DirectoryExists(Path.GetDirectoryName(filePath)))
                 fileSystem.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            new SettingsWriter(fileSystem).Write(filePath, this);
+            await new SettingsWriter(fileSystem).Write(filePath, this).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -98,7 +100,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task SaveLocalSettingsAsync(string filePath)
         {
-            await Task.Run(() => SaveLocalSettings(filePath));
+            await SaveLocalSettings(filePath);
         }
 
         #endregion

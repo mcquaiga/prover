@@ -124,8 +124,8 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task SaveSettings()
         {
-            await Shared.SaveSharedSettings(_keyValueStore);
-            await Local.SaveLocalSettingsAsync(SettingsPath);
+            await Shared.SaveSharedSettings(_keyValueStore).ConfigureAwait(false);
+            await Local.SaveLocalSettingsAsync(SettingsPath).ConfigureAwait(false);
         }
 
         #endregion
