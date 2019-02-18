@@ -132,11 +132,20 @@
     <Compile Include="Screens\Exporter\ExportTestsView.xaml.cs">
       <DependentUpon>ExportTestsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DCRWebServiceCommunicator.cs" />
+    <Compile Include="Dialogs\MeterDTODialog\MeterDtoListDialogView.xaml.cs">
+      <DependentUpon>MeterDtoListDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\MeterDTODialog\MeterDtoListDialogViewModel.cs" />
     <Compile Include="Screens\Exporter\ExportTestsViewModel.cs" />
     <Compile Include="Screens\Exporter\QaTestRunGridView.xaml.cs">
       <DependentUpon>QaTestRunGridView.xaml</DependentUpon>
+      </Compile>
+    <Compile Include="Screens\TestsByJobNumber\TestsByJobNumberView.xaml.cs">
+      <DependentUpon>TestsByJobNumberView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Exporter\QaTestRunGridViewModel.cs" />
+    <Compile Include="Screens\TestsByJobNumber\TestsByJobNumberViewModel.cs" />
     <Compile Include="Screens\Toolbars\LoginToolbarViewModel.cs" />
     <Compile Include="Screens\Toolbars\LoginToolbar\LoggedIn.xaml.cs">
       <DependentUpon>LoggedIn.xaml</DependentUpon>
@@ -288,6 +297,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\MeterDTODialog\MeterDtoListDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Exporter\ExportTestsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -295,6 +308,10 @@
     <Page Include="Screens\Exporter\QaTestRunGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\TestsByJobNumber\TestsByJobNumberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Toolbars\LoginToolbar\LoggedIn.xaml">
       <SubType>Designer</SubType>

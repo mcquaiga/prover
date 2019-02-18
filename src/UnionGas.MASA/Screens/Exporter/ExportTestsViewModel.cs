@@ -15,6 +15,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Threading.Tasks;
+    using UnionGas.MASA.Screens.TestsByJobNumber;
 
     /// <summary>
     /// Defines the <see cref="ExportTestsViewModel" />
@@ -79,6 +80,7 @@
         {
             _exportTestRun = exportTestRun;
             _testRunService = testRunService;
+            _dcrWebService = dcrWebService;
 
             FilterObservable = new Subject<Predicate<Instrument>>();
 
@@ -122,7 +124,9 @@
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
             ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
-        }
+          
+            TestsByJobNumber = testsByJobNumber;
+        }       
 
         #endregion
 
@@ -152,6 +156,8 @@
         /// Gets the FilterByTypeCommand
         /// </summary>
         public ReactiveCommand<string, Unit> FilterByTypeCommand { get; }
+
+        public ReactiveCommand GetUntestedByJobNumberCommand {get;}
 
         /// <summary>
         /// Gets or sets the FilterObservable
@@ -183,6 +189,9 @@
         /// </summary>
         public IReactiveDerivedList<QaTestRunGridViewModel> VisibleTiles { get => _visibleTiles; set => this.RaiseAndSetIfChanged(ref _visibleTiles, value); }
         public ReactiveCommand<IEnumerable<Instrument>, Unit> CreateTestsViewsCommand { get; private set; }
+        private readonly DCRWebServiceCommunicator _dcrWebService;
+
+        public TestsByJobNumberViewModel TestsByJobNumber { get; }
 
         #endregion
 

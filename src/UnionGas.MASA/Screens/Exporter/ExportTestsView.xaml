@@ -1,138 +1,180 @@
 ﻿<UserControl x:Class="UnionGas.MASA.Screens.Exporter.ExportTestsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters;assembly=Prover"             
-             mc:Ignorable="d"             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Prover.GUI.Common.Converters;assembly=Prover.GUI.Common"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-<ResourceDictionary>
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-    </ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
             <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
                                                   TrueValue="Visible"
                                                   FalseValue="Collapsed" />
             <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
-            <Style.Triggers>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="ItemsControl.AlternationIndex" Value="1" />
-                        <Condition Property="IsSelected" Value="False" />
-                        <Condition Property="IsMouseOver" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background" Value="#EEEEEEEE" />
-                </MultiTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="Flat">
-            <Setter Property="Control.Background" Value="{x:Null}" />
-            <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="Control.IsMouseOver" Value="True">
-                    <Setter Property="Control.Background" Value="{x:Null}" />
-                    <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-                <Trigger Property="Control.IsFocused" Value="True">
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <!--<Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>-->
-        <Style x:Key="Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-</ResourceDictionary>
+                <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="ItemsControl.AlternationIndex" Value="1" />
+                            <Condition Property="IsSelected" Value="False" />
+                            <Condition Property="IsMouseOver" Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" Value="#EEEEEEEE" />
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="Flat">
+                <Setter Property="Control.Background" Value="{x:Null}" />
+                <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+                <Style.Triggers>
+                    <Trigger Property="Control.IsMouseOver" Value="True">
+                        <Setter Property="Control.Background" Value="{x:Null}" />
+                        <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+                        <Setter Property="Control.FontWeight" Value="Bold" />
+                    </Trigger>
+                    <Trigger Property="Control.IsFocused" Value="True">
+                        <Setter Property="Control.FontWeight" Value="Bold" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
+    
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="212">
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                        DockPanel.Dock="Top"
+                                        HorizontalAlignment="Right" Margin="8"
+                                        IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+                    <!--<ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16" SelectedIndex="0"                         
+                                 ItemsSource="{Binding DemoItems}"
+                                 PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="domain:DemoItem">
+                                <TextBlock Text="{Binding Name}" Margin="32 0 32 0" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>-->
+              
+            </DockPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            <Grid>
+                
+                <Grid>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="0"
-                    Margin="5">
-            <TextBlock Text="Filter by instrument"/>
-            <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
-                          DockPanel.Dock="Left">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding .}"
-                                Command="{Binding Path=DataContext.FilterByTypeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
-                                CommandParameter="{Binding .}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </StackPanel>
-        
-        <ProgressBar Grid.Row="1"                         
-                         Width="56"
-                         Height="56"
-                         Style="{StaticResource MaterialDesignCircularProgressBar}"
-                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
-                         Value="0"
-                         Panel.ZIndex="5"
-                         IsIndeterminate="True"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Center" />
-        
-        <ListBox  x:Name="VisibleTiles"
-                  Margin="5"
-                  Grid.Row="1"
-                  Panel.ZIndex="0"    
-                  Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
-                 HorizontalContentAlignment="Stretch"
-                 VerticalContentAlignment="Stretch">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <Border BorderThickness="0 0 0 1"
-                                        BorderBrush="Gray">
-                                    <ContentPresenter />
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:ColorZone Padding="12" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                                Mode="PrimaryLight">
+                            <DockPanel>
+                                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False"
+                                            x:Name="MenuToggleButton"/>
+                            </DockPanel>
+                        </materialDesign:ColorZone>
+                        
+                    <UniformGrid Rows="1"
+                                        HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Vertical"
+                                        Grid.Column="0"
+                                        Margin="8">
+                            <TextBlock Text="Filter by instrument"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="All"
+                                            Command="{Binding FilterByTypeCommand}"
+                                            CommandParameter="All"/>
+                                <Button Content="Mini-AT"
+                                            Command="{Binding FilterByTypeCommand}"
+                                            CommandParameter="Mini-AT"/>
+                                <Button Content="Mini-Max"
+                                            Command="{Binding FilterByTypeCommand}"
+                                            CommandParameter="Mini-Max"/>
+                                <Button Content="TOC"
+                                            Command="{Binding FilterByTypeCommand}"
+                                            CommandParameter="TOC"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </UniformGrid>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right">
+                            <TextBlock Text="Export Failed Test"/>
+                            <TextBox Text="{Binding FailedCompanyNumber}"
+                                         Width="250"/>
+                            <Button Command="{Binding ExportFailedTestCommand}"
+                                        Style="{StaticResource MaterialDesignFlatAccentButton}"
+                                        Content="Export Failed"/>
+                        </StackPanel>
 
-        <!--<Button Margin="8"
-                Grid.Row="2"
-                HorizontalAlignment="Left"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Command="{Binding ExportAllPassedQaRunsCommand}"
-                Content="Export all passed">
-        </Button>-->
+                        <ContentControl x:Name="TestsByJobNumber"/>
+                    </StackPanel>
+                </StackPanel>
 
-        <Grid Grid.Row="2">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="Export Failed Test:"/>
-                <TextBox Text="{Binding FailedCompanyNumber}" 
-                         Width="250" Height="75"
-                         Margin="5"/>
-                <Button Command="{Binding ExportFailedTestCommand}"
-                        Style="{StaticResource MaterialDesignFlatAccentButton}"
-                        Width="150"
-                        Content="Export Failed"/>
-            </StackPanel>
-        </Grid>
-    </Grid>
+
+
+                <ProgressBar Grid.Row="1"                         
+                             Width="56"
+                             Height="56"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
+                             Value="0"
+                             Panel.ZIndex="5"
+                             IsIndeterminate="True"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center" />
+
+                    <ListBox  x:Name="VisibleTiles"
+                      Margin="5"
+                      Grid.Row="1"
+                      Panel.ZIndex="0"    
+                      Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Border BorderThickness="0 0 0 1"
+                                            BorderBrush="Gray">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <!--<Button Margin="8"
+                    Grid.Row="2"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Command="{Binding ExportAllPassedQaRunsCommand}"
+                    Content="Export all passed">
+            </Button>-->
+
+
+                </Grid>
+            </Grid>
+        </materialDesign:DrawerHost>
+
 </UserControl>
