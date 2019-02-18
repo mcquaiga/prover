@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prover.Core.IO;
-using Prover.Core.Shared.Domain;
-using Prover.Core.Storage;
 
 namespace Prover.Core.Settings
 {

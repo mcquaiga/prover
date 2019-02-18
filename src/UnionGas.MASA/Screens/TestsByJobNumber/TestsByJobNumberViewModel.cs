@@ -2,15 +2,13 @@
 {
     using Caliburn.Micro;
     using Prover.Core.Models.Instruments;
-    using Prover.Core.Storage;
-    using Prover.GUI.Common;
-    using Prover.GUI.Common.Screens;
+    using Prover.Core.Services;
+    using Prover.GUI.Screens;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
-    using System.Threading.Tasks;
     using UnionGas.MASA.DCRWebService;
     using UnionGas.MASA.Dialogs.MeterDTODialog;
 
@@ -34,7 +32,7 @@
         /// <summary>
         /// Defines the _instrumentStore
         /// </summary>
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly TestRunService _testRunService;
 
         /// <summary>
         /// Defines the _meterDtoList
@@ -58,18 +56,17 @@
         /// <param name="instrumentStore">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceCommunicator"/></param>
         public TestsByJobNumberViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IInstrumentStore<Instrument> instrumentStore,
+            TestRunService testRunService,
             DCRWebServiceCommunicator dcrWebService) : base(screenManager, eventAggregator)
         {
-            _instrumentStore = instrumentStore;
+            _testRunService = testRunService;
             _dcrWebService = dcrWebService;
 
             /* Get list of open job numbers */
             GetOpenJobNumbersCommand = ReactiveCommand.Create(() =>
-            {
-                //return _instrumentStore.GetAll(i => i.ExportedDateTime == null && !string.IsNullOrEmpty(i.JobId))
-                return _instrumentStore.Query()
-                    .Where(i => i.ExportedDateTime == null && !string.IsNullOrEmpty(i.JobId))
+            {                
+                return _testRunService.GetAllUnexported()
+                    .Where(i => !string.IsNullOrEmpty(i.JobId))
                     .Select(i => i.JobId)
                     .Distinct()
                     .ToList();

@@ -5,8 +5,8 @@
     using Prover.Core.ExternalIntegrations;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Services;
-    using Prover.Core.Storage;
     using Prover.GUI.Screens;
+    using Prover.GUI.Screens.Modules.Certificates.Screens;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;
@@ -75,8 +75,8 @@
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="exportTestRun">The exportTestRun<see cref="IExportTestRun"/></param>
         /// <param name="testRunService">The instrumentStore<see cref="IInstrumentStore{Instrument}"/></param>
-        public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            IExportTestRun exportTestRun, TestRunService testRunService) : base(screenManager, eventAggregator)
+        public ExportTestsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceCommunicator dcrWebService,
+            IExportTestRun exportTestRun, TestRunService testRunService, TestsByJobNumberViewModel testsByJobNumber) : base(screenManager, eventAggregator)
         {
             _exportTestRun = exportTestRun;
             _testRunService = testRunService;
@@ -224,10 +224,9 @@
             foreach (var i in instruments)
             {
                 await Task.Run(() =>
-                {
+                {                                
                     var item = ScreenManager.ResolveViewModel<QaTestRunGridViewModel>();
-                    item.Instrument = i;
-                    item.SetFilter(FilterObservable);
+                    item.Initialize(i, FilterObservable);                    
                     RootResults.Add(item);
                 });
             }

@@ -1,27 +1,29 @@
 ﻿namespace Prover.Core.VerificationTests.VolumeVerification
 {
     using Caliburn.Micro;
-    using Prover.CommProtocol.Common;
-    using Prover.Core.Communication;
-    using Prover.Core.ExternalDevices.DInOutBoards;
+    using Prover.Core.ExternalDevices;
     using Prover.Core.Models.Instruments;
-    using System;
+    using Prover.Core.Settings;
     using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class MechanicalAutoVolumeTestManager : AutoVolumeTestManager
     {
-        public MechanicalAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm) : base(eventAggregator, tachComm)
+        public MechanicalAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, ISettingsService settingsService) : base(eventAggregator, tachComm, settingsService)
         {
         }      
 
         protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {
-            while (await TachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
+        {           
+            await Observable.Start(async () =>
             {
-                Thread.Sleep(500);
-            }  
+                while (await TachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
+                {
+                    Thread.Sleep(500);
+                }  
+            });
+            
         }
     }
 }

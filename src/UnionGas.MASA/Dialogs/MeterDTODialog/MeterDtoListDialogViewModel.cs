@@ -1,11 +1,6 @@
 ﻿using Caliburn.Micro;
-using Prover.GUI.Common;
-using Prover.GUI.Common.Screens;
-using System;
+using Prover.GUI.Screens;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Dialogs.MeterDTODialog

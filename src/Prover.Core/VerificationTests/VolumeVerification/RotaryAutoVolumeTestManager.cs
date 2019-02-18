@@ -1,18 +1,15 @@
 ﻿namespace Prover.Core.VerificationTests.VolumeVerification
 {
     using Caliburn.Micro;
-    using Prover.CommProtocol.Common;
-    using Prover.Core.Communication;
-    using Prover.Core.ExternalDevices.DInOutBoards;
+    using Prover.Core.ExternalDevices;
     using Prover.Core.Models.Instruments;
-    using System;
-    using System.Reactive.Linq;
+    using Prover.Core.Settings;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class RotaryAutoVolumeTestManager : AutoVolumeTestManager
     {
-        public RotaryAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm) : base(eventAggregator, tachComm)
+        public RotaryAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, ISettingsService settingsService) : base(eventAggregator, tachComm, settingsService)
         {
         }       
 

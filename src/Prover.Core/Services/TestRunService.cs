@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Data;

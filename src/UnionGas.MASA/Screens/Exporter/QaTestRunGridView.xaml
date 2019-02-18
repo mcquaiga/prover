@@ -61,6 +61,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
+            <ContentControl x:Name="VerificationItem"/>
             <materialDesign:PackIcon x:Name="Icon"
                                      Grid.Column="0"
                                      Style="{StaticResource PassFailIcon}"
@@ -138,7 +139,7 @@
                         Margin="15 0 0 0"
                         Height="48"
                         Command="{Binding ArchiveTestCommand}"
-                        ToolTip="Archive Test">
+                        ToolTip="Archive Test" Click="Button_Click_1">
                     <materialDesign:PackIcon Kind="Archive"
                                              Height="36"
                                              Width="36" />
