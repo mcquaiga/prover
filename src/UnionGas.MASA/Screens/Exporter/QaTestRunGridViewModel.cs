@@ -158,11 +158,6 @@
         public bool IsShowing { get => _isShowing; set => this.RaiseAndSetIfChanged(ref _isShowing, value); }
 
         /// <summary>
-        /// Gets or sets the VerificationItem
-        /// </summary>
-        public VerificationViewModel VerificationItem { get; set; }
-
-        /// <summary>
         /// Gets or sets the ViewQaTestReportCommand
         /// </summary>
         public ReactiveCommand ViewQaTestReportCommand
@@ -213,8 +208,7 @@
         /// <param name="filterObservable">The filterObservable<see cref="IObservable{Predicate{Instrument}}"/></param>
         public void Initialize(Instrument instrument, IObservable<Predicate<Instrument>> filterObservable)
         {
-            Instrument = instrument;
-            VerificationItem = new VerificationViewModel(instrument);
+            Instrument = instrument;           
 
             SetFilter(filterObservable);
         }
@@ -237,17 +231,17 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task AddCurrentUserToTest()
         {
+            if (!_loginService.IsLoggedIn)
+            {
+                await _loginService.GetLoginDetails();
+            }
+
             if (_loginService.IsLoggedIn)
             {
                 Instrument.EmployeeId = _loginService.User.Id;
                 await _testRunService.Save(Instrument);
                 this.RaisePropertyChanged($"Instrument");
-            }
-            else
-            {
-                await _loginService.GetLoginDetails();
-                await AddCurrentUserToTest();
-            }
+            }           
         }
 
         #endregion

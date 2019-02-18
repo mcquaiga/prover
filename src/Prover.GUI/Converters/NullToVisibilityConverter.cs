@@ -22,7 +22,7 @@ namespace Prover.GUI.Converters
             if (value is string)
                 value = string.IsNullOrEmpty((string) value) ? null : value;
 
-            return value == null ? Visibility.Collapsed : Visibility.Visible;
+            return value == null ? NullValue : NotNullValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
