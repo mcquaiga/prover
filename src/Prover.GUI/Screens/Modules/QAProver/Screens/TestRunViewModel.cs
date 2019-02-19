@@ -214,6 +214,17 @@
             this.WhenAnyValue(x => x.SelectedInstrumentType)
                 .Subscribe(x => _settingsService.Local.LastInstrumentTypeUsed = x?.Name);
 
+            this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Where(i => i != null)
+                .Subscribe(i =>
+                {
+                    UseIrDaPort = i?.CanUseIrDaPort == true;
+                    if (i.MaxBaudRate.HasValue)
+                    {
+                        SelectedBaudRate = i.MaxBaudRate.Value;
+                    }
+                });
+
             _selectedBaudRate = BaudRate.Contains(_settingsService.Local.InstrumentBaudRate)
                 ? _settingsService.Local.InstrumentBaudRate
                 : -1;
@@ -235,12 +246,19 @@
 
             TachIsNotUsed = _settingsService.Local.TachIsNotUsed;
 
-            var canStartNewTest = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
-                (baud, instrumentPort, tachPort, tachNotUsed) =>
-                BaudRate.Contains(baud) && !string.IsNullOrEmpty(instrumentPort) && (tachNotUsed || !string.IsNullOrEmpty(tachPort)));
+            var canStartInstrument = this.WhenAnyValue(x => x.SelectedInstrumentType)
+                .Select(i => i != null);
+
+            var canStartCommPort = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.UseIrDaPort,
+                (baud, port, irda) => (BaudRate.Contains(baud) && !string.IsNullOrEmpty(port)) || irda);
+
+            var canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+                (tachPort, tachNotUsed) => tachNotUsed || !string.IsNullOrEmpty(tachPort));
+
+            var canStartNewTest = Observable.Merge(new [] { canStartInstrument, canStartCommPort, canStartTach });
 
             StartTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest);
+                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest, canStartNewTest);
             StartTestCommand.ThrownExceptions
                 .Subscribe(ex => MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error));
 
@@ -274,7 +292,7 @@
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
             SelectedClient = Clients.Contains(_settingsService.Local.LastClientSelected)
                 ? _settingsService.Local.LastClientSelected
-                : string.Empty;         
+                : string.Empty;
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)

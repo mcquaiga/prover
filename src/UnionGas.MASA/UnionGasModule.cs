@@ -15,8 +15,7 @@ namespace UnionGas.MASA
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
-            
+            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));            
             builder.RegisterType<DCRWebServiceCommunicator>();
 
             //Login service

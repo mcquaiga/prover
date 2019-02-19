@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
+    using System.Windows;
     using UnionGas.MASA.DCRWebService;
     using UnionGas.MASA.Dialogs.MeterDTODialog;
 
@@ -91,6 +92,9 @@
                     }                    
                 }                
             }, canExecuteFetchTestsByJobNumber);
+
+            FetchTestsByJobNumberCommand.ThrownExceptions
+                .Subscribe(async ex => await ScreenManager.ShowMessageBox(ex.Message));
         }
 
         #endregion

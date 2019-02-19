@@ -19,9 +19,9 @@ namespace Prover.GUI.Screens.Settings
         {
             _settingsService = settingsService;
            
-            StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
-            this.WhenAnyValue(x => x.StabilizeLiveReadings)
-                .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
+            //StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
+            //this.WhenAnyValue(x => x.StabilizeLiveReadings)
+            //    .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
 
             SelectedMechanicalVolumeTestType = _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)

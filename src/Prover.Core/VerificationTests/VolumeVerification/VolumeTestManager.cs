@@ -98,6 +98,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             {
                 RunningTest = true;
                 CommClient = commClient;
+                VolumeTest = volumeTest;
+
                 await Task.Run(async () =>
                 {
                     Log.Info("Volume test started!");

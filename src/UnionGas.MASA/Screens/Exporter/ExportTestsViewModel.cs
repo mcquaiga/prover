@@ -104,8 +104,7 @@
 
             ExecuteTestSearch
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .InvokeCommand(CreateTestsViewsCommand);
-                //.Subscribe(async i => await CreateInstrumentViews(i));
+                .InvokeCommand(CreateTestsViewsCommand);          
 
             VisibleTiles = RootResults.CreateDerivedCollection(t => t,
                 model => model.IsShowing,

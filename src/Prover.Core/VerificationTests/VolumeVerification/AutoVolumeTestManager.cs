@@ -118,10 +118,10 @@
             {
                 Status.OnNext("Running volume sync test...");
 
-                await CommClient.Disconnect();
+                await CommClient.Disconnect().ConfigureAwait(false);
 
                 await Task.Run(() =>
-                {
+                {    
                     ResetPulseCounts(VolumeTest);
                     OutputBoard.StartMotor();
                     do
@@ -129,7 +129,7 @@
                         VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                         VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                     } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
-                }, ct);
+                }, ct).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

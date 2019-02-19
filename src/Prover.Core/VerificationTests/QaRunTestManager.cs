@@ -263,11 +263,11 @@
 
                 await DownloadVerificationTestItems(level, ct);
 
-                if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
-                {
-                    _testStatus.OnNext($"Running volume test...");
-                    await RunVolumeTest(ct);
-                }
+                //if (Instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level)?.VolumeTest != null)
+                //{
+                //    _testStatus.OnNext($"Running volume test...");
+                //    await RunVolumeTest(ct);
+                //}
             }
             catch (OperationCanceledException)
             {

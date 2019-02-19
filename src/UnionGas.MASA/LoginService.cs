@@ -33,7 +33,7 @@
         /// <summary>
         /// Defines the _webService
         /// </summary>
-        private readonly DCRWebServiceSoap _webService;
+        private readonly DCRWebServiceCommunicator _webService;
 
         /// <summary>
         /// Defines the _eventAggregator
@@ -50,7 +50,7 @@
         /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="webService">The webService<see cref="DCRWebServiceSoap"/></param>
-        public LoginService(ScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceSoap webService)
+        public LoginService(ScreenManager screenManager, IEventAggregator eventAggregator, DCRWebServiceCommunicator webService)
         {
             _screenManager = screenManager;
             _eventAggregator = eventAggregator;
@@ -100,28 +100,7 @@
 
             if (!string.IsNullOrEmpty(username))
             {
-                var cts = new CancellationTokenSource(new TimeSpan(0, 0, 3));
-                var ct = cts.Token;
-                ct.ThrowIfCancellationRequested();
-
-                _log.Debug($"Logging into MASA using Employee #{username} ...");
-                try
-                {
-                    var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-                    var response =
-                        await Task.Run(async () => await _webService.GetEmployeeAsync(employeeRequest), ct);
-
-                    User = response.Body.GetEmployeeResult;
-                }
-                catch (EndpointNotFoundException)
-                {
-                    MessageBox.Show("Couldn't connect to web service.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _log.Error("Endpoint could not be found.");
-                }
-                catch (Exception ex)
-                {
-                    _log.Error(ex);
-                }
+                User = await _webService.GetEmployee(username);
             }
 
             if (User?.Id != null)

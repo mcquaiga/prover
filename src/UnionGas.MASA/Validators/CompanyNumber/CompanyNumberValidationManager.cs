@@ -47,7 +47,7 @@
         /// <summary>
         /// Defines the _webService
         /// </summary>
-        private readonly DCRWebServiceSoap _webService;
+        private readonly DCRWebServiceCommunicator _webService;
 
         #endregion
 
@@ -60,7 +60,7 @@
         /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
         /// <param name="webService">The webService<see cref="DCRWebServiceSoap"/></param>
         /// <param name="loginService">The loginService<see cref="ILoginService{EmployeeDTO}"/></param>
-        public CompanyNumberValidationManager(ScreenManager screenManager, TestRunService testRunService, DCRWebServiceSoap webService, ILoginService<EmployeeDTO> loginService)
+        public CompanyNumberValidationManager(ScreenManager screenManager, TestRunService testRunService, DCRWebServiceCommunicator webService, ILoginService<EmployeeDTO> loginService)
         {
             _screenManager = screenManager;
             _testRunService = testRunService;
@@ -87,26 +87,34 @@
             var serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber);
             var serialNumber = serialNumberItem.RawValue.TrimStart('0');
 
-            MeterDTO meterDto;
-            do
+            try
             {
-                meterDto = await ValidateInstrumentExistsOnOpenJob(companyNumber);
-
-                if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
-                    || meterDto.InventoryCode != companyNumber || meterDto.SerialNumber.TrimStart('0') != serialNumber)
+                MeterDTO meterDto;
+                do
                 {
-                    _log.Warn($"Inventory number {companyNumber} not found in an open job.");
-                    companyNumber = (string)await Update(commClient, instrument, new CancellationTokenSource().Token);
-                }
-                else
-                {
-                    break;
-                }
+                    meterDto = await _webService.FindMeterByCompanyNumber(companyNumber);
 
-            } while (!string.IsNullOrEmpty(companyNumber));
+                    if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
+                        || meterDto.InventoryCode != companyNumber || meterDto.SerialNumber.TrimStart('0') != serialNumber)
+                    {
+                        _log.Warn($"Inventory number {companyNumber} not found in an open job.");
+                        companyNumber = (string)await Update(commClient, instrument, new CancellationTokenSource().Token);
+                    }
+                    else
+                    {
+                        break;
+                    }
 
-            if (meterDto != null)
-                await UpdateInstrumentValues(instrument, meterDto);
+                } while (!string.IsNullOrEmpty(companyNumber));
+
+                if (meterDto != null)
+                    await UpdateInstrumentValues(instrument, meterDto);
+            }
+            catch (EndpointNotFoundException)
+            {                
+                return;
+            }
+            
         }
 
         /// <summary>
@@ -175,45 +183,7 @@
             await _testRunService.Save(instrument);
         }
 
-        /// <summary>
-        /// The VerifyWithWebService
-        /// </summary>
-        /// <param name="companyNumber">The companyNumber<see cref="string"/></param>
-        /// <returns>The <see cref="Task{MeterDTO}"/></returns>
-        public async Task<MeterDTO> ValidateInstrumentExistsOnOpenJob(string companyNumber)
-        {
-            _log.Debug($"Verifying inventory number {companyNumber} with MASA.");
-
-            try
-            {
-                var tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                var request = new GetValidatedEvcDeviceByInventoryCodeRequest
-                {
-                    Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
-                };
-
-                var response = await Task.Run(async () => await _webService.GetValidatedEvcDeviceByInventoryCodeAsync(request), tokenSource.Token).ConfigureAwait(false);
-
-                return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
-            }
-            catch (OperationCanceledException)
-            {
-                _log.Warn($"Timed out contacting the web service. Skipping company number verification.");
-                return null;
-            }
-            catch (EndpointNotFoundException)
-            {
-                _log.Warn($"Web service not available. Skipping company number verification.");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex, $"An error occured contacting the web service. Skipping company number verification.");
-                return null;
-            }
-        }
+       
 
         #endregion
     }
