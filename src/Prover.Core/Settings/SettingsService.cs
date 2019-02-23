@@ -1,5 +1,7 @@
 ﻿namespace Prover.Core.Settings
 {
+    using Caliburn.Micro;
+    using Prover.Core.Events;
     using Prover.Core.Storage;
     using System;
     using System.IO;
@@ -83,9 +85,10 @@
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
         /// <param name="keyValueStore">The keyValueStore<see cref="KeyValueStore"/></param>
-        public SettingsService(KeyValueStore keyValueStore)
+        public SettingsService(KeyValueStore keyValueStore, IEventAggregator eventAggregator)
         {
             _keyValueStore = keyValueStore;
+            EventAggregator = eventAggregator;
         }
 
         #endregion
@@ -101,6 +104,7 @@
         /// Gets the Shared
         /// </summary>
         public SharedSettings Shared { get; private set; }
+        public IEventAggregator EventAggregator { get; }
 
         #endregion
 
@@ -126,6 +130,8 @@
         {
             await Shared.SaveSharedSettings(_keyValueStore).ConfigureAwait(false);
             await Local.SaveLocalSettingsAsync(SettingsPath).ConfigureAwait(false);
+
+            await EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
         }
 
         #endregion

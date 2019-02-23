@@ -241,6 +241,7 @@
     <Compile Include="Settings\CertificateSettings.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Settings\SettingsReader.cs" />
+    <Compile Include="Settings\SettingsService.cs" />
     <Compile Include="Settings\SettingsWriter.cs" />
     <Compile Include="Settings\SharedSettings.cs" />
     <Compile Include="Settings\TestSettings.cs" />
@@ -290,7 +291,6 @@
     <Compile Include="Models\Instruments\TemperatureTest.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="CoreBootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />

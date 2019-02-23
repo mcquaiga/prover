@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell.Items;
@@ -26,9 +27,9 @@ namespace Prover.Core
 
         public static void RegisterServices(ContainerBuilder builder)
         {
-            SetupDatabase(builder);
+            SetupDatabase(builder);           
 
-            builder.Register(c => new SettingsService(c.Resolve<KeyValueStore>()))               
+            builder.Register(c => new SettingsService(c.Resolve<KeyValueStore>(), c.Resolve<IEventAggregator>()))               
                 .As<ISettingsService>()
                 .SingleInstance();
 

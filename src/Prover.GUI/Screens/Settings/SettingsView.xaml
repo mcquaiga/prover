@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="{x:Type CheckBox}">
@@ -43,6 +44,43 @@
                 <TabItem Header="Test Configuration">
                     <TabItem.Content>
                         <StackPanel Margin="16" Orientation="Vertical">
+
+                            <StackPanel Margin="0,8" Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Bottom"
+                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                    Text="Corrected % Threshold (+/-)" />
+                                <TextBox
+                                    MinWidth="75"
+                                    Margin="10,0"
+                                    Style="{StaticResource MaterialDesignTextBox}"
+                                    Text="{Binding SharedSettings.TestSettings.CorrectedErrorThreshold}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,8" Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Bottom"
+                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                    Text="Uncorrected % Threshold (+/-)" />
+                                <TextBox
+                                    MinWidth="75"
+                                    Margin="10,0"
+                                    Style="{StaticResource MaterialDesignTextBox}"
+                                    Text="{Binding SharedSettings.TestSettings.UncorrectedErrorThreshold}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,8" Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Bottom"
+                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                    Text="Meter Displacement % Threshold (+/-)" />
+                                <TextBox
+                                    MinWidth="75"
+                                    Margin="10,0"
+                                    Style="{StaticResource MaterialDesignTextBox}"
+                                    Text="{Binding SharedSettings.TestSettings.MeterDisplacementErrorThreshold}" />
+                            </StackPanel>
+
                             <CheckBox
                                 Margin="0,8"
                                 Content="Auto Save tests."
@@ -102,6 +140,8 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </materialDesign:Card>
+
+
 
                                 <materialDesign:Card Margin="8">
                                     <StackPanel Orientation="Vertical">
