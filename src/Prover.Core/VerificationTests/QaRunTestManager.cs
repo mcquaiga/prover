@@ -209,14 +209,14 @@
         /// <summary>
         /// The InitializeTest
         /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
+        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
         /// <param name="commPort">The commPort<see cref="ICommPort"/></param>
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <param name="client">The client<see cref="Client"/></param>
         /// <param name="statusObserver">The statusObserver<see cref="IObserver{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings,
+        public async Task InitializeTest(EvcDevice instrumentType, ICommPort commPort, TestSettings testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
         {
             if (statusObserver != null)

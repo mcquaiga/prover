@@ -1,33 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
-    public static class HoneywellInstrumentTypes
+    /// <summary>
+    /// Defines the <see cref="HoneywellDevice" />
+    /// </summary>
+    public class HoneywellDevice : IEvcDevice
     {
-        public static EvcDevice GetByName(string name)
-        {
-            var all = GetAll();
+        #region Fields
 
-            return all.ToList().FirstOrDefault(i => i.Name == name);
+        /// <summary>
+        /// Defines the _itemsInformation
+        /// </summary>
+        private readonly HashSet<ItemMetadata> _itemsInformation = new HashSet<ItemMetadata>();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the ItemsInformation
+        /// </summary>
+        public HashSet<ItemMetadata> Items
+        {
+            get
+            {
+                if (_itemsInformation.Count == 0)
+                {
+                    LoadItemsInformation();
+                }
+
+                return _itemsInformation;
+            }
         }
 
-        public static EvcDevice GetById(int id)
-        {
-            var all = GetAll();
+        public int AccessCode { get; set; }
+        public bool? CanUseIrDaPort { get; set; }
+        public Func<ICommPort, ISubject<string>, EvcCommunicationClient> ClientFactory { get; set; }
+        public string CommClientType { get; set; }
+        public int Id { get; set; }
+        public string ItemFilePath { get; set; }
+        public IEnumerable<ItemMetadata> ItemsMetadata { get; set; }
+        public int? MaxBaudRate { get; set; }
+        public string Name { get; set; }
 
-            return all.ToList().FirstOrDefault(i => i.Id == id);
+        public void LoadItemsInformation()
+        {
+            _itemsInformation.Clear();
+            _itemsInformation.UnionWith(ItemHelpers.LoadItems(this));
         }
 
-        public static IEnumerable<EvcDevice> GetAll()
-        {
-            var allTask = ItemHelpers.GetInstrumentDefinitions().ConfigureAwait(false);
-            return allTask.GetAwaiter().GetResult()
-                .ToList()
-                .OrderBy(i => i.Name);
-        }
+        #endregion
     }
 }
 /*

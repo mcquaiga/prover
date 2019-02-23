@@ -27,7 +27,7 @@ namespace Prover.CommProtocol.Common
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="instrumentType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject)
+        protected EvcCommunicationClient(ICommPort commPort, EvcDevice instrumentType, ISubject<string> statusSubject)
         {
             CommPort = commPort;
             InstrumentType = instrumentType;
@@ -46,7 +46,7 @@ namespace Prover.CommProtocol.Common
 
         protected ICommPort CommPort { get; }
 
-        public InstrumentType InstrumentType { get; set; }
+        public EvcDevice InstrumentType { get; set; }
 
         public IObservable<string> StatusObservable => _statusSubject.AsObservable();
 

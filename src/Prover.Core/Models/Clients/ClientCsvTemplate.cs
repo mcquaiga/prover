@@ -38,7 +38,7 @@ namespace Prover.Core.Models.Clients
         }
 
         [NotMapped]
-        public InstrumentType InstrumentType { get; set; }
+        public EvcDevice InstrumentType { get; set; }
 
         [Column("InstrumentType")]
         public string InstrumentTypeString

@@ -44,11 +44,11 @@
         /// <summary>
         /// The CreateNextTestRun
         /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
+        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        public static async Task<IQaRunTestManager> CreateNextTestRun(InstrumentType instrumentType, CommPort commPort, Action<string> statusAction = null)
+        public static async Task<IQaRunTestManager> CreateNextTestRun(EvcDevice instrumentType, CommPort commPort, Action<string> statusAction = null)
         {
             if (instrumentType == Instruments.Toc)
             {
@@ -79,11 +79,11 @@
         /// <summary>
         /// The CreateTestRun
         /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
+        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        public static async Task<IQaRunTestManager> CreateTestRun(InstrumentType instrumentType, CommPort commPort, Action<string> statusAction = null)
+        public static async Task<IQaRunTestManager> CreateTestRun(EvcDevice instrumentType, CommPort commPort, Action<string> statusAction = null)
         {
             var qaTestRunManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
             qaTestRunManager.TestStatus.Subscribe(statusAction);
@@ -100,11 +100,11 @@
         /// <summary>
         /// The CreateTocTestRun
         /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
+        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="qaTestRunManager">The qaTestRunManager<see cref="IQaRunTestManager"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        private static async Task<IQaRunTestManager> TocTestRun(InstrumentType instrumentType, CommPort commPort, IQaRunTestManager qaTestRunManager)
+        private static async Task<IQaRunTestManager> TocTestRun(EvcDevice instrumentType, CommPort commPort, IQaRunTestManager qaTestRunManager)
         {
             MiniAtTestManager = qaTestRunManager;
             instrumentType = Instruments.MiniAt;

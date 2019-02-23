@@ -169,6 +169,6 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override EvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
     }
 }

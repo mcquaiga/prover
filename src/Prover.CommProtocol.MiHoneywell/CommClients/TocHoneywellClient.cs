@@ -14,7 +14,7 @@ using System.Reactive.Subjects;
     /// </summary>
     public sealed class TocHoneywellClient : HoneywellClient
     {
-        internal static InstrumentType TurboMonitor = new InstrumentType()
+        internal static EvcDevice TurboMonitor = new EvcDevice()
         {
             Id = 6,
             AccessCode = 6,
@@ -30,12 +30,11 @@ using System.Reactive.Subjects;
         /// </summary>
         private readonly IEnumerable<ItemMetadata> _tibBoardItems;
 
-        public TocHoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public TocHoneywellClient(ICommPort commPort, EvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
             _tibBoardItems = ItemHelpers.LoadItems(Instruments.TurboMonitor);
         }
 
-        #endregion
 
         #region Methods
 

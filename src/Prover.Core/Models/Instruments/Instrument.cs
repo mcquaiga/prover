@@ -24,7 +24,7 @@ namespace Prover.Core.Models.Instruments
 
     public partial class Instrument : ProverTable
     {
-        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+        public static Instrument Create(EvcDevice instrumentType, IEnumerable<ItemValue> itemValues,
             TestSettings testSettings, Client client = null)
         {
             var i = new Instrument()
@@ -52,7 +52,7 @@ namespace Prover.Core.Models.Instruments
         public int Type { get; set; }
 
         [NotMapped]
-        public override InstrumentType InstrumentType { get; set; }
+        public override EvcDevice InstrumentType { get; set; }
 
         [Index]
         public Guid? CertificateId { get; set; }

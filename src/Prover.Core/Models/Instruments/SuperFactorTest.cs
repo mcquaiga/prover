@@ -62,7 +62,7 @@ namespace Prover.Core.Models.Instruments
         public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?) Math.Pow((double) ActualFactor, 2) : null;
 
         [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override EvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         public void Calculate()
         {

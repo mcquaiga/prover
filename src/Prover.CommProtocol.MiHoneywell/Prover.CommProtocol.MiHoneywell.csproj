@@ -111,6 +111,7 @@
     <Compile Include="CommClients\TocHoneywellClient.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
+    <Compile Include="HoneywellDevice.cs" />
     <Compile Include="Instruments.cs" />
     <Compile Include="Items\DeviceItems.cs" />
     <Compile Include="Items\FrequencyTestItems.cs" />

@@ -78,13 +78,13 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvTemplates
 
         // Instrument Types      
 
-        public List<InstrumentType> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
+        public List<EvcDevice> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
             .OrderBy(s => s.Name)
             .ToList();
 
-        private InstrumentType _selectedInstrumentType;
+        private EvcDevice _selectedInstrumentType;
 
-        public InstrumentType SelectedInstrumentType
+        public EvcDevice SelectedInstrumentType
         {
             get => _selectedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);

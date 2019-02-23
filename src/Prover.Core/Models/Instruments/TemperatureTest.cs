@@ -53,7 +53,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         public override decimal? EvcFactor => Items.GetItem(ItemCodes.Temperature.Factor)?.NumericValue;
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override EvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         public static decimal ConvertTo(decimal value, string fromUnit, string toUnit)
         {

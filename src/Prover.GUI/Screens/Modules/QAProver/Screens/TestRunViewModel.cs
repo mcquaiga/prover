@@ -94,8 +94,8 @@
         /// <summary>
         /// Defines the _instrumentTypes
         /// </summary>
-        private ReactiveList<InstrumentType> _instrumentTypes =
-            new ReactiveList<InstrumentType> { ChangeTrackingEnabled = true };
+        private ReactiveList<EvcDevice> _instrumentTypes =
+            new ReactiveList<EvcDevice> { ChangeTrackingEnabled = true };
 
         /// <summary>
         /// Defines the _isDirty
@@ -135,7 +135,7 @@
         /// <summary>
         /// Defines the _selectedInstrumentType
         /// </summary>
-        private InstrumentType _selectedInstrumentType;
+        private EvcDevice _selectedInstrumentType;
 
         /// <summary>
         /// Defines the _selectedTachCommPort
@@ -347,7 +347,7 @@
         /// <summary>
         /// Gets or sets the InstrumentTypes
         /// </summary>
-        public ReactiveList<InstrumentType> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        public ReactiveList<EvcDevice> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
 
         /// <summary>
         /// Gets or sets a value indicating whether IsDirty
@@ -392,7 +392,7 @@
         /// <summary>
         /// Gets or sets the SelectedInstrumentType
         /// </summary>
-        public InstrumentType SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
+        public EvcDevice SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
 
         /// <summary>
         /// Gets or sets the SelectedTachCommPort

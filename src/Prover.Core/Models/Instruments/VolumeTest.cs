@@ -210,7 +210,7 @@ namespace Prover.Core.Models.Instruments
         public string DriveTypeDiscriminator { get; set; }
 
         [NotMapped]
-        public override InstrumentType InstrumentType => Instrument.InstrumentType;
+        public override EvcDevice InstrumentType => Instrument.InstrumentType;
 
         private void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
         {

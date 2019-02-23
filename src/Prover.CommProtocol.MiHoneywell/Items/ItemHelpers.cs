@@ -1,29 +1,60 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using NLog;
-using NuGet;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.CommClients;
-
-namespace Prover.CommProtocol.MiHoneywell.Items
+﻿namespace Prover.CommProtocol.MiHoneywell.Items
 {
+    using Newtonsoft.Json.Linq;
+    using NLog;
+    using NuGet;
+    using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.MiHoneywell.CommClients;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reactive.Subjects;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="ItemHelpers" />
+    /// </summary>
     public static class ItemHelpers
-    {     
-        private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\ItemDefinitions";
+    {
+        #region Constants
+
+        /// <summary>
+        /// Defines the ItemDefinitionFileName
+        /// </summary>
         private const string ItemDefinitionFileName = "Items.json";
+
+        /// <summary>
+        /// Defines the TypeFileName
+        /// </summary>
         private const string TypeFileName = "Type_";
 
-        private static HashSet<InstrumentType> _instrumentTypesCache;
+        #endregion
 
-        public static async Task<HashSet<InstrumentType>> GetInstrumentDefinitions()
+        #region Fields
+
+        /// <summary>
+        /// Defines the ItemDefinitionsFolder
+        /// </summary>
+        private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\ItemDefinitions";
+
+        /// <summary>
+        /// Defines the _instrumentTypesCache
+        /// </summary>
+        private static HashSet<HoneywellDevice> _instrumentTypesCache;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The GetInstrumentDefinitions
+        /// </summary>
+        /// <returns>The <see cref="Task{HashSet{HoneywellDevice}}"/></returns>
+        public static async Task<HashSet<HoneywellDevice>> GetInstrumentDefinitions()
         {
             if (_instrumentTypesCache == null || !_instrumentTypesCache.Any())
                 await LoadInstrumentTypes();
@@ -31,16 +62,20 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             return _instrumentTypesCache;
         }
 
+        /// <summary>
+        /// The LoadInstrumentTypes
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public static async Task LoadInstrumentTypes()
-        {            
+        {
             if (_instrumentTypesCache == null)
-                _instrumentTypesCache = new HashSet<InstrumentType>();
+                _instrumentTypesCache = new HashSet<HoneywellDevice>();
 
             _instrumentTypesCache.Clear();
 
             var items = await LoadGlobalItemDefinitions();
             var readTasks = new List<Task>();
-            var results = new ConcurrentDictionary<InstrumentType, byte>();
+            var results = new ConcurrentDictionary<HoneywellDevice, byte>();
             var files = Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json");
             foreach (var file in files)
             {
@@ -48,7 +83,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                     Task.Run(async () =>
                     {
                         var instrJson = await FileTextToJObjectAsync(file);
-                        var i = instrJson.ToObject<InstrumentType>();
+                        var i = instrJson.ToObject<HoneywellDevice>();
                         i.ClientFactory = GetCommClientFactory(i);
 
                         var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
@@ -75,7 +110,42 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                 });
         }
 
-        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(InstrumentType instrumentType)
+        /// <summary>
+        /// The LoadItems
+        /// </summary>
+        /// <param name="instrumentType">The instrumentType<see cref="HoneywellDevice"/></param>
+        /// <param name="itemValues">The itemValues<see cref="Dictionary{int, string}"/></param>
+        /// <returns>The <see cref="IEnumerable{ItemValue}"/></returns>
+        public static IEnumerable<ItemValue> LoadItems(HoneywellDevice instrumentType, Dictionary<int, string> itemValues)
+        {
+            if (instrumentType == null)
+                throw new ArgumentNullException(nameof(instrumentType));
+
+            return itemValues
+                .Where(i => instrumentType.ItemsMetadata.GetItem(i.Key) != null)
+                .Select(iv => new ItemValue(instrumentType.ItemsMetadata.GetItem(iv.Key), iv.Value));
+        }
+
+        /// <summary>
+        /// The FileTextToJObjectAsync
+        /// </summary>
+        /// <param name="path">The path<see cref="string"/></param>
+        /// <returns>The <see cref="Task{JObject}"/></returns>
+        private static async Task<JObject> FileTextToJObjectAsync(string path)
+        {
+            using (var fs = File.OpenText(path))
+            {
+                var t = await fs.ReadToEndAsync();
+                return JObject.Parse(t);
+            }
+        }
+
+        /// <summary>
+        /// The GetCommClientFactory
+        /// </summary>
+        /// <param name="instrumentType">The instrumentType<see cref="HoneywellDevice"/></param>
+        /// <returns>The <see cref="Func{ICommPort, ISubject{string}, EvcCommunicationClient}"/></returns>
+        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(HoneywellDevice instrumentType)
         {
             var commTypeName = instrumentType.CommClientType;
             if (string.IsNullOrEmpty(commTypeName))
@@ -86,19 +156,19 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             if (commType == null)
                 commType = typeof(HoneywellClient);
 
-            return (port, statusSubject) => (EvcCommunicationClient) Activator.CreateInstance(commType, port, instrumentType, statusSubject);
+            return (port, statusSubject) => (EvcCommunicationClient)Activator.CreateInstance(commType, port, instrumentType, statusSubject);
         }
 
-        private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
-        {
-            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";                 
-            return await GetItemDefinitions(path, "ItemDefinitions");            
-        }
-
+        /// <summary>
+        /// The GetItemDefinitions
+        /// </summary>
+        /// <param name="itemsJObject">The itemsJObject<see cref="JObject"/></param>
+        /// <param name="attributeName">The attributeName<see cref="string"/></param>
+        /// <returns>The <see cref="Task{HashSet{ItemMetadata}}"/></returns>
         private static async Task<HashSet<ItemMetadata>> GetItemDefinitions(JObject itemsJObject, string attributeName)
         {
             var results = new HashSet<ItemMetadata>();
-            var items = itemsJObject[attributeName]?.Children().ToList();            
+            var items = itemsJObject[attributeName]?.Children().ToList();
             if (items == null) return results;
 
             var tasks = new List<Task>();
@@ -121,7 +191,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
                         itemValues = definitionsJObject["values"];
                         var values = itemValues?.Children().ToList();
-                        i.ItemDescriptions = values?.Select(v => (ItemMetadata.ItemDescription) v.ToObject(type));
+                        i.ItemDescriptions = values?.Select(v => (ItemMetadata.ItemDescription)v.ToObject(type));
                     }
                     else
                     {
@@ -144,29 +214,28 @@ namespace Prover.CommProtocol.MiHoneywell.Items
             return results;
         }
 
+        /// <summary>
+        /// The GetItemDefinitions
+        /// </summary>
+        /// <param name="itemFilePath">The itemFilePath<see cref="string"/></param>
+        /// <param name="attributeName">The attributeName<see cref="string"/></param>
+        /// <returns>The <see cref="Task{HashSet{ItemMetadata}}"/></returns>
         private static async Task<HashSet<ItemMetadata>> GetItemDefinitions(string itemFilePath, string attributeName)
         {
             var itemsJson = await FileTextToJObjectAsync(itemFilePath);
             return await GetItemDefinitions(itemsJson, attributeName);
         }
 
-        private static async Task<JObject> FileTextToJObjectAsync(string path)
-        {            
-            using (var fs = File.OpenText(path))
-            {
-                var t = await fs.ReadToEndAsync();
-                return JObject.Parse(t);
-            }
-        }
-
-        public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
+        /// <summary>
+        /// The LoadGlobalItemDefinitions
+        /// </summary>
+        /// <returns>The <see cref="Task{HashSet{ItemMetadata}}"/></returns>
+        private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
         {
-            if (instrumentType == null)
-                throw new ArgumentNullException(nameof(instrumentType));
-
-            return itemValues
-                .Where(i => instrumentType.ItemsMetadata.GetItem(i.Key) != null)
-                .Select(iv => new ItemValue(instrumentType.ItemsMetadata.GetItem(iv.Key), iv.Value));
+            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
+            return await GetItemDefinitions(path, "ItemDefinitions");
         }
+
+        #endregion
     }
 }
