@@ -50,7 +50,7 @@
     },
     {
       "description": "Roots11M",
-      "UnCorPulsesX10": "100",
+      "UnCorPulsesX10": "103",
       "UnCorPulsesX100": "10",
       "MeterDisplacement": "0.1000000",
       "ids": [
@@ -60,7 +60,7 @@
     },
     {
       "description": "Roots16M",
-      "UnCorPulsesX10": "150",
+      "UnCorPulsesX10": "152",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1481500",
       "ids": [
@@ -70,7 +70,7 @@
     },
     {
       "description": "Roots23M",
-      "UnCorPulsesX10": "270",
+      "UnCorPulsesX10": "274",
       "UnCorPulsesX100": "27",
       "MeterDisplacement": "0.2624500",
       "ids": [
@@ -187,7 +187,7 @@
     },
     {
       "description": "RM11000",
-      "UnCorPulsesX10": "100",
+      "UnCorPulsesX10": "102",
       "UnCorPulsesX100": "10",
       "MeterDisplacement": "0.0993789",
       "ids": [
@@ -197,7 +197,7 @@
     },
     {
       "description": "RM16000",
-      "UnCorPulsesX10": "150",
+      "UnCorPulsesX10": "152",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1408163",
       "ids": [
@@ -207,7 +207,7 @@
     },
     {
       "description": "RM 16000 New",
-      "UnCorPulsesX10": "110",
+      "UnCorPulsesX10": "112",
       "UnCorPulsesX100": "11",
       "MeterDisplacement": "0.1085343",
       "ids": [
@@ -217,7 +217,7 @@
     },
     {
       "description": "RM 23000",
-      "UnCorPulsesX10": "150",
+      "UnCorPulsesX10": "152",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1408163",
       "ids": [
@@ -277,7 +277,7 @@
     },
     {
       "description": "Roots 11M B3",
-      "UnCorPulsesX10": "100",
+      "UnCorPulsesX10": "103",
       "UnCorPulsesX100": "10",
       "MeterDisplacement": "0.1000000",
       "ids": [
@@ -287,7 +287,7 @@
     },
     {
       "description": "Roots 16M B3",
-      "UnCorPulsesX10": "150",
+      "UnCorPulsesX10": "152",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1481480",
       "ids": [
@@ -297,7 +297,7 @@
     },
     {
       "description": "Roots 23M B3",
-      "UnCorPulsesX10": "370",
+      "UnCorPulsesX10": "389",
       "UnCorPulsesX100": "37",
       "MeterDisplacement": "0.3703700",
       "ids": [
