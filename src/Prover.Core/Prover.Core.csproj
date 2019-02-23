@@ -332,11 +332,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MeterIndexes.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\201510030033541_InitialCreate.resx">
       <DependentUpon>201510030033541_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
