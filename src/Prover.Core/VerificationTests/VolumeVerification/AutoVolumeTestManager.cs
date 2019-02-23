@@ -248,7 +248,7 @@
                     pulsesWaiting += (int)i.NumericValue;
                 }
 
-                Status.OnNext($"Waiting for residual pulses..." + Environment.NewLine + "{pulsesWaiting} total pulses remaining");
+                Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
                 if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                 {
                     await commClient.Disconnect();

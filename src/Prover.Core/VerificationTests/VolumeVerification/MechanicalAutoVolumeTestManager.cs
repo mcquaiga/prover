@@ -16,14 +16,13 @@
 
         protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
         {           
-            await Observable.Start(async () =>
+            await Task.Run(async () =>
             {
                 while (await TachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
                 {
                     Thread.Sleep(500);
                 }  
-            });
-            
+            });            
         }
     }
 }
