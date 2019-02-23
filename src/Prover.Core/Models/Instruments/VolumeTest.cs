@@ -16,18 +16,22 @@ namespace Prover.Core.Models.Instruments
 {
     public class VolumeTest : BaseVerificationTest
     {
+        public decimal UncorrectedErrorThreshold;
+        public decimal CorrectedErrorThreshold;        
+
         private string _testInstrumentData;
 
         private VolumeTest() { }
 
-        public static VolumeTest Create(VerificationTest verificationTest,
-            TestSettings testSettings)
+        public static VolumeTest Create(VerificationTest verificationTest, TestSettings testSettings)
         {
             var volume = new VolumeTest()
             {
                 Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
                 VerificationTest = verificationTest,
                 VerificationTestId = verificationTest.Id,
+                UncorrectedErrorThreshold = testSettings.UncorrectedErrorThreshold,
+                CorrectedErrorThreshold = testSettings.CorrectedErrorThreshold
             };
 
             volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
@@ -85,10 +89,10 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
+        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(CorrectedErrorThreshold) ?? false;
 
         [NotMapped]
-        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
+        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(UncorrectedErrorThreshold) ?? false;
 
         [NotMapped]
         public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
