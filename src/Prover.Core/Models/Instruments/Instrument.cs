@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Runtime.Serialization;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Certificates;
@@ -87,7 +88,10 @@ namespace Prover.Core.Models.Instruments
             return DateTime.ParseExact($"{date} {time}", dateFormat, null);
         }
 
-        public string GetDateFormatted(DateTime dateTime)
+        public Guid? LinkedTestId { get; set; }
+        public virtual Instrument LinkedTest { get; set; }      
+
+	public string GetDateFormatted(DateTime dateTime)
         {
             var dateFormat = Items.GetItem(262).Description;
             dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
@@ -97,7 +101,7 @@ namespace Prover.Core.Models.Instruments
         public string GetTimeFormatted(DateTime dateTime)
         {
             return dateTime.ToString("HH mm ss");
-        }
+        }     
 
         #region NotMapped Properties
 

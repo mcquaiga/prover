@@ -219,6 +219,10 @@
     <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.cs" />
     <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.Designer.cs">
       <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+      </Compile>
+    <Compile Include="Migrations\201810281911496_AddLinkedTestColumn.cs" />
+    <Compile Include="Migrations\201810281911496_AddLinkedTestColumn.Designer.cs">
+      <DependentUpon>201810281911496_AddLinkedTestColumn.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.cs" />
     <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.Designer.cs">
@@ -233,6 +237,7 @@
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
+    <Compile Include="Models\Instruments\GroupedInstruments.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
@@ -257,11 +262,13 @@
     <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
     <Compile Include="VerificationTests\IQaRunTestManager.cs" />
     <Compile Include="VerificationTests\ITestActionsManager.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\TestActionsManager.cs" />
     <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
-    <Compile Include="VerificationTests\ITestManager.cs" />
+    <Compile Include="VerificationTests\TestRunCreator.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\FrequencyVolumeTestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
@@ -295,7 +302,6 @@
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
-    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\MechanicalAutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\RotaryAutoVolumeTestManager.cs" />
@@ -367,6 +373,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612301400385_AddClientItems.resx">
       <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810281911496_AddLinkedTestColumn.resx">
+      <DependentUpon>201810281911496_AddLinkedTestColumn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.resx">
       <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>

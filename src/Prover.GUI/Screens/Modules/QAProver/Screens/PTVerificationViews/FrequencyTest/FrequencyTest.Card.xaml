@@ -23,14 +23,28 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>              
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="0" Grid.RowSpan="2"
+                    <!--<StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Grid.Row="0"
+                                Grid.ColumnSpan="4">
+                        <Button Content="Download Start Readings"
+                                Margin="15 5"                    
+                                Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PreTestCommand}" />
+
+                        <Button Content="Finish"  
+                                Margin="15 5"
+                                Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                Command="{Binding PostTestCommand}" />
+                    </StackPanel>-->
+
+                    <StackPanel                                 Grid.Column="0" 
                                 VerticalAlignment="Top">
                         <controls:LabelValueControl Label="KMO (AAT Sim)"
                                                            Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -44,10 +58,12 @@
                     </StackPanel>
 
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="1"
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                        
+                                         Grid.Column="1">
+                        <StackPanel 
                                 Margin="4">
-                        <materialDesign:ColorZone Content="Adjusted"
+                            <materialDesign:ColorZone Content="Adjusted"
                                                   Mode="Light"
                                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Padding="2"
@@ -57,20 +73,23 @@
                             HorizontalAlignment="Center"
                             DisplayValue="{Binding TestRun.AdjustedVolumePercentError}"
                             Passed="{Binding TestRun.HasPassed}" />
-                        <UniformGrid Columns="2">
-                            <controls:LabelValueControl Label="True Adj."                                               
-                                                        Value="{Binding AdjustedVolume}" />
+                            <UniformGrid Columns="2">
+                                <controls:LabelValueControl Label="Start Reading"
+                                                               Value="{Binding TestRun.EvcAdjustedStartReading}" />
+                                <controls:LabelValueControl Label="End Reading"
+                                                               Value="{Binding TestRun.EvcAdjustedEndReading}" />
 
-                            <controls:LabelValueControl Label="EVC Adj."
+                                <controls:LabelValueControl Label="True Value"
+                                                               Value="{Binding AdjustedVolume}" />
+                                <controls:LabelValueControl Label="EVC Value"
                                                                Value="{Binding EvcAdjustedVolume}" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </materialDesign:Card>
 
-                        </UniformGrid>
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="1"
+                    <StackPanel                                Grid.Column="2"
                                 Margin="4">
-                        <materialDesign:ColorZone Content="Unadjusted"
+                        <materialDesign:ColorZone Content="Corrected Adjusted"
                                                   Mode="Light"
                                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Padding="2"/>
@@ -80,15 +99,41 @@
                             DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
                             Passed="{Binding TestRun.HasPassed}" />
                         <UniformGrid Columns="2">
-                            <controls:LabelValueControl Label="True Unadj."
-                                                               Value="{Binding UnadjustedVolume}" />
+                            <controls:LabelValueControl Label="Start Reading"
+                                                               Value="{Binding TestRun.UnadjustedStartReading}" />
+                            <controls:LabelValueControl Label="End Reading"
+                                                               Value="{Binding TestRun.UnadjustedEndReading}" />
 
-                            <controls:LabelValueControl Label="EVC Unadj."
+                            <controls:LabelValueControl Label="True Value"
+                                                               Value="{Binding UnadjustedVolume}" />
+                            <controls:LabelValueControl Label="EVC Value"
                                                                Value="{Binding EvcUnadjustedVolume}" />
                         </UniformGrid>
                     </StackPanel>
-
-
+                    <StackPanel                                Grid.Column="3"
+                                Margin="4">
+                        <materialDesign:ColorZone Content="Unadjusted"
+                                                  Mode="Light"
+                                                  materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                  Padding="2"/>
+                        <controls1:PercentageControl
+                            Margin="5"
+                            HorizontalAlignment="Center"
+                            DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
+                            Passed="{Binding TestRun.HasPassed}" />
+                        <UniformGrid Columns="2">
+                            <controls1:ValueDescriptionControl Label="Start Reading"
+                                                               Value="{Binding TestRun.UnadjustedStartReading}" />
+                            <controls1:ValueDescriptionControl Label="End Reading"
+                                                               Value="{Binding TestRun.UnadjustedEndReading}" />
+                            
+                            <controls1:ValueDescriptionControl Label="True Value"
+                                                               Value="{Binding UnadjustedVolume}" />
+                            <controls1:ValueDescriptionControl Label="EVC Value"
+                                                               Value="{Binding EvcUnadjustedVolume}" />
+                        </UniformGrid>
+                    </StackPanel>
+                   
                 </Grid>
 
             </StackPanel>

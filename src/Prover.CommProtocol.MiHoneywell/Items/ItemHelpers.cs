@@ -32,7 +32,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
         }
 
         public static async Task LoadInstrumentTypes()
-        {
+        {            
             if (_instrumentTypesCache == null)
                 _instrumentTypesCache = new HashSet<InstrumentType>();
 

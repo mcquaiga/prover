@@ -2,8 +2,10 @@
 {
     public interface IFrequencyTestItems
     {
-        decimal AdjustedVolumeReading { get; set; }
-        long UnadjustVolumeReading { get; set; }
-
+        decimal TibAdjustedVolumeReading { get; set; }
+        long TibUnadjustedVolumeReading { get; }
+        
+        long MainUnadjustVolumeReading { get; set; }
+        long MainAdjustedVolumeReading {get; set;}
     }
 }
