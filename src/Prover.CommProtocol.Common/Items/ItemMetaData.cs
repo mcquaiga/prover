@@ -46,6 +46,9 @@ namespace Prover.CommProtocol.Common.Items
         public bool? IsSuperFactor { get; set; } = false;
         public bool? IsFrequencyTest { get; set; } = false;
 
+        public bool? IsLiveReadPressure { get; set; }
+        public bool? IsLiveReadTemperature { get; set; }
+
         public bool CanVerify { get; set; } = true;
         public bool CanReset { get; set; } = true;
 

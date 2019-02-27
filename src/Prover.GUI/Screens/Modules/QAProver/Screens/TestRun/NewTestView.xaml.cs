@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reactive.Linq;
-using System.Windows.Controls;
 using ReactiveUI;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.TestRun

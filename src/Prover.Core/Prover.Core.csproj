@@ -115,6 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
+    <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
     <Compile Include="Exports\VerificationTypeEnum.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.cs" />
     <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
@@ -236,7 +238,13 @@
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\TestRunService.cs" />
+    <Compile Include="Settings\CertificateSettings.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
+    <Compile Include="Settings\SettingsReader.cs" />
+    <Compile Include="Settings\SettingsService.cs" />
+    <Compile Include="Settings\SettingsWriter.cs" />
+    <Compile Include="Settings\SharedSettings.cs" />
+    <Compile Include="Settings\TestSettings.cs" />
     <Compile Include="Storage\GenericRepository.cs" />
     <Compile Include="Storage\KeyValueStore.cs" />
     <Compile Include="Storage\NLogCommandInterceptor.cs" />
@@ -247,7 +255,12 @@
     <Compile Include="Modules\Clients\VerificationTestActions\IHandleInvalidItemVerification.cs" />
     <Compile Include="VerificationTests\PreTestActions\DateTimeValidator.cs" />
     <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\IVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\IQaRunTestManager.cs" />
+    <Compile Include="VerificationTests\ITestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
+    <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
+    <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
     <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
@@ -278,14 +291,14 @@
     <Compile Include="Models\Instruments\TemperatureTest.cs" />
     <Compile Include="Models\Instruments\VolumeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="CoreBootstrapper.cs" />
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
     <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\MechanicalAutoVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\VolumeVerification\RotaryAutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\VolumeTestManager.cs" />
   </ItemGroup>
   <ItemGroup>

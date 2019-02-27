@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 
@@ -11,26 +9,26 @@ namespace Prover.Core.VerificationTests.VolumeVerification
 {
     public sealed class ManualVolumeTestManager : VolumeTestManager
     {
-        public ManualVolumeTestManager(IEventAggregator eventAggregator, EvcCommunicationClient commClient, VolumeTest volumeTest, ISettingsService settingsService) 
-            : base(eventAggregator, commClient, volumeTest, settingsService)
+        public ManualVolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
+            : base(eventAggregator, settingsService)
         {
         }
 
-        public override async Task PreTest(CancellationToken ct)
+        public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
             await CommClient.Connect(ct);
-            
+
             VolumeTest.Items = await CommClient.GetVolumeItems();
-       
+
             if (VolumeTest.VerificationTest.FrequencyTest != null)
             {
                 VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
             }
 
-            await CommClient.Disconnect();            
+            await CommClient.Disconnect();
         }
 
-        public override async Task ExecutingTest(CancellationToken ct)
+        public override async Task RunTest(CancellationToken ct)
         {
             RunningTest = true;
             ResetPulseCounts(VolumeTest);
@@ -40,11 +38,11 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 while (RunningTest || ct.IsCancellationRequested)
                 {
 
-                }                
-            }, ct);            
+                }
+            }, ct);
         }
 
-        public override async Task PostTest(CancellationToken ct)
+        public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
         {
             await Task.Run(async () =>
             {
@@ -61,7 +59,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 finally
                 {
                     await CommClient.Disconnect();
-                }               
+                }
             }, ct);
         }
 
@@ -70,7 +68,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await Task.Run(() =>
             {
             }, ct);
-        }       
+        }
     }
 }
 

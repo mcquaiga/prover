@@ -1,126 +1,209 @@
-﻿<UserControl x:Class="UnionGas.MASA.Screens.Exporter.ExportTestsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters;assembly=Prover"
-             mc:Ignorable="d"             
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<UserControl
+    x:Class="UnionGas.MASA.Screens.Exporter.ExportTestsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cal="http://www.caliburnproject.org"
+    xmlns:converters="clr-namespace:Prover.GUI.Converters;assembly=Prover"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="500"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <UserControl.Resources>
-<ResourceDictionary>
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-    </ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisible"
-                                                  TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
+            <converters:BoolToVisibilityConverter
+                x:Key="BoolToVisible"
+                FalseValue="Collapsed"
+                TrueValue="Visible" />
             <Style x:Key="InstrumentStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
-            <Style.Triggers>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="ItemsControl.AlternationIndex" Value="1" />
-                        <Condition Property="IsSelected" Value="False" />
-                        <Condition Property="IsMouseOver" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Background" Value="#EEEEEEEE" />
-                </MultiTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="Flat">
-            <Setter Property="Control.Background" Value="{x:Null}" />
-            <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-            <Style.Triggers>
-                <Trigger Property="Control.IsMouseOver" Value="True">
-                    <Setter Property="Control.Background" Value="{x:Null}" />
-                    <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-                <Trigger Property="Control.IsFocused" Value="True">
-                    <Setter Property="Control.FontWeight" Value="Bold" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <!--<Style TargetType="{x:Type ListBoxItem}">
-            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        </Style>-->
-        <Style x:Key="Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-</ResourceDictionary>
+                <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="ItemsControl.AlternationIndex" Value="1" />
+                            <Condition Property="IsSelected" Value="False" />
+                            <Condition Property="IsMouseOver" Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" Value="#EEEEEEEE" />
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="Flat">
+                <Setter Property="Control.Background" Value="{x:Null}" />
+                <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+                <Style.Triggers>
+                    <Trigger Property="Control.IsMouseOver" Value="True">
+                        <Setter Property="Control.Background" Value="{x:Null}" />
+                        <Setter Property="Control.BorderBrush" Value="{x:Null}" />
+                        <Setter Property="Control.FontWeight" Value="Bold" />
+                    </Trigger>
+                    <Trigger Property="Control.IsFocused" Value="True">
+                        <Setter Property="Control.FontWeight" Value="Bold" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel MinWidth="212">
+                <ToggleButton
+                    Margin="8"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Top"
+                    IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"
+                    Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="0"
-                    Margin="5">
-            <TextBlock Text="Filter by instrument"/>
-            <ItemsControl ItemsSource="{Binding Path=InstrumentTypes}"
-                          DockPanel.Dock="Left">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding .}"
-                                Command="{Binding Path=DataContext.FilterByTypeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
-                                CommandParameter="{Binding .}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </StackPanel>
-        
-        <ProgressBar Grid.Row="1"                         
-                         Width="56"
-                         Height="56"
-                         Style="{StaticResource MaterialDesignCircularProgressBar}"
-                         Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
-                         Value="0"
-                         Panel.ZIndex="5"
-                         IsIndeterminate="True"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Center" />
-        
-        <ListBox  x:Name="VisibleTiles"
-                  Margin="5"
-                  Grid.Row="1"
-                  Panel.ZIndex="0"    
-                  Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
-                 HorizontalContentAlignment="Stretch"
-                 VerticalContentAlignment="Stretch">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <Border BorderThickness="0 0 0 1"
-                                        BorderBrush="Gray">
-                                    <ContentPresenter />
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-        <Button Margin="8"
-                Grid.Row="2"
-                HorizontalAlignment="Left"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Command="{Binding ExportAllPassedQaRunsCommand}"
-                Content="Export all passed">
-        </Button>
+                    <StackPanel
+                        Grid.Row="0"
+                        Margin="5"
+                        Orientation="Vertical">
+                        <TextBlock Text="Export Failed Test" />
+                        <TextBox Width="Auto" Text="{Binding FailedCompanyNumber}" />
+                        <Button
+                            Command="{Binding ExportFailedTestCommand}"
+                            Content="Export Failed"
+                            Style="{StaticResource MaterialDesignFlatAccentButton}" />
+                    </StackPanel>
 
-    </Grid>
+                    <ContentControl
+                        x:Name="TestsByJobNumber"
+                        Grid.Row="1"
+                        Margin="5"
+                        cal:View.Model="{Binding TestsByJobNumber}" />
+                </Grid>
+
+            </DockPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+        <Grid>
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:ColorZone
+                        Padding="12"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        Mode="PrimaryLight">
+                        <DockPanel>
+                            <ToggleButton
+                                x:Name="MenuToggleButton"
+                                IsChecked="False"
+                                Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                        </DockPanel>
+                    </materialDesign:ColorZone>
+
+                    <UniformGrid HorizontalAlignment="Stretch" Rows="1">
+                        <StackPanel
+                            Grid.Column="0"
+                            Margin="8"
+                            Orientation="Vertical">
+                            <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Text="Filter by Instrument Type" />
+                            <StackPanel Margin="0,2" Orientation="Horizontal">
+                                <StackPanel.Resources>
+                                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                                        <Setter Property="Margin" Value="2,0" />
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Height" Value="Auto" />
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="All"
+                                    Content="All" />
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="Mini-Max"
+                                    Content="Mini-Max" />
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="Mini-AT"
+                                    Content="Mini-AT" />
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="EC-350"
+                                    Content="EC-350" />
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="TCI"
+                                    Content="TCI" />
+                                <Button
+                                    Command="{Binding FilterByTypeCommand}"
+                                    CommandParameter="TOC"
+                                    Content="TOC" />
+                            </StackPanel>
+                        </StackPanel>
+                    </UniformGrid>
+
+                </StackPanel>
+
+                <ProgressBar
+                    Grid.Row="1"
+                    Width="56"
+                    Height="56"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Panel.ZIndex="5"
+                    IsIndeterminate="True"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}"
+                    Value="0" />
+
+                <ListBox
+                    x:Name="VisibleTiles"
+                    Grid.Row="1"
+                    Margin="5"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    Panel.ZIndex="0"
+                    Visibility="{Binding ShowTestViewListBox, Converter={StaticResource BoolToVisible}, NotifyOnSourceUpdated=True}">
+                    <ListBox.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+                                            <ContentPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <!--<Button Margin="8"
+                    Grid.Row="2"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Command="{Binding ExportAllPassedQaRunsCommand}"
+                    Content="Export all passed">
+            </Button>-->
+
+
+            </Grid>
+        </Grid>
+    </materialDesign:DrawerHost>
+
 </UserControl>

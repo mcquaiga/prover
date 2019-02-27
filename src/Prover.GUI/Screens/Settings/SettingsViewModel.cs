@@ -18,10 +18,10 @@ namespace Prover.GUI.Screens.Settings
             : base(screenManager, eventAggregator)
         {
             _settingsService = settingsService;
-
-            StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
-            this.WhenAnyValue(x => x.StabilizeLiveReadings)
-                .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
+           
+            //StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
+            //this.WhenAnyValue(x => x.StabilizeLiveReadings)
+            //    .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
 
             SelectedMechanicalVolumeTestType = _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)
@@ -36,7 +36,7 @@ namespace Prover.GUI.Screens.Settings
 
             SaveSettingsCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                await _settingsService.SaveSharedSettings();
+                await _settingsService.SaveSettings();
             });
         }
 

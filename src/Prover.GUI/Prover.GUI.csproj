@@ -30,7 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -310,6 +310,10 @@
     <Compile Include="Screens\Modules\Certificates\Common\Verification\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\InstrumentInfo\TocInfoView.xaml.cs">
+      <DependentUpon>TocInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\InstrumentInfo\TocInfoViewModel.cs" />
     <Compile Include="Screens\Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml.cs">
       <DependentUpon>SiteInformation.CardNew.xaml</DependentUpon>
     </Compile>
@@ -326,6 +330,12 @@
     </Compile>
     <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Card.New.xaml.cs">
       <DependentUpon>Volume.Card.New.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Base.xaml.cs">
+      <DependentUpon>Volume.Base.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml.cs">
+      <DependentUpon>Volume.PulseInputCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Modules\QAProver\Screens\TestRunView.xaml.cs">
       <DependentUpon>TestRunView.xaml</DependentUpon>
@@ -551,14 +561,26 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\Modules\QAProver\Screens\InstrumentInfo\SiteInformation.CardNew.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Modules\QAProver\Screens\InstrumentInfo\TocInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Modules\Certificates\Common\Verification\TestView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\Modules\QAProver\Screens\PTVerificationViews\FrequencyTest\FrequencyTest.Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.Base.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Modules\QAProver\Screens\PTVerificationViews\VolumeTest\Volume.PulseInputCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

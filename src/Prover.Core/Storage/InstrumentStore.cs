@@ -25,7 +25,7 @@ namespace Prover.Core.Storage
                 .IncludeOptimized(v => v.VerificationTests.Select(t => t.TemperatureTest))
                 .IncludeOptimized(v => v.VerificationTests.Select(p => p.PressureTest))
                 .IncludeOptimized(v => v.VerificationTests.Select(vo => vo.VolumeTest));
-        }
+        }     
 
         public override async Task<bool> Delete(Instrument entity)
         {

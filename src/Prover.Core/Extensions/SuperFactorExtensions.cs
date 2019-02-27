@@ -1,6 +1,5 @@
 ﻿using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Instruments;
-using static Prover.Core.Models.Instruments.SuperFactorTest;
 
 namespace Prover.Core.Extensions
 {

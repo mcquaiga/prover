@@ -1,34 +1,103 @@
-﻿using System;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using Prover.Core.ExternalIntegrations;
-using Prover.Core.Models.Instruments;
-using Prover.GUI.Reports;
-using ReactiveUI;
-using Prover.Core.Services;
-using Prover.GUI.Screens;
-
-namespace UnionGas.MASA.Screens.Exporter
+﻿namespace UnionGas.MASA.Screens.Exporter
 {
+    using Caliburn.Micro;
+    using Prover.Core.ExternalIntegrations;
+    using Prover.Core.Login;
+    using Prover.Core.Models.Instruments;
+    using Prover.Core.Services;
+    using Prover.GUI.Reports;
+    using Prover.GUI.Screens;
+    using Prover.GUI.Screens.Modules.Certificates.Common;
+    using ReactiveUI;
+    using System;
+    using System.Reactive;
+    using System.Threading.Tasks;
+    using UnionGas.MASA.DCRWebService;
+
+    /// <summary>
+    /// Defines the <see cref="QaTestRunGridViewModel" />
+    /// </summary>
     public class QaTestRunGridViewModel : ViewModelBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Defines the _exportManager
+        /// </summary>
         private readonly IExportTestRun _exportManager;
+
+        /// <summary>
+        /// Defines the _instrumentReportGenerator
+        /// </summary>
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
+
+        /// <summary>
+        /// Defines the _loginService
+        /// </summary>
+        private readonly ILoginService<EmployeeDTO> _loginService;
+
+        /// <summary>
+        /// Defines the _testRunService
+        /// </summary>
         private readonly TestRunService _testRunService;
 
-        public QaTestRunGridViewModel(ScreenManager screenManager, 
+        /// <summary>
+        /// Defines the _archiveTestCommand
+        /// </summary>
+        private ReactiveCommand _archiveTestCommand;
+
+        /// <summary>
+        /// Defines the _instrument
+        /// </summary>
+        private Instrument _instrument;
+
+        /// <summary>
+        /// Defines the _isRemoved
+        /// </summary>
+        private bool _isRemoved;
+
+        /// <summary>
+        /// Defines the _isShowing
+        /// </summary>
+        private bool _isShowing;
+
+        /// <summary>
+        /// Defines the _viewQaTestReportCommand
+        /// </summary>
+        private ReactiveCommand _viewQaTestReportCommand;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QaTestRunGridViewModel"/> class.
+        /// </summary>
+        /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="exportManager">The exportManager<see cref="IExportTestRun"/></param>
+        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
+        /// <param name="instrumentReportGenerator">The instrumentReportGenerator<see cref="InstrumentReportGenerator"/></param>
+        /// <param name="loginService">The loginService<see cref="ILoginService{EmployeeDTO}"/></param>
+        public QaTestRunGridViewModel(ScreenManager screenManager,
                 IEventAggregator eventAggregator,
                 IExportTestRun exportManager,
                 TestRunService testRunService,
-                InstrumentReportGenerator instrumentReportGenerator) 
+                InstrumentReportGenerator instrumentReportGenerator,
+                ILoginService<EmployeeDTO> loginService)
             : base(screenManager, eventAggregator)
         {
             _exportManager = exportManager;
             _testRunService = testRunService;
             _instrumentReportGenerator = instrumentReportGenerator;
+            _loginService = loginService;
+
+            //var canAddUser = this.WhenAnyValue(x => x._loginService.User, dto => !string.IsNullOrEmpty(dto?.Id));
+            AddCurrentUserCommand = ReactiveCommand.CreateFromTask(AddCurrentUserToTest);
 
             var canExport = this.WhenAnyValue(x => x.Instrument.JobId, x => x.Instrument.EmployeeId,
                 (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
+
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
 
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
@@ -36,52 +105,118 @@ namespace UnionGas.MASA.Screens.Exporter
             ViewQaTestReportCommand = ReactiveCommand.CreateFromTask(DisplayInstrumentReport);
         }
 
+        #endregion
+
         #region Properties
-        private bool _isShowing;
-        public bool IsShowing
-        {
-            get => _isShowing;
-            set => this.RaiseAndSetIfChanged(ref _isShowing, value);
-        }
 
-        private Instrument _instrument;
-        public Instrument Instrument
-        {
-            get { return _instrument; } 
-            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
-        }
+        /// <summary>
+        /// Gets the AddCurrentUserCommand
+        /// </summary>
+        public ReactiveCommand<Unit, Unit> AddCurrentUserCommand { get; private set; }
 
-        public string DateTimePretty => $"{Instrument.TestDateTime:g}";
-
-        public bool IsSelected { get; set; }
-
-        private ReactiveCommand _viewQaTestReportCommand;
-        public ReactiveCommand ViewQaTestReportCommand
-        {
-            get { return _viewQaTestReportCommand; }
-            set { this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value); }
-        }
-        public async Task DisplayInstrumentReport()
-        {
-            await _instrumentReportGenerator.GenerateAndViewReport(Instrument);
-        }
-
-        private ReactiveCommand _archiveTestCommand;
+        /// <summary>
+        /// Gets or sets the ArchiveTestCommand
+        /// </summary>
         public ReactiveCommand ArchiveTestCommand
         {
             get { return _archiveTestCommand; }
             set { this.RaiseAndSetIfChanged(ref _archiveTestCommand, value); }
         }
 
-        private bool _isRemoved;
-        public bool IsRemoved
+        /// <summary>
+        /// Gets the DateTimePretty
+        /// </summary>
+        public string DateTimePretty => $"{Instrument.TestDateTime:g}";
+
+        /// <summary>
+        /// Gets the ExportQaTestRunCommand
+        /// </summary>
+        public ReactiveCommand ExportQaTestRunCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the Instrument
+        /// </summary>
+        public Instrument Instrument
         {
-            get => _isRemoved;
-            set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
+            get { return _instrument; }
+            set { this.RaiseAndSetIfChanged(ref _instrument, value); }
         }
-        public ReactiveCommand ExportQaTestRunCommand { get; }      
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsRemoved
+        /// </summary>
+        public bool IsRemoved { get => _isRemoved; set => this.RaiseAndSetIfChanged(ref _isRemoved, value); }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsSelected
+        /// </summary>
+        public bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IsShowing
+        /// </summary>
+        public bool IsShowing { get => _isShowing; set => this.RaiseAndSetIfChanged(ref _isShowing, value); }
+
+        /// <summary>
+        /// Gets or sets the ViewQaTestReportCommand
+        /// </summary>
+        public ReactiveCommand ViewQaTestReportCommand
+        {
+            get { return _viewQaTestReportCommand; }
+            set { this.RaiseAndSetIfChanged(ref _viewQaTestReportCommand, value); }
+        }
+
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// The ArchiveTest
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        public async Task ArchiveTest()
+        {
+            await _testRunService.ArchiveTest(Instrument);
+            IsRemoved = true;
+        }
+
+        /// <summary>
+        /// The DisplayInstrumentReport
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        public async Task DisplayInstrumentReport()
+        {
+            await _instrumentReportGenerator.GenerateAndViewReport(Instrument);
+        }
+
+        /// <summary>
+        /// The ExportQaTestRun
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        public async Task ExportQaTestRun()
+        {
+            if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
+                return;
+
+            IsRemoved = await _exportManager.Export(Instrument);
+        }
+
+        /// <summary>
+        /// The Initialize
+        /// </summary>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
+        /// <param name="filterObservable">The filterObservable<see cref="IObservable{Predicate{Instrument}}"/></param>
+        public void Initialize(Instrument instrument, IObservable<Predicate<Instrument>> filterObservable)
+        {
+            Instrument = instrument;           
+
+            SetFilter(filterObservable);
+        }
+
+        /// <summary>
+        /// The SetFilter
+        /// </summary>
+        /// <param name="filter">The filter<see cref="IObservable{Predicate{Instrument}}"/></param>
         public void SetFilter(IObservable<Predicate<Instrument>> filter)
         {
             filter.Subscribe(x =>
@@ -90,20 +225,25 @@ namespace UnionGas.MASA.Screens.Exporter
             });
         }
 
-        public async Task ArchiveTest()
+        /// <summary>
+        /// The AddCurrentUserToTest
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task AddCurrentUserToTest()
         {
-            await _testRunService.ArchiveTest(Instrument);            
-            IsRemoved = true;
-        }
-        
-        public async Task ExportQaTestRun()
-        {
-            if (string.IsNullOrEmpty(Instrument.JobId) || string.IsNullOrEmpty(Instrument.EmployeeId))
-                return;
+            if (!_loginService.IsLoggedIn)
+            {
+                await _loginService.GetLoginDetails();
+            }
 
-            IsRemoved = await _exportManager.Export(Instrument);            
+            if (_loginService.IsLoggedIn)
+            {
+                Instrument.EmployeeId = _loginService.User.Id;
+                await _testRunService.Save(Instrument);
+                this.RaisePropertyChanged($"Instrument");
+            }           
         }
 
-        
+        #endregion
     }
 }

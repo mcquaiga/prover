@@ -4,13 +4,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
              xmlns:controls1="clr-namespace:Prover.GUI.Controls"
-             xmlns:converters="clr-namespace:Prover.GUI.Converters"
-             FontWeight="Light"
-             FontSize="12"
-             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"   
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -40,8 +36,10 @@
                 <Setter Property="Background" Value="Transparent" />
             </Style>
 
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="Black" />
+            <Style TargetType="{x:Type TextBlock}" x:Key="TextBlockStyle">
+                <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="FontSize" Value="9"/>
             </Style>
 
             <Style TargetType="TextBlock" x:Key="PercentErrorStyle">
@@ -50,23 +48,24 @@
                 <Setter Property="Margin" Value="0" />
             </Style>
 
-            <Style TargetType="{x:Type TextBlock}" x:Key="LabelStyle">
+            <Style TargetType="{x:Type TextBlock}" x:Key="LabelStyle" BasedOn="{StaticResource TextBlockStyle}">
                 <Setter Property="Margin" Value="0 0 0 2" />
                 <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="FontSize" Value="10" />
+
             </Style>
 
-            <Style TargetType="{x:Type TextBlock}" x:Key="ValueStyle">
-                <Setter Property="FontSize" Value="10" />
+            <Style TargetType="{x:Type TextBlock}" x:Key="ValueStyle" BasedOn="{StaticResource TextBlockStyle}">
+
                 <Setter Property="Margin" Value="0" />
+                <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="HorizontalAlignment" Value="Right" />
             </Style>
 
             <Style TargetType="{x:Type TextBlock}"
                    x:Key="HeaderOneStyle">
                 <Setter Property="Margin" Value="0" />
-                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="FontSize" Value="12" />
             </Style>
 
@@ -82,7 +81,7 @@
             <Style TargetType="{x:Type TextBlock}"
                    x:Key="HeaderTwoStyle">
                 <Setter Property="Margin" Value="1" />
-                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignLightForeground}" />
+                <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="FontSize" Value="10" />
@@ -116,7 +115,7 @@
     <Grid Margin="4 2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="70" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="145" />
             <ColumnDefinition Width="190" />
             <ColumnDefinition Width="175" />
@@ -130,17 +129,17 @@
         </Grid.Resources>
         <StackPanel Grid.Column="1"
                     Orientation="Vertical"
-                    VerticalAlignment="Center">           
-            <TextBlock FontSize="14"
+                    VerticalAlignment="Center">
+            <TextBlock FontSize="12"
                        HorizontalAlignment="Center"
                        Margin="0 1"
-                       Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" />            
+                       Text="{Binding Instrument.InstrumentType.Name, FallbackValue=Mini-Max}" Style="{DynamicResource HeaderOneStyle}" />
             <Border BorderThickness="0 1 0 0"
                     BorderBrush="Gray"
                     Margin="5 0">
                 <StackPanel>
                     <TextBlock Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator, FallbackValue=Rotary}"
-                               HorizontalAlignment="Center" />
+                               HorizontalAlignment="Center" Style="{DynamicResource HeaderTwoStyle}" />
                 </StackPanel>
             </Border>
         </StackPanel>
@@ -163,7 +162,7 @@
                 </Style>
             </StackPanel.Resources>
             <materialDesign:ColorZone Style="{StaticResource HeaderColorZone}">
-                <TextBlock Text="Information"
+                <TextBlock Text="Site Information"
                            Style="{StaticResource HeaderOneStyle}" />
             </materialDesign:ColorZone>
             <UniformGrid HorizontalAlignment="Right"
@@ -206,7 +205,7 @@
                     <TextBlock Text="Firm. Ver."
                                Style="{StaticResource LabelStyle2}" />
                 </StackPanel>
-                
+
             </UniformGrid>
         </StackPanel>
 
@@ -295,10 +294,8 @@
                             HorizontalAlignment="Right">
                     <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Right">
-                        <TextBlock Text="-40 "
-                                   Style="{StaticResource ValueStyle}"
-                                   FontSize="10" />
-                        <TextBlock Text="to 170 F "
+                        
+                        <TextBlock Text="-40 to +170F"
                                    Style="{StaticResource ValueStyle}"
                                    FontSize="8" />
                     </StackPanel>
@@ -318,41 +315,45 @@
                                Style="{StaticResource HeaderOneStyle}"
                                HorizontalAlignment="Center" />
                 </materialDesign:ColorZone>
-                <Grid HorizontalAlignment="Stretch">
+                <Grid HorizontalAlignment="Right" Width="75">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="8*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical"
                                 Grid.Column="1"
-                                HorizontalAlignment="Right">
+                                HorizontalAlignment="Right" Grid.RowSpan="2">
                         <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
+                            <TextBlock Text="{Binding SuperFactor.SpecGr, FallbackValue=[N]}"
                                    Style="{StaticResource ValueStyle}" />
-                        <TextBlock Text="sg"
+                            <TextBlock Text="sg"
                                    Style="{StaticResource LabelStyle}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical"
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
+                            <TextBlock Text="{Binding SuperFactor.N2, FallbackValue=[N]}"
                                    Style="{StaticResource ValueStyle}" />
-                        <TextBlock Text="n²"
+                            <TextBlock Text="n²"
                                    Style="{StaticResource LabelStyle}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical"
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
+                            <TextBlock Text="{Binding SuperFactor.Co2, FallbackValue=[N]}"
                                    Style="{StaticResource ValueStyle}" />
-                        <TextBlock Text="co²"
+                            <TextBlock Text="co²"
                                    Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
                     </StackPanel>
-                    </StackPanel>
-                    
+
                     <StackPanel Orientation="Vertical"
-                                Margin="0"
+                                Margin="0,0,0,4"
                                 Grid.Column="0"
-                                HorizontalAlignment="Right">
+                                HorizontalAlignment="Right" VerticalAlignment="Stretch" d:LayoutOverrides="Height">
                         <TextBlock Text="NX-19"
                                    Style="{StaticResource ValueStyle}" />
                         <TextBlock Text="fpv"
@@ -360,8 +361,8 @@
                     </StackPanel>
 
                 </Grid>
-                
-               
+
+
             </StackPanel>
         </Grid>
 
@@ -582,7 +583,7 @@
                                FontSize="10" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right">
-                         <TextBlock
+                        <TextBlock
                             Text="{Binding VolumeTest.CorrectedPercentError, FallbackValue=0.17}"
                             Style="{StaticResource ValueStyle}" />
                         <TextBlock Text="%"

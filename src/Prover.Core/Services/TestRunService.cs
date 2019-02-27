@@ -18,12 +18,13 @@ namespace Prover.Core.Services
         public IEnumerable<Instrument> GetAllUnexported()
         {
             return _instrumentStore
-                .Query(i => i.ExportedDateTime == null);
+                .Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue);
         }
 
         public IEnumerable<Instrument> GetTestRunByCertificate(Guid certificateId)
         {
-            return _instrumentStore.Query(i => i.CertificateId == certificateId);
+            return _instrumentStore
+                .Query(i => i.CertificateId == certificateId);
         }
 
         public async Task ArchiveTest(Instrument instrument)

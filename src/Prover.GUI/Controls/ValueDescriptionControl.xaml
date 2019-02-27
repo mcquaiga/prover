@@ -10,10 +10,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <SolidColorBrush x:Key="PrimaryText"
-                             Opacity=".87" 
+                             Opacity=".90" 
                              Color="Black"/>
             <SolidColorBrush x:Key="SecondaryText"
-                             Opacity=".54" 
+                             Opacity=".75" 
                              Color="Black"/>
         </ResourceDictionary>
     </UserControl.Resources>

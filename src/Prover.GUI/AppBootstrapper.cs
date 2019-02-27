@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
@@ -90,7 +89,7 @@ namespace Prover.GUI
             assemblies.AddRange(base.SelectAssemblies());
 
             if (!File.Exists(_moduleFilePath))
-                throw new Exception("Could not find a modules.conf file in the current directory.");
+                throw new Exception("Could not find a modules.json in the current directory.");
 
             var modulesString = File.ReadAllText(_moduleFilePath);
             assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)
@@ -139,7 +138,7 @@ namespace Prover.GUI
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            Container.Resolve<ISettingsService>().SaveLocalSettings();
+            Container.Resolve<ISettingsService>().SaveSettings();
             base.OnExit(sender, e);
         }
     }

@@ -2,6 +2,7 @@
     "Id": "4",
     "Name": "Mini-Max",
     "AccessCode": "4",
+    "MaxBaudRate":  "38400",
   "CanUseIrDaPort": false,
   "OverrideItems": [],
   "ExcludeItems": [] 

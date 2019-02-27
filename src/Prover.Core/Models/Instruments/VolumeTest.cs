@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.MiHoneywell.Items;
+using Prover.Core.DriveTypes;
 using Prover.Core.Extensions;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.Settings;
@@ -13,20 +14,24 @@ using Prover.Core.Shared.Enums;
 
 namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : BaseVerificationTest
+    public class VolumeTest : BaseVerificationTest
     {
+        public decimal UncorrectedErrorThreshold;
+        public decimal CorrectedErrorThreshold;        
+
         private string _testInstrumentData;
 
         private VolumeTest() { }
 
-        public static VolumeTest Create(VerificationTest verificationTest,
-            TestSettings testSettings)
+        public static VolumeTest Create(VerificationTest verificationTest, TestSettings testSettings)
         {
             var volume = new VolumeTest()
             {
                 Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
                 VerificationTest = verificationTest,
                 VerificationTestId = verificationTest.Id,
+                UncorrectedErrorThreshold = testSettings.UncorrectedErrorThreshold,
+                CorrectedErrorThreshold = testSettings.CorrectedErrorThreshold
             };
 
             volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
@@ -66,7 +71,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
+        public virtual decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         [NotMapped]
         public decimal? CorrectedPercentError
@@ -84,10 +89,10 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
+        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(CorrectedErrorThreshold) ?? false;
 
         [NotMapped]
-        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
+        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(UncorrectedErrorThreshold) ?? false;
 
         [NotMapped]
         public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
@@ -162,7 +167,7 @@ namespace Prover.Core.Models.Instruments
         }
 
         [NotMapped]
-        public decimal? TrueCorrected
+        public virtual decimal? TrueCorrected
         {
             get
             {
@@ -179,18 +184,18 @@ namespace Prover.Core.Models.Instruments
             {
                 if (VerificationTest == null) return null;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
-                    VerificationTest.TemperatureTest != null)
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T && VerificationTest.TemperatureTest != null)
                     return VerificationTest.TemperatureTest.ActualFactor;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
-                    VerificationTest.PressureTest != null)
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P && VerificationTest.PressureTest != null)
                     return VerificationTest.PressureTest.ActualFactor;
 
                 if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor *
-                           VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared;
+                {
+                    return VerificationTest.PressureTest?.ActualFactor
+                          * VerificationTest.TemperatureTest?.ActualFactor
+                          * VerificationTest.SuperFactorTest.SuperFactorSquared;
+                }
 
                 return null;
             }
@@ -211,23 +216,33 @@ namespace Prover.Core.Models.Instruments
         {
             if (string.IsNullOrEmpty(DriveTypeDiscriminator))
             {
-                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
-                    ? "Rotary"
-                    : "Mechanical";
-
-                if (InstrumentType.Id == 12)
-                    DriveTypeDiscriminator = "Rotary";                
+                if (Instrument.Items?.GetItem(182)?.NumericValue > 0)
+                {
+                    DriveTypeDiscriminator = Drives.PulseInput;
+                }
+                else
+                {
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == Drives.Rotary.ToLower()
+                        ? Drives.Rotary
+                        : Drives.Mechanical;
+                }                
             }
+
+            if (InstrumentType.Id == 12)
+	            DriveTypeDiscriminator = "Rotary";                
 
             if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
             { 
                 switch (DriveTypeDiscriminator)
                 {
-                    case "Rotary":
+                    case Drives.Rotary:
                         DriveType = new RotaryDrive(Instrument);
                         break;
-                    case "Mechanical":
+                    case Drives.Mechanical:
                         DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
+                        break;
+                    case Drives.PulseInput:
+                        DriveType = new PulseInputSensor(Instrument);
                         break;
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");

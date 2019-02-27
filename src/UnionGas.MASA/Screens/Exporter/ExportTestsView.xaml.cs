@@ -1,14 +1,19 @@
-﻿using System;
-using System.Reactive.Linq;
-using ReactiveUI;
-
-namespace UnionGas.MASA.Screens.Exporter
+﻿namespace UnionGas.MASA.Screens.Exporter
 {
+    using ReactiveUI;
+    using System;
+    using System.Reactive.Linq;
+
     /// <summary>
-    ///     Interaction logic for CreateCertificateView.xaml
+    /// Defines the <see cref="ExportTestsView" />
     /// </summary>
     public partial class ExportTestsView : IViewFor<ExportTestsViewModel>
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportTestsView"/> class.
+        /// </summary>
         public ExportTestsView()
         {
             InitializeComponent();
@@ -20,17 +25,27 @@ namespace UnionGas.MASA.Screens.Exporter
                 d(this.WhenAnyValue(x => x.ViewModel.ExecuteTestSearch)
                     .SelectMany(x => x.Execute())
                     .Subscribe());
-                
-                //d(this.Bind(ViewModel, model => model.FilterByTypeCommand, view => view.))
             });
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the ViewModel
+        /// </summary>
+        public ExportTestsViewModel ViewModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ViewModel
+        /// </summary>
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
             set { ViewModel = (ExportTestsViewModel)value; }
         }
 
-        public ExportTestsViewModel ViewModel { get; set; }
+        #endregion
     }
 }
