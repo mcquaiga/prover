@@ -21,7 +21,7 @@ namespace Prover.Core.Models.Instruments
             VerificationTest = verificationTest;
             VerificationTestId = VerificationTest.Id;
 
-            Gauge = (double) ConvertToFahrenheit(gauge, VerificationTest.Instrument.TemperatureUnits());            
+            Gauge = (double) ConvertTo(gauge, "F", VerificationTest.Instrument.TemperatureUnits());            
         }
 
         public double Gauge { get; set; }

@@ -26,6 +26,10 @@
         /// </summary>
         SharedSettings Shared { get; }
 
+        TestSettings TestSettings { get; }
+
+        CertificateSettings CertificateSettings { get; }
+
         #endregion
 
         #region Methods
@@ -33,6 +37,7 @@
         /// <summary>
         /// The RefreshSettings
         /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         Task RefreshSettings();
 
         /// <summary>
@@ -85,6 +90,7 @@
         /// Initializes a new instance of the <see cref="SettingsService"/> class.
         /// </summary>
         /// <param name="keyValueStore">The keyValueStore<see cref="KeyValueStore"/></param>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         public SettingsService(KeyValueStore keyValueStore, IEventAggregator eventAggregator)
         {
             _keyValueStore = keyValueStore;
@@ -96,6 +102,11 @@
         #region Properties
 
         /// <summary>
+        /// Gets the EventAggregator
+        /// </summary>
+        public IEventAggregator EventAggregator { get; }
+
+        /// <summary>
         /// Gets the Local
         /// </summary>
         public LocalSettings Local { get; private set; }
@@ -104,8 +115,10 @@
         /// Gets the Shared
         /// </summary>
         public SharedSettings Shared { get; private set; }
-        public IEventAggregator EventAggregator { get; }
 
+        public TestSettings TestSettings => Shared.TestSettings;
+
+        public CertificateSettings CertificateSettings => Shared.CertificateSettings;
         #endregion
 
         #region Methods
@@ -113,11 +126,12 @@
         /// <summary>
         /// The RefreshSettings
         /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task RefreshSettings()
-        {            
+        {
             var localTask = LocalSettings.LoadLocalSettings(SettingsPath);
             var sharedTask = SharedSettings.LoadSharedSettings(_keyValueStore);
-            
+
             Local = await localTask;
             Shared = await sharedTask;
         }

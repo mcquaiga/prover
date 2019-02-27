@@ -117,7 +117,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
                         var typeName = definitionsJObject["type"].Value<string>();
                         var type = Type.GetType(typeName);
                         if (type == null)
-                            throw new NullReferenceException();
+                            throw new NullReferenceException($"Type {typeName} does not exist in the project. File {defPath}");
 
                         itemValues = definitionsJObject["values"];
                         var values = itemValues?.Children().ToList();

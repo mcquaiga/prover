@@ -104,7 +104,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     Log.Info("Volume test started!");
 
-                    commClient.StatusObservable.Subscribe(Status);
+                    commClient.Status.Subscribe(Status);
 
                     await ExecuteSyncTest(ct);
                     ct.ThrowIfCancellationRequested();
