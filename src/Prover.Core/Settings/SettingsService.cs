@@ -115,11 +115,8 @@
         /// </summary>
         public async Task RefreshSettings()
         {            
-            var localTask = LocalSettings.LoadLocalSettings(SettingsPath);
-            var sharedTask = SharedSettings.LoadSharedSettings(_keyValueStore);
-            
-            Local = await localTask;
-            Shared = await sharedTask;
+            Local = await LocalSettings.LoadLocalSettings(SettingsPath);
+            Shared = SharedSettings.LoadSharedSettings(_keyValueStore);            
         }
 
         /// <summary>

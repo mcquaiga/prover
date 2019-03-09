@@ -18,7 +18,7 @@ namespace Prover.GUI.Screens.Settings
             : base(screenManager, eventAggregator)
         {
             _settingsService = settingsService;
-           
+            
             //StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
             //this.WhenAnyValue(x => x.StabilizeLiveReadings)
             //    .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);

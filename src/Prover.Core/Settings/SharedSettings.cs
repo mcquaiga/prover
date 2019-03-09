@@ -58,11 +58,9 @@
         /// </summary>
         /// <param name="keyValueStore">The keyValueStore<see cref="KeyValueStore"/></param>
         /// <returns>The <see cref="SharedSettings"/></returns>
-        public static async Task<SharedSettings> LoadSharedSettings(KeyValueStore keyValueStore)
+        public static SharedSettings LoadSharedSettings(KeyValueStore keyValueStore)
         {
-            var settings = keyValueStore.GetValue<SharedSettings>(SettingsKey) ?? SharedSettings.Create();
-
-            return settings;
+            return keyValueStore.GetValue<SharedSettings>(SettingsKey) ?? SharedSettings.Create();
         }
 
         /// <summary>

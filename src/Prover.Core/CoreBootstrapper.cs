@@ -33,13 +33,12 @@ namespace Prover.Core
                 .As<ISettingsService>()
                 .SingleInstance();
 
-            builder.RegisterBuildCallback(c => c.Resolve<ISettingsService>().RefreshSettings());
-
             RegisterCommunications(builder);
 
-            builder.RegisterBuildCallback(async container =>
+            builder.RegisterBuildCallback(async c =>
             {
                 await ItemHelpers.LoadInstrumentTypes();
+                c.Resolve<ISettingsService>().RefreshSettings();
             });
         }
 
