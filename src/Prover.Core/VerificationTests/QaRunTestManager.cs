@@ -216,22 +216,19 @@
         /// <param name="client">The client<see cref="Client"/></param>
         /// <param name="statusObserver">The statusObserver<see cref="IObserver{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, TestSettings testSettings,
+        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
         {
             if (statusObserver != null)
                 TestStatus.Subscribe(statusObserver);
 
-            _communicationClient = instrumentType.ClientFactory.Invoke(commPort, _testStatus);
-            ct.ThrowIfCancellationRequested();
+            _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);
+            _communicationClient.Status.Subscribe(_testStatus);
 
-            await _communicationClient.Connect(ct);
-            ct.ThrowIfCancellationRequested();
-
-            _testStatus.OnNext("Downloading items...");
+            await _communicationClient.Connect(ct);            
             var items = await _communicationClient.GetAllItems();
 
-            Instrument = Instrument.Create(instrumentType, items, testSettings, client);
+            Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
 
             await RunVerifiers();
             await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
@@ -255,7 +252,7 @@
 
             try
             {
-                if (_settingsService.Shared.TestSettings.StabilizeLiveReadings)
+                if (_settingsService.TestSettings.StabilizeLiveReadings)
                 {
                     _testStatus.OnNext($"Stabilizing live readings...");
                     await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct, _testStatus);

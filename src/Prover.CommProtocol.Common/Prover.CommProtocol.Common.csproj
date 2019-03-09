@@ -144,7 +144,7 @@
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialPort.cs" />
     <Compile Include="IO\SerialPortWatcher.cs" />
-    <Compile Include="Items\IFrequencyTestItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\IFrequencyTestItems.cs" />
     <Compile Include="Items\ItemCodes.cs" />
     <Compile Include="Items\ItemMetadata.cs" />
     <Compile Include="Items\ItemMetadataExtentions.cs" />
@@ -153,15 +153,16 @@
     <Compile Include="Messaging\ResponseCode.cs" />
     <Compile Include="Messaging\ResponseMessage.cs" />
     <Compile Include="Messaging\ResponseProcessor.cs" />
-    <Compile Include="Models\Instrument\IInstrument.cs" />
-    <Compile Include="Models\Instrument\Items\IItemsGroup.cs" />
-    <Compile Include="Models\Instrument\Items\IPressureItems.cs" />
-    <Compile Include="Models\Instrument\Items\IPulseOutputItems.cs" />
-    <Compile Include="Models\Instrument\Items\ISiteInformationItems.cs" />
-    <Compile Include="Models\Instrument\Items\ISuperFactorItems.cs" />
-    <Compile Include="Models\Instrument\Items\ITemperatureItems.cs" />
-    <Compile Include="Models\Instrument\Items\IVolumeItems.cs" />
-    <Compile Include="Models\MeterIndexItemDescription.cs" />
+    <Compile Include="Models\EvcDevice\EvcDevice.cs" />
+    <Compile Include="Models\EvcDevice\IEvcDevice.cs" />
+    <Compile Include="Models\EvcDevice\Items\IItemsGroup.cs" />
+    <Compile Include="Models\EvcDevice\Items\IPressureItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\IPulseOutputItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\ISiteInformationItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\ISuperFactorItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\ITemperatureItems.cs" />
+    <Compile Include="Models\EvcDevice\Items\IVolumeItems.cs" />
+    <Compile Include="Items\MeterIndexItemDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +172,7 @@
   <ItemGroup>
     <Folder Include="Events\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="Models\Instrument\Items\Meters\" />
+    <Folder Include="Models\EvcDevice\Items\Meters\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">

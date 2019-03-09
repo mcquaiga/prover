@@ -12,11 +12,13 @@ using Prover.Core.Services;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Data;
 using Prover.Core.Storage;
+using Prover.Core.Testing;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core
@@ -27,19 +29,17 @@ namespace Prover.Core
 
         public static void RegisterServices(ContainerBuilder builder)
         {
-            SetupDatabase(builder);           
+            SetupDatabase(builder);                       
 
             builder.Register(c => new SettingsService(c.Resolve<KeyValueStore>(), c.Resolve<IEventAggregator>()))               
                 .As<ISettingsService>()
                 .SingleInstance();
 
+            builder.RegisterBuildCallback(c => c.Resolve<ISettingsService>().RefreshSettings());
+
             RegisterCommunications(builder);
 
-            builder.RegisterBuildCallback(async c =>
-            {
-                await ItemHelpers.LoadInstrumentTypes();
-                c.Resolve<ISettingsService>().RefreshSettings();
-            });
+            builder.RegisterBuildCallback(_ => Task.Run(ItemHelpers.LoadInstrumentTypes));
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
@@ -77,6 +77,8 @@ namespace Prover.Core
 
             builder.RegisterType<QaRunTestManager>()
                 .As<IQaRunTestManager>();
+
+            builder.RegisterType<RotaryStressTest>();
 
             RegisterTestActions(builder);
         }

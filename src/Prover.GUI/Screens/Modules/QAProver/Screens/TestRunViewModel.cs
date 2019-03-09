@@ -9,6 +9,7 @@
     using Prover.Core.Services;
     using Prover.Core.Settings;
     using Prover.Core.Shared.Extensions;
+    using Prover.Core.Testing;
     using Prover.Core.VerificationTests;
     using Prover.GUI.Events;
     using Prover.GUI.Reports;
@@ -65,6 +66,7 @@
         /// Defines the _settingsService
         /// </summary>
         private readonly ISettingsService _settingsService;
+        private readonly RotaryStressTest _rotaryStressTest;
 
         /// <summary>
         /// Defines the _showSaveSnackbar
@@ -175,11 +177,12 @@
         /// <param name="instrumentReportGenerator">The instrumentReportGenerator<see cref="InstrumentReportGenerator"/></param>
         /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientService clientService,
-            InstrumentReportGenerator instrumentReportGenerator, ISettingsService settingsService)
+            InstrumentReportGenerator instrumentReportGenerator, ISettingsService settingsService, RotaryStressTest rotaryStressTest)
             : base(screenManager, eventAggregator)
         {
             _instrumentReportGenerator = instrumentReportGenerator;
             _settingsService = settingsService;
+            _rotaryStressTest = rotaryStressTest;
             eventAggregator.Subscribe(this);
 
             RefreshCommPortsCommand = ReactiveCommand.Create(() => SerialPort.GetPortNames().ToList());
@@ -262,6 +265,9 @@
             StartTestCommand.ThrownExceptions
                 .Subscribe(ex => MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error));
 
+            StartRotarySmokeTestCommand =
+                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Running Smoke test...", StartRotarySmokeTest, canStartNewTest);
+
             var canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
 
@@ -309,6 +315,8 @@
 
             _viewContext = NewQaTestViewContext;
         }
+
+       
 
         #endregion
 
@@ -460,6 +468,8 @@
         /// </summary>
         public VolumeTestViewModel VolumeTestView =>
             TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
+
+        public ReactiveCommand StartRotarySmokeTestCommand { get; }
 
         #endregion
 
@@ -614,13 +624,13 @@
                 await _settingsService.SaveSettings();
 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService.Shared.TestSettings, ct, _client, statusObservable);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client, statusObservable);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
 
                 IsDirty = true;
-                await SaveTest();
+                if (_settingsService.Local.AutoSave) await SaveTest().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -637,7 +647,33 @@
                 _isLoading = false;
             }
         }
+        private async Task StartRotarySmokeTest(IObserver<string> statusObservable, CancellationToken ct)
+        {
+            try
+            {
+                if (SelectedInstrumentType == null)
+                    return;
 
+                ShowDialog = true;
+                _isLoading = true;
+
+                await _settingsService.SaveSettings();
+
+                statusObservable = _rotaryStressTest.Status;
+                await _rotaryStressTest.Run(SelectedInstrumentType, GetCommPort(), _client, ct);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
+                ShowDialog = false;
+                _isLoading = false;
+            }
+           
+
+        }
         #endregion
     }
 }

@@ -9,12 +9,7 @@ namespace Prover.CommProtocol.Common.Items
     public class ItemValue
     {
         public ItemValue(ItemMetadata metadata, string value)
-        {
-            //if (string.IsNullOrEmpty(value))
-            //    throw new ArgumentNullException(nameof(value));
-
-            //if (metadata == null)
-            //    throw new ArgumentNullException(nameof(metadata));
+        {         
 
             RawValue = value;
             Metadata = metadata;
@@ -36,7 +31,7 @@ namespace Prover.CommProtocol.Common.Items
         public virtual string Description 
             => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
-        private ItemMetadata.ItemDescription ItemDescription
+        public ItemMetadata.ItemDescription ItemDescription
         {
             get { return Metadata?.GetItemDescription(RawValue); }
         }
