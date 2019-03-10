@@ -10,6 +10,7 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Components;
 using Prover.Core.Shared.Data;
 using Prover.Core.Storage;
 using Prover.Core.Testing;
@@ -29,13 +30,13 @@ namespace Prover.Core
 
         public static void RegisterServices(ContainerBuilder builder)
         {
+   
             SetupDatabase(builder);                       
 
-            builder.Register(c => new SettingsService(c.Resolve<KeyValueStore>(), c.Resolve<IEventAggregator>()))               
-                .As<ISettingsService>()
-                .SingleInstance();
-
-            builder.RegisterBuildCallback(c => c.Resolve<ISettingsService>().RefreshSettings());
+            builder.RegisterType<SettingsService>()                              
+                .As<ISettingsService>()     
+                .As<IStartable>()
+                .SingleInstance();          
 
             RegisterCommunications(builder);
 
@@ -113,21 +114,15 @@ namespace Prover.Core
 
         private static void SetupDatabase(ContainerBuilder builder)
         {
-            //Database registrations
-            Log.Debug("Started initializing database...");
-            builder.RegisterType<ProverContext>()
+            //Database registrations           
+            builder.Register(c => new ProverContext())
                 .AsSelf()
-                .AutoActivate()
+                .As<IStartable>()
                 .SingleInstance();                    
             
             builder.Register(c => new KeyValueStore(c.Resolve<ProverContext>()))
                 .As<KeyValueStore>()
                 .InstancePerDependency();
-          
-            builder.RegisterType<SettingsService>()
-                .AsImplementedInterfaces()
-                .SingleInstance()
-                .AutoActivate();
 
             builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
                 .InstancePerDependency();
@@ -145,8 +140,6 @@ namespace Prover.Core
             builder.RegisterType<CertificateStore>().As<IProverStore<Certificate>>()
                 .InstancePerDependency();
             builder.RegisterType<CertificateService>().As<ICertificateService>();
-
-            Log.Debug("Completed initializing database...");
         }
     }
 }

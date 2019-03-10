@@ -50,37 +50,44 @@ namespace Prover.GUI
 
         protected override void Configure()
         {
-            base.Configure();
+            try
+            {
+                base.Configure();
 
-            Builder = new ContainerBuilder();
-            CoreBootstrapper.RegisterServices(Builder);
+                Builder = new ContainerBuilder();
+                CoreBootstrapper.RegisterServices(Builder);
 
-            Builder.Register(c => new WindowManager())
-                .As<IWindowManager>()
-                .SingleInstance();
+                Builder.Register(c => new WindowManager())
+                    .As<IWindowManager>()
+                    .SingleInstance();
 
-            Builder.RegisterType<ShellViewModel>()
-                .As<IConductor>()
-                .SingleInstance();
+                Builder.RegisterType<ShellViewModel>()
+                    .As<IConductor>()
+                    .SingleInstance();
 
-            Builder.RegisterType<EventAggregator>()
-                .As<IEventAggregator>()
-                .SingleInstance();
+                Builder.RegisterType<EventAggregator>()
+                    .As<IEventAggregator>()
+                    .SingleInstance();
 
-            Builder.RegisterType<ScreenManager>()
-                .SingleInstance();
+                Builder.RegisterType<ScreenManager>()
+                    .SingleInstance();
 
-            Builder.RegisterType<InstrumentReportGenerator>()
-                .SingleInstance();
-            Builder.RegisterAssemblyModules(Assemblies);
+                Builder.RegisterType<InstrumentReportGenerator>()
+                    .SingleInstance();
+                Builder.RegisterAssemblyModules(Assemblies);
 
-            Builder.RegisterViewModels(Assemblies);
-            Builder.RegisterViews(Assemblies);
-            Builder.RegisterScreen(Assemblies);
+                Builder.RegisterViewModels(Assemblies);
+                Builder.RegisterViews(Assemblies);
+                Builder.RegisterScreen(Assemblies);
 
-            Container = Builder.Build();
+                Container = Builder.Build();
 
-            RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
+                RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()

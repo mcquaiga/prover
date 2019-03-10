@@ -1,7 +1,9 @@
 ﻿namespace Prover.Core.Settings
 {
+    using Autofac;
     using Caliburn.Micro;
     using Prover.Core.Events;
+    using Prover.Core.Shared.Components;
     using Prover.Core.Storage;
     using System;
     using System.IO;
@@ -17,6 +19,11 @@
         #region Properties
 
         /// <summary>
+        /// Gets the CertificateSettings
+        /// </summary>
+        CertificateSettings CertificateSettings { get; }
+
+        /// <summary>
         /// Gets the Local
         /// </summary>
         LocalSettings Local { get; }
@@ -26,9 +33,10 @@
         /// </summary>
         SharedSettings Shared { get; }
 
+        /// <summary>
+        /// Gets the TestSettings
+        /// </summary>
         TestSettings TestSettings { get; }
-
-        CertificateSettings CertificateSettings { get; }
 
         #endregion
 
@@ -54,7 +62,7 @@
     /// <summary>
     /// Defines the <see cref="SettingsService" />
     /// </summary>
-    public class SettingsService : ISettingsService
+    public class SettingsService : ISettingsService, IStartable
     {
         #region Constants
 
@@ -95,6 +103,7 @@
         {
             _keyValueStore = keyValueStore;
             EventAggregator = eventAggregator;
+            HasInitialized = false;
         }
 
         #endregion
@@ -102,9 +111,19 @@
         #region Properties
 
         /// <summary>
+        /// Gets the CertificateSettings
+        /// </summary>
+        public CertificateSettings CertificateSettings => Shared.CertificateSettings;
+
+        /// <summary>
         /// Gets the EventAggregator
         /// </summary>
         public IEventAggregator EventAggregator { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether HasInitialized
+        /// </summary>
+        public bool HasInitialized { get; private set; }
 
         /// <summary>
         /// Gets the Local
@@ -116,9 +135,11 @@
         /// </summary>
         public SharedSettings Shared { get; private set; }
 
+        /// <summary>
+        /// Gets the TestSettings
+        /// </summary>
         public TestSettings TestSettings => Shared.TestSettings;
 
-        public CertificateSettings CertificateSettings => Shared.CertificateSettings;
         #endregion
 
         #region Methods
@@ -129,11 +150,10 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RefreshSettings()
         {
-            var localTask = LocalSettings.LoadLocalSettings(SettingsPath);
-            var sharedTask = SharedSettings.LoadSharedSettings(_keyValueStore);
-
-            Local = await localTask;
-            Shared = await sharedTask;
+            HasInitialized = false;
+            Local = await LocalSettings.LoadLocalSettings(SettingsPath);
+            Shared = await SharedSettings.LoadSharedSettings(_keyValueStore);
+            HasInitialized = true;
         }
 
         /// <summary>
@@ -142,10 +162,18 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task SaveSettings()
         {
-            await Shared.SaveSharedSettings(_keyValueStore).ConfigureAwait(false);
-            await Local.SaveLocalSettingsAsync(SettingsPath).ConfigureAwait(false);
+            await Shared.SaveSharedSettings(_keyValueStore);
+            await Local.SaveLocalSettingsAsync(SettingsPath);
 
             await EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
+        }
+
+        /// <summary>
+        /// The Start
+        /// </summary>
+        public void Start()
+        {
+            AsyncUtil.RunSync(RefreshSettings);
         }
 
         #endregion
