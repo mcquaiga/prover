@@ -62,13 +62,13 @@
         {
             get
             {
-                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live" && Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
+                if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase) && string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
                     return EvcCorrectorType.PTZ;
 
-                if (Items.GetItem(ItemCodes.Pressure.FixedFactor).Description.ToLower() == "live")
+                if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
                     return EvcCorrectorType.P;
 
-                if (Items.GetItem(ItemCodes.Temperature.FixedFactor).Description.ToLower() == "live")
+                if (string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
                     return EvcCorrectorType.T;
 
                 return EvcCorrectorType.T;
@@ -447,7 +447,7 @@
         /// <returns>The <see cref="Predicate{Instrument}"/></returns>
         public static Predicate<Instrument> IsOfInstrumentType(string instrumentType)
         {
-            return i => string.Equals(i.InstrumentType.Name, instrumentType, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(instrumentType) || instrumentType.ToLower() == "all";
+            return i => string.Equals(i.InstrumentType.Name, instrumentType, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(instrumentType) || string.Equals(instrumentType, "all", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion

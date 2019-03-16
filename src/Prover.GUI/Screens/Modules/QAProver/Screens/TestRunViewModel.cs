@@ -662,9 +662,9 @@
                 statusObservable = _rotaryStressTest.Status;
                 await _rotaryStressTest.Run(SelectedInstrumentType, GetCommPort(), _client, ct);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                Log.Error(ex);
             }
             finally
             {

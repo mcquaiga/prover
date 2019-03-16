@@ -44,7 +44,7 @@ namespace Prover.Core
             RegisterCommunications(builder);
 
             //builder.RegisterBuildCallback(_ => AsyncUtil.RunSync(ItemHelpers.LoadInstrumentTypes));
-            builder.RegisterBuildCallback(async _ => await ItemHelpers.GetInstrumentDefinitions());
+            builder.RegisterBuildCallback(_ => Task.Run(ItemHelpers.GetInstrumentDefinitions));
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)

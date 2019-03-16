@@ -49,7 +49,7 @@ namespace Prover.Core.Storage
 
         private KeyValue GetExistingKeyValue(KeyValue entity)
         {
-            var existing = Query(kv => kv.Id.ToLower() == entity.Id.ToLower()).FirstOrDefault();
+            var existing = Query(kv => string.Equals(kv.Id, entity.Id, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             return existing;
         }
        

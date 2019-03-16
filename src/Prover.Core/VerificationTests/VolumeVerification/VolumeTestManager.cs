@@ -119,7 +119,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     Log.Info("Volume test finished!");
                 }, ct);
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Log.Info("volume test cancellation requested.");
                 throw;

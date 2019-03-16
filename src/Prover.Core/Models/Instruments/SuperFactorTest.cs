@@ -132,7 +132,7 @@
         /// <summary>
         /// The CalculateFpv
         /// </summary>
-        /// <returns>The <see cref="decimal?"/></returns>
+        /// <returns>The <see cref="decimal"/></returns>
         private decimal? CalculateFpv()
         {
             if (!GaugePressure.HasValue)

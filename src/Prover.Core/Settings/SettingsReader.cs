@@ -35,7 +35,7 @@ namespace Prover.Core.Settings
                     return JsonConvert.DeserializeObject<LocalSettings>(jsonText);
                 }      
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return new LocalSettings();
             }
