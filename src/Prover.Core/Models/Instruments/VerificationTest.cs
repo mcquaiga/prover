@@ -10,56 +10,12 @@ namespace Prover.Core.Models.Instruments
 {
     public sealed class VerificationTest : EntityWithId
     {
-        public VerificationTest()
+        public VerificationTest(Instrument instrument, int testLevel)
         {
-        }
-
-        public VerificationTest(int testNumber, Instrument instrument)
-        {
-            TestNumber = testNumber;
+            TestNumber = testLevel;
             Instrument = instrument;
-            InstrumentId = Instrument.Id;
-        }
-
-        public static List<VerificationTest> Create(Instrument instrument, TestSettings testSettings)
-        {
-            var results = new List<VerificationTest>();
-            foreach (var vt in testSettings.TestPoints)
-            {
-                var verificationTest = new VerificationTest(vt.Level, instrument);
-
-                if (instrument.CompositionType == EvcCorrectorType.P)
-                {
-                    verificationTest.PressureTest = new PressureTest(verificationTest, vt.PressureGaugePercent);
-                }
-
-                if (instrument.CompositionType == EvcCorrectorType.T)
-                {
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, vt.TemperatureGauge);
-                }
-
-                if (instrument.CompositionType == EvcCorrectorType.PTZ)
-                {
-                    verificationTest.PressureTest = new PressureTest(verificationTest, vt.PressureGaugePercent);
-                    verificationTest.TemperatureTest = new TemperatureTest(verificationTest, vt.TemperatureGauge);
-                    verificationTest.SuperFactorTest = new SuperFactorTest(verificationTest);
-                }
-
-                if (vt.IsVolumeTest)
-                {
-                    verificationTest.VolumeTest = VolumeTest.Create(verificationTest, testSettings);
-
-                    if (instrument.InstrumentType.Name == "TOC")
-                    {
-                        verificationTest.FrequencyTest = new FrequencyTest(verificationTest);
-                    }
-                }
-
-                results.Add(verificationTest);
-            }
-
-            return results;
-        }
+            InstrumentId = Instrument.Id;           
+        }      
 
         public int TestNumber { get; set; }
 
