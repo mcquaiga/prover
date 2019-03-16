@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,20 +29,25 @@ namespace Prover.GUI
 
         public AppBootstrapper()
         {
+            var sw = Stopwatch.StartNew();
             try
-            {
-                _log.Info("Starting EVC Prover Application...");
+            {               
+                _log.Info("Starting EVC Prover Application.");
 
                 _splashScreen.Show();
 
                 Initialize();
-
-                _log.Info("Finished starting application.");
+                
+                _log.Info($"Finished starting application in {sw.ElapsedMilliseconds} ms.");                
             }
             catch (Exception e)
             {
-                _log.Error("Application failed to load. See exception for more details.");
+                _log.Error($"Application failed to load in {sw.ElapsedMilliseconds}. See exception for more details.");
                 _log.Error(e);
+            }
+            finally
+            {
+                sw.Stop();
             }
         }
 

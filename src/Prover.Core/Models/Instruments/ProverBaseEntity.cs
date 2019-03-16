@@ -11,7 +11,7 @@ using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class ProverTable : EntityWithId
+    public abstract class ProverBaseEntity : EntityWithId
     {
         private string _instrumentData;
 
@@ -28,14 +28,7 @@ namespace Prover.Core.Models.Instruments
         public virtual InstrumentType InstrumentType { get; set; }
 
         public override void OnInitializing()
-        {
-            if (this is Instrument)
-            {
-                var id = (this as Instrument)?.Type;
-                if (!id.HasValue) throw new NullReferenceException("Instrument ID could not be found.");
-                InstrumentType = HoneywellInstrumentTypes.GetById(id.Value);
-            }
-
+        {        
             if (InstrumentType == null)
                 throw new NullReferenceException(nameof(InstrumentType));
             if (string.IsNullOrEmpty(_instrumentData))
