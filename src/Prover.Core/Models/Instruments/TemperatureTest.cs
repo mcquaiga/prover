@@ -30,9 +30,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="TemperatureTest"/> class.
         /// </summary>
-        public TemperatureTest()
-        {
-        }
+        private TemperatureTest() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemperatureTest"/> class.

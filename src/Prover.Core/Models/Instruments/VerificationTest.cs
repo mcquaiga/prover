@@ -10,6 +10,8 @@ namespace Prover.Core.Models.Instruments
 {
     public sealed class VerificationTest : EntityWithId
     {
+        private VerificationTest() { }
+
         public VerificationTest(Instrument instrument, int testLevel)
         {
             TestNumber = testLevel;

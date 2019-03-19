@@ -33,8 +33,17 @@
         /// <summary>
         /// Prevents a default instance of the <see cref="VolumeTest"/> class from being created.
         /// </summary>
-        public VolumeTest()
+        private VolumeTest()
         {
+        }
+
+        public VolumeTest(VerificationTest verificationTest, List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
+        {
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
+            VerificationTest = verificationTest;
+            VerificationTestId = verificationTest.Id;
+
+            CreateDriveType(mechanicalUncorrectedTestLimits);
         }
 
         #endregion

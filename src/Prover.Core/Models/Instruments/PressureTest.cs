@@ -23,6 +23,8 @@
 
         #region Constructors
 
+        private PressureTest() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PressureTest"/> class.
         /// </summary>

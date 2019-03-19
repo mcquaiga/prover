@@ -310,15 +310,8 @@
 
                 if (tp.IsVolumeTest)
                 {
-                    var volume = new VolumeTest()
-                    {
-                        Items = vt.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
-                        VerificationTest = vt,
-                        VerificationTestId = vt.Id
-                    };
-
-                    volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
-
+                    var volume = new VolumeTest(vt, testSettings.MechanicalUncorrectedTestLimits);
+                    
                     if (instrument.InstrumentType.Name == "TOC")
                     {
                         vt.FrequencyTest = new FrequencyTest(vt);
