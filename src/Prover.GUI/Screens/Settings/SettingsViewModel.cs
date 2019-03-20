@@ -17,11 +17,7 @@ namespace Prover.GUI.Screens.Settings
         public SettingsViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ISettingsService settingsService)
             : base(screenManager, eventAggregator)
         {
-            _settingsService = settingsService;
-           
-            //StabilizeLiveReadings = _settingsService.Shared.TestSettings.StabilizeLiveReadings;
-            //this.WhenAnyValue(x => x.StabilizeLiveReadings)
-            //    .Subscribe(x => _settingsService.Shared.TestSettings.StabilizeLiveReadings = x);
+            _settingsService = settingsService;         
 
             SelectedMechanicalVolumeTestType = _settingsService.Shared.TestSettings.MechanicalDriveVolumeTestType.ToString();
             this.WhenAnyValue(x => x.SelectedMechanicalVolumeTestType)

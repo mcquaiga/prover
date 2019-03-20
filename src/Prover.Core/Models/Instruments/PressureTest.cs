@@ -1,24 +1,35 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.Core.Extensions;
-
-namespace Prover.Core.Models.Instruments
+﻿namespace Prover.Core.Models.Instruments
 {
-    /**
-     * 
-     * Transducer type = PSIA 
-     * 
-     **/
+    using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.Items;
+    using Prover.Core.Extensions;
+    using System;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
+    /// <summary>
+    /// Defines the <see cref="PressureTest" />
+    /// </summary>
     public sealed class PressureTest : BaseVerificationTest
     {
-        public PressureTest()
-        {
-        }
+        #region Fields
 
+        /// <summary>
+        /// Defines the _totalGauge
+        /// </summary>
+        private readonly decimal? _totalGauge;
+
+        #endregion
+
+        #region Constructors
+
+        private PressureTest() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PressureTest"/> class.
+        /// </summary>
+        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
+        /// <param name="percentOfGauge">The percentOfGauge<see cref="decimal"/></param>
         public PressureTest(VerificationTest verificationTest, decimal percentOfGauge)
         {
             Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
@@ -41,26 +52,99 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        private readonly decimal? _totalGauge;
+        #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the ActualFactor
+        /// </summary>
         [NotMapped]
-        public TransducerType? Transducer => VerificationTest?.Instrument?.Transducer;
+        public override decimal? ActualFactor
+        {
+            get
+            {
+                var basePressure = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
+                if (basePressure == 0) return 0;
 
+                return decimal.Round(GasPressure / basePressure, 4);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the AtmosphericGauge
+        /// </summary>
+        public decimal? AtmosphericGauge { get; set; }
+
+        /// <summary>
+        /// Gets the EvcFactor
+        /// </summary>
         [NotMapped]
-        public decimal TotalGauge => _totalGauge ?? 0;
+        public override decimal? EvcFactor => Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue ?? 0;
 
+        /// <summary>
+        /// Gets or sets the GasGauge
+        /// </summary>
+        public decimal? GasGauge { get; set; }
+
+        /// <summary>
+        /// Gets the GasGaugePsi
+        /// </summary>
+        [NotMapped]
+        public decimal? GasGaugePsi => GasGauge.HasValue ? ConvertToPsi(GasGauge.Value, VerificationTest.Instrument.PressureUnits()) : default(decimal?);
+
+        /// <summary>
+        /// Gets the GasPressure
+        /// </summary>
         public decimal GasPressure
         {
             get
-            {                                
+            {
                 var result = GasGauge.GetValueOrDefault(0) + AtmosphericGauge.GetValueOrDefault(0);
                 return decimal.Round(result, 4);
             }
         }
 
+        /// <summary>
+        /// Gets the GasPressurePsi
+        /// </summary>
         [NotMapped]
         public decimal GasPressurePsi => ConvertToPsi(GasPressure, VerificationTest.Instrument.PressureUnits());
 
+        /// <summary>
+        /// Gets the InstrumentType
+        /// </summary>
+        [NotMapped]
+        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+
+        /// <summary>
+        /// Gets the TotalGauge
+        /// </summary>
+        [NotMapped]
+        public decimal TotalGauge => _totalGauge ?? 0;
+
+        /// <summary>
+        /// Gets the Transducer
+        /// </summary>
+        [NotMapped]
+        public TransducerType? Transducer => VerificationTest?.Instrument?.Transducer;
+
+        /// <summary>
+        /// Gets the PassTolerance
+        /// </summary>
+        protected override decimal PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The ConvertTo
+        /// </summary>
+        /// <param name="value">The value<see cref="decimal"/></param>
+        /// <param name="fromUnit">The fromUnit<see cref="string"/></param>
+        /// <param name="toUnit">The toUnit<see cref="string"/></param>
+        /// <returns>The <see cref="decimal"/></returns>
         public static decimal ConvertTo(decimal value, string fromUnit, string toUnit)
         {
             var result = ConvertToPsi(value, fromUnit);
@@ -99,6 +183,12 @@ namespace Prover.Core.Models.Instruments
             return decimal.Round(result, 2);
         }
 
+        /// <summary>
+        /// The ConvertToPsi
+        /// </summary>
+        /// <param name="value">The value<see cref="decimal"/></param>
+        /// <param name="fromUnit">The fromUnit<see cref="string"/></param>
+        /// <returns>The <see cref="decimal"/></returns>
         public static decimal ConvertToPsi(decimal value, string fromUnit)
         {
             var result = 0.0m;
@@ -136,6 +226,11 @@ namespace Prover.Core.Models.Instruments
             return decimal.Round(result, 2);
         }
 
+        /// <summary>
+        /// The GetGaugePressure
+        /// </summary>
+        /// <param name="percentOfGauge">The percentOfGauge<see cref="decimal"/></param>
+        /// <returns>The <see cref="decimal"/></returns>
         public decimal GetGaugePressure(decimal percentOfGauge)
         {
             if (percentOfGauge > 1)
@@ -145,30 +240,6 @@ namespace Prover.Core.Models.Instruments
             return Decimal.Round(percentOfGauge * evcPressureRange, 2);
         }
 
-        public decimal? GasGauge { get; set; }
-
-        [NotMapped]
-        public decimal? GasGaugePsi 
-            => GasGauge.HasValue ? ConvertToPsi(GasGauge.Value, VerificationTest.Instrument.PressureUnits()) : default(decimal?);
-
-        public decimal? AtmosphericGauge { get; set; }
-
-        [NotMapped]
-        public override decimal? EvcFactor => Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue ?? 0;
-
-        [NotMapped]
-        public override decimal? ActualFactor
-        {
-            get
-            {
-                var basePressure = VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Base).NumericValue;
-                if (basePressure == 0) return 0;
-             
-                return decimal.Round(GasPressure / basePressure, 4);
-            }
-        }
-
-        [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        #endregion
     }
 }

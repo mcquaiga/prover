@@ -47,7 +47,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
         public MeterIndexItemDescription MeterIndex
             => (MeterIndexItemDescription) _instrument.Items.GetItem(432).Metadata.ItemDescriptions
-                .FirstOrDefault(x => (x as MeterIndexItemDescription).Ids.Contains(MeterTypeId));
+                .FirstOrDefault(x => (x as IHaveManyId).Ids.Contains(MeterTypeId));
 
         public string MeterTypeDescription => MeterIndex.Description;
 

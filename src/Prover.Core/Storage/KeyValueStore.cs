@@ -14,14 +14,14 @@ namespace Prover.Core.Storage
             
         }
 
-        public KeyValue GetKeyValue(string key)
+        public async Task<KeyValue> GetKeyValue(string key)
         {
-            return Query(k => k.Id == key).FirstOrDefault();
+            return await Query(k => k.Id == key).FirstOrDefaultAsync();
         }
 
-        public T GetValue<T>(string key)
+        public async Task<T> GetValue<T>(string key)
         {
-            var kv = GetKeyValue(key);
+            var kv = await GetKeyValue(key).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(kv?.Value))
                 return default(T);
@@ -49,7 +49,7 @@ namespace Prover.Core.Storage
 
         private KeyValue GetExistingKeyValue(KeyValue entity)
         {
-            var existing = Query(kv => kv.Id.ToLower() == entity.Id.ToLower()).FirstOrDefault();
+            var existing = Query(kv => string.Equals(kv.Id, entity.Id, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             return existing;
         }
        

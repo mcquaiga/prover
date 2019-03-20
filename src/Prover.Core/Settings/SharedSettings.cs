@@ -60,9 +60,7 @@
         /// <returns>The <see cref="SharedSettings"/></returns>
         public static async Task<SharedSettings> LoadSharedSettings(KeyValueStore keyValueStore)
         {
-            var settings = keyValueStore.GetValue<SharedSettings>(SettingsKey) ?? SharedSettings.Create();
-
-            return settings;
+            return await keyValueStore.GetValue<SharedSettings>(SettingsKey) ?? SharedSettings.Create();
         }
 
         /// <summary>

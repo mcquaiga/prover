@@ -233,6 +233,7 @@
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
+    <Compile Include="Models\Instruments\ProverBaseEntity.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
@@ -249,6 +250,7 @@
     <Compile Include="Storage\KeyValueStore.cs" />
     <Compile Include="Storage\NLogCommandInterceptor.cs" />
     <Compile Include="Storage\ProverStore.cs" />
+    <Compile Include="Testing\RotaryStressTest.cs" />
     <Compile Include="VerificationTests\IEvcItemReset.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ItemVerificationManager.cs" />
@@ -284,7 +286,6 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
-    <Compile Include="Models\Instruments\InstrumentTable.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
     <Compile Include="Models\Instruments\PressureTest.cs" />
     <Compile Include="Models\Instruments\SuperFactorTest.cs" />

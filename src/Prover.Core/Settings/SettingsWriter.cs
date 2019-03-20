@@ -20,8 +20,7 @@ namespace Prover.Core.Settings
         {            
             var jsonText = JsonConvert.SerializeObject(config, Formatting.Indented);
 
-            var uniencoding = new UnicodeEncoding();
-            byte[] result = uniencoding.GetBytes(jsonText);
+            byte[] result = Encoding.UTF8.GetBytes(jsonText);
             
             using (FileStream sourceStream = File.Open(path, FileMode.Create))
             {

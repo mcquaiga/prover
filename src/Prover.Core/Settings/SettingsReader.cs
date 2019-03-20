@@ -27,7 +27,7 @@ namespace Prover.Core.Settings
                     var result = new byte[SourceStream.Length];
                     await SourceStream.ReadAsync(result, 0, (int)SourceStream.Length);
 
-                    var jsonText = System.Text.Encoding.ASCII.GetString(result);
+                    var jsonText = System.Text.Encoding.UTF8.GetString(result);
 
                     if (string.IsNullOrEmpty(jsonText))
                         return new LocalSettings();
@@ -35,7 +35,7 @@ namespace Prover.Core.Settings
                     return JsonConvert.DeserializeObject<LocalSettings>(jsonText);
                 }      
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return new LocalSettings();
             }
