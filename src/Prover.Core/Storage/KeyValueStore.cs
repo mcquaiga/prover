@@ -49,8 +49,9 @@ namespace Prover.Core.Storage
 
         private KeyValue GetExistingKeyValue(KeyValue entity)
         {
-            var existing = Query(kv => string.Equals(kv.Id, entity.Id, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            return existing;
+#pragma warning disable RCS1155 // Use StringComparison when comparing strings.
+            return Query(kv => kv != null && !string.IsNullOrEmpty(kv.Id) && kv.Id.ToLower() == entity.Id.ToLower()).FirstOrDefault();
+#pragma warning restore RCS1155 // Use StringComparison when comparing strings.
         }
        
         public override Task<bool> Delete(KeyValue entity)
