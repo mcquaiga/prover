@@ -14,14 +14,14 @@ namespace Prover.Core.Storage
             
         }
 
-        public KeyValue GetKeyValue(string key)
+        public async Task<KeyValue> GetKeyValue(string key)
         {
-            return Query(k => k.Id == key).FirstOrDefault();
+            return await Query(k => k.Id == key).FirstOrDefaultAsync();
         }
 
-        public T GetValue<T>(string key)
+        public async Task<T> GetValue<T>(string key)
         {
-            var kv = GetKeyValue(key);
+            var kv = await GetKeyValue(key).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(kv?.Value))
                 return default(T);
@@ -49,8 +49,9 @@ namespace Prover.Core.Storage
 
         private KeyValue GetExistingKeyValue(KeyValue entity)
         {
-            var existing = Query(kv => kv.Id.ToLower() == entity.Id.ToLower()).FirstOrDefault();
-            return existing;
+#pragma warning disable RCS1155 // Use StringComparison when comparing strings.
+            return Query(kv => kv != null && !string.IsNullOrEmpty(kv.Id) && kv.Id.ToLower() == entity.Id.ToLower()).FirstOrDefault();
+#pragma warning restore RCS1155 // Use StringComparison when comparing strings.
         }
        
         public override Task<bool> Delete(KeyValue entity)

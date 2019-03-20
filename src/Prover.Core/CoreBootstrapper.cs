@@ -10,13 +10,19 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
+using Prover.Core.Shared.Components;
 using Prover.Core.Shared.Data;
+using Prover.Core.Shared.Domain;
 using Prover.Core.Storage;
+using Prover.Core.Testing;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using LogManager = NLog.LogManager;
 
 namespace Prover.Core
@@ -27,20 +33,18 @@ namespace Prover.Core
 
         public static void RegisterServices(ContainerBuilder builder)
         {
-            SetupDatabase(builder);           
+   
+            SetupDatabase(builder);                       
 
-            builder.Register(c => new SettingsService(c.Resolve<KeyValueStore>(), c.Resolve<IEventAggregator>()))               
-                .As<ISettingsService>()
-                .SingleInstance();
-
-            builder.RegisterBuildCallback(c => c.Resolve<ISettingsService>().RefreshSettings());
+            builder.RegisterType<SettingsService>()                              
+                .As<ISettingsService>()     
+                .As<IStartable>()
+                .SingleInstance();          
 
             RegisterCommunications(builder);
 
-            builder.RegisterBuildCallback(async container =>
-            {
-                await ItemHelpers.LoadInstrumentTypes();
-            });
+            //builder.RegisterBuildCallback(_ => AsyncUtil.RunSync(ItemHelpers.LoadInstrumentTypes));
+            builder.RegisterBuildCallback(_ => Task.Run(ItemHelpers.GetInstrumentDefinitions));
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
@@ -79,6 +83,8 @@ namespace Prover.Core
             builder.RegisterType<QaRunTestManager>()
                 .As<IQaRunTestManager>();
 
+            builder.RegisterType<RotaryStressTest>();
+
             RegisterTestActions(builder);
         }
 
@@ -112,40 +118,40 @@ namespace Prover.Core
 
         private static void SetupDatabase(ContainerBuilder builder)
         {
-            //Database registrations
-            Log.Debug("Started initializing database...");
+            //Database registrations           
             builder.RegisterType<ProverContext>()
                 .AsSelf()
-                .AutoActivate()
-                .SingleInstance();                    
-            
-            builder.Register(c => new KeyValueStore(c.Resolve<ProverContext>()))
-                .As<KeyValueStore>()
-                .InstancePerDependency();
-          
-            builder.RegisterType<SettingsService>()
-                .AsImplementedInterfaces()
-                .SingleInstance()
-                .AutoActivate();
-
-            builder.RegisterType<InstrumentStore>().As<IProverStore<Instrument>>()
-                .InstancePerDependency();
-            builder.RegisterType<TestRunService>()
+                .As<IStartable>()
                 .SingleInstance();
 
-            builder.Register(c => new ProverStore<Client>(c.Resolve<ProverContext>()))
-                .As<IProverStore<Client>>()
+            //Register all types of EntityWithId as ProverStore<T>
+            var asm = Assembly.GetExecutingAssembly();
+            var stores = asm.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(EntityWithId)) && !t.IsAbstract)
+                .Select(t => typeof(ProverStore<>).MakeGenericType(new[] { t }))
+                .ToList();
+
+            builder.RegisterTypes(stores.ToArray())
+                .AsSelf()
+                .AsImplementedInterfaces()
                 .InstancePerDependency();
-            builder.Register(c => new ProverStore<ClientCsvTemplate>(c.Resolve<ProverContext>())).As<IProverStore<ClientCsvTemplate>>()
+
+            builder.RegisterType<KeyValueStore>()
+                .AsSelf()
                 .InstancePerDependency();
+
+            builder.RegisterType<InstrumentStore>()
+                .AsSelf()
+                .As<IProverStore<Instrument>>()
+                .InstancePerDependency();
+
+            builder.RegisterType<TestRunService>()
+               .SingleInstance();
+
             builder.RegisterType<ClientService>()
                 .As<IClientService>();
 
-            builder.RegisterType<CertificateStore>().As<IProverStore<Certificate>>()
-                .InstancePerDependency();
             builder.RegisterType<CertificateService>().As<ICertificateService>();
-
-            Log.Debug("Completed initializing database...");
         }
     }
 }
