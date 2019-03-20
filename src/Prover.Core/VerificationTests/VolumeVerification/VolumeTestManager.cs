@@ -104,7 +104,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                 {
                     Log.Info("Volume test started!");
 
-                    commClient.StatusObservable.Subscribe(Status);
+                    commClient.Status.Subscribe(Status);
 
                     await ExecuteSyncTest(ct);
                     ct.ThrowIfCancellationRequested();
@@ -119,7 +119,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification
                     Log.Info("Volume test finished!");
                 }, ct);
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Log.Info("volume test cancellation requested.");
                 throw;

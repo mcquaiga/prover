@@ -15,7 +15,7 @@ namespace Prover.Core.Models.Clients
         Verify
     }
 
-    public class ClientItems : ProverTable
+    public class ClientItems : ProverBaseEntity
     {
         public ClientItems()
         {
