@@ -195,6 +195,7 @@
                                                     $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                     $"   CorVol => {VolumeTest.CorPulseCount}")))
                 {
+                    ResetPulseCounts(VolumeTest);
                     OutputBoard?.StartMotor();                    
                     await WaitForTestComplete(VolumeTest, ct);
                 }
