@@ -4,6 +4,7 @@
     using Prover.Core.ExternalDevices;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Settings;
+    using System;
     using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -15,14 +16,20 @@
         }      
 
         protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {           
-            await Task.Run(async () =>
+        {
+            await Task.Run(() =>
             {
-                while (await TachometerCommunicator.ReadTach() < 100 && !ct.IsCancellationRequested)
+                var tachCount = 0;
+
+                using (Observable
+                        .Interval(TimeSpan.FromMilliseconds(500))
+                        .Subscribe(async _ => {
+                            tachCount = await TachometerCommunicator.ReadTach();
+                        }))
                 {
-                    Thread.Sleep(500);
-                }  
-            });            
+                    while (tachCount < 100 && !ct.IsCancellationRequested) { }
+                }
+            });                 
         }
     }
 }
