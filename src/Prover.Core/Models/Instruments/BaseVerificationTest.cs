@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Prover.Core.Models.Instruments
 {
-    public abstract class BaseVerificationTest : ProverTable, IHavePercentError, IHaveVerificationTest
+    public abstract class BaseVerificationTest : ProverBaseEntity, IHavePercentError, IHaveVerificationTest
     {
         [NotMapped]
         public bool HasPassed => PercentError.HasValue && PercentError < PassTolerance && PercentError > -PassTolerance;

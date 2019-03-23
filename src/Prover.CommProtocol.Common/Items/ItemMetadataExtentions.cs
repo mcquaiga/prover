@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Prover.CommProtocol.Common.Items.ItemMetadata;
 
 namespace Prover.CommProtocol.Common.Items
 {
@@ -41,7 +42,7 @@ namespace Prover.CommProtocol.Common.Items
             var result = items.GetItemString(itemValues, code);
             return decimal.Parse(result);
         }
-
+    
         public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
             string code)
         {
@@ -54,6 +55,9 @@ namespace Prover.CommProtocol.Common.Items
 
             return result;
         }
+
+        public static IEnumerable<ItemDescription> GetItemDescriptions(this IEnumerable<ItemMetadata> items, int itemNumber)
+            => items.FirstOrDefault(i => i.Number == itemNumber)?.ItemDescriptions;
 
         public static IEnumerable<ItemMetadata> PulseOutputItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.Number == 5 || i.Number == 6 || i.Number == 7);

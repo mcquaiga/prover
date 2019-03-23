@@ -154,7 +154,7 @@
             CommClient = commClient;
             VolumeTest = volumeTest;
 
-            CommClient.StatusObservable.Subscribe(Status);
+            CommClient.Status.Subscribe(Status);
 
             await CommClient.Connect(ct);
 
