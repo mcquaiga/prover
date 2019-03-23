@@ -190,7 +190,7 @@
                 ct.ThrowIfCancellationRequested();
     
                 using (Observable
-                    .Interval(TimeSpan.FromMilliseconds(100))
+                    .Interval(TimeSpan.FromMilliseconds(500))
                     .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
                                                     $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                     $"   CorVol => {VolumeTest.CorPulseCount}")))
@@ -235,7 +235,7 @@
             Status.OnNext("Waiting for residual pulses...");
 
             using (Observable                    
-                   .Interval(TimeSpan.FromSeconds(15))
+                   .Interval(TimeSpan.FromSeconds(10))
                    .Subscribe(async _ => {
                        pulsesWaiting = 0;
 
