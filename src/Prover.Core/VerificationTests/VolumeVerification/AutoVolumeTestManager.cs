@@ -8,6 +8,7 @@
     using Prover.Core.Models.Instruments;
     using Prover.Core.Settings;
     using System;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -118,7 +119,7 @@
             {
                 Status.OnNext("Running volume sync test...");
 
-                await CommClient.Disconnect().ConfigureAwait(false);
+                await CommClient.Disconnect();
 
                 await Task.Run(() =>
                 {    
@@ -129,7 +130,7 @@
                         VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                         VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
                     } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
-                }, ct).ConfigureAwait(false);
+                }, ct);
             }
             catch (OperationCanceledException)
             {
@@ -184,20 +185,21 @@
         /// <returns>The <see cref="Task"/></returns>
         public override async Task RunTest(CancellationToken ct)
         {
+            _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+            var listen = Task.Run(() => ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token),
+                _pulseInputsCancellationTokenSource.Token);
+
             try
             {
                 ct.ThrowIfCancellationRequested();
-                _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-
+    
                 using (Observable
                     .Interval(TimeSpan.FromMilliseconds(100))
                     .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
                                                     $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
                                                     $"   CorVol => {VolumeTest.CorPulseCount}")))
                 {
-                    OutputBoard?.StartMotor();
-
-                    var listen = Task.Run(() => ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token));
+                    OutputBoard?.StartMotor();                    
                     await WaitForTestComplete(VolumeTest, ct);
                 }
 
@@ -211,6 +213,8 @@
             finally
             {
                 OutputBoard?.StopMotor();
+                _pulseInputsCancellationTokenSource.Cancel();
+                listen.Dispose();
             }
         }
 
@@ -231,36 +235,38 @@
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, CancellationToken ct)
         {
             int pulsesWaiting;
-            int lastPulsesWaiting = 0;
+            int lastPulsesWaiting = 0; 
             bool keepWaiting = true;
 
             Status.OnNext("Waiting for residual pulses...");
 
-            do
+            using (Observable                    
+                   .Interval(TimeSpan.FromSeconds(15))
+                   .Subscribe(async _ => {
+                       pulsesWaiting = 0;
+
+                       if (!commClient.IsConnected)
+                           await commClient.Connect(ct);
+
+                       foreach (var i in await commClient.GetPulseOutputItems())
+                       {
+                           pulsesWaiting += (int)i.NumericValue;
+                       }
+
+                       Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+                       if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
+                       {
+                           await commClient.Disconnect();                         
+                           lastPulsesWaiting = pulsesWaiting;
+                       }
+                       else
+                       {
+                           keepWaiting = false;
+                       }
+                   }))
             {
-                pulsesWaiting = 0;
-
-                if (!commClient.IsConnected)
-                    await commClient.Connect(ct);
-
-                foreach (var i in await commClient.GetPulseOutputItems())
-                {
-                    pulsesWaiting += (int)i.NumericValue;
-                }
-
-                Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
-                if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
-                {
-                    await commClient.Disconnect();
-                    await Task.Delay(new TimeSpan(0, 0, 20), ct);
-                    lastPulsesWaiting = pulsesWaiting;
-                }
-                else
-                {
-                    keepWaiting = false;
-                }
-
-            } while (keepWaiting && !ct.IsCancellationRequested);
+                while (keepWaiting) { }
+            }        
 
             _pulseInputsCancellationTokenSource.Cancel();
         }
@@ -301,16 +307,14 @@
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="CancellationToken"/></returns>
         private CancellationToken ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
-        {
-          
+        {          
             do
             {
                 //TODO: Raise events so the UI can respond
                 volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                 volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
             }
-            while (!ct.IsCancellationRequested);
-          
+            while (!ct.IsCancellationRequested);          
 
             return ct;
         }
