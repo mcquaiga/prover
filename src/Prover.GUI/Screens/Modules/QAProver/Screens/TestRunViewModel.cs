@@ -624,7 +624,8 @@
                 await _settingsService.SaveSettings();
 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client, statusObservable);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);
+                _qaRunTestManager.Status.Subscribe(statusObservable);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -660,7 +661,7 @@
                 await _settingsService.SaveSettings();
 
                 statusObservable = _rotaryStressTest.Status;
-                await _rotaryStressTest.Run(SelectedInstrumentType, GetCommPort(), _client, ct);
+                await _rotaryStressTest.Run(SelectedInstrumentType, _client, ct);
             }
             catch (Exception ex)
             {

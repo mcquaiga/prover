@@ -213,5 +213,10 @@ namespace Prover.CommProtocol.Common.IO
 
             
         }
+
+        public ICommPort CreateNew()
+        {
+            return new IrDAPort();
+        }
     }
 }

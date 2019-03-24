@@ -19,6 +19,7 @@ using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.TestActions;
 using Prover.Core.VerificationTests.TestActions.PreTestActions;
 using Prover.Core.VerificationTests.VolumeVerification;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -48,17 +49,25 @@ namespace Prover.Core
         }
 
         private static void RegisterCommunications(ContainerBuilder builder)
-        {
-            //EVC Communcation
-            builder.Register(c =>
-                {
-                    var ss = c.Resolve<ISettingsService>();
-                    return new SerialPort(ss.Local.InstrumentCommPort, ss.Local.InstrumentBaudRate);
-                })
-                .Named<ICommPort>("SerialPort");
+        {    
+            builder.RegisterType<SerialPort>();
 
-            builder.Register(c => new IrDAPort())
+            builder.RegisterType<IrDAPort>()
                 .Named<ICommPort>("IrDAPort");
+
+            builder.Register<Func<string, int, ICommPort>>(c =>
+            {     
+                var resolve = c;
+                return (port, baud) =>
+                {
+                    if (string.IsNullOrEmpty(port))
+                    {
+                        return new IrDAPort();
+                    }
+
+                    return new SerialPort(port, baud);                    
+                };              
+            });           
 
             //QA Test Runs
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
