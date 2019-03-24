@@ -41,8 +41,8 @@ namespace Prover.Core.Testing
 
             try
             {
-                await RunMechanicalTest(instrumentType, client, ct);
-                //await RunRotaryTest(instrumentType, client, ct);
+                //await RunMechanicalTest(instrumentType, client, ct);
+                await RunRotaryTest(instrumentType, client, ct);
             }
             catch (Exception ex)
             {
@@ -74,7 +74,7 @@ namespace Prover.Core.Testing
                     await commClient.Disconnect();
                 }
                 
-                Thread.Sleep(2000);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
 
                 commPort = GetCommPort();
                 using (var qaRunTestManager = IoC.Get<IQaRunTestManager>())
@@ -82,9 +82,12 @@ namespace Prover.Core.Testing
                     await qaRunTestManager.InitializeTest(instrumentType, commPort, _testSettings, ct, client, false);
                     qaRunTestManager.Status.Subscribe(Status);
                     await qaRunTestManager.RunCorrectionTest(0, ct);
-                    //await qaRunTestManager.RunVolumeTest(ct);
+                    await qaRunTestManager.RunVolumeTest(ct);
                     await qaRunTestManager.SaveAsync();
                 }
+                
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+
                 x++;
             }
         }
