@@ -7,6 +7,8 @@
     using Prover.Core.ExternalDevices.DInOutBoards;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Settings;
+    using Prover.Core.VerificationTests.Events;
+    using PubSub.Extension;
     using System;
     using System.Reactive.Concurrency;
     using System.Reactive.Linq;
@@ -117,17 +119,15 @@
                 Status.OnNext("Running volume sync test...");
 
                 await CommClient.Disconnect();
-
-                await Task.Run(() =>
-                {    
-                    ResetPulseCounts(VolumeTest);
-                    OutputBoard.StartMotor();
-                    do
-                    {
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
-                }, ct);
+                 
+                ResetPulseCounts(VolumeTest);
+                OutputBoard.StartMotor();
+                do
+                {
+                    VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
+              
             }
             catch (OperationCanceledException)
             {
@@ -191,9 +191,7 @@
     
                 using (Observable
                     .Interval(TimeSpan.FromMilliseconds(500))
-                    .Subscribe(l => Status.OnNext($"Waiting for pulse inputs... {Environment.NewLine}" +
-                                                    $"   UncVol => {VolumeTest.UncPulseCount} / {VolumeTest.DriveType.MaxUncorrectedPulses()} {Environment.NewLine}" +
-                                                    $"   CorVol => {VolumeTest.CorPulseCount}")))
+                    .Subscribe(l => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                 {
                     ResetPulseCounts(VolumeTest);
                     OutputBoard?.StartMotor();                    

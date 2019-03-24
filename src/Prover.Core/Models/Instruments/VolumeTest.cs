@@ -128,6 +128,9 @@
             }
         }
 
+        [NotMapped]
+        public int UncorrectedPulseTarget => DriveType.MaxUncorrectedPulses();
+
         /// <summary>
         /// Gets or sets the DriveType
         /// </summary>
