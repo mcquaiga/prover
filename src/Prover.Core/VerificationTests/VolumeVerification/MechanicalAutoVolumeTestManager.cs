@@ -22,10 +22,8 @@
                 var tachCount = 0;
 
                 using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(500))
-                        .Subscribe(async _ => {
-                            tachCount = await TachometerCommunicator.ReadTach();
-                        }))
+                        .Interval(TimeSpan.FromSeconds(1))
+                        .Subscribe(async _ => tachCount = await TachometerCommunicator.ReadTach()))
                 {
                     while (tachCount < 100 && !ct.IsCancellationRequested) { }
                 }
