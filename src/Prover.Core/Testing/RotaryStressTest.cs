@@ -26,7 +26,7 @@ namespace Prover.Core.Testing
         private readonly ISettingsService _testSettings;
         private readonly Func<string, int, ICommPort> _commPortFactory;
 
-        public IObserver<string> Status { get; } = new Subject<string>();
+        public Subject<string> Status { get; } = new Subject<string>();
 
         public RotaryStressTest(ISettingsService testSettings, Func<string, int, ICommPort> commPortFactory)
         {
@@ -56,21 +56,14 @@ namespace Prover.Core.Testing
         }
 
         private async Task RunMechanicalTest(InstrumentType instrumentType, Client client, CancellationToken ct)
-        {
-            IEnumerable<ItemValue> items;
+        {   
             var corrVolumeUnits = instrumentType.ItemsMetadata.GetItemDescriptions(90);
-
-            var commPort = GetCommPort();
-            using (var commClient = EvcCommunicationClient.Create(instrumentType, commPort))
-            {
-                await commClient.Connect(ct);
-                items = await commClient.GetAllItems();
-                await commClient.Disconnect();
-            }
-
+                  
+            var x = 1;
             foreach (var corUnits in corrVolumeUnits)
             {
-                commPort = GetCommPort();
+                _log.Info($"Smoke test #{x} of {corrVolumeUnits.Count()}");
+                var commPort = GetCommPort();
                 using (var commClient = EvcCommunicationClient.Create(instrumentType, commPort))
                 {
                     commClient.Status.Subscribe(Status);
@@ -80,6 +73,8 @@ namespace Prover.Core.Testing
 
                     await commClient.Disconnect();
                 }
+                
+                Thread.Sleep(2000);
 
                 commPort = GetCommPort();
                 using (var qaRunTestManager = IoC.Get<IQaRunTestManager>())
@@ -87,9 +82,10 @@ namespace Prover.Core.Testing
                     await qaRunTestManager.InitializeTest(instrumentType, commPort, _testSettings, ct, client, false);
                     qaRunTestManager.Status.Subscribe(Status);
                     await qaRunTestManager.RunCorrectionTest(0, ct);
-                    await qaRunTestManager.RunVolumeTest(ct);
+                    //await qaRunTestManager.RunVolumeTest(ct);
                     await qaRunTestManager.SaveAsync();
                 }
+                x++;
             }
         }
 
@@ -107,9 +103,11 @@ namespace Prover.Core.Testing
             }
 
             var mt = items.GetItem(432).ItemDescription as MeterIndexItemDescription;
-
-            foreach (MeterIndexItemDescription meter in meterTypes.Where(m => (m as MeterIndexItemDescription).MountType == mt.MountType))
+            var x = 1;
+            var mountTypes = meterTypes.Where(m => (m as MeterIndexItemDescription).MountType == mt.MountType);
+            foreach (MeterIndexItemDescription meter in mountTypes)
             {
+                _log.Info($"Smoke test #{x} of {mountTypes.Count()}");
                 commPort = GetCommPort();
                 using (var commClient = EvcCommunicationClient.Create(instrumentType, commPort))
                 {
@@ -124,13 +122,14 @@ namespace Prover.Core.Testing
 
                 commPort = GetCommPort();
                 using (var qaRunTestManager = IoC.Get<IQaRunTestManager>())
-                {
-                    await qaRunTestManager.InitializeTest(instrumentType, commPort, _testSettings, ct, client);
+                {   
                     qaRunTestManager.Status.Subscribe(Status);
+                    await qaRunTestManager.InitializeTest(instrumentType, commPort, _testSettings, ct, client);                    
                     await qaRunTestManager.RunCorrectionTest(0, ct);
                     await qaRunTestManager.RunVolumeTest(ct);
                     await qaRunTestManager.SaveAsync();
                 }
+                x++;
             }
         }
 
