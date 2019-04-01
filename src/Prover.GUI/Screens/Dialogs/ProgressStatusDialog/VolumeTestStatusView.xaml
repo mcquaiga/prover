@@ -29,7 +29,7 @@
                 <controls:ValueDescriptionControl
                     IsReadOnly="True"
                     Label="Actual"
-                    Value="{Binding VolumeTest.UncPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />
+                    Value="{Binding UncorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />
                 <controls:ValueDescriptionControl Label="Target" Value="{Binding VolumeTest.UncorrectedPulseTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />
             </StackPanel>
         </Grid>
@@ -49,7 +49,7 @@
                 Margin="8,4"
                 IsReadOnly="True"
                 Label="Actual"
-                Value="{Binding VolumeTest.CorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=12}" />
+                Value="{Binding CorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=12}" />
         </Grid>
 
 

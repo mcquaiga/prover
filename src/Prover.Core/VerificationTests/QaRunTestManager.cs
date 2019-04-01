@@ -240,7 +240,9 @@
             await _communicationClient.Disconnect();
 
             CreateVolumeTestManager();
-            await SaveAsync();
+
+            if (testSettings.Local.AutoSave)
+                await SaveAsync();
         }
 
         /// <summary>
@@ -281,7 +283,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVerifiers()
         {
-            if (_validators != null && _validators.Any())
+            if (_validators?.Any() == true)
                 foreach (var validator in _validators)
                 {
                     _testStatus.OnNext($"Verifying items...");

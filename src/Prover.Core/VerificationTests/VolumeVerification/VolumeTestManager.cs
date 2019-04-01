@@ -170,8 +170,10 @@
                 Log.Info("Volume test started!");
 
                 commClient.Status.Subscribe(Status);
+                //TODO: Add setting to skip
+                if (SettingsService.TestSettings.RunVolumeSyncTest)
+                    await ExecuteSyncTest(ct);
 
-                await ExecuteSyncTest(ct);
                 ct.ThrowIfCancellationRequested();
 
                 await PreTest(commClient, volumeTest, testActionsManager, ct);

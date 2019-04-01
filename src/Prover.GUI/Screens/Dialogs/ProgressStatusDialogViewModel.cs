@@ -20,7 +20,15 @@
         /// Defines the LiveReadStatusView
         /// </summary>
         private const string LiveReadStatusView = "LiveReadStatusView";
+
+        /// <summary>
+        /// Defines the StatusProgressBarView
+        /// </summary>
         private const string StatusProgressBarView = "StatusAndProgressBarView";
+
+        /// <summary>
+        /// Defines the VolumeTestStatusView
+        /// </summary>
         private const string VolumeTestStatusView = "VolumeTestStatusView";
 
         #endregion
@@ -31,6 +39,11 @@
         /// Defines the _contentItem
         /// </summary>
         private string _contentItem;
+
+        /// <summary>
+        /// Defines the _corPulseCount
+        /// </summary>
+        private int _corPulseCount;
 
         /// <summary>
         /// Defines the _headerText
@@ -52,6 +65,14 @@
         /// </summary>
         private string _statusText;
 
+        /// <summary>
+        /// Defines the _uncorPulseCount
+        /// </summary>
+        private int _uncorPulseCount;
+
+        /// <summary>
+        /// Defines the _volumeTest
+        /// </summary>
         private VolumeTest _volumeTest;
 
         #endregion
@@ -72,7 +93,7 @@
             CancellationTokenSource = new CancellationTokenSource();
             var statusObserver = Observer.Create<string>(s => StatusText = s);
             TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token)
-                .ContinueWith(task => TryClose(true)));
+                .ContinueWith(_ => TryClose(true)));
 
             TaskCommand.IsExecuting
                 .Subscribe(x => ShowDialog = x);
@@ -85,7 +106,7 @@
                 TaskCommand.IsExecuting);
 
             ShowDialog = true;
-            
+
             this.Subscribe<LiveReadStatusEvent>(e =>
             {
                 ContentItem = LiveReadStatusView;
@@ -98,6 +119,8 @@
                 ContentItem = VolumeTestStatusView;
                 HeaderText = e.HeaderText;
                 VolumeTest = e.VolumeTest;
+                UncorPulseCount = VolumeTest.UncPulseCount;
+                CorPulseCount = VolumeTest.CorPulseCount;
             });
 
             this.Subscribe<VerificationTestEvent>(e =>
@@ -120,6 +143,11 @@
         /// Gets or sets the ContentItem
         /// </summary>
         public string ContentItem { get => _contentItem; set => this.RaiseAndSetIfChanged(ref _contentItem, value); }
+
+        /// <summary>
+        /// Gets or sets the CorPulseCount
+        /// </summary>
+        public int CorPulseCount { get => _corPulseCount; set => this.RaiseAndSetIfChanged(ref _corPulseCount, value); }
 
         /// <summary>
         /// Gets or sets the HeaderText
@@ -149,8 +177,16 @@
         /// </summary>
         public string StatusText { get => _statusText; set => this.RaiseAndSetIfChanged(ref _statusText, value); }
 
+        /// <summary>
+        /// Gets or sets the UncorPulseCount
+        /// </summary>
+        public int UncorPulseCount { get => _uncorPulseCount; set => this.RaiseAndSetIfChanged(ref _uncorPulseCount, value); }
 
+        /// <summary>
+        /// Gets or sets the VolumeTest
+        /// </summary>
         public VolumeTest VolumeTest { get => _volumeTest; set => this.RaiseAndSetIfChanged(ref _volumeTest, value); }
+
         #endregion
 
         #region Methods
