@@ -8,6 +8,8 @@
     using Prover.Core.Events;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Shared.Enums;
+    using Prover.Core.VerificationTests.Events;
+    using PubSub.Extension;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -92,13 +94,10 @@
         public async Task WaitForReadingsToStabilizeAsync(EvcCommunicationClient commClient, Instrument instrument, int level, CancellationToken ct, Subject<string> statusUpdates)
         {
             try
-            {
-                LiveReadStatusUpdates = new ReplaySubject<LiveReadEvent>();
-
+            {            
                 var liveReadItems = GetLiveReadItemNumbers(instrument, level);
                 
                 await commClient.Connect(ct);
-                statusUpdates.OnNext("Waiting for readings to stabilize...");
                 
                 ct.ThrowIfCancellationRequested();
                 do
@@ -107,18 +106,12 @@
                     foreach (var item in liveReadItems)
                     {
                         var liveValue = await commClient.LiveReadItemValue(item.Key.Metadata.Number);
-                        item.Value.Add(liveValue.NumericValue);
-                        
-                        LiveReadStatusUpdates.OnNext(new LiveReadEvent(item.Key.Metadata, liveValue.NumericValue));
-                        status += $"{Environment.NewLine} {item.Key.Metadata.ShortDescription} >> {liveValue.NumericValue}";
+                        item.Value.Add(liveValue.NumericValue);                       
                     }
-
-                    statusUpdates.OnNext($"Waiting for readings to stabilize... {status}");
+                    this.Publish(new LiveReadStatusEvent($"Stabilizing live readings...", liveReadItems));   
 
                     ct.ThrowIfCancellationRequested();
                 } while (liveReadItems.Any(x => !x.Value.IsStable));
-
-                LiveReadStatusUpdates.OnCompleted();
             }
             catch (OperationCanceledException)
             {
@@ -160,7 +153,7 @@
     /// <summary>
     /// Defines the <see cref="AveragedReadingStabilizer" />
     /// </summary>
-    internal class AveragedReadingStabilizer
+    public class AveragedReadingStabilizer
     {
         #region Constants
 
@@ -182,6 +175,7 @@
         /// Defines the _valueQueue
         /// </summary>
         private FixedSizedQueue<decimal> _valueQueue;
+        private decimal _latest;
 
         #endregion
 
@@ -237,6 +231,7 @@
         public void Add(decimal value)
         {
             _valueQueue.Enqueue(value);
+            _latest = value;
         }
 
         /// <summary>
@@ -246,6 +241,11 @@
         {
             _valueQueue = null;
             _valueQueue = new FixedSizedQueue<decimal>(FixedQueueSize);
+        }
+
+        public decimal Latest()
+        {
+            return _latest;
         }
 
         #endregion

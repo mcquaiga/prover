@@ -105,6 +105,9 @@
     <Reference Include="PresentationFramework">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\PresentationFramework.dll</HintPath>
     </Reference>
+    <Reference Include="PubSub, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fe4ede83ff72b2e0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PubSub.3.0.0\lib\netstandard2.0\PubSub.dll</HintPath>
+    </Reference>
     <Reference Include="ReachFramework" />
     <Reference Include="ReactiveUI, Version=8.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.8.7.1\lib\net461\ReactiveUI.dll</HintPath>
@@ -221,6 +224,15 @@
     <Compile Include="Events\ScreenChangeEvent.cs" />
     <Compile Include="Events\ShowDialogEvent.cs" />
     <Compile Include="Events\VerificationTestEvent.cs" />
+    <Compile Include="Screens\Dialogs\ProgressStatusDialog\LiveReadStatusView.xaml.cs">
+      <DependentUpon>LiveReadStatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\ProgressStatusDialog\StatusAndProgressBarView.xaml.cs">
+      <DependentUpon>StatusAndProgressBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Dialogs\ProgressStatusDialog\VolumeTestStatusView.xaml.cs">
+      <DependentUpon>VolumeTestStatusView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Screens\Modules\Certificates\Screens\EditCertificateView.xaml.cs">
       <DependentUpon>EditCertificateView.xaml</DependentUpon>
@@ -468,6 +480,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialog\LiveReadStatusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialog\StatusAndProgressBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Dialogs\ProgressStatusDialog\VolumeTestStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,8 +12,10 @@
     using Prover.Core.Services;
     using Prover.Core.Settings;
     using Prover.Core.Shared.Enums;
+    using Prover.Core.VerificationTests.Events;
     using Prover.Core.VerificationTests.TestActions;
     using Prover.Core.VerificationTests.VolumeVerification;
+    using PubSub.Extension;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -113,6 +115,8 @@
             TestActionsManager = testActionsManager;
             _validators = validators;
             _postTestCommands = postTestCommands;
+
+            _testStatus.Subscribe(s => this.Publish(new VerificationTestEvent(s)));
         }
 
         #endregion
@@ -236,7 +240,9 @@
             await _communicationClient.Disconnect();
 
             CreateVolumeTestManager();
-            await SaveAsync();
+
+            if (testSettings.Local.AutoSave)
+                await SaveAsync();
         }
 
         /// <summary>
@@ -254,7 +260,6 @@
             {
                 if (_settingsService.TestSettings.StabilizeLiveReadings)
                 {
-                    _testStatus.OnNext($"Stabilizing live readings...");
                     await _readingStabilizer.WaitForReadingsToStabilizeAsync(_communicationClient, Instrument, level, ct, _testStatus);
                 }
 
@@ -278,7 +283,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVerifiers()
         {
-            if (_validators != null && _validators.Any())
+            if (_validators?.Any() == true)
                 foreach (var validator in _validators)
                 {
                     _testStatus.OnNext($"Verifying items...");

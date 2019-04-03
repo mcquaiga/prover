@@ -1,0 +1,58 @@
+﻿<UserControl
+    x:Class="Prover.GUI.Screens.Dialogs.ProgressStatusDialog.VolumeTestStatusView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Prover.GUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Prover.GUI.Screens.Dialogs.ProgressStatusDialog"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="250"
+    d:DesignWidth="250"
+    mc:Ignorable="d">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+
+        <Grid Margin="0,2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
+                Text="Uncorrected" />
+            <StackPanel
+                Grid.Row="1"
+                Margin="8,4"
+                Orientation="Horizontal">
+                <controls:ValueDescriptionControl
+                    IsReadOnly="True"
+                    Label="Actual"
+                    Value="{Binding UncorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />
+                <controls:ValueDescriptionControl Label="Target" Value="{Binding VolumeTest.UncorrectedPulseTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="0,2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
+                Text="Corrected" />
+            <controls:ValueDescriptionControl
+                Grid.Row="1"
+                Margin="8,4"
+                IsReadOnly="True"
+                Label="Actual"
+                Value="{Binding CorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=12}" />
+        </Grid>
+
+
+    </StackPanel>
+
+</UserControl>
