@@ -8,6 +8,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using Prover.Core;
 using Prover.Core.Settings;
@@ -105,7 +106,9 @@ namespace Prover.GUI
                 throw new Exception("Could not find a modules.json in the current directory.");
 
             var modulesString = File.ReadAllText(_moduleFilePath);
-            assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)
+            var mods = (JsonConvert.DeserializeObject(modulesString) as JObject)["modules"];
+
+            assemblies.AddRange(from module in mods.Children()
                                 where File.Exists($"{module}.dll")
                                 select Assembly.LoadFrom($"{module}.dll"));
 
