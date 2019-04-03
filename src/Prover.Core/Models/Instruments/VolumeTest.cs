@@ -1,121 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Newtonsoft.Json;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.Items;
-using Prover.Core.Extensions;
-using Prover.Core.Models.Instruments.DriveTypes;
-using Prover.Core.Settings;
-using Prover.Core.Shared.Enums;
-
-namespace Prover.Core.Models.Instruments
+﻿namespace Prover.Core.Models.Instruments
 {
-    public sealed class VolumeTest : BaseVerificationTest
+    using Newtonsoft.Json;
+    using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.MiHoneywell.Items;
+    using Prover.Core.DriveTypes;
+    using Prover.Core.Extensions;
+    using Prover.Core.Models.Instruments.DriveTypes;
+    using Prover.Core.Settings;
+    using Prover.Core.Shared.Enums;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+
+    /// <summary>
+    /// Defines the <see cref="VolumeTest" />
+    /// </summary>
+    public class VolumeTest : BaseVerificationTest
     {
+        #region Fields
+
+        /// <summary>
+        /// Defines the _testInstrumentData
+        /// </summary>
         private string _testInstrumentData;
 
-        private VolumeTest() { }
+        #endregion
 
-        public static VolumeTest Create(VerificationTest verificationTest,
-            TestSettings testSettings)
+        #region Constructors
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="VolumeTest"/> class from being created.
+        /// </summary>
+        private VolumeTest()
         {
-            var volume = new VolumeTest()
-            {
-                Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList(),
-                VerificationTest = verificationTest,
-                VerificationTestId = verificationTest.Id,
-            };
-
-            volume.CreateDriveType(testSettings.MechanicalUncorrectedTestLimits);
-
-            return volume;
         }
 
-        public int PulseACount { get; set; }
-        public int PulseBCount { get; set; }
-        public decimal AppliedInput { get; set; }
+        public VolumeTest(VerificationTest verificationTest, List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
+        {
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
+            VerificationTest = verificationTest;
+            VerificationTestId = verificationTest.Id;
 
-        public IDriveType DriveType { get; set; }
+            CreateDriveType(mechanicalUncorrectedTestLimits);
+        }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the ActualFactor
+        /// </summary>
+        public override decimal? ActualFactor { get; }
+
+        /// <summary>
+        /// Gets or sets the AfterTestItems
+        /// </summary>
         [NotMapped]
         public IEnumerable<ItemValue> AfterTestItems { get; set; }
-        public string TestInstrumentData
-        {
-            get => AfterTestItems.Serialize();
-            set => _testInstrumentData = value;
-        }
 
-        public Instrument Instrument => VerificationTest.Instrument;
+        /// <summary>
+        /// Gets or sets the AppliedInput
+        /// </summary>
+        public decimal AppliedInput { get; set; }
 
-        [NotMapped]
-        public decimal? UnCorrectedPercentError
-        {
-            get
-            {
-                if (EvcUncorrected.HasValue && TrueUncorrected.HasValue && TrueUncorrected != 0 )
-                {
-                    var o = (EvcUncorrected.Value - TrueUncorrected.Value) / TrueUncorrected.Value;
-                    return decimal.Round(o * 100, 2);
-                }
-
-                return null;
-            }
-        }
-
-        [NotMapped]
-        public decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
-
-        [NotMapped]
-        public decimal? CorrectedPercentError
-        {
-            get
-            {
-                if (EvcCorrected.HasValue && TrueCorrected.HasValue && TrueCorrected != 0 )
-                {
-                    var o = (EvcCorrected.Value - TrueCorrected.Value) / TrueCorrected.Value;
-                    return decimal.Round(o * 100, 2);
-                }
-
-                return null;
-            }
-        }
-
-        [NotMapped]
-        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
-
-        [NotMapped]
-        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
-
-        [NotMapped]
-        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
-                                     UnCorPulsesPassed && CorPulsesPassed;
-
-        public override decimal? PercentError { get; }
-        public override decimal? ActualFactor { get; }
-        public override decimal? EvcFactor { get; }
-
-        [NotMapped]
-        public int UncPulseCount
-        {
-            get
-            {
-                if (Instrument.PulseASelect() == "UncVol")
-                    return PulseACount;
-
-                return PulseBCount;
-            }
-            set
-            {
-                if (Instrument.PulseASelect() == "UncVol")
-                    PulseACount = value;
-                else
-                    PulseBCount = value;
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the CorPulseCount
+        /// </summary>
         [NotMapped]
         public int CorPulseCount
         {
@@ -135,34 +88,143 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        [NotMapped]
-        public bool UnCorPulsesPassed
-        {
-            get
-            {
-                var expectedPulses = (int?) (AfterTestItems?.Uncorrected() - Items?.Uncorrected());
-                if (!expectedPulses.HasValue) return false;
-
-                var variance = expectedPulses - UncPulseCount;
-                return variance.IsBetween(2);
-            }
-        }
-
+        /// <summary>
+        /// Gets a value indicating whether CorPulsesPassed
+        /// </summary>
         [NotMapped]
         public bool CorPulsesPassed
         {
             get
             {
-                var expectedPulses = (int?) (AfterTestItems?.Corrected() - Items.Corrected());
+                var expectedPulses = (int?)(AfterTestItems?.Corrected() - Items.Corrected());
                 if (!expectedPulses.HasValue) return false;
 
                 var variance = expectedPulses - CorPulseCount;
-                return variance.IsBetween(2);
+                return variance.IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether CorrectedHasPassed
+        /// </summary>
         [NotMapped]
-        public decimal? TrueCorrected
+        public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
+
+        /// <summary>
+        /// Gets the CorrectedPercentError
+        /// </summary>
+        [NotMapped]
+        public decimal? CorrectedPercentError
+        {
+            get
+            {
+                if (EvcCorrected.HasValue && TrueCorrected.HasValue && TrueCorrected != 0)
+                {
+                    var o = (EvcCorrected.Value - TrueCorrected.Value) / TrueCorrected.Value;
+                    return decimal.Round(o * 100, 2);
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the DriveType
+        /// </summary>
+        public IDriveType DriveType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DriveTypeDiscriminator
+        /// </summary>
+        public string DriveTypeDiscriminator { get; set; }
+
+        /// <summary>
+        /// Gets the EvcCorrected
+        /// </summary>
+        [NotMapped]
+        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
+
+        /// <summary>
+        /// Gets the EvcFactor
+        /// </summary>
+        public override decimal? EvcFactor { get; }
+
+        /// <summary>
+        /// Gets the EvcUncorrected
+        /// </summary>
+        [NotMapped]
+        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
+
+        /// <summary>
+        /// Gets a value indicating whether HasPassed
+        /// </summary>
+        [NotMapped]
+        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
+                                     UnCorPulsesPassed && CorPulsesPassed;
+
+        /// <summary>
+        /// Gets the Instrument
+        /// </summary>
+        public Instrument Instrument => VerificationTest.Instrument;
+
+        /// <summary>
+        /// Gets the InstrumentType
+        /// </summary>
+        [NotMapped]
+        public override InstrumentType InstrumentType => Instrument.InstrumentType;
+
+        /// <summary>
+        /// Gets the PercentError
+        /// </summary>
+        public override decimal? PercentError { get; }
+
+        /// <summary>
+        /// Gets or sets the PulseACount
+        /// </summary>
+        public int PulseACount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PulseBCount
+        /// </summary>
+        public int PulseBCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TestInstrumentData
+        /// </summary>
+        public string TestInstrumentData { get => AfterTestItems.Serialize(); set => _testInstrumentData = value; }
+
+        /// <summary>
+        /// Gets the TotalCorrectionFactor
+        /// </summary>
+        [NotMapped]
+        public decimal? TotalCorrectionFactor
+        {
+            get
+            {
+                if (VerificationTest == null) return null;
+
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T && VerificationTest.TemperatureTest != null)
+                    return VerificationTest.TemperatureTest.ActualFactor;
+
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P && VerificationTest.PressureTest != null)
+                    return VerificationTest.PressureTest.ActualFactor;
+
+                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
+                {
+                    return VerificationTest.PressureTest?.ActualFactor
+                          * VerificationTest.TemperatureTest?.ActualFactor
+                          * VerificationTest.SuperFactorTest.SuperFactorSquared;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the TrueCorrected
+        /// </summary>
+        [NotMapped]
+        public virtual decimal? TrueCorrected
         {
             get
             {
@@ -172,71 +234,81 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        /// <summary>
+        /// Gets the TrueUncorrected
+        /// </summary>
         [NotMapped]
-        public decimal? TotalCorrectionFactor
+        public virtual decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
+
+        /// <summary>
+        /// Gets a value indicating whether UnCorPulsesPassed
+        /// </summary>
+        [NotMapped]
+        public bool UnCorPulsesPassed
         {
             get
             {
-                if (VerificationTest == null) return null;
+                var expectedPulses = (int?)(AfterTestItems?.Uncorrected() - Items?.Uncorrected());
+                if (!expectedPulses.HasValue) return false;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.T &&
-                    VerificationTest.TemperatureTest != null)
-                    return VerificationTest.TemperatureTest.ActualFactor;
+                var variance = expectedPulses - UncPulseCount;
+                return variance.IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
+            }
+        }
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.P &&
-                    VerificationTest.PressureTest != null)
-                    return VerificationTest.PressureTest.ActualFactor;
+        /// <summary>
+        /// Gets a value indicating whether UnCorrectedHasPassed
+        /// </summary>
+        [NotMapped]
+        public bool UnCorrectedHasPassed => UnCorrectedPercentError?.IsBetween(Global.UNCOR_ERROR_THRESHOLD) ?? false;
 
-                if (VerificationTest.Instrument.CompositionType == EvcCorrectorType.PTZ)
-                    return VerificationTest.PressureTest?.ActualFactor *
-                           VerificationTest.TemperatureTest?.ActualFactor *
-                           VerificationTest.SuperFactorTest.SuperFactorSquared;
+        /// <summary>
+        /// Gets the UnCorrectedPercentError
+        /// </summary>
+        [NotMapped]
+        public decimal? UnCorrectedPercentError
+        {
+            get
+            {
+                if (EvcUncorrected.HasValue && TrueUncorrected.HasValue && TrueUncorrected != 0)
+                {
+                    var o = (EvcUncorrected.Value - TrueUncorrected.Value) / TrueUncorrected.Value;
+                    return decimal.Round(o * 100, 2);
+                }
 
                 return null;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the UncPulseCount
+        /// </summary>
         [NotMapped]
-        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
-
-        [NotMapped]
-        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
-
-        public string DriveTypeDiscriminator { get; set; }
-
-        [NotMapped]
-        public override InstrumentType InstrumentType => Instrument.InstrumentType;
-
-        private void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
+        public int UncPulseCount
         {
-            if (string.IsNullOrEmpty(DriveTypeDiscriminator))
+            get
             {
-                DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == "rotary"
-                    ? "Rotary"
-                    : "Mechanical";
+                if (Instrument.PulseASelect() == "UncVol")
+                    return PulseACount;
 
-                if (InstrumentType.Id == 12)
-                    DriveTypeDiscriminator = "Rotary";                
+                return PulseBCount;
             }
-
-            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
-            { 
-                switch (DriveTypeDiscriminator)
-                {
-                    case "Rotary":
-                        DriveType = new RotaryDrive(Instrument);
-                        break;
-                    case "Mechanical":
-                        DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
-                        break;
-                    default:
-                        throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
-                }               
+            set
+            {
+                if (Instrument.PulseASelect() == "UncVol")
+                    PulseACount = value;
+                else
+                    PulseBCount = value;
             }
-            else
-                throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
         }
 
+        #endregion
+
+        #region Methods      
+
+        /// <summary>
+        /// The OnInitializing
+        /// </summary>
         public override void OnInitializing()
         {
             base.OnInitializing();
@@ -249,5 +321,51 @@ namespace Prover.Core.Models.Instruments
                 AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
             }
         }
+
+        /// <summary>
+        /// The CreateDriveType
+        /// </summary>
+        /// <param name="mechanicalUncorrectedTestLimits">The mechanicalUncorrectedTestLimits<see cref="List{TestSettings.MechanicalUncorrectedTestLimit}"/></param>
+        public void CreateDriveType(List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits = null)
+        {
+            if (string.IsNullOrEmpty(DriveTypeDiscriminator))
+            {
+                if (Instrument.Items?.GetItem(182)?.NumericValue > 0)
+                {
+                    DriveTypeDiscriminator = Drives.PulseInput;
+                }
+                else
+                {
+                    DriveTypeDiscriminator = Instrument.Items?.GetItem(98)?.Description.ToLower() == Drives.Rotary.ToLower()
+                        ? Drives.Rotary
+                        : Drives.Mechanical;
+                }
+            }
+
+            if (InstrumentType.Id == 12)
+                DriveTypeDiscriminator = "Rotary";
+
+            if (DriveType == null && !string.IsNullOrEmpty(DriveTypeDiscriminator) && VerificationTest != null)
+            {
+                switch (DriveTypeDiscriminator)
+                {
+                    case Drives.Rotary:
+                        DriveType = new RotaryDrive(Instrument);
+                        break;
+                    case Drives.Mechanical:
+                        DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
+                        break;
+                    case Drives.PulseInput:
+                        DriveType = new PulseInputSensor(Instrument);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
+                }
+            }
+            else
+                throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
+        }
+
+        #endregion
     }
 }

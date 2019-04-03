@@ -1,14 +1,16 @@
-﻿namespace Prover.Core.Events
+﻿using Prover.CommProtocol.Common.Items;
+
+namespace Prover.Core.Events
 {
     public class LiveReadEvent
     {
-        public LiveReadEvent(int itemNumber, decimal liveReadValue)
+        public LiveReadEvent(ItemMetadata item, decimal liveReadValue)
         {
             LiveReadValue = liveReadValue;
-            ItemNumber = itemNumber;
+            Item = item;
         }
 
         public decimal LiveReadValue { get; set; }
-        public int ItemNumber { get; set; }
+        public ItemMetadata Item { get; set; }
     }
 }

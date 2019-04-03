@@ -21,21 +21,26 @@ namespace Prover.CommProtocol.Common
 
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        public static EvcCommunicationClient Create(InstrumentType instrumentType, ICommPort commPort)
+        {
+            return instrumentType.ClientFactory.Invoke(commPort, null);
+        }
+
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
         /// </summary>
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="instrumentType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject)
+        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject = null)
         {
             CommPort = commPort;
             InstrumentType = instrumentType;
 
             if (statusSubject != null)
-                StatusObservable?.Subscribe(statusSubject);
+                Status?.Subscribe(statusSubject);
 
-            StatusObservable?.Subscribe(s => Log.Debug(s));
+            Status?.Subscribe(s => Log.Debug(s));
 
             _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
                 .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
@@ -48,7 +53,7 @@ namespace Prover.CommProtocol.Common
 
         public InstrumentType InstrumentType { get; set; }
 
-        public IObservable<string> StatusObservable => _statusSubject.AsObservable();
+        public IObservable<string> Status => _statusSubject.AsObservable();
 
         /// <summary>
         ///     Contains all the item numbers and meta data for a specific instrument type
@@ -196,6 +201,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual async Task<IEnumerable<ItemValue>> GetAllItems()
         {
+            _statusSubject.OnNext("Downloading items...");
             return await GetItemValues(InstrumentType.ItemsMetadata);
         }
 
@@ -212,7 +218,16 @@ namespace Prover.CommProtocol.Common
         ///     Read frequency test items defined in items xml definitions
         /// </summary>
         /// <returns></returns>
-        public abstract Task<IFrequencyTestItems> GetFrequencyItems();
+        public abstract Task<IFrequencyTestItems> GetFrequencyItems();       
+
+         /// <summary>
+        ///     Read temperature test items defined in items xml definitions
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ItemValue>> GetPulseOutputItems()
+        {
+            return await GetItemValues(ItemDetails.PulseOutputItems());
+        }
 
         /// <summary>
         ///     Read pressure test items defined in items xml definitions

@@ -9,12 +9,7 @@ namespace Prover.CommProtocol.Common.Items
     public class ItemValue
     {
         public ItemValue(ItemMetadata metadata, string value)
-        {
-            //if (string.IsNullOrEmpty(value))
-            //    throw new ArgumentNullException(nameof(value));
-
-            //if (metadata == null)
-            //    throw new ArgumentNullException(nameof(metadata));
+        {         
 
             RawValue = value;
             Metadata = metadata;
@@ -36,9 +31,9 @@ namespace Prover.CommProtocol.Common.Items
         public virtual string Description 
             => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
-        private ItemMetadata.ItemDescription ItemDescription
+        public ItemMetadata.ItemDescription ItemDescription
         {
-            get { return Metadata.GetItemDescription(RawValue); }
+            get { return Metadata?.GetItemDescription(RawValue); }
         }
 
         public override string ToString()
@@ -54,7 +49,7 @@ namespace Prover.CommProtocol.Common.Items
     {
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
-            var result = items.FirstOrDefault(x => x.Metadata?.Code?.ToLower() == code.ToLower());
+            var result = items?.FirstOrDefault(x => x.Metadata?.Code?.ToLower() == code.ToLower());
             //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item code {code} could not be found.");
 
             return result;
@@ -62,7 +57,7 @@ namespace Prover.CommProtocol.Common.Items
 
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, int itemNumber)
         {
-            var result = items.FirstOrDefault(x => x.Metadata.Number == itemNumber);
+            var result = items?.FirstOrDefault(x => x.Metadata?.Number == itemNumber);
 
             //if (result == null) NLog.LogManager.GetCurrentClassLogger().Warn($"Item number {itemNumber} could not be found.");         
 
@@ -74,7 +69,9 @@ namespace Prover.CommProtocol.Common.Items
             try
             {
                 if (items == null) return new Dictionary<int, string>();
-                return items.ToDictionary(k => k.Metadata.Number, v => v.RawValue);
+                return items
+                    .Where(i => i.Metadata != null)
+                    .ToDictionary(k => k.Metadata.Number, v => v.RawValue);
             }
             catch (Exception e)
             {

@@ -100,6 +100,12 @@ namespace Prover.GUI.Screens
             return result;
         }
 
+        public async Task ShowMessageBox(string message)
+        {
+            var vm = new InformationDialogViewModel(message);
+            await _eventAggregator.PublishOnUIThreadAsync(new DialogDisplayEvent(vm));          
+        }
+
         public void ShowWindow(ViewModelBase dialogViewModel)
         {
             if (dialogViewModel is IWindowSettings windowsSettings)

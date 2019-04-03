@@ -29,6 +29,15 @@ namespace Prover.GUI.Controls
         public static readonly DependencyProperty IconKindProperty = DependencyProperty.Register(
             "IconKind", typeof(PackIconKind), typeof(PercentageControl), new PropertyMetadata(default(PackIconKind)));
 
+        public static readonly DependencyProperty HidePercentageProperty = DependencyProperty.Register(
+            "HidePercentage", typeof(bool), typeof(PercentageControl), new PropertyMetadata(false));
+
+        public bool HidePercentage
+        {
+            get { return (bool) GetValue(HidePercentageProperty); }
+            set { SetValue(HidePercentageProperty, value); }
+        }
+
         public PercentageControl()
         {
             InitializeComponent();

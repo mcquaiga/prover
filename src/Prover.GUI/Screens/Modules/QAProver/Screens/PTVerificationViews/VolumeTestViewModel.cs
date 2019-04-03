@@ -23,8 +23,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             PostTest
         }
 
-        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null)
+        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Prover.Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null)
             : base(screenManager, eventAggregator, volumeTest)
         {
             Volume = volumeTest;
@@ -92,7 +91,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
         {
             TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
-            await TestManager.VolumeTestManager.PreTest(ct);
+            await TestManager.DownloadPreVolumeTest(ct);
             ManualVolumeTestStep = TestStep.PostTest;
             EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(Volume.VerificationTest));
         }
@@ -105,7 +104,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Subscribe(status);
 
-                await TestManager.VolumeTestManager.PostTest(ct);
+                await TestManager.DownloadPostVolumeTest(ct);
                 ManualVolumeTestStep = TestStep.PreTest;
             }
             catch (Exception ex)
@@ -143,7 +142,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         private void CreateDriveSpecificViews()
         {
             if (Volume?.DriveType is MechanicalDrive)
-                EnergyTestItem = new EnergyTestViewModel(EventAggregator, (MechanicalDrive) Volume.DriveType);
+                EnergyTestItem = new EnergyTestViewModel(EventAggregator, ((MechanicalDrive)Volume.DriveType).Energy);
             else if (Volume?.DriveType is RotaryDrive)
                 MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive) Volume.DriveType);
 

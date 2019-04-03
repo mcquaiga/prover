@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.VerificationSet
 {

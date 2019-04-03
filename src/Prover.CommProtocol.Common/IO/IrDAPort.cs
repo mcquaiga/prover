@@ -32,7 +32,7 @@ namespace Prover.CommProtocol.Common.IO
         {
             try
             {
-                _encoding = Encoding.GetEncoding("x-IAS");
+                _encoding = Encoding.ASCII;
             }
             catch (ArgumentException)
             {

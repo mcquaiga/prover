@@ -1,2 +1,6 @@
-﻿[
-]
+﻿{
+	"modules": [
+		"UnionGas.MASA",
+		"Certificates"
+	]
+}

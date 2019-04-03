@@ -21,8 +21,9 @@
             </Style>
 
             <Style x:Key="LabelFontStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}"/>
+                <Setter Property="FontSize" Value="14"/>                
+                <Setter Property="Opacity" Value=".80"/>
+                <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
         </ResourceDictionary>
@@ -32,9 +33,7 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="0 6">
                 <TextBlock Text="{Binding TestDatePretty}"
-                           Foreground="{StaticResource SecondaryTextColor}"
-                           FontSize="14"                           
-                           FontWeight="Light"/>
+                           Style="{StaticResource LabelFontStyle}"/>
                 
                 <TextBlock FontSize="28"
                            Text="{Binding Instrument.InstrumentType.Name}"

@@ -19,8 +19,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
                 throw new KeyNotFoundException("Could not find a meter type that match the instruments value in item 432.");
         }
 
-        public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(Global
-            .METER_DIS_ERROR_THRESHOLD);
+        public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD);
 
         public decimal MeterDisplacement
         {
@@ -48,7 +47,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
         public MeterIndexItemDescription MeterIndex
             => (MeterIndexItemDescription) _instrument.Items.GetItem(432).Metadata.ItemDescriptions
-                .FirstOrDefault(x => (x as MeterIndexItemDescription).Ids.Contains(MeterTypeId));
+                .FirstOrDefault(x => (x as IHaveManyId).Ids.Contains(MeterTypeId));
 
         public string MeterTypeDescription => MeterIndex.Description;
 

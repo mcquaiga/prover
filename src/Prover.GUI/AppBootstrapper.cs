@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using Prover.Core;
 using Prover.Core.Settings;
@@ -29,20 +30,25 @@ namespace Prover.GUI
 
         public AppBootstrapper()
         {
+            var sw = Stopwatch.StartNew();
             try
-            {
-                _log.Info("Starting EVC Prover Application...");
+            {               
+                _log.Info("Starting EVC Prover Application.");
 
                 _splashScreen.Show();
 
                 Initialize();
-
-                _log.Info("Finished starting application.");
+                
+                _log.Info($"Finished starting application in {sw.ElapsedMilliseconds} ms.");                
             }
             catch (Exception e)
             {
-                _log.Error("Application failed to load. See exception for more details.");
+                _log.Error($"Application failed to load in {sw.ElapsedMilliseconds}. See exception for more details.");
                 _log.Error(e);
+            }
+            finally
+            {
+                sw.Stop();
             }
         }
 
@@ -51,37 +57,44 @@ namespace Prover.GUI
 
         protected override void Configure()
         {
-            base.Configure();
+            try
+            {
+                base.Configure();
 
-            Builder = new ContainerBuilder();
-            CoreBootstrapper.RegisterServices(Builder);
+                Builder = new ContainerBuilder();
+                CoreBootstrapper.RegisterServices(Builder);
 
-            Builder.Register(c => new WindowManager())
-                .As<IWindowManager>()
-                .SingleInstance();
+                Builder.Register(c => new WindowManager())
+                    .As<IWindowManager>()
+                    .SingleInstance();
 
-            Builder.RegisterType<ShellViewModel>()
-                .As<IConductor>()
-                .SingleInstance();
+                Builder.RegisterType<ShellViewModel>()
+                    .As<IConductor>()
+                    .SingleInstance();
 
-            Builder.RegisterType<EventAggregator>()
-                .As<IEventAggregator>()
-                .SingleInstance();
+                Builder.RegisterType<EventAggregator>()
+                    .As<IEventAggregator>()
+                    .SingleInstance();
 
-            Builder.RegisterType<ScreenManager>()
-                .SingleInstance();
+                Builder.RegisterType<ScreenManager>()
+                    .SingleInstance();
 
-            Builder.RegisterType<InstrumentReportGenerator>()
-                .SingleInstance();
-            Builder.RegisterAssemblyModules(Assemblies);
+                Builder.RegisterType<InstrumentReportGenerator>()
+                    .SingleInstance();
+                Builder.RegisterAssemblyModules(Assemblies);
 
-            Builder.RegisterViewModels(Assemblies);
-            Builder.RegisterViews(Assemblies);
-            Builder.RegisterScreen(Assemblies);
+                Builder.RegisterViewModels(Assemblies);
+                Builder.RegisterViews(Assemblies);
+                Builder.RegisterScreen(Assemblies);
 
-            Container = Builder.Build();
+                Container = Builder.Build();
 
-            RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
+                RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -90,10 +103,12 @@ namespace Prover.GUI
             assemblies.AddRange(base.SelectAssemblies());
 
             if (!File.Exists(_moduleFilePath))
-                throw new Exception("Could not find a modules.conf file in the current directory.");
+                throw new Exception("Could not find a modules.json in the current directory.");
 
             var modulesString = File.ReadAllText(_moduleFilePath);
-            assemblies.AddRange(from module in JsonConvert.DeserializeObject<List<string>>(modulesString)
+            var mods = (JsonConvert.DeserializeObject(modulesString) as JObject)["modules"];
+
+            assemblies.AddRange(from module in mods.Children()
                                 where File.Exists($"{module}.dll")
                                 select Assembly.LoadFrom($"{module}.dll"));
 
@@ -139,7 +154,7 @@ namespace Prover.GUI
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            Container.Resolve<ISettingsService>().SaveLocalSettings();
+            Container.Resolve<ISettingsService>().SaveSettings();
             base.OnExit(sender, e);
         }
     }

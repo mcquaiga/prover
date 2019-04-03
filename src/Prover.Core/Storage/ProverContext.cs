@@ -11,27 +11,23 @@ using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Z.EntityFramework.Plus;
 using Prover.Core.Shared.Domain;
+using Autofac;
 
 //using Prover.Core.Migrations;
 
 namespace Prover.Core.Storage
 {
-    public class ProverContext : DbContext
+    public class ProverContext : DbContext, IStartable
     {
         private Logger _log = LogManager.GetCurrentClassLogger();
 
         public ProverContext()
             : base(@"name=ConnectionString")
         {
-            _log.Trace("Starting Db Context...");
-
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
-            Database.Initialize(false);
-
             this.Configuration.LazyLoadingEnabled = false;
 
-            ((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
-            
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+
             Database.Log = s => Debug.WriteLine(s);
         }
 
@@ -47,6 +43,16 @@ namespace Prover.Core.Storage
         public DbSet<ClientCsvTemplate> ClientCsvTemplates { get; set; }
         public DbSet<KeyValue> KeyValueStore { get; set; }
 
+        public void Start()
+        {
+            _log.Trace("Initializing Db Context...");
+
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ProverContext, Configuration>());
+            Database.Initialize(false);
+
+            _log.Trace("Finished init Db Context...");
+        }
+
         protected void ObjectContext_ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
             (e.Entity as EntityWithId)?.OnInitializing();
@@ -56,6 +62,7 @@ namespace Prover.Core.Storage
         {
             if (Database.Connection is SqlCeConnection)
                 QueryIncludeOptimizedManager.AllowQueryBatch = false;
+
 
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
