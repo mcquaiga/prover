@@ -110,7 +110,7 @@
         private static async Task<IEvcDevice> GetInstrument(HashSet<ItemMetadata> items, ConcurrentBag<IEvcDevice> results, string file)
         {
             var instrJson = await FileTextToJObjectAsync(file);
-            var i = instrJson.ToObject<IEvcDevice>();
+            var i = instrJson.ToObject<HoneywellDevice>();
             i.ClientFactory = GetCommClientFactory(i);
 
             var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
@@ -258,10 +258,10 @@
         /// The LoadGlobalItemDefinitions
         /// </summary>
         /// <returns>The <see cref="Task{HashSet{ItemMetadata}}"/></returns>
-        private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
+        private static Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
         {
             var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
-            return await GetItemDefinitions(path, "ItemDefinitions");
+            return GetItemDefinitions(path, "ItemDefinitions");
         }
 
         #endregion
