@@ -2,7 +2,11 @@
 {
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Models.Instrument;
+    using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
+    using Prover.Core.Settings;
+    using Prover.Core.VerificationTests.VolumeVerification;
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -20,60 +24,19 @@
         /// </summary>
         EvcCommunicationClient CommunicationClient { get; }
 
-        /// <summary>
-        /// Gets the Instrument
-        /// </summary>
         Instrument Instrument { get; }
-
-        /// <summary>
-        /// Gets the TestStatus
-        /// </summary>
         IObservable<string> TestStatus { get; }
+        VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
+        Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null);
 
-        #region Methods
-
-        /// <summary>
-        /// The DownloadPostVolumeTest
-        /// </summary>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        Task DownloadPostVolumeTest(CancellationToken ct = new CancellationToken());
-
-        /// <summary>
-        /// The DownloadPreVolumeTest
-        /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
-        Task DownloadPreVolumeTest();
-
-        /// <summary>
-        /// The InitializeTest
-        /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
-        /// <param name="commPort">The commPort<see cref="CommPort"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-        Task InitializeTest(EvcDevice instrumentType, CommPort commPort);       
-
-        /// <summary>
-        /// The RunTest
-        /// </summary>
-        /// <param name="level">The level<see cref="int"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
-
-        /// <summary>
-        /// The RunVerifier
-        /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
-        /// <summary>
-        /// The SaveAsync
-        /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
+        Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
+        Task RunVolumeTest(CancellationToken ct);
+        Task DownloadPreVolumeTest(CancellationToken ct);
+        Task DownloadPostVolumeTest(CancellationToken ct);
         Task SaveAsync();
-
-        #endregion
+        Task RunVerifiers();
     }
 
     #endregion

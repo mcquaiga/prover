@@ -12,7 +12,7 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              mc:Ignorable="d">
     <Grid>
-        <!--<materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
+       <!--<materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth0">
             <StackPanel>
                 <materialDesign:ColorZone Padding="5"
                                           Margin="5"
@@ -27,7 +27,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>              
 
-                    <!--<StackPanel Orientation="Horizontal"
+                    <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0"
                                 Grid.ColumnSpan="4">
@@ -42,7 +42,7 @@
                                 Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                                 Style="{StaticResource MaterialDesignRaisedDarkButton}"
                                 Command="{Binding PostTestCommand}" />
-                    </StackPanel>-->
+                    </StackPanel>
 
                     <StackPanel                                 Grid.Column="0" 
                                 VerticalAlignment="Top">
@@ -116,20 +116,20 @@
                                                   Mode="Light"
                                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                                   Padding="2"/>
-                        <controls1:PercentageControl
+                        <controls:PercentageControl
                             Margin="5"
                             HorizontalAlignment="Center"
                             DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
                             Passed="{Binding TestRun.HasPassed}" />
                         <UniformGrid Columns="2">
-                            <controls1:ValueDescriptionControl Label="Start Reading"
+                            <controls:ValueDescriptionControl Label="Start Reading"
                                                                Value="{Binding TestRun.UnadjustedStartReading}" />
-                            <controls1:ValueDescriptionControl Label="End Reading"
+                            <controls:ValueDescriptionControl Label="End Reading"
                                                                Value="{Binding TestRun.UnadjustedEndReading}" />
                             
-                            <controls1:ValueDescriptionControl Label="True Value"
+                            <controls:ValueDescriptionControl Label="True Value"
                                                                Value="{Binding UnadjustedVolume}" />
-                            <controls1:ValueDescriptionControl Label="EVC Value"
+                            <controls:ValueDescriptionControl Label="EVC Value"
                                                                Value="{Binding EvcUnadjustedVolume}" />
                         </UniformGrid>
                     </StackPanel>

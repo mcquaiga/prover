@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
 using Prover.Core.Extensions;
@@ -78,13 +79,13 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens.CsvTemplates
 
         // Instrument Types      
 
-        public List<EvcDevice> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
+        public List<IEvcDevice> InstrumentTypes => HoneywellInstrumentTypes.GetAll()
             .OrderBy(s => s.Name)
             .ToList();
 
-        private EvcDevice _selectedInstrumentType;
+        private IEvcDevice _selectedInstrumentType;
 
-        public EvcDevice SelectedInstrumentType
+        public IEvcDevice SelectedInstrumentType
         {
             get => _selectedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);

@@ -3,6 +3,7 @@
     using Caliburn.Micro;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
@@ -96,8 +97,8 @@
         /// <summary>
         /// Defines the _instrumentTypes
         /// </summary>
-        private ReactiveList<EvcDevice> _instrumentTypes =
-            new ReactiveList<EvcDevice> { ChangeTrackingEnabled = true };
+        private ReactiveList<IEvcDevice> _instrumentTypes =
+            new ReactiveList<IEvcDevice> { ChangeTrackingEnabled = true };
 
         /// <summary>
         /// Defines the _isDirty
@@ -137,7 +138,7 @@
         /// <summary>
         /// Defines the _selectedInstrumentType
         /// </summary>
-        private EvcDevice _selectedInstrumentType;
+        private IEvcDevice _selectedInstrumentType;
 
         /// <summary>
         /// Defines the _selectedTachCommPort
@@ -355,7 +356,7 @@
         /// <summary>
         /// Gets or sets the InstrumentTypes
         /// </summary>
-        public ReactiveList<EvcDevice> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        public ReactiveList<IEvcDevice> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
 
         /// <summary>
         /// Gets or sets a value indicating whether IsDirty
@@ -400,7 +401,7 @@
         /// <summary>
         /// Gets or sets the SelectedInstrumentType
         /// </summary>
-        public EvcDevice SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
+        public IEvcDevice SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
 
         /// <summary>
         /// Gets or sets the SelectedTachCommPort

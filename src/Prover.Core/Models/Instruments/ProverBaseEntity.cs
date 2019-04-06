@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.Shared.Domain;
@@ -25,7 +26,7 @@ namespace Prover.Core.Models.Instruments
         public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
-        public virtual EvcDevice InstrumentType { get; set; }
+        public virtual IEvcDevice InstrumentType { get; set; }
 
         public override void OnInitializing()
         {        

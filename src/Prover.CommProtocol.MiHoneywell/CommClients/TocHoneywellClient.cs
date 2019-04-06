@@ -8,13 +8,14 @@ using System.Reactive.Subjects;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Prover.CommProtocol.Common.Models.Instrument;
 
     /// <summary>
     /// Defines the <see cref="TocHoneywellClient" />
     /// </summary>
     public sealed class TocHoneywellClient : HoneywellClient
     {
-        internal static EvcDevice TurboMonitor = new EvcDevice()
+        internal static InstrumentType TurboMonitor = new InstrumentType()
         {
             Id = 6,
             AccessCode = 6,
@@ -30,9 +31,9 @@ using System.Reactive.Subjects;
         /// </summary>
         private readonly IEnumerable<ItemMetadata> _tibBoardItems;
 
-        public TocHoneywellClient(ICommPort commPort, EvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public TocHoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
-            _tibBoardItems = ItemHelpers.LoadItems(Instruments.TurboMonitor);
+            _tibBoardItems = HoneywellInstrumentTypes.TurboMonitor.ItemsMetadata;
         }
 
 
@@ -46,21 +47,20 @@ using System.Reactive.Subjects;
         {
             var mainResults = await GetItemValues(ItemDetails.FrequencyTestItems());
             await Disconnect();
-            Thread.Sleep(1000);
+            
 
             try
             {
-                InstrumentType = Instruments.TurboMonitor;
-                await Connect();
+                InstrumentType = HoneywellInstrumentTypes.TurboMonitor;
+                await Connect(new CancellationToken());
                 var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
 
                 return new FrequencyTestItems(mainResults, tibResults);
             }
             finally
             {
-                await Disconnect();
-                Thread.Sleep(500);
-                InstrumentType = Instruments.Toc;
+                await Disconnect();              
+                InstrumentType = HoneywellInstrumentTypes.Toc;
             }
         }
 
@@ -71,7 +71,7 @@ using System.Reactive.Subjects;
         /// <returns>The <see cref="Task{IEnumerable{ItemValue}}"/></returns>
         public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
         {
-            if (InstrumentType == Instruments.TurboMonitor)
+            if (InstrumentType == HoneywellInstrumentTypes.TurboMonitor)
             {
                 var results = new List<ItemValue>();
 

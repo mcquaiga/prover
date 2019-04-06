@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Subjects;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -48,7 +49,8 @@
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public virtual async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        public virtual async Task Execute(EvcCommunicationClient commClient, Instrument instrument, 
+            CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
             foreach (var item in _itemsForUpdate)
             {

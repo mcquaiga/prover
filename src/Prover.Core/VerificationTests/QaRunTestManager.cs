@@ -4,6 +4,7 @@
     using NLog;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.DriveTypes;
     using Prover.Core.ExternalDevices;
     using Prover.Core.Models.Clients;
@@ -148,6 +149,8 @@
         /// </summary>
         public VolumeTestManager VolumeTestManager { get; set; }
 
+        public EvcCommunicationClient CommunicationClient => _communicationClient;
+
         #endregion
 
         #region Methods
@@ -220,7 +223,7 @@
         /// <param name="client">The client<see cref="Client"/></param>
         /// <param name="statusObserver">The statusObserver<see cref="IObserver{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
+        public async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
         {
             if (statusObserver != null)
@@ -386,7 +389,7 @@
             }
 
             await _communicationClient.Disconnect();
-        }
+        }  
 
         #endregion
     }

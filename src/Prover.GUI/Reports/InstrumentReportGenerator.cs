@@ -8,17 +8,19 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
 using Prover.Core.Models.Instruments;
+using Prover.Core.Shared.Data;
 using Prover.Core.Storage;
-using Prover.GUI.Common;
+using Prover.GUI;
+using Prover.GUI.Screens;
 
 namespace Prover.GUI.Reports
 {
     public class InstrumentReportGenerator
     {
         private readonly ScreenManager _screenManager;
-        private readonly IInstrumentStore<Instrument> _instrumentStore;
+        private readonly IProverStore<Instrument> _instrumentStore;
 
-        public InstrumentReportGenerator(ScreenManager screenManager, IInstrumentStore<Instrument> instrumentStore)
+        public InstrumentReportGenerator(ScreenManager screenManager, IProverStore<Instrument> instrumentStore)
         {
             _screenManager = screenManager;
             _instrumentStore = instrumentStore;
@@ -28,8 +30,8 @@ namespace Prover.GUI.Reports
 
         public async Task GenerateAndViewReport(Instrument instrument)
         {
-            instrument = _instrumentStore.Get(instrument.Id);
-            var linkedInstrument = _instrumentStore.Query().FirstOrDefault(i => i.LinkedTestId == instrument.Id);
+            instrument = await _instrumentStore.Get(instrument.Id);
+            var linkedInstrument = _instrumentStore.Query(i => i.LinkedTestId == instrument.Id).FirstOrDefault();
 
             var filePath = CreateFileName(instrument);
 

@@ -5,6 +5,7 @@ using System.Reactive.Subjects;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Items;
 
 namespace Prover.CommProtocol.MiHoneywell
@@ -52,9 +53,7 @@ namespace Prover.CommProtocol.MiHoneywell
         public string Name { get; set; }
 
         public void LoadItemsInformation()
-        {
-            _itemsInformation.Clear();
-            _itemsInformation.UnionWith(ItemHelpers.LoadItems(this));
+        {    
         }
 
         #endregion

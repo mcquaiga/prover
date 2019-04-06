@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell.Items;
     using Prover.Core.DriveTypes;
     using Prover.Core.Extensions;
@@ -174,7 +175,7 @@
         /// Gets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType => Instrument.InstrumentType;
+        public override IEvcDevice InstrumentType => Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the PercentError

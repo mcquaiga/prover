@@ -34,21 +34,22 @@
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        public override async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(),
+            Subject<string> statusUpdates = null)
         {
-            if (instrument.InstrumentType == Instruments.Toc)
+            if (instrument.InstrumentType == HoneywellInstrumentTypes.Toc)
             {
-                await base.Execute(commClient, instrument, statusUpdates);
+                await base.Execute(commClient, instrument, ct, statusUpdates);
                 await commClient.Disconnect();
                 Thread.Sleep(1000);
 
-                commClient.InstrumentType = Instruments.TurboMonitor;
-                await commClient.Connect();
-                await base.Execute(commClient, instrument, statusUpdates);
+                commClient.InstrumentType = HoneywellInstrumentTypes.TurboMonitor;
+                await commClient.Connect(ct);
+                await base.Execute(commClient, instrument, ct, statusUpdates);
                 await commClient.Disconnect();
 
-                commClient.InstrumentType = Instruments.Toc;
-                await commClient.Connect();
+                commClient.InstrumentType = HoneywellInstrumentTypes.Toc;
+                await commClient.Connect(ct);
             }                
         }
 

@@ -2,30 +2,38 @@
 using System.Linq;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell.Items;
+using System;
+using Prover.CommProtocol.Common.Models.Instrument;
 
 namespace Prover.CommProtocol.MiHoneywell
 {
     public static class HoneywellInstrumentTypes
     {
-        public static EvcDevice GetByName(string name)
+        public static IEvcDevice Ec350 => GetByName("EC-350");
+        public static IEvcDevice Tci => GetByName("Tci");
+        public static IEvcDevice MiniAt => GetByName("Mini-AT");
+        public static IEvcDevice MiniMax => GetByName("Mini-Max");
+        public static IEvcDevice Toc => GetByName("Toc");
+        public static IEvcDevice TurboMonitor => GetByName("TurboMonitor");
+
+        public static IEvcDevice GetByName(string name)
         {
             var all = GetAll();
 
-            return all.ToList().FirstOrDefault(i => i.Name == name);
+            return all.FirstOrDefault(i => string.Equals(i.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static EvcDevice GetById(int id)
+        public static IEvcDevice GetById(int id)
         {
             var all = GetAll();
 
-            return all.ToList().FirstOrDefault(i => i.Id == id);
+            return all.FirstOrDefault(i => i.Id == id);
         }
 
-        public static IEnumerable<EvcDevice> GetAll()
+        public static IEnumerable<IEvcDevice> GetAll()
         {
             var allTask = ItemHelpers.GetInstrumentDefinitions().ConfigureAwait(false);
-            return allTask.GetAwaiter().GetResult()
-                .ToList()
+            return allTask.GetAwaiter().GetResult()       
                 .OrderBy(i => i.Name);
         }
     }

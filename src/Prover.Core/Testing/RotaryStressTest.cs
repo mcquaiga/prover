@@ -5,6 +5,7 @@ using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 using Prover.Core.Settings;
@@ -32,7 +33,7 @@ namespace Prover.Core.Testing
             _testSettings = testSettings;
         }
 
-        public async Task Run(InstrumentType instrumentType, ICommPort commPort, Client client, CancellationToken ct = new CancellationToken())
+        public async Task Run(IEvcDevice instrumentType, ICommPort commPort, Client client, CancellationToken ct = new CancellationToken())
         {
             try
             {
@@ -83,9 +84,9 @@ namespace Prover.Core.Testing
            
         }
 
-        private int GetMeterId(InstrumentType instrumentType, MeterIndexItemDescription meterInfo)
+        private int GetMeterId(IEvcDevice instrumentType, MeterIndexItemDescription meterInfo)
         {
-            if (instrumentType.Name == "EC-350")
+            if (instrumentType == HoneywellInstrumentTypes.Ec350)
             {
                 return meterInfo.Ids.FirstOrDefault(i => i > 80);
             }

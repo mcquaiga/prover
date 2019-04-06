@@ -1,24 +1,17 @@
 ﻿namespace Prover.Core.VerificationTests
 {
     using Caliburn.Micro;
-    using NLog;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
-    using Prover.Core.DriveTypes;
-    using Prover.Core.ExternalIntegrations.Validators;
+    using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
-    using Prover.Core.Storage;
-    using Prover.Core.VerificationTests.VolumeVerification;
-    using Splat;
+    using Prover.Core.Settings;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reactive.Linq;
-    using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
-    using LogManager = NLog.LogManager;
 
     /// <summary>
     /// Defines the <see cref="TestRunCreator" />
@@ -48,11 +41,12 @@
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        public static async Task<IQaRunTestManager> CreateNextTestRun(EvcDevice instrumentType, CommPort commPort, Action<string> statusAction = null)
+        public static async Task<IQaRunTestManager> CreateNextTestRun(IEvcDevice instrumentType, ICommPort commPort, ISettingsService settingsService,
+            Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
         {
-            if (instrumentType == Instruments.Toc)
+            if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
-                TocTestManager = Locator.Current.GetService<IQaRunTestManager>();
+                TocTestManager = IoC.Get<IQaRunTestManager>();
                 TocTestManager.TestStatus.Subscribe(statusAction);
                             
                 Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
@@ -63,7 +57,7 @@
 
                 IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
 
-                await TocTestManager.InitializeTest(instrumentType, commPort);
+                await TocTestManager.InitializeTest(instrumentType, commPort, settingsService, ct);
                 IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
 
 
@@ -83,17 +77,18 @@
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        public static async Task<IQaRunTestManager> CreateTestRun(EvcDevice instrumentType, CommPort commPort, Action<string> statusAction = null)
+        public static async Task<IQaRunTestManager> CreateTestRun(IEvcDevice instrumentType, ICommPort commPort, ISettingsService settingsService,
+            Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
         {
-            var qaTestRunManager = (IQaRunTestManager)Locator.Current.GetService<IQaRunTestManager>();
+            var qaTestRunManager = IoC.Get<IQaRunTestManager>();
             qaTestRunManager.TestStatus.Subscribe(statusAction);
 
-            if (instrumentType == Instruments.Toc)
+            if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
-                return await TocTestRun(instrumentType, commPort, qaTestRunManager);
+                return await TocTestRun(qaTestRunManager, instrumentType, commPort, settingsService, client, ct);
             }
 
-            await qaTestRunManager.InitializeTest(instrumentType, commPort);
+            await qaTestRunManager.InitializeTest(instrumentType, commPort, settingsService, ct, client);
             return qaTestRunManager;
         }
 
@@ -104,10 +99,11 @@
         /// <param name="commPort">The commPort<see cref="CommPort"/></param>
         /// <param name="qaTestRunManager">The qaTestRunManager<see cref="IQaRunTestManager"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
-        private static async Task<IQaRunTestManager> TocTestRun(EvcDevice instrumentType, CommPort commPort, IQaRunTestManager qaTestRunManager)
+        private static async Task<IQaRunTestManager> TocTestRun(IQaRunTestManager qaTestRunManager, IEvcDevice instrumentType, ICommPort commPort,
+            ISettingsService settingsService, Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
         {
             MiniAtTestManager = qaTestRunManager;
-            instrumentType = Instruments.MiniAt;
+            instrumentType = HoneywellInstrumentTypes.MiniAt;
 
             Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
                 {
@@ -116,7 +112,7 @@
                 };
 
             IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
-            await qaTestRunManager.InitializeTest(instrumentType, commPort);           
+            await qaTestRunManager.InitializeTest(instrumentType, commPort, settingsService, ct, client);           
             IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
 
             return qaTestRunManager;

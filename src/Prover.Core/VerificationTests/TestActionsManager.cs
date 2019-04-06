@@ -80,8 +80,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVerificationCompleteActions(EvcCommunicationClient commClient, Instrument instrument)
         {
-            await ExecuteActions(PostVerificationActions, commClient, instrument);
-            await ExecuteActions(TestActionStep.PostVerification, commClient, instrument);
+            await ExecuteActions(PostVerificationActions, commClient, instrument);            
         }
 
         /// <summary>
@@ -92,8 +91,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVerificationInitActions(EvcCommunicationClient commClient, Instrument instrument)
         {
-            await ExecuteActions(PreVerificationActions, commClient, instrument);
-            await ExecuteActions(TestActionStep.PreVerification, commClient, instrument);
+            await ExecuteActions(PreVerificationActions, commClient, instrument);           
         }
 
         /// <summary>
@@ -104,8 +102,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVolumeTestCompleteActions(EvcCommunicationClient commClient, Instrument instrument)
         {
-            await ExecuteActions(PostVolumeTestActions, commClient, instrument);
-            await ExecuteActions(TestActionStep.PostVolume, commClient, instrument);
+            await ExecuteActions(PostVolumeTestActions, commClient, instrument);           
         }
 
         /// <summary>
@@ -116,8 +113,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVolumeTestInitActions(EvcCommunicationClient commClient, Instrument instrument)
         {
-            await ExecuteActions(PreVolumeTestActions, commClient, instrument);
-            await ExecuteActions(TestActionStep.PreVolume, commClient, instrument);
+            await ExecuteActions(PreVolumeTestActions, commClient, instrument);           
         }
 
         public void RegisterAction(TestActionStep actionStep, Func<EvcCommunicationClient, Instrument, Task> testAction)
@@ -128,8 +124,8 @@
         public void UnregisterActions(TestActionStep actionStep, Func<EvcCommunicationClient, Instrument, Task> testAction)
         {
             TestActions.RemoveAll(x => x.Item1 == actionStep && x.Item2 == testAction);
-        }
-
+        }      
+     
         /// <summary>
         /// The ExecuteActions
         /// </summary>
@@ -145,17 +141,6 @@
             foreach (var testAction in actions)
             {
                 await testAction.Execute(commClient, instrument);
-            }
-        }
-
-        public async Task ExecuteActions(TestActionStep testStep, EvcCommunicationClient commClient, Instrument instrument)
-        {
-             if (!commClient.IsConnected)
-                await commClient.Connect();
-
-            foreach (var a in TestActions.Where(x => x.Item1 == testStep))
-            {
-                await a.Item2(commClient, instrument);
             }
         }
 

@@ -138,9 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EvcCommunicationClient.cs" />
-    <Compile Include="EvcDevice.cs" />
     <Compile Include="Extensions\CommStringHelpers.cs" />
-    <Compile Include="IEvcDevice.cs" />
+    <Compile Include="InstrumentType.cs" />
     <Compile Include="IO\ICommPort.cs" />
     <Compile Include="IO\IrDAPort.cs" />
     <Compile Include="IO\SerialPort.cs" />

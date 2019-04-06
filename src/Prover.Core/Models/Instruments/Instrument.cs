@@ -13,7 +13,8 @@ using System.Runtime.Serialization;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;    
+    using System.Linq;
+    using Prover.CommProtocol.Common.Models.Instrument;
 
     /// <summary>
     /// Defines the <see cref="Instrument" />
@@ -120,7 +121,7 @@ using System.Runtime.Serialization;
         /// Gets or sets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType { get; set; }
+        public override IEvcDevice InstrumentType { get; set; }
 
         /// <summary>
         /// Gets the InstrumentTypeString
@@ -234,6 +235,9 @@ using System.Runtime.Serialization;
         /// </summary>
         public int Type { get; set; }
 
+        public Guid? LinkedTestId { get; set; }
+        public virtual Instrument LinkedTest { get; set; }
+
         /// <summary>
         /// Gets or sets the VerificationTests
         /// </summary>
@@ -266,7 +270,7 @@ using System.Runtime.Serialization;
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="client">The client<see cref="Client"/></param>
         /// <returns>The <see cref="Instrument"/></returns>
-        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+        public static Instrument Create(IEvcDevice instrumentType, IEnumerable<ItemValue> itemValues,
             TestSettings testSettings, Client client = null)
         {
             var i = new Instrument()

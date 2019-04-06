@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Models.Clients;
 using Prover.Core.Services;
@@ -49,7 +50,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
                     Client = await _clientService.GetById(Client.Id);
 
                 IsDirty = true;
-                InstrumentTypes = new ReactiveList<EvcDevice>(HoneywellInstrumentTypes.GetAll());
+                InstrumentTypes = new ReactiveList<IEvcDevice>(HoneywellInstrumentTypes.GetAll());
 
                 var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
 
@@ -159,17 +160,17 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
         }
 
-        private ReactiveList<EvcDevice> _instrumentTypes;
+        private ReactiveList<IEvcDevice> _instrumentTypes;
 
-        public ReactiveList<EvcDevice> InstrumentTypes
+        public ReactiveList<IEvcDevice> InstrumentTypes
         {
             get => _instrumentTypes;
             set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
         }
 
-        private EvcDevice _selecedInstrumentType;
+        private IEvcDevice _selecedInstrumentType;
 
-        public EvcDevice SelectedInstrumentType
+        public IEvcDevice SelectedInstrumentType
         {
             get => _selecedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value);
