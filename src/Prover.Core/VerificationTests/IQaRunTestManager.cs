@@ -14,11 +14,11 @@ namespace Prover.Core.VerificationTests
     public interface IQaRunTestManager : IDisposable
     {
         Instrument Instrument { get; }
-        IObservable<string> TestStatus { get; }
+        IObservable<string> Status { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
         Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
-            CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null);
+            CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
         Task RunVolumeTest(CancellationToken ct);

@@ -15,6 +15,7 @@ namespace Prover.CommProtocol.Common.IO
         Task Open(CancellationToken ct);
         Task Close();
         Task Send(string data);
+        ICommPort CreateNew();
     }
 
     //public abstract class CommPort : ICommPort

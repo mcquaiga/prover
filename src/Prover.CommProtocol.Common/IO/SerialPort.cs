@@ -106,5 +106,10 @@ namespace Prover.CommProtocol.Common.IO
         {
             return SerialPortStream.GetPortNames();
         }
+
+        public ICommPort CreateNew()
+        {
+            return new SerialPort(_serialStream.PortName, _serialStream.BaudRate, _serialStream.ReadTimeout);
+        }
     }
 }
