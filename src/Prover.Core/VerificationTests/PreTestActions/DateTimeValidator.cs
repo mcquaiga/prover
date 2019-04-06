@@ -17,12 +17,10 @@ namespace Prover.Core.VerificationTests.PreTestActions
             var dtNow = DateTime.Now;
 
             if (!instrument.GetDateTime().Equals(dtNow))
-            {
-                await commClient.Connect(new System.Threading.CancellationToken());
+            {             
                 _log.Info("Resetting instrument date/time...");
-                await commClient.SetItemValue(203, instrument.GetTimeFormatted(dtNow));
-                await commClient.SetItemValue(204, instrument.GetDateFormatted(dtNow));
-                await commClient.Disconnect();
+                //await commClient.SetItemValue(203, instrument.GetTimeFormatted(dtNow));
+                //await commClient.SetItemValue(204, instrument.GetDateFormatted(dtNow));                
             }
         }
     }

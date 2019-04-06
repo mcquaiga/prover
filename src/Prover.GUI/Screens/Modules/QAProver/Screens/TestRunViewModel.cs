@@ -258,7 +258,7 @@
             var canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
                 (tachPort, tachNotUsed) => tachNotUsed || !string.IsNullOrEmpty(tachPort));
 
-            var canStartNewTest = Observable.Merge(new [] { canStartInstrument, canStartCommPort, canStartTach });
+            var canStartNewTest = Observable.Merge(new[] { canStartInstrument, canStartCommPort, canStartTach });
 
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest, canStartNewTest);
@@ -316,7 +316,7 @@
             _viewContext = NewQaTestViewContext;
         }
 
-       
+
 
         #endregion
 
@@ -625,7 +625,7 @@
 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
                 _qaRunTestManager.Status.Subscribe(statusObservable);
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);                
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
@@ -671,7 +671,7 @@
             {
                 ShowDialog = false;
                 _isLoading = false;
-            }          
+            }
 
         }
         #endregion
