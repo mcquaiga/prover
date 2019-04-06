@@ -1,6 +1,7 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
     using Newtonsoft.Json;
+using System.Runtime.Serialization;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
     using Prover.CommProtocol.MiHoneywell;

@@ -49,7 +49,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(InstrumentType instrument, string accessCode = null)
+            SignOn(EvcDevice instrument, string accessCode = null)
         {
             if (string.IsNullOrEmpty(accessCode))
                 accessCode = DefaultAccessCode;

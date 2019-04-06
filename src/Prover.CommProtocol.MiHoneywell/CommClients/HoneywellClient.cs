@@ -16,7 +16,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
     {
         protected Task LoadItemsTask { get; private set; }
 
-        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public HoneywellClient(ICommPort commPort, EvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {            
         }
 

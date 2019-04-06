@@ -52,10 +52,13 @@
         {
             foreach (var item in _itemsForUpdate)
             {
-                await commClient.SetItemValue(item.Key, item.Value);
+                if (commClient.InstrumentType.Items.GetItem(item.Key) != null)
+                {
+                    await commClient.SetItemValue(item.Key, item.Value);
 
-                if (instrument.Items.GetItem(item.Key) != null)
-                    instrument.Items.GetItem(item.Key).RawValue = item.Value;
+                    if (instrument.Items.GetItem(item.Key) != null)
+                        instrument.Items.GetItem(item.Key).RawValue = item.Value;
+                }                
             }
         }
 

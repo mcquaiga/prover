@@ -49,7 +49,7 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
                     Client = await _clientService.GetById(Client.Id);
 
                 IsDirty = true;
-                InstrumentTypes = new ReactiveList<InstrumentType>(HoneywellInstrumentTypes.GetAll());
+                InstrumentTypes = new ReactiveList<EvcDevice>(HoneywellInstrumentTypes.GetAll());
 
                 var instrumentSelected = this.WhenAnyValue(x => x.SelectedInstrumentType).Where(x => x != null);
 
@@ -159,17 +159,17 @@ namespace Prover.GUI.Screens.Modules.ClientManager.Screens
             set => this.RaiseAndSetIfChanged(ref _isRemoved, value);
         }
 
-        private ReactiveList<InstrumentType> _instrumentTypes;
+        private ReactiveList<EvcDevice> _instrumentTypes;
 
-        public ReactiveList<InstrumentType> InstrumentTypes
+        public ReactiveList<EvcDevice> InstrumentTypes
         {
             get => _instrumentTypes;
             set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value);
         }
 
-        private InstrumentType _selecedInstrumentType;
+        private EvcDevice _selecedInstrumentType;
 
-        public InstrumentType SelectedInstrumentType
+        public EvcDevice SelectedInstrumentType
         {
             get => _selecedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selecedInstrumentType, value);

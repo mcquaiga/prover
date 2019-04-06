@@ -3,7 +3,9 @@
     using Prover.CommProtocol.Common;
     using Prover.Core.Models.Instruments;
     using Prover.Core.VerificationTests.TestActions;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -12,6 +14,14 @@
     /// </summary>
     public class TestActionsManager : ITestActionsManager
     {
+        public enum TestActionStep
+        {
+            PreVolume,
+            PostVolume,
+            PreVerification,
+            PostVerification
+        }
+
         #region Constructors
 
         /// <summary>
@@ -31,7 +41,6 @@
             PreVerificationActions = preVerificationActions;
             PostVerificationActions = postVerificationActions;
         }
-
         #endregion
 
         #region Properties
@@ -56,6 +65,9 @@
         /// </summary>
         public IEnumerable<IPreVolumeTestAction> PreVolumeTestActions { get; }
 
+        public List<Tuple<TestActionStep, Func<EvcCommunicationClient, Instrument, Task>>> TestActions { get; } 
+            = new List<Tuple<TestActionStep, Func<EvcCommunicationClient, Instrument, Task>>>();
+
         #endregion
 
         #region Methods
@@ -69,6 +81,7 @@
         public async Task RunVerificationCompleteActions(EvcCommunicationClient commClient, Instrument instrument)
         {
             await ExecuteActions(PostVerificationActions, commClient, instrument);
+            await ExecuteActions(TestActionStep.PostVerification, commClient, instrument);
         }
 
         /// <summary>
@@ -80,6 +93,7 @@
         public async Task RunVerificationInitActions(EvcCommunicationClient commClient, Instrument instrument)
         {
             await ExecuteActions(PreVerificationActions, commClient, instrument);
+            await ExecuteActions(TestActionStep.PreVerification, commClient, instrument);
         }
 
         /// <summary>
@@ -91,6 +105,7 @@
         public async Task RunVolumeTestCompleteActions(EvcCommunicationClient commClient, Instrument instrument)
         {
             await ExecuteActions(PostVolumeTestActions, commClient, instrument);
+            await ExecuteActions(TestActionStep.PostVolume, commClient, instrument);
         }
 
         /// <summary>
@@ -102,6 +117,17 @@
         public async Task RunVolumeTestInitActions(EvcCommunicationClient commClient, Instrument instrument)
         {
             await ExecuteActions(PreVolumeTestActions, commClient, instrument);
+            await ExecuteActions(TestActionStep.PreVolume, commClient, instrument);
+        }
+
+        public void RegisterAction(TestActionStep actionStep, Func<EvcCommunicationClient, Instrument, Task> testAction)
+        {
+            TestActions.Add(new Tuple<TestActionStep, Func<EvcCommunicationClient, Instrument, Task>>(actionStep, testAction));
+        }
+
+        public void UnregisterActions(TestActionStep actionStep, Func<EvcCommunicationClient, Instrument, Task> testAction)
+        {
+            TestActions.RemoveAll(x => x.Item1 == actionStep && x.Item2 == testAction);
         }
 
         /// <summary>
@@ -119,6 +145,17 @@
             foreach (var testAction in actions)
             {
                 await testAction.Execute(commClient, instrument);
+            }
+        }
+
+        public async Task ExecuteActions(TestActionStep testStep, EvcCommunicationClient commClient, Instrument instrument)
+        {
+             if (!commClient.IsConnected)
+                await commClient.Connect();
+
+            foreach (var a in TestActions.Where(x => x.Item1 == testStep))
+            {
+                await a.Item2(commClient, instrument);
             }
         }
 

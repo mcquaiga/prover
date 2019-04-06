@@ -17,14 +17,14 @@ namespace Prover.GUI.Controls
         public ClientItemType ItemsFileType { get; }
 
         public ItemsFileViewModel(Client client, ClientItemType itemsFileType,
-            IObservable<InstrumentType> selectedInstrumentTypeObservable, string helpInfo)
+            IObservable<EvcDevice> selectedInstrumentTypeObservable, string helpInfo)
         {
             _client = client;
             ItemsFileType = itemsFileType;
             HeaderText = Enum.GetName(typeof(ClientItemType), itemsFileType);
             DescriptionText = helpInfo;
 
-            UpdateListItems = ReactiveCommand.Create<InstrumentType>(UpdateList);
+            UpdateListItems = ReactiveCommand.Create<EvcDevice>(UpdateList);
             selectedInstrumentTypeObservable
                 .InvokeCommand(UpdateListItems);
 
@@ -155,9 +155,9 @@ namespace Prover.GUI.Controls
             set => this.RaiseAndSetIfChanged(ref _descriptionText, value);
         }
 
-        private InstrumentType _selectedInstrumentType;
+        private EvcDevice _selectedInstrumentType;
 
-        public InstrumentType SelectedInstrumentType
+        public EvcDevice SelectedInstrumentType
         {
             get => _selectedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);
@@ -167,9 +167,9 @@ namespace Prover.GUI.Controls
 
         #region Commands
 
-        private ReactiveCommand<InstrumentType, Unit> _updateListItems;
+        private ReactiveCommand<EvcDevice, Unit> _updateListItems;
 
-        public ReactiveCommand<InstrumentType, Unit> UpdateListItems
+        public ReactiveCommand<EvcDevice, Unit> UpdateListItems
         {
             get => _updateListItems;
             set => this.RaiseAndSetIfChanged(ref _updateListItems, value);
@@ -206,7 +206,7 @@ namespace Prover.GUI.Controls
             ItemValue = null;
         }
 
-        private void UpdateList(InstrumentType instrumentType)
+        private void UpdateList(EvcDevice instrumentType)
         {
             SelectedInstrumentType = instrumentType;
 
@@ -234,7 +234,7 @@ namespace Prover.GUI.Controls
             }
         }
 
-        private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
+        private ClientItems GetItemList(EvcDevice instrumentType, ClientItemType clientItemType)
         {
             return _client?.Items
                 .FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);

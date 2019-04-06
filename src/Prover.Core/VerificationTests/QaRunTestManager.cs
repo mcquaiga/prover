@@ -213,7 +213,7 @@
         /// <summary>
         /// The InitializeTest
         /// </summary>
-        /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
+        /// <param name="instrumentType">The instrumentType<see cref="EvcDevice"/></param>
         /// <param name="commPort">The commPort<see cref="ICommPort"/></param>
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>

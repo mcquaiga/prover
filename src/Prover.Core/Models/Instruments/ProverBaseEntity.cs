@@ -25,7 +25,7 @@ namespace Prover.Core.Models.Instruments
         public IEnumerable<ItemValue> Items { get; set; }
 
         [NotMapped]
-        public virtual InstrumentType InstrumentType { get; set; }
+        public virtual EvcDevice InstrumentType { get; set; }
 
         public override void OnInitializing()
         {        

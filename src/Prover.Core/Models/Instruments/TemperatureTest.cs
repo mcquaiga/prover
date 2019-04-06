@@ -95,7 +95,6 @@
         /// <summary>
         /// Gets the InstrumentType
         /// </summary>
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the PassTolerance

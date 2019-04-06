@@ -95,7 +95,7 @@
         /// Gets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override EvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the SuperFactorSquared

@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.MiHoneywell.Items;
-
-namespace Prover.CommProtocol.MiHoneywell.CommClients
+﻿namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
+using System.Reactive.Subjects;
+    using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.MiHoneywell.Items;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="TocHoneywellClient" />
+    /// </summary>
     public sealed class TocHoneywellClient : HoneywellClient
     {
-        internal static InstrumentType TurboMonitor = new InstrumentType()
+        internal static EvcDevice TurboMonitor = new EvcDevice()
         {
             Id = 6,
             AccessCode = 6,
@@ -23,29 +25,67 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
             }
         };
 
-        public TocHoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        /// <summary>
+        /// Defines the _tibBoardItems
+        /// </summary>
+        private readonly IEnumerable<ItemMetadata> _tibBoardItems;
+
+        public TocHoneywellClient(ICommPort commPort, EvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
+            _tibBoardItems = ItemHelpers.LoadItems(Instruments.TurboMonitor);
         }
 
+
+        #region Methods
+
+        /// <summary>
+        /// The GetFrequencyItems
+        /// </summary>
+        /// <returns>The <see cref="Task{IFrequencyTestItems}"/></returns>
         public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
-            var firstInstrument = InstrumentType;
-            var results = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
+            var mainResults = await GetItemValues(ItemDetails.FrequencyTestItems());
             await Disconnect();
             Thread.Sleep(1000);
 
-            InstrumentType = TurboMonitor;
-            await Connect(new CancellationToken());
-            var tibResults = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
-            await Disconnect();
+            try
+            {
+                InstrumentType = Instruments.TurboMonitor;
+                await Connect();
+                var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
 
-            Thread.Sleep(1000);
-
-            InstrumentType = firstInstrument;
-
-            var values = results.ToList();
-            values.AddRange(tibResults.ToList());
-            return new FrequencyTestItems(values);
+                return new FrequencyTestItems(mainResults, tibResults);
+            }
+            finally
+            {
+                await Disconnect();
+                Thread.Sleep(500);
+                InstrumentType = Instruments.Toc;
+            }
         }
+
+        /// <summary>
+        /// The GetItemValues
+        /// </summary>
+        /// <param name="itemNumbers">The itemNumbers<see cref="IEnumerable{ItemMetadata}"/></param>
+        /// <returns>The <see cref="Task{IEnumerable{ItemValue}}"/></returns>
+        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
+        {
+            if (InstrumentType == Instruments.TurboMonitor)
+            {
+                var results = new List<ItemValue>();
+
+                foreach (var item in itemNumbers)
+                {
+                    results.Add(await GetItemValue(item));
+                }
+
+                return results;
+            }
+
+            return await base.GetItemValues(itemNumbers);
+        }
+
+        #endregion
     }
 }

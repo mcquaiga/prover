@@ -66,6 +66,69 @@ namespace Prover.Core.Storage
 
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
+            modelBuilder.Entity<Instrument>()
+                .HasOptional(i => i.LinkedTest);
+
+            //modelBuilder.Entity<GroupedInstruments>()
+            //    .HasKey(g => new { g.ParentId, g.ChildId });
+
+            //modelBuilder.Entity<GroupedInstruments>()
+            //    .HasRequired(p => p.Parent)
+            //    .WithMany(c => c.ChildTests)
+            //    .HasForeignKey(g => g.ParentId);
+
+            //modelBuilder.Entity<GroupedInstruments>()
+            //  .HasRequired(c => c.Child)
+            //  .WithRequiredPrincipal(p => p.ParentTest);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(c => c.ChildTests)
+            //    .WithRequired(i => i.Parent)                
+            //    .HasForeignKey(f => f.ParentId);
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(p => p.ParentTest)
+            //    .WithMany();           
+            ;
+
+            //.Map(m =>
+            //{
+            //    m.MapKey(new[] { "ChildId" });
+            //    m.ToTable("GroupedInstruments");
+            //});
+            //.WithRequiredPrincipal(p => p.ParentTest);
+
+            //modelBuilder.Entity<Instrument>()
+            // .HasOptional(i => i.ParentTest)
+            // .WithOptionalPrincipal()
+            // .Map(m =>
+            // {
+            //     m.MapKey(new [] { "ParentId"});
+            //     m.ToTable("GroupedInstruments");
+            // });             
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasOptional(i => i.ChildTests)
+            //    .WithOptionalDependent()
+            //    .Map(m =>
+            //    {
+            //        m.MapKey("ChildId");                    
+            //        m.ToTable("GroupedInstruments");
+            //    });
+
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(m => m.)
+            //    .WithMany().Map(m =>
+            //      {
+            //          m.MapLeftKey("MemberId");
+            //          m.MapRightKey("FriendId");
+            //          m.ToTable("MembersFriends");
+            //      }
+            //  );              
+
+
+
+
             base.OnModelCreating(modelBuilder);            
         }
     }

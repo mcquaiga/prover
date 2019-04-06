@@ -10,7 +10,12 @@ namespace Prover.Core.Models.Instruments
 {
     public class FrequencyTest : EntityWithId, IHaveVerificationTest, IHavePercentError
     {
-        public FrequencyTest() { }
+        public FrequencyTest() 
+        {
+            //MainRotorPulseCount = 2600;
+            //SenseRotorPulseCount = 260;
+            //MechanicalOutputFactor = 70;
+        }
 
         public FrequencyTest(VerificationTest verificationTest)
         {
@@ -59,7 +64,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (AdjustedVolume() == 0) return null;
 
-                var result = (EvcAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
+                var result = (TibAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
                 return result.HasValue ? decimal.Round(result.Value, 2) : default(decimal?);
             }
         }
@@ -75,6 +80,14 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        public decimal? CorrectedAdjustedVolumePercentError
+        {
+            get
+            {
+                return 100;
+            }
+        }
+
         public decimal? PercentError { get; }
 
         [NotMapped]
@@ -82,11 +95,22 @@ namespace Prover.Core.Models.Instruments
             (AdjustedVolumePercentError.HasValue && AdjustedVolumePercentError < 1 && AdjustedVolumePercentError > -1)
         && (UnadjustedVolumePercentError.HasValue && UnadjustedVolumePercentError < 1 && UnadjustedVolumePercentError > -1);
 
+        public decimal? TotalCorrection()
+        {
+            return VerificationTest.SuperFactorTest.SuperFactorSquared * VerificationTest.PressureTest.ActualFactor
+                * VerificationTest.TemperatureTest.ActualFactor;
+        }       
+
         public decimal AdjustedVolume()
         {
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
+        }      
+        
+        public decimal AdjustedCorrectedVolume()
+        {
+            return AdjustedVolume() * TotalCorrection().Value;
         }
 
         public long RoundedAdjustedVolume()
@@ -103,20 +127,30 @@ namespace Prover.Core.Models.Instruments
             return decimal.Round((decimal) MainRotorPulseCount / MechanicalOutputFactor, 4);
         }
 
-        public decimal? EvcAdjustedVolume()
+        public decimal? TibAdjustedVolume()
         {
-            var result = (PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            var result = (TibAdjustedEndReading - TibAdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
 
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
         public decimal? EvcUnadjustedVolume()
         {
-            var result = (PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
-            //
+            var result = (UnadjustedEndReading - UnadjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;           
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
+
+        public decimal? TibAdjustedStartReading => PreTestItemValues?.TibAdjustedVolumeReading;
+        public decimal? TibAdjustedEndReading => PostTestItemValues?.TibAdjustedVolumeReading;
+
+        public decimal? EvcAdjustedStartReading => PreTestItemValues?.MainAdjustedVolumeReading;
+        public decimal? EvcAdjustedEndReading => PostTestItemValues?.MainAdjustedVolumeReading;
+
+        public decimal? UnadjustedStartReading => PreTestItemValues?.MainUnadjustVolumeReading;
+        public decimal? UnadjustedEndReading => PostTestItemValues?.MainUnadjustVolumeReading;
         
+
+
         public override void OnInitializing()
         {
             base.OnInitializing();
