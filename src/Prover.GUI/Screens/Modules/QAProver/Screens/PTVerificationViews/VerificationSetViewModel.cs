@@ -118,7 +118,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         {
             try
             {
-                QaRunTestManager.TestStatus.Subscribe(statusObserver);
+                QaRunTestManager.Status.Subscribe(statusObserver);
                 await QaRunTestManager.RunCorrectionTest(VerificationTest.TestNumber, cancellationToken);
             }
             catch (Exception ex)

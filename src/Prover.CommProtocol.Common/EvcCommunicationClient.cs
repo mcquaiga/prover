@@ -290,13 +290,11 @@ namespace Prover.CommProtocol.Common
 
         public virtual void Dispose()
         {
-            Disconnect().ContinueWith(task =>
-            {
-                _receivedObservable?.Dispose();
-                _sentObservable?.Dispose();
-                _statusSubject?.Dispose();
-                CommPort?.Dispose();
-            });
+            Disconnect();            
+            _receivedObservable?.Dispose();
+            _sentObservable?.Dispose();
+            _statusSubject?.Dispose();
+            CommPort?.Dispose();            
         }
     }
 }

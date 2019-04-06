@@ -142,7 +142,7 @@
         /// <summary>
         /// Gets the TestStatus
         /// </summary>
-        public IObservable<string> TestStatus => _testStatus.AsObservable();
+        public IObservable<string> Status => _testStatus.AsObservable();
 
         /// <summary>
         /// Gets or sets the VolumeTestManager
@@ -220,23 +220,35 @@
         /// <param name="commPort">The commPort<see cref="ICommPort"/></param>
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <param name="client">The client<see cref="Client"/></param>
-        /// <param name="statusObserver">The statusObserver<see cref="IObserver{string}"/></param>
+        /// <param name="client">The client<see cref="Client"/></param>      
         /// <returns>The <see cref="Task"/></returns>
         public async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings,
-            CancellationToken ct = new CancellationToken(), Client client = null, IObserver<string> statusObserver = null)
-        {
-            if (statusObserver != null)
-                TestStatus.Subscribe(statusObserver);
+            CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
+        {       
+            await GetInstrument(instrumentType, commPort, testSettings, client, ct);
 
+            if (runVerifiers)
+            {
+                await RunVerifiers();
+                await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
+            }        
+
+            await _communicationClient.Disconnect();
+
+            CreateVolumeTestManager();
+            await SaveAsync();
+        }
+
+        private async Task GetInstrument(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings, Client client, CancellationToken ct)
+        {
             _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);
             _communicationClient.Status.Subscribe(_testStatus);
 
-            await _communicationClient.Connect(ct);            
+            await _communicationClient.Connect(ct);
             var items = await _communicationClient.GetAllItems();
 
             Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
-
+            
             await RunVerifiers();
             await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
 
@@ -392,5 +404,5 @@
         }  
 
         #endregion
-    }
+    } 
 }
