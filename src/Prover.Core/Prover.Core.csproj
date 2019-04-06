@@ -118,10 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="Migrations\201904060343476_Test.cs" />
-    <Compile Include="Migrations\201904060343476_Test.Designer.cs">
-      <DependentUpon>201904060343476_Test.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
     <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
     <Compile Include="Exports\VerificationTypeEnum.cs" />
@@ -422,9 +418,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711250647351_Modify-FrequencyTests.resx">
       <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904060343476_Test.resx">
-      <DependentUpon>201904060343476_Test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
