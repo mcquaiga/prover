@@ -249,16 +249,16 @@
 
             TachIsNotUsed = _settingsService.Local.TachIsNotUsed;
 
-            IObservable<bool> canStartInstrument = this.WhenAnyValue(x => x.SelectedInstrumentType)
+            var canStartInstrument = this.WhenAnyValue(x => x.SelectedInstrumentType)
                 .Select(i => i != null);
 
-            IObservable<bool> canStartCommPort = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.UseIrDaPort,
+            var canStartCommPort = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.UseIrDaPort,
                 (baud, port, irda) => (BaudRate.Contains(baud) && !string.IsNullOrEmpty(port)) || irda);
 
-            IObservable<bool> canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+            var canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
                 (tachPort, tachNotUsed) => tachNotUsed || !string.IsNullOrEmpty(tachPort));
 
-            IObservable<bool> canStartNewTest = Observable.Merge(new[] { canStartInstrument, canStartCommPort, canStartTach });
+            var canStartNewTest = Observable.Merge(new[] { canStartInstrument, canStartCommPort, canStartTach });
 
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest, canStartNewTest);
