@@ -58,8 +58,6 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
 
                 if (response.IsSuccess)
                     IsConnected = false;
-
-                Thread.Sleep(500);
             }
         }
 

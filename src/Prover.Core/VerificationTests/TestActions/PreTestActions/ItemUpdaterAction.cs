@@ -13,7 +13,7 @@
     /// <summary>
     /// Defines the <see cref="ItemUpdaterAction" />
     /// </summary>
-    public class ItemUpdaterAction : IPreVerificationAction, IPreVolumeTestAction, IPostVerificationAction, IPostVolumeTestAction
+    public class ItemUpdaterAction : IEvcDeviceValidationAction
     {
         #region Fields
 
@@ -30,13 +30,16 @@
         /// Initializes a new instance of the <see cref="ItemUpdaterAction"/> class.
         /// </summary>
         /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
-        public ItemUpdaterAction(Dictionary<int, string> itemsForUpdate)
+        public ItemUpdaterAction(VerificationStep verificationStep, Dictionary<int, string> itemsForUpdate)
         {
             if (itemsForUpdate == null || !itemsForUpdate.Any())
                 throw new ArgumentNullException(nameof(itemsForUpdate));
 
             _itemsForUpdate = itemsForUpdate;
+            VerificationStep = verificationStep;
         }
+
+        public VerificationStep VerificationStep { get; protected set; }
 
         #endregion
 

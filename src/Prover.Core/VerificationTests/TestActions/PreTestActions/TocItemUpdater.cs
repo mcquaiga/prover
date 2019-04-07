@@ -19,11 +19,11 @@
         /// Initializes a new instance of the <see cref="TocItemUpdater"/> class.
         /// </summary>
         /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
-        public TocItemUpdaterAction(Dictionary<int, string> itemsForUpdate) : base(itemsForUpdate)
+        public TocItemUpdaterAction(Dictionary<int, string> itemsForUpdate) : base(VerificationStep.PreVolumeVerification, itemsForUpdate)
         {
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Methods
 
@@ -50,9 +50,9 @@
 
                 commClient.InstrumentType = HoneywellInstrumentTypes.Toc;
                 await commClient.Connect(ct);
-            }                
+            }
         }
 
-        #endregion
+        #endregion Methods
     }
 }

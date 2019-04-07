@@ -106,8 +106,8 @@ namespace Prover.Core
                 var resetItems = c.Resolve<ISettingsService>().Shared.TestSettings.TocResetItems;
                 return new TocItemUpdaterAction(resetItems);
             })
-            .As<IPreVolumeTestAction>()
-            .Named<IPreVolumeTestAction>("TocVolPulsesWaitingReset");
+            .As<IEvcDeviceValidationAction>()
+            .Named<IEvcDeviceValidationAction>("TocVolPulsesWaitingReset");
 
             builder.Register(c =>
             {
@@ -117,10 +117,10 @@ namespace Prover.Core
                     {6, "0" },
                     {7, "0" }
                 };
-                return new ItemUpdaterAction(resetItems);
+                return new ItemUpdaterAction(VerificationStep.PreVolumeVerification, resetItems);
             })
-            .As<IPreVolumeTestAction>()
-            .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
+            .As<IEvcDeviceValidationAction>()
+            .Named<IEvcDeviceValidationAction>("PulseOutputWaitingReset");
 
 
         }

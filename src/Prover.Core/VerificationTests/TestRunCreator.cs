@@ -8,6 +8,7 @@
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Settings;
+    using Prover.Core.VerificationTests.TestActions;
     using System;
     using System.Reactive.Linq;
     using System.Threading;
@@ -47,7 +48,7 @@
             if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
                 TocTestManager = IoC.Get<IQaRunTestManager>();
-                TocTestManager.TestStatus.Subscribe(statusAction);
+                TocTestManager.Status.Subscribe(statusAction);
                             
                 Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
                 {
@@ -55,10 +56,9 @@
                     await comm.SetItemValue(855, 1);
                 };
 
-                IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
-
+                IoC.Get<ITestActionsManager>().RegisterAction(VerificationStep.PreVerification, testFunc);
                 await TocTestManager.InitializeTest(instrumentType, commPort, settingsService, ct);
-                IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
+                IoC.Get<ITestActionsManager>().UnregisterActions(VerificationStep.PreVerification, testFunc);
 
 
                 MiniAtTestManager.Instrument.LinkedTest = TocTestManager.Instrument;
@@ -81,7 +81,7 @@
             Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
         {
             var qaTestRunManager = IoC.Get<IQaRunTestManager>();
-            qaTestRunManager.TestStatus.Subscribe(statusAction);
+            qaTestRunManager.Status.Subscribe(statusAction);
 
             if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
@@ -111,9 +111,9 @@
                     await comm.SetItemValue(855, 0);
                 };
 
-            IoC.Get<ITestActionsManager>().RegisterAction(TestActionsManager.TestActionStep.PreVerification, testFunc);
+            IoC.Get<ITestActionsManager>().RegisterAction(VerificationStep.PreVerification, testFunc);
             await qaTestRunManager.InitializeTest(instrumentType, commPort, settingsService, ct, client);           
-            IoC.Get<ITestActionsManager>().UnregisterActions(TestActionsManager.TestActionStep.PreVerification, testFunc);
+            IoC.Get<ITestActionsManager>().UnregisterActions(VerificationStep.PreVerification, testFunc);
 
             return qaTestRunManager;
         }

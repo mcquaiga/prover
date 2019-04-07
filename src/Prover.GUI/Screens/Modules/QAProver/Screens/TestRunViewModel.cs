@@ -1,7 +1,6 @@
 ﻿namespace Prover.GUI.Screens.Modules.QAProver.Screens
 {
     using Caliburn.Micro;
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
     using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
@@ -187,7 +186,7 @@
             eventAggregator.Subscribe(this);
 
             RefreshCommPortsCommand = ReactiveCommand.Create(() => SerialPort.GetPortNames().ToList());
-            var commPorts = RefreshCommPortsCommand
+            IObservable<ReactiveList<string>> commPorts = RefreshCommPortsCommand
                 .Select(list => new ReactiveList<string>(list));
             commPorts
                 .ToProperty(this, x => x.CommPorts, out _commPorts, new ReactiveList<string>() { ChangeTrackingEnabled = true });
@@ -250,16 +249,16 @@
 
             TachIsNotUsed = _settingsService.Local.TachIsNotUsed;
 
-            var canStartInstrument = this.WhenAnyValue(x => x.SelectedInstrumentType)
+            IObservable<bool> canStartInstrument = this.WhenAnyValue(x => x.SelectedInstrumentType)
                 .Select(i => i != null);
 
-            var canStartCommPort = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.UseIrDaPort,
+            IObservable<bool> canStartCommPort = this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.UseIrDaPort,
                 (baud, port, irda) => (BaudRate.Contains(baud) && !string.IsNullOrEmpty(port)) || irda);
 
-            var canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
+            IObservable<bool> canStartTach = this.WhenAnyValue(x => x.SelectedTachCommPort, x => x.TachIsNotUsed,
                 (tachPort, tachNotUsed) => tachNotUsed || !string.IsNullOrEmpty(tachPort));
 
-            var canStartNewTest = Observable.Merge(new [] { canStartInstrument, canStartCommPort, canStartTach });
+            IObservable<bool> canStartNewTest = Observable.Merge(new[] { canStartInstrument, canStartCommPort, canStartTach });
 
             StartTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting test...", StartNewQaTest, canStartNewTest);
@@ -269,7 +268,7 @@
             StartRotarySmokeTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Running Smoke test...", StartRotarySmokeTest, canStartNewTest);
 
-            var canSave = this.WhenAnyValue(x => x.IsDirty);
+            IObservable<bool> canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
 
             SaveCommand.IsExecuting
@@ -287,7 +286,7 @@
             /**             
             * Clients              
             **/
-            var clientList = clientService.GetActiveClients()
+            List<Client> clientList = clientService.GetActiveClients()
                 .ToList();
             Clients = new ReactiveList<string>(
                 clientList.Select(x => x.Name).OrderBy(x => x).ToList())
@@ -317,7 +316,7 @@
             _viewContext = NewQaTestViewContext;
         }
 
-       
+
 
         #endregion
 
@@ -504,7 +503,9 @@
                         MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
+                    {
                         SaveTest().ConfigureAwait(false);
+                    }
 
                     if (result == MessageBoxResult.Cancel)
                     {
@@ -524,7 +525,7 @@
         {
             if (ViewContext == EditQaTestViewContext)
             {
-                foreach (var testView in TestViews)
+                foreach (VerificationSetViewModel testView in TestViews)
                 {
                     testView.Dispose();
                     testView.TryClose();
@@ -561,9 +562,9 @@
                 SiteInformationItem.QaTestManager = qaTestRunTestManager;
                 SiteInformationItem.Instrument = instrument;
 
-                foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                foreach (VerificationTest x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
                 {
-                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                    VerificationSetViewModel item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
                     item.InitializeViews(x, qaTestRunTestManager);
                     item.VerificationTest = x;
 
@@ -579,7 +580,9 @@
         private ICommPort GetCommPort()
         {
             if (UseIrDaPort)
+            {
                 return new IrDAPort();
+            }
 
             return new SerialPort(_settingsService.Local.InstrumentCommPort, _settingsService.Local.InstrumentBaudRate);
         }
@@ -615,7 +618,9 @@
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
         {
             if (SelectedInstrumentType == null)
+            {
                 return;
+            }
 
             ShowDialog = true;
             _isLoading = true;
@@ -626,22 +631,29 @@
 
                 _qaRunTestManager = IoC.Get<IQaRunTestManager>();
                 _qaRunTestManager.Status.Subscribe(statusObservable);
-                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);                
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);
 
                 await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
 
                 IsDirty = true;
-                if (_settingsService.Local.AutoSave) await SaveTest().ConfigureAwait(false);
+                if (_settingsService.Local.AutoSave)
+                {
+                    await SaveTest().ConfigureAwait(false);
+                }
             }
             catch (Exception ex)
             {
                 _qaRunTestManager?.Dispose();
 
                 if (ex is OperationCanceledException)
+                {
                     Log.Warn("Test init cancelled by user.");
+                }
                 else
+                {
                     Log.Error(ex);
+                }
             }
             finally
             {
@@ -654,7 +666,9 @@
             try
             {
                 if (SelectedInstrumentType == null)
+                {
                     return;
+                }
 
                 ShowDialog = true;
                 _isLoading = true;
@@ -662,7 +676,7 @@
                 await _settingsService.SaveSettings();
 
                 _rotaryStressTest.Status.Subscribe(statusObservable);
-                await _rotaryStressTest.Run(SelectedInstrumentType, _client, ct);
+                await _rotaryStressTest.Run(SelectedInstrumentType, GetCommPort(), _client, ct);
             }
             catch (Exception ex)
             {
@@ -672,7 +686,7 @@
             {
                 ShowDialog = false;
                 _isLoading = false;
-            }          
+            }
 
         }
         #endregion
