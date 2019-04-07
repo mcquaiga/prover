@@ -122,6 +122,7 @@ namespace Prover.Core.Services
         {
             return _certificateStore.GetAll()                
                 .Select(c => c.TestedBy)
+                .ToList()
                 .Distinct();
         }
 

@@ -101,6 +101,8 @@
         /// </summary>
         protected override decimal PassTolerance => Global.TEMP_ERROR_TOLERANCE;
 
+
+
         #endregion
 
         #region Methods

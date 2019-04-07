@@ -554,23 +554,22 @@
         /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="IQaRunTestManager"/></param>
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
+        public void InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
         {
-            await Task.Run(() =>
+          
+            SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+            SiteInformationItem.QaTestManager = qaTestRunTestManager;
+            SiteInformationItem.Instrument = instrument;
+
+            foreach (VerificationTest x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
             {
-                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-                SiteInformationItem.QaTestManager = qaTestRunTestManager;
-                SiteInformationItem.Instrument = instrument;
+                VerificationSetViewModel item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                item.InitializeViews(x, qaTestRunTestManager);
+                item.VerificationTest = x;
 
-                foreach (VerificationTest x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
-                {
-                    VerificationSetViewModel item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                    item.InitializeViews(x, qaTestRunTestManager);
-                    item.VerificationTest = x;
+                TestViews.Add(item);
+            }
 
-                    TestViews.Add(item);
-                }
-            });
         }
 
         /// <summary>
@@ -633,7 +632,7 @@
                 _qaRunTestManager.Status.Subscribe(statusObservable);
                 await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);
 
-                await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+                InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
 
                 IsDirty = true;

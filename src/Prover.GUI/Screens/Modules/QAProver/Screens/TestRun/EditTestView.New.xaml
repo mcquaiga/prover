@@ -48,16 +48,18 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Column="0"
-                          VerticalScrollBarVisibility="Auto">
+            <Viewbox Grid.Column="0"
+                     Stretch="Uniform">
                 <ContentControl Margin="4 8"
                             cal:View.Model="{Binding SiteInformationItem}"
                             cal:View.Context="SiteInfoCardNew" 
                             VerticalAlignment="Top"/>
-            </ScrollViewer>
+            </Viewbox>
 
             <ScrollViewer Grid.Column="1"
-                          VerticalScrollBarVisibility="Auto">
+                          VerticalScrollBarVisibility="Auto">               
+   
+            <Viewbox Stretch="Uniform">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -99,6 +101,7 @@
                     </Border>
                 </Grid>
 
+            </Viewbox>
             </ScrollViewer>
         </Grid>
 

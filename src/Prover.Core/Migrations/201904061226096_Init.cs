@@ -28,7 +28,7 @@ namespace Prover.Core.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
-                        Name = c.String(),
+                        Name = c.String(maxLength: 4000),
                         Address = c.String(),
                         RegistrationNumber = c.String(),
                         CreatedDateTime = c.DateTime(nullable: false),
