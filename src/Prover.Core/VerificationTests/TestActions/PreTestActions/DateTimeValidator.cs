@@ -20,8 +20,8 @@ namespace Prover.Core.VerificationTests.PreTestActions
             if (!instrument.GetDateTime().Equals(dtNow))
             {             
                 statusUpdates?.OnNext("Resetting instrument date/time...");
-                //await commClient.SetItemValue(203, instrument.GetTimeFormatted(dtNow));
-                //await commClient.SetItemValue(204, instrument.GetDateFormatted(dtNow));                
+                await commClient.SetItemValue(203, instrument.GetTimeFormatted(dtNow));
+                await commClient.SetItemValue(204, instrument.GetDateFormatted(dtNow));
             }
         }
     }

@@ -70,7 +70,7 @@
 
         public VerificationStep VerificationStep => VerificationStep.PreVerification;
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = default, Subject<string> statusUpdates = null)
+        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
             ItemValue companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
             string companyNumber = companyNumberItem.RawValue.TrimStart('0');
