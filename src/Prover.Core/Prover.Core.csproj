@@ -155,7 +155,7 @@
     <Compile Include="Models\Instruments\ProverBaseEntity.cs" />
     <Compile Include="Models\Instruments\GroupedInstruments.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
-    <Compile Include="QaRunTestManager.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\IClientService.cs" />

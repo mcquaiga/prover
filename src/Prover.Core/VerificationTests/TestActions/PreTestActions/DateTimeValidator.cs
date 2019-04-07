@@ -13,7 +13,7 @@ namespace Prover.Core.VerificationTests.PreTestActions
     {        
         public VerificationStep VerificationStep => VerificationStep.PreVerification;            
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = default, Subject<string> statusUpdates = null)
+        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
             var dtNow = DateTime.Now;
 

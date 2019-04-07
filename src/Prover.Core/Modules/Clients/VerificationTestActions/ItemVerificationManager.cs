@@ -92,7 +92,7 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
             return true;
         }
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = default, Subject<string> statusUpdates = null)
+        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
             if (!await IsValid(instrument))
             {
