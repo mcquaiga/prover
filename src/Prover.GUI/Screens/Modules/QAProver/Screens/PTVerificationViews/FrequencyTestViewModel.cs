@@ -4,6 +4,8 @@ using Prover.GUI.Events;
 using ReactiveUI;
 using System.Threading.Tasks;
 using Prover.Core.VerificationTests;
+using System.Reactive.Subjects;
+using Prover.Core.Models.Instruments;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -17,7 +19,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         private readonly IQaRunTestManager _testRunManager;
 
         public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun
-            , IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun)
+            , ISubject<VerificationTest> changeObservable, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun, changeObservable)
         {
             _testRunManager = testRunManager;
             if (_testRunManager != null)
@@ -36,8 +38,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                     TestRun.MainRotorPulseCount = x.Item1 ?? 0;
                     TestRun.SenseRotorPulseCount = x.Item2 ?? 0;
                     TestRun.MechanicalOutputFactor = x.Item3 ?? 0;
-                    eventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-                    eventAggregator.PublishOnUIThread(new SaveTestEvent());
+                    ChangedEvent.OnNext(TestRun.VerificationTest);                    
                 });
         }
 

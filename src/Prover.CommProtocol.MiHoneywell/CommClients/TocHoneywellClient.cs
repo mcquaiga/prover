@@ -15,17 +15,6 @@ using System.Reactive.Subjects;
     /// </summary>
     public sealed class TocHoneywellClient : HoneywellClient
     {
-        internal static InstrumentType TurboMonitor = new InstrumentType()
-        {
-            Id = 6,
-            AccessCode = 6,
-            Name = "Turbo Monitor",
-            ItemsMetadata = new List<ItemMetadata>()
-            {
-                new ItemMetadata() { Code = "HIGHRES", Number = 851, IsFrequencyTest = true}
-            }
-        };
-
         /// <summary>
         /// Defines the _tibBoardItems
         /// </summary>
@@ -33,9 +22,8 @@ using System.Reactive.Subjects;
 
         public TocHoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
-            _tibBoardItems = HoneywellInstrumentTypes.TurboMonitor.ItemsMetadata;
+            _tibBoardItems = HoneywellInstrumentTypes.TibBoard.ItemsMetadata;
         }
-
 
         #region Methods
 
@@ -46,12 +34,11 @@ using System.Reactive.Subjects;
         public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
             var mainResults = await GetItemValues(ItemDetails.FrequencyTestItems());
-            await Disconnect();
-            
+            await Disconnect();          
 
             try
             {
-                InstrumentType = HoneywellInstrumentTypes.TurboMonitor;
+                InstrumentType = HoneywellInstrumentTypes.TibBoard;
                 await Connect(new CancellationToken());
                 var tibResults = await GetItemValues(_tibBoardItems.FrequencyTestItems());
 
@@ -71,7 +58,8 @@ using System.Reactive.Subjects;
         /// <returns>The <see cref="Task{IEnumerable{ItemValue}}"/></returns>
         public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
         {
-            if (InstrumentType == HoneywellInstrumentTypes.TurboMonitor)
+            // The Tib Boards don't support the ReadGroup command, so we need to read one item at a time
+            if (InstrumentType == HoneywellInstrumentTypes.TibBoard)
             {
                 var results = new List<ItemValue>();
 

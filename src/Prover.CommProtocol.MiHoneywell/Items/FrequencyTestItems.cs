@@ -16,6 +16,7 @@ namespace Prover.CommProtocol.MiHoneywell.Items
 
             TibAdjustedVolumeReading = GetHighResolutionValue(tibItemValues.ToList(), 850, 851);
             TibUnadjustedVolumeReading = (long)tibItemValues.GetItem(852).NumericValue;
+
             MainAdjustedVolumeReading = (long)mainItems.GetItem(850).NumericValue;
             MainUnadjustVolumeReading = (long)mainItems.GetItem(852).NumericValue;
         }

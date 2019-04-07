@@ -51,6 +51,7 @@ namespace Prover.CommProtocol.MiHoneywell
         public IEnumerable<ItemMetadata> ItemsMetadata { get; set; }
         public int? MaxBaudRate { get; set; }
         public string Name { get; set; }
+        public bool IsHidden { get; set; } = false;
 
         public void LoadItemsInformation()
         {    

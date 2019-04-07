@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
+using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.Common.Models.Instrument.Items;
-using Prover.Core.Shared.Enums;
 
 namespace Prover.CommProtocol.Common.Models.Instrument
 {
@@ -21,7 +18,7 @@ namespace Prover.CommProtocol.Common.Models.Instrument
         IEnumerable<ItemMetadata> ItemsMetadata { get; set; }
         int? MaxBaudRate { get; set; }
         string Name { get; set; }
-
+        bool IsHidden { get; set; }
         void LoadItemsInformation();
     }
 }

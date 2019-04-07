@@ -11,7 +11,6 @@
     using Prover.Core.Shared.Extensions;
     using Prover.Core.Testing;
     using Prover.Core.VerificationTests;
-    using Prover.GUI.Events;
     using Prover.GUI.Reports;
     using Prover.GUI.Screens.Dialogs;
     using Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews;
@@ -22,6 +21,7 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -29,7 +29,7 @@
     /// <summary>
     /// Defines the <see cref="TestRunViewModel" />
     /// </summary>
-    public class TestRunViewModel : ViewModelBase, IHandle<VerificationTestEvent>
+    public class TestRunViewModel : ViewModelBase
     {
         #region Constants
 
@@ -99,10 +99,6 @@
         private ReactiveList<IEvcDevice> _instrumentTypes =
             new ReactiveList<IEvcDevice> { ChangeTrackingEnabled = true };
 
-        /// <summary>
-        /// Defines the _isDirty
-        /// </summary>
-        private bool _isDirty;
 
         /// <summary>
         /// Defines the _isLoading
@@ -183,10 +179,9 @@
             _instrumentReportGenerator = instrumentReportGenerator;
             _settingsService = settingsService;
             _rotaryStressTest = rotaryStressTest;
-            eventAggregator.Subscribe(this);
 
             RefreshCommPortsCommand = ReactiveCommand.Create(() => SerialPort.GetPortNames().ToList());
-            IObservable<ReactiveList<string>> commPorts = RefreshCommPortsCommand
+            var commPorts = RefreshCommPortsCommand
                 .Select(list => new ReactiveList<string>(list));
             commPorts
                 .ToProperty(this, x => x.CommPorts, out _commPorts, new ReactiveList<string>() { ChangeTrackingEnabled = true });
@@ -268,26 +263,28 @@
             StartRotarySmokeTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Running Smoke test...", StartRotarySmokeTest, canStartNewTest);
 
-            IObservable<bool> canSave = this.WhenAnyValue(x => x.IsDirty);
+           
+            var canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
+
+            DataChangedObsverable
+                .Subscribe(x => IsDirty = true);
+            DataChangedObsverable
+                .Where(x => !_isLoading && _settingsService.Local.AutoSave)
+                .Throttle(TimeSpan.FromSeconds(1)) 
+                .Select(x => Unit.Default)
+                .InvokeCommand(SaveCommand);          
 
             SaveCommand.IsExecuting
                 .StepInterval(TimeSpan.FromSeconds(2))
-                .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
-
-            /** Auto Save logic*/
-            //this.WhenAnyValue(x => x.IsDirty)
-            //     .Where(dirty => dirty && !_isLoading && _settingsService.Local.AutoSave)   
-            //     .Select(x => new Unit())                                 
-            //     .InvokeCommand(this, x => x.SaveCommand);
+                .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);          
 
             PrintReportCommand = ReactiveCommand.CreateFromTask(PrintTest);
 
             /**             
             * Clients              
             **/
-            List<Client> clientList = clientService.GetActiveClients()
-                .ToList();
+            var clientList = clientService.GetActiveClients().ToList();
             Clients = new ReactiveList<string>(
                 clientList.Select(x => x.Name).OrderBy(x => x).ToList())
             {
@@ -357,10 +354,7 @@
         /// </summary>
         public ReactiveList<IEvcDevice> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether IsDirty
-        /// </summary>
-        public bool IsDirty { get => _isDirty; set => this.RaiseAndSetIfChanged(ref _isDirty, value); }
+    
 
         /// <summary>
         /// Gets the PrintReportCommand
@@ -417,6 +411,8 @@
         /// </summary>
         public bool ShowSaveSnackbar => _showSaveSnackbar.Value;
 
+        public ISubject<VerificationTest> DataChangedObsverable { get; private set; } = new Subject<VerificationTest>();
+
         /// <summary>
         /// Gets or sets the SiteInformationItem
         /// </summary>
@@ -471,6 +467,9 @@
 
         public ReactiveCommand StartRotarySmokeTestCommand { get; }
 
+        private bool _isDirty;
+        public bool IsDirty { get => _isDirty; set => this.RaiseAndSetIfChanged(ref _isDirty, value); }
+      
         #endregion
 
         #region Methods
@@ -532,21 +531,11 @@
                 }
                 SiteInformationItem = null;
                 _qaRunTestManager?.Dispose();
+                DataChangedObsverable.OnCompleted();
+                DataChangedObsverable = null;
             }
         }
 
-        /// <summary>
-        /// The Handle
-        /// </summary>
-        /// <param name="message">The message<see cref="VerificationTestEvent"/></param>
-        public void Handle(VerificationTestEvent message)
-        {
-            IsDirty = true;
-            this.WhenAnyValue(x => x.SaveCommand)
-                .Where(x => !_isLoading && _settingsService.Local.AutoSave)
-                .SelectMany(x => x.Execute())
-                .Subscribe();
-        }
 
         /// <summary>
         /// The InitializeViews
@@ -556,15 +545,15 @@
         /// <returns>The <see cref="Task"/></returns>
         public void InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
         {
-          
+
             SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
             SiteInformationItem.QaTestManager = qaTestRunTestManager;
             SiteInformationItem.Instrument = instrument;
 
             foreach (VerificationTest x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
             {
-                VerificationSetViewModel item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                item.InitializeViews(x, qaTestRunTestManager);
+                var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                item.InitializeViews(x, qaTestRunTestManager, DataChangedObsverable);
                 item.VerificationTest = x;
 
                 TestViews.Add(item);
@@ -590,9 +579,9 @@
         /// The PrintTest
         /// </summary>
         /// <returns>The <see cref="Task"/></returns>
-        private async Task PrintTest()
+        private Task PrintTest()
         {
-            await _instrumentReportGenerator.GenerateAndViewReport(_qaRunTestManager.Instrument);
+            return _instrumentReportGenerator.GenerateAndViewReport(_qaRunTestManager.Instrument);
         }
 
         /// <summary>
@@ -601,10 +590,10 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task SaveTest()
         {
-            if (IsDirty && _qaRunTestManager != null)
-            {
+            if (_qaRunTestManager != null)
+            {                
                 await _qaRunTestManager?.SaveAsync();
-                IsDirty = false;
+                Log.Info("Saved!");
             }
         }
 
@@ -634,8 +623,7 @@
 
                 InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
-
-                IsDirty = true;
+                
                 if (_settingsService.Local.AutoSave)
                 {
                     await SaveTest().ConfigureAwait(false);

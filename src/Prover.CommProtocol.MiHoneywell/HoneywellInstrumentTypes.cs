@@ -14,26 +14,27 @@ namespace Prover.CommProtocol.MiHoneywell
         public static IEvcDevice MiniAt => GetByName("Mini-AT");
         public static IEvcDevice MiniMax => GetByName("Mini-Max");
         public static IEvcDevice Toc => GetByName("Toc");
-        public static IEvcDevice TurboMonitor => GetByName("TurboMonitor");
+        public static IEvcDevice TibBoard => GetByName("TibBoard");
 
         public static IEvcDevice GetByName(string name)
         {
-            var all = GetAll();
+            var all = GetAll(true);
 
             return all.FirstOrDefault(i => string.Equals(i.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static IEvcDevice GetById(int id)
         {
-            var all = GetAll();
+            var all = GetAll(true);
 
             return all.FirstOrDefault(i => i.Id == id);
         }
 
-        public static IEnumerable<IEvcDevice> GetAll()
+        public static IEnumerable<IEvcDevice> GetAll(bool showHidden = false)
         {
             var allTask = ItemHelpers.GetInstrumentDefinitions().ConfigureAwait(false);
-            return allTask.GetAwaiter().GetResult()       
+            return allTask.GetAwaiter().GetResult()   
+                .Where(evc => showHidden || !evc.IsHidden)
                 .OrderBy(i => i.Name);
         }
     }

@@ -41,9 +41,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             }
         }
 
-        public override async Task ExecuteSyncTest(CancellationToken ct)
+        public override Task ExecuteSyncTest(CancellationToken ct)
         {
-            return;
+            return default;
         }
 
         public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
@@ -60,9 +60,9 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await CommClient.Disconnect();
         }
 
-        public override async Task RunTest(CancellationToken ct)
+        public override Task RunTest(CancellationToken ct)
         {
-            return;
+            return default;
         }
     }
 }

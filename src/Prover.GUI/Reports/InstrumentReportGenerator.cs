@@ -38,12 +38,12 @@ namespace Prover.GUI.Reports
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
                     
-            var instrumentControl = await CreateReportControl(instrument);                                 
+            var instrumentControl = CreateReportControl(instrument);                                 
             fixedDoc.Pages.Add(CreatePage(instrumentControl));
 
             if (linkedInstrument != null)
             {                
-                instrumentControl = await CreateReportControl(linkedInstrument);                                 
+                instrumentControl = CreateReportControl(linkedInstrument);                                 
                 fixedDoc.Pages.Add(CreatePage(instrumentControl));
             }
 
@@ -64,12 +64,12 @@ namespace Prover.GUI.Reports
             return pageContent;
         }
 
-        private async Task<InstrumentReportView> CreateReportControl(Instrument instrument)
+        private InstrumentReportView CreateReportControl(Instrument instrument)
         {
             //Set up the WPF Control to be printed
             var controlToPrint = new InstrumentReportView();
             var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
-            await reportViewModel.Initialize(instrument);
+            reportViewModel.Initialize(instrument);
             controlToPrint.DataContext = reportViewModel;
             return controlToPrint;
         }

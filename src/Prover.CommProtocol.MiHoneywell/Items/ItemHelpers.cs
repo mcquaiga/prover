@@ -113,14 +113,22 @@
             var i = instrJson.ToObject<HoneywellDevice>();
             i.ClientFactory = GetCommClientFactory(i);
 
-            var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
-            var excludeItems = await GetItemDefinitions(instrJson, "ExcludeItems");
+            if (instrJson["ItemDefinitions"] != null)
+            {
+                var newItems = await GetItemDefinitions(instrJson, "ItemDefinitions");
+                i.ItemsMetadata = newItems.ToList();
+            }
+            else
+            {
+                var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
+                var excludeItems = await GetItemDefinitions(instrJson, "ExcludeItems");
 
-            i.ItemsMetadata = items.Concat(overrideItems)
-                .Where(item => excludeItems.All(x => x.Number != item.Number))
-                .GroupBy(item => item.Number)
-                .Select(group => group.Aggregate((merged, next) => next))
-                .ToList();
+                i.ItemsMetadata = items.Concat(overrideItems)
+                    .Where(item => excludeItems.All(x => x.Number != item.Number))
+                    .GroupBy(item => item.Number)
+                    .Select(group => group.Aggregate((merged, next) => next))
+                    .ToList();
+            }          
 
             results.Add(i);
             return i;

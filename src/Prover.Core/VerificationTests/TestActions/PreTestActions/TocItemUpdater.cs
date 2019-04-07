@@ -43,7 +43,7 @@
                 await commClient.Disconnect();
                 Thread.Sleep(1000);
 
-                commClient.InstrumentType = HoneywellInstrumentTypes.TurboMonitor;
+                commClient.InstrumentType = HoneywellInstrumentTypes.TibBoard;
                 await commClient.Connect(ct);
                 await base.Execute(commClient, instrument, ct, statusUpdates);
                 await commClient.Disconnect();
