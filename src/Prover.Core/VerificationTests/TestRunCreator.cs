@@ -43,12 +43,12 @@
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
         public static async Task<IQaRunTestManager> CreateNextTestRun(IEvcDevice instrumentType, ICommPort commPort, ISettingsService settingsService,
-            Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
+            Client client = null, CancellationToken ct = new CancellationToken(), IObserver<string> statusObserver = null)
         {
             if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
                 TocTestManager = IoC.Get<IQaRunTestManager>();
-                TocTestManager.Status.Subscribe(statusAction);
+                TocTestManager.Status.Subscribe(statusObserver);
                             
                 Func<EvcCommunicationClient, Instrument, Task> testFunc = async (comm, instrument) =>
                 {
@@ -78,14 +78,14 @@
         /// <param name="statusAction">The statusAction<see cref="Action{string}"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
         public static async Task<IQaRunTestManager> CreateTestRun(IEvcDevice instrumentType, ICommPort commPort, ISettingsService settingsService,
-            Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
+            Client client = null, CancellationToken ct = new CancellationToken(), IObserver<string> statusObservable = null)
         {
             var qaTestRunManager = IoC.Get<IQaRunTestManager>();
-            qaTestRunManager.Status.Subscribe(statusAction);
+            qaTestRunManager.Status.Subscribe(statusObservable);
 
             if (instrumentType == HoneywellInstrumentTypes.Toc)
             {
-                return await TocTestRun(qaTestRunManager, instrumentType, commPort, settingsService, client, ct);
+                return await TocTestRun(qaTestRunManager, instrumentType, commPort, settingsService, client, ct, statusObservable);
             }
 
             await qaTestRunManager.InitializeTest(instrumentType, commPort, settingsService, ct, client);
@@ -100,7 +100,7 @@
         /// <param name="qaTestRunManager">The qaTestRunManager<see cref="IQaRunTestManager"/></param>
         /// <returns>The <see cref="Task{IQaRunTestManager}"/></returns>
         private static async Task<IQaRunTestManager> TocTestRun(IQaRunTestManager qaTestRunManager, IEvcDevice instrumentType, ICommPort commPort,
-            ISettingsService settingsService, Client client = null, CancellationToken ct = new CancellationToken(), Action<string> statusAction = null)
+            ISettingsService settingsService, Client client = null, CancellationToken ct = new CancellationToken(), IObserver<string> statusObservable = null)
         {
             MiniAtTestManager = qaTestRunManager;
             instrumentType = HoneywellInstrumentTypes.MiniAt;
