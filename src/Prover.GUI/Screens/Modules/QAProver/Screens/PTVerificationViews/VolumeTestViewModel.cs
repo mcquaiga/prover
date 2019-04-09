@@ -4,7 +4,6 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;
-using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 using System;
@@ -18,14 +17,25 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
     {
+        /// <summary>
+        /// Defines the StandardCardViewContext
+        /// </summary>
+        private const string StandardCardViewContext = "CardNew";
+
+        /// <summary>
+        /// Defines the PulseInputCardViewContext
+        /// </summary>
+        private const string PulseInputCardViewContext = "PulseInputCard";
+
         #region Public Constructors
 
-        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, 
+        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null, ISubject<VerificationTest> changeObservable = null)
             : base(screenManager, eventAggregator, volumeTest, changeObservable)
         {
+            ViewContext = StandardCardViewContext;
             Volume = volumeTest;
-            TestManager = qaRunTestManager;           
+            TestManager = qaRunTestManager;
 
             AppliedInput = (long)Volume.AppliedInput;
             UncorrectedPulseCount = Volume.UncPulseCount;
@@ -38,7 +48,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
             if (TestManager != null)
             {
-                if (TestManager?.VolumeTestManager is ManualVolumeTestManager)
+                if (TestManager?.VolumeTestManager is ManualVolumeTestManager
+                    || TestManager?.VolumeTestManager is FrequencyVolumeTestManager)
                 {
                     var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
                         .Select(x => x == TestStep.PreTest);
@@ -59,14 +70,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                         "Running Volume Test...", RunTest, canRunTestCommand);
                 }
 
-                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount)                    
-                    .Subscribe(_  =>
+                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount)
+                    .Subscribe(_ =>
                     {
                         Volume.AppliedInput = _.Item1;
                         Volume.UncPulseCount = _.Item2;
                         Volume.CorPulseCount = _.Item3;
                         ChangedEvent.OnNext(TestRun.VerificationTest);
-                    });          
+                    });
             }
         }
 
@@ -82,6 +93,19 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
         public ReactiveCommand RunVolumeTestCommand { get; set; }
 
+        /// <summary>
+        /// Defines the _viewContext
+        /// </summary>
+        private string _viewContext;
+
+        /// <summary>
+        /// Gets or sets the ViewContext
+        /// </summary>
+        public string ViewContext
+        {
+            get { return _viewContext; }
+            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+        }
         #endregion Public Properties
 
         #region Internal Enums
@@ -112,7 +136,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             {
                 AppliedInput = (long)Volume.AppliedInput;
                 UncorrectedPulseCount = Volume.UncPulseCount;
-                CorrectedPulseCount = Volume.CorPulseCount;               
+                CorrectedPulseCount = Volume.CorPulseCount;
             }
         }
 
@@ -129,7 +153,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
             if (Volume?.VerificationTest.FrequencyTest != null)
             {
-                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest, ChangedEvent);
+                ViewContext = PulseInputCardViewContext;
+                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest, ChangedEvent, TestManager);
             }
         }
 

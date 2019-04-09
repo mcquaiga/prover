@@ -25,6 +25,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
+    
 
     /// <summary>
     /// Defines the <see cref="QaRunTestManager" />
@@ -157,7 +158,7 @@
             }
         }
 
-        public async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings, CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
+        public virtual async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings, CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
         {
             _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);
             _communicationClient.Status.Subscribe(_testStatus);
@@ -331,7 +332,7 @@
             }
             else if (Instrument.VolumeTest.DriveType is PulseInputSensor)
             {
-                VolumeTestManager = IoC.Get<ManualVolumeTestManager>();
+                VolumeTestManager = IoC.Get<FrequencyVolumeTestManager>();
             }
         }
 

@@ -33,12 +33,24 @@
                         Grid.Column="1"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"
                         Content="{materialDesign:PackIcon ContentSave}"/>
-                <Button HorizontalAlignment="Right"
+
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <Button Content="Next Test"
+                            HorizontalAlignment="Right"
+                            Margin="8 2"
+                            Width="150"
+                            Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                            Command="{Binding NextTestCommand}"/>
+                    <Button 
                         Command="{Binding PrintReportCommand}"                        
-                        Grid.Column="1"
+                        HorizontalAlignment="Right"
                         Height="32" Width="48"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"
                         Content="{materialDesign:PackIcon Printer}"/>
+                </StackPanel>
+              
             </Grid>
         </materialDesign:ColorZone>
         <Grid Margin="5"
@@ -71,7 +83,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
-                    <ItemsControl ItemsSource="{Binding PTTestViews}"
+                    <ItemsControl ItemsSource="{Binding TestViews}"
                                   Grid.ColumnSpan="3">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -82,7 +94,8 @@
                             <DataTemplate>
                                 <Border Style="{StaticResource SubSectionDividerBorder}"
                                         BorderThickness="0 0 1 0"
-                                        Padding="4">
+                                        Padding="4"
+                                        MaxWidth="300">
                                     <ContentControl cal:View.Model="{Binding }"                                                    
                                                     cal:View.Context="CardNew" />
                                 </Border>
@@ -97,7 +110,7 @@
                             Padding="4"
                             VerticalAlignment="Stretch">
                         <ContentControl cal:View.Model="{Binding VolumeTestView}" 
-                                        cal:View.Context="CardNew" />
+                                        cal:View.Context="Base" />
                     </Border>
                 </Grid>
 
