@@ -6,7 +6,6 @@
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell.CommClients;
     using System;
     using System.Collections.Concurrent;
@@ -46,7 +45,7 @@
         /// <summary>
         /// Defines the _instrumentTypesCache
         /// </summary>
-        private static HashSet<IEvcDevice> _instrumentTypesCache = new HashSet<IEvcDevice>();
+        private static HashSet<InstrumentType> _instrumentTypesCache = new HashSet<InstrumentType>();
 
         #endregion
 
@@ -55,8 +54,8 @@
         /// <summary>
         /// The GetInstrumentDefinitions
         /// </summary>
-        /// <returns>The <see cref="Task{HashSet{IEvcDevice}}"/></returns>
-        public static async Task<HashSet<IEvcDevice>> GetInstrumentDefinitions()
+        /// <returns>The <see cref="Task{HashSet{InstrumentType}}"/></returns>
+        public static async Task<HashSet<InstrumentType>> GetInstrumentDefinitions()
         {
             if (_instrumentTypesCache == null || !_instrumentTypesCache.Any())
                 await LoadInstrumentTypes();
@@ -79,8 +78,8 @@
 
                 var items = await LoadGlobalItemDefinitions();
 
-                var readTasks = new List<Task<IEvcDevice>>();
-                var results = new ConcurrentBag<IEvcDevice>();
+                var readTasks = new List<Task<InstrumentType>>();
+                var results = new ConcurrentBag<InstrumentType>();
                 foreach (var file in Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json"))
                 {
                     readTasks.Add(GetInstrument(items, results, file));
@@ -107,28 +106,20 @@
             }
         }
 
-        private static async Task<IEvcDevice> GetInstrument(HashSet<ItemMetadata> items, ConcurrentBag<IEvcDevice> results, string file)
+        private static async Task<InstrumentType> GetInstrument(HashSet<ItemMetadata> items, ConcurrentBag<InstrumentType> results, string file)
         {
             var instrJson = await FileTextToJObjectAsync(file);
-            var i = instrJson.ToObject<HoneywellDevice>();
+            var i = instrJson.ToObject<InstrumentType>();
             i.ClientFactory = GetCommClientFactory(i);
 
-            if (instrJson["ItemDefinitions"] != null)
-            {
-                var newItems = await GetItemDefinitions(instrJson, "ItemDefinitions");
-                i.ItemsMetadata = newItems.ToList();
-            }
-            else
-            {
-                var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
-                var excludeItems = await GetItemDefinitions(instrJson, "ExcludeItems");
+            var overrideItems = await GetItemDefinitions(instrJson, "OverrideItems");
+            var excludeItems = await GetItemDefinitions(instrJson, "ExcludeItems");
 
-                i.ItemsMetadata = items.Concat(overrideItems)
-                    .Where(item => excludeItems.All(x => x.Number != item.Number))
-                    .GroupBy(item => item.Number)
-                    .Select(group => group.Aggregate((merged, next) => next))
-                    .ToList();
-            }          
+            i.ItemsMetadata = items.Concat(overrideItems)
+                .Where(item => excludeItems.All(x => x.Number != item.Number))
+                .GroupBy(item => item.Number)
+                .Select(group => group.Aggregate((merged, next) => next))
+                .ToList();
 
             results.Add(i);
             return i;
@@ -140,7 +131,7 @@
         /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
         /// <param name="itemValues">The itemValues<see cref="Dictionary{int, string}"/></param>
         /// <returns>The <see cref="IEnumerable{ItemValue}"/></returns>
-        public static IEnumerable<ItemValue> LoadItems(IEvcDevice instrumentType, Dictionary<int, string> itemValues)
+        public static IEnumerable<ItemValue> LoadItems(InstrumentType instrumentType, Dictionary<int, string> itemValues)
         {
             if (instrumentType == null)
                 throw new ArgumentNullException(nameof(instrumentType));
@@ -169,7 +160,7 @@
         /// </summary>
         /// <param name="instrumentType">The instrumentType<see cref="InstrumentType"/></param>
         /// <returns>The <see cref="Func{ICommPort, ISubject{string}, EvcCommunicationClient}"/></returns>
-        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(IEvcDevice instrumentType)
+        private static Func<ICommPort, ISubject<string>, EvcCommunicationClient> GetCommClientFactory(InstrumentType instrumentType)
         {
             var commTypeName = instrumentType.CommClientType;
             if (string.IsNullOrEmpty(commTypeName))
@@ -266,10 +257,10 @@
         /// The LoadGlobalItemDefinitions
         /// </summary>
         /// <returns>The <see cref="Task{HashSet{ItemMetadata}}"/></returns>
-        private static Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
+        private static async Task<HashSet<ItemMetadata>> LoadGlobalItemDefinitions()
         {
             var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}";
-            return GetItemDefinitions(path, "ItemDefinitions");
+            return await GetItemDefinitions(path, "ItemDefinitions");
         }
 
         #endregion

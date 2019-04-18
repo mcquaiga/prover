@@ -1,19 +1,18 @@
-﻿using Prover.CommProtocol.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.VerificationTests.TestActions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Prover.Core.Modules.Clients.VerificationTestActions
 {
-    public class ItemVerificationManager : IEvcDeviceValidationAction
+    public class ItemVerificationManager : IPreTestValidation
     {
         private readonly IHandleInvalidItemVerification _invalidItemHandler;
         private readonly IClientService _clientService;
@@ -27,42 +26,49 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
             _testRunService = testRunService;
         }
 
+        public async Task Validate(EvcCommunicationClient commClient, Instrument instrument,
+            Subject<string> statusUpdates = null)
+        {
+            if (!await IsValid(instrument))
+            {
+                var result = _invalidItemHandler.ShouldInvalidItemsBeChanged(InvalidInstrumentValues);
+
+                if (result) await Update(commClient, instrument);
+            }
+        }
+
         private async Task<bool> IsValid(Instrument instrument)
         {
             if (instrument.Client == null)
-            {
                 return true;
-            }
 
-            Client client = await _clientService.GetById(instrument.Client.Id);
+            var client = await _clientService.GetById(instrument.Client.Id);
 
             InvalidInstrumentValues.Clear();
             ValidationItems.Clear();
 
             ValidationItems = client.Items
-                .Find(c => c.ItemFileType == ClientItemType.Verify && c.InstrumentType == instrument.InstrumentType)?
+                .FirstOrDefault(c => c.ItemFileType == ClientItemType.Verify && c.InstrumentType == instrument.InstrumentType)?
                 .Items
                 .ToList();
 
             if (ValidationItems == null)
-            {
                 return true;
-            }
 
-            foreach (ItemValue validItem in ValidationItems)
+            foreach (var validItem in ValidationItems)
             {
-                ItemValue instrumentItem =
+                var instrumentItem =
                     instrument.Items.FirstOrDefault(i => i.Metadata.Number == validItem.Metadata.Number);
 
                 if (instrumentItem != null && !Equals(instrumentItem.NumericValue, validItem.NumericValue))
                 {
-                    Tuple<ItemValue, ItemValue> values = new Tuple<ItemValue, ItemValue>(validItem, instrumentItem);
+                    var values = new Tuple<ItemValue, ItemValue>(validItem, instrumentItem);
                     InvalidInstrumentValues.Add(validItem.Metadata, values);
                 }
             }
 
-            return InvalidInstrumentValues.Count == 0;
-
+            return !InvalidInstrumentValues.Any();
+         
         }
 
         /// <summary>
@@ -75,34 +81,17 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
 
         public List<ItemValue> ValidationItems { get; private set; } = new List<ItemValue>();
 
-        public VerificationStep VerificationStep => VerificationStep.PreVerification;
-
         private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument)
         {
-            foreach (KeyValuePair<ItemMetadata, Tuple<ItemValue, ItemValue>> invalidItem in InvalidInstrumentValues)
+            foreach (var invalidItem in InvalidInstrumentValues)
             {
-                bool response =
+                var response =
                     await evcCommunicationClient.SetItemValue(invalidItem.Key.Number, invalidItem.Value.Item1.RawValue);
                 if (response)
-                {
                     instrument.Items.First(i => i.Metadata.Number == invalidItem.Key.Number).RawValue =
                         invalidItem.Value.Item1.RawValue;
-                }
             }
             return true;
-        }
-
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
-        {
-            if (!await IsValid(instrument))
-            {
-                bool result = _invalidItemHandler.ShouldInvalidItemsBeChanged(InvalidInstrumentValues);
-
-                if (result)
-                {
-                    await Update(commClient, instrument).ConfigureAwait(false);
-                }
-            }
         }
     }
 }

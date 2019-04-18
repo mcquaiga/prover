@@ -1,4 +1,8 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using Caliburn.Micro;
 using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
@@ -6,26 +10,18 @@ using Prover.Core.VerificationTests;
 using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class VerificationSetViewModel : ViewModelBase, IDisposable
     {
         private readonly ISettingsService _settingsService;
-        public ISubject<VerificationTest> DataChangedObservable { get; } = new Subject<VerificationTest>();
 
         public VerificationSetViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, ISettingsService settingsService)
             : base(screenManager, eventAggregator)
         {
             _settingsService = settingsService;
             RunTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator, "Downloading data...", RunTest);
-
         }
 
         public IQaRunTestManager QaRunTestManager;
@@ -44,35 +40,24 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         public VolumeTestViewModel VolumeTestViewModel { get; private set; }
         public VerificationTest VerificationTest { get; set; }
 
-        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null, IObserver<VerificationTest> changeObserver = null)
+        public void InitializeViews(VerificationTest verificationTest, IQaRunTestManager qaTestRunTestManager = null)
         {
             VerificationTest = verificationTest;
             QaRunTestManager = qaTestRunTestManager;
 
             ShowDownloadButton = QaRunTestManager != null;
 
-            DataChangedObservable              
-                .Subscribe(changeObserver);
-
             if (VerificationTest.SuperFactorTest != null)
-            {
-                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest, DataChangedObservable);
-            }
+                SuperFactorTestViewModel = new SuperFactorTestViewModel(ScreenManager, EventAggregator, VerificationTest.SuperFactorTest);
 
             if (VerificationTest.TemperatureTest != null)
-            {
-                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest, DataChangedObservable);
-            }
+                TemperatureTestViewModel = new TemperatureTestViewModel(ScreenManager, EventAggregator, VerificationTest.TemperatureTest);
 
             if (VerificationTest.PressureTest != null)
-            {
-                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest, _settingsService, DataChangedObservable);
-            }
+                PressureTestViewModel = new PressureTestViewModel(ScreenManager, EventAggregator, VerificationTest.PressureTest, _settingsService);
 
             if (VerificationTest.VolumeTest != null)
-            {
-                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager, DataChangedObservable);
-            }
+                VolumeTestViewModel = new VolumeTestViewModel(ScreenManager, EventAggregator, VerificationTest.VolumeTest, QaRunTestManager);
         }
 
         public override void Dispose()
@@ -83,7 +68,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             VolumeTestViewModel?.TryClose();
             _cancelTestCommand?.Dispose();
             _runTestCommand?.Dispose();
-            DataChangedObservable.OnCompleted();
         }
 
         #region Properties
@@ -144,7 +128,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             }
             finally
             {
-                DataChangedObservable.OnNext(VerificationTest);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(VerificationTest));
             }
         }
     }

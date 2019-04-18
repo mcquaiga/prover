@@ -112,7 +112,6 @@
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="HoneywellInstrumentTypes.cs" />
-    <Compile Include="HoneywellDevice.cs" />
     <Compile Include="Items\DeviceItems.cs" />
     <Compile Include="Items\FrequencyTestItems.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
@@ -156,11 +155,8 @@
     <Content Include="ItemDefinitions\Item_MeterType.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ItemDefinitions\Type_TOC.json">
+    <Content Include="ItemDefinitions\DisabledType_TOC.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_TibBoard.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
   </ItemGroup>

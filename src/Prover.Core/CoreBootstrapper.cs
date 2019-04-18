@@ -84,7 +84,6 @@ namespace Prover.Core
 
             builder.RegisterType<MechanicalAutoVolumeTestManager>();
             builder.RegisterType<RotaryAutoVolumeTestManager>();
-            builder.RegisterType<FrequencyVolumeTestManager>();
             builder.RegisterType<ManualVolumeTestManager>();
 
             builder.RegisterType<AverageReadingStabilizer>()
@@ -107,8 +106,8 @@ namespace Prover.Core
                 var resetItems = c.Resolve<ISettingsService>().Shared.TestSettings.TocResetItems;
                 return new TocItemUpdaterAction(resetItems);
             })
-            .As<IEvcDeviceValidationAction>()
-            .Named<IEvcDeviceValidationAction>("TocVolPulsesWaitingReset");
+            .As<IPreVolumeTestAction>()
+            .Named<IPreVolumeTestAction>("TocVolPulsesWaitingReset");
 
             builder.Register(c =>
             {
@@ -118,10 +117,10 @@ namespace Prover.Core
                     {6, "0" },
                     {7, "0" }
                 };
-                return new ItemUpdaterAction(VerificationStep.PreVolumeVerification, resetItems);
+                return new ItemUpdaterAction(resetItems);
             })
-            .As<IEvcDeviceValidationAction>()
-            .Named<IEvcDeviceValidationAction>("PulseOutputWaitingReset");
+            .As<IPreVolumeTestAction>()
+            .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
 
 
         }

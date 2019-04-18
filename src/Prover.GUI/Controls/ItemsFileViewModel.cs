@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using Caliburn.Micro.ReactiveUI;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.Core.Models.Clients;
 using ReactiveUI;
 
@@ -18,14 +17,14 @@ namespace Prover.GUI.Controls
         public ClientItemType ItemsFileType { get; }
 
         public ItemsFileViewModel(Client client, ClientItemType itemsFileType,
-            IObservable<IEvcDevice> selectedInstrumentTypeObservable, string helpInfo)
+            IObservable<InstrumentType> selectedInstrumentTypeObservable, string helpInfo)
         {
             _client = client;
             ItemsFileType = itemsFileType;
             HeaderText = Enum.GetName(typeof(ClientItemType), itemsFileType);
             DescriptionText = helpInfo;
 
-            UpdateListItems = ReactiveCommand.Create<IEvcDevice>(UpdateList);
+            UpdateListItems = ReactiveCommand.Create<InstrumentType>(UpdateList);
             selectedInstrumentTypeObservable
                 .InvokeCommand(UpdateListItems);
 
@@ -156,9 +155,9 @@ namespace Prover.GUI.Controls
             set => this.RaiseAndSetIfChanged(ref _descriptionText, value);
         }
 
-        private IEvcDevice _selectedInstrumentType;
+        private InstrumentType _selectedInstrumentType;
 
-        public IEvcDevice SelectedInstrumentType
+        public InstrumentType SelectedInstrumentType
         {
             get => _selectedInstrumentType;
             set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value);
@@ -168,9 +167,9 @@ namespace Prover.GUI.Controls
 
         #region Commands
 
-        private ReactiveCommand<IEvcDevice, Unit> _updateListItems;
+        private ReactiveCommand<InstrumentType, Unit> _updateListItems;
 
-        public ReactiveCommand<IEvcDevice, Unit> UpdateListItems
+        public ReactiveCommand<InstrumentType, Unit> UpdateListItems
         {
             get => _updateListItems;
             set => this.RaiseAndSetIfChanged(ref _updateListItems, value);
@@ -207,7 +206,7 @@ namespace Prover.GUI.Controls
             ItemValue = null;
         }
 
-        private void UpdateList(IEvcDevice instrumentType)
+        private void UpdateList(InstrumentType instrumentType)
         {
             SelectedInstrumentType = instrumentType;
 
@@ -235,7 +234,7 @@ namespace Prover.GUI.Controls
             }
         }
 
-        private ClientItems GetItemList(IEvcDevice instrumentType, ClientItemType clientItemType)
+        private ClientItems GetItemList(InstrumentType instrumentType, ClientItemType clientItemType)
         {
             return _client?.Items
                 .FirstOrDefault(x => x.InstrumentType == instrumentType && x.ItemFileType == clientItemType);
