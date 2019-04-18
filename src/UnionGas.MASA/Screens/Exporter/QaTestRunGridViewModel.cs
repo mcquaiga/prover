@@ -12,6 +12,7 @@
     using System;
     using System.Reactive;
     using System.Threading.Tasks;
+    using System.Windows;
     using UnionGas.MASA.DCRWebService;
 
     /// <summary>
@@ -99,6 +100,12 @@
                 (jobId, employeeId) => !string.IsNullOrEmpty(jobId) && !string.IsNullOrEmpty(employeeId));
 
             ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
+
+            ExportQaTestRunCommand.ThrownExceptions
+                .Subscribe(ex => {
+                    MessageBox.Show("An error occured exporting the test. See logs for more details");
+                    Log.Error(ex.InnerException);
+                });
 
             ArchiveTestCommand = ReactiveCommand.CreateFromTask(ArchiveTest);
 
