@@ -16,13 +16,10 @@ namespace Prover.Core.VerificationTests.Events
                 PressureActual = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 8).Value.Latest();
                 PressureTarget = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 8).Value.GaugeValue;
             }
-            
-            if (LiveReadItems.Any(l => l.Key.Metadata.Number == 26))
-            {
-                TempActual = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 26).Value.Latest();
-                TempTarget = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 26).Value.GaugeValue;
-            }
            
+
+            TempActual = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 26).Value.Latest();
+            TempTarget = LiveReadItems.FirstOrDefault(l => l.Key.Metadata.Number == 26).Value.GaugeValue;
         }
 
         public LiveReadStatusEvent(decimal pressureActual, decimal pressureTarget, decimal tempActual, decimal tempTarget)

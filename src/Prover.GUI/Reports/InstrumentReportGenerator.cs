@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
 using Prover.Core.Models.Instruments;
-using Prover.Core.Shared.Data;
-using Prover.Core.Storage;
-using Prover.GUI;
 using Prover.GUI.Screens;
 
 namespace Prover.GUI.Reports
@@ -18,34 +14,37 @@ namespace Prover.GUI.Reports
     public class InstrumentReportGenerator
     {
         private readonly ScreenManager _screenManager;
-        private readonly IProverStore<Instrument> _instrumentStore;
 
-        public InstrumentReportGenerator(ScreenManager screenManager, IProverStore<Instrument> instrumentStore)
+        public InstrumentReportGenerator(ScreenManager screenManager)
         {
             _screenManager = screenManager;
-            _instrumentStore = instrumentStore;
         }
 
         public string OutputFolderPath => Path.Combine(Directory.GetCurrentDirectory(), "InstrumentReports");
 
         public async Task GenerateAndViewReport(Instrument instrument)
         {
-            instrument = await _instrumentStore.Get(instrument.Id);
-            var linkedInstrument = _instrumentStore.Query(i => i.LinkedTestId == instrument.Id).FirstOrDefault();
-
             var filePath = CreateFileName(instrument);
+
+            //Set up the WPF Control to be printed            
+            var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
+            await reportViewModel.Initialize(instrument);
+
+            var controlToPrint = new InstrumentReportView
+            {
+                DataContext = reportViewModel
+            };
+
+            //Create first page of document
+            var fixedPage = new FixedPage {Width = 96 * 11, Height = 96 * 8.5};                 
+            fixedPage.Children.Add(controlToPrint);
+
+            var pageContent = new PageContent();
+            ((IAddChild) pageContent).AddChild(fixedPage);
 
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
-                    
-            var instrumentControl = CreateReportControl(instrument);                                 
-            fixedDoc.Pages.Add(CreatePage(instrumentControl));
-
-            if (linkedInstrument != null)
-            {                
-                instrumentControl = CreateReportControl(linkedInstrument);                                 
-                fixedDoc.Pages.Add(CreatePage(instrumentControl));
-            }
+            fixedDoc.Pages.Add(pageContent);
 
             // Save document
             WriteDocument(fixedDoc, filePath);
@@ -54,30 +53,10 @@ namespace Prover.GUI.Reports
             Process.Start(filePath);
         }
 
-        private PageContent CreatePage(InstrumentReportView instrumentControl)
-        {
-            var pageContent = new PageContent();
-            var fixedPage = new FixedPage { Width = 96 * 11, Height = 96 * 8.5 };
-             //Create first page of document
-            fixedPage.Children.Add(instrumentControl);
-            ((IAddChild)pageContent).AddChild(fixedPage);
-            return pageContent;
-        }
-
-        private InstrumentReportView CreateReportControl(Instrument instrument)
-        {
-            //Set up the WPF Control to be printed
-            var controlToPrint = new InstrumentReportView();
-            var reportViewModel = _screenManager.ResolveViewModel<InstrumentReportViewModel>();
-            reportViewModel.Initialize(instrument);
-            controlToPrint.DataContext = reportViewModel;
-            return controlToPrint;
-        }
-
         private string CreateFileName(Instrument instrument)
         {
             var fileName =
-                $"{instrument.InventoryNumber}-instrument-{DateTime.Now.ToFileTime().ToString().Substring(0, 10)}.xps";
+                $"instrument_{instrument.InventoryNumber}_{DateTime.UtcNow.ToFileTimeUtc().ToString().Substring(0, 8)}.xps";
 
             var filePath = Path.Combine(OutputFolderPath, fileName);
 
@@ -88,7 +67,7 @@ namespace Prover.GUI.Reports
             return filePath;
         }
 
-        private string WriteDocument(FixedDocument fixedDoc, string filePath)
+        private void WriteDocument(FixedDocument fixedDoc, string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -99,8 +78,6 @@ namespace Prover.GUI.Reports
             var xw = XpsDocument.CreateXpsDocumentWriter(xpsWriter);
             xw.Write(fixedDoc);
             xpsWriter.Close();
-
-            return filePath;
         }
     }
 }

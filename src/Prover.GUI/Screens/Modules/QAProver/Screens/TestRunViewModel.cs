@@ -1,8 +1,8 @@
 ﻿namespace Prover.GUI.Screens.Modules.QAProver.Screens
 {
     using Caliburn.Micro;
+    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
@@ -11,24 +11,25 @@
     using Prover.Core.Shared.Extensions;
     using Prover.Core.Testing;
     using Prover.Core.VerificationTests;
+    using Prover.GUI.Events;
     using Prover.GUI.Reports;
     using Prover.GUI.Screens.Dialogs;
     using Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
-    using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
 
     /// <summary>
-    /// Defines the <see cref="TestRunViewModel"/>
+    /// Defines the <see cref="TestRunViewModel" />
     /// </summary>
-    public class TestRunViewModel : ViewModelBase
+    public class TestRunViewModel : ViewModelBase, IHandle<VerificationTestEvent>
     {
         #region Constants
 
@@ -42,7 +43,7 @@
         /// </summary>
         private const string NewQaTestViewContext = "NewTestView";
 
-        #endregion Constants
+        #endregion
 
         #region Fields
 
@@ -61,12 +62,11 @@
         /// </summary>
         private readonly InstrumentReportGenerator _instrumentReportGenerator;
 
-        private readonly RotaryStressTest _rotaryStressTest;
-
         /// <summary>
         /// Defines the _settingsService
         /// </summary>
         private readonly ISettingsService _settingsService;
+        private readonly RotaryStressTest _rotaryStressTest;
 
         /// <summary>
         /// Defines the _showSaveSnackbar
@@ -93,13 +93,16 @@
         /// </summary>
         private ReactiveList<string> _clients;
 
-        private ICommPort _commPort;
-
         /// <summary>
         /// Defines the _instrumentTypes
         /// </summary>
-        private ReactiveList<IEvcDevice> _instrumentTypes =
-            new ReactiveList<IEvcDevice> { ChangeTrackingEnabled = true };
+        private ReactiveList<InstrumentType> _instrumentTypes =
+            new ReactiveList<InstrumentType> { ChangeTrackingEnabled = true };
+
+        /// <summary>
+        /// Defines the _isDirty
+        /// </summary>
+        private bool _isDirty;
 
         /// <summary>
         /// Defines the _isLoading
@@ -134,7 +137,7 @@
         /// <summary>
         /// Defines the _selectedInstrumentType
         /// </summary>
-        private IEvcDevice _selectedInstrumentType;
+        private InstrumentType _selectedInstrumentType;
 
         /// <summary>
         /// Defines the _selectedTachCommPort
@@ -161,18 +164,18 @@
         /// </summary>
         private string _viewContext;
 
-        #endregion Fields
+        #endregion
 
         #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestRunViewModel"/> class.
         /// </summary>
-        /// <param name="screenManager">The screenManager <see cref="ScreenManager"/></param>
-        /// <param name="eventAggregator">The eventAggregator <see cref="IEventAggregator"/></param>
-        /// <param name="clientService">The clientService <see cref="IClientService"/></param>
-        /// <param name="instrumentReportGenerator">The instrumentReportGenerator <see cref="InstrumentReportGenerator"/></param>
-        /// <param name="settingsService">The settingsService <see cref="ISettingsService"/></param>
+        /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="clientService">The clientService<see cref="IClientService"/></param>
+        /// <param name="instrumentReportGenerator">The instrumentReportGenerator<see cref="InstrumentReportGenerator"/></param>
+        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
         public TestRunViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, IClientService clientService,
             InstrumentReportGenerator instrumentReportGenerator, ISettingsService settingsService, RotaryStressTest rotaryStressTest)
             : base(screenManager, eventAggregator)
@@ -180,6 +183,7 @@
             _instrumentReportGenerator = instrumentReportGenerator;
             _settingsService = settingsService;
             _rotaryStressTest = rotaryStressTest;
+            eventAggregator.Subscribe(this);
 
             RefreshCommPortsCommand = ReactiveCommand.Create(() => SerialPort.GetPortNames().ToList());
             var commPorts = RefreshCommPortsCommand
@@ -234,7 +238,7 @@
             UseIrDaPort = _settingsService.Local.InstrumentUseIrDaPort;
 
             /**
-             *
+             * 
              * Tachometer Settings
              *
              **/
@@ -264,30 +268,26 @@
             StartRotarySmokeTestCommand =
                 DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Running Smoke test...", StartRotarySmokeTest, canStartNewTest);
 
-            NextTestCommand =
-                DialogDisplayHelpers.ProgressStatusDialogCommand(EventAggregator, "Starting next test...", StartNextTest);
-
             var canSave = this.WhenAnyValue(x => x.IsDirty);
             SaveCommand = ReactiveCommand.CreateFromTask(SaveTest, canSave);
-
-            DataChangedObsverable
-                .Subscribe(x => IsDirty = true);
-            DataChangedObsverable
-                .Where(x => !_isLoading && _settingsService.Local.AutoSave)
-                .Throttle(TimeSpan.FromSeconds(1))
-                .Select(x => Unit.Default)
-                .InvokeCommand(SaveCommand);
 
             SaveCommand.IsExecuting
                 .StepInterval(TimeSpan.FromSeconds(2))
                 .ToProperty(this, x => x.ShowSaveSnackbar, out _showSaveSnackbar);
 
+            /** Auto Save logic*/
+            //this.WhenAnyValue(x => x.IsDirty)
+            //     .Where(dirty => dirty && !_isLoading && _settingsService.Local.AutoSave)   
+            //     .Select(x => new Unit())                                 
+            //     .InvokeCommand(this, x => x.SaveCommand);
+
             PrintReportCommand = ReactiveCommand.CreateFromTask(PrintTest);
 
-            /**
-            * Clients
+            /**             
+            * Clients              
             **/
-            var clientList = clientService.GetActiveClients().ToList();
+            var clientList = clientService.GetActiveClients()
+                .ToList();
             Clients = new ReactiveList<string>(
                 clientList.Select(x => x.Name).OrderBy(x => x).ToList())
             {
@@ -296,14 +296,13 @@
 
             this.WhenAnyValue(x => x.SelectedClient)
                 .Subscribe(_ => { _client = clientList.FirstOrDefault(x => x.Name == SelectedClient); });
-
             SelectedClient = Clients.Contains(_settingsService.Local.LastClientSelected)
                 ? _settingsService.Local.LastClientSelected
                 : string.Empty;
 
             this.WhenAnyValue(x => x.SelectedBaudRate, x => x.SelectedCommPort, x => x.SelectedTachCommPort,
                     x => x.SelectedClient, x => x.TachIsNotUsed, x => x.UseIrDaPort, x => x.SelectedInstrumentType)
-                .Subscribe(async _ =>
+                .Subscribe(_ =>
                {
                    _settingsService.Local.InstrumentBaudRate = _.Item1;
                    _settingsService.Local.InstrumentCommPort = _.Item2;
@@ -314,15 +313,12 @@
                    _settingsService.Local.LastInstrumentTypeUsed = _.Item7?.Name;
                });
 
-            TestViews.ItemsAdded.Subscribe(_ =>
-            {
-                VolumeTestView = TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
-            });
-
             _viewContext = NewQaTestViewContext;
         }
 
-        #endregion Constructors
+
+
+        #endregion
 
         #region Properties
 
@@ -340,8 +336,6 @@
         /// Gets the CommPorts
         /// </summary>
         public ReactiveList<string> CommPorts => _commPorts.Value;
-
-        public ISubject<VerificationTest> DataChangedObsverable { get; private set; } = new Subject<VerificationTest>();
 
         /// <summary>
         /// Gets a value indicating whether DisableCommPortAndBaudRate
@@ -361,16 +355,22 @@
         /// <summary>
         /// Gets or sets the InstrumentTypes
         /// </summary>
-        public ReactiveList<IEvcDevice> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
+        public ReactiveList<InstrumentType> InstrumentTypes { get => _instrumentTypes; set => this.RaiseAndSetIfChanged(ref _instrumentTypes, value); }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether IsDirty
+        /// </summary>
         public bool IsDirty { get => _isDirty; set => this.RaiseAndSetIfChanged(ref _isDirty, value); }
-
-        public ReactiveCommand NextTestCommand { get; }
 
         /// <summary>
         /// Gets the PrintReportCommand
         /// </summary>
         public ReactiveCommand PrintReportCommand { get; }
+
+        /// <summary>
+        /// Gets the PTTestViews
+        /// </summary>
+        public List<VerificationSetViewModel> PTTestViews => TestViews.ToList();
 
         /// <summary>
         /// Gets or sets the RefreshCommPortsCommand
@@ -400,7 +400,7 @@
         /// <summary>
         /// Gets or sets the SelectedInstrumentType
         /// </summary>
-        public IEvcDevice SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
+        public InstrumentType SelectedInstrumentType { get => _selectedInstrumentType; set => this.RaiseAndSetIfChanged(ref _selectedInstrumentType, value); }
 
         /// <summary>
         /// Gets or sets the SelectedTachCommPort
@@ -413,11 +413,6 @@
         public bool ShowDialog { get => _showDialog; set => this.RaiseAndSetIfChanged(ref _showDialog, value); }
 
         /// <summary>
-        /// Gets a value indicating whether ShowNextTestButton
-        /// </summary>
-        public bool ShowNextTestButton { get => _showNextTestButton; set => this.RaiseAndSetIfChanged(ref _showNextTestButton, value); }
-
-        /// <summary>
         /// Gets a value indicating whether ShowSaveSnackbar
         /// </summary>
         public bool ShowSaveSnackbar => _showSaveSnackbar.Value;
@@ -425,13 +420,7 @@
         /// <summary>
         /// Gets or sets the SiteInformationItem
         /// </summary>
-        public InstrumentInfoViewModel SiteInformationItem
-        {
-            get => _siteInformationItem;
-            set => this.RaiseAndSetIfChanged(ref _siteInformationItem, value);
-        }
-
-        public ReactiveCommand StartRotarySmokeTestCommand { get; }
+        public InstrumentInfoViewModel SiteInformationItem { get; set; }
 
         /// <summary>
         /// Gets the StartTestCommand
@@ -456,10 +445,8 @@
         /// <summary>
         /// Gets or sets the TestViews
         /// </summary>
-        public ReactiveList<VerificationSetViewModel> TestViews { get; set; } =
-         new ReactiveList<VerificationSetViewModel>()
-         {
-         };
+        public ObservableCollection<VerificationSetViewModel> TestViews { get; set; } =
+            new ObservableCollection<VerificationSetViewModel>();
 
         /// <summary>
         /// Gets or sets a value indicating whether UseIrDaPort
@@ -472,27 +459,26 @@
         public string ViewContext { get => _viewContext; set => this.RaiseAndSetIfChanged(ref _viewContext, value); }
 
         /// <summary>
+        /// Gets or sets the VolumeInformationItem
+        /// </summary>
+        public VolumeTestViewModel VolumeInformationItem { get; set; }
+
+        /// <summary>
         /// Gets the VolumeTestView
         /// </summary>
-        public VolumeTestViewModel VolumeTestView
-        {
-            get => _volumeTestView;
-            set => this.RaiseAndSetIfChanged(ref _volumeTestView, value);
-        }
+        public VolumeTestViewModel VolumeTestView =>
+            TestViews.FirstOrDefault(x => x.VolumeTestViewModel != null)?.VolumeTestViewModel;
 
-        private bool _isDirty;
-        private InstrumentInfoViewModel _siteInformationItem;
-        private VolumeTestViewModel _volumeTestView;
-        private bool _showNextTestButton;
+        public ReactiveCommand StartRotarySmokeTestCommand { get; }
 
-        #endregion Properties
+        #endregion
 
         #region Methods
 
         /// <summary>
         /// The CanClose
         /// </summary>
-        /// <param name="callback">The callback <see cref="Action{bool}"/></param>
+        /// <param name="callback">The callback<see cref="Action{bool}"/></param>
         public override void CanClose(Action<bool> callback)
         {
             if (_qaRunTestManager?.Instrument != null)
@@ -517,9 +503,7 @@
                         MessageBoxImage.Question);
 
                     if (result == MessageBoxResult.Yes)
-                    {
                         SaveTest().ConfigureAwait(false);
-                    }
 
                     if (result == MessageBoxResult.Cancel)
                     {
@@ -539,48 +523,52 @@
         {
             if (ViewContext == EditQaTestViewContext)
             {
-                foreach (VerificationSetViewModel testView in TestViews)
+                foreach (var testView in TestViews)
                 {
                     testView.Dispose();
                     testView.TryClose();
                 }
                 SiteInformationItem = null;
                 _qaRunTestManager?.Dispose();
-                DataChangedObsverable.OnCompleted();
-                DataChangedObsverable = null;
             }
+        }
+
+        /// <summary>
+        /// The Handle
+        /// </summary>
+        /// <param name="message">The message<see cref="VerificationTestEvent"/></param>
+        public void Handle(VerificationTestEvent message)
+        {
+            IsDirty = true;
+            this.WhenAnyValue(x => x.SaveCommand)
+                .Where(x => !_isLoading && _settingsService.Local.AutoSave)
+                .SelectMany(x => x.Execute())
+                .Subscribe();
         }
 
         /// <summary>
         /// The InitializeViews
         /// </summary>
-        /// <param name="qaTestRunTestManager">The qaTestRunTestManager <see cref="IQaRunTestManager"/></param>
-        /// <param name="instrument">The instrument <see cref="Instrument"/></param>
+        /// <param name="qaTestRunTestManager">The qaTestRunTestManager<see cref="IQaRunTestManager"/></param>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public void InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
+        public async Task InitializeViews(IQaRunTestManager qaTestRunTestManager, Instrument instrument)
         {
-            TestViews.Clear();
-            SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
-            SiteInformationItem.QaTestManager = qaTestRunTestManager;
-            SiteInformationItem.Instrument = instrument;
-
-            foreach (VerificationTest x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
+            await Task.Run(() =>
             {
-                var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
-                item.InitializeViews(x, qaTestRunTestManager, DataChangedObsverable);
-                item.VerificationTest = x;
+                SiteInformationItem = ScreenManager.ResolveViewModel<InstrumentInfoViewModel>();
+                SiteInformationItem.QaTestManager = qaTestRunTestManager;
+                SiteInformationItem.Instrument = instrument;
 
-                TestViews.Add(item);
-            }
+                foreach (var x in instrument.VerificationTests.OrderBy(v => v.TestNumber))
+                {
+                    var item = ScreenManager.ResolveViewModel<VerificationSetViewModel>();
+                    item.InitializeViews(x, qaTestRunTestManager);
+                    item.VerificationTest = x;
 
-            if (SelectedInstrumentType == HoneywellInstrumentTypes.Toc)
-            {
-                ShowNextTestButton = true;
-            }
-            else
-            {
-                ShowNextTestButton = false;
-            }
+                    TestViews.Add(item);
+                }
+            });
         }
 
         /// <summary>
@@ -590,9 +578,7 @@
         private ICommPort GetCommPort()
         {
             if (UseIrDaPort)
-            {
                 return new IrDAPort();
-            }
 
             return new SerialPort(_settingsService.Local.InstrumentCommPort, _settingsService.Local.InstrumentBaudRate);
         }
@@ -601,9 +587,9 @@
         /// The PrintTest
         /// </summary>
         /// <returns>The <see cref="Task"/></returns>
-        private Task PrintTest()
+        private async Task PrintTest()
         {
-            return _instrumentReportGenerator.GenerateAndViewReport(_qaRunTestManager.Instrument);
+            await _instrumentReportGenerator.GenerateAndViewReport(_qaRunTestManager.Instrument);
         }
 
         /// <summary>
@@ -612,25 +598,23 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task SaveTest()
         {
-            if (_qaRunTestManager != null)
+            if (IsDirty && _qaRunTestManager != null)
             {
                 await _qaRunTestManager?.SaveAsync();
-                Log.Info("Saved!");
+                IsDirty = false;
             }
         }
 
         /// <summary>
         /// The StartNewQaTest
         /// </summary>
-        /// <param name="statusObservable">The statusObservable <see cref="IObserver{string}"/></param>
-        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
+        /// <param name="statusObservable">The statusObservable<see cref="IObserver{string}"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         private async Task StartNewQaTest(IObserver<string> statusObservable, CancellationToken ct)
         {
             if (SelectedInstrumentType == null)
-            {
                 return;
-            }
 
             ShowDialog = true;
             _isLoading = true;
@@ -638,28 +622,25 @@
             try
             {
                 await _settingsService.SaveSettings();
-                _commPort = GetCommPort();
-                _qaRunTestManager = await TestRunCreator.CreateTestRun(SelectedInstrumentType, _commPort, _settingsService, _client, ct, statusObservable);
-                InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
+
+                _qaRunTestManager = IoC.Get<IQaRunTestManager>();
+                _qaRunTestManager.Status.Subscribe(statusObservable);
+                await _qaRunTestManager.InitializeTest(SelectedInstrumentType, GetCommPort(), _settingsService, ct, _client);
+
+                await InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
                 ViewContext = EditQaTestViewContext;
 
-                if (_settingsService.Local.AutoSave)
-                {
-                    await SaveTest();
-                }
+                IsDirty = true;
+                if (_settingsService.Local.AutoSave) await SaveTest().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _qaRunTestManager?.Dispose();
 
                 if (ex is OperationCanceledException)
-                {
                     Log.Warn("Test init cancelled by user.");
-                }
                 else
-                {
                     Log.Error(ex);
-                }
             }
             finally
             {
@@ -667,41 +648,12 @@
                 _isLoading = false;
             }
         }
-
-        /// <summary>
-        /// The StartNextTest
-        /// </summary>
-        /// <returns>The <see cref="Task{object}"/></returns>
-        private async Task StartNextTest(IObserver<string> statusObservable, CancellationToken ct)
-        {
-            ShowDialog = true;
-            try
-            {
-                await SaveTest();
-                _qaRunTestManager = await TestRunCreator.CreateNextTestRun(SelectedInstrumentType, _commPort, _settingsService, _client, ct, statusObservable);
-                InitializeViews(_qaRunTestManager, _qaRunTestManager.Instrument);
-                ShowNextTestButton = false;
-                ViewContext = EditQaTestViewContext;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-            }
-            finally
-            {
-                ShowDialog = false;
-            }
-        }
-
         private async Task StartRotarySmokeTest(IObserver<string> statusObservable, CancellationToken ct)
         {
             try
             {
                 if (SelectedInstrumentType == null)
-                {
                     return;
-                }
 
                 ShowDialog = true;
                 _isLoading = true;
@@ -709,7 +661,7 @@
                 await _settingsService.SaveSettings();
 
                 _rotaryStressTest.Status.Subscribe(statusObservable);
-                await _rotaryStressTest.Run(SelectedInstrumentType, GetCommPort(), _client, ct);
+                await _rotaryStressTest.Run(SelectedInstrumentType, _client, ct);
             }
             catch (Exception ex)
             {
@@ -720,8 +672,8 @@
                 ShowDialog = false;
                 _isLoading = false;
             }
-        }
 
-        #endregion Methods
+        }
+        #endregion
     }
 }

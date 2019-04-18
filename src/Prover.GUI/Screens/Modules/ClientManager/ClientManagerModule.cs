@@ -31,9 +31,9 @@ namespace Prover.GUI.Screens.Modules.ClientManager
                 .As<IHaveMainMenuItem>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<DateTimeValidator>().As<IEvcDeviceValidationAction>();
-            builder.RegisterType<ItemVerificationManager>().As<IEvcDeviceValidationAction>();
-            builder.RegisterType<ClientPostVolumeResetAction>().As<IEvcDeviceValidationAction>();
+            builder.RegisterType<DateTimeValidator>().As<IPreTestValidation>();
+            builder.RegisterType<ItemVerificationManager>().As<IPreTestValidation>();
+            builder.RegisterType<ClientPostTestResetManager>().As<IPostTestAction>();
             builder.RegisterType<ExportToCsvManager>().As<IExportCertificate>();
             builder.RegisterType<ExportToCsvViewModel>();
         }

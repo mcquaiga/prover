@@ -1,34 +1,23 @@
-﻿namespace Prover.Core.VerificationTests
-{
-    using Prover.CommProtocol.Common;
-    using Prover.CommProtocol.Common.IO;
-    using Prover.CommProtocol.Common.Models.Instrument;
-    using Prover.Core.Models.Clients;
-    using Prover.Core.Models.Instruments;
-    using Prover.Core.Settings;
-    using Prover.Core.VerificationTests.VolumeVerification;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
+using Prover.Core.Models.Clients;
+using Prover.Core.Models.Instruments;
+using Prover.Core.Settings;
+using Prover.Core.VerificationTests.VolumeVerification;
 
-    /// <summary>
-    /// Defines the <see cref="IQaRunTestManager" />
-    /// </summary>
+namespace Prover.Core.VerificationTests
+{
+
     public interface IQaRunTestManager : IDisposable
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets the CommunicationClient
-        /// </summary>
-        EvcCommunicationClient CommunicationClient { get; }
-
         Instrument Instrument { get; }
         IObservable<string> Status { get; }
         VolumeTestManager VolumeTestManager { get; set; }
 
-        Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings,
+        Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true);
 
         Task RunCorrectionTest(int level, CancellationToken ct = new CancellationToken());
@@ -36,8 +25,7 @@
         Task DownloadPreVolumeTest(CancellationToken ct);
         Task DownloadPostVolumeTest(CancellationToken ct);
         Task SaveAsync();
-     
+        Task RunVerifiers();
     }
 
-    #endregion
 }

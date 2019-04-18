@@ -20,7 +20,7 @@
     /// <summary>
     /// Defines the <see cref="CompanyNumberValidationManager" />
     /// </summary>
-    public class CompanyNumberValidationManager : IEvcDeviceValidationAction
+    public class CompanyNumberValidationManager : IPreTestValidation
     {
         #region Fields
 
@@ -68,15 +68,24 @@
             _loginService = loginService;
         }
 
-        public VerificationStep VerificationStep => VerificationStep.PreVerification;
+        #endregion
 
-        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
+        #region Methods
+
+        /// <summary>
+        /// The Validate
+        /// </summary>
+        /// <param name="commClient">The commClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
+        /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        public async Task Validate(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
         {
-            ItemValue companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
-            string companyNumber = companyNumberItem.RawValue.TrimStart('0');
+            var companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            var companyNumber = companyNumberItem.RawValue.TrimStart('0');
 
-            ItemValue serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber);
-            string serialNumber = serialNumberItem.RawValue.TrimStart('0');
+            var serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber);
+            var serialNumber = serialNumberItem.RawValue.TrimStart('0');
 
             try
             {
@@ -99,20 +108,14 @@
                 } while (!string.IsNullOrEmpty(companyNumber));
 
                 if (meterDto != null)
-                {
                     await UpdateInstrumentValues(instrument, meterDto);
-                }
             }
             catch (EndpointNotFoundException)
-            {
+            {                
                 return;
             }
+            
         }
-
-        #endregion
-
-        #region Methods
-       
 
         /// <summary>
         /// The OpenCompanyNumberDialog
@@ -122,16 +125,14 @@
         {
             while (true)
             {
-                CompanyNumberDialogViewModel dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
-                bool? result = _screenManager.ShowDialog(dialog);
+                var dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
+                var result = _screenManager.ShowDialog(dialog);
 
                 if (result.HasValue && result.Value)
                 {
                     _log.Debug($"New company number {dialog.CompanyNumber} was entered.");
                     if (string.IsNullOrEmpty(dialog.CompanyNumber))
-                    {
                         continue;
-                    }
 
                     return dialog.CompanyNumber;
                 }
@@ -150,14 +151,11 @@
         /// <returns>The <see cref="Task{object}"/></returns>
         private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
         {
-            string newCompanyNumber = OpenCompanyNumberDialog();
-            if (string.IsNullOrEmpty(newCompanyNumber))
-            {
-                return string.Empty;
-            }
+            var newCompanyNumber = OpenCompanyNumberDialog();
+            if (string.IsNullOrEmpty(newCompanyNumber)) return string.Empty;
 
             await evcCommunicationClient.Connect(ct);
-            bool response =
+            var response =
                 await
                     evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
 
@@ -184,6 +182,8 @@
             instrument.EmployeeId = _loginService.User?.Id;
             await _testRunService.Save(instrument);
         }
+
+       
 
         #endregion
     }
