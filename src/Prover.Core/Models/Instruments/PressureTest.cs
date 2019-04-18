@@ -2,6 +2,7 @@
 {
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Extensions;
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -115,7 +116,7 @@
         /// Gets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
+        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the TotalGauge

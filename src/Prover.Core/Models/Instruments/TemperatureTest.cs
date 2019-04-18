@@ -95,12 +95,13 @@
         /// <summary>
         /// Gets the InstrumentType
         /// </summary>
-        public override InstrumentType InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the PassTolerance
         /// </summary>
         protected override decimal PassTolerance => Global.TEMP_ERROR_TOLERANCE;
+
+
 
         #endregion
 

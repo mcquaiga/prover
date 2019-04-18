@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
 using Prover.Core.Extensions;
@@ -38,7 +39,7 @@ namespace Prover.Core.Models.Clients
         }
 
         [NotMapped]
-        public InstrumentType InstrumentType { get; set; }
+        public IEvcDevice InstrumentType { get; set; }
 
         [Column("InstrumentType")]
         public string InstrumentTypeString
