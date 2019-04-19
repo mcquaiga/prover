@@ -1,8 +1,8 @@
 ﻿namespace Prover.CommProtocol.Common.Models.Instrument
 {
+    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument.Items;
-    using Prover.Core.Shared.Enums;
+    using Prover.CommProtocol.Common.Models.Instrument.Items;    
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -10,7 +10,7 @@
     /// <summary>
     /// Defines the <see cref="EvcDevice" />
     /// </summary>
-    internal abstract class EvcDevice : IEvcDevice
+    public abstract class EvcDevice : IEvcDevice
     {
         #region Properties
 
@@ -42,7 +42,7 @@
         /// <summary>
         /// Gets or sets the ItemFilePath
         /// </summary>
-        public string ItemFilePath { get; set; }
+        public string ItemFilePath { get; }
 
         /// <summary>
         /// Gets or sets the Name
@@ -52,27 +52,27 @@
         /// <summary>
         /// Gets the PressureItems
         /// </summary>
-        public IPressureItems PressureItems => throw new NotImplementedException();
+        public IPressureItems PressureItems { get; }
 
         /// <summary>
         /// Gets the SiteInformationItems
         /// </summary>
-        public ISiteInformationItems SiteInformationItems => throw new NotImplementedException();
+        public ISiteInformationItems SiteInformationItems { get; }
 
         /// <summary>
         /// Gets the SuperFactorItems
         /// </summary>
-        public ISuperFactorItems SuperFactorItems => throw new NotImplementedException();
+        public ISuperFactorItems SuperFactorItems { get; }
 
         /// <summary>
         /// Gets the TemperatureItems
         /// </summary>
-        public ITemperatureItems TemperatureItems => throw new NotImplementedException();
+        public ITemperatureItems TemperatureItems { get; }
 
         /// <summary>
         /// Gets the VolumeItems
         /// </summary>
-        public IVolumeItems VolumeItems => throw new NotImplementedException();
+        public IVolumeItems VolumeItems { get; }
 
         /// <summary>
         /// Gets the ItemData

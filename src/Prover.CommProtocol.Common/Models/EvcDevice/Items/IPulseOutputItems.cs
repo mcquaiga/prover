@@ -1,11 +1,16 @@
 namespace Prover.CommProtocol.Common.Models.Instrument.Items
 {
-    public interface IPulseOutputItems : IItemsGroup
+    public interface IPulseOutputs : IItemsGroup
     {
-        decimal PulseBScaling { get; }
-        decimal PulserAScaling { get; }
-        string PulserAUnits { get; }
+        decimal Scaling { get; }
+        decimal Units { get; }
+    }
 
-        string PulserBUnits { get; }
+    public interface IPulseOutputChannels : IItemsGroup
+    {
+        IPulseOutputs ChannelA { get; }
+        IPulseOutputs ChannelB { get; }       
+        IPulseOutputs ChannelC { get; }
+        decimal PulseOutputTiming { get; }
     }
 }

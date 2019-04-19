@@ -1,17 +1,12 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
-    using Newtonsoft.Json;
-    using Prover.CommProtocol.Common;
-    using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.MiHoneywell;
-    using Prover.Core.Models.Certificates;
+    using global::Core.Enums;
+    using global::Core.Models.Certificates;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments.DriveTypes;
-    using Prover.Core.Settings;
-    using Prover.Core.Shared.Enums;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
     /// <summary>
@@ -23,8 +18,7 @@
 
         /// <summary>
         /// Gets or sets the ArchivedDateTime
-        /// </summary>
-        [Index]
+        /// </summary>    
         public DateTime? ArchivedDateTime { get; set; }
 
         /// <summary>
@@ -35,7 +29,7 @@
         /// <summary>
         /// Gets or sets the CertificateId
         /// </summary>
-        [Index]
+  
         public Guid? CertificateId { get; set; }
 
         /// <summary>
@@ -46,34 +40,13 @@
         /// <summary>
         /// Gets or sets the ClientId
         /// </summary>
-        [Index]
+     
         public Guid? ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the CommPortsPassed
         /// </summary>
-        public bool? CommPortsPassed { get; set; }
-
-        /// <summary>
-        /// Gets the CompositionType
-        /// </summary>
-        [NotMapped]
-        public EvcCorrectorType CompositionType
-        {
-            get
-            {
-                if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase) && string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.PTZ;
-
-                if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.P;
-
-                if (string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.T;
-
-                return EvcCorrectorType.T;
-            }
-        }
+        public bool? CommPortsPassed { get; set; }     
 
         /// <summary>
         /// Gets or sets the EmployeeId
@@ -88,19 +61,11 @@
         /// <summary>
         /// Gets or sets the ExportedDateTime
         /// </summary>
-        [Index]
         public DateTime? ExportedDateTime { get; set; } = null;
-
-        /// <summary>
-        /// Gets the FirmwareVersion
-        /// </summary>
-        [NotMapped]
-        public decimal FirmwareVersion => Items.GetItem(ItemCodes.SiteInfo.Firmware).NumericValue;
 
         /// <summary>
         /// Gets a value indicating whether HasPassed
         /// </summary>
-        [NotMapped]
         public bool HasPassed
         {
             get
@@ -113,92 +78,16 @@
 
                 return verificationTestsPassed;
             }
-        }
+        }   
 
-        /// <summary>
-        /// Gets or sets the InstrumentType
-        /// </summary>
-        [NotMapped]
-        public override InstrumentType InstrumentType { get; set; }
-
-        /// <summary>
-        /// Gets the InstrumentTypeString
-        /// </summary>
-        [NotMapped]
-        public string InstrumentTypeString => InstrumentType.ToString();
-
-        /// <summary>
-        /// Gets the InventoryNumber
-        /// </summary>
-        [NotMapped]
-        public string InventoryNumber => Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue;
-
-        /// <summary>
-        /// Gets a value indicating whether IsLivePressure
-        /// </summary>
-        [NotMapped]
-        public bool IsLivePressure => CompositionType == EvcCorrectorType.PTZ || CompositionType == EvcCorrectorType.P;
-
-        /// <summary>
-        /// Gets a value indicating whether IsLiveSuper
-        /// </summary>
-        [NotMapped]
-        public bool IsLiveSuper => CompositionType == EvcCorrectorType.PTZ;
-
-        /// <summary>
-        /// Gets a value indicating whether IsLiveTemperature
-        /// </summary>
-        [NotMapped]
-        public bool IsLiveTemperature => CompositionType == EvcCorrectorType.PTZ ||
-                                         CompositionType == EvcCorrectorType.T;
+        public IEvcDevice EvcDevice { get; }
+     
 
         /// <summary>
         /// Gets or sets the JobId
         /// </summary>
-        public string JobId { get; set; }
-
-        /// <summary>
-        /// Gets the PulseAScaling
-        /// </summary>
-        [NotMapped]
-        public decimal PulseAScaling => Items.GetItem(56).NumericValue;
-
-        /// <summary>
-        /// Gets the PulseASelect
-        /// </summary>
-        [NotMapped]
-        public string PulseASelect => Items.GetItem(93).Description;
-
-        /// <summary>
-        /// Gets the PulseBScaling
-        /// </summary>
-        [NotMapped]
-        public decimal PulseBScaling => Items.GetItem(57).NumericValue;
-
-        /// <summary>
-        /// Gets the PulseBSelect
-        /// </summary>
-        [NotMapped]
-        public string PulseBSelect => Items.GetItem(94).Description;
-
-        /// <summary>
-        /// Gets the PulseCScaling
-        /// </summary>
-        [NotMapped]
-        public decimal PulseCScaling => Items.GetItem(58).NumericValue;
-
-        /// <summary>
-        /// Gets the PulseCSelect
-        /// </summary>
-        [NotMapped]
-        public string PulseCSelect => Items.GetItem(95).Description;
-
-        /// <summary>
-        /// Gets the PulseOutputTiming
-        /// </summary>
-        [NotMapped]
-        public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
-
+        public string JobId { get; set; }  
+        
         /// <summary>
         /// Gets the SerialNumber
         /// </summary>

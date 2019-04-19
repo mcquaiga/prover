@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommClients\TocHoneywellClient.cs" />
+    <Compile Include="Devices\HoneywellEvcDevice.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="HoneywellInstrumentTypes.cs" />

@@ -1,6 +1,4 @@
-﻿using Prover.Core.Shared.Enums;
-
-namespace Prover.CommProtocol.Common.Models.Instrument.Items
+﻿namespace Prover.CommProtocol.Common.Models.Instrument.Items
 {
     public interface IVolumeItems : IItemsGroup
     {

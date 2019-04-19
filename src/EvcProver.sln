@@ -43,6 +43,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core.Shared", "Prover.Core.Shared\Prover.Core.Shared.csproj", "{35FE4429-B8F5-4761-B401-A215D1B4EBA2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{CCDD70C8-38F3-44C6-94FC-6ED7613930F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +195,24 @@ Global
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x64.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x64.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x64.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x86.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x86.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x64.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
