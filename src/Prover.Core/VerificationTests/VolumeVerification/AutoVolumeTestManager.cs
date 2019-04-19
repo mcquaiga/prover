@@ -237,10 +237,10 @@
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, CancellationToken ct)
         {
             await Task.Run(() =>
-            {
-                int pulsesWaiting;
-                int lastPulsesWaiting = 0;
-                bool keepWaiting = true;
+            {            
+                var pulsesWaiting = 0;
+                var lastPulsesWaiting = 0; 
+                var isComplete = false;
 
                 Status.OnNext("Waiting for residual pulses...");
 
@@ -262,6 +262,9 @@
                            }
 
                            Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+
+                           //We'll stop listening if either we have no pulses left in the register or the evc hasn't spit 
+                           //anything else out since our last check (pulses waiting shouldn't be the same after 10 seconds, it means something is wrong)
                            if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                            {
                                await commClient.Disconnect();
@@ -269,14 +272,14 @@
                            }
                            else
                            {
-                               keepWaiting = false;
+                               isComplete = true;
                            }
                        }))
                        .Concat()
                        .Subscribe())
                 {
-                    while (keepWaiting) { }
-                }
+                    while (!isComplete && !ct.IsCancellationRequested) { }
+                }        
 
                 _pulseInputsCancellationTokenSource.Cancel();
             });
