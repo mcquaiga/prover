@@ -40,7 +40,8 @@ namespace Prover.Core.Modules.Clients.VerificationTestActions
                                      c.InstrumentType == instrument.InstrumentType)
                 ?.Items.ToList();
 
-            if (resetItems == null || !resetItems.Any()) return;
+            if (resetItems == null || resetItems.Count == 0) 
+                return;
 
             var cts = new CancellationTokenSource();
             await commClient.Connect(cts.Token);

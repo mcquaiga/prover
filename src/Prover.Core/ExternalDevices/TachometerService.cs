@@ -94,7 +94,7 @@
             if (_serialPort == null)
                 return -1;
 
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 try
                 {
@@ -104,7 +104,7 @@
                     _serialPort.DiscardInBuffer();
                     _serialPort.Write("@D0");
                     _serialPort.Write(((char)13).ToString());
-                    Thread.Sleep(100);
+                    await Task.Delay(100);
 
                     var tachString = _serialPort.ReadExisting();
 
@@ -113,7 +113,6 @@
                 }
                 finally
                 {
-                    _serialPort.Close();
                 }
             });
         }

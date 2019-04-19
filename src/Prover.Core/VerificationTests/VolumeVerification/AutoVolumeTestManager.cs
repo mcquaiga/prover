@@ -70,8 +70,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
-            Status.OnNext("Completing volume test...");
+            ct.ThrowIfCancellationRequested();          
            
             try
             {               
@@ -153,7 +152,7 @@
                 CommClient = commClient;
                 VolumeTest = volumeTest;
 
-                CommClient.Status.Subscribe(Status);
+                CommClient?.Status?.Subscribe(Status);
 
                 await CommClient.Connect(ct);
 
@@ -170,7 +169,7 @@
 
                 if (TachometerCommunicator != null)
                 {
-                    Status.OnNext("Resetting Tachometer...");
+                    Status?.OnNext("Resetting Tachometer...");
                     await TachometerCommunicator?.ResetTach();
                 }
 
@@ -186,19 +185,14 @@
         /// <returns>The <see cref="Task"/></returns>
         public override async Task RunTest(CancellationToken ct)
         {
-            await Task.Run(async () =>
+            _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+            var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
+
+            try
             {
-
-           
-                _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
-
-                try
-                {
-                    ct.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
     
-                    using (Observable
-                    .Interval(TimeSpan.FromMilliseconds(500))                      
+                using (Observable.Interval(TimeSpan.FromMilliseconds(200))                      
                     .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                     {
                         ResetPulseCounts(VolumeTest);
@@ -206,19 +200,18 @@
                         await WaitForTestComplete(VolumeTest, ct);
                     }
 
-                    ct.ThrowIfCancellationRequested();
-                }
-                catch (OperationCanceledException)
-                {
-                _pulseInputsCancellationTokenSource?.Cancel();
-                    Log.Info("Cancelling volume test.");
-                    throw;
-                }
-                finally
-                {
-                    OutputBoard?.StopMotor();                              
-                }
-            });
+                ct.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException)
+            {
+            _pulseInputsCancellationTokenSource?.Cancel();
+                Log.Info("Cancelling volume test.");
+                throw;
+            }
+            finally
+            {
+                OutputBoard?.StopMotor();                              
+            } 
         }
 
         /// <summary>
@@ -243,8 +236,6 @@
                 var lastPulsesWaiting = 0; 
                 var isComplete = false;
 
-                Status.OnNext("Waiting for residual pulses...");
-
                 using (Observable                    
                        .Interval(TimeSpan.FromSeconds(10))
                        .StartWith(-1)
@@ -258,9 +249,7 @@
                            foreach (var i in await commClient.GetPulseOutputItems())
                            {
                                pulsesWaiting += (int)i.NumericValue;
-                           }
-
-                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+                           }                
 
                            //We'll stop listening if either we have no pulses left in the register or the evc hasn't spit 
                            //anything else out since our last check (pulses waiting shouldn't be the same after 10 seconds, it means something is wrong)

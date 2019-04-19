@@ -82,6 +82,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ProgressStatusDialogViewModel"/> class.
         /// </summary>
+        /// 
         /// <param name="headerText">The headerText<see cref="string"/></param>
         /// <param name="taskFunc">The taskFunc<see cref="Func{IObserver{string}, CancellationToken, Task}"/></param>
         public ProgressStatusDialogViewModel(string headerText,
@@ -93,7 +94,16 @@
             CancellationTokenSource = new CancellationTokenSource();
             var statusObserver = Observer.Create<string>(s => StatusText = s);
             TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token)
-                .ContinueWith(_ => TryClose(true)));
+                .ContinueWith(_ => {
+                    statusObserver.OnCompleted();
+                    this.Unsubscribe<LiveReadStatusEvent>();
+                    this.Unsubscribe<VolumeTestStatusEvent>();
+                    this.Unsubscribe<VerificationTestEvent>();
+                    TryClose(true);
+            }));
+
+            TaskCommand.ThrownExceptions
+                .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
 
             TaskCommand.IsExecuting
                 .Subscribe(x => ShowDialog = x);
@@ -104,6 +114,9 @@
                     CancellationTokenSource?.Cancel();
                 },
                 TaskCommand.IsExecuting);
+
+            CancelCommand.ThrownExceptions
+               .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
 
             ShowDialog = true;
 

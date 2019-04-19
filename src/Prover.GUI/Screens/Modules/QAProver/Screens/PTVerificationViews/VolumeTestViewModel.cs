@@ -56,8 +56,13 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                 }
 
                 if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
+                {
                     RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
                         "Running Volume Test...", RunTest, canRunTestCommand);
+
+                    RunVolumeTestCommand.ThrownExceptions
+                        .Subscribe(ex => Log.Error(ex));
+                }                    
 
                 this.WhenAnyValue(x => x.AppliedInput)
                     .Subscribe(value =>
@@ -100,9 +105,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         {
             try
             {
-                TestManager.VolumeTestManager.StatusMessage
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .Subscribe(status);
+                //TestManager.VolumeTestManager.StatusMessage
+                //    .ObserveOn(RxApp.MainThreadScheduler)
+                //    .Subscribe(status);
 
                 await TestManager.DownloadPostVolumeTest(ct);
                 ManualVolumeTestStep = TestStep.PreTest;
@@ -122,7 +127,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         {
             try
             {
-                TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
                 await TestManager.RunVolumeTest(ct);
             }
             catch (Exception ex)
