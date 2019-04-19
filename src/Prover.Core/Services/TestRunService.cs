@@ -18,7 +18,7 @@ namespace Prover.Core.Services
         public IEnumerable<Instrument> GetAllUnexported()
         {
             return _instrumentStore
-                .Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue && !i.LinkedTestId.HasValue);
+                .Query(i => !i.ExportedDateTime.HasValue && !i.ArchivedDateTime.HasValue);
         }
 
         public IEnumerable<Instrument> GetTestRunByCertificate(Guid certificateId)

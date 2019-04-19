@@ -1,30 +1,19 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows.Media;
+using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Events;
 using ReactiveUI;
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Windows.Media;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
-    public abstract class TestRunViewModelBase<T> : ViewModelBase
+    public abstract class TestRunViewModelBase<T> : ViewModelBase, IHandle<VerificationTestEvent>
         where T : IHavePercentError, IHaveVerificationTest
     {
-        public ISubject<VerificationTest> ChangedEvent { get; protected set; } = new Subject<VerificationTest>();
-
-        protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun, ISubject<VerificationTest> changeObservable)
+        protected TestRunViewModelBase(ScreenManager screenManager, IEventAggregator eventAggregator, T testRun)
             : base(screenManager, eventAggregator)
         {
             TestRun = testRun;
-
-            ChangedEvent
-                .Subscribe(changeObservable);
-
-            changeObservable
-                .Where(vt => vt == TestRun.VerificationTest)
-                .Subscribe(_ => RaisePropertyChangeEvents());
+            eventAggregator.Subscribe(this);
         }
 
         private T _testRun;
@@ -41,16 +30,17 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             =>
                 TestRun == null || TestRun.HasPassed
                     ? Brushes.White
-                    : (SolidColorBrush)new BrushConverter().ConvertFrom("#DC6156");
+                    : (SolidColorBrush) new BrushConverter().ConvertFrom("#DC6156");
 
         public Brush PassColour => TestRun != null && TestRun.HasPassed ? Brushes.ForestGreen : Brushes.IndianRed;
         public string PassStatusIcon => TestRun != null && TestRun.HasPassed ? "pass" : "fail";
-        public override void Dispose()
+
+        public virtual void Handle(VerificationTestEvent message)
         {
-            base.Dispose();
-            ChangedEvent.OnCompleted();
-            ChangedEvent = null;
+            if (message.VerificationTest == TestRun.VerificationTest)
+                RaisePropertyChangeEvents();
         }
+
         protected abstract void RaisePropertyChangeEvents();
     }
 }

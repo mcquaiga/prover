@@ -168,8 +168,7 @@
                 VolumeTest = volumeTest;
 
                 Log.Info("Volume test started!");
-
-                commClient.Status.Subscribe(Status);
+              
                 //TODO: Add setting to skip
                 if (SettingsService.TestSettings.RunVolumeSyncTest)
                     await ExecuteSyncTest(ct);
@@ -183,7 +182,7 @@
 
                 await CompleteTest(testActionsManager, ct);
 
-                Log.Info("Volume test finished!");
+                Log.Info("Volume test finished!");                
 
             }
             catch (OperationCanceledException)

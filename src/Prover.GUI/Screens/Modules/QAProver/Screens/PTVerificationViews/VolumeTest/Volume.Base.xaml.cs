@@ -5,9 +5,9 @@ namespace Prover.GUI.Screens.QAProver.PTVerificationViews.VolumeTest
     /// <summary>
     /// Interaction logic for Volume.xaml
     /// </summary>
-    public partial class Base : UserControl
+    public partial class Volume : UserControl
     {
-        public Base()
+        public Volume()
         {
             InitializeComponent();
         }

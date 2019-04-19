@@ -1,55 +1,45 @@
-﻿using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using System;
+﻿using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument.Items;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 namespace Prover.CommProtocol.Common.Models.Instrument
 {
     public interface IEvcDevice
     {
+        #region Public Properties
+
         int AccessCode { get; set; }
-        bool? CanUseIrDaPort { get; set; }
-        Func<ICommPort, ISubject<string>, EvcCommunicationClient> ClientFactory { get; set; }
-        string CommClientType { get; set; }
+        EvcCommunicationClient CommClient { get; }
+        EvcCorrectorType CorrectorType { get; }
         int Id { get; set; }
-        string ItemFilePath { get; set; }
-        HashSet<ItemMetadata> Items { get; }
-        IEnumerable<ItemMetadata> ItemsMetadata { get; set; }
-        int? MaxBaudRate { get; set; }
+        IEnumerable<ItemMetadata> ItemDefinitions { get; }
+        string ItemFilePath { get; }
         string Name { get; set; }
-        bool IsHidden { get; set; }
-        void LoadItemsInformation();
+        IPressureItems PressureItems { get; }
+        ISiteInformationItems SiteInformationItems { get; }
+        ISuperFactorItems SuperFactorItems { get; }
+        ITemperatureItems TemperatureItems { get; }
+        IVolumeItems VolumeItems { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        Task GetAllItems();
+
+        Task<IPressureItems> GetPressureItems();
+
+        IPressureItems GetPressureItems(Dictionary<string, string> itemData);
+
+        Task<ITemperatureItems> GetTemperatureItems();
+
+        ITemperatureItems GetTemperatureItems(Dictionary<string, string> itemData);
+
+        Task<IVolumeItems> GetVolumeItems();
+
+        IVolumeItems GetVolumeItems(Dictionary<string, string> itemData);
+
+        #endregion Public Methods
     }
 }
-
-//    public interface IEvcDevice
-//    {
-//        int AccessCode { get; set; }
-//        string Name { get; set; }
-//        int Id { get; set; }
-//        string ItemFilePath { get; set; }
-
-//        EvcCommunicationClient CommClient { get; }
-
-//        EvcCorrectorType CorrectorType { get; }
-//        IEnumerable<ItemMetadata> ItemDefinitions { get; }        
-
-//        IPressureItems PressureItems { get; }
-//        ISiteInformationItems SiteInformationItems { get; }
-//        ISuperFactorItems SuperFactorItems { get; }
-//        ITemperatureItems TemperatureItems { get; }
-//        IVolumeItems VolumeItems { get; }
-
-//        Task GetAllItems();
-
-//        Task<IPressureItems> GetPressureItems();
-//        IPressureItems GetPressureItems(Dictionary<string, string> itemData);
-
-//        Task<ITemperatureItems> GetTemperatureItems();
-//        ITemperatureItems GetTemperatureItems(Dictionary<string, string> itemData);
-
-//        Task<IVolumeItems> GetVolumeItems();
-//        IVolumeItems GetVolumeItems(Dictionary<string, string> itemData);
-//    }
-//}

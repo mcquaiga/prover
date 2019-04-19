@@ -9,18 +9,32 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 {
     public class Energy
     {
-        private const string Therms = "Therms";
-        private const string Dktherms = "DecaTherms";
-        private const string MegaJoules = "MegaJoules";
-        private const string GigaJoules = "GigaJoules";
-        private const string KiloCals = "KiloCals";
-        private const string KiloWattHours = "KiloWattHours";
+        public enum Units
+        {
+            Therms,
+            Dktherms,
+            MegaJoules,
+            GigaJoules,
+            KiloCals,
+            KiloWattHours
+        }
 
         private readonly Instrument _instrument;
+        private decimal? _evcCorrected;
 
         public Energy(Instrument instrument)
         {
             _instrument = instrument;
+            EnergyUnits = (Units)Enum.Parse(typeof(Units), _instrument.Items.GetItem(141).Description);
+        }
+
+        public Energy(Units unitValue, decimal startValue, decimal endValue, decimal totalValue, decimal evcCorrected)
+        {
+            StartValue = startValue;
+            EndValue = endValue;
+            TotalValue = totalValue;
+            EnergyUnits = unitValue;
+            _evcCorrected = evcCorrected;
         }
 
         public bool HasPassed => PercentError < 1 && PercentError > -1;
@@ -41,48 +55,69 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         {
             get
             {
-                var startEnergy = _instrument.VolumeTest.Items?.GetItem(140)?.NumericValue;
-                var endEnergy = _instrument.VolumeTest.AfterTestItems?.GetItem(140)?.NumericValue;
-                if (endEnergy != null && startEnergy != null)
-                    return endEnergy.Value - startEnergy.Value;
+                if (_instrument != null)
+                {
+                    StartValue = _instrument.VolumeTest.Items?.GetItem(140)?.NumericValue;
+                    EndValue = _instrument.VolumeTest.AfterTestItems?.GetItem(140)?.NumericValue;
+                }
+
+                if (StartValue.HasValue && EndValue.HasValue)
+                {
+                    return EndValue.Value - StartValue.Value;
+                }
 
                 return null;
             }
         }
 
-        public string EnergyUnits => _instrument.Items.GetItem(141).Description;
+        public Units EnergyUnits { get; }
 
         public decimal? ActualEnergy
         {
             get
             {
-                if (!_instrument.VolumeTest.EvcCorrected.HasValue || _instrument.VolumeTest.EvcCorrected == 0) 
+                if (!_evcCorrected.HasValue && _instrument != null && !_instrument.VolumeTest.EvcCorrected.HasValue 
+                    && !_instrument.VolumeTest.EvcCorrected.HasValue && _instrument.VolumeTest.EvcCorrected == 0)
+                {
                     return 0.0m;
+                }
 
-                var energyValue = _instrument.Items.GetItem(142).NumericValue;
+                if (_instrument != null)
+                {
+                    if (!_instrument.VolumeTest.EvcCorrected.HasValue)
+                        return null;
+
+                    _evcCorrected = _instrument.VolumeTest?.EvcCorrected.Value;
+                    TotalValue = _instrument.Items.GetItem(142).NumericValue;
+                }          
 
                 switch (EnergyUnits)
                 {
-                    case Therms:
-                        return Math.Floor(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 100000);
+                    case Units.Therms:
+                        return Math.Round(TotalValue * _evcCorrected.Value / 100000);
 
-                    case Dktherms:
-                        return Math.Floor(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000000) ;
+                    case Units.Dktherms:
+                        return Math.Round(TotalValue * _evcCorrected.Value / 1000000) ;
 
-                    case GigaJoules:
-                        return Math.Floor(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000000);
+                    case Units.GigaJoules:
+                        return Math.Round(TotalValue * 0.028317m * _evcCorrected.Value / 1000000);
 
-                    case MegaJoules:
-                        return Math.Floor(energyValue * _instrument.VolumeTest.EvcCorrected.Value / 1000);
+                    case Units.MegaJoules:
+                        return Math.Round(TotalValue * 0.028317m * _evcCorrected.Value / 1000);
 
-                    case KiloCals:
-                        return Math.Floor(energyValue * 0.0283168m * _instrument.VolumeTest.EvcCorrected.Value);
+                    case Units.KiloCals:
+                        return Math.Round(TotalValue * 0.0283168m * _evcCorrected.Value);
 
                     default:
                         throw new Exception(string.Format("Energy units not supported: {0}", EnergyUnits));
                 }
             }
         }
+
+        public decimal? StartValue { get; private set; }
+        public decimal? EndValue { get; private set; }
+        public decimal TotalValue { get; private set; }
+      
     }
 
     public class MechanicalDrive : IDriveType

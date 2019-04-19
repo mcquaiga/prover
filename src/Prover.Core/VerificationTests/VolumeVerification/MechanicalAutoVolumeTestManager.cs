@@ -11,6 +11,7 @@
 
     public class MechanicalAutoVolumeTestManager : AutoVolumeTestManager
     {
+        private const long TachometerCount = 100;
         public MechanicalAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, ISettingsService settingsService) : base(eventAggregator, tachComm, settingsService)
         {
         }      
@@ -27,7 +28,7 @@
                         .Concat()
                         .Subscribe())
                 {
-                    while (tachCount < 100 && !ct.IsCancellationRequested) { }
+                    while (tachCount < TachometerCount && !ct.IsCancellationRequested) { }
                 }
             });                 
         }

@@ -118,13 +118,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\FixedSizeQueue.cs" />
-    <Compile Include="Migrations\201904061226096_Init.cs" />
-    <Compile Include="Migrations\201904061226096_Init.Designer.cs">
-      <DependentUpon>201904061226096_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
     <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
     <Compile Include="Exports\VerificationTypeEnum.cs" />
+    <Compile Include="Migrations\201711010030152_Indexes.cs" />
+    <Compile Include="Migrations\201711010030152_Indexes.Designer.cs">
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.cs" />
+    <Compile Include="Migrations\201711091434443_AddClientRegisterationNumber.Designer.cs">
+      <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711210642092_AddKeyValueTable.cs" />
+    <Compile Include="Migrations\201711210642092_AddKeyValueTable.Designer.cs">
+      <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711250153353_Add-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250153353_Add-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.cs" />
+    <Compile Include="Migrations\201711250647351_Modify-FrequencyTests.Designer.cs">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MechanicalDrive.cs" />
     <Compile Include="Models\Instruments\DriveTypes\MeterTest.cs" />
@@ -147,15 +162,81 @@
     <Compile Include="Global.cs" />
     <Compile Include="ItemDetails.cs" />
     <Compile Include="Login\ILoginService.cs" />
+    <Compile Include="Migrations\201603300541401_refactor-pt.cs" />
+    <Compile Include="Migrations\201603300541401_refactor-pt.Designer.cs">
+      <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604200029287_verifications.cs" />
+    <Compile Include="Migrations\201604200029287_verifications.Designer.cs">
+      <DependentUpon>201604200029287_verifications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605051843555_export-date-time.cs" />
+    <Compile Include="Migrations\201605051843555_export-date-time.Designer.cs">
+      <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.cs" />
+    <Compile Include="Migrations\201605172352408_update-exported-datetime.Designer.cs">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610171500415_add-employee-id.cs" />
+    <Compile Include="Migrations\201610171500415_add-employee-id.Designer.cs">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611070412573_add job-id.cs" />
+    <Compile Include="Migrations\201611070412573_add job-id.Designer.cs">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.cs" />
+    <Compile Include="Migrations\201612081436258_add-event-log-comm-ports-bool.Designer.cs">
+      <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612121748479_add-archived-date-time.cs" />
+    <Compile Include="Migrations\201612121748479_add-archived-date-time.Designer.cs">
+      <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612151919517_AddClients.cs" />
+    <Compile Include="Migrations\201612151919517_AddClients.Designer.cs">
+      <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612301400385_AddClientItems.cs" />
+    <Compile Include="Migrations\201612301400385_AddClientItems.Designer.cs">
+      <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.cs" />
+    <Compile Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.Designer.cs">
+      <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701021633015_AddClientIdToInstrument.cs" />
+    <Compile Include="Migrations\201701021633015_AddClientIdToInstrument.Designer.cs">
+      <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705220833519_AddCsvExportToClient.cs" />
+    <Compile Include="Migrations\201705220833519_AddCsvExportToClient.Designer.cs">
+      <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.cs" />
+    <Compile Include="Migrations\201705292156266_AddClientsToCertificate.Designer.cs">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.cs" />
+    <Compile Include="Migrations\201706181948396_AddClientCsvTemplates.Designer.cs">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.cs" />
+    <Compile Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.Designer.cs">
+      <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710290128497_AddApparatusToCertificate.cs" />
+    <Compile Include="Migrations\201710290128497_AddApparatusToCertificate.Designer.cs">
+      <DependentUpon>201710290128497_AddApparatusToCertificate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Clients\Client.cs" />
     <Compile Include="Models\Clients\ClientCsvTemplate.cs" />
     <Compile Include="Models\Clients\ClientItems.cs" />
     <Compile Include="Models\Instruments\BaseVerificationTest.cs" />
     <Compile Include="Models\Instruments\FrequencyTest.cs" />
     <Compile Include="Models\Instruments\ProverBaseEntity.cs" />
-    <Compile Include="Models\Instruments\GroupedInstruments.cs" />
     <Compile Include="Models\Instruments\VerificationTest.cs" />
-    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="Services\CertificateService.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\IClientService.cs" />
@@ -178,15 +259,15 @@
     <Compile Include="Modules\Clients\VerificationTestActions\ClientPostTestResetManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\ItemVerificationManager.cs" />
     <Compile Include="Modules\Clients\VerificationTestActions\IHandleInvalidItemVerification.cs" />
-    <Compile Include="VerificationTests\TestActions\IEvcDeviceValidationAction.cs" />
-    <Compile Include="VerificationTests\TestActions\PreTestActions\DateTimeValidator.cs" />
+    <Compile Include="VerificationTests\PreTestActions\DateTimeValidator.cs" />
+    <Compile Include="VerificationTests\TestActions\TestActionBase.cs" />
     <Compile Include="VerificationTests\IQaRunTestManager.cs" />
-    <Compile Include="VerificationTests\TestActions\ITestActionsManager.cs" />
-    <Compile Include="VerificationTests\TestActions\TestActionsManager.cs" />
+    <Compile Include="VerificationTests\ITestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActionsManager.cs" />
+    <Compile Include="VerificationTests\TestActions\IInstrumentAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\ItemUpdaterAction.cs" />
     <Compile Include="VerificationTests\TestActions\PreTestActions\TocItemUpdater.cs" />
-    <Compile Include="VerificationTests\TestRunCreator.cs" />
-    <Compile Include="VerificationTests\VolumeVerification\FrequencyVolumeTestManager.cs" />
+    <Compile Include="VerificationTests\ITestManager.cs" />
     <Compile Include="VerificationTests\Mechanical\MechanicalQaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\ManualVolumeTestManager.cs" />
     <Compile Include="VerificationTests\ReadingStabilizer.cs" />
@@ -199,6 +280,14 @@
     <Compile Include="ExternalDevices\DInOutBoards\EmptyDInOutBoard.cs" />
     <Compile Include="ExternalDevices\DInOutBoards\IDInOutBoard.cs" />
     <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="Migrations\201510030033541_InitialCreate.cs" />
+    <Compile Include="Migrations\201510030033541_InitialCreate.Designer.cs">
+      <DependentUpon>201510030033541_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603070654013_PressureMigration.cs" />
+    <Compile Include="Migrations\201603070654013_PressureMigration.Designer.cs">
+      <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Certificates\Certificate.cs" />
     <Compile Include="Models\Instruments\Instrument.cs" />
@@ -211,6 +300,7 @@
     <Compile Include="Storage\CertificateStore.cs" />
     <Compile Include="Storage\InstrumentStore.cs" />
     <Compile Include="Storage\ProverContext.cs" />
+    <Compile Include="VerificationTests\QaRunTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\AutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\MechanicalAutoVolumeTestManager.cs" />
     <Compile Include="VerificationTests\VolumeVerification\RotaryAutoVolumeTestManager.cs" />
@@ -247,12 +337,81 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Exports\CsvFiles\" />
+    <EmbeddedResource Include="Migrations\201510030033541_InitialCreate.resx">
+      <DependentUpon>201510030033541_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603070654013_PressureMigration.resx">
+      <DependentUpon>201603070654013_PressureMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603300541401_refactor-pt.resx">
+      <DependentUpon>201603300541401_refactor-pt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604200029287_verifications.resx">
+      <DependentUpon>201604200029287_verifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605051843555_export-date-time.resx">
+      <DependentUpon>201605051843555_export-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605172352408_update-exported-datetime.resx">
+      <DependentUpon>201605172352408_update-exported-datetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171500415_add-employee-id.resx">
+      <DependentUpon>201610171500415_add-employee-id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070412573_add job-id.resx">
+      <DependentUpon>201611070412573_add job-id.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612081436258_add-event-log-comm-ports-bool.resx">
+      <DependentUpon>201612081436258_add-event-log-comm-ports-bool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612121748479_add-archived-date-time.resx">
+      <DependentUpon>201612121748479_add-archived-date-time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612151919517_AddClients.resx">
+      <DependentUpon>201612151919517_AddClients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612301400385_AddClientItems.resx">
+      <DependentUpon>201612301400385_AddClientItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612302119295_AddInstrumentTypeToClientItems.resx">
+      <DependentUpon>201612302119295_AddInstrumentTypeToClientItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701021633015_AddClientIdToInstrument.resx">
+      <DependentUpon>201701021633015_AddClientIdToInstrument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705220833519_AddCsvExportToClient.resx">
+      <DependentUpon>201705220833519_AddCsvExportToClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705292156266_AddClientsToCertificate.resx">
+      <DependentUpon>201705292156266_AddClientsToCertificate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706181948396_AddClientCsvTemplates.resx">
+      <DependentUpon>201706181948396_AddClientCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709060059470_AddDriveTypeToCsvTemplates.resx">
+      <DependentUpon>201709060059470_AddDriveTypeToCsvTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710290128497_AddApparatusToCertificate.resx">
+      <DependentUpon>201710290128497_AddApparatusToCertificate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711010030152_Indexes.resx">
+      <DependentUpon>201711010030152_Indexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711091434443_AddClientRegisterationNumber.resx">
+      <DependentUpon>201711091434443_AddClientRegisterationNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711210642092_AddKeyValueTable.resx">
+      <DependentUpon>201711210642092_AddKeyValueTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250153353_Add-FrequencyTests.resx">
+      <DependentUpon>201711250153353_Add-FrequencyTests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711250647351_Modify-FrequencyTests.resx">
+      <DependentUpon>201711250647351_Modify-FrequencyTests.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201904061226096_Init.resx">
-      <DependentUpon>201904061226096_Init.cs</DependentUpon>
-    </EmbeddedResource>
+    <Folder Include="Exports\CsvFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

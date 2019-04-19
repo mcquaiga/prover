@@ -8,6 +8,7 @@ using Prover.Core.Models.Instruments;
 using System.Collections.Generic;
 using Prover.Core.Services;
 using Prover.Core.Shared.Enums;
+using Prover.CommProtocol.Common;
 
 namespace Prover.Core.Exports
 {

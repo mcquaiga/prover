@@ -18,9 +18,9 @@ namespace Prover.GUI.Reports
 
         public TestRunViewModel QaTestRunViewItem { get; set; }
 
-        public void Initialize(Instrument instrument)
+        public async Task Initialize(Instrument instrument)
         {
-            QaTestRunViewItem.InitializeViews(null, instrument);
+            await QaTestRunViewItem.InitializeViews(null, instrument);
             QaTestRunViewItem.ViewContext = ReportViewContext;
         }
     }

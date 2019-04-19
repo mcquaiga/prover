@@ -8,7 +8,6 @@ using NLog;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
-using Prover.CommProtocol.Common.Models.Instrument;
 
 namespace Prover.CommProtocol.Common
 {
@@ -22,7 +21,7 @@ namespace Prover.CommProtocol.Common
 
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public static EvcCommunicationClient Create(IEvcDevice instrumentType, ICommPort commPort)
+        public static EvcCommunicationClient Create(InstrumentType instrumentType, ICommPort commPort)
         {
             return instrumentType.ClientFactory.Invoke(commPort, null);
         }
@@ -33,7 +32,7 @@ namespace Prover.CommProtocol.Common
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="instrumentType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected EvcCommunicationClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject = null)
+        protected EvcCommunicationClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject = null)
         {
             CommPort = commPort;
             InstrumentType = instrumentType;
@@ -52,7 +51,7 @@ namespace Prover.CommProtocol.Common
 
         protected ICommPort CommPort { get; }
 
-        public IEvcDevice InstrumentType { get; set; }
+        public InstrumentType InstrumentType { get; set; }
 
         public IObservable<string> Status => _statusSubject.AsObservable();
 

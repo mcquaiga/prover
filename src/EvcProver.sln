@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
@@ -42,6 +42,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Domain", "Prover.Domain\Prover.Domain.csproj", "{1DB4B2AB-8CBC-4570-AFC9-CF22358DF8FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core.Shared", "Prover.Core.Shared\Prover.Core.Shared.csproj", "{35FE4429-B8F5-4761-B401-A215D1B4EBA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{CCDD70C8-38F3-44C6-94FC-6ED7613930F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,6 +195,24 @@ Global
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x64.Build.0 = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{35FE4429-B8F5-4761-B401-A215D1B4EBA2}.Release|x86.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x64.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x64.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x86.ActiveCfg = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.MiProtocolConsole|x86.Build.0 = Debug|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x64.Build.0 = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{26E8F35B-8ACC-43FC-AB0F-FFCCBE9920E2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
