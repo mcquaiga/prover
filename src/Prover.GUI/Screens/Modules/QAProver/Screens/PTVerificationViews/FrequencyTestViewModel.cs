@@ -2,6 +2,10 @@
 using Caliburn.Micro;
 using Prover.GUI.Events;
 using ReactiveUI;
+using System.Threading.Tasks;
+using Prover.Core.VerificationTests;
+using System.Reactive.Subjects;
+using Prover.Core.Models.Instruments;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
@@ -11,13 +15,22 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
     }
 
     public class FrequencyTestViewModel : TestRunViewModelBase<Core.Models.Instruments.FrequencyTest>
-    {       
-        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun) : base(screenManager, eventAggregator, testRun)
+    {
+        private readonly IQaRunTestManager _testRunManager;
+
+        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun
+            , ISubject<VerificationTest> changeObservable, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun, changeObservable)
         {
+            _testRunManager = testRunManager;
+            if (_testRunManager != null)
+            {
+                PreTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPreVolumeTest);
+                PostTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPostVolumeTest);
+            }
+
             _mainRotorPulses = testRun.MainRotorPulseCount;
             _senseRotorPulses = testRun.SenseRotorPulseCount;
             _mechanicalOutputFactor = testRun.MechanicalOutputFactor;
-            RaisePropertyChangeEvents();
 
             this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
                 .Subscribe(x =>
@@ -25,9 +38,38 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                     TestRun.MainRotorPulseCount = x.Item1 ?? 0;
                     TestRun.SenseRotorPulseCount = x.Item2 ?? 0;
                     TestRun.MechanicalOutputFactor = x.Item3 ?? 0;
-                    eventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-                    eventAggregator.PublishOnUIThread(new SaveTestEvent());
+                    ChangedEvent.OnNext(TestRun.VerificationTest);                    
                 });
+        }
+
+        #region Properties
+        
+        private ReactiveCommand _preTestCommand;
+        public ReactiveCommand PreTestCommand
+        {
+            get
+            {
+                return _preTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _preTestCommand, value);
+            }
+        }
+
+        private ReactiveCommand _postTestCommand;
+        public ReactiveCommand PostTestCommand
+        {
+            get
+            {
+                return _postTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _postTestCommand, value);
+            }
         }
 
         private long? _mechanicalOutputFactor;
@@ -83,12 +125,35 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             set { this.RaiseAndSetIfChanged(ref _evcAdjustedVolume, value); }
         }
 
+        private decimal _adjustedStartReading;
+
+        public decimal AdjustedStartReading
+        {
+            get { return _adjustedStartReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedStartReading, value); }
+        }
+
+        private decimal _adjustedEndReading;
+
+        public decimal AdjustedEndReading
+        {
+            get { return _adjustedEndReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedEndReading, value); }
+        }
+
+        #endregion
+
+        #region Methods
+
+
+        #endregion
+
         protected sealed override void RaisePropertyChangeEvents()
         {
             AdjustedVolume = TestRun.AdjustedVolume();
             TestRun.RoundedAdjustedVolume();
             UnadjustedVolume = TestRun.UnadjustedVolume();
-            EvcAdjustedVolume = TestRun.EvcAdjustedVolume() ?? 0;
+            EvcAdjustedVolume = TestRun.TibAdjustedVolume() ?? 0;
             EvcUnadjustedVolume = TestRun.EvcUnadjustedVolume() ?? 0;
 
             NotifyOfPropertyChange(() => TestRun);

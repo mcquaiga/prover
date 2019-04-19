@@ -1,8 +1,8 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
     using Newtonsoft.Json;
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Certificates;
     using Prover.Core.Models.Clients;
@@ -63,13 +63,19 @@
             get
             {
                 if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase) && string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.PTZ;
+                }
 
                 if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.P;
+                }
 
                 if (string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.T;
+                }
 
                 return EvcCorrectorType.T;
             }
@@ -107,9 +113,11 @@
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
                 if (VolumeTest.DriveType is MechanicalDrive)
+                {
                     return verificationTestsPassed
                         && EventLogPassed != null && EventLogPassed.Value
                         && CommPortsPassed != null && CommPortsPassed.Value;
+                }
 
                 return verificationTestsPassed;
             }
@@ -119,7 +127,7 @@
         /// Gets or sets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType { get; set; }
+        public override IEvcDevice InstrumentType { get; set; }
 
         /// <summary>
         /// Gets the InstrumentTypeString
@@ -233,6 +241,9 @@
         /// </summary>
         public int Type { get; set; }
 
+        public Guid? LinkedTestId { get; set; }
+        public virtual Instrument LinkedTest { get; set; }
+
         /// <summary>
         /// Gets or sets the VerificationTests
         /// </summary>
@@ -248,7 +259,10 @@
             {
                 var firstOrDefault = VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null);
                 if (firstOrDefault != null)
+                {
                     return firstOrDefault.VolumeTest;
+                }
+
                 return null;
             }
         }
@@ -265,7 +279,7 @@
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="client">The client<see cref="Client"/></param>
         /// <returns>The <see cref="Instrument"/></returns>
-        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+        public static Instrument Create(IEvcDevice instrumentType, IEnumerable<ItemValue> itemValues,
             TestSettings testSettings, Client client = null)
         {
             var i = new Instrument()
@@ -288,42 +302,25 @@
         private static List<VerificationTest> AddVerificationTests(Instrument instrument, TestSettings testSettings)
         {
             var results = new List<VerificationTest>();
-            foreach (var tp in testSettings.TestPoints)
+
+            if (instrument.InstrumentType == HoneywellInstrumentTypes.Toc)
             {
-                var vt = new VerificationTest(instrument, tp.Level);
-                if (instrument.CompositionType == EvcCorrectorType.P)
+                var firstLevel = testSettings.TestPoints.Find(t => t.Level == 0);
+                results.Add(VerificationTest.Create(instrument, testSettings, firstLevel));
+                return results;
+            }
+            else
+            {
+                foreach (var tp in testSettings.TestPoints)
                 {
-                    vt.PressureTest = new PressureTest(vt, tp.PressureGaugePercent);
+                    var vt = VerificationTest.Create(instrument, testSettings, tp);
+                    results.Add(vt);
                 }
-
-                if (instrument.CompositionType == EvcCorrectorType.T)
-                {
-                    vt.TemperatureTest = new TemperatureTest(vt, tp.TemperatureGauge);
-                }
-
-                if (instrument.CompositionType == EvcCorrectorType.PTZ)
-                {
-                    vt.PressureTest = new PressureTest(vt, tp.PressureGaugePercent);
-                    vt.TemperatureTest = new TemperatureTest(vt, tp.TemperatureGauge);
-                    vt.SuperFactorTest = new SuperFactorTest(vt);
-                }
-
-                if (tp.IsVolumeTest)
-                {
-                    var volume = new VolumeTest(vt, testSettings.MechanicalUncorrectedTestLimits);
-                    
-                    if (instrument.InstrumentType.Name == "TOC")
-                    {
-                        vt.FrequencyTest = new FrequencyTest(vt);
-                    }
-
-                    vt.VolumeTest = volume;
-                }
-
-                results.Add(vt);
             }
             return results;
         }
+
+        
 
         /// <summary>
         /// The ToString
@@ -335,8 +332,8 @@
         }
 
         public override void OnInitializing()
-        {            
-            InstrumentType = HoneywellInstrumentTypes.GetById(this.Type);     
+        {
+            InstrumentType = HoneywellInstrumentTypes.GetById(Type);
 
             base.OnInitializing();
         }

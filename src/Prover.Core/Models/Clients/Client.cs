@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Prover.Core.Shared.Domain;
 
 namespace Prover.Core.Models.Clients
