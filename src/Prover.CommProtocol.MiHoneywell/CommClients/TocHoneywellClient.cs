@@ -1,14 +1,12 @@
 ﻿namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
-using System.Reactive.Subjects;
-    using Prover.CommProtocol.Common;
+    using System.Reactive.Subjects;
     using Prover.CommProtocol.Common.IO;
     using Prover.CommProtocol.Common.Items;
     using Prover.CommProtocol.MiHoneywell.Items;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Prover.CommProtocol.Common.Models.Instrument;
 
     /// <summary>
     /// Defines the <see cref="TocHoneywellClient" />
@@ -22,7 +20,7 @@ using System.Reactive.Subjects;
 
         public TocHoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
-            _tibBoardItems = HoneywellInstrumentTypes.TibBoard.ItemsMetadata;
+            _tibBoardItems = HoneywellInstrumentTypes.TibBoard.ItemDefinitions;
         }
 
         #region Methods

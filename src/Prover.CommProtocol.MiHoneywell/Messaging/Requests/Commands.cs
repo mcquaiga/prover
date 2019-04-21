@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
-using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests

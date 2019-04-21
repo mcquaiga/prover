@@ -6,7 +6,6 @@
     using Prover.Core.Models.Instruments;
     using Prover.Core.Services;
     using Prover.GUI.Screens;
-    using Prover.GUI.Screens.Modules.Certificates.Screens;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;

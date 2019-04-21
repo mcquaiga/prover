@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ItemDefinitions\Items.json" />
+    <None Remove="ItemDefinitions\Item_MeterType.json" />
+    <None Remove="ItemDefinitions\TurboMonitorItems.xml" />
+    <None Remove="ItemDefinitions\Type_EC350.json" />
+    <None Remove="ItemDefinitions\Type_MiniAT.json" />
+    <None Remove="ItemDefinitions\Type_MiniMax.json" />
+    <None Remove="ItemDefinitions\Type_TCI.json" />
+    <None Remove="ItemDefinitions\Type_TibBoard.json" />
+    <None Remove="ItemDefinitions\Type_TOC.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ItemDefinitions\Items.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Item_MeterType.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\TurboMonitorItems.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_EC350.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_MiniAT.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_MiniMax.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_TCI.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_TibBoard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_TOC.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+  </ItemGroup>
+
+</Project>

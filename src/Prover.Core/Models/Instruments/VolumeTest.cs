@@ -1,9 +1,7 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
     using Newtonsoft.Json;
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell.Items;
     using Prover.Core.DriveTypes;
     using Prover.Core.Extensions;

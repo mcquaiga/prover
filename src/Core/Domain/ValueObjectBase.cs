@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 
 #endregion
 
-namespace Prover.Core.Shared.Domain
+namespace Core.Domain
 {
     public abstract class ValueObjectBase
     {

@@ -137,7 +137,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnumTypes.cs" />
     <Compile Include="EvcCommunicationClient.cs" />
     <Compile Include="Extensions\CommStringHelpers.cs" />
     <Compile Include="InstrumentType.cs" />

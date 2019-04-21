@@ -2,7 +2,6 @@
 {
     using Newtonsoft.Json;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Certificates;
     using Prover.Core.Models.Clients;

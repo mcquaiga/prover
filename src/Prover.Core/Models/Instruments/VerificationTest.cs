@@ -1,5 +1,4 @@
 ﻿using Prover.CommProtocol.MiHoneywell;
-using Prover.CommProtocol.Common;
 using Prover.Core.Settings;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Shared.Enums;

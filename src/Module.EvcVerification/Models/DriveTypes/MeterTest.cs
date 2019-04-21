@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Module.EvcVerification.Models.DriveTypes
+{
+    public class MeterTest
+    {
+        private readonly EvcVerification _instrument;
+
+        public MeterTest(EvcVerification instrument)
+        {
+            _instrument = instrument;
+
+            if (MeterIndex == null)
+                throw new KeyNotFoundException("Could not find a meter type that match the instruments value in item 432.");
+        }
+
+        public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD);
+
+        public double MeterDisplacement
+        {
+            get
+            {
+                if (MeterIndex != null)
+                    return MeterIndex.MeterDisplacement.Value;
+
+                return 0;
+            }
+        }
+
+        public double? EvcMeterDisplacement => _instrument.Items.GetItem(439).NumericValue;
+
+        public double MeterDisplacementPercentError
+        {
+            get
+            {
+                if (MeterDisplacement != 0)
+                    return Math.Round((double) ((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100),
+                        2);
+                return 0;
+            }
+        }
+
+        public MeterIndexItemDescription MeterIndex
+            => (MeterIndexItemDescription) _instrument.Items.GetItem(432).Metadata.ItemDescriptions
+                .FirstOrDefault(x => (x as IHaveManyId).Ids.Contains(MeterTypeId));
+
+        public string MeterTypeDescription => MeterIndex.Description;
+
+        public string MeterType
+            => !string.IsNullOrEmpty(MeterTypeDescription)
+                ? MeterTypeDescription
+                : _instrument.Items.GetItem(432).Description;
+
+        public int MeterTypeId => (int) _instrument.Items.GetItem(432).NumericValue;
+    }
+}

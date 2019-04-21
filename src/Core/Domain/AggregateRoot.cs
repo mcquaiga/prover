@@ -1,16 +1,17 @@
-﻿#region
+#region
 
-using Core.Domain;
 using System;
 using System.Collections.Generic;
 
 #endregion
 
-namespace Prover.Core.Shared.Domain
+namespace Core.Domain
 {
-    public abstract class AggregateRoot : EntityWithId, IAggregateRoot
+    public abstract class AggregateRoot : BaseEntity, IAggregateRoot
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+
+        protected AggregateRoot() : base() { }
 
         protected AggregateRoot(Guid id) : base(id)
         {

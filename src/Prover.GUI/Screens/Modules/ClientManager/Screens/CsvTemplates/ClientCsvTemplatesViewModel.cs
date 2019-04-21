@@ -6,8 +6,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
 using Caliburn.Micro;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;
 using Prover.Core.Extensions;

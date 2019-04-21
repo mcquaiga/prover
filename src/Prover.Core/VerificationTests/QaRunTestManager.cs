@@ -4,7 +4,6 @@
     using NLog;
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.DriveTypes;
     using Prover.Core.ExternalDevices;
     using Prover.Core.Models.Clients;
@@ -25,7 +24,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
-    
+
 
     /// <summary>
     /// Defines the <see cref="QaRunTestManager" />
@@ -161,7 +160,7 @@
 
         public virtual async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings, CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
         {
-            _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);           
+            _communicationClient = instrumentType.CreateCommClient(commPort);           
 
             await _communicationClient.Connect(ct);
             IEnumerable<CommProtocol.Common.Items.ItemValue> items = await _communicationClient.GetAllItems();

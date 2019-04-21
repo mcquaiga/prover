@@ -1,3 +1,5 @@
+using Prover.Core.Shared.Enums;
+
 namespace Prover.CommProtocol.Common.Models.Instrument.Items
 {
     public interface ITemperatureItems : IItemsGroup

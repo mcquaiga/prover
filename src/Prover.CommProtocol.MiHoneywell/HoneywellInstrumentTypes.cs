@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell.Items;
 using System;
 using Prover.CommProtocol.Common.Models.Instrument;

@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using System;
 
@@ -10,7 +10,7 @@ namespace Core.Domain
     {
         /// <summary>
         ///     Gets or sets the id.
-        /// </summary>       
+        /// </summary>
         public TId Id { get; set; }
     }
 
@@ -19,17 +19,17 @@ namespace Core.Domain
     /// </summary>
     ///     Id type
     /// </typeparam>
-    public abstract class EntityWithId : GenericEntity<Guid>
+    public abstract class BaseEntity : GenericEntity<Guid>
     {
-        protected EntityWithId()
+        protected BaseEntity()
         {
             Id = Guid.NewGuid();
         }
 
-        protected EntityWithId(Guid id)
+        protected BaseEntity(Guid id)
         {
             Id = id;
-        }
+        }     
 
         public virtual void OnInitializing()
         {

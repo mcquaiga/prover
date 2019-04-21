@@ -1,8 +1,6 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Extensions;
     using System;
     using System.ComponentModel.DataAnnotations.Schema;

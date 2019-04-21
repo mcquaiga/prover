@@ -3,7 +3,6 @@ using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
-using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 using System;

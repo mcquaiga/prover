@@ -1,8 +1,6 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Extensions;
     using SuperFactorCalculations;
     using System;
@@ -10,7 +8,7 @@
     using System.Linq;
 
     /// <summary>
-    /// Defines the <see cref="SuperFactorTest" />
+    /// Defines the <see cref="SuperFactorTest"/>
     /// </summary>
     public sealed class SuperFactorTest : BaseVerificationTest
     {
@@ -33,7 +31,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperFactorTest"/> class.
         /// </summary>
-        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
+        /// <param name="verificationTest">The verificationTest <see cref="VerificationTest"/></param>
         public SuperFactorTest(VerificationTest verificationTest)
         {
             if (verificationTest == null)
@@ -62,8 +60,7 @@
         {
             get
             {
-                if (_actualFactor == null)
-                    Calculate();
+                Calculate();
 
                 return _actualFactor;
             }
@@ -99,24 +96,24 @@
         public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
-        /// Gets the SuperFactorSquared
-        /// </summary>
-        public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?)Math.Pow((double)ActualFactor, 2) : null;
-
-        /// <summary>
-        /// Gets the PassTolerance
-        /// </summary>
-        protected override decimal PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
-
-        /// <summary>
         /// Gets the PressureTest
         /// </summary>
         private PressureTest PressureTest => VerificationTest.PressureTest;
 
         /// <summary>
+        /// Gets the SuperFactorSquared
+        /// </summary>
+        public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?)Math.Pow((double)ActualFactor, 2) : null;
+
+        /// <summary>
         /// Gets the TemperatureTest
         /// </summary>
         private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
+
+        /// <summary>
+        /// Gets the PassTolerance
+        /// </summary>
+        protected override decimal PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
 
         #endregion
 

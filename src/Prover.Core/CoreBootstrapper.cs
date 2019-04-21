@@ -1,16 +1,12 @@
 ﻿using Autofac;
-using Caliburn.Micro;
 using NLog;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.MiHoneywell.Items;
 using Prover.Core.ExternalDevices;
 using Prover.Core.ExternalDevices.DInOutBoards;
-using Prover.Core.Models.Certificates;
-using Prover.Core.Models.Clients;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Settings;
-using Prover.Core.Shared.Components;
 using Prover.Core.Shared.Data;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Storage;

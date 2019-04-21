@@ -1,6 +1,4 @@
-﻿using Core.Domain;
-
-namespace Prover.Core.Shared.Domain
+namespace Core.Domain
 {
     public class KeyValue : GenericEntity<string>
     {

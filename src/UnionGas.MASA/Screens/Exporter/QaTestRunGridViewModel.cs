@@ -7,7 +7,6 @@
     using Prover.Core.Services;
     using Prover.GUI.Reports;
     using Prover.GUI.Screens;
-    using Prover.GUI.Screens.Modules.Certificates.Common;
     using ReactiveUI;
     using System;
     using System.Reactive;

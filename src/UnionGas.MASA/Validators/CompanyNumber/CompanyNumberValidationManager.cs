@@ -8,7 +8,6 @@
     using Prover.Core.Services;
     using Prover.Core.VerificationTests.TestActions;
     using Prover.GUI.Screens;
-    using System;
     using System.Reactive.Subjects;
     using System.ServiceModel;
     using System.Threading;

@@ -8,7 +8,6 @@ using NLog;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Messaging;
-using Prover.CommProtocol.Common.Models.Instrument;
 
 namespace Prover.CommProtocol.Common
 {

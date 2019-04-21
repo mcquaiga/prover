@@ -1,10 +1,10 @@
-﻿#region
+#region
 
 using System.Collections.Generic;
 
 #endregion
 
-namespace Prover.Core.Shared.Domain
+namespace Core.Domain
 {
     public interface IAggregateRoot
     {

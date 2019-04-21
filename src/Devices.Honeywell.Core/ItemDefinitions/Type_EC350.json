@@ -1,0 +1,363 @@
+{
+  "Id": "14",
+  "Name": "EC-350",
+  "AccessCode": "99",
+  "CanUseIrDaPort": true,
+  "OverrideItems": [
+    {
+      "number": "87",
+      "code": "PRESS_UNITS",
+      "shortDescription": "Press Units",
+      "description": "Pressure Units",
+      "isPressure": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "PSI",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "kPa",
+          "numericvalue": "2"
+        },
+        {
+          "id": "2",
+          "description": "mPa",
+          "numericvalue": "3"
+        },
+        {
+          "id": "3",
+          "description": "BAR",
+          "numericvalue": "4"
+        },
+        {
+          "id": "4",
+          "description": "mBAR",
+          "numericvalue": "5"
+        },
+        {
+          "id": "5",
+          "description": "KGcm2",
+          "numericvalue": "6"
+        },
+        {
+          "id": "6",
+          "description": "inWC",
+          "numericvalue": "7"
+        },
+        {
+          "id": "7",
+          "description": "inHG",
+          "numericvalue": "8"
+        },
+        {
+          "id": "8",
+          "description": "mmHG",
+          "numericvalue": "9"
+        }
+      ]
+    },
+    {
+      "number": "90",
+      "code": "Corr Vol Units",
+      "shortDescription": "Corr Vol Units",
+      "description": "Corrected Volume Units",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "CF",
+          "numericvalue": "1"
+        },
+        {
+          "id": "1",
+          "description": "CFx10",
+          "numericvalue": "10"
+        },
+        {
+          "id": "2",
+          "description": "CFx100",
+          "numericvalue": "100"
+        },
+        {
+          "id": "3",
+          "description": "CFx1000",
+          "numericvalue": "1000"
+        },
+        {
+          "id": "4",
+          "description": "CFx10000",
+          "numericvalue": "10000"
+        },
+        {
+          "id": "5",
+          "description": "CCF",
+          "numericvalue": "100"
+        },
+        {
+          "id": "6",
+          "description": "MCF",
+          "numericvalue": "1000"
+        },
+        {
+          "id": "7",
+          "description": "m3x0.1",
+          "numericvalue": "0.1"
+        },
+        {
+          "id": "8",
+          "description": "m3",
+          "numericvalue": "1"
+        },
+        {
+          "id": "9",
+          "description": "m3x10",
+          "numericvalue": "10"
+        },
+        {
+          "id": "10",
+          "description": "m3x100",
+          "numericvalue": "100"
+        },
+        {
+          "id": "11",
+          "description": "m3x1000",
+          "numericvalue": "1000"
+        }
+      ]
+    },
+    {
+      "number": "92",
+      "code": "Uncorr Volume Units",
+      "shortDescription": "Uncorr Volume Units",
+      "description": "UnCorrected Volume Units",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "CF",
+          "numericvalue": "1"
+        },
+        {
+          "id": "1",
+          "description": "CFx10",
+          "numericvalue": "10"
+        },
+        {
+          "id": "2",
+          "description": "CFx100",
+          "numericvalue": "100"
+        },
+        {
+          "id": "3",
+          "description": "CFx1000",
+          "numericvalue": "1000"
+        },
+        {
+          "id": "4",
+          "description": "CFx10000",
+          "numericvalue": "10000"
+        },
+        {
+          "id": "5",
+          "description": "CCF",
+          "numericvalue": "100"
+        },
+        {
+          "id": "6",
+          "description": "MCF",
+          "numericvalue": "1000"
+        },
+        {
+          "id": "7",
+          "description": "m3x0.1",
+          "numericvalue": "0.1"
+        },
+        {
+          "id": "8",
+          "description": "m3",
+          "numericvalue": "1"
+        },
+        {
+          "id": "9",
+          "description": "m3x10",
+          "numericvalue": "10"
+        },
+        {
+          "id": "10",
+          "description": "m3x100",
+          "numericvalue": "100"
+        },
+        {
+          "id": "11",
+          "description": "m3x1000",
+          "numericvalue": "1000"
+        }
+      ]
+    },
+    {
+      "number": "98",
+      "code": "METER_INDEX",
+      "shortDescription": "Meter Index Rate",
+      "description": "Meter Index Rate",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Rotary",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "1 CF",
+          "numericvalue": "1"
+        },
+        {
+          "id": "2",
+          "description": "2 CF",
+          "numericvalue": "2"
+        },
+        {
+          "id": "3",
+          "description": "5 CF",
+          "numericvalue": "5"
+        },
+        {
+          "id": "4",
+          "description": "10 CF",
+          "numericvalue": "10"
+        },
+        {
+          "id": "5",
+          "description": "50 CF",
+          "numericvalue": "50"
+        },
+        {
+          "id": "6",
+          "description": "100 CF",
+          "numericvalue": "100"
+        },
+        {
+          "id": "7",
+          "description": "500 CF",
+          "numericvalue": "500"
+        },
+        {
+          "id": "8",
+          "description": "1000 CF",
+          "numericvalue": "1000"
+        },
+        {
+          "id": "9",
+          "description": "10000 CF",
+          "numericvalue": "10000"
+        },
+        {
+          "id": "10",
+          "description": "0.1 M3",
+          "numericvalue": "0.1"
+        },
+        {
+          "id": "11",
+          "description": "1.0 M3",
+          "numericvalue": "1"
+        },
+        {
+          "id": "12",
+          "description": "10 M3",
+          "numericvalue": "10"
+        },
+        {
+          "id": "13",
+          "description": "100 M3",
+          "numericvalue": "100"
+        },
+        {
+          "id": "14",
+          "description": "1000 M3",
+          "numericvalue": "1000"
+        }
+      ]
+    },
+    {
+      "number": "109",
+      "code": "FIXED_PRESS_FACTOR",
+      "shortDescription": "F Press Factor",
+      "description": "Fixed Pressure Factor",
+      "isPressure": "true",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Fixed",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "Live",
+          "numericvalue": "1"
+        }
+      ]
+    },
+    {
+      "number": "111",
+      "code": "FIXED_TEMP_FACTOR",
+      "shortDescription": "F Temp Factor",
+      "description": "Fixed Temp Factor",
+      "isTemperature": "true",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Fixed",
+          "numericvalue": "0"
+        },
+        {
+          "id": "1",
+          "description": "Live",
+          "numericvalue": "1"
+        }
+      ]
+    },
+    {
+      "number": "141",
+      "code": "ENERGY_UNITS",
+      "shortDescription": "Energy Units",
+      "description": "Energy Units",
+      "isVolume": "true",
+      "values": [
+        {
+          "id": "0",
+          "description": "Therms"
+        },
+        {
+          "id": "1",
+          "description": "DecaTherms"
+        },
+        {
+          "id": "2",
+          "description": "MegaJoules"
+        },
+        {
+          "id": "3",
+          "description": "GigaJoules"
+        },
+        {
+          "id": "4",
+          "description": "KiloCals"
+        },
+        {
+          "id": "5",
+          "description": "KiloWattHours"
+        }
+      ]
+    }
+  ],
+  "ExcludeItems": [
+    {
+      "number": "110",
+      "description": "Fixed Super. Factor"
+    }
+  ]
+}

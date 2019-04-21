@@ -2,7 +2,6 @@
 {
     using Caliburn.Micro;
     using Prover.CommProtocol.Common.IO;
-    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;

@@ -1,4 +1,4 @@
-﻿namespace Prover.Core.Shared.Domain
+namespace Core.Domain
 {
     public class BusinessRule
     {

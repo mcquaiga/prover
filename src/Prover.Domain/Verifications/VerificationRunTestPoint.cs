@@ -1,5 +1,4 @@
 using System;
-using Prover.CommProtocol.Common;
 using Prover.Core.Shared.Domain;
 using Prover.Core.Shared.Enums;
 
