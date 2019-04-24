@@ -1,30 +1,32 @@
+using Devices.Communications;
 using Devices.Communications.IO;
-using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;
-using Prover.CommProtocol.Common;
+using Devices.Honeywell.Comm.Messaging.Responses.Codes;
+using Devices.Honeywell.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient
+    public class HoneywellClient : EvcCommunicationClient<IHoneywellEvcType>
     {
         #region Constructors
 
-        public HoneywellClient(ICommPort commPort, IEvcDeviceType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public HoneywellClient(ICommPort commPort, IHoneywellEvcType instrumentType) : base(commPort, instrumentType)
         {
         }
 
         #endregion
 
         #region Properties
+
+        public override IHoneywellEvcType EvcDeviceType { get; set; }
 
         public override bool IsConnected { get; protected set; }
 
@@ -119,27 +121,29 @@ namespace Devices.Honeywell.Comm.CommClients
 
         protected Task LoadItemsTask { get; private set; }
 
-        protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null)
+        protected override async Task ConnectToInstrument(CancellationToken ct)
         {
             await Task.Run(async () =>
             {
                 if (await WakeUpInstrument())
                 {
-                    var response = await ExecuteCommand(Commands.SignOn(EvcDeviceType, accessCode));
+                    var response = await ExecuteCommand(Commands.SignOn(EvcDeviceType));
 
                     if (response.IsSuccess)
                     {
                         IsConnected = true;
-                        Log.Info($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
+                        StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
                     }
                     else
                     {
                         IsConnected = false;
 
-                        if (response.ResponseCode == ResponseCode.FramingError)
-                            await CommPort.Close();
+                        var responseType = Responses.Get(response.ResponseCode);
 
-                        throw new Exception($"Error response {response.ResponseCode}");
+                        responseType.TryRecover(this);
+
+                        if (responseType.ThrowsException)
+                            throw responseType.RaiseException(response);
                     }
                 }
             }, ct);
@@ -163,6 +167,7 @@ namespace Devices.Honeywell.Comm.CommClients
             {
                 await Task.Delay(200);
                 await ExecuteCommand(Commands.OkayToSend());
+                throw;
             }
 
             return false;

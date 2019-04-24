@@ -10,23 +10,23 @@ namespace Devices.Honeywell.Core
     {
         #region Properties
 
-        public static IEvcDeviceType Ec350 => GetByName("EC-350");
+        public static IHoneywellEvcType Ec350 => GetByName("EC-350");
 
-        public static IEvcDeviceType MiniAt => GetByName("Mini-AT");
+        public static IHoneywellEvcType MiniAt => GetByName("Mini-AT");
 
-        public static IEvcDeviceType MiniMax => GetByName("Mini-Max");
+        public static IHoneywellEvcType MiniMax => GetByName("Mini-Max");
 
-        public static IEvcDeviceType Tci => GetByName("Tci");
+        public static IHoneywellEvcType Tci => GetByName("Tci");
 
-        public static IEvcDeviceType TibBoard => GetByName("TibBoard");
+        public static IHoneywellEvcType TibBoard => GetByName("TibBoard");
 
-        public static IEvcDeviceType Toc => GetByName("Toc");
+        public static IHoneywellEvcType Toc => GetByName("Toc");
 
         #endregion
 
         #region Methods
 
-        public static IEnumerable<IEvcDeviceType> GetAll(bool showHidden = false)
+        public static IEnumerable<IHoneywellEvcType> GetAll(bool showHidden = false)
         {
             var allTask = _typesInstance.LoadDevicesAsync();
             return allTask.GetAwaiter().GetResult()
@@ -34,14 +34,14 @@ namespace Devices.Honeywell.Core
                 .OrderBy(i => i.Name);
         }
 
-        public static IEvcDeviceType GetById(int id)
+        public static IHoneywellEvcType GetById(int id)
         {
             var all = GetAll(true);
 
             return all.FirstOrDefault(i => i.Id == id);
         }
 
-        public static IEvcDeviceType GetByName(string name)
+        public static IHoneywellEvcType GetByName(string name)
         {
             var all = GetAll(true);
 

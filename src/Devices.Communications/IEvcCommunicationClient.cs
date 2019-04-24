@@ -1,4 +1,4 @@
-﻿using Devices.Core.Interfaces;
+using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using System;
@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Prover.CommProtocol.Common
+namespace Devices.Communications
 {
-    public interface IEvcCommunicationClient
+    public interface IEvcCommunicationClient<TEvcType> where TEvcType : IEvcDeviceType
     {
         #region Public Properties
 
-        IEvcDeviceType EvcDeviceType { get; set; }
+        TEvcType EvcDeviceType { get; set; }
 
         bool IsConnected { get; }
 
@@ -24,7 +24,7 @@ namespace Prover.CommProtocol.Common
 
         #region Public Methods
 
-        Task Connect(CancellationToken ct, string accessCode = null, int retryAttempts = 10);
+        Task Connect(CancellationToken ct, int retryAttempts = 10, TimeSpan? timeout = null);
 
         Task Disconnect();
 

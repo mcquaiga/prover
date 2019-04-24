@@ -15,7 +15,7 @@
     /// <summary>
     /// Defines the <see cref="DeviceTypeLoader"/>
     /// </summary>
-    public class DeviceTypeLoader : ILoadDeviceTypes
+    public class DeviceTypeLoader : ILoadDeviceTypes<IHoneywellEvcType>
     {
         #region Constants
 
@@ -33,28 +33,27 @@
 
         #region Fields
 
-        /// <summary>
-        /// Defines the _instrumentTypesCache
-        /// </summary>
-        private static readonly HashSet<IEvcDeviceType> _instrumentTypesCache = new HashSet<IEvcDeviceType>();
+        public IReadOnlyCollection<IHoneywellEvcType> EvcDeviceTypes => _evcTypesCache;
 
         /// <summary>
         /// Defines the ItemDefinitionsFolder
         /// </summary>
         private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\ItemDefinitions";
 
+        private List<IHoneywellEvcType> _evcTypesCache = new List<IHoneywellEvcType>();
+
         #endregion Fields
 
         #region Methods
 
-        public async Task<IEnumerable<IEvcDeviceType>> LoadDevicesAsync()
+        public async Task<IEnumerable<IHoneywellEvcType>> LoadDevicesAsync()
         {
-            if (_instrumentTypesCache?.Count == 0)
+            if (_evcTypesCache.Count == 0)
             {
                 await LoadInstrumentTypes();
             }
 
-            return _instrumentTypesCache;
+            return _evcTypesCache;
         }
 
         /// <summary>
@@ -71,7 +70,7 @@
             }
         }
 
-        private static async Task<IEvcDeviceType> GetInstrument(HashSet<ItemMetadata> items, ConcurrentBag<IEvcDeviceType> results, string file)
+        private static async Task GetInstrument(HashSet<ItemMetadata> items, ConcurrentBag<IHoneywellEvcType> results, string file)
         {
             var instrJson = await FileTextToJObjectAsync(file);
             var i = instrJson.ToObject<HoneywellEvcType>();
@@ -94,21 +93,6 @@
             }
 
             results.Add(i);
-            return i;
-        }
-
-        /// <summary>
-        /// The GetInstrumentDefinitions
-        /// </summary>
-        /// <returns>The <see cref="Task{HashSet{IEvcDeviceType}}"/></returns>
-        private static async Task<HashSet<IEvcDeviceType>> GetInstrumentDefinitions()
-        {
-            if (_instrumentTypesCache == null || !_instrumentTypesCache.Any())
-            {
-                await LoadInstrumentTypes();
-            }
-
-            return _instrumentTypesCache;
         }
 
         /// <summary>
@@ -209,54 +193,12 @@
         }
 
         /// <summary>
-        /// The LoadInstrumentTypes
-        /// </summary>
-        /// <returns>The <see cref="Task"/></returns>
-        private static async Task LoadInstrumentTypes()
-        {
-            try
-            {
-                var sw = Stopwatch.StartNew();
-
-                _instrumentTypesCache.Clear();
-
-                var items = await LoadGlobalItemDefinitions();
-
-                var readTasks = new List<Task<IEvcDeviceType>>();
-                var results = new ConcurrentBag<IEvcDeviceType>();
-                foreach (var file in Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json"))
-                {
-                    readTasks.Add(GetInstrument(items, results, file));
-                }
-
-                await Task.WhenAll(readTasks.ToArray())
-                    .ContinueWith(_ =>
-                    {
-                        sw.Stop();
-                        //LogManager.GetCurrentClassLogger().Debug($"Finished loading Honeywell instruments in {sw.ElapsedMilliseconds} ms");
-                    });
-
-                var ret = readTasks
-                            .Where(t => !t.IsFaulted && t.IsCompleted)
-                            .Select(task => task.Result)
-                            .ToList();
-
-                ret.ForEach(x => _instrumentTypesCache.Add(x));
-            }
-            catch (Exception)
-            {
-                //LogManager.GetCurrentClassLogger().Error(ex);
-                throw;
-            }
-        }
-
-        /// <summary>
         /// The LoadItems
         /// </summary>
         /// <param name="instrumentType">The instrumentType <see cref="InstrumentType"/></param>
         /// <param name="itemValues">The itemValues <see cref="Dictionary{int, string}"/></param>
         /// <returns>The <see cref="IEnumerable{ItemValue}"/></returns>
-        private static IEnumerable<ItemValue> LoadItems(IEvcDeviceType instrumentType, Dictionary<int, string> itemValues)
+        private static IEnumerable<ItemValue> LoadItems(IHoneywellEvcType instrumentType, Dictionary<int, string> itemValues)
         {
             if (instrumentType == null)
             {
@@ -266,6 +208,44 @@
             return itemValues
                 .Where(i => instrumentType.Definitions.GetItem(i.Key) != null)
                 .Select(iv => new ItemValue(instrumentType.Definitions.GetItem(iv.Key), iv.Value));
+        }
+
+        /// <summary>
+        /// The LoadInstrumentTypes
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task LoadInstrumentTypes()
+        {
+            try
+            {
+                var sw = Stopwatch.StartNew();
+
+                _evcTypesCache.Clear();
+
+                var items = await LoadGlobalItemDefinitions();
+
+                var resultBag = new ConcurrentBag<IHoneywellEvcType>();
+                var readTasks = new List<Task>();
+
+                foreach (var file in Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json"))
+                {
+                    readTasks.Add(GetInstrument(items, resultBag, file));
+                }
+
+                await Task.WhenAll(readTasks.ToArray())
+                    .ContinueWith(_ =>
+                    {
+                        sw.Stop();
+                        //LogManager.GetCurrentClassLogger().Debug($"Finished loading Honeywell instruments in {sw.ElapsedMilliseconds} ms");
+                    });
+
+                _evcTypesCache = resultBag.ToList();
+            }
+            catch (Exception)
+            {
+                //LogManager.GetCurrentClassLogger().Error(ex);
+                throw;
+            }
         }
 
         ///// <summary>

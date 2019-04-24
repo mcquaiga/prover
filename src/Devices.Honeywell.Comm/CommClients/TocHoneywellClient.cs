@@ -1,13 +1,11 @@
 namespace Devices.Honeywell.Comm.CommClients
 {
     using Devices.Communications.IO;
-    using Devices.Core.Interfaces;
     using Devices.Core.Interfaces.Items;
     using Devices.Core.Items;
     using Devices.Honeywell.Core;
     using Prover.CommProtocol.MiHoneywell.Items;
     using System.Collections.Generic;
-    using System.Reactive.Subjects;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,7 +16,7 @@ namespace Devices.Honeywell.Comm.CommClients
     {
         #region Constructors
 
-        public TocHoneywellClient(ICommPort commPort, IEvcDeviceType evcType, ISubject<string> statusSubject) : base(commPort, evcType, statusSubject)
+        public TocHoneywellClient(ICommPort commPort, IHoneywellEvcType evcType) : base(commPort, evcType)
         {
             _tibBoardItems = HoneywellDeviceTypes.TibBoard.Definitions;
         }

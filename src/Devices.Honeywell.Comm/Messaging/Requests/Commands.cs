@@ -1,7 +1,8 @@
 using Devices.Communications.IO;
 using Devices.Communications.Messaging;
-using Devices.Core.Interfaces;
-using Devices.Honeywell.Comm.Messaging.Response;
+using Devices.Honeywell.Comm.Crc;
+using Devices.Honeywell.Comm.Messaging.Responses;
+using Devices.Honeywell.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
     {
         #region Fields
 
-        public const string DefaultAccessCode = "33333";
+        public const string DefaultPassword = "33333";
 
         #endregion
 
@@ -62,16 +63,16 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         /// Creates the Sign On command to the instrument
         /// </summary>
         /// <param name="evcType">Instrument Type</param>
-        /// <param name="accessCode">Password for access to the instrument</param>
+        /// <param name="password">Password for access to the instrument</param>
         /// <returns>A response code is expected in return NoError indicates we're connected</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(IEvcDeviceType evcType, string accessCode = null)
+            SignOn(IHoneywellEvcType evcType, string password = null)
         {
-            if (string.IsNullOrEmpty(accessCode))
-                accessCode = DefaultAccessCode;
+            if (string.IsNullOrEmpty(password))
+                password = DefaultPassword;
 
             var code = evcType.AccessCode < 10 ? string.Concat("0", evcType.AccessCode) : evcType.AccessCode.ToString();
-            var cmd = $"SN,{accessCode}{ControlCharacters.STX}vq{code}";
+            var cmd = $"SN,{password}{ControlCharacters.STX}vq{code}";
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }
 
@@ -96,11 +97,11 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         /// </summary>
         /// <param name="itemNumber">Item number to write</param>
         /// <param name="value">Value to write</param>
-        /// <param name="accessCode">Password for the instrument</param>
+        /// <param name="password">Password for the instrument</param>
         /// <returns>A response code is expected in return</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            WriteItem(int itemNumber, string value, string accessCode = DefaultAccessCode)
-            => new WriteItemCommand(itemNumber, value, accessCode);
+            WriteItem(int itemNumber, string value, string password = DefaultPassword)
+            => new WriteItemCommand(itemNumber, value, password);
 
         #endregion
     }
@@ -112,8 +113,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         public LiveReadItemCommand(int itemNumber)
         {
             ItemNumber = itemNumber;
-            var itemString = itemNumber.ToString().PadLeft(3, Convert.ToChar("0"));
-            Command = BuildCommand($"{CommandPrefix}{ControlCharacters.STX}{itemString}");
+            Command = BuildCommand(CommandPrefix, itemNumber);
         }
 
         #endregion
@@ -163,13 +163,38 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         {
         }
 
+        protected static string JoinItemValues(IEnumerable<int> items)
+        {
+            var itemsArray = items.Select(x => x.ToString().PadLeft(3, Convert.ToChar("0"))).ToArray();
+            return string.Join(",", itemsArray);
+        }
+
         protected string BuildCommand(string body)
         {
             if (!body.Contains(ControlCharacters.ETX))
                 body = string.Concat(body, ControlCharacters.ETX);
 
-            var crc = CrcChecksum.Calculate(body);
+            var crc = CRC.CalcCRC(body);
             return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
+        }
+
+        protected string BuildCommand(string commandPrefix, int itemNumber)
+        {
+            var itemString = itemNumber.ToString().PadLeft(3, Convert.ToChar("0"));
+            return BuildCommand($"{commandPrefix}{ControlCharacters.STX}{itemString}");
+        }
+
+        protected string BuildCommand(string commandPrefix, IEnumerable<int> itemNumbers)
+        {
+            var itemsString = JoinItemValues(itemNumbers);
+            var cmd = $"{commandPrefix}{ControlCharacters.STX}{itemsString}";
+            return BuildCommand(cmd);
+        }
+
+        protected string BuildCommand(string header, string text)
+        {
+            var cmd = $"{header}{ControlCharacters.STX}{text}";
+            return BuildCommand(cmd);
         }
     }
 
@@ -186,11 +211,10 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         public ReadGroupCommand(IEnumerable<int> itemNumbers)
         {
             ItemNumbers = itemNumbers as int[] ?? itemNumbers.ToArray();
-            if (ItemNumbers.Count() > 15) throw new ArgumentOutOfRangeException(nameof(itemNumbers));
+            if (ItemNumbers.Count() > 15)
+                throw new ArgumentOutOfRangeException(nameof(itemNumbers));
 
-            var itemsString = JoinItemValues(ItemNumbers);
-            var cmd = $"{CommandPrefix}{ControlCharacters.STX}{itemsString}";
-            Command = BuildCommand(cmd);
+            Command = BuildCommand(CommandPrefix, ItemNumbers);
         }
 
         #endregion
@@ -209,16 +233,6 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         private const string CommandPrefix = "RG";
 
         #endregion
-
-        #region Methods
-
-        private static string JoinItemValues(IEnumerable<int> items)
-        {
-            var itemsArray = items.Select(x => x.ToString().PadLeft(3, Convert.ToChar("0"))).ToArray();
-            return string.Join(",", itemsArray);
-        }
-
-        #endregion
     }
 
     internal class ReadItemCommand : MiCommandDefinition<ItemValueResponseMessage>
@@ -228,8 +242,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         public ReadItemCommand(int itemNumber)
         {
             ItemNumber = itemNumber;
-            var itemString = itemNumber.ToString().PadLeft(3, Convert.ToChar("0"));
-            Command = BuildCommand($"{CommandPrefix}{ControlCharacters.STX}{itemString}");
+            Command = BuildCommand(CommandPrefix, ItemNumber);
         }
 
         #endregion
@@ -254,15 +267,19 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
     {
         #region Constructors
 
-        public WriteItemCommand(int number, string value, string accessCode)
+        public WriteItemCommand(int number, string value, string password = null)
         {
             Number = number;
             Value = value;
+            Command = BuildWriteCommand(password);
+        }
 
+        private string BuildWriteCommand(string password)
+        {
             var numberString = Number.ToString().PadLeft(3, Convert.ToChar("0"));
             var valueString = Value.PadLeft(8, Convert.ToChar("0"));
-            Command = $"{CommandPrefix},{accessCode}{ControlCharacters.STX}{numberString},{valueString}";
-            Command = BuildCommand(Command);
+
+            return BuildCommand($"{CommandPrefix},{password}", $"{numberString},{valueString}");
         }
 
         #endregion

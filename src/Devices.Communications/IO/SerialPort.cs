@@ -44,10 +44,8 @@ namespace Devices.Communications.IO
                 WriteTimeout = timeoutMs
             };
 
-            DataReceivedObservable = DataReceived().Publish();
-            DataReceivedObservable.Connect();
-
             DataSentObservable = new Subject<string>();
+            _dataStream = DataReceived();
         }
 
         #endregion Public Constructors
@@ -60,15 +58,13 @@ namespace Devices.Communications.IO
 
         #region Public Properties
 
-        public IConnectableObservable<char> DataReceivedObservable { get; }
-
-        IConnectableObservable<char> ICommPort.DataReceivedObservable => throw new NotImplementedException();
+        public IConnectableObservable<char> DataReceivedObservable => _dataStream.Publish();
 
         public ISubject<string> DataSentObservable { get; }
 
-        ISubject<string> ICommPort.DataSentObservable => throw new NotImplementedException();
-
         public string Name => _serialStream.PortName;
+
+        private IObservable<char> _dataStream;
 
         #endregion Public Properties
 
@@ -79,9 +75,9 @@ namespace Devices.Communications.IO
             return SerialPortStream.GetPortNames();
         }
 
-        public async Task Close()
+        public Task Close()
         {
-            await Task.Run(() => _serialStream.Close());
+            return Task.Run(() => _serialStream.Close());
         }
 
         public ICommPort CreateNew()
@@ -93,26 +89,30 @@ namespace Devices.Communications.IO
         {
             _serialStream?.Close();
             _serialStream?.Dispose();
+            DataSentObservable.OnCompleted();
         }
 
         public bool IsOpen() => _serialStream.IsOpen;
 
-        public async Task Open(CancellationToken ct)
+        public async Task Open(CancellationToken ct = new CancellationToken())
         {
-            if (_serialStream.IsOpen) return;
+            if (_serialStream.IsOpen)
+                return;
+
+            DataReceivedObservable.Connect();
 
             await Task.Run(() => _serialStream.Open(), ct);
         }
 
         public async Task Send(string data)
         {
+            if (!_serialStream.IsOpen)
+                await Open();
+
             _serialStream.DiscardInBuffer();
             _serialStream.DiscardOutBuffer();
 
-            var content = new List<byte>();
-            content.AddRange(Encoding.ASCII.GetBytes(data));
-
-            var buffer = content.ToArray();
+            var buffer = Encoding.ASCII.GetBytes(data);
             await _serialStream.WriteAsync(buffer, 0, buffer.Length);
 
             DataSentObservable.OnNext(data);

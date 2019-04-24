@@ -109,7 +109,7 @@ namespace Devices.Communications.Messaging
         #endregion Protected Fields
     }
 
-    internal class ResponseProcessors
+    internal static class ResponseProcessors
     {
         #region Public Fields
 

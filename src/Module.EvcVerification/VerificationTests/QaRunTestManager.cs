@@ -9,33 +9,30 @@ namespace Module.EvcVerification.VerificationTests
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
 
-
     /// <summary>
-    /// Defines the <see cref="QaRunTestManager" />
+    /// Defines the <see cref="QaRunTestManager"/>
     /// </summary>
     public class QaRunTestManager : IQaRunTestManager
     {
-
         #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QaRunTestManager"/> class.
         /// </summary>
-        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
-        /// <param name="readingStabilizer">The readingStabilizer<see cref="IReadingStabilizer"/></param>
-        /// <param name="tachometerService">The tachometerService<see cref="TachometerService"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>    
+        /// <param name="eventAggregator">The eventAggregator <see cref="IEventAggregator"/></param>
+        /// <param name="testRunService">The testRunService <see cref="TestRunService"/></param>
+        /// <param name="readingStabilizer">The readingStabilizer <see cref="IReadingStabilizer"/></param>
+        /// <param name="tachometerService">The tachometerService <see cref="TachometerService"/></param>
+        /// <param name="testActionsManager">The testActionsManager <see cref="ITestActionsManager"/></param>
+        /// <param name="settingsService">The settingsService <see cref="ISettingsService"/></param>
         public QaRunTestManager(
-            IEventAggregator eventAggregator,
+
             TestRunService testRunService,
             IReadingStabilizer readingStabilizer,
             TachometerService tachometerService,
             ITestActionsManager testActionsManager,
             ISettingsService settingsService)
         {
-            _eventAggregator = eventAggregator;
             _testRunService = testRunService;
             _readingStabilizer = readingStabilizer;
             _tachometerService = tachometerService;
@@ -51,11 +48,6 @@ namespace Module.EvcVerification.VerificationTests
         #region Public Properties
 
         public EvcCommunicationClient CommunicationClient => _communicationClient;
-
-        /// <summary>
-        /// Gets the EventAggregator
-        /// </summary>
-        public IEventAggregator EventAggregator { get; }
 
         /// <summary>
         /// Gets the Instrument
@@ -94,7 +86,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The DownloadPostVolumeTest
         /// </summary>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public Task DownloadPostVolumeTest(CancellationToken ct)
         {
@@ -104,7 +96,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The DownloadPressureTestItems
         /// </summary>
-        /// <param name="level">The level<see cref="int"/></param>
+        /// <param name="level">The level <see cref="int"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public async Task DownloadPressureTestItems(int level)
         {
@@ -119,7 +111,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The DownloadPreVolumeTest
         /// </summary>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public Task DownloadPreVolumeTest(CancellationToken ct)
         {
@@ -129,7 +121,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The DownloadTemperatureTestItems
         /// </summary>
-        /// <param name="levelNumber">The levelNumber<see cref="int"/></param>
+        /// <param name="levelNumber">The levelNumber <see cref="int"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public async Task DownloadTemperatureTestItems(int levelNumber)
         {
@@ -144,7 +136,7 @@ namespace Module.EvcVerification.VerificationTests
 
         public virtual async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings, CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
         {
-            _communicationClient = instrumentType.CreateCommClient(commPort);           
+            _communicationClient = instrumentType.CreateCommClient(commPort);
 
             await _communicationClient.Connect(ct);
             IEnumerable<CommProtocol.Common.Items.ItemValue> items = await _communicationClient.GetAllItems();
@@ -169,8 +161,8 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The RunCorrectionTest
         /// </summary>
-        /// <param name="level">The level<see cref="int"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="level">The level <see cref="int"/></param>
+        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunCorrectionTest(int level, CancellationToken ct)
         {
@@ -203,7 +195,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The RunVolumeTest
         /// </summary>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public async Task RunVolumeTest(CancellationToken ct)
         {
@@ -212,10 +204,9 @@ namespace Module.EvcVerification.VerificationTests
                 await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
                 await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
-
             }
             catch (OperationCanceledException)
-            {               
+            {
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -227,7 +218,7 @@ namespace Module.EvcVerification.VerificationTests
         public async Task SaveAsync()
         {
             try
-            {               
+            {
                 await _testRunService.Save(Instrument);
             }
             catch (Exception ex)
@@ -254,7 +245,6 @@ namespace Module.EvcVerification.VerificationTests
         /// </summary>
         private readonly IEventAggregator _eventAggregator;
 
-
         /// <summary>
         /// Defines the _readingStabilizer
         /// </summary>
@@ -279,6 +269,7 @@ namespace Module.EvcVerification.VerificationTests
         /// Defines the _testStatus
         /// </summary>
         private readonly Subject<string> _testStatus = new Subject<string>();
+
         /// <summary>
         /// Defines the _communicationClient
         /// </summary>
@@ -293,7 +284,6 @@ namespace Module.EvcVerification.VerificationTests
         /// </summary>
         private void CreateVolumeTestManager()
         {
-
             if (Instrument.VolumeTest.DriveType is RotaryDrive)
             {
                 VolumeTestManager = IoC.Get<RotaryAutoVolumeTestManager>();
@@ -318,8 +308,8 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The DownloadVerificationTestItems
         /// </summary>
-        /// <param name="level">The level<see cref="int"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <param name="level">The level <see cref="int"/></param>
+        /// <param name="ct">The ct <see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         private async Task DownloadVerificationTestItems(int level, CancellationToken ct)
         {
@@ -348,6 +338,5 @@ namespace Module.EvcVerification.VerificationTests
         }
 
         #endregion Private Methods
-
     }
 }

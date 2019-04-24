@@ -1,4 +1,4 @@
-﻿using Devices.Communications.IO;
+using Devices.Communications.IO;
 using Devices.Communications.Messaging;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
@@ -11,11 +11,14 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Prover.CommProtocol.Common
+namespace Devices.Communications
 {
-    public abstract class EvcCommunicationClient : IDisposable, IEvcCommunicationClient
+    public abstract class EvcCommunicationClient<TEvcType> : IDisposable, IEvcCommunicationClient<TEvcType>
+        where TEvcType : IEvcDeviceType
     {
-        #region Public Properties
+        #region Properties
+
+        public virtual TEvcType EvcDeviceType { get; set; }
 
         /// <summary>
         /// Is this client already connected to an instrument
@@ -27,11 +30,11 @@ namespace Prover.CommProtocol.Common
         /// </summary>
         public virtual List<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
-        public IObservable<string> Status => _statusSubject.AsObservable();
+        public IObservable<string> Status { get; private set; }
 
-        #endregion Public Properties
+        #endregion
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Establish a link with an instrument Handles retries for failed connections
@@ -40,20 +43,25 @@ namespace Prover.CommProtocol.Common
         /// <param name="accessCode"></param>
         /// <param name="retryAttempts"></param>
         /// <returns></returns>
-        public async Task Connect(CancellationToken ct, string accessCode = null, int retryAttempts = MaxConnectionAttempts)
+        public async Task Connect(CancellationToken ct, int retryAttempts = MaxConnectionAttempts, TimeSpan? timeout = null)
         {
+            var connectionAttempts = 1;
+
             if (IsConnected)
                 return;
 
-            var connectionAttempts = 1;
+            if (timeout.HasValue)
+                _timeout = timeout.Value;
 
             ct.ThrowIfCancellationRequested();
 
             var result = Task.Run(async () =>
             {
+                Exception exception = null;
+
                 while (!IsConnected)
                 {
-                    _statusSubject.OnNext($"Connecting to {EvcDeviceType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+                    StatusStream.OnNext($"Connecting to {EvcDeviceType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
 
                     if (ct.IsCancellationRequested)
                         ct.ThrowIfCancellationRequested();
@@ -63,27 +71,29 @@ namespace Prover.CommProtocol.Common
 
                     try
                     {
-                        await ConnectToInstrument(ct, accessCode);
+                        await ConnectToInstrument(ct);
                     }
-                    catch (UnauthorizedAccessException)
+                    catch (EvcResponseException)
                     {
                         throw;
                     }
                     catch (Exception ex)
                     {
-                        Log.Warn(ex);
+                        exception = ex;
                     }
 
                     if (!IsConnected)
                     {
                         if (connectionAttempts < retryAttempts)
                         {
-                            Log.Warn($"[{CommPort.Name}] Failed connecting to {EvcDeviceType.Name}.");
+                            StatusStream.OnNext($"[{CommPort.Name}] Failed connecting to {EvcDeviceType.Name}.");
                             await Task.Delay(ConnectionRetryDelayMs);
                             connectionAttempts++;
                         }
                         else
-                            throw new Exception($"{CommPort.Name} Could not connect to {EvcDeviceType.Name} after {retryAttempts} retries.");
+                        {
+                            throw new FailedConnectionException(CommPort, EvcDeviceType, retryAttempts, exception);
+                        }
                     }
                 }
             }, ct);
@@ -95,7 +105,10 @@ namespace Prover.CommProtocol.Common
             catch (AggregateException e)
             {
                 foreach (var v in e.InnerExceptions)
+                {
                     Log.Warn(e.Message + " " + v.Message);
+                }
+                throw;
             }
         }
 
@@ -107,9 +120,9 @@ namespace Prover.CommProtocol.Common
         public virtual void Dispose()
         {
             Disconnect();
+            StatusStream.OnCompleted();
             _receivedObservable?.Dispose();
             _sentObservable?.Dispose();
-            _statusSubject?.Dispose();
             CommPort?.Dispose();
         }
 
@@ -119,7 +132,7 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public virtual Task<IEnumerable<ItemValue>> GetAllItems()
         {
-            _statusSubject.OnNext("Downloading items...");
+            StatusStream.OnNext("Downloading items...");
             return GetItemValues(EvcDeviceType.Definitions);
         }
 
@@ -224,15 +237,15 @@ namespace Prover.CommProtocol.Common
         /// <returns></returns>
         public abstract Task<bool> SetItemValue(string itemCode, long value);
 
-        #endregion Public Methods
+        #endregion
 
-        #region Protected Fields
+        #region Fields
 
         protected readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        #endregion Protected Fields
+        #endregion
 
-        #region Protected Constructors
+        #region Constructors
 
         /// <summary>
         /// A client to communicate with a wide range of EVCs
@@ -240,15 +253,17 @@ namespace Prover.CommProtocol.Common
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="EvcDeviceType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected EvcCommunicationClient(ICommPort commPort, IEvcDeviceType evcDeviceType, ISubject<string> statusSubject = null)
+        protected EvcCommunicationClient(ICommPort commPort, TEvcType evcDeviceType)
         {
             CommPort = commPort;
             EvcDeviceType = evcDeviceType;
 
-            if (statusSubject != null)
-                Status?.Subscribe(statusSubject);
+            Status = StatusStream.Publish();
+            var statusDisposable = (Status as IConnectableObservable<string>).Connect();
 
-            Status?.Subscribe(s => Log.Debug(s));
+            Status.Subscribe(
+                s => Log.Debug(s),
+                () => statusDisposable.Dispose());
 
             _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
                 .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
@@ -257,17 +272,11 @@ namespace Prover.CommProtocol.Common
                 .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
         }
 
-        #endregion Protected Constructors
+        #endregion
 
-        #region Protected Properties
+        public ICommPort CommPort { get; }
 
-        public IEvcDeviceType EvcDeviceType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        protected ICommPort CommPort { get; }
-
-        #endregion Protected Properties
-
-        #region Protected Methods
+        protected readonly ISubject<string> StatusStream = new Subject<string>();
 
         /// <summary>
         /// Establish a link with an instrument Handles retries for failed connections
@@ -275,59 +284,42 @@ namespace Prover.CommProtocol.Common
         /// <param name="ct"></param>
         /// <param name="accessCode"></param>
         /// <returns></returns>
-        protected abstract Task ConnectToInstrument(CancellationToken ct, string accessCode = null);
+        protected abstract Task ConnectToInstrument(CancellationToken ct);
+
+        protected virtual void ExecuteCommand(string command)
+        {
+            CommPort.Send(command);
+        }
 
         protected virtual async Task<T> ExecuteCommand<T>(CommandDefinition<T> command) where T : ResponseMessage
         {
             if (command.ResponseProcessor == null)
             {
-                await ExecuteCommand(command.Command);
+                ExecuteCommand(command.Command);
                 return default(T);
             }
 
             var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Timeout(TimeSpan.FromSeconds(5))
+                .Timeout(_timeout)
                 .FirstAsync()
                 .PublishLast();
 
             using (response.Connect())
             {
-                await CommPort.Send(command.Command);
+                ExecuteCommand(command.Command);
 
-                var result = await response;
-
-                return result;
+                return await response;
             }
         }
-
-        #endregion Protected Methods
-
-        #region Private Fields
 
         private const int ConnectionRetryDelayMs = 3000;
 
         private const int MaxConnectionAttempts = 10;
 
-        private readonly Subject<string> _statusSubject = new Subject<string>();
+        private readonly IDisposable _receivedObservable;
 
-        private IDisposable _receivedObservable;
+        private readonly IDisposable _sentObservable;
 
-        private IDisposable _sentObservable;
-
-        #endregion Private Fields
-
-        #region Private Methods
-
-        Task<IFrequencyTestItems> IEvcCommunicationClient.GetFrequencyItems()
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task ExecuteCommand(string command)
-        {
-            await Task.Run(() => CommPort.Send(command));
-        }
-
-        #endregion Private Methods
+        private TimeSpan _timeout = TimeSpan.FromSeconds(5);
     }
 }

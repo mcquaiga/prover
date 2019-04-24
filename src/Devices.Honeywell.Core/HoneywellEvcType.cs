@@ -4,10 +4,21 @@ using System.Collections.Generic;
 
 namespace Devices.Honeywell.Core
 {
+    public interface IHoneywellEvcType : IEvcDeviceType
+    {
+        #region Properties
+
+        int AccessCode { get; set; }
+
+        int Id { get; set; }
+
+        #endregion
+    }
+
     /// <summary>
     /// Defines the <see cref="HoneywellEvcType"/>
     /// </summary>
-    public class HoneywellEvcType : IEvcDeviceType
+    public class HoneywellEvcType : IHoneywellEvcType
     {
         #region Properties
 

@@ -3,8 +3,14 @@ using System.Threading.Tasks;
 
 namespace Devices.Core.Interfaces
 {
-    public interface ILoadDeviceTypes
+    public interface ILoadDeviceTypes<TEvcType> where TEvcType : IEvcDeviceType
     {
-        Task<IEnumerable<IEvcDeviceType>> LoadDevicesAsync();
+        #region Methods
+
+        IReadOnlyCollection<TEvcType> EvcDeviceTypes { get; }
+
+        Task<IEnumerable<TEvcType>> LoadDevicesAsync();
+
+        #endregion
     }
 }
