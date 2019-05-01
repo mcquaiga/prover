@@ -1,0 +1,42 @@
+﻿{
+  "Id": "6",
+  "Name": "TibBoard",
+  "AccessCode": "6",
+  "IsHidden": true,
+  "CanUseIrDaPort": false,
+  "Items": [
+    {
+      "number": "850",
+      "code": "ADJVOLUME",
+      "shortDescription": "Adjusted Volume",
+      "description": "Adjusted Volume",
+      "isFrequencyTest": "true"
+    },
+    {
+      "number": "851",
+      "code": "HIGHRESADJVOLUME",
+      "shortDescription": "High Res. Adjusted Volume",
+      "description": "High Res. Adjusted Volume",
+      "isFrequencyTest": "true"
+    },
+    {
+      "number": "852",
+      "code": "UNADJVOLUME",
+      "shortDescription": "Unadjusted Volume",
+      "description": "Unadjusted Volume",
+      "isFrequencyTest": "true"
+    },
+    {
+      "number": "859",
+      "code": "ADJVOLUME_PULSES_WAITING",
+      "shortDescription": "Adjusted Volume Pulses Waiting",
+      "description": "Adjusted Volume Pulses Waiting"
+    },
+    {
+      "number": "860",
+      "code": "UNADJVOLUME_PULSES_WAITING",
+      "shortDescription": "Unadjusted Volume Pulses Waiting",
+      "description": "Unadjusted Volume Pulses Waiting"
+    }
+  ]
+}

@@ -1,42 +1,39 @@
+using Core;
+using Core.Domain;
+using Devices.Core.Interfaces;
+using Module.Clients.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Module.Certificates.Certificates
 {
-    public class Certificate : EntityWithId
+    public class Certificate : AggregateRoot
     {
-        public DateTime CreatedDateTime { get; set; }
-
-        public string VerificationType { get; set; }
-
-        [Index]
-        public string TestedBy { get; set; }
+        #region Properties
 
         public string Apparatus { get; set; }
 
-        [Index]
-        public Guid? ClientId { get; set; }
         public virtual Client Client { get; set; }
+
+        public DateTimeOffset CreatedDateTime { get; set; }
+
+        public virtual ICollection<IDevice> Devices { get; set; } = new List<IDevice>();
 
         public long Number { get; set; }
 
-        public virtual ICollection<Instrument> Instruments { get; set; } = new List<Instrument>();
+        public string TestedBy { get; set; }
 
-        [NotMapped]
-        public string SealExpirationDate
+        public VerificationType VerificationType { get; set; }
+
+        public DateTimeOffset SealExpirationDate()
         {
-            get
-            {
-                var period = 10; //Re-Verification
-                if (VerificationType == "Verification")
-                    period = 12;
+            var period = 10; //Re-Verification
+            if (VerificationType == VerificationType.New)
+                period = 12;
 
-                return CreatedDateTime.AddYears(period).ToString("yyyy-MM-dd");
-            }
+            return CreatedDateTime.AddYears(period);
         }
 
-        [NotMapped]
-        public int InstrumentCount => Instruments.Count();
+        #endregion
     }
 }

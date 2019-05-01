@@ -5,52 +5,51 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ItemDefinitions\Items.json" />
-    <None Remove="ItemDefinitions\Item_MeterType.json" />
-    <None Remove="ItemDefinitions\TurboMonitorItems.xml" />
-    <None Remove="ItemDefinitions\Type_EC350.json" />
-    <None Remove="ItemDefinitions\Type_MiniAT.json" />
-    <None Remove="ItemDefinitions\Type_MiniMax.json" />
-    <None Remove="ItemDefinitions\Type_TCI.json" />
-    <None Remove="ItemDefinitions\Type_TibBoard.json" />
-    <None Remove="ItemDefinitions\Type_TOC.json" />
+    <None Remove="DeviceTypes\Items.json" />
+    <None Remove="DeviceTypes\Item_MeterType.json" />
+    <None Remove="DeviceTypes\Type_EC350.json" />
+    <None Remove="DeviceTypes\Type_MiniAT.json" />
+    <None Remove="DeviceTypes\Type_MiniMax.json" />
+    <None Remove="DeviceTypes\Type_TCI.json" />
+    <None Remove="DeviceTypes\Type_TibBoard.json" />
+    <None Remove="DeviceTypes\Type_TOC.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ItemDefinitions\Items.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Item_MeterType.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\TurboMonitorItems.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_EC350.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_MiniAT.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_MiniMax.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_TCI.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ItemDefinitions\Type_TibBoard.json">
+    <Content Include="DeviceTypes\Items.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ItemDefinitions\Type_TOC.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="DeviceTypes\Item_MeterType.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_EC350.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_MiniAT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_TCI.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_TibBoard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DeviceTypes\Type_TOC.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog" Version="4.6.2" />
+    <PackageReference Include="System.Reactive" Version="4.1.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Devices.Honeywell.Comm.CommClients;
+using Devices.Honeywell.Comm.Exceptions;
 using System;
 using System.Collections.Generic;
 

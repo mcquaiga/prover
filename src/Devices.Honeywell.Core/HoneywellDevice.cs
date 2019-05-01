@@ -1,4 +1,4 @@
-using Devices.Core.EvcDevices;
+using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Core
 {
-    public class HoneywellDevice : IEvcDevice
+    public class HoneywellDevice : IDevice
     {
         #region Constructors
 
-        public HoneywellDevice(IEvcDeviceType evcType, Dictionary<string, string> items)
+        public HoneywellDevice(IDeviceType evcType, Dictionary<string, string> items)
         {
             Device = evcType;
         }
@@ -21,31 +21,25 @@ namespace Devices.Honeywell.Core
 
         #region Properties
 
-        public EvcCorrectorType CompositionType => throw new NotImplementedException();
-
-        public EvcCorrectorType CorrectorType
+        public EvcCorrectorType CompositionType
         {
             get
             {
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase)
                     && string.Equals(ItemValues.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.PTZ;
+                    return EvcCorrectorType.PressureTemperature;
 
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.P;
+                    return EvcCorrectorType.PressureOnly;
 
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.T;
+                    return EvcCorrectorType.TemperatureOnly;
 
-                return EvcCorrectorType.T;
+                return EvcCorrectorType.TemperatureOnly;
             }
         }
 
-        public IEvcDeviceType Device { get; set; }
-
-        public IFrequencyTestItems FrequencyItems { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public bool HasFrequency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IDeviceType Device { get; set; }
 
         public IEnumerable<ItemValue> ItemValues { get; set; }
 

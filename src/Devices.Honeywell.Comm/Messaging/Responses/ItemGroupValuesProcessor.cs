@@ -85,7 +85,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses
                                 parsingChecksum = false;
                                 break;
 
-                            case ControlCharacters.Comma:
+                            case ControlCharacters.COMMA:
                                 AddValue();
                                 break;
 

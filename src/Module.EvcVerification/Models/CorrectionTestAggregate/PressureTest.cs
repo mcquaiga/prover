@@ -1,5 +1,7 @@
 namespace Module.EvcVerification.Models.CorrectionTestAggregate
 {
+    using Devices.Core;
+    using Devices.Core.Interfaces.Items;
     using System;
 
     /// <summary>

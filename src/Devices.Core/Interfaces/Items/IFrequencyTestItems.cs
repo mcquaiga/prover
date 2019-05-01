@@ -5,10 +5,22 @@ namespace Devices.Core.Interfaces.Items
         #region Public Properties
 
         long MainAdjustedVolumeReading { get; set; }
+
         long MainUnadjustVolumeReading { get; set; }
+
         decimal TibAdjustedVolumeReading { get; set; }
+
         long TibUnadjustedVolumeReading { get; }
 
         #endregion Public Properties
+    }
+
+    public interface IHaveFrequency
+    {
+        #region Properties
+
+        IFrequencyTestItems FrequencyItems { get; set; }
+
+        #endregion
     }
 }

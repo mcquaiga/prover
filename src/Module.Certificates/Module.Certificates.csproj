@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Module.Clients\Module.Clients.csproj" />
     <ProjectReference Include="..\Module.EvcVerification\Module.EvcVerification.csproj" />
   </ItemGroup>
 

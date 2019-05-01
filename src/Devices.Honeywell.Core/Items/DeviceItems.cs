@@ -1,11 +1,11 @@
-﻿using Devices.Core.Items;
+using Devices.Core.Items;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Prover.CommProtocol.MiHoneywell.Items
+namespace Devices.Honeywell.Core.Items
 {
     public abstract class DeviceItems
     {

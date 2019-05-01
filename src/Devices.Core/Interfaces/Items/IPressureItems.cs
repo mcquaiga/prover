@@ -1,5 +1,3 @@
-using Devices.Core.EvcDevices;
-
 namespace Devices.Core.Interfaces.Items
 {
     public interface IPressureItems : IItemsGroup

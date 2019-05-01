@@ -7,14 +7,23 @@ namespace Devices.Communications.IO
         #region Public Fields
 
         public const char ACK = (char)6;
-        public const char Comma = (char)44;
+
+        public const char COMMA = (char)44;
+
         public const char CR = (char)13;
+
         public const char ENQ = (char)5;
+
         public const char EOT = (char)4;
+
         public const char ETX = (char)3;
+
         public const char NAK = (char)21;
+
         public const char RS = (char)30;
+
         public const char SOH = (char)1;
+
         public const char STX = (char)2;
 
         #endregion Public Fields

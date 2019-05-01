@@ -1,5 +1,3 @@
-using Devices.Core.EvcDevices;
-
 namespace Devices.Core.Interfaces.Items
 {
     public interface IEnergyItems : IItemsGroup
@@ -42,7 +40,7 @@ namespace Devices.Core.Interfaces.Items
 
         string DriveRateDescription { get; }
 
-        DriveTypeDescripter DriveType { get; }
+        IDriveType DriveType { get; }
 
         double Energy { get; }
 

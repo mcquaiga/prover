@@ -1,4 +1,5 @@
 using Core.Domain;
+using Devices.Core.Interfaces;
 using System.Collections.Generic;
 
 namespace Module.EvcVerification.Models.CorrectionTestAggregate
@@ -7,7 +8,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
     {
         #region Constructors
 
-        public CorrectionTest(IEvcDevice evcDevice, int testLevel)
+        public CorrectionTest(IDevice evcDevice, int testLevel)
         {
             TestNumber = testLevel;
             EvcDevice = evcDevice;
@@ -17,7 +18,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
 
         #region Properties
 
-        public IEvcDevice EvcDevice { get; }
+        public IDevice EvcDevice { get; }
 
         public FrequencyTest FrequencyTest { get; private set; }
 
@@ -68,7 +69,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
 
         internal void AddSuperFactor()
         {
-            SuperFactorTest = new SuperFactorTest(EvcDevice.SuperFactorItems, EvcDevice.PressureItems, EvcDevice.TemperatureItems);
+            SuperFactorTest = new SuperFactorTest(EvcDevice.SuperFactorItems, PressureTest, TemperatureTest);
         }
 
         internal void AddTemperature(double temperatureGauge)

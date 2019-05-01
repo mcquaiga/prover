@@ -1,10 +1,10 @@
-﻿using Devices.Core.Interfaces.Items;
+using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Prover.CommProtocol.MiHoneywell.Items
+namespace Devices.Honeywell.Core.Items
 {
     public class FrequencyTestItems : DeviceItems, IFrequencyTestItems
     {

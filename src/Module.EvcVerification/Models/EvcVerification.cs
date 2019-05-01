@@ -1,6 +1,9 @@
 namespace Module.EvcVerification.Models
 {
     using Core.Domain;
+    using Devices.Core;
+    using Devices.Core.Interfaces;
+    using Module.Clients.Models;
     using Module.EvcVerification.Models.CorrectionTestAggregate;
     using Newtonsoft.Json;
     using System;
@@ -29,7 +32,7 @@ namespace Module.EvcVerification.Models
         /// </summary>
         public virtual IReadOnlyCollection<CorrectionTest> CorrectionTests => _correctionTests.AsReadOnly();
 
-        public virtual IEvcDevice EvcDevice { get; private set; }
+        public virtual IDevice Device { get; private set; }
 
         /// <summary>
         /// Gets or sets the EventLogPassed
@@ -64,20 +67,12 @@ namespace Module.EvcVerification.Models
 
         #region Methods
 
-        /// <summary>
-        /// The Create
-        /// </summary>
-        /// <param name="instrumentType">The instrumentType <see cref="InstrumentType"/></param>
-        /// <param name="itemValues">The itemValues <see cref="IEnumerable{ItemValue}"/></param>
-        /// <param name="testSettings">The testSettings <see cref="TestSettings"/></param>
-        /// <param name="client">The client <see cref="Client"/></param>
-        /// <returns>The <see cref="EvcVerification"/></returns>
-        public static EvcVerification Create(IEvcDevice evcType, Client client = null)
+        public static EvcVerification Create(IDeviceType evcType, Client client = null)
         {
             var i = new EvcVerification()
             {
                 TestDateTime = DateTime.Now,
-                EvcDevice = evcType
+                Device = evcType.CreateInstance()
             };
 
             return i;
@@ -85,33 +80,33 @@ namespace Module.EvcVerification.Models
 
         public void AddCorrectionTest(CorrectionTestDefinition tp)
         {
-            var test = new CorrectionTest(this, tp.Level);
+            var test = new CorrectionTest(this.Device, tp.Level);
 
-            if (EvcDevice.CompositionType == EvcCorrectorType.P)
+            if (Device.CompositionType == EvcCorrectorType.PressureOnly)
             {
                 test.AddPressure(tp.PressureGaugePercent);
             }
 
-            if (EvcDevice.CompositionType == EvcCorrectorType.T)
+            if (Device.CompositionType == EvcCorrectorType.TemperatureOnly)
             {
                 test.AddTemperature(tp.TemperatureGauge);
             }
 
-            if (EvcDevice.CompositionType == EvcCorrectorType.PTZ)
+            if (Device.CompositionType == EvcCorrectorType.PressureTemperature)
             {
                 test.AddPressure(tp.PressureGaugePercent);
                 test.AddTemperature(tp.TemperatureGauge);
-                test.AddSuperFactor(this);
+                test.AddSuperFactor();
             }
 
             if (tp.IsVolumeTest)
             {
                 test.AddVolume(tp.MechanicalDriveTestLimits);
 
-                if (EvcDevice.HasFrequency)
-                {
-                    test.AddFrequency();
-                }
+                //if (Device)
+                //{
+                //    test.AddFrequency();
+                //}
             }
         }
 

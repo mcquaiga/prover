@@ -66,7 +66,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         /// <param name="password">Password for access to the instrument</param>
         /// <returns>A response code is expected in return NoError indicates we're connected</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(IHoneywellEvcType evcType, string password = null)
+            SignOn(IHoneywellDeviceType evcType, string password = null)
         {
             if (string.IsNullOrEmpty(password))
                 password = DefaultPassword;

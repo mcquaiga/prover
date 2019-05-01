@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications
 {
-    public interface IEvcCommunicationClient<TEvcType> where TEvcType : IEvcDeviceType
+    public interface IEvcCommunicationClient<TEvcType> where TEvcType : IDeviceType
     {
         #region Public Properties
 

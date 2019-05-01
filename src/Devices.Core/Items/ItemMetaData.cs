@@ -1,5 +1,6 @@
 namespace Devices.Core.Items
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -105,8 +106,24 @@ namespace Devices.Core.Items
     /// <summary>
     /// Defines the <see cref="ItemMetadata"/>
     /// </summary>
-    public class ItemMetadata
+    public class ItemMetadata : IEqualityComparer<ItemMetadata>
     {
+        #region Fields
+
+        private readonly List<ItemDescription> _itemDescriptions = new List<ItemDescription>();
+
+        #endregion
+
+        #region Constructors
+
+        [JsonConstructor]
+        public ItemMetadata(ICollection<ItemDescription> itemDescriptions = null)
+        {
+            _itemDescriptions = itemDescriptions?.ToList() ?? new List<ItemDescription>();
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -187,7 +204,7 @@ namespace Devices.Core.Items
         /// <summary>
         /// Gets or sets the ItemDescriptions
         /// </summary>
-        public virtual IEnumerable<ItemDescription> ItemDescriptions { get; set; }
+        public virtual ICollection<ItemDescription> ItemDescriptions => _itemDescriptions.AsReadOnly();
 
         /// <summary>
         /// Gets or sets the Number
@@ -198,6 +215,16 @@ namespace Devices.Core.Items
         /// Gets or sets the ShortDescription
         /// </summary>
         public string ShortDescription { get; set; }
+
+        public bool Equals(ItemMetadata x, ItemMetadata y)
+        {
+            return x.Number == y.Number;
+        }
+
+        public int GetHashCode(ItemMetadata obj)
+        {
+            return obj.GetHashCode();
+        }
 
         #endregion Properties
 

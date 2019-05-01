@@ -1,5 +1,6 @@
 namespace Module.EvcVerification.Models.CorrectionTestAggregate
 {
+    using Devices.Core.Interfaces.Items;
     using SuperFactorCalculations;
     using System;
 
@@ -18,7 +19,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// Defines the _actualFactor
         /// </summary>
-        private double? _actualFactor;
+        private double _actualFactor;
 
         private IPressureItems PressureItems;
 
@@ -29,15 +30,6 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SuperFactorTest"/> class.
-        /// </summary>
-        /// <param name="verificationTest">The verificationTest <see cref="CorrectionTest"/></param>
-        public SuperFactorTest(CorrectionTest verificationTest)
-        {
-            VerificationTest = verificationTest;
-        }
 
         public SuperFactorTest(ISuperFactorItems superFactorItems, PressureTest pressureTest, TemperatureTest temperatureTest)
         {
@@ -51,25 +43,27 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
                 (double)SuperFactorItems.N2,
                 TemperatureTest.GaugeFahrenheit,
                 PressureTest.GasPressurePsi);
+
+            CalculateFactor();
         }
 
         #endregion
 
         #region Properties
 
-        public override double ActualFactor { get; private set; }
+        public override double ActualFactor => _actualFactor;
 
         public override double EvcFactor => EvcUnsqrFactor;
 
         public double EvcUnsqrFactor => PressureItems.UnsqrFactor;
+
+        public override double PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
 
         public PressureTest PressureTest { get; }
 
         public double SuperFactorSquared => Math.Pow(ActualFactor, 2);
 
         public TemperatureTest TemperatureTest { get; }
-
-        protected override double PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
 
         #endregion
 
@@ -84,7 +78,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             _factorCalculator.GaugeTemp = TemperatureTest.GaugeFahrenheit;
             _factorCalculator.GaugePressure = PressureTest.GasPressurePsi;
 
-            ActualFactor = Math.Round(_factorCalculator.SuperFactor, 4);
+            _actualFactor = Math.Round(_factorCalculator.SuperFactor, 4);
         }
 
         #endregion

@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient<IHoneywellEvcType>
+    public class HoneywellClient : EvcCommunicationClient<IHoneywellDeviceType>
     {
         #region Constructors
 
-        public HoneywellClient(ICommPort commPort, IHoneywellEvcType instrumentType) : base(commPort, instrumentType)
+        public HoneywellClient(ICommPort commPort, IHoneywellDeviceType instrumentType) : base(commPort, instrumentType)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Devices.Honeywell.Comm.CommClients
 
         #region Properties
 
-        public override IHoneywellEvcType EvcDeviceType { get; set; }
+        public override IHoneywellDeviceType EvcDeviceType { get; set; }
 
         public override bool IsConnected { get; protected set; }
 
@@ -123,33 +123,30 @@ namespace Devices.Honeywell.Comm.CommClients
 
         protected override async Task ConnectToInstrument(CancellationToken ct)
         {
-            await Task.Run(async () =>
+            if (await WakeUpInstrument(ct))
             {
-                if (await WakeUpInstrument())
+                var response = await ExecuteCommand(Commands.SignOn(EvcDeviceType));
+
+                if (response.IsSuccess)
                 {
-                    var response = await ExecuteCommand(Commands.SignOn(EvcDeviceType));
-
-                    if (response.IsSuccess)
-                    {
-                        IsConnected = true;
-                        StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
-                    }
-                    else
-                    {
-                        IsConnected = false;
-
-                        var responseType = Responses.Get(response.ResponseCode);
-
-                        responseType.TryRecover(this);
-
-                        if (responseType.ThrowsException)
-                            throw responseType.RaiseException(response);
-                    }
+                    IsConnected = true;
+                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
                 }
-            }, ct);
+                else
+                {
+                    IsConnected = false;
+
+                    var responseType = Responses.Get(response.ResponseCode);
+
+                    responseType.TryRecover(this);
+
+                    if (responseType.ThrowsException)
+                        throw responseType.RaiseException(response);
+                }
+            }
         }
 
-        private async Task<bool> WakeUpInstrument()
+        private async Task<bool> WakeUpInstrument(CancellationToken ct)
         {
             await ExecuteCommand(Commands.WakeupOne());
             await Task.Delay(150);

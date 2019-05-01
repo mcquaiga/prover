@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Devices.Communications
 {
     public abstract class EvcCommunicationClient<TEvcType> : IDisposable, IEvcCommunicationClient<TEvcType>
-        where TEvcType : IEvcDeviceType
+        where TEvcType : IDeviceType
     {
         #region Properties
 
@@ -55,60 +55,44 @@ namespace Devices.Communications
 
             ct.ThrowIfCancellationRequested();
 
-            var result = Task.Run(async () =>
+            Exception exception = null;
+
+            while (!IsConnected)
             {
-                Exception exception = null;
+                StatusStream.OnNext($"Connecting to {EvcDeviceType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
 
-                while (!IsConnected)
+                if (ct.IsCancellationRequested)
+                    ct.ThrowIfCancellationRequested();
+
+                if (!CommPort.IsOpen())
+                    await CommPort.Open(ct);
+
+                try
                 {
-                    StatusStream.OnNext($"Connecting to {EvcDeviceType.Name} on {CommPort.Name}... {connectionAttempts} of {MaxConnectionAttempts}");
+                    await ConnectToInstrument(ct);
+                }
+                catch (EvcResponseException eex)
+                {
+                    throw eex;
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
 
-                    if (ct.IsCancellationRequested)
-                        ct.ThrowIfCancellationRequested();
-
-                    if (!CommPort.IsOpen())
-                        await CommPort.Open(ct);
-
-                    try
+                if (!IsConnected)
+                {
+                    if (connectionAttempts < retryAttempts)
                     {
-                        await ConnectToInstrument(ct);
+                        StatusStream.OnNext($"[{CommPort.Name}] Failed connecting to {EvcDeviceType.Name}.");
+                        await Task.Delay(ConnectionRetryDelayMs);
+                        connectionAttempts++;
                     }
-                    catch (EvcResponseException)
+                    else
                     {
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        exception = ex;
-                    }
-
-                    if (!IsConnected)
-                    {
-                        if (connectionAttempts < retryAttempts)
-                        {
-                            StatusStream.OnNext($"[{CommPort.Name}] Failed connecting to {EvcDeviceType.Name}.");
-                            await Task.Delay(ConnectionRetryDelayMs);
-                            connectionAttempts++;
-                        }
-                        else
-                        {
-                            throw new FailedConnectionException(CommPort, EvcDeviceType, retryAttempts, exception);
-                        }
+                        throw new FailedConnectionException(CommPort, EvcDeviceType, retryAttempts, exception);
                     }
                 }
-            }, ct);
-
-            try
-            {
-                await result;
-            }
-            catch (AggregateException e)
-            {
-                foreach (var v in e.InnerExceptions)
-                {
-                    Log.Warn(e.Message + " " + v.Message);
-                }
-                throw;
             }
         }
 
