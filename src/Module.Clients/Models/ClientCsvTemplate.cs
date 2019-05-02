@@ -25,7 +25,7 @@ namespace Module.Clients.Models
 
         public virtual Client Client { get; set; }
 
-        public EvcCorrectorType? CorrectorType { get; set; }
+        public CompositionType? CorrectorType { get; set; }
 
         public string CsvTemplate { get; set; }
 

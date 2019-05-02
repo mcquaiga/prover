@@ -7,13 +7,9 @@ namespace Devices.Terminal.Wpf
     /// </summary>
     public partial class App : Application
     {
-        #region Constructors
-
         protected override void OnStartup(StartupEventArgs e)
         {
             Bootstrapper.Start();
         }
-
-        #endregion
     }
 }

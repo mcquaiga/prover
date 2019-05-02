@@ -26,7 +26,7 @@ namespace Module.EvcVerification.Models.DriveTypes
             return 10;
         }
 
-        public double? UnCorrectedInputVolume(double appliedInput)
+        public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
             return FrequencyTest.AdjustedVolume();
         }

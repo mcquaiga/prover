@@ -4,7 +4,7 @@ namespace Module.EvcVerification.Models
     using Devices.Core;
     using Devices.Core.Interfaces;
     using Module.Clients.Models;
-    using Module.EvcVerification.Models.CorrectionTestAggregate;
+    using Module.EvcVerification.Models.CorrectionTests;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Module.EvcVerification.Models
     /// </summary>
     public class EvcVerification : AggregateRoot
     {
-        #region Properties
+        private readonly List<CorrectionTestPoint> _correctionTests = new List<CorrectionTestPoint>();
 
         /// <summary>
         /// Gets or sets the ArchivedDateTime
@@ -30,7 +30,7 @@ namespace Module.EvcVerification.Models
         /// <summary>
         /// Gets or sets the VerificationTests
         /// </summary>
-        public virtual IReadOnlyCollection<CorrectionTest> CorrectionTests => _correctionTests.AsReadOnly();
+        public virtual IReadOnlyCollection<CorrectionTestPoint> CorrectionTests => _correctionTests.AsReadOnly();
 
         public virtual IDevice Device { get; private set; }
 
@@ -61,12 +61,6 @@ namespace Module.EvcVerification.Models
             }
         }
 
-        private readonly List<CorrectionTest> _correctionTests = new List<CorrectionTest>();
-
-        #endregion Properties
-
-        #region Methods
-
         public static EvcVerification Create(IDeviceType evcType, Client client = null)
         {
             var i = new EvcVerification()
@@ -80,19 +74,19 @@ namespace Module.EvcVerification.Models
 
         public void AddCorrectionTest(CorrectionTestDefinition tp)
         {
-            var test = new CorrectionTest(this.Device, tp.Level);
+            var test = new CorrectionTestPoint(this.Device, tp.Level);
 
-            if (Device.CompositionType == EvcCorrectorType.PressureOnly)
+            if (Device.CompositionType == CompositionType.PressureOnly)
             {
                 test.AddPressure(tp.PressureGaugePercent);
             }
 
-            if (Device.CompositionType == EvcCorrectorType.TemperatureOnly)
+            if (Device.CompositionType == CompositionType.TemperatureOnly)
             {
                 test.AddTemperature(tp.TemperatureGauge);
             }
 
-            if (Device.CompositionType == EvcCorrectorType.PressureTemperature)
+            if (Device.CompositionType == CompositionType.PressureTemperature)
             {
                 test.AddPressure(tp.PressureGaugePercent);
                 test.AddTemperature(tp.TemperatureGauge);
@@ -118,8 +112,6 @@ namespace Module.EvcVerification.Models
         {
             return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) }";
         }
-
-        #endregion Methods
     }
 }
 
@@ -194,4 +186,20 @@ namespace Module.EvcVerification.Models
 // string.Equals(instrumentType, "all", StringComparison.OrdinalIgnoreCase); }
 
 //    #endregion
+//}
+
+//public abstract class BaseVerificationEntity : BaseEntity
+//{
+//    public virtual IEvcDevice EvcDevice { get; }
+
+//    //public override void OnInitializing()
+//    //{
+//    //    if (EvcDeviceType == null)
+//    //        throw new NullReferenceException(nameof(EvcDeviceType));
+//    //    if (string.IsNullOrEmpty(_evcData))
+//    //        throw new NullReferenceException(nameof(_evcData));
+
+//    //    var itemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_evcData);
+//    //    //Items = ItemHelpers.LoadItems(EvcDeviceType, itemValues).ToList();
+//    //}
 //}

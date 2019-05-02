@@ -7,27 +7,21 @@ namespace Devices.Core.Interfaces
 {
     public interface IDevice
     {
-        #region Properties
-
-        EvcCorrectorType CompositionType { get; }
+        CompositionType CompositionType { get; }
 
         IDeviceType Device { get; set; }
 
         IEnumerable<ItemValue> ItemValues { get; set; }
 
-        IPressureItems PressureItems { get; set; }
+        IPressureItems PressureItems { get; }
 
-        ISiteInformationItems SiteInformationItems { get; set; }
+        ISiteInformationItems SiteInformationItems { get; }
 
-        ISuperFactorItems SuperFactorItems { get; set; }
+        ISuperFactorItems SuperFactorItems { get; }
 
-        ITemperatureItems TemperatureItems { get; set; }
+        ITemperatureItems TemperatureItems { get; }
 
-        IVolumeItems VolumeItems { get; set; }
-
-        #endregion
-
-        #region Methods
+        IVolumeItems VolumeItems { get; }
 
         Task GetAllItems();
 
@@ -48,7 +42,5 @@ namespace Devices.Core.Interfaces
         Task<IVolumeItems> GetVolumeItems();
 
         IVolumeItems GetVolumeItems(Dictionary<string, string> itemData);
-
-        #endregion
     }
 }

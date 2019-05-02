@@ -65,7 +65,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
                 ct.ThrowIfCancellationRequested();
                 await CheckForResidualPulses(CommClient, ct);
 
-                VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
+                VolumeTest.EndItems = await CommClient.GetVolumeItems();
                 if (VolumeTest.VerificationTest.FrequencyTest != null)
                 {
                     VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();

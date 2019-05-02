@@ -17,9 +17,11 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <materialDesign:Card Padding="32" Margin="16">
-            <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
-        </materialDesign:Card>
-    </Grid>
+    <DockPanel>
+        <rxui:ViewModelViewHost x:Name="SettingsItem"
+                                  DockPanel.Dock="Top" />
+
+        <TextBlock x:Name="CommWindow"
+                   DockPanel.Dock="Bottom" />
+    </DockPanel>
 </rxui:ReactiveWindow>

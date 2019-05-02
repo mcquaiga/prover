@@ -21,21 +21,21 @@ namespace Devices.Honeywell.Core
 
         #region Properties
 
-        public EvcCorrectorType CompositionType
+        public CompositionType CompositionType
         {
             get
             {
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase)
                     && string.Equals(ItemValues.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.PressureTemperature;
+                    return CompositionType.PressureTemperature;
 
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.PressureOnly;
+                    return CompositionType.PressureOnly;
 
                 if (string.Equals(ItemValues.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
-                    return EvcCorrectorType.TemperatureOnly;
+                    return CompositionType.TemperatureOnly;
 
-                return EvcCorrectorType.TemperatureOnly;
+                return CompositionType.TemperatureOnly;
             }
         }
 

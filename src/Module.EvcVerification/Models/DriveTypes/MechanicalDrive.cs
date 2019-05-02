@@ -17,7 +17,7 @@ namespace Module.EvcVerification.Models.DriveTypes
             EnergyUnits = (Units)Enum.Parse(typeof(Units), _instrument.Items.GetItem(141).Description);
         }
 
-        public Energy(Units unitValue, double startValue, double endValue, double totalValue, double evcCorrected)
+        public Energy(Units unitValue, decimal startValue, decimal endValue, decimal totalValue, decimal evcCorrected)
         {
             StartValue = startValue;
             EndValue = endValue;
@@ -49,7 +49,7 @@ namespace Module.EvcVerification.Models.DriveTypes
 
         #region Properties
 
-        public double? ActualEnergy
+        public decimal? ActualEnergy
         {
             get
             {
@@ -91,18 +91,18 @@ namespace Module.EvcVerification.Models.DriveTypes
             }
         }
 
-        public double? EndValue { get; private set; }
+        public decimal? EndValue { get; private set; }
 
         public Units EnergyUnits { get; }
 
-        public double? EvcEnergy
+        public decimal? EvcEnergy
         {
             get
             {
                 if (_instrument != null)
                 {
                     StartValue = _instrument.VolumeTest.Items?.GetItem(140)?.NumericValue;
-                    EndValue = _instrument.VolumeTest.AfterTestItems?.GetItem(140)?.NumericValue;
+                    EndValue = _instrument.VolumeTest.EndItems?.GetItem(140)?.NumericValue;
                 }
 
                 if (StartValue.HasValue && EndValue.HasValue)
@@ -116,21 +116,21 @@ namespace Module.EvcVerification.Models.DriveTypes
 
         public bool HasPassed => PercentError < 1 && PercentError > -1;
 
-        public double? PercentError
+        public decimal? PercentError
         {
             get
             {
                 if (ActualEnergy == 0) return null;
                 var error = (EvcEnergy - ActualEnergy) / ActualEnergy * 100;
                 if (error != null)
-                    return double.Round(error.Value, 2);
+                    return decimal.Round(error.Value, 2);
                 return null;
             }
         }
 
-        public double? StartValue { get; private set; }
+        public decimal? StartValue { get; private set; }
 
-        public double TotalValue { get; private set; }
+        public decimal TotalValue { get; private set; }
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace Module.EvcVerification.Models.DriveTypes
 
         private readonly EvcVerification _instrument;
 
-        private double? _evcCorrected;
+        private decimal? _evcCorrected;
 
         #endregion
     }
@@ -183,7 +183,7 @@ namespace Module.EvcVerification.Models.DriveTypes
                        .FirstOrDefault(x => x.CuFtValue == uncorUnitValue)?.UncorrectedPulses ?? 10;
         }
 
-        public double? UnCorrectedInputVolume(double appliedInput)
+        public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
             return appliedInput * Device.DriveRate();
         }

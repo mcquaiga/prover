@@ -18,7 +18,7 @@ namespace Module.EvcVerification.Models.DriveTypes
 
         public bool MeterDisplacementHasPassed => MeterDisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD);
 
-        public double MeterDisplacement
+        public decimal MeterDisplacement
         {
             get
             {
@@ -29,14 +29,14 @@ namespace Module.EvcVerification.Models.DriveTypes
             }
         }
 
-        public double? EvcMeterDisplacement => _instrument.Items.GetItem(439).NumericValue;
+        public decimal? EvcMeterDisplacement => _instrument.Items.GetItem(439).NumericValue;
 
-        public double MeterDisplacementPercentError
+        public decimal MeterDisplacementPercentError
         {
             get
             {
                 if (MeterDisplacement != 0)
-                    return Math.Round((double) ((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100),
+                    return Math.Round((decimal) ((EvcMeterDisplacement - MeterDisplacement) / MeterDisplacement * 100),
                         2);
                 return 0;
             }

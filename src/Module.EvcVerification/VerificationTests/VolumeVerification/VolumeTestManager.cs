@@ -1,5 +1,8 @@
 namespace Module.EvcVerification.VerificationTests.VolumeVerification
 {
+    using Devices.Communications;
+    using Module.EvcVerification.Models.CorrectionTests;
+    using NLog;
     using System;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
@@ -42,20 +45,15 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// </summary>
         protected readonly Subject<string> Status = new Subject<string>();
 
-        /// <summary>
-        /// Defines the EventAggreator
-        /// </summary>
-        protected IEventAggregator EventAggreator;
+        ///// <summary>
+        ///// Defines the FirstPortAInputBoard
+        ///// </summary>
+        //protected IDInOutBoard FirstPortAInputBoard;
 
-        /// <summary>
-        /// Defines the FirstPortAInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortAInputBoard;
-
-        /// <summary>
-        /// Defines the FirstPortBInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortBInputBoard;
+        ///// <summary>
+        ///// Defines the FirstPortBInputBoard
+        ///// </summary>
+        //protected IDInOutBoard FirstPortBInputBoard;
 
         /// <summary>
         /// Defines the Log
@@ -71,11 +69,9 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// </summary>
         /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
         /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
-        protected VolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
-        {
-
-            SettingsService = settingsService;
-            EventAggreator = eventAggregator;           
+        protected VolumeTestManager()
+        {                        
+   
         }
 
         #endregion
@@ -86,11 +82,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// Gets or sets a value indicating whether RunningTest
         /// </summary>
         public bool RunningTest { get; set; }
-
-        /// <summary>
-        /// Gets the SettingsService
-        /// </summary>
-        public ISettingsService SettingsService { get; }
+      
 
         /// <summary>
         /// Gets the StatusMessage
@@ -105,7 +97,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// <summary>
         /// Gets or sets the CommClient
         /// </summary>
-        protected EvcCommunicationClient CommClient { get; set; }
+        protected IEvcCommunicationClient CommClient { get; set; }
 
         #endregion
 
@@ -117,7 +109,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public abstract Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct);
+        public abstract Task CompleteTest(CancellationToken ct);
 
         /// <summary>
         /// The Dispose
@@ -142,7 +134,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct);
+        public abstract Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, CancellationToken ct);
 
         /// <summary>
         /// The RunTest
@@ -152,7 +144,7 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
         /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public virtual async Task RunFullVolumeTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager,
+        public virtual async Task RunFullVolumeTest(EvcCommunicationClient commClient, VolumeTest volumeTest,
             CancellationToken ct)
         {
             try
@@ -164,17 +156,17 @@ namespace Module.EvcVerification.VerificationTests.VolumeVerification
                 Log.Info("Volume test started!");
               
                 //TODO: Add setting to skip
-                if (SettingsService.TestSettings.RunVolumeSyncTest)
+                //if (SettingsService.TestSettings.RunVolumeSyncTest)
                     await ExecuteSyncTest(ct);
 
                 ct.ThrowIfCancellationRequested();
 
-                await PreTest(commClient, volumeTest, testActionsManager, ct);
+                await PreTest(commClient, volumeTest, ct);
 
                 await RunTest(ct);
                 ct.ThrowIfCancellationRequested();
 
-                await CompleteTest(testActionsManager, ct);
+                await CompleteTest(ct);
 
                 Log.Info("Volume test finished!");                
 

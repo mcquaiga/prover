@@ -1,35 +1,33 @@
-namespace Module.EvcVerification.Models.CorrectionTestAggregate
+namespace Module.EvcVerification.Models.CorrectionTests
 {
     using Core.Domain;
+    using Core.Extensions;
+    using Devices.Core.Interfaces.Items;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using static Module.EvcVerification.CorrectionTestDefinition;
 
+    public class PulseOutputChannel : IAssertPassFail, ICompareTestResults<int>
+    {
+        public int Actual { get; }
+
+        public int Expected { get; }
+
+        public bool Passed => Math.Abs(Expected - Actual).IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
+
+        public decimal PercentVariance => (Expected - Actual) / Actual * 100;
+    }
+
     /// <summary>
     /// Defines the <see cref="VolumeTest"/>
     /// </summary>
-    public class VolumeTest : BaseEntity
+    public class VolumeTest : BaseEntity, IAssertPassFail
     {
-        #region Fields
-
         /// <summary>
         /// Defines the _testInstrumentData
         /// </summary>
         private string _testInstrumentData;
-
-        #endregion
-
-        #region Constructors
-
-        public VolumeTest(CorrectionTest verificationTest, List<MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
-        {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = verificationTest.Id;
-
-            CreateDriveType(mechanicalUncorrectedTestLimits);
-        }
 
         /// <summary>
         /// Prevents a default instance of the <see cref="VolumeTest"/> class from being created.
@@ -38,82 +36,24 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         {
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the ActualFactor
-        /// </summary>
-        public override double? ActualFactor { get; }
-
-        /// <summary>
-        /// Gets or sets the AfterTestItems
-        /// </summary>
-        [NotMapped]
-        public IEnumerable<ItemValue> AfterTestItems { get; set; }
-
-        /// <summary>
-        /// Gets or sets the AppliedInput
-        /// </summary>
-        public double AppliedInput { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CorPulseCount
-        /// </summary>
-        [NotMapped]
-        public int CorPulseCount
+        public VolumeTest(CorrectionTestPoint c)
         {
-            get
-            {
-                if (Instrument.PulseASelect() == "CorVol")
-                    return PulseACount;
-
-                return PulseBCount;
-            }
-            set
-            {
-                if (Instrument.PulseASelect() == "CorVol")
-                    PulseACount = value;
-                else
-                    PulseBCount = value;
-            }
+            VerificationTest = verificationTest;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether CorPulsesPassed
-        /// </summary>
-        [NotMapped]
-        public bool CorPulsesPassed
-        {
-            get
-            {
-                var expectedPulses = (int?)(AfterTestItems?.Corrected() - Items.Corrected());
-                if (!expectedPulses.HasValue) return false;
+        public decimal AppliedInput { get; set; }
 
-                var variance = expectedPulses - CorPulseCount;
-                return variance.IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether CorrectedHasPassed
-        /// </summary>
-        [NotMapped]
+        public ICollection<Volume>
         public bool CorrectedHasPassed => CorrectedPercentError?.IsBetween(Global.COR_ERROR_THRESHOLD) ?? false;
 
-        /// <summary>
-        /// Gets the CorrectedPercentError
-        /// </summary>
-        [NotMapped]
-        public double? CorrectedPercentError
+        public decimal? CorrectedPercentError
         {
             get
             {
                 if (EvcCorrected.HasValue && TrueCorrected.HasValue && TrueCorrected != 0)
                 {
                     var o = (EvcCorrected.Value - TrueCorrected.Value) / TrueCorrected.Value;
-                    return double.Round(o * 100, 2);
+                    return decimal.Round(o * 100, 2);
                 }
 
                 return null;
@@ -130,45 +70,25 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// </summary>
         public string DriveTypeDiscriminator { get; set; }
 
-        /// <summary>
-        /// Gets the EvcCorrected
-        /// </summary>
-        [NotMapped]
-        public double? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
+        public IVolumeItems EndItems { get; set; }
 
-        /// <summary>
-        /// Gets the InstrumentType
-        /// </summary>
-        [NotMapped]
-        public override InstrumentType EvcDeviceType => Instrument.InstrumentType;
+        public bool Passed
+        {
+            get
+            {
+                return PulseOutputChannels.All(p => p.Passed);
+            }
+        }
 
-        /// <summary>
-        /// Gets the EvcFactor
-        /// </summary>
-        public override double? EvcFactor { get; }
+        //CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
+        //                       UnCorPulsesPassed && CorPulsesPassed;
 
-        /// <summary>
-        /// Gets the EvcUncorrected
-        /// </summary>
-        [NotMapped]
-        public double? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
-
-        /// <summary>
-        /// Gets a value indicating whether HasPassed
-        /// </summary>
-        [NotMapped]
-        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
-                                     UnCorPulsesPassed && CorPulsesPassed;
-
-        /// <summary>
-        /// Gets the Instrument
-        /// </summary>
-        public EvcVerification Instrument => VerificationTest.Instrument;
+        public decimal PassTolerance => throw new NotImplementedException();
 
         /// <summary>
         /// Gets the PercentError
         /// </summary>
-        public override double? PercentError { get; }
+        public override decimal? PercentError { get; }
 
         /// <summary>
         /// Gets or sets the PulseACount
@@ -180,16 +100,18 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// </summary>
         public int PulseBCount { get; set; }
 
+        public ICollection<PulseOutputChannel> PulseOutputChannels { get; }
+
         /// <summary>
         /// Gets or sets the TestInstrumentData
         /// </summary>
-        public string TestInstrumentData { get => AfterTestItems.Serialize(); set => _testInstrumentData = value; }
+        public string TestInstrumentData { get => EndItems.Serialize(); set => _testInstrumentData = value; }
 
         /// <summary>
         /// Gets the TotalCorrectionFactor
         /// </summary>
         [NotMapped]
-        public double? TotalCorrectionFactor
+        public decimal? TotalCorrectionFactor
         {
             get
             {
@@ -216,7 +138,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// Gets the TrueCorrected
         /// </summary>
         [NotMapped]
-        public virtual double? TrueCorrected
+        public virtual decimal? TrueCorrected
         {
             get
             {
@@ -230,7 +152,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// Gets the TrueUncorrected
         /// </summary>
         [NotMapped]
-        public virtual double? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
+        public virtual decimal? TrueUncorrected => DriveType?.UnCorrectedInputVolume(AppliedInput);
 
         /// <summary>
         /// Gets a value indicating whether UnCorPulsesPassed
@@ -240,7 +162,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         {
             get
             {
-                var expectedPulses = (int?)(AfterTestItems?.Uncorrected() - Items?.Uncorrected());
+                var expectedPulses = (int?)(EndItems?.Uncorrected() - Items?.Uncorrected());
                 if (!expectedPulses.HasValue) return false;
 
                 var variance = expectedPulses - UncPulseCount;
@@ -258,14 +180,14 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// Gets the UnCorrectedPercentError
         /// </summary>
         [NotMapped]
-        public double? UnCorrectedPercentError
+        public decimal? UnCorrectedPercentError
         {
             get
             {
                 if (EvcUncorrected.HasValue && TrueUncorrected.HasValue && TrueUncorrected != 0)
                 {
                     var o = (EvcUncorrected.Value - TrueUncorrected.Value) / TrueUncorrected.Value;
-                    return double.Round(o * 100, 2);
+                    return decimal.Round(o * 100, 2);
                 }
 
                 return null;
@@ -275,10 +197,6 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         [NotMapped]
         public int UncorrectedPulseTarget => DriveType.MaxUncorrectedPulses();
 
-        /// <summary>
-        /// Gets or sets the UncPulseCount
-        /// </summary>
-        [NotMapped]
         public int UncPulseCount
         {
             get
@@ -297,9 +215,15 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             }
         }
 
-        #endregion
+        decimal ICompareFactors.ActualFactor => throw new NotImplementedException();
+        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, EndItems);
+        decimal ICompareFactors.EvcFactor => throw new NotImplementedException();
+        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, EndItems);
 
-        #region Methods
+        /// <summary>
+        /// Gets the Instrument
+        /// </summary>
+        public EvcVerification Instrument => VerificationTest.Instrument;
 
         /// <summary>
         /// The CreateDriveType
@@ -362,10 +286,8 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             if (!string.IsNullOrEmpty(_testInstrumentData))
             {
                 var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
-                AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
+                EndItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
             }
         }
-
-        #endregion
     }
 }

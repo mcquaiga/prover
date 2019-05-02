@@ -1,19 +1,19 @@
 namespace Devices.Core
 {
-    public enum DriveTypeDescripter
-    {
-        Mechanical,
-
-        Rotary
-    }
-
-    public enum EvcCorrectorType
+    public enum CompositionType
     {
         TemperatureOnly,
 
         PressureOnly,
 
         PressureTemperature
+    }
+
+    public enum DriveTypeDescripter
+    {
+        Mechanical,
+
+        Rotary
     }
 
     public enum PressureTransducerType

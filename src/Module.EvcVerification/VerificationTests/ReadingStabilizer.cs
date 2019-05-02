@@ -125,7 +125,7 @@ namespace Module.EvcVerification.VerificationTests
         {
             var test = instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
             var pressure = test?.PressureTest?.GasGauge ?? 0m;
-            var temperature = (double?)test?.TemperatureTest?.Gauge ?? 0m;
+            var temperature = (decimal?)test?.TemperatureTest?.Gauge ?? 0m;
 
             var liveReadItems = new Dictionary<ItemValue, AveragedReadingStabilizer>();
 
@@ -150,7 +150,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// Defines the AverageThreshold
         /// </summary>
-        private const double AverageThreshold = 1.0m;
+        private const decimal AverageThreshold = 1.0m;
 
         /// <summary>
         /// Defines the FixedQueueSize
@@ -164,8 +164,8 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// Defines the _valueQueue
         /// </summary>
-        private FixedSizedQueue<double> _valueQueue;
-        private double _latest;
+        private FixedSizedQueue<decimal> _valueQueue;
+        private decimal _latest;
 
         #endregion
 
@@ -174,11 +174,11 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// Initializes a new instance of the <see cref="AveragedReadingStabilizer"/> class.
         /// </summary>
-        /// <param name="gaugeValue">The gaugeValue<see cref="double"/></param>
-        public AveragedReadingStabilizer(double gaugeValue)
+        /// <param name="gaugeValue">The gaugeValue<see cref="decimal"/></param>
+        public AveragedReadingStabilizer(decimal gaugeValue)
         {
             GaugeValue = gaugeValue;
-            _valueQueue = new FixedSizedQueue<double>(FixedQueueSize);
+            _valueQueue = new FixedSizedQueue<decimal>(FixedQueueSize);
         }
 
         #endregion
@@ -188,7 +188,7 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// Gets the GaugeValue
         /// </summary>
-        public double GaugeValue { get; }
+        public decimal GaugeValue { get; }
 
         /// <summary>
         /// Gets a value indicating whether IsStable
@@ -217,8 +217,8 @@ namespace Module.EvcVerification.VerificationTests
         /// <summary>
         /// The Add
         /// </summary>
-        /// <param name="value">The value<see cref="double"/></param>
-        public void Add(double value)
+        /// <param name="value">The value<see cref="decimal"/></param>
+        public void Add(decimal value)
         {
             _valueQueue.Enqueue(value);
             _latest = value;
@@ -230,10 +230,10 @@ namespace Module.EvcVerification.VerificationTests
         public void Clear()
         {
             _valueQueue = null;
-            _valueQueue = new FixedSizedQueue<double>(FixedQueueSize);
+            _valueQueue = new FixedSizedQueue<decimal>(FixedQueueSize);
         }
 
-        public double Latest()
+        public decimal Latest()
         {
             return _latest;
         }

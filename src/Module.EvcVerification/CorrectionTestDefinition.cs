@@ -12,9 +12,9 @@ namespace Module.EvcVerification
 
         public List<MechanicalUncorrectedTestLimit> MechanicalDriveTestLimits { get; set; } = new List<MechanicalUncorrectedTestLimit>();
 
-        public double PressureGaugePercent { get; set; }
+        public decimal PressureGaugePercent { get; set; }
 
-        public double TemperatureGauge { get; set; }
+        public decimal TemperatureGauge { get; set; }
 
         public class MechanicalUncorrectedTestLimit
         {
@@ -23,7 +23,7 @@ namespace Module.EvcVerification
             /// <summary>
             /// Gets or sets the CuFtValue
             /// </summary>
-            public double CuFtValue { get; set; }
+            public decimal CuFtValue { get; set; }
 
             /// <summary>
             /// Gets or sets the UncorrectedPulses

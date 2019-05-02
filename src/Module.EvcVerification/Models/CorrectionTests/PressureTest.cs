@@ -1,4 +1,4 @@
-namespace Module.EvcVerification.Models.CorrectionTestAggregate
+namespace Module.EvcVerification.Models.CorrectionTests
 {
     using Devices.Core;
     using Devices.Core.Interfaces.Items;
@@ -7,30 +7,28 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
     /// <summary>
     /// Defines the <see cref="PressureTest"/>
     /// </summary>
-    public sealed class PressureTest : BaseCorrectionTest
+    public sealed class PressureTest : CorrectionBase
     {
-        #region Fields
-
         /// <summary>
         /// Defines the _totalGauge
         /// </summary>
-        private readonly double? _totalGauge;
+        private readonly decimal? _totalGauge;
 
-        #endregion
-
-        #region Constructors
+        private PressureTest()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PressureTest"/> class.
         /// </summary>
-        /// <param name="verificationTest">The verificationTest <see cref="CorrectionTest"/></param>
-        /// <param name="percentOfGauge">The percentOfGauge <see cref="double"/></param>
-        public PressureTest(IPressureItems items, double percentOfGauge)
+        /// <param name="verificationTest">The verificationTest <see cref="CorrectionTestPoint"/></param>
+        /// <param name="percentOfGauge">The percentOfGauge <see cref="decimal"/></param>
+        public PressureTest(IPressureItems items, decimal percentOfGauge)
         {
             Items = items;
 
             _totalGauge = GetGaugePressure(percentOfGauge);
-            AtmosphericGauge = default(double?);
+            AtmosphericGauge = default(decimal?);
 
             switch (Items.TransducerType)
             {
@@ -46,16 +44,10 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             }
         }
 
-        private PressureTest() { }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets the ActualFactor
         /// </summary>
-        public override double ActualFactor
+        public override decimal ActualFactor
         {
             get
             {
@@ -69,27 +61,27 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// Gets or sets the AtmosphericGauge
         /// </summary>
-        public double? AtmosphericGauge { get; set; }
+        public decimal? AtmosphericGauge { get; set; }
 
         /// <summary>
         /// Gets the EvcFactor
         /// </summary>
-        public override double EvcFactor => Items.Factor;
+        public override decimal EvcFactor => Items.Factor;
 
         /// <summary>
         /// Gets or sets the GasGauge
         /// </summary>
-        public double? GasGauge { get; set; }
+        public decimal? GasGauge { get; set; }
 
         /// <summary>
         /// Gets the GasGaugePsi
         /// </summary>
-        public double? GasGaugePsi => GasGauge.HasValue ? ConvertToPsi(GasGauge.Value, Items.Units) : default(double?);
+        public decimal? GasGaugePsi => GasGauge.HasValue ? ConvertToPsi(GasGauge.Value, Items.Units) : default(decimal?);
 
         /// <summary>
         /// Gets the GasPressure
         /// </summary>
-        public double GasPressure
+        public decimal GasPressure
         {
             get
             {
@@ -98,29 +90,25 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             }
         }
 
-        public double GasPressurePsi => ConvertToPsi(GasPressure, Items.Units);
+        public decimal GasPressurePsi => ConvertToPsi(GasPressure, Items.Units);
 
         public IPressureItems Items { get; }
-
-        public double TotalGauge => _totalGauge ?? 0;
 
         /// <summary>
         /// Gets the PassTolerance
         /// </summary>
-        protected override double PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
+        public override decimal PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
 
-        #endregion
-
-        #region Methods
+        public decimal TotalGauge => _totalGauge ?? 0;
 
         /// <summary>
         /// The ConvertTo
         /// </summary>
-        /// <param name="value">The value <see cref="double"/></param>
+        /// <param name="value">The value <see cref="decimal"/></param>
         /// <param name="fromUnit">The fromUnit <see cref="string"/></param>
         /// <param name="toUnit">The toUnit <see cref="string"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        public static double ConvertTo(double value, PressureUnits fromUnit, PressureUnits toUnit)
+        /// <returns>The <see cref="decimal"/></returns>
+        public static decimal ConvertTo(decimal value, PressureUnits fromUnit, PressureUnits toUnit)
         {
             var result = ConvertToPsi(value, fromUnit);
 
@@ -169,10 +157,10 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// The ConvertToPsi
         /// </summary>
-        /// <param name="value">The value <see cref="double"/></param>
+        /// <param name="value">The value <see cref="decimal"/></param>
         /// <param name="fromUnit">The fromUnit <see cref="string"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        public static double ConvertToPsi(double value, PressureUnits fromUnit)
+        /// <returns>The <see cref="decimal"/></returns>
+        public static decimal ConvertToPsi(decimal value, PressureUnits fromUnit)
         {
             var result = 0.0;
 
@@ -221,9 +209,9 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// The GetGaugePressure
         /// </summary>
-        /// <param name="percentOfGauge">The percentOfGauge <see cref="double"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        public double GetGaugePressure(double percentOfGauge)
+        /// <param name="percentOfGauge">The percentOfGauge <see cref="decimal"/></param>
+        /// <returns>The <see cref="decimal"/></returns>
+        public decimal GetGaugePressure(decimal percentOfGauge)
         {
             if (percentOfGauge > 1)
                 percentOfGauge = percentOfGauge / 100;
@@ -231,7 +219,5 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             var evcPressureRange = Items.Range;
             return Math.Round(percentOfGauge * evcPressureRange, 2);
         }
-
-        #endregion
     }
 }

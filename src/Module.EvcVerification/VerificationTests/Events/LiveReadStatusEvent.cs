@@ -24,7 +24,7 @@ namespace Module.EvcVerification.VerificationTests.Events
            
         }
 
-        public LiveReadStatusEvent(double pressureActual, double pressureTarget, double tempActual, double tempTarget)
+        public LiveReadStatusEvent(decimal pressureActual, decimal pressureTarget, decimal tempActual, decimal tempTarget)
         {
             PressureActual = pressureActual;
             PressureTarget = pressureTarget;
@@ -32,10 +32,10 @@ namespace Module.EvcVerification.VerificationTests.Events
             TempTarget = tempTarget;
         }
 
-        public double PressureActual { get; }
-        public double PressureTarget { get; }
-        public double TempActual { get; }
-        public double TempTarget { get; }
+        public decimal PressureActual { get; }
+        public decimal PressureTarget { get; }
+        public decimal TempActual { get; }
+        public decimal TempTarget { get; }
         public Dictionary<ItemValue, AveragedReadingStabilizer> LiveReadItems { get; }
         public string HeaderMessage { get; }
     }

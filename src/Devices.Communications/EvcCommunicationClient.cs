@@ -13,12 +13,54 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications
 {
-    public abstract class EvcCommunicationClient<TEvcType> : IDisposable, IEvcCommunicationClient<TEvcType>
-        where TEvcType : IDeviceType
-    {
-        #region Properties
+    public abstract class EvcCommunicationClient : IDisposable, IEvcCommunicationClient
 
-        public virtual TEvcType EvcDeviceType { get; set; }
+    {
+        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
+        protected readonly ISubject<string> StatusStream = new Subject<string>();
+        private const int ConnectionRetryDelayMs = 3000;
+        private const int MaxConnectionAttempts = 10;
+        private readonly IDisposable _receivedObservable;
+        private readonly IDisposable _sentObservable;
+        private TimeSpan _timeout = TimeSpan.FromSeconds(5);
+
+        /// <summary>
+        /// A client to communicate with a wide range of EVCs
+        /// </summary>
+        /// <param name="commPort">Communcations interface to the device</param>
+        /// <param name="EvcDeviceType">Instrument type of device</param>
+        /// <param name="statusSubject">Subject for listening to status updates</param>
+        protected EvcCommunicationClient(ICommPort commPort, IDeviceType evcDeviceType)
+        {
+            CommPort = commPort;
+            EvcDeviceType = evcDeviceType;
+
+            var incoming = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
+                .Select(msg => $"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}");
+
+            var outgoing = CommPort.DataSentObservable
+                .Select(msg => $"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}");
+
+            incoming.Merge(outgoing)
+               .Subscribe(msg =>
+               {
+                   Log.Debug(msg);
+                   Console.WriteLine(msg);
+               });
+
+            incoming.Subscribe(StatusStream);
+            CommPort.DataSentObservable.Subscribe(StatusStream);
+
+            Status = StatusStream.Publish();
+            var statusDisposable = (Status as IConnectableObservable<string>).Connect();
+
+            Status.Subscribe(
+                s => Console.WriteLine(s),
+                () => statusDisposable.Dispose());
+        }
+
+        public ICommPort CommPort { get; }
+        public virtual IDeviceType EvcDeviceType { get; protected set; }
 
         /// <summary>
         /// Is this client already connected to an instrument
@@ -31,10 +73,6 @@ namespace Devices.Communications
         public virtual List<ItemMetadata> ItemDetails { get; protected set; } = new List<ItemMetadata>();
 
         public IObservable<string> Status { get; private set; }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Establish a link with an instrument Handles retries for failed connections
@@ -221,47 +259,6 @@ namespace Devices.Communications
         /// <returns></returns>
         public abstract Task<bool> SetItemValue(string itemCode, long value);
 
-        #endregion
-
-        #region Fields
-
-        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// A client to communicate with a wide range of EVCs
-        /// </summary>
-        /// <param name="commPort">Communcations interface to the device</param>
-        /// <param name="EvcDeviceType">Instrument type of device</param>
-        /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected EvcCommunicationClient(ICommPort commPort, TEvcType evcDeviceType)
-        {
-            CommPort = commPort;
-            EvcDeviceType = evcDeviceType;
-
-            Status = StatusStream.Publish();
-            var statusDisposable = (Status as IConnectableObservable<string>).Connect();
-
-            Status.Subscribe(
-                s => Log.Debug(s),
-                () => statusDisposable.Dispose());
-
-            _receivedObservable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceivedObservable)
-                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [R] {ControlCharacters.Prettify(msg)}"); });
-
-            _sentObservable = CommPort.DataSentObservable
-                .Subscribe(msg => { Log.Debug($"[{CommPort.Name}] [S] {ControlCharacters.Prettify(msg)}"); });
-        }
-
-        #endregion
-
-        public ICommPort CommPort { get; }
-
-        protected readonly ISubject<string> StatusStream = new Subject<string>();
-
         /// <summary>
         /// Establish a link with an instrument Handles retries for failed connections
         /// </summary>
@@ -295,15 +292,5 @@ namespace Devices.Communications
                 return await response;
             }
         }
-
-        private const int ConnectionRetryDelayMs = 3000;
-
-        private const int MaxConnectionAttempts = 10;
-
-        private readonly IDisposable _receivedObservable;
-
-        private readonly IDisposable _sentObservable;
-
-        private TimeSpan _timeout = TimeSpan.FromSeconds(5);
     }
 }

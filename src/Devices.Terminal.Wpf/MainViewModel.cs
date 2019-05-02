@@ -1,22 +1,19 @@
-﻿using ReactiveUI;
+﻿using Devices.Terminal.Wpf.Controls;
+using ReactiveUI;
+using Splat;
 
 namespace Devices.Terminal.Wpf
 {
     public class MainViewModel : ReactiveObject, IScreen
     {
-        #region Constructors
-
         public MainViewModel()
         {
             Router = new RoutingState();
+
+            SettingsViewModel = new SettingsViewModel();
         }
 
-        #endregion
-
-        #region Properties
-
         public RoutingState Router { get; }
-
-        #endregion
+        public SettingsViewModel SettingsViewModel { get; }
     }
 }

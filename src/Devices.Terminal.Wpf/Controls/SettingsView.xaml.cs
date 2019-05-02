@@ -7,13 +7,9 @@ namespace Devices.Terminal.Wpf.Controls
     /// </summary>
     public partial class SettingsView : ReactiveUserControl<SettingsViewModel>
     {
-        #region Constructors
-
         public SettingsView()
         {
             InitializeComponent();
         }
-
-        #endregion
     }
 }

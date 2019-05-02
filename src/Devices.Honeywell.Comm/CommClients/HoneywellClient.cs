@@ -1,5 +1,6 @@
 using Devices.Communications;
 using Devices.Communications.IO;
+using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;
@@ -14,25 +15,64 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient<IHoneywellDeviceType>
+    public class HoneywellClient : EvcCommunicationClient
     {
-        #region Constructors
-
-        public HoneywellClient(ICommPort commPort, IHoneywellDeviceType instrumentType) : base(commPort, instrumentType)
+        public HoneywellClient(ICommPort commPort, IHoneywellDeviceType deviceType) : base(commPort, deviceType)
         {
         }
 
-        #endregion
-
-        #region Properties
-
-        public override IHoneywellDeviceType EvcDeviceType { get; set; }
+        protected Task LoadItemsTask { get; private set; }
 
         public override bool IsConnected { get; protected set; }
 
-        #endregion
+        private async Task<bool> WakeUpInstrument(CancellationToken ct)
+        {
+            await ExecuteCommand(Commands.WakeupOne());
+            await Task.Delay(150);
 
-        #region Methods
+            try
+            {
+                var response = await ExecuteCommand(Commands.WakeupTwo());
+
+                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                await Task.Delay(200);
+                await ExecuteCommand(Commands.OkayToSend());
+                throw;
+            }
+
+            return false;
+        }
+
+        protected override async Task ConnectToInstrument(CancellationToken ct)
+        {
+            if (await WakeUpInstrument(ct))
+            {
+                var response = await ExecuteCommand(Commands.SignOn((IHoneywellDeviceType)EvcDeviceType));
+
+                if (response.IsSuccess)
+                {
+                    IsConnected = true;
+                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
+                }
+                else
+                {
+                    IsConnected = false;
+
+                    var responseType = Responses.Get(response.ResponseCode);
+
+                    responseType.TryRecover(this);
+
+                    if (responseType.ThrowsException)
+                        throw responseType.RaiseException(response);
+                }
+            }
+        }
 
         public override async Task Disconnect()
         {
@@ -116,58 +156,5 @@ namespace Devices.Honeywell.Comm.CommClients
 
         public override async Task<bool> SetItemValue(string itemCode, long value)
             => await SetItemValue(ItemDetails.GetItem(itemCode), value);
-
-        #endregion
-
-        protected Task LoadItemsTask { get; private set; }
-
-        protected override async Task ConnectToInstrument(CancellationToken ct)
-        {
-            if (await WakeUpInstrument(ct))
-            {
-                var response = await ExecuteCommand(Commands.SignOn(EvcDeviceType));
-
-                if (response.IsSuccess)
-                {
-                    IsConnected = true;
-                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
-                }
-                else
-                {
-                    IsConnected = false;
-
-                    var responseType = Responses.Get(response.ResponseCode);
-
-                    responseType.TryRecover(this);
-
-                    if (responseType.ThrowsException)
-                        throw responseType.RaiseException(response);
-                }
-            }
-        }
-
-        private async Task<bool> WakeUpInstrument(CancellationToken ct)
-        {
-            await ExecuteCommand(Commands.WakeupOne());
-            await Task.Delay(150);
-
-            try
-            {
-                var response = await ExecuteCommand(Commands.WakeupTwo());
-
-                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                await Task.Delay(200);
-                await ExecuteCommand(Commands.OkayToSend());
-                throw;
-            }
-
-            return false;
-        }
     }
 }

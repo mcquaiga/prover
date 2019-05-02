@@ -17,7 +17,7 @@ namespace Module.EvcVerification.Models.DriveTypes
 
         public Energy Energy => null;
 
-        public double? UnCorrectedInputVolume(double appliedInput)
+        public decimal? UnCorrectedInputVolume(decimal appliedInput)
         {
             return Meter.MeterDisplacement * appliedInput;
         }

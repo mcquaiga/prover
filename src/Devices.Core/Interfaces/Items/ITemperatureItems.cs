@@ -1,5 +1,3 @@
-using Devices.Core.EvcDevices;
-
 namespace Devices.Core.Interfaces.Items
 {
     public interface ITemperatureItems : IItemsGroup

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications
 {
-    public interface IEvcCommunicationClient<TEvcType> where TEvcType : IDeviceType
+    public interface IEvcCommunicationClient
     {
         #region Public Properties
 
-        TEvcType EvcDeviceType { get; set; }
+        IDeviceType EvcDeviceType { get; }
 
         bool IsConnected { get; }
 

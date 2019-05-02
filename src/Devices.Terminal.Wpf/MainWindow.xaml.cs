@@ -7,8 +7,6 @@ namespace Devices.Terminal.Wpf
     /// </summary>
     public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
-        #region Constructors
-
         public MainWindow()
         {
             InitializeComponent();
@@ -17,9 +15,8 @@ namespace Devices.Terminal.Wpf
 
             this.WhenActivated(disposables =>
             {
+                this.OneWayBind(ViewModel, vm => vm.SettingsViewModel, v => v.SettingsItem.ViewModel);
             });
         }
-
-        #endregion
     }
 }

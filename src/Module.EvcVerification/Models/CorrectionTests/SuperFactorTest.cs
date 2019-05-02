@@ -1,4 +1,4 @@
-namespace Module.EvcVerification.Models.CorrectionTestAggregate
+namespace Module.EvcVerification.Models.CorrectionTests
 {
     using Devices.Core.Interfaces.Items;
     using SuperFactorCalculations;
@@ -7,7 +7,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
     /// <summary>
     /// Defines the <see cref="SuperFactorTest"/>
     /// </summary>
-    public sealed class SuperFactorTest : BaseCorrectionTest
+    public sealed class SuperFactorTest : CorrectionBase
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// Defines the _actualFactor
         /// </summary>
-        private double _actualFactor;
+        private decimal _actualFactor;
 
         private IPressureItems PressureItems;
 
@@ -38,9 +38,9 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
             PressureTest = pressureTest;
 
             _factorCalculator = new FactorCalculations(
-                (double)SuperFactorItems.SpecGr,
-                (double)SuperFactorItems.Co2,
-                (double)SuperFactorItems.N2,
+                (decimal)SuperFactorItems.SpecGr,
+                (decimal)SuperFactorItems.Co2,
+                (decimal)SuperFactorItems.N2,
                 TemperatureTest.GaugeFahrenheit,
                 PressureTest.GasPressurePsi);
 
@@ -51,17 +51,17 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
 
         #region Properties
 
-        public override double ActualFactor => _actualFactor;
+        public override decimal ActualFactor => _actualFactor;
 
-        public override double EvcFactor => EvcUnsqrFactor;
+        public override decimal EvcFactor => EvcUnsqrFactor;
 
-        public double EvcUnsqrFactor => PressureItems.UnsqrFactor;
+        public decimal EvcUnsqrFactor => PressureItems.UnsqrFactor;
 
-        public override double PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
+        public override decimal PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
 
         public PressureTest PressureTest { get; }
 
-        public double SuperFactorSquared => Math.Pow(ActualFactor, 2);
+        public decimal SuperFactorSquared => Math.Pow(ActualFactor, 2);
 
         public TemperatureTest TemperatureTest { get; }
 
@@ -72,7 +72,7 @@ namespace Module.EvcVerification.Models.CorrectionTestAggregate
         /// <summary>
         /// The CalculateFpv
         /// </summary>
-        /// <returns>The <see cref="double"/></returns>
+        /// <returns>The <see cref="decimal"/></returns>
         public void CalculateFactor()
         {
             _factorCalculator.GaugeTemp = TemperatureTest.GaugeFahrenheit;

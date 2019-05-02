@@ -1,9 +1,6 @@
 namespace Module.EvcVerification.VerificationTests
 {
-    using Devices.Communications;
     using Devices.Communications.IO;
-    using Devices.Core.Interfaces;
-    using Module.Clients.Clients;
     using Module.EvcVerification.VerificationTests.VolumeVerification;
     using System;
     using System.Threading;
