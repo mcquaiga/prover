@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="NLog" Version="4.6.3" />
     <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Reactive" Version="4.1.5" />

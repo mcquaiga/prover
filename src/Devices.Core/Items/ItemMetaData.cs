@@ -4,21 +4,15 @@ namespace Devices.Core.Items
     using System.Collections.Generic;
     using System.Linq;
 
-    #region Interfaces
-
     /// <summary>
     /// Defines the <see cref="IHaveManyId"/>
     /// </summary>
     public interface IHaveManyId
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the Ids
         /// </summary>
         int[] Ids { get; set; }
-
-        #endregion Properties
     }
 
     /// <summary>
@@ -26,25 +20,17 @@ namespace Devices.Core.Items
     /// </summary>
     public interface IHaveOneId
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the Id
         /// </summary>
         int Id { get; set; }
-
-        #endregion Properties
     }
-
-    #endregion Interfaces
 
     /// <summary>
     /// Defines the <see cref="ItemGroup"/>
     /// </summary>
     public class ItemGroup
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the Description
         /// </summary>
@@ -99,8 +85,6 @@ namespace Devices.Core.Items
         /// Gets or sets the IsVolumeTest
         /// </summary>
         public bool? IsVolumeTest { get; set; }
-
-        #endregion Properties
     }
 
     /// <summary>
@@ -108,23 +92,17 @@ namespace Devices.Core.Items
     /// </summary>
     public class ItemMetadata : IEqualityComparer<ItemMetadata>
     {
-        #region Fields
-
         private readonly List<ItemDescription> _itemDescriptions = new List<ItemDescription>();
 
-        #endregion
-
-        #region Constructors
+        public ItemMetadata()
+        {
+        }
 
         [JsonConstructor]
         public ItemMetadata(ICollection<ItemDescription> itemDescriptions = null)
         {
             _itemDescriptions = itemDescriptions?.ToList() ?? new List<ItemDescription>();
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether CanReset
@@ -226,10 +204,6 @@ namespace Devices.Core.Items
             return obj.GetHashCode();
         }
 
-        #endregion Properties
-
-        #region Methods
-
         /// <summary>
         /// The GetItemDescription
         /// </summary>
@@ -262,25 +236,15 @@ namespace Devices.Core.Items
             return $"{Number} - {Description}";
         }
 
-        #endregion Methods
-
-        #region Public Classes
-
         /// <summary>
         /// Defines the <see cref="ItemDescription"/>
         /// </summary>
         public class ItemDescription : ItemDescriptionBase, IHaveOneId
         {
-            #region Properties
-
             /// <summary>
             /// Gets or sets the Id
             /// </summary>
             public int Id { get; set; }
-
-            #endregion Properties
-
-            #region Methods
 
             /// <summary>
             /// The ToString
@@ -290,8 +254,6 @@ namespace Devices.Core.Items
             {
                 return $"{Id} - {Description}";
             }
-
-            #endregion Methods
         }
 
         /// <summary>
@@ -299,8 +261,6 @@ namespace Devices.Core.Items
         /// </summary>
         public abstract class ItemDescriptionBase
         {
-            #region Properties
-
             /// <summary>
             /// Gets or sets the Description
             /// </summary>
@@ -311,10 +271,6 @@ namespace Devices.Core.Items
             /// </summary>
             public decimal? NumericValue { get; set; }
 
-            #endregion Properties
-
-            #region Methods
-
             /// <summary>
             /// The ToString
             /// </summary>
@@ -323,10 +279,6 @@ namespace Devices.Core.Items
             {
                 return $"{Description} - Value: {NumericValue}";
             }
-
-            #endregion Methods
         }
-
-        #endregion Public Classes
     }
 }

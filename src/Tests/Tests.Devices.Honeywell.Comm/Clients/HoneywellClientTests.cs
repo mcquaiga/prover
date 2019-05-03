@@ -1,6 +1,7 @@
 using Devices.Communications;
 using Devices.Communications.IO;
 using Devices.Honeywell.Comm.CommClients;
+using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -14,8 +15,6 @@ namespace Tests.Devices.Honeywell.Comm.Clients
     [TestClass]
     public class HoneywellClientTests : BaseHoneywellTest
     {
-        #region Methods
-
         [TestMethod]
         public async Task ConnectionSuccessTest()
         {
@@ -26,11 +25,9 @@ namespace Tests.Devices.Honeywell.Comm.Clients
             SetupComm(commMock, incoming, outgoing);
             MockConnectionHandshake(commMock, incoming);
 
-            var client = new HoneywellClient(commMock.Object, Device.Object);
+            var client = await CommClient.CreateAsync((Device as IHoneywellDeviceType), commMock.Object);
 
             client.Status.Subscribe(s => Assert.IsNotNull(s));
-
-            await client.Connect(new CancellationToken(), retryAttempts: 0, TimeSpan.FromMilliseconds(500));
 
             Assert.IsTrue(client.IsConnected);
         }
@@ -44,21 +41,17 @@ namespace Tests.Devices.Honeywell.Comm.Clients
 
             SetupComm(commMock, incoming, outgoing);
 
-            var client = new HoneywellClient(commMock.Object, Device.Object);
-
             try
             {
-                await client.Connect(new CancellationToken(), retryAttempts: 1, TimeSpan.FromMilliseconds(100));
+                await CommClient.CreateAsync(Device, commMock.Object);
             }
             catch (Exception ex)
             {
                 Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
             }
 
-            await Assert.ThrowsExceptionAsync<FailedConnectionException>(()
-                => client.Connect(new CancellationToken(), retryAttempts: 0, TimeSpan.FromMilliseconds(100)));
+            await Assert.ThrowsExceptionAsync<FailedConnectionException>(async ()
+                => await CommClient.CreateAsync(Device, commMock.Object));
         }
-
-        #endregion
     }
 }

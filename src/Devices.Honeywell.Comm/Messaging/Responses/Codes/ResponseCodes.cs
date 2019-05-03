@@ -5,8 +5,6 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 {
     internal static class ResponseCodes
     {
-        #region Methods
-
         internal static EvcResponseException GetException(StatusResponseMessage response)
         {
             switch (response.ResponseCode)
@@ -17,10 +15,6 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
                 default:
                     return new EvcResponseException($"Unknown response code {response.ResponseCode}.");
             }
-
-            return new EvcResponseException($"Unknown response code {response.ResponseCode}.");
         }
-
-        #endregion
     }
 }

@@ -9,18 +9,12 @@ namespace Devices.Core.Interfaces
     {
         CompositionType CompositionType { get; }
 
-        IDeviceType Device { get; set; }
-
         IEnumerable<ItemValue> ItemValues { get; set; }
-
         IPressureItems PressureItems { get; }
-
         ISiteInformationItems SiteInformationItems { get; }
-
         ISuperFactorItems SuperFactorItems { get; }
-
         ITemperatureItems TemperatureItems { get; }
-
+        IDeviceType Type { get; set; }
         IVolumeItems VolumeItems { get; }
 
         Task GetAllItems();

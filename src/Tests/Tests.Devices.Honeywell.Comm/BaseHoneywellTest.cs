@@ -14,7 +14,7 @@ namespace Tests.Devices.Honeywell.Comm
 {
     public abstract class BaseHoneywellTest
     {
-        #region Methods
+        protected IHoneywellDeviceType Device;
 
         [TestInitialize]
         public virtual void Setup()
@@ -24,37 +24,17 @@ namespace Tests.Devices.Honeywell.Comm
 
         public virtual void SetupDevice()
         {
-            Device = new Mock<IHoneywellDeviceType>();
-
-            Device.Setup(d => d.Name)
-                .Returns("Honeywell");
-
-            Device.Setup(d => d.Id)
-                .Returns(3);
-
-            Device.Setup(d => d.AccessCode)
-                .Returns(3);
-
-            Device.Setup(d => d.Definitions)
-                .Returns(new List<ItemMetadata>(){
-                    new ItemMetadata()
-                    {
-                        Number = 0
-                    },
-                    new ItemMetadata()
-                    {
-                        Number = 2
-                    }
-                });
+            Device = new HoneywellDeviceType(new List<ItemMetadata>
+                {
+                    new ItemMetadata() { Number= 0 },
+                    new ItemMetadata() { Number= 2 }
+                })
+            {
+                Name = "Mini-At",
+                Id = 3,
+                AccessCode = 3
+            };
         }
-
-        #endregion
-
-        #region Fields
-
-        protected Mock<IHoneywellDeviceType> Device;
-
-        #endregion
 
         protected void MockConnectionHandshake(Mock<ICommPort> commMock, ISubject<string> incomingStream)
         {
@@ -64,7 +44,7 @@ namespace Tests.Devices.Honeywell.Comm
             commMock.Setup(c => c.Send(ControlCharacters.ENQ.ToString()))
                .Callback(() => incomingStream.OnNext(ControlCharacters.ACK.ToString()));
 
-            commMock.Setup(c => c.Send(Messages.Outgoing.SignOnMessage(Device.Object)))
+            commMock.Setup(c => c.Send(Messages.Outgoing.SignOnMessage(Device)))
                 .Callback(() => incomingStream.OnNext(Messages.Incoming.SuccessResponse));
         }
 

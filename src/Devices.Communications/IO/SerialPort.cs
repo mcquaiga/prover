@@ -13,13 +13,13 @@ namespace Devices.Communications.IO
 {
     public sealed class SerialPort : ICommPort
     {
-        #region Public Fields
-
         public static List<int> BaudRates = new List<int> { 300, 600, 1200, 2400, 4800, 9600, 19200, 38400 };
 
-        #endregion Public Fields
+        private readonly IObservable<char> _dataStream;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        #region Public Constructors
+        private readonly SerialPortStream _serialStream;
+        private IDisposable _receivedStreamDisposable;
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
         {
@@ -46,29 +46,16 @@ namespace Devices.Communications.IO
 
             DataSentObservable = new Subject<string>();
             _dataStream = DataReceived();
+            DataReceivedObservable = _dataStream.Publish();
         }
-
-        #endregion Public Constructors
-
-        #region Public Delegates
 
         public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
 
-        #endregion Public Delegates
-
-        #region Public Properties
-
-        public IConnectableObservable<char> DataReceivedObservable => _dataStream.Publish();
+        public IConnectableObservable<char> DataReceivedObservable { get; }
 
         public ISubject<string> DataSentObservable { get; }
 
         public string Name => _serialStream.PortName;
-
-        private IObservable<char> _dataStream;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static IEnumerable<string> GetPortNames()
         {
@@ -90,6 +77,7 @@ namespace Devices.Communications.IO
             _serialStream?.Close();
             _serialStream?.Dispose();
             DataSentObservable.OnCompleted();
+            _receivedStreamDisposable?.Dispose();
         }
 
         public bool IsOpen() => _serialStream.IsOpen;
@@ -99,9 +87,11 @@ namespace Devices.Communications.IO
             if (_serialStream.IsOpen)
                 return;
 
-            DataReceivedObservable.Connect();
+            _receivedStreamDisposable = DataReceivedObservable.Connect();
 
             await Task.Run(() => _serialStream.Open(), ct);
+            _serialStream.DiscardInBuffer();
+            _serialStream.DiscardOutBuffer();
         }
 
         public async Task Send(string data)
@@ -109,26 +99,13 @@ namespace Devices.Communications.IO
             if (!_serialStream.IsOpen)
                 await Open();
 
-            _serialStream.DiscardInBuffer();
             _serialStream.DiscardOutBuffer();
+
+            DataSentObservable.OnNext(data);
 
             var buffer = Encoding.ASCII.GetBytes(data);
             await _serialStream.WriteAsync(buffer, 0, buffer.Length);
-
-            DataSentObservable.OnNext(data);
         }
-
-        #endregion Public Methods
-
-        #region Private Fields
-
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        private readonly SerialPortStream _serialStream;
-
-        #endregion Private Fields
-
-        #region Private Methods
 
         private IObservable<char> DataReceived()
         {
@@ -145,7 +122,5 @@ namespace Devices.Communications.IO
                     return chars;
                 });
         }
-
-        #endregion Private Methods
     }
 }

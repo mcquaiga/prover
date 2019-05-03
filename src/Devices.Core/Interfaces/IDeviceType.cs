@@ -5,8 +5,6 @@ namespace Devices.Core.Interfaces
 {
     public interface IDeviceType
     {
-        #region Properties
-
         bool? CanUseIrDaPort { get; }
 
         ICollection<ItemMetadata> Definitions { get; }
@@ -19,10 +17,8 @@ namespace Devices.Core.Interfaces
 
         string Name { get; }
 
-        IDevice CreateInstance();
-
         IDevice CreateInstance(Dictionary<string, string> itemValues);
 
-        #endregion
+        IDevice CreateInstance(IEnumerable<ItemValue> itemValues);
     }
 }

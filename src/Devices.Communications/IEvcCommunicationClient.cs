@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications
 {
-    public interface IEvcCommunicationClient
+    public interface IEvcCommunicationClient<T>
+        where T : IDeviceType
     {
-        #region Public Properties
-
-        IDeviceType EvcDeviceType { get; }
+        T DeviceType { get; }
 
         bool IsConnected { get; }
 
@@ -20,17 +19,17 @@ namespace Devices.Communications
 
         IObservable<string> Status { get; }
 
-        #endregion Public Properties
+        Task Cancel();
 
-        #region Public Methods
-
-        Task Connect(CancellationToken ct, int retryAttempts = 10, TimeSpan? timeout = null);
+        Task ConnectAsync(int retryAttempts = 10, TimeSpan? timeout = null);
 
         Task Disconnect();
 
         void Dispose();
 
         Task<IEnumerable<ItemValue>> GetAllItems();
+
+        Task<IDevice> GetDevice();
 
         Task<IFrequencyTestItems> GetFrequencyItems();
 
@@ -55,7 +54,5 @@ namespace Devices.Communications
         Task<bool> SetItemValue(int itemNumber, string value);
 
         Task<bool> SetItemValue(string itemCode, long value);
-
-        #endregion Public Methods
     }
 }

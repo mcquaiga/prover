@@ -1,4 +1,5 @@
 using Devices.Communications;
+using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
@@ -15,70 +16,20 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient
+    public class HoneywellClient : EvcCommunicationClient<IHoneywellDeviceType>
     {
-        public HoneywellClient(ICommPort commPort, IHoneywellDeviceType deviceType) : base(commPort, deviceType)
+        internal HoneywellClient(ICommPort commPort) : base(commPort)
         {
         }
-
-        protected Task LoadItemsTask { get; private set; }
 
         public override bool IsConnected { get; protected set; }
-
-        private async Task<bool> WakeUpInstrument(CancellationToken ct)
-        {
-            await ExecuteCommand(Commands.WakeupOne());
-            await Task.Delay(150);
-
-            try
-            {
-                var response = await ExecuteCommand(Commands.WakeupTwo());
-
-                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                await Task.Delay(200);
-                await ExecuteCommand(Commands.OkayToSend());
-                throw;
-            }
-
-            return false;
-        }
-
-        protected override async Task ConnectToInstrument(CancellationToken ct)
-        {
-            if (await WakeUpInstrument(ct))
-            {
-                var response = await ExecuteCommand(Commands.SignOn((IHoneywellDeviceType)EvcDeviceType));
-
-                if (response.IsSuccess)
-                {
-                    IsConnected = true;
-                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {EvcDeviceType.Name}!");
-                }
-                else
-                {
-                    IsConnected = false;
-
-                    var responseType = Responses.Get(response.ResponseCode);
-
-                    responseType.TryRecover(this);
-
-                    if (responseType.ThrowsException)
-                        throw responseType.RaiseException(response);
-                }
-            }
-        }
+        protected Task LoadItemsTask { get; }
 
         public override async Task Disconnect()
         {
             if (IsConnected)
             {
-                var response = await ExecuteCommand(Commands.SignOffCommand());
+                var response = await ExecuteCommandAsync(Commands.SignOffCommand());
 
                 if (response.IsSuccess)
                     IsConnected = false;
@@ -93,7 +44,7 @@ namespace Devices.Honeywell.Comm.CommClients
         public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
         {
             var itemDetails = itemNumber;
-            var response = await ExecuteCommand(Commands.ReadItem(itemNumber.Number));
+            var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));
             return new ItemValue(itemDetails, response.RawValue);
         }
 
@@ -121,7 +72,7 @@ namespace Devices.Honeywell.Comm.CommClients
                 if (!set.Any())
                     break;
 
-                var response = await ExecuteCommand(Commands.ReadGroup(set));
+                var response = await ExecuteCommandAsync(Commands.ReadGroup(set));
                 foreach (var item in response.ItemValues)
                 {
                     var metadata = itemDetails.FirstOrDefault(x => x.Number == item.Key);
@@ -137,13 +88,13 @@ namespace Devices.Honeywell.Comm.CommClients
         public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
         {
             var itemDetails = ItemDetails.GetItem(itemNumber);
-            var response = await ExecuteCommand(Commands.LiveReadItem(itemNumber));
+            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
             return new ItemValue(itemDetails, response.RawValue);
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
         {
-            var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
+            var result = await ExecuteCommandAsync(Commands.WriteItem(itemNumber, value));
 
             return result.IsSuccess;
         }
@@ -156,5 +107,59 @@ namespace Devices.Honeywell.Comm.CommClients
 
         public override async Task<bool> SetItemValue(string itemCode, long value)
             => await SetItemValue(ItemDetails.GetItem(itemCode), value);
+
+        internal new Task ConnectAsync(IDeviceType deviceType, int retryAttempts = 10, TimeSpan? timeout = null)
+        {
+            return base.ConnectAsync(deviceType, retryAttempts, timeout);
+        }
+
+        protected override async Task EstablishConnectionAsync(IDeviceType deviceType, CancellationToken ct)
+        {
+            if (await WakeUpInstrument(ct))
+            {
+                var response = await ExecuteCommandAsync(Commands.SignOn((IHoneywellDeviceType)deviceType));
+
+                if (response.IsSuccess)
+                {
+                    IsConnected = true;
+                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {deviceType.Name}!");
+                }
+                else
+                {
+                    IsConnected = false;
+
+                    var responseType = Responses.Get(response.ResponseCode);
+
+                    responseType.TryRecover(this);
+
+                    if (responseType.ThrowsException)
+                        throw responseType.RaiseException(response);
+                }
+            }
+        }
+
+        private async Task<bool> WakeUpInstrument(CancellationToken ct)
+        {
+            await ExecuteCommandAsync(Commands.WakeupOne());
+            await Task.Delay(250);
+
+            try
+            {
+                var response = await ExecuteCommandAsync(Commands.WakeupTwo());
+
+                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                await Task.Delay(200);
+                await ExecuteCommandAsync(Commands.OkayToSend());
+                throw;
+            }
+
+            return false;
+        }
     }
 }

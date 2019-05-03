@@ -16,8 +16,6 @@ namespace Tests.Devices.Honeywell.Comm.Messaging.Responses
     [TestClass]
     public class ResponseMessageTests : BaseHoneywellTest
     {
-        #region Methods
-
         [TestMethod]
         public async Task FramingError()
         {
@@ -48,11 +46,7 @@ namespace Tests.Devices.Honeywell.Comm.Messaging.Responses
             commMock.Setup(c => c.Send(It.Is<string>(s => s.Length > 1)))
                 .Callback(() => incoming.OnNext(Messages.Incoming.GetResponse(response)));
 
-            var client = new HoneywellClient(commMock.Object, Device.Object);
-
-            return client.Connect(new CancellationToken(), retryAttempts: 1, TimeSpan.FromMilliseconds(100));
+            return CommClient.CreateAsync(Device, commMock.Object);
         }
-
-        #endregion
     }
 }

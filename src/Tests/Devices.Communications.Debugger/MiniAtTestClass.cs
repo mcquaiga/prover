@@ -9,6 +9,7 @@ using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading;
 
 namespace Devices.Communications.Debugger
 {
@@ -18,25 +19,31 @@ namespace Devices.Communications.Debugger
         private HoneywellClient _client;
         private SerialPort _comm;
         private IHoneywellDeviceType _miniAt;
-        private IObserver<string> _receiveStream = new Subject<string>();
+
+        [TestCleanup]
+        public async Task CleanUpAsync()
+        {
+            await _client?.Disconnect();
+            _comm.Dispose();
+        }
 
         [TestMethod]
         public async Task ConnectToMiniAt()
         {
-            await _client.Connect(new System.Threading.CancellationToken(), 3, TimeSpan.FromSeconds(5));
-
             Assert.IsTrue(_client.IsConnected);
+
+            await _client.Disconnect();
         }
 
         [TestInitialize]
-        public async Task Init()
+        public async Task InitAsync()
         {
             var repo = new DeviceRepository(DeviceDataSourceFactory.Instance);
 
             _miniAt = await repo.Find<IHoneywellDeviceType>(d => d.Name.Equals("Mini-AT"));
 
             _comm = new SerialPort("COM5", 9600);
-            _client = new HoneywellClient(_comm, _miniAt);
+            _client = (HoneywellClient)await CommClient.CreateAsync(_miniAt, _comm);
             _client.Status.Subscribe(Console.WriteLine);
         }
     }

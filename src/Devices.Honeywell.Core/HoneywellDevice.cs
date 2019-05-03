@@ -10,16 +10,13 @@ namespace Devices.Honeywell.Core
 {
     public class HoneywellDevice : IDevice
     {
-        #region Constructors
+        private readonly Dictionary<string, string> _items;
 
         public HoneywellDevice(IDeviceType evcType, Dictionary<string, string> items)
         {
-            Device = evcType;
+            Type = evcType;
+            _items = items;
         }
-
-        #endregion
-
-        #region Properties
 
         public CompositionType CompositionType
         {
@@ -39,23 +36,13 @@ namespace Devices.Honeywell.Core
             }
         }
 
-        public IDeviceType Device { get; set; }
-
         public IEnumerable<ItemValue> ItemValues { get; set; }
-
         public IPressureItems PressureItems { get; set; }
-
         public ISiteInformationItems SiteInformationItems { get; set; }
-
         public ISuperFactorItems SuperFactorItems { get; set; }
-
         public ITemperatureItems TemperatureItems { get; set; }
-
+        public IDeviceType Type { get; set; }
         public IVolumeItems VolumeItems { get; set; }
-
-        #endregion
-
-        #region Methods
 
         public Task GetAllItems()
         {
@@ -106,7 +93,5 @@ namespace Devices.Honeywell.Core
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

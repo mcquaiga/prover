@@ -7,18 +7,12 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 {
     internal static class Responses
     {
-        #region Methods
+        private static List<HoneywellResponse> _all;
 
-        public static HoneywellResponse Get(ResponseCode code)
-        {
-            return All.Find(h => h.Code == code);
-        }
+        public static HoneywellResponse SignOnError =>
+                            new HoneywellResponse(ResponseCode.SignOnError, response => new SignOnErrorException(response));
 
-        #endregion
-
-        #region Properties
-
-        public static List<HoneywellResponse> All
+        private static List<HoneywellResponse> All
         {
             get
             {
@@ -30,10 +24,10 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
             }
         }
 
-        public static HoneywellResponse SignOnError =>
-                            new HoneywellResponse(ResponseCode.SignOnError, response => new SignOnErrorException(response));
-
-        private static List<HoneywellResponse> _all;
+        public static HoneywellResponse Get(ResponseCode code)
+        {
+            return All.Find(h => h.Code == code);
+        }
 
         private static void BuildList()
         {
@@ -43,14 +37,10 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
                 new FramingErrorCode()
             };
         }
-
-        #endregion
     }
 
     internal class FramingErrorCode : HoneywellResponse
     {
-        #region Constructors
-
         public FramingErrorCode()
             : base(ResponseCode.FramingError)
         {
@@ -60,7 +50,5 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
         {
             client.CommPort.Close();
         };
-
-        #endregion
     }
 }

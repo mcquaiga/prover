@@ -11,15 +11,11 @@ namespace Devices.Honeywell.Core
 {
     public interface IHoneywellDeviceType : IDeviceType
     {
-        #region Properties
-
         int AccessCode { get; set; }
 
         int Id { get; set; }
 
         IObservable<ItemMetadata> ItemsObservable { get; }
-
-        #endregion
     }
 
     /// <summary>
@@ -27,7 +23,15 @@ namespace Devices.Honeywell.Core
     /// </summary>
     public class HoneywellDeviceType : IHoneywellDeviceType
     {
-        #region Constructors
+        private readonly HashSet<ItemMetadata> _itemDefinitions = new HashSet<ItemMetadata>();
+
+        public HoneywellDeviceType(IEnumerable<ItemMetadata> items)
+        {
+            ItemsObservable = items.ToObservable().SubscribeOn(NewThreadScheduler.Default);
+            ItemsObservable
+               .ToList()
+               .Subscribe(x => _itemDefinitions.UnionWith(x));
+        }
 
         [JsonConstructor]
         public HoneywellDeviceType(IEnumerable<ItemMetadata> globalItems, IEnumerable<ItemMetadata> overrideItems, IEnumerable<ItemMetadata> excludeItems)
@@ -49,16 +53,6 @@ namespace Devices.Honeywell.Core
                 .Subscribe(x => _itemDefinitions.UnionWith(x));
         }
 
-        #endregion
-
-        #region Fields
-
-        private readonly HashSet<ItemMetadata> _itemDefinitions = new HashSet<ItemMetadata>();
-
-        #endregion
-
-        #region Properties
-
         public virtual int AccessCode { get; set; }
 
         public virtual bool? CanUseIrDaPort { get; set; }
@@ -77,20 +71,14 @@ namespace Devices.Honeywell.Core
 
         public virtual string Name { get; set; }
 
-        #endregion
-
-        #region Methods
-
-        public IDevice CreateInstance()
-        {
-            throw new NotImplementedException();
-        }
-
         public IDevice CreateInstance(Dictionary<string, string> itemValues)
         {
             return new HoneywellDevice(this, itemValues);
         }
 
-        #endregion
+        public IDevice CreateInstance(IEnumerable<ItemValue> itemValues)
+        {
+            throw new HoneywellDevice(this, ;
+        }
     }
 }
