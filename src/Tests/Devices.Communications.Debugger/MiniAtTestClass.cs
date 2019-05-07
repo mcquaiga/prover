@@ -19,6 +19,8 @@ namespace Devices.Communications.Debugger
     [TestClass]
     public class MiniAtTestClass
     {
+        public const string PortName = "COM4";
+
         [TestCleanup]
         public async Task Cleanup()
         {
@@ -67,7 +69,7 @@ namespace Devices.Communications.Debugger
         {
             var repo = new DeviceRepository(HoneywellDeviceDataSourceFactory.Instance);
             _miniAt = await repo.Find<HoneywellDeviceType>(d => d.Name.Equals("Mini-AT"));
-            _comm = new SerialPort("COM6", 9600);
+            _comm = new SerialPort(PortName, 9600);
         }
 
         private ICommunicationsClient _client;

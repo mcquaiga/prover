@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Devices.Communications.IrDa;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 
-namespace Tests.Devices.Honeywell.Comm
+namespace Devices.Communications.Debugger
 {
     [TestClass]
+    [TestCategory("CommPorts")]
     public class CommPortTests
     {
         [TestMethod]

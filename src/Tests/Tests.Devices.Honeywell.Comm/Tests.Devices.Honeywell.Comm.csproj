@@ -92,7 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messaging\Responses\ResponseMessageTests.cs" />
     <Compile Include="Messaging\CommandHelpers.cs" />
-    <Compile Include="CommPortTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
