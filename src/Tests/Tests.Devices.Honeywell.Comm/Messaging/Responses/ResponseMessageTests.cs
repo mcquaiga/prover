@@ -1,4 +1,5 @@
 using Devices.Communications;
+using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Honeywell.Comm;
 using Devices.Honeywell.Comm.CommClients;
@@ -29,7 +30,7 @@ namespace Tests.Devices.Honeywell.Comm.Messaging.Responses
             await TryConnection(ResponseCode.SignOnError);
         }
 
-        private Task TryConnection(ResponseCode response)
+        private Task<ICommunicationsClient> TryConnection(ResponseCode response)
         {
             var commMock = new Mock<ICommPort>();
             var incoming = new Subject<string>();
@@ -46,7 +47,7 @@ namespace Tests.Devices.Honeywell.Comm.Messaging.Responses
             commMock.Setup(c => c.Send(It.Is<string>(s => s.Length > 1)))
                 .Callback(() => incoming.OnNext(Messages.Incoming.GetResponse(response)));
 
-            return CommClient.CreateAsync(Device, commMock.Object);
+            return DeviceConnection.ConnectAsync(Device, commMock.Object);
         }
     }
 }

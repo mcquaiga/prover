@@ -1,16 +1,16 @@
-using Devices.Core.Items;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using Devices.Core.Interfaces.Items;
+using Devices.Core.Items;
+using Devices.Honeywell.Core.Attributes;
 
-namespace Devices.Honeywell.Core.Items
+namespace Devices.Honeywell.Core.ItemGroups
 {
-    public abstract class DeviceItems
+    internal abstract class ItemGroupBase : IItemsGroup
     {
-        #region Methods
-
         public static decimal GetHighResFractionalValue(decimal highResValue)
         {
             if (highResValue == 0) return 0;
@@ -54,15 +54,44 @@ namespace Devices.Honeywell.Core.Items
             return GetHighResolutionItemValue((int)lowResValue.Value, highResValue.Value);
         }
 
-        #endregion
-
-        #region Constructors
-
-        [JsonConstructor]
-        protected DeviceItems()
+        public virtual void SetValues(IEnumerable<ItemValue> values)
         {
+            values.Join(GetType().GetProperties(),
+                       x => x.Id,
+                       y => y.GetNumber(),
+                       (x, y) => new Tuple<ItemValue, PropertyInfo>(x, y))
+               .ToList()
+               .ForEach(pair =>
+               {
+                   SetValue(pair.Item2, pair.Item1);
+               });
         }
 
-        #endregion
+        protected virtual void SetValue(PropertyInfo property, ItemValue value)
+        {
+            if (property.PropertyType.IsEnum)
+            {
+                var v = value.Description;
+                var e = Enum.Parse(property.PropertyType, v);
+
+                property.SetValue(this, e);
+            }
+            else if (property.PropertyType == typeof(decimal))
+            {
+                property.SetValue(this, value.NumericValue);
+            }
+            else if (property.PropertyType == typeof(int))
+            {
+                property.SetValue(this, (int)value.NumericValue);
+            }
+            else if (property.PropertyType == typeof(string))
+            {
+                property.SetValue(this, value.Description);
+            }
+            else
+            {
+                throw new NotImplementedException($"{property.PropertyType} is not yet supported.");
+            }
+        }
     }
 }

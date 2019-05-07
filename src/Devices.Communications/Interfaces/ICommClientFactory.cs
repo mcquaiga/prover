@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications.Interfaces
 {
-    public interface ICommClientFactory<TDevice>
-        where TDevice : IDeviceType
+    public interface ICommClientFactory<in T>
+        where T : IDevice
     {
-        Task<IEvcCommunicationClient<TDevice>> Create(TDevice deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null);
+        Task<ICommunicationsClient> Create(T deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null);
     }
 }

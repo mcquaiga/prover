@@ -6,27 +6,16 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Core.Repository.JsonConverters
 {
     internal class JsonItemsConverter : JsonCreationConverter<ItemMetadata>
     {
-        #region Constructors
-
         public JsonItemsConverter(JsonDeviceDataSource itemDataSource)
         {
             _itemDataSource = itemDataSource;
         }
-
-        #endregion
-
-        #region Fields
-
-        private readonly JsonDeviceDataSource _itemDataSource;
-
-        #endregion
-
-        #region Methods
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -41,9 +30,9 @@ namespace Devices.Honeywell.Core.Repository.JsonConverters
                 var itemName = itemToken.First.Value<string>("definitionPath");
                 if (itemName != null)
                 {
-                    return new ItemMetadata(
-                        AsyncUtil.RunSync(() => _itemDataSource.GetItemDescriptions(itemName)).ToList()
-                    );
+                    var task = Task.Run(async () => await _itemDataSource.GetItemDescriptionsAsync(itemName));
+                    var desc = task.Result;
+                    return new ItemMetadata(desc.ToList());
                 }
                 else
                 {
@@ -54,6 +43,6 @@ namespace Devices.Honeywell.Core.Repository.JsonConverters
             return new ItemMetadata();
         }
 
-        #endregion
+        private readonly JsonDeviceDataSource _itemDataSource;
     }
 }

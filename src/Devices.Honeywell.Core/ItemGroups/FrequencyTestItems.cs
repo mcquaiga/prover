@@ -4,13 +4,11 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Devices.Honeywell.Core.Items
+namespace Devices.Honeywell.Core.ItemGroups
 {
-    public class FrequencyTestItems : DeviceItems, IFrequencyTestItems
+    internal class FrequencyItems : ItemGroupBase, IFrequencyTestItems
     {
-        #region Constructors
-
-        public FrequencyTestItems(IEnumerable<ItemValue> mainItemValues, IEnumerable<ItemValue> tibItemValues)
+        public FrequencyItems(IEnumerable<ItemValue> mainItemValues, IEnumerable<ItemValue> tibItemValues)
         {
             var mainItems = mainItemValues.ToList();
 
@@ -21,9 +19,8 @@ namespace Devices.Honeywell.Core.Items
             MainUnadjustVolumeReading = (long)mainItems.GetItem(852).NumericValue;
         }
 
-        #endregion
-
-        #region Properties
+        [JsonConstructor]
+        private FrequencyItems() { }
 
         public long MainAdjustedVolumeReading { get; set; }
 
@@ -32,10 +29,5 @@ namespace Devices.Honeywell.Core.Items
         public decimal TibAdjustedVolumeReading { get; set; }
 
         public long TibUnadjustedVolumeReading { get; }
-
-        #endregion
-
-        [JsonConstructor]
-        private FrequencyTestItems() { }
     }
 }

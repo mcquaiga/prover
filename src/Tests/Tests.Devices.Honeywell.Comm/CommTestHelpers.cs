@@ -11,9 +11,7 @@ namespace Tests.Devices.Honeywell.Comm
 {
     public static class CommTestHelpers
     {
-        #region Methods
-
-        internal static void MockConnectionHandshake(Mock<ICommPort> commMock, Mock<IHoneywellDeviceType> deviceType, ISubject<string> incomingStream)
+        internal static void MockConnectionHandshake(Mock<ICommPort> commMock, Mock<HoneywellDeviceType> deviceType, ISubject<string> incomingStream)
         {
             commMock.Setup(c => c.Send(It.IsAny<string>()))
               .Returns(Task.FromResult(default(object)));
@@ -45,7 +43,5 @@ namespace Tests.Devices.Honeywell.Comm
             commMock.Setup(c => c.DataSentObservable)
                 .Returns(writeStream);
         }
-
-        #endregion
     }
 }

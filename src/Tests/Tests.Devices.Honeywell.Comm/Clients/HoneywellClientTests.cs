@@ -25,7 +25,7 @@ namespace Tests.Devices.Honeywell.Comm.Clients
             SetupComm(commMock, incoming, outgoing);
             MockConnectionHandshake(commMock, incoming);
 
-            var client = await CommClient.CreateAsync((Device as IHoneywellDeviceType), commMock.Object);
+            var client = await DeviceConnection.ConnectAsync(Device, commMock.Object);
 
             client.Status.Subscribe(s => Assert.IsNotNull(s));
 
@@ -43,15 +43,15 @@ namespace Tests.Devices.Honeywell.Comm.Clients
 
             try
             {
-                await CommClient.CreateAsync(Device, commMock.Object);
+                var conn = await DeviceConnection.ConnectAsync(Device, commMock.Object, 1, TimeSpan.FromMilliseconds(50));
             }
             catch (Exception ex)
             {
                 Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
             }
 
-            await Assert.ThrowsExceptionAsync<FailedConnectionException>(async ()
-                => await CommClient.CreateAsync(Device, commMock.Object));
+            //await Assert.ThrowsExceptionAsync<FailedConnectionException>(async ()
+            //    => await DeviceConnection.ConnectAsync(Device, commMock.Object, 1, TimeSpan.FromMilliseconds(50)));
         }
     }
 }

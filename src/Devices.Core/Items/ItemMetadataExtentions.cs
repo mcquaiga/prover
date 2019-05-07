@@ -7,8 +7,6 @@ namespace Devices.Core.Items
 {
     public static class ItemMetadataExtentions
     {
-        #region Public Methods
-
         public static IEnumerable<ItemMetadata> FrequencyTestItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsFrequencyTest == true);
 
@@ -75,9 +73,29 @@ namespace Devices.Core.Items
         public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
             => items.Where(i => i.IsTemperatureTest == true);
 
+        public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)
+        {
+            number = -1;
+            var firstOrDefault = items.FirstOrDefault(i => i.Code == code);
+
+            if (firstOrDefault == null)
+                return false;
+
+            number = firstOrDefault.Number;
+            return true;
+        }
+
+        public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out ItemMetadata item)
+        {
+            item = items.FirstOrDefault(i => i.Code == code);
+
+            if (item == null)
+                return false;
+
+            return true;
+        }
+
         public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
                     => items.Where(i => i.IsVolumeTest == true);
-
-        #endregion Public Methods
     }
 }

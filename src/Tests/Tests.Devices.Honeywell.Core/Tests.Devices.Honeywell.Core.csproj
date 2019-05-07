@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseHoneywellTest.cs" />
+    <Compile Include="Items\PressureItemsTest.cs" />
     <Compile Include="Repository\JsonDeviceDataSourceFromItemFileTests.cs" />
     <Compile Include="ItemTestFixtures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +87,9 @@
     <Compile Include="Repository\DeviceRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

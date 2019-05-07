@@ -9,6 +9,12 @@ namespace Devices.Core
         PressureTemperature
     }
 
+    public enum CorrectionFactor
+    {
+        Fixed,
+        Live
+    }
+
     public enum DriveTypeDescripter
     {
         Mechanical,
@@ -44,6 +50,15 @@ namespace Devices.Core
         inHG,
 
         mmHG
+    }
+
+    public enum PulseOutputUnits
+    {
+        CorVol,
+        PCorVol,
+        UncVol,
+        NoOut,
+        Time
     }
 
     public enum TemperatureUnits

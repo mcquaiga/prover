@@ -92,11 +92,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messaging\Responses\ResponseMessageTests.cs" />
     <Compile Include="Messaging\CommandHelpers.cs" />
+    <Compile Include="CommPortTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj">
+      <Project>{dadba878-f46b-49a4-a7ea-b92ce0a5a366}</Project>
+      <Name>Devices.Communications.IrDa</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Devices.Communications\Devices.Communications.csproj">
       <Project>{a4e19dbe-f582-45b7-ab39-5afbd8b3fe97}</Project>
       <Name>Devices.Communications</Name>
@@ -104,10 +109,6 @@
     <ProjectReference Include="..\..\Devices.Core\Devices.Core.csproj">
       <Project>{EC7DDF34-F555-414F-9998-744A85516ED4}</Project>
       <Name>Devices.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj">
-      <Project>{D4A4DE0B-C310-4183-9E8C-389794D1DB79}</Project>
-      <Name>Devices.Honeywell.Comm.Crc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj">
       <Project>{229ae6f4-1bd2-4b75-a97e-4e928b903323}</Project>

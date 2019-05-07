@@ -8,8 +8,6 @@ namespace Devices.Core.Items
 {
     public static class ItemValueExtensions
     {
-        #region Public Methods
-
         public static ItemValue GetItem(this IEnumerable<ItemValue> items, string code)
         {
             var result = items?.FirstOrDefault(x => x.Metadata?.Code?.ToLower() == code.ToLower());
@@ -48,31 +46,11 @@ namespace Devices.Core.Items
                 throw;
             }
         }
-
-        #endregion Public Methods
     }
 
     public class ItemValue
     {
-        #region Public Constructors
-
-        public ItemValue(ItemMetadata metadata, string value)
-        {
-            RawValue = value;
-            Metadata = metadata;
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public virtual string Description
-            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
-
-        public ItemMetadata.ItemDescription ItemDescription
-        {
-            get { return Metadata?.GetItemDescription(RawValue); }
-        }
+        public int Id => Metadata != null ? Metadata.Number : -1;
 
         public ItemMetadata Metadata { get; }
 
@@ -88,9 +66,19 @@ namespace Devices.Core.Items
 
         public string RawValue { get; set; }
 
-        #endregion Public Properties
+        public virtual string Description
+                                    => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
 
-        #region Public Methods
+        public ItemMetadata.ItemDescription ItemDescription
+        {
+            get { return Metadata?.GetItemDescription(RawValue); }
+        }
+
+        public ItemValue(ItemMetadata metadata, string value)
+        {
+            RawValue = value;
+            Metadata = metadata;
+        }
 
         public override string ToString()
         {
@@ -99,7 +87,21 @@ namespace Devices.Core.Items
                    $"   Item Description: {Description} {Environment.NewLine}" +
                    $"   Numeric Value: {NumericValue} {Environment.NewLine}";
         }
+    }
 
-        #endregion Public Methods
+    public class ItemValueComparer : IEqualityComparer<ItemValue>
+    {
+        public bool Equals(ItemValue x, ItemValue y)
+        {
+            if (x.Id == y.Id)
+                return true;
+
+            return false;
+        }
+
+        public int GetHashCode(ItemValue obj)
+        {
+            return obj.Id.GetHashCode();
+        }
     }
 }

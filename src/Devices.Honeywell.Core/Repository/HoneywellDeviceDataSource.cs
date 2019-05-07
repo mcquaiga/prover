@@ -3,20 +3,24 @@ using System;
 
 namespace Devices.Honeywell.Core.Repository
 {
-    public static class DeviceDataSourceFactory
+    public static class HoneywellDeviceDataSourceFactory
     {
-        #region Methods
+        public static IDeviceDataSource<IDevice> Instance => _lazy.Value;
 
-        public static IDeviceDataSource<IHoneywellDeviceType> Instance => _lazy.Value;
-
-        private static readonly Lazy<IDeviceDataSource<IHoneywellDeviceType>> _lazy
-            = new Lazy<IDeviceDataSource<IHoneywellDeviceType>>(() => Factory());
-
-        private static IDeviceDataSource<IHoneywellDeviceType> Factory()
+        public static IDeviceDataSource<IDevice> GetInstance(string directory)
         {
-            return new JsonDeviceDataSource(new FileStreamReader());
+            _directory = directory;
+            return _lazy.Value;
         }
 
-        #endregion
+        private static readonly Lazy<IDeviceDataSource<IDevice>> _lazy
+                    = new Lazy<IDeviceDataSource<IDevice>>(() => Factory());
+
+        private static string _directory;
+
+        private static IDeviceDataSource<IDevice> Factory()
+        {
+            return new JsonDeviceDataSource(new FileStreamReader(_directory));
+        }
     }
 }

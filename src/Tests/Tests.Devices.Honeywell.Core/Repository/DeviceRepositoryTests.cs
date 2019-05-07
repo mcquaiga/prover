@@ -24,13 +24,13 @@ namespace Tests.Devices.Honeywell.Core
         [TestInitialize]
         public void Initialize()
         {
-            var dataSourceMock = new Mock<IDeviceDataSource<IDeviceType>>();
+            var dataSourceMock = new Mock<IDeviceDataSource<IDevice>>();
             dataSourceMock.Setup(ds => ds.GetDeviceTypes())
                 .Returns(DevicesList.ToObservable());
 
-            var sources = new List<IDeviceDataSource<IDeviceType>>()
+            var sources = new List<IDeviceDataSource<IDevice>>()
             {
-                DeviceDataSourceFactory.Instance,
+                HoneywellDeviceDataSourceFactory.Instance,
                 dataSourceMock.Object
             };
 

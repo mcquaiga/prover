@@ -9,15 +9,15 @@ namespace Devices.Honeywell.Core.Repository
 {
     public class FileStreamReader : IStreamReader
     {
-        private const string ItemDefinitionFileName = "Items";
-
-        private const string TypeFileName = "Type_";
-
-        private static readonly string ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\DeviceTypes";
-
-        private static IEnumerable<string> FindDeviceFiles()
+        public FileStreamReader(string devicesRootDirectory = null)
         {
-            return Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json");
+            ItemDefinitionsFolder = $@"{devicesRootDirectory}/DeviceTypes";
+
+            if (string.IsNullOrEmpty(devicesRootDirectory))
+                ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}/DeviceTypes";
+
+            if (!Directory.Exists(ItemDefinitionsFolder))
+                throw new DirectoryNotFoundException($"Directory path {ItemDefinitionsFolder} does not exist.");
         }
 
         public IEnumerable<StreamReader> GetDeviceTypeReaders()
@@ -28,14 +28,25 @@ namespace Devices.Honeywell.Core.Repository
 
         public StreamReader GetItemDefinitionsReader(string name)
         {
-            var path = $@"{ItemDefinitionsFolder}\{name}.json";
+            var path = $@"{ItemDefinitionsFolder}/{name}.json";
             return new StreamReader(path);
         }
 
         public StreamReader GetItemsReader()
         {
-            var path = $@"{ItemDefinitionsFolder}\{ItemDefinitionFileName}.json";
+            var path = $@"{ItemDefinitionsFolder}/{ItemDefinitionFileName}.json";
             return new StreamReader(path);
+        }
+
+        private const string ItemDefinitionFileName = "Items";
+
+        private const string TypeFileName = "Type_";
+
+        private readonly string ItemDefinitionsFolder;
+
+        private IEnumerable<string> FindDeviceFiles()
+        {
+            return Directory.GetFiles(ItemDefinitionsFolder, $"{TypeFileName}*.json");
         }
     }
 }

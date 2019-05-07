@@ -1,8 +1,8 @@
 using Devices.Communications.IO;
 using Devices.Communications.Messaging;
-using Devices.Honeywell.Comm.Crc;
 using Devices.Honeywell.Comm.Messaging.Responses;
 using Devices.Honeywell.Core;
+using Honeywell.Metering.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +11,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
 {
     internal static class Commands
     {
-        #region Fields
-
         public const string DefaultPassword = "33333";
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Creates a Live Read command
@@ -66,7 +60,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         /// <param name="password">Password for access to the instrument</param>
         /// <returns>A response code is expected in return NoError indicates we're connected</returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(IHoneywellDeviceType evcType, string password = null)
+            SignOn(HoneywellDeviceType evcType, string password = null)
         {
             if (string.IsNullOrEmpty(password))
                 password = DefaultPassword;
@@ -102,13 +96,14 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         public static MiCommandDefinition<StatusResponseMessage>
             WriteItem(int itemNumber, string value, string password = DefaultPassword)
             => new WriteItemCommand(itemNumber, value, password);
-
-        #endregion
     }
 
     internal class LiveReadItemCommand : MiCommandDefinition<ItemValueResponseMessage>
     {
-        #region Constructors
+        public int ItemNumber { get; }
+
+        public override ResponseProcessor<ItemValueResponseMessage> ResponseProcessor
+            => ResponseProcessors.ItemValue(ItemNumber);
 
         public LiveReadItemCommand(int itemNumber)
         {
@@ -116,28 +111,13 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             Command = BuildCommand(CommandPrefix, itemNumber);
         }
 
-        #endregion
-
-        #region Properties
-
-        public int ItemNumber { get; }
-
-        public override ResponseProcessor<ItemValueResponseMessage> ResponseProcessor
-            => ResponseProcessors.ItemValue(ItemNumber);
-
-        #endregion
-
-        #region Fields
-
         private const string CommandPrefix = "LR";
-
-        #endregion
     }
 
     internal class MiCommandDefinition<TResponse> : CommandDefinition<TResponse>
             where TResponse : ResponseMessage
     {
-        #region Constructors
+        public override ResponseProcessor<TResponse> ResponseProcessor { get; }
 
         public MiCommandDefinition(char controlChar, ResponseProcessor<TResponse> processor = null)
         {
@@ -150,14 +130,6 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             Command = BuildCommand(body);
             ResponseProcessor = processor;
         }
-
-        #endregion
-
-        #region Properties
-
-        public override ResponseProcessor<TResponse> ResponseProcessor { get; }
-
-        #endregion
 
         protected MiCommandDefinition()
         {
@@ -172,10 +144,11 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         protected string BuildCommand(string body)
         {
             if (!body.Contains(ControlCharacters.ETX))
-                body = string.Concat(body, ControlCharacters.ETX);
+                body = $"{body}{ControlCharacters.ETX}";
 
-            var crc = CRC.CalcCRC(body);
-            return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
+            var crc = Checksum.CalcCRC(body);
+
+            return $"{ControlCharacters.SOH}{body}{crc}{ControlCharacters.EOT}";
         }
 
         protected string BuildCommand(string commandPrefix, int itemNumber)
@@ -200,7 +173,10 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
 
     internal class ReadGroupCommand : MiCommandDefinition<ItemGroupResponseMessage>
     {
-        #region Constructors
+        public IEnumerable<int> ItemNumbers { get; }
+
+        public override ResponseProcessor<ItemGroupResponseMessage> ResponseProcessor
+            => ResponseProcessors.ItemGroup(ItemNumbers);
 
         /// <summary>
         /// Builds the RG command for 1 to 15 item numbers An exception is thrown is there are more
@@ -217,27 +193,15 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             Command = BuildCommand(CommandPrefix, ItemNumbers);
         }
 
-        #endregion
-
-        #region Properties
-
-        public IEnumerable<int> ItemNumbers { get; }
-
-        public override ResponseProcessor<ItemGroupResponseMessage> ResponseProcessor
-            => ResponseProcessors.ItemGroup(ItemNumbers);
-
-        #endregion
-
-        #region Fields
-
         private const string CommandPrefix = "RG";
-
-        #endregion
     }
 
     internal class ReadItemCommand : MiCommandDefinition<ItemValueResponseMessage>
     {
-        #region Constructors
+        public int ItemNumber { get; }
+
+        public override ResponseProcessor<ItemValueResponseMessage> ResponseProcessor
+            => ResponseProcessors.ItemValue(ItemNumber);
 
         public ReadItemCommand(int itemNumber)
         {
@@ -245,27 +209,14 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             Command = BuildCommand(CommandPrefix, ItemNumber);
         }
 
-        #endregion
-
-        #region Properties
-
-        public int ItemNumber { get; }
-
-        public override ResponseProcessor<ItemValueResponseMessage> ResponseProcessor
-            => ResponseProcessors.ItemValue(ItemNumber);
-
-        #endregion
-
-        #region Fields
-
         private const string CommandPrefix = "RD";
-
-        #endregion
     }
 
     internal class WriteItemCommand : MiCommandDefinition<StatusResponseMessage>
     {
-        #region Constructors
+        public int Number { get; }
+        public override ResponseProcessor<StatusResponseMessage> ResponseProcessor => ResponseProcessors.ResponseCode;
+        public string Value { get; }
 
         public WriteItemCommand(int number, string value, string password = null)
         {
@@ -274,6 +225,8 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             Command = BuildWriteCommand(password);
         }
 
+        private const string CommandPrefix = "WD";
+
         private string BuildWriteCommand(string password)
         {
             var numberString = Number.ToString().PadLeft(3, Convert.ToChar("0"));
@@ -281,23 +234,5 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
 
             return BuildCommand($"{CommandPrefix},{password}", $"{numberString},{valueString}");
         }
-
-        #endregion
-
-        #region Properties
-
-        public int Number { get; }
-
-        public override ResponseProcessor<StatusResponseMessage> ResponseProcessor => ResponseProcessors.ResponseCode;
-
-        public string Value { get; }
-
-        #endregion
-
-        #region Fields
-
-        private const string CommandPrefix = "WD";
-
-        #endregion
     }
 }

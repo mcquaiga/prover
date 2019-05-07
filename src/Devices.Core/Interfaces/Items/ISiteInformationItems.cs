@@ -2,13 +2,13 @@ namespace Devices.Core.Interfaces.Items
 {
     public interface ISiteInformationItems : IItemsGroup
     {
-        #region Public Properties
-
         string FirmwareVersion { get; }
+        CorrectionFactor PressureFactor { get; }
         string SerialNumber { get; }
         string SiteId1 { get; }
         string SiteId2 { get; }
 
-        #endregion Public Properties
+        CorrectionFactor SuperFactor { get; }
+        CorrectionFactor TemperatureFactor { get; }
     }
 }

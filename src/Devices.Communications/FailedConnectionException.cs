@@ -8,7 +8,7 @@ namespace Devices.Communications
     {
         #region Constructors
 
-        public FailedConnectionException(ICommPort commPort, IDeviceType evcType, int retryAttempts, Exception reason = null)
+        public FailedConnectionException(ICommPort commPort, IDevice evcType, int retryAttempts, Exception reason = null)
             : base($"{commPort.Name} Could not connect to {evcType.Name} after {retryAttempts} retries.", reason)
         {
         }

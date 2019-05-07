@@ -14,7 +14,7 @@ namespace Tests.Devices.Honeywell.Comm
 {
     public abstract class BaseHoneywellTest
     {
-        protected IHoneywellDeviceType Device;
+        protected HoneywellDeviceType Device;
 
         [TestInitialize]
         public virtual void Setup()

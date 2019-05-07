@@ -1,29 +1,40 @@
+using Devices.Core;
 using Devices.Core.Interfaces;
+using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
+using Devices.Honeywell.Core.Attributes;
+using Devices.Honeywell.Core.Devices;
+using Devices.Honeywell.Core.ItemGroups;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reflection;
 
 namespace Devices.Honeywell.Core
 {
-    public interface IHoneywellDeviceType : IDeviceType
-    {
-        int AccessCode { get; set; }
-
-        int Id { get; set; }
-
-        IObservable<ItemMetadata> ItemsObservable { get; }
-    }
-
     /// <summary>
     /// Defines the <see cref="HoneywellDeviceType"/>
     /// </summary>
-    public class HoneywellDeviceType : IHoneywellDeviceType
+    public class HoneywellDeviceType : IDevice
     {
-        private readonly HashSet<ItemMetadata> _itemDefinitions = new HashSet<ItemMetadata>();
+        public virtual int AccessCode { get; set; }
+
+        public virtual bool? CanUseIrDaPort { get; set; }
+
+        public virtual int Id { get; set; }
+
+        public virtual bool IsHidden { get; set; }
+
+        public virtual ICollection<ItemMetadata> Items => _itemDefinitions.OrderBy(i => i.Number).ToList();
+
+        public IObservable<ItemMetadata> ItemsObservable { get; }
+
+        public virtual int? MaxBaudRate { get; set; }
+
+        public virtual string Name { get; set; }
 
         public HoneywellDeviceType(IEnumerable<ItemMetadata> items)
         {
@@ -53,32 +64,47 @@ namespace Devices.Honeywell.Core
                 .Subscribe(x => _itemDefinitions.UnionWith(x));
         }
 
-        public virtual int AccessCode { get; set; }
-
-        public virtual bool? CanUseIrDaPort { get; set; }
-
-        public ICollection<ItemMetadata> Definitions => _itemDefinitions.OrderBy(i => i.Number).ToList();
-
-        public virtual int Id { get; set; }
-
-        public virtual bool IsHidden { get; set; } = false;
-
-        public virtual string ItemFilePath { get; set; }
-
-        public IObservable<ItemMetadata> ItemsObservable { get; }
-
-        public virtual int? MaxBaudRate { get; set; }
-
-        public virtual string Name { get; set; }
-
-        public IDevice CreateInstance(Dictionary<string, string> itemValues)
+        public virtual IEnumerable<ItemValue> Convert<T>(IDictionary<T, string> values) where T : struct
         {
+            return ItemConvert.ToItemValues(this, (Dictionary<int, string>)values);
+        }
+
+        public virtual IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues)
+        {
+            var items = GetItemValuesByGroup<IVolumeItems>(itemValues);
+            if (items.DriveRateDescription != "Rotary")
+            {
+                return new MechanicalDevice(this, itemValues);
+            }
+
             return new HoneywellDevice(this, itemValues);
         }
 
-        public IDevice CreateInstance(IEnumerable<ItemValue> itemValues)
+        public virtual IEnumerable<ItemMetadata> GetItemNumbersByGroup<T>() where T : IItemsGroup
         {
-            throw new HoneywellDevice(this, ;
+            var itemType = GetMatchingItemGroupClass(typeof(T));
+            var items = ItemInfoAttributeHelpers.GetItemIdentifiers(itemType);
+            return GetItemMetadata(items);
+        }
+
+        public virtual T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup
+        {
+            var itemType = GetMatchingItemGroupClass(typeof(T));
+            var itemGroup = (T)Activator.CreateInstance(itemType);
+            itemGroup.SetValues(values);
+            return itemGroup;
+        }
+
+        protected virtual Type GetMatchingItemGroupClass(Type typeInterface)
+        {
+            return Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => typeInterface.IsAssignableFrom(t));
+        }
+
+        private readonly HashSet<ItemMetadata> _itemDefinitions = new HashSet<ItemMetadata>();
+
+        private IEnumerable<ItemMetadata> GetItemMetadata(IEnumerable<int> itemNumbers)
+        {
+            return Items.Join(itemNumbers, im => im.Number, i => i, (x, y) => x);
         }
     }
 }

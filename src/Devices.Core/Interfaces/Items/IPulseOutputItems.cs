@@ -2,23 +2,16 @@ namespace Devices.Core.Interfaces.Items
 {
     public interface IPulseOutputChannels : IItemsGroup
     {
-        #region Public Properties
-
         IPulseOutputs ChannelA { get; }
         IPulseOutputs ChannelB { get; }
         IPulseOutputs ChannelC { get; }
-        decimal PulseOutputTiming { get; }
 
-        #endregion Public Properties
+        decimal PulseOutputTiming { get; }
     }
 
-    public interface IPulseOutputs : IItemsGroup
+    public interface IPulseOutputs
     {
-        #region Public Properties
-
         decimal Scaling { get; }
-        decimal Units { get; }
-
-        #endregion Public Properties
+        PulseOutputUnits Units { get; }
     }
 }

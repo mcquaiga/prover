@@ -15,11 +15,13 @@ namespace Devices.Communications.IO
     {
         public static List<int> BaudRates = new List<int> { 300, 600, 1200, 2400, 4800, 9600, 19200, 38400 };
 
-        private readonly IObservable<char> _dataStream;
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        public IConnectableObservable<char> DataReceivedObservable { get; private set; }
+        public ISubject<string> DataSentObservable { get; private set; }
+        public string Name => _serialStream.PortName;
 
-        private readonly SerialPortStream _serialStream;
-        private IDisposable _receivedStreamDisposable;
+        public SerialPort()
+        {
+        }
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
         {
@@ -33,29 +35,10 @@ namespace Devices.Communications.IO
                 throw new ArgumentException(
                     $"Baud rate is invalid. Must be one of the following: {string.Join(",", BaudRates)}");
 
-            _serialStream = new SerialPortStream
-            {
-                PortName = portName,
-                BaudRate = baudRate,
-                DataBits = 8,
-                Parity = Parity.None,
-                StopBits = StopBits.One,
-                ReadTimeout = timeoutMs,
-                WriteTimeout = timeoutMs
-            };
-
-            DataSentObservable = new Subject<string>();
-            _dataStream = DataReceived();
-            DataReceivedObservable = _dataStream.Publish();
+            Setup(portName, baudRate, timeoutMs);
         }
 
         public delegate SerialPort Factory(string portName, int baudRate, int timeoutMs = 250);
-
-        public IConnectableObservable<char> DataReceivedObservable { get; }
-
-        public ISubject<string> DataSentObservable { get; }
-
-        public string Name => _serialStream.PortName;
 
         public static IEnumerable<string> GetPortNames()
         {
@@ -106,6 +89,34 @@ namespace Devices.Communications.IO
             var buffer = Encoding.ASCII.GetBytes(data);
             await _serialStream.WriteAsync(buffer, 0, buffer.Length);
         }
+
+        public void Setup(string portName, int baudRate, int timeoutMs = 250)
+        {
+            if (_serialStream == null)
+            {
+                _serialStream = new SerialPortStream();
+            }
+
+            if (_serialStream.IsOpen)
+                _serialStream.Close();
+
+            _serialStream.PortName = portName;
+            _serialStream.BaudRate = baudRate;
+            _serialStream.DataBits = 8;
+            _serialStream.Parity = Parity.None;
+            _serialStream.StopBits = StopBits.One;
+            _serialStream.ReadTimeout = timeoutMs;
+            _serialStream.WriteTimeout = timeoutMs;
+
+            DataSentObservable = new Subject<string>();
+            _dataStream = DataReceived();
+            DataReceivedObservable = _dataStream.Publish();
+        }
+
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private IObservable<char> _dataStream;
+        private IDisposable _receivedStreamDisposable;
+        private SerialPortStream _serialStream;
 
         private IObservable<char> DataReceived()
         {

@@ -7,34 +7,22 @@ namespace Devices.Core.Interfaces
 {
     public interface IDevice
     {
-        CompositionType CompositionType { get; }
+        bool? CanUseIrDaPort { get; }
 
-        IEnumerable<ItemValue> ItemValues { get; set; }
-        IPressureItems PressureItems { get; }
-        ISiteInformationItems SiteInformationItems { get; }
-        ISuperFactorItems SuperFactorItems { get; }
-        ITemperatureItems TemperatureItems { get; }
-        IDeviceType Type { get; set; }
-        IVolumeItems VolumeItems { get; }
+        bool IsHidden { get; }
 
-        Task GetAllItems();
+        ICollection<ItemMetadata> Items { get; }
 
-        TValue GetItemValue<TValue>(string code) where TValue : struct;
+        int? MaxBaudRate { get; }
 
-        ItemValue GetItemValue(string code);
+        string Name { get; }
 
-        Task<IPressureItems> GetPressureItems();
+        IEnumerable<ItemValue> Convert<T>(IDictionary<T, string> values) where T : struct;
 
-        IPressureItems GetPressureItems(Dictionary<string, string> itemData);
+        IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues);
 
-        Task<ITemperatureItems> GetTemperatureItems();
+        IEnumerable<ItemMetadata> GetItemNumbersByGroup<T>() where T : IItemsGroup;
 
-        ITemperatureItems GetTemperatureItems(Dictionary<string, string> itemData);
-
-        TValue GetValue<TValue>(string code) where TValue : struct;
-
-        Task<IVolumeItems> GetVolumeItems();
-
-        IVolumeItems GetVolumeItems(Dictionary<string, string> itemData);
+        T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup;
     }
 }

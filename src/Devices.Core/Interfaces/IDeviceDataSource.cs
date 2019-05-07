@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 namespace Devices.Core.Interfaces
 {
     public interface IDeviceDataSource<out TDevice>
-        where TDevice : IDeviceType
+        where TDevice : IDevice
     {
         #region Methods
 
         IObservable<TDevice> GetDeviceTypes();
 
-        Task<IEnumerable<ItemMetadata.ItemDescription>> GetItemDescriptions(string name);
+        Task<IEnumerable<ItemMetadata.ItemDescription>> GetItemDescriptionsAsync(string name);
 
         IObservable<ItemMetadata> GetItems();
 

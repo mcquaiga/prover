@@ -3,17 +3,36 @@ using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Tests.Devices.Honeywell.Core
 {
     public abstract class BaseHoneywellTest
     {
-        #region Methods
+        protected Mock<HoneywellDeviceType> Device;
+        protected Mock<HoneywellDeviceType> Device2;
+        protected List<HoneywellDeviceType> DevicesList = new List<HoneywellDeviceType>();
+        public Dictionary<int, string> MiniMaxItemFile => JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("MiniMax.json"));
+
+        public Dictionary<int, string> MiniMaxPressureItemFile => JsonConvert.DeserializeObject<Dictionary<int, string>>(
+            "{'8':'  80.134','44':'  6.4402','47':'  1.0076'}");
 
         [TestInitialize]
         public virtual void SetupDevice()
         {
-            Device = new Mock<IHoneywellDeviceType>();
+            var items = new List<ItemMetadata>(){
+                    new ItemMetadata()
+                    {
+                        Number = 0
+                    },
+                    new ItemMetadata()
+                    {
+                        Number = 2
+                    }
+                };
+
+            Device = new Mock<HoneywellDeviceType>(MockBehavior.Strict, new object[] { items });
 
             Device.Setup(d => d.Name)
                 .Returns("Honeywell");
@@ -24,19 +43,18 @@ namespace Tests.Devices.Honeywell.Core
             Device.Setup(d => d.AccessCode)
                 .Returns(3);
 
-            Device.Setup(d => d.Definitions)
-                .Returns(new List<ItemMetadata>(){
+            var items2 = new List<ItemMetadata>(){
                     new ItemMetadata()
                     {
-                        Number = 0
+                        Number = 8
                     },
                     new ItemMetadata()
                     {
-                        Number = 2
+                        Number = 12
                     }
-                });
+                };
 
-            Device2 = new Mock<IHoneywellDeviceType>();
+            Device2 = new Mock<HoneywellDeviceType>(MockBehavior.Strict, new object[] { items2 });
 
             Device2.Setup(d => d.Name)
                .Returns("Honeywell 2");
@@ -47,35 +65,11 @@ namespace Tests.Devices.Honeywell.Core
             Device2.Setup(d => d.AccessCode)
                 .Returns(3);
 
-            Device2.Setup(d => d.Definitions)
-                .Returns(new List<ItemMetadata>(){
-                    new ItemMetadata()
-                    {
-                        Number = 8
-                    },
-                    new ItemMetadata()
-                    {
-                        Number = 12
-                    }
-                });
-
-            DevicesList = new List<IHoneywellDeviceType>()
+            DevicesList = new List<HoneywellDeviceType>()
             {
                 Device.Object,
                 Device2.Object
             };
         }
-
-        #endregion
-
-        #region Fields
-
-        protected Mock<IHoneywellDeviceType> Device;
-
-        protected Mock<IHoneywellDeviceType> Device2;
-
-        protected List<IHoneywellDeviceType> DevicesList = new List<IHoneywellDeviceType>();
-
-        #endregion
     }
 }

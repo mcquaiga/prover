@@ -6,16 +6,10 @@ namespace Core.Json
 {
     public abstract class JsonCreationConverter<T> : JsonConverter
     {
-        #region Properties
-
         public override bool CanWrite
         {
             get { return false; }
         }
-
-        #endregion
-
-        #region Methods
 
         public override bool CanConvert(Type objectType)
         {
@@ -46,7 +40,5 @@ namespace Core.Json
         /// <param name="jObject">contents of JSON object that will be deserialized</param>
         /// <returns></returns>
         protected abstract T Create(Type objectType, JObject jObject);
-
-        #endregion
     }
 }

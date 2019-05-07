@@ -2,16 +2,12 @@ namespace Devices.Core.Interfaces.Items
 {
     public interface ITemperatureItems : IItemsGroup
     {
-        #region Public Properties
+        decimal Base { get; }
 
-        double Base { get; }
+        decimal Factor { get; }
 
-        double Factor { get; }
-
-        double GasTemperature { get; }
+        decimal GasTemperature { get; }
 
         TemperatureUnits Units { get; }
-
-        #endregion Public Properties
     }
 }

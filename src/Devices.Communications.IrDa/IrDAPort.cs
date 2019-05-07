@@ -3,7 +3,9 @@ using InTheHand.Net;
 using InTheHand.Net.Sockets;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -16,7 +18,13 @@ namespace Devices.Communications.IrDa
 {
     public sealed class IrDAPort : ICommPort
     {
-        #region Public Constructors
+        public IConnectableObservable<char> DataReceivedObservable => _dataReceivedConnectableObservable;
+
+        public ISubject<string> DataSentObservable { get; }
+
+        public string Name => CommPorts.IrDAName;
+
+        public int RetryCount { get; } = 30;
 
         public IrDAPort()
         {
@@ -29,9 +37,7 @@ namespace Devices.Communications.IrDa
                 _encoding = Encoding.ASCII;
             }
 
-            _client = new IrDAClient();
-            _client.Client.SetSocketOption(
-                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+            Setup(null, 0);
 
             _dataReceivedConnectableObservable = new Subject<char>().Publish();
             DataReceivedObservable.Connect();
@@ -39,25 +45,22 @@ namespace Devices.Communications.IrDa
             DataSentObservable = new Subject<string>();
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public IConnectableObservable<char> DataReceivedObservable => _dataReceivedConnectableObservable;
-
-        public ISubject<string> DataSentObservable { get; }
-
-        public string Name => "IrDA";
-
-        public int RetryCount { get; } = 30;
-
-        #endregion Public Properties
-
-        #region Public Methods
-
-        public async Task Close()
+        public static async Task<IEnumerable<string>> GetIrDADevices()
         {
-            await Task.Run(() => _client.Close());
+            var client = new IrDAClient();
+
+            var devices = await GetIrDADevices(client)
+                .RunAsync(new CancellationToken())
+                .ToList();
+
+            var ds = client.DiscoverDevices();
+
+            return devices.Select(d => d.DeviceName);
+        }
+
+        public Task Close()
+        {
+            return Task.Run(() => _client.Close());
         }
 
         public ICommPort CreateNew()
@@ -82,37 +85,42 @@ namespace Devices.Communications.IrDa
 
         public async Task Open(CancellationToken ct)
         {
+            _client?.Close();
+
             _client = new IrDAClient();
+
             _client.Client.SetSocketOption(
                 IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
 
-            //if (_device == null)
             _device = await SelectIrDAPeerInfo(_client, ct);
 
-            //if (_endPoint == null)
             _endPoint = new IrDAEndPoint(_device.DeviceAddress, ServiceName);
 
             if (!_client.Connected)
             {
                 await Task.Factory.FromAsync(
-                    _client.BeginConnect(_endPoint, ar =>
-                    {
-                        try
-                        {
-                            _client.EndConnect(ar);
-                        }
-                        catch (Exception ex)
-                        {
-                            _log.Error(ex);
-                            throw;
-                        }
-                    }, _device),
+                    _client.BeginConnect(_endPoint, ConnectCallback, _device),
                     ar =>
                     {
-                        if (!_client.Connected) return;
+                        if (!_client.Connected)
+                            throw new Exception($"Could not connect to IrDA device {_device.DeviceName}");
+
                         _dataReceivedConnectableObservable = DataReceived(_client.GetStream()).Publish();
                         _dataReceivedObs = _dataReceivedConnectableObservable.Connect();
                     });
+            }
+
+            void ConnectCallback(IAsyncResult ar)
+            {
+                try
+                {
+                    _client.EndConnect(ar);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex);
+                    throw;
+                }
             }
         }
 
@@ -128,9 +136,12 @@ namespace Devices.Communications.IrDa
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Fields
+        public void Setup(string portName, int baudRate, int timeoutMs = 250)
+        {
+            _client = new IrDAClient();
+            _client.Client.SetSocketOption(
+                IrDASocketOptionLevel.IrLmp, IrDASocketOptionName.NineWireMode, 1);
+        }
 
         private const int DevicePeerIndex = 0;
 
@@ -150,9 +161,12 @@ namespace Devices.Communications.IrDa
 
         private IrDAEndPoint _endPoint;
 
-        #endregion Private Fields
-
-        #region Private Methods
+        private static IObservable<IrDADeviceInfo> GetIrDADevices(IrDAClient client)
+        {
+            return Observable.Create<IrDADeviceInfo[]>(
+                        o => Observable.ToAsync(client.DiscoverDevices)().Subscribe(o))
+                    .SelectMany(i => i);
+        }
 
         private IObservable<char> DataReceived(Stream sourceStream)
         {
@@ -239,7 +253,5 @@ namespace Devices.Communications.IrDa
                 throw new Exception("No IrDA devices found.");
             }, ct);
         }
-
-        #endregion Private Methods
     }
 }

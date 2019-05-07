@@ -2,24 +2,20 @@ namespace Devices.Core.Interfaces.Items
 {
     public interface IPressureItems : IItemsGroup
     {
-        #region Public Properties
+        decimal AtmosphericPressure { get; }
 
-        double AtmosphericPressure { get; set; }
+        decimal Base { get; }
 
-        double Base { get; set; }
+        decimal Factor { get; }
 
-        double Factor { get; set; }
+        decimal GasPressure { get; }
 
-        double GasPressure { get; set; }
+        int Range { get; }
 
-        int Range { get; set; }
+        PressureTransducerType TransducerType { get; }
 
-        PressureTransducerType TransducerType { get; set; }
+        PressureUnits Units { get; }
 
-        PressureUnits Units { get; set; }
-
-        double UnsqrFactor { get; set; }
-
-        #endregion Public Properties
+        decimal UnsqrFactor { get; }
     }
 }

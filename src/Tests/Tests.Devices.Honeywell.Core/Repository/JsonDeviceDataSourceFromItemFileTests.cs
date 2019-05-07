@@ -17,13 +17,7 @@ namespace Tests.Devices.Honeywell.Core
     [TestClass]
     public class JsonDeviceDataSourceFromItemFileTests
     {
-        #region Fields
-
         private Mock<IStreamReader> _streamMock = new Mock<IStreamReader>();
-
-        #endregion
-
-        #region Methods
 
         [TestInitialize]
         public void Initialize()
@@ -35,7 +29,7 @@ namespace Tests.Devices.Honeywell.Core
         {
             var ds = new JsonDeviceDataSource(new FileStreamReader());
 
-            var devices = new ConcurrentBag<IHoneywellDeviceType>();
+            var devices = new ConcurrentBag<HoneywellDeviceType>();
 
             await ds.GetDeviceTypes()
                 .ForEachAsync(d =>
@@ -44,7 +38,7 @@ namespace Tests.Devices.Honeywell.Core
                     Assert.IsNotNull(d.CanUseIrDaPort);
                     Assert.IsTrue(d.Id != 0);
 
-                    Assert.IsFalse(d.Definitions
+                    Assert.IsFalse(d.Items
                         .GroupBy(n => n.Number)
                         .Any(c => c.Count() > 1));
                     devices.Add(d);
@@ -79,7 +73,5 @@ namespace Tests.Devices.Honeywell.Core
 
             Assert.IsTrue(items.Count == itemsBag.Count);
         }
-
-        #endregion
     }
 }

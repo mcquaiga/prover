@@ -6,7 +6,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 {
     internal class HoneywellResponse
     {
-        #region Constructors
+        private Func<StatusResponseMessage, EvcResponseException> _exceptionFactory;
 
         public HoneywellResponse(ResponseCode code, Func<StatusResponseMessage, EvcResponseException> exceptionFactory)
         {
@@ -19,39 +19,23 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
             Code = code;
         }
 
-        public HoneywellResponse(ResponseCode code, Action<HoneywellClient> recoveryAction) : this(code)
+        public HoneywellResponse(ResponseCode code, Action<BaseHoneywellClient> recoveryAction) : this(code)
         {
             RecoveryAction = recoveryAction;
         }
-
-        #endregion
-
-        #region Properties
 
         public ResponseCode Code { get; }
 
         public bool ThrowsException => _exceptionFactory != null;
 
-        #endregion
-
-        #region Methods
+        protected virtual Action<BaseHoneywellClient> RecoveryAction { get; } = _ => { };
 
         public EvcResponseException RaiseException(StatusResponseMessage response)
-                    => _exceptionFactory.Invoke(response);
+                            => _exceptionFactory.Invoke(response);
 
-        public virtual void TryRecover(HoneywellClient client)
+        public virtual void TryRecover(BaseHoneywellClient client)
         {
             RecoveryAction.Invoke(client);
         }
-
-        protected virtual Action<HoneywellClient> RecoveryAction { get; } = _ => { };
-
-        #endregion
-
-        #region Fields
-
-        private Func<StatusResponseMessage, EvcResponseException> _exceptionFactory;
-
-        #endregion
     }
 }

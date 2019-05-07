@@ -1,65 +1,23 @@
 namespace Devices.Core.Interfaces.Items
 {
-    public interface IEnergyItems : IItemsGroup
-    {
-        #region Public Properties
-
-        double EnergyGasValue { get; }
-
-        double EnergyReading { get; }
-
-        string EnergyUnits { get; }
-
-        #endregion Public Properties
-    }
-
-    public interface IRotaryMeterItems : IItemsGroup
-    {
-        #region Public Properties
-
-        double MeterDisplacement { get; }
-
-        string MeterModel { get; }
-
-        int MeterModelId { get; }
-
-        #endregion Public Properties
-    }
-
     public interface IVolumeItems : IItemsGroup
     {
-        #region Public Properties
+        decimal CorrectedMultiplier { get; }
 
-        double CorrectedMultiplier { get; }
-
-        double CorrectedReading { get; }
+        decimal CorrectedReading { get; }
 
         string CorrectedUnits { get; }
 
-        double DriveRate { get; }
+        decimal DriveRate { get; }
 
         string DriveRateDescription { get; }
 
         IDriveType DriveType { get; }
 
-        double Energy { get; }
+        decimal UncorrectedMultiplier { get; }
 
-        double EnergyGasValue { get; }
-
-        string EnergyUnits { get; }
-
-        double MeterDisplacement { get; }
-
-        string MeterModel { get; }
-
-        int MeterModelId { get; }
-
-        double UncorrectedMultiplier { get; }
-
-        double UncorrectedReading { get; }
+        decimal UncorrectedReading { get; }
 
         string UncorrectedUnits { get; }
-
-        #endregion Public Properties
     }
 }

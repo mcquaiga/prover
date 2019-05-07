@@ -10,44 +10,9 @@ namespace Module.EvcVerification.Models.CorrectionTests
     public sealed class PressureTest : CorrectionBase
     {
         /// <summary>
-        /// Defines the _totalGauge
-        /// </summary>
-        private readonly decimal? _totalGauge;
-
-        private PressureTest()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PressureTest"/> class.
-        /// </summary>
-        /// <param name="verificationTest">The verificationTest <see cref="CorrectionTestPoint"/></param>
-        /// <param name="percentOfGauge">The percentOfGauge <see cref="decimal"/></param>
-        public PressureTest(IPressureItems items, decimal percentOfGauge)
-        {
-            Items = items;
-
-            _totalGauge = GetGaugePressure(percentOfGauge);
-            AtmosphericGauge = default(decimal?);
-
-            switch (Items.TransducerType)
-            {
-                case PressureTransducerType.Gauge:
-                    GasGauge = TotalGauge;
-                    AtmosphericGauge = Items.AtmosphericPressure;
-                    break;
-
-                case PressureTransducerType.Absolute:
-                    AtmosphericGauge = null;
-                    GasGauge = TotalGauge - (AtmosphericGauge ?? 0);
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Gets the ActualFactor
         /// </summary>
-        public override decimal ActualFactor
+        public override decimal Actual
         {
             get
             {
@@ -100,6 +65,32 @@ namespace Module.EvcVerification.Models.CorrectionTests
         public override decimal PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
 
         public decimal TotalGauge => _totalGauge ?? 0;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PressureTest"/> class.
+        /// </summary>
+        /// <param name="verificationTest">The verificationTest <see cref="CorrectionTestPoint"/></param>
+        /// <param name="percentOfGauge">The percentOfGauge <see cref="decimal"/></param>
+        public PressureTest(IPressureItems items, decimal percentOfGauge)
+        {
+            Items = items;
+
+            _totalGauge = GetGaugePressure(percentOfGauge);
+            AtmosphericGauge = default(decimal?);
+
+            switch (Items.TransducerType)
+            {
+                case PressureTransducerType.Gauge:
+                    GasGauge = TotalGauge;
+                    AtmosphericGauge = Items.AtmosphericPressure;
+                    break;
+
+                case PressureTransducerType.Absolute:
+                    AtmosphericGauge = null;
+                    GasGauge = TotalGauge - (AtmosphericGauge ?? 0);
+                    break;
+            }
+        }
 
         /// <summary>
         /// The ConvertTo
@@ -218,6 +209,15 @@ namespace Module.EvcVerification.Models.CorrectionTests
 
             var evcPressureRange = Items.Range;
             return Math.Round(percentOfGauge * evcPressureRange, 2);
+        }
+
+        /// <summary>
+        /// Defines the _totalGauge
+        /// </summary>
+        private readonly decimal? _totalGauge;
+
+        private PressureTest()
+        {
         }
     }
 }

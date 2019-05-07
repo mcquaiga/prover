@@ -18,23 +18,11 @@ namespace Tests.Devices.Honeywell.Core
     [TestClass]
     public class JsonDeviceDataSourceTests
     {
-        #region Fields
-
         private List<ItemMetadata.ItemDescription> _expectedDescriptions;
-
-        #endregion
-
-
-
-        #region Fields
 
         private IList<ItemMetadata> _expectedItems;
 
         private Mock<IStreamReader> _streamMock = new Mock<IStreamReader>();
-
-        #endregion
-
-        #region Methods
 
         [TestMethod]
         public async Task GetItemDescriptionsSuccessfulTest()
@@ -111,14 +99,10 @@ namespace Tests.Devices.Honeywell.Core
                 }
             };
         }
-
-        #endregion
     }
 
     internal static class StreamHelpers
     {
-        #region Methods
-
         public static StreamReader ToStream(this ICollection<ItemMetadata> item)
         {
             return JsonConvert.SerializeObject(item).ToStream();
@@ -132,7 +116,5 @@ namespace Tests.Devices.Honeywell.Core
             // convert stream to string
             return new StreamReader(stream);
         }
-
-        #endregion
     }
 }

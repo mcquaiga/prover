@@ -28,6 +28,7 @@ namespace Devices.Communications.IO
         Task Open(CancellationToken ct);
 
         Task Send(string data);
+        void Setup(string portName, int baudRate, int timeoutMs = 250);
 
         #endregion Public Methods
     }

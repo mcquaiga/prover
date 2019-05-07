@@ -1,5 +1,5 @@
 using Devices.Communications.IO;
-using Devices.Honeywell.Comm.Crc;
+using Devices.Honeywell.Comm.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Devices.Honeywell.Comm.Messaging
@@ -10,17 +10,6 @@ namespace Tests.Devices.Honeywell.Comm.Messaging
     [TestClass]
     public class CrcChecksumTests
     {
-        #region Constructors
-
-        public CrcChecksumTests()
-        {
-            // TODO: Add constructor logic here
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
@@ -37,29 +26,22 @@ namespace Tests.Devices.Honeywell.Comm.Messaging
             }
         }
 
-        #endregion
-
-        #region Methods
+        public CrcChecksumTests()
+        {
+            // TODO: Add constructor logic here
+        }
 
         [TestMethod]
         public void CrcChecksumTest()
         {
             var expected = "415D";
             var cmd = $"SN,33333{ControlCharacters.STX}vq03{ControlCharacters.ETX}";
-            var actual = CRC.CalcCRC(cmd);
+            var actual = Checksum.CalcCRC(cmd);
 
             Assert.AreEqual(expected, actual);
         }
 
-        #endregion
-
-        #region Fields
-
         private TestContext testContextInstance;
-
-        #endregion
-
-        #region Additional test attributes
 
         // You can use the following additional attributes as you write your tests:
         //
@@ -74,7 +56,5 @@ namespace Tests.Devices.Honeywell.Comm.Messaging
         //
         // Use TestCleanup to run code after each test has run [TestCleanup()] public void
         // MyTestCleanup() { }
-
-        #endregion
     }
 }

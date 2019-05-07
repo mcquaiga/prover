@@ -11,29 +11,15 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Core.Repository
 {
-    public class JsonDeviceDataSource : IDeviceDataSource<IHoneywellDeviceType>
+    public class JsonDeviceDataSource : IDeviceDataSource<HoneywellDeviceType>
     {
-        #region Fields
-
-        private JsonItemsConverter _itemConverter;
-
-        private IStreamReader _streamReader;
-
-        #endregion
-
-        #region Constructors
-
         public JsonDeviceDataSource(IStreamReader streamReader)
         {
             _streamReader = streamReader;
             _itemConverter = new JsonItemsConverter(this);
         }
 
-        #endregion
-
-        #region Methods
-
-        public IObservable<IHoneywellDeviceType> GetDeviceTypes()
+        public IObservable<HoneywellDeviceType> GetDeviceTypes()
         {
             var converter = new JsonDeviceConverter(GetItems().ToEnumerable(), _itemConverter);
 
@@ -50,12 +36,12 @@ namespace Devices.Honeywell.Core.Repository
                 .Merge();
         }
 
-        public IEnumerable<IHoneywellDeviceType> GetDeviceTypesEnumerable()
+        public IEnumerable<HoneywellDeviceType> GetDeviceTypesEnumerable()
         {
             return GetDeviceTypes().ToEnumerable();
         }
 
-        public async Task<IEnumerable<ItemMetadata.ItemDescription>> GetItemDescriptions(string name)
+        public async Task<IEnumerable<ItemMetadata.ItemDescription>> GetItemDescriptionsAsync(string name)
         {
             using (var sr = _streamReader.GetItemDefinitionsReader(name))
             {
@@ -98,6 +84,8 @@ namespace Devices.Honeywell.Core.Repository
             return GetItems().ToEnumerable();
         }
 
-        #endregion
+        private JsonItemsConverter _itemConverter;
+
+        private IStreamReader _streamReader;
     }
 }

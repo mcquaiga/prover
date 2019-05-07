@@ -1,24 +1,20 @@
 using Devices.Communications;
-using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
-using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;
 using Devices.Honeywell.Comm.Messaging.Responses.Codes;
 using Devices.Honeywell.Core;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public class HoneywellClient : EvcCommunicationClient<IHoneywellDeviceType>
+    internal abstract class BaseHoneywellClient : CommunicationsClient
     {
-        internal HoneywellClient(ICommPort commPort) : base(commPort)
+        internal BaseHoneywellClient(ICommPort commPort, HoneywellDeviceType deviceType) : base(commPort, deviceType)
         {
         }
 
@@ -36,19 +32,46 @@ namespace Devices.Honeywell.Comm.CommClients
             }
         }
 
-        public override Task<IFrequencyTestItems> GetFrequencyItems()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
+        public async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
         {
             var itemDetails = itemNumber;
             var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));
             return new ItemValue(itemDetails, response.RawValue);
         }
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
+        //public override async Task<bool> SetItemValue(string itemCode, long value)
+        //    => await SetItemValue(ItemDetails.GetItem(itemCode), value);
+
+        protected override async Task EstablishConnectionAsync<T>(T deviceType, CancellationToken ct)
+        {
+            var honeyDevice = deviceType as HoneywellDeviceType;
+            if (honeyDevice == null)
+                throw new ArgumentException($"Type {typeof(T)} is not valid as a Honeywell Device Type.");
+
+            if (await WakeUpInstrument(ct))
+            {
+                var response = await ExecuteCommandAsync(Commands.SignOn(honeyDevice));
+
+                if (response.IsSuccess)
+                {
+                    IsConnected = true;
+                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {honeyDevice.Name}!");
+                }
+                else
+                {
+                    IsConnected = false;
+
+                    var responseType = Responses.Get(response.ResponseCode);
+
+                    responseType.TryRecover(this);
+
+                    if (responseType.ThrowsException)
+                        throw responseType.RaiseException(response);
+                }
+            }
+        }
+
+        protected override async Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
             var itemDetails = itemNumbers.ToList();
             var items = itemDetails.GetAllItemNumbers().ToArray();
@@ -85,60 +108,26 @@ namespace Devices.Honeywell.Comm.CommClients
             return results;
         }
 
-        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
-        {
-            var itemDetails = ItemDetails.GetItem(itemNumber);
-            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
-            return new ItemValue(itemDetails, response.RawValue);
-        }
+        //public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        //{
+        //    var itemDetails = ItemDetails.GetItem(itemNumber);
+        //    var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
+        //    return new ItemValue(itemDetails, response.RawValue);
+        //}
 
-        public override async Task<bool> SetItemValue(int itemNumber, string value)
-        {
-            var result = await ExecuteCommandAsync(Commands.WriteItem(itemNumber, value));
+        //public override async Task<bool> SetItemValue(int itemNumber, string value)
+        //{
+        //    var result = await ExecuteCommandAsync(Commands.WriteItem(itemNumber, value));
 
-            return result.IsSuccess;
-        }
+        //    return result.IsSuccess;
+        //}
 
-        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
-            => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
+        //public override async Task<bool> SetItemValue(int itemNumber, decimal value)
+        //    => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
 
-        public override async Task<bool> SetItemValue(int itemNumber, long value)
-            => await SetItemValue(itemNumber, value.ToString());
-
-        public override async Task<bool> SetItemValue(string itemCode, long value)
-            => await SetItemValue(ItemDetails.GetItem(itemCode), value);
-
-        internal new Task ConnectAsync(IDeviceType deviceType, int retryAttempts = 10, TimeSpan? timeout = null)
-        {
-            return base.ConnectAsync(deviceType, retryAttempts, timeout);
-        }
-
-        protected override async Task EstablishConnectionAsync(IDeviceType deviceType, CancellationToken ct)
-        {
-            if (await WakeUpInstrument(ct))
-            {
-                var response = await ExecuteCommandAsync(Commands.SignOn((IHoneywellDeviceType)deviceType));
-
-                if (response.IsSuccess)
-                {
-                    IsConnected = true;
-                    StatusStream.OnNext($"[{CommPort.Name}] Connected to {deviceType.Name}!");
-                }
-                else
-                {
-                    IsConnected = false;
-
-                    var responseType = Responses.Get(response.ResponseCode);
-
-                    responseType.TryRecover(this);
-
-                    if (responseType.ThrowsException)
-                        throw responseType.RaiseException(response);
-                }
-            }
-        }
-
-        private async Task<bool> WakeUpInstrument(CancellationToken ct)
+        //public override async Task<bool> SetItemValue(int itemNumber, long value)
+        //    => await SetItemValue(itemNumber, value.ToString());
+        protected async Task<bool> WakeUpInstrument(CancellationToken ct)
         {
             await ExecuteCommandAsync(Commands.WakeupOne());
             await Task.Delay(250);
@@ -160,6 +149,13 @@ namespace Devices.Honeywell.Comm.CommClients
             }
 
             return false;
+        }
+    }
+
+    internal class HoneywellClient : BaseHoneywellClient
+    {
+        internal HoneywellClient(ICommPort commPort, HoneywellDeviceType deviceType) : base(commPort, deviceType)
+        {
         }
     }
 }
