@@ -9,9 +9,13 @@ namespace Devices.Honeywell.Comm
 {
     public class HoneywellClientFactory : ICommClientFactory<HoneywellDeviceType>
     {
-        public async Task<ICommunicationsClient> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null)
+        public async Task<ICommunicationsClient> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
+            IObserver<string> statusObserver = null)
         {
             var client = new HoneywellClient(commPort, deviceType);
+
+            if (statusObserver != null)
+                client.Status.Subscribe(statusObserver);
 
             await client.ConnectAsync(retryAttempts, timeout);
 

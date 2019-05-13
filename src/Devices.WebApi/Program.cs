@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Devices.Core.Repository;
 using Microsoft.AspNetCore;
@@ -22,6 +23,10 @@ namespace Devices.WebApi
                 .ConfigureKestrel((context, options) =>
                 {
                     // Set properties and call methods on options
+                    //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    //{
+                    //    listenOptions.UseHttps("testCert.pfx", "testPassword");
+                    //});
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {

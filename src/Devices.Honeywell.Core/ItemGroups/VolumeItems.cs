@@ -9,7 +9,7 @@ namespace Devices.Honeywell.Core.ItemGroups
         [ItemInfo(90)]
         public decimal CorrectedMultiplier { get; protected set; }
 
-        [ItemInfo(0)]
+        [JoinLowResHighResValueAttribute(0, 113)]
         public decimal CorrectedReading { get; protected set; }
 
         [ItemInfo(90)]
@@ -26,7 +26,7 @@ namespace Devices.Honeywell.Core.ItemGroups
         [ItemInfo(92)]
         public decimal UncorrectedMultiplier { get; protected set; }
 
-        [ItemInfo(2)]
+        [JoinLowResHighResValueAttribute(2, 892)]
         public decimal UncorrectedReading { get; protected set; }
 
         [ItemInfo(92)]

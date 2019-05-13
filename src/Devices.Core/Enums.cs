@@ -22,6 +22,16 @@ namespace Devices.Core
         Rotary
     }
 
+    public enum EnergyUnits
+    {
+        Therms,
+        Dktherms,
+        MegaJoules,
+        GigaJoules,
+        KiloCals,
+        KiloWattHours
+    }
+
     public enum PressureTransducerType
     {
         Absolute,

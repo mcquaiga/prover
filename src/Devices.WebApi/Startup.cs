@@ -7,6 +7,7 @@ using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository;
+using Devices.WebApi.Hubs;
 using Devices.WebApi.Services;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -46,6 +47,12 @@ namespace Devices.WebApi
             }
             app.UseStaticFiles();
             app.UseHttpsRedirection();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<DeviceHub>("/deviceHub");
+            });
+
             app.UseMvc();
         }
 
@@ -59,6 +66,8 @@ namespace Devices.WebApi
                     json.SerializerSettings.Formatting = Formatting.Indented;
                 });
 
+            services.AddSignalR();
+
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
             {
@@ -68,11 +77,14 @@ namespace Devices.WebApi
 
             //services.AddSingleton<IDeviceDataSource<IDevice>>(HoneywellDeviceDataSourceFactory.Instance);
 
-            var repo = new DeviceRepository(
-                    HoneywellDeviceDataSourceFactory.GetInstance($@"{Environment.CurrentDirectory}/bin/Debug/netcoreapp2.2"));
-            services.AddSingleton(repo);
+            services.AddSingleton(
+                new DeviceRepository(
+                    HoneywellDeviceDataSourceFactory.GetInstance($@"{Environment.CurrentDirectory}/bin/Debug/netcoreapp2.2")
+                )
+            );
 
-            services.AddTransient<ICommPort, SerialPort>();
+            //services.AddScoped<ICommPort, SerialPort>();
+            services.AddSingleton<DeviceHub>();
             services.AddSingleton<RemoteConnectionsManager>();
 
             services.AddTransient<DevicesModelBuilder>();

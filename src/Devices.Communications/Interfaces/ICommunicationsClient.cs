@@ -1,3 +1,4 @@
+using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
@@ -16,6 +17,8 @@ namespace Devices.Communications.Interfaces
     public interface ICommunicationsClient
 
     {
+        ICommPort CommPort { get; }
+
         IDeviceWithValues Device { get; }
         IDevice DeviceType { get; }
         bool IsConnected { get; }
@@ -37,20 +40,6 @@ namespace Devices.Communications.Interfaces
         Task<IEnumerable<ItemValue>> GetItemsAsync();
 
         Task<T> GetItemsAsync<T>() where T : IItemsGroup;
-
-        //Task<IFrequencyTestItems> GetFrequencyItems();
-
-        //Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
-
-        //Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers);
-
-        //Task<IEnumerable<ItemValue>> GetPressureTestItems();
-
-        //Task<IEnumerable<ItemValue>> GetPulseOutputItems();
-
-        //Task<IEnumerable<ItemValue>> GetTemperatureTestItems();
-
-        //Task<IEnumerable<ItemValue>> GetVolumeItems();
 
         //Task<ItemValue> LiveReadItemValue(int itemNumber);
 

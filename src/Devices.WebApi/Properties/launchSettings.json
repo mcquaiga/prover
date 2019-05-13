@@ -19,7 +19,6 @@
     },
     "Devices.WebApi": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "api/devices",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

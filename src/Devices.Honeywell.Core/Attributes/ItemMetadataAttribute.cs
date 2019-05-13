@@ -1,3 +1,4 @@
+using Devices.Honeywell.Core.ItemGroups;
 using System;
 
 namespace Devices.Honeywell.Core.Attributes
@@ -5,6 +6,8 @@ namespace Devices.Honeywell.Core.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class ItemInfoAttribute : Attribute
     {
+        public int Number { get; set; }
+
         public ItemInfoAttribute()
         {
         }
@@ -13,7 +16,21 @@ namespace Devices.Honeywell.Core.Attributes
         {
             Number = number;
         }
+    }
 
-        public int Number { get; set; }
+    [AttributeUsage(AttributeTargets.Property)]
+    public class JoinLowResHighResValueAttribute : Attribute
+    {
+        public int FirstItem { get; }
+
+        public Func<decimal, decimal, decimal> ResultSelector { get; }
+        public int SecondItem { get; }
+
+        public JoinLowResHighResValueAttribute(int firstItem, int secondItem)
+        {
+            FirstItem = firstItem;
+            SecondItem = secondItem;
+            ResultSelector = (x, y) => ItemValueParses.JoinLowResHighResReading(x, y);
+        }
     }
 }

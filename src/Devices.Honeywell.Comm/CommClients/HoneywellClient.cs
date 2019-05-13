@@ -14,12 +14,7 @@ namespace Devices.Honeywell.Comm.CommClients
 {
     internal abstract class BaseHoneywellClient : CommunicationsClient
     {
-        internal BaseHoneywellClient(ICommPort commPort, HoneywellDeviceType deviceType) : base(commPort, deviceType)
-        {
-        }
-
         public override bool IsConnected { get; protected set; }
-        protected Task LoadItemsTask { get; }
 
         public override async Task Disconnect()
         {
@@ -39,6 +34,11 @@ namespace Devices.Honeywell.Comm.CommClients
             return new ItemValue(itemDetails, response.RawValue);
         }
 
+        internal BaseHoneywellClient(ICommPort commPort, HoneywellDeviceType deviceType) : base(commPort, deviceType)
+        {
+        }
+
+        protected Task LoadItemsTask { get; }
         //public override async Task<bool> SetItemValue(string itemCode, long value)
         //    => await SetItemValue(ItemDetails.GetItem(itemCode), value);
 
@@ -130,7 +130,7 @@ namespace Devices.Honeywell.Comm.CommClients
         protected async Task<bool> WakeUpInstrument(CancellationToken ct)
         {
             await ExecuteCommandAsync(Commands.WakeupOne());
-            await Task.Delay(250);
+            await Task.Delay(200);
 
             try
             {
@@ -141,10 +141,14 @@ namespace Devices.Honeywell.Comm.CommClients
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Task.Delay(200);
-                await ExecuteCommandAsync(Commands.OkayToSend());
+                if (!(ex is TimeoutException))
+                {
+                    await Task.Delay(200);
+                    await ExecuteCommandAsync(Commands.OkayToSend());
+                }
+
                 throw;
             }
 

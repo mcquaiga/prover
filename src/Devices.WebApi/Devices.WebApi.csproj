@@ -27,7 +27,6 @@
     <ProjectReference Include="..\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj" />
     <ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj" />
     <ProjectReference Include="..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
     <ProjectReference Include="..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
   </ItemGroup>

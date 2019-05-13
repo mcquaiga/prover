@@ -97,7 +97,8 @@ namespace Devices.Communications
 
             Exception exception = null;
 
-            for (int attempts = 1; attempts <= retryAttempts && !IsConnected; attempts++)
+            var attempts = 1;
+            do
             {
                 StatusStream.OnNext($"Connecting to {deviceType.Name} on {CommPort.Name}... {attempts} of {MaxConnectionAttempts}");
 
@@ -118,10 +119,14 @@ namespace Devices.Communications
                 catch (Exception ex)
                 {
                     StatusStream.OnNext($"[{CommPort.Name}] Failed connecting to {deviceType.Name}.");
-                    await Task.Delay(ConnectionRetryDelayMs);
                     exception = ex;
                 }
-            }
+
+                if (!IsConnected && attempts <= retryAttempts)
+                    await Task.Delay(ConnectionRetryDelayMs);
+
+                attempts++;
+            } while (attempts <= retryAttempts && !IsConnected);
 
             if (!IsConnected)
             {

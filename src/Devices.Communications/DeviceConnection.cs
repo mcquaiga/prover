@@ -18,7 +18,7 @@ namespace Devices.Communications
 {
     public static class DeviceConnection
     {
-        public static Task<ICommunicationsClient> ConnectAsync<T>(this T deviceType, ICommPort commPort, int retryAttempts = 10, TimeSpan? timeout = null)
+        public static Task<ICommunicationsClient> ConnectAsync<T>(this T deviceType, ICommPort commPort, int retryAttempts = 10, TimeSpan? timeout = null, IObserver<string> statusObserver = null)
             where T : IDevice
         {
             var a = Assembly.Load("Devices.Honeywell.Comm");
@@ -26,7 +26,7 @@ namespace Devices.Communications
             var obj = Activator.CreateInstance(factory);
             var method = factory.GetMethod("Create");
 
-            return (Task<ICommunicationsClient>)method.Invoke(obj, new object[] { deviceType, commPort, retryAttempts, timeout });
+            return (Task<ICommunicationsClient>)method.Invoke(obj, new object[] { deviceType, commPort, retryAttempts, timeout, statusObserver });
         }
     }
 }

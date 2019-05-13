@@ -12,7 +12,7 @@ namespace Devices.WebApi.Responses
 {
     public class DeviceGet
     {
-        public string ConnectionRef => $"/api/devices/{Id}/Connect/{_port}";
+        public string ConnectionRef => $"/api/devices/{Id}/Connect";
 
         [Key]
         [Required]

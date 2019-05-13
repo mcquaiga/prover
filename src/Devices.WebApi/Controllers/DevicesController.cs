@@ -28,7 +28,9 @@ namespace Devices.WebApi.Controllers
         public async Task<IActionResult> GetDevices()
         {
             return new ObjectResult(
-                    DeviceRepository.Devices.Select(d => new DeviceGet(d.Key, d.Value, _urlHelper))
+                    DeviceRepository.Devices
+                        .Select(d => new DeviceGet(d.Key, d.Value, _urlHelper))
+                        .OrderBy(x => x.Name)
                 );
         }
 

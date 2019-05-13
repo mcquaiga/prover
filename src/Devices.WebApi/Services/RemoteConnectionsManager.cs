@@ -17,28 +17,59 @@ using System.Threading.Tasks;
 
 namespace Devices.WebApi.Services
 {
+    public class RemoteConnection
+    {
+        public ICommunicationsClient Client { get; }
+
+        public IDeviceWithValues Device { get; }
+
+        public Guid Id { get; set; }
+
+        public RemoteConnection(ICommunicationsClient client, IDeviceWithValues device)
+           : this(Guid.NewGuid(), client, device)
+        {
+        }
+
+        public RemoteConnection(Guid id, ICommunicationsClient client, IDeviceWithValues device)
+        {
+            Id = id;
+            Client = client;
+            Device = device;
+        }
+
+        public string GetPortName()
+        {
+            return Client.CommPort.Name;
+        }
+    }
+
     public class RemoteConnectionsManager
     {
-        public IObservable<Tuple<ICommunicationsClient, IDeviceWithValues>> ConnectionCompleteStream { get; }
+        public IConnectableObservable<RemoteConnection> ConnectionStatusObservable { get; }
 
-        public RemoteConnectionsManager(ICommPort commPort)
+        public RemoteConnectionsManager()
         {
-            _connCompletedObservable = new Subject<Guid>();
+            _connCompletedObservable = new Subject<RemoteConnection>();
             _connCompletedObservable
                 .Subscribe(x => Console.WriteLine($"Connection completed for session id {x}"));
+
+            ConnectionStatusObservable = _connCompletedObservable.Publish();
+            ConnectionStatusObservable.Connect();
         }
 
-        public ConnectionGet Add(ICommunicationsClient client, IDeviceWithValues device)
+        public async Task<RemoteConnection> EndSession(Guid id)
         {
-            var tup = new Tuple<ICommunicationsClient, IDeviceWithValues>(client, device);
-            var id = Guid.NewGuid();
+            var session = Get(id);
+            await session.Client.Disconnect();
+            session.Client.CommPort.Dispose();
 
-            _sessions.TryAdd(id, tup);
-
-            return new ConnectionGet(id, device);
+            if (_sessions.Remove(id, out var removedSession))
+                return removedSession;
+            else
+                throw new KeyNotFoundException("Session could not be removed from the queue.");
         }
 
-        public Tuple<ICommunicationsClient, IDeviceWithValues> Get(Guid id)
+        public RemoteConnection Get(Guid id)
         {
             if (_sessions.TryGetValue(id, out var result))
             {
@@ -48,29 +79,50 @@ namespace Devices.WebApi.Services
             throw new KeyNotFoundException($"Session id: {id} could not be found");
         }
 
-        public async Task<Guid> StartSession(IDevice device, ICommPort commPort)
+        public IEnumerable<ConnectionGet> Get()
         {
+            return _sessions.ToList().Select(kv => new ConnectionGet(kv.Key, kv.Value.Device));
+        }
+
+        public async Task<Guid> StartSession(IDevice device, string portName, IObserver<string> status)
+        {
+            if (!IsPortAvailable(portName))
+                throw new UnauthorizedAccessException($"{portName} is in use by another session. Please try a different port.");
+
             var id = Guid.NewGuid();
 
-            Observable.StartAsync(async () => _sessions.TryAdd(id, await Connect()) ? id : Guid.Empty, NewThreadScheduler.Default)
-                        .Subscribe(x => _connCompletedObservable.OnNext(x));
+            var commPort = new SerialPort(portName, 9600);
 
-            async Task<Tuple<ICommunicationsClient, IDeviceWithValues>> Connect()
+            Observable.StartAsync(async () =>
+                {
+                    var conn = await Connect(id);
+                    _sessions.TryAdd(id, conn);
+                    return conn;
+                },
+                NewThreadScheduler.Default)
+            .Subscribe(x => _connCompletedObservable.OnNext(x));
+
+            return id;
+
+            async Task<RemoteConnection> Connect(Guid sessionId)
             {
-                var conn = await DeviceConnection.ConnectAsync(device, commPort);
+                var conn = await DeviceConnection.ConnectAsync(device, commPort, statusObserver: status);
                 var evc = await conn.GetDeviceAsync();
 
-                var tup = new Tuple<ICommunicationsClient, IDeviceWithValues>(conn, evc);
+                var tup = new RemoteConnection(id, conn, evc);
 
                 return tup;
             }
-
-            return id;
         }
 
-        private readonly ConcurrentDictionary<Guid, Tuple<ICommunicationsClient, IDeviceWithValues>> _sessions
-                                            = new ConcurrentDictionary<Guid, Tuple<ICommunicationsClient, IDeviceWithValues>>();
+        private readonly ConcurrentDictionary<Guid, RemoteConnection> _sessions
+                                            = new ConcurrentDictionary<Guid, RemoteConnection>();
 
-        private ISubject<Guid> _connCompletedObservable;
+        private ISubject<RemoteConnection> _connCompletedObservable;
+
+        private bool IsPortAvailable(string portName)
+        {
+            return !_sessions.Any(kv => string.Equals(kv.Value.GetPortName(), portName, StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

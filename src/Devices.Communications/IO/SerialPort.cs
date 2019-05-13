@@ -15,12 +15,17 @@ namespace Devices.Communications.IO
     {
         public static List<int> BaudRates = new List<int> { 300, 600, 1200, 2400, 4800, 9600, 19200, 38400 };
 
+        public int BaudRate { get; private set; }
         public IConnectableObservable<char> DataReceivedObservable { get; private set; }
         public ISubject<string> DataSentObservable { get; private set; }
         public string Name => _serialStream.PortName;
 
+        public string PortName { get; private set; }
+        public int TimeoutMs { get; private set; }
+
         public SerialPort()
         {
+            _serialStream = new SerialPortStream();
         }
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
@@ -59,7 +64,7 @@ namespace Devices.Communications.IO
         {
             _serialStream?.Close();
             _serialStream?.Dispose();
-            DataSentObservable.OnCompleted();
+            DataSentObservable?.OnCompleted();
             _receivedStreamDisposable?.Dispose();
         }
 
@@ -67,12 +72,15 @@ namespace Devices.Communications.IO
 
         public async Task Open(CancellationToken ct = new CancellationToken())
         {
+            if (_serialStream.IsDisposed)
+                Setup(PortName, BaudRate, TimeoutMs);
+
             if (_serialStream.IsOpen)
                 return;
 
             _receivedStreamDisposable = DataReceivedObservable.Connect();
 
-            await Task.Run(() => _serialStream.Open(), ct);
+            _serialStream.Open();
             _serialStream.DiscardInBuffer();
             _serialStream.DiscardOutBuffer();
         }
@@ -92,13 +100,17 @@ namespace Devices.Communications.IO
 
         public void Setup(string portName, int baudRate, int timeoutMs = 250)
         {
-            if (_serialStream == null)
+            if (_serialStream == null || _serialStream.IsDisposed)
             {
                 _serialStream = new SerialPortStream();
             }
-
+            _serialStream = new SerialPortStream();
             if (_serialStream.IsOpen)
                 _serialStream.Close();
+
+            PortName = portName;
+            BaudRate = baudRate;
+            TimeoutMs = timeoutMs;
 
             _serialStream.PortName = portName;
             _serialStream.BaudRate = baudRate;

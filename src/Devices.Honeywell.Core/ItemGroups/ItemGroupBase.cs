@@ -9,54 +9,11 @@ using Devices.Honeywell.Core.Attributes;
 
 namespace Devices.Honeywell.Core.ItemGroups
 {
-    internal abstract class ItemGroupBase : IItemsGroup
+    public abstract class ItemGroupBase : IItemsGroup
     {
-        public static decimal GetHighResFractionalValue(decimal highResValue)
-        {
-            if (highResValue == 0) return 0;
-
-            var highResString = Convert.ToString(highResValue, CultureInfo.InvariantCulture);
-            var pointLocation = highResString.IndexOf(".", StringComparison.Ordinal);
-
-            if (highResValue > 0 && pointLocation > -1)
-            {
-                var result = highResString.Substring(pointLocation, highResString.Length - pointLocation);
-
-                return Convert.ToDecimal(result);
-            }
-
-            return 0;
-        }
-
-        public static decimal GetHighResolutionItemValue(int lowResValue, decimal highResValue)
-        {
-            var fractional = GetHighResFractionalValue(highResValue);
-            return lowResValue + fractional;
-        }
-
-        public static decimal GetHighResolutionValue(IEnumerable<ItemValue> itemValues, int lowResItemNumber,
-            int highResItemNumber)
-        {
-            if (itemValues == null) return 0m;
-
-            var items = itemValues as ItemValue[] ?? itemValues.ToArray();
-            decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
-            decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
-
-            return JoinLowResHighResReading(lowResValue, highResValue);
-        }
-
-        public static decimal JoinLowResHighResReading(decimal? lowResValue, decimal? highResValue)
-        {
-            if (!lowResValue.HasValue || !highResValue.HasValue)
-                throw new ArgumentNullException(nameof(lowResValue) + " & " + nameof(highResValue));
-
-            return GetHighResolutionItemValue((int)lowResValue.Value, highResValue.Value);
-        }
-
         public virtual void SetValues(IEnumerable<ItemValue> values)
         {
-            values.Join(GetType().GetProperties(),
+            values.Join(GetType().GetProperties().Where(p => p.GetCustomAttribute(typeof(ItemInfoAttribute)) != null),
                        x => x.Id,
                        y => y.GetNumber(),
                        (x, y) => new Tuple<ItemValue, PropertyInfo>(x, y))
@@ -65,6 +22,17 @@ namespace Devices.Honeywell.Core.ItemGroups
                {
                    SetValue(pair.Item2, pair.Item1);
                });
+
+            //values.Join(GetType().GetProperties().Where(p => Attribute.GetCustomAttribute(p.GetType(), typeof(JoinLowResHighResValueAttribute)) != null),
+            //    x => x.Id,
+            //    y => (Attribute.GetCustomAttribute(y.GetType(), typeof(JoinLowResHighResValueAttribute)) as JoinLowResHighResValueAttribute).FirstItem,
+            //    (x, y) =>
+            //    {
+            //        var secondValue = values.GetItem(y..SecondItem);
+            //        var result = y.ResultSelector.Invoke(x.NumericValue, secondValue.NumericValue);
+            //        return new Tuple<decimal, PropertyInfo>(result, y.)
+            //    })
+            //    .ToList()
         }
 
         protected virtual void SetValue(PropertyInfo property, ItemValue value)
