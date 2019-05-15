@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{FBCB3A80-9BA3-46F2-A50A-FB23740437DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "srcTurbo\Core\Core.csproj", "{FBCB3A80-9BA3-46F2-A50A-FB23740437DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "src\Devices.WebApi\Devices.WebApi.csproj", "{25EA367A-DFBF-455A-8AFE-5CF3646118CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "srcTurbo\Devices.WebApi\Devices.WebApi.csproj", "{25EA367A-DFBF-455A-8AFE-5CF3646118CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "src\Devices.Core\Devices.Core.csproj", "{2E7574FB-6E83-4360-8DE0-4655276D5822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "srcTurbo\Devices.Core\Devices.Core.csproj", "{2E7574FB-6E83-4360-8DE0-4655276D5822}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "src\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{BC78A8FF-5B74-4B7F-89BA-01CABED106DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "srcTurbo\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{BC78A8FF-5B74-4B7F-89BA-01CABED106DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Devices", "Devices", "{C78EFD76-4538-466F-B085-7F2EE2F20912}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "src\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{197EBB05-20FF-4F71-94E2-40B069DF3BD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "srcTurbo\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{197EBB05-20FF-4F71-94E2-40B069DF3BD3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "src\Devices.Communications\Devices.Communications.csproj", "{4DCED0E7-B313-4325-A2E6-D8D6E6385910}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "srcTurbo\Devices.Communications\Devices.Communications.csproj", "{4DCED0E7-B313-4325-A2E6-D8D6E6385910}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Honeywell", "Honeywell", "{93551A33-7AAC-456F-B508-DE88D4552DE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "src\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "srcTurbo\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

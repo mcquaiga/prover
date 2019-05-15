@@ -3,45 +3,43 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "src\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "srcTurbo\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Honeywell", "Honeywell", "{0454CC76-EF8F-4580-B5BD-5A6E24623504}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "src\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "srcTurbo\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "src\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "srcTurbo\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "src\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "srcTurbo\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "src\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "srcTurbo\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AE41EBB1-18AA-4D75-B51B-9541D519D81B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Comm", "src\Tests\Tests.Devices.Honeywell.Comm\Tests.Devices.Honeywell.Comm.csproj", "{44A0295D-BAB8-4C77-91FD-8338A918AA62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Comm", "srcTurbo\Tests\Tests.Devices.Honeywell.Comm\Tests.Devices.Honeywell.Comm.csproj", "{44A0295D-BAB8-4C77-91FD-8338A918AA62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Core", "src\Tests\Tests.Devices.Honeywell.Core\Tests.Devices.Honeywell.Core.csproj", "{BCC8B57E-9241-465C-95E6-04E4A1AF5171}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Core", "srcTurbo\Tests\Tests.Devices.Honeywell.Core\Tests.Devices.Honeywell.Core.csproj", "{BCC8B57E-9241-465C-95E6-04E4A1AF5171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "src\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "srcTurbo\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{0BAF7547-73A2-4A8F-AC84-3B7BDBCEB14C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "srcTurbo\Core\Core.csproj", "{0BAF7547-73A2-4A8F-AC84-3B7BDBCEB14C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.Debugger", "src\Tests\Devices.Communications.Debugger\Devices.Communications.Debugger.csproj", "{34F54274-BADF-49D2-89CD-CC2F23BC4A7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.Debugger", "srcTurbo\Tests\Devices.Communications.Debugger\Devices.Communications.Debugger.csproj", "{34F54274-BADF-49D2-89CD-CC2F23BC4A7D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toys", "Toys", "{0EF988B9-EAF3-4315-A751-7BD23C31B872}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protocols", "Protocols", "{107D240B-8287-4DD7-801C-C002E0E7FFAF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "src\Devices.WebApi\Devices.WebApi.csproj", "{19D1E2E0-84B8-4E5B-9F30-A2AD7E448968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "srcTurbo\Devices.WebApi\Devices.WebApi.csproj", "{19D1E2E0-84B8-4E5B-9F30-A2AD7E448968}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{056E251F-79DE-4E37-96DB-B2DCD7E8C3D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Mobile.Android", "srcTurbo\Devices.Mobile\Devices.Mobile.Android\Devices.Mobile.Android.csproj", "{7FA97582-1800-4815-B649-7DCC70BFAFB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Mobile.Android", "src\Mobile\Devices.Mobile\Devices.Mobile.Android\Devices.Mobile.Android.csproj", "{7FA97582-1800-4815-B649-7DCC70BFAFB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Mobile.iOS", "srcTurbo\Devices.Mobile\Devices.Mobile.iOS\Devices.Mobile.iOS.csproj", "{0981CFF7-9C24-4061-9B8A-B3AA4EB5B9EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Mobile.iOS", "src\Mobile\Devices.Mobile\Devices.Mobile.iOS\Devices.Mobile.iOS.csproj", "{0981CFF7-9C24-4061-9B8A-B3AA4EB5B9EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Mobile", "srcTurbo\Devices.Mobile\Devices.Mobile\Devices.Mobile.csproj", "{C6D86CBB-4804-4C26-AB34-98A11A2F162E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Mobile", "src\Mobile\Devices.Mobile\Devices.Mobile\Devices.Mobile.csproj", "{C6D86CBB-4804-4C26-AB34-98A11A2F162E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.SignalRClient.ConsoleApp", "src\Devices.SignalRClient.Console\Devices.SignalRClient.ConsoleApp.csproj", "{5FDBC91F-8308-4722-A6EE-18B5E84B74C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.SignalRClient.ConsoleApp", "srcTurbo\Devices.SignalRClient.Console\Devices.SignalRClient.ConsoleApp.csproj", "{5FDBC91F-8308-4722-A6EE-18B5E84B74C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,53 +3,59 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{0F183C2D-A66E-49D0-81FD-373C1A7AD0F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "srcTurbo\Core\Core.csproj", "{0F183C2D-A66E-49D0-81FD-373C1A7AD0F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.EvcVerification", "src\Module.EvcVerification\Module.EvcVerification.csproj", "{0C4D7648-F8EB-4D24-8B6F-D0D24AD9B846}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.EvcVerification", "srcTurbo\Module.EvcVerification\Module.EvcVerification.csproj", "{0C4D7648-F8EB-4D24-8B6F-D0D24AD9B846}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4CE11F70-ED31-4B4D-BD73-7B48F3054030}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{7BD0FA6B-C949-4C6E-8A38-E8AABFCFC3BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Certificates", "src\Module.Certificates\Module.Certificates.csproj", "{5741C816-BA34-4B6E-BD0F-8F3BBD2C2C29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Certificates", "srcTurbo\Module.Certificates\Module.Certificates.csproj", "{5741C816-BA34-4B6E-BD0F-8F3BBD2C2C29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Clients", "src\Module.Clients\Module.Clients.csproj", "{1ACBEDDF-CC96-4453-A10B-799B7987180E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Clients", "srcTurbo\Module.Clients\Module.Clients.csproj", "{1ACBEDDF-CC96-4453-A10B-799B7987180E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommProtocols", "CommProtocols", "{41BC084A-80EA-4653-91FD-CBC0331946E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "src\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "srcTurbo\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Honeywell", "Honeywell", "{0454CC76-EF8F-4580-B5BD-5A6E24623504}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "src\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "srcTurbo\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "src\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "srcTurbo\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "src\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "srcTurbo\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "src\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "srcTurbo\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AE41EBB1-18AA-4D75-B51B-9541D519D81B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Comm", "src\Tests\Tests.Devices.Honeywell.Comm\Tests.Devices.Honeywell.Comm.csproj", "{44A0295D-BAB8-4C77-91FD-8338A918AA62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Comm", "srcTurbo\Tests\Tests.Devices.Honeywell.Comm\Tests.Devices.Honeywell.Comm.csproj", "{44A0295D-BAB8-4C77-91FD-8338A918AA62}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Devices.Honeywell.Comm.Crc", "src\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj", "{D4A4DE0B-C310-4183-9E8C-389794D1DB79}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Devices.Honeywell.Comm.Crc", "srcTurbo\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj", "{D4A4DE0B-C310-4183-9E8C-389794D1DB79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Core", "src\Tests\Tests.Devices.Honeywell.Core\Tests.Devices.Honeywell.Core.csproj", "{BCC8B57E-9241-465C-95E6-04E4A1AF5171}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Devices.Honeywell.Core", "srcTurbo\Tests\Tests.Devices.Honeywell.Core\Tests.Devices.Honeywell.Core.csproj", "{BCC8B57E-9241-465C-95E6-04E4A1AF5171}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{DB6AB39C-5A1A-4562-B6F1-1D8FE24143E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "srcTurbo\Infrastructure\Infrastructure.csproj", "{DB6AB39C-5A1A-4562-B6F1-1D8FE24143E9}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Prover.SuperFactorCalculations", "src\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj", "{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Prover.SuperFactorCalculations", "srcTurbo\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj", "{D39DB1D2-6243-4FAA-931C-95FEBAA3A9C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{2B104496-42CD-4694-9BB1-1565AB8EE67A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core", "src\Prover.Core\Prover.Core.csproj", "{DE48160F-095D-40B1-8790-6CB560024CE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core", "srcTurbo\Prover.Core\Prover.Core.csproj", "{DE48160F-095D-40B1-8790-6CB560024CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "src\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "srcTurbo\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculations", "Calculations", "{2AA6FDFF-13A4-426B-96F6-775B0F489987}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Core.GasCalculations.ZFactor", "src\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj", "{3E4389CC-C2A9-48E8-8403-737FA0B310BE}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Core.GasCalculations.ZFactor", "srcTurbo\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj", "{3E4389CC-C2A9-48E8-8403-737FA0B310BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "srcTurbo\Domain\Domain.csproj", "{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.GasCalculations", "srcTurbo\Core.GasCalculations\Core.GasCalculations.csproj", "{E9DC511A-9EE0-4205-97A3-1C18992A0263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.ConsoleApp", "srcTurbo\Console\Prover.ConsoleApp.csproj", "{49F9F849-F81A-4E47-A9A3-953AE5486EC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,6 +166,24 @@ Global
 		{3E4389CC-C2A9-48E8-8403-737FA0B310BE}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
 		{3E4389CC-C2A9-48E8-8403-737FA0B310BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E4389CC-C2A9-48E8-8403-737FA0B310BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9DC511A-9EE0-4205-97A3-1C18992A0263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49F9F849-F81A-4E47-A9A3-953AE5486EC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
