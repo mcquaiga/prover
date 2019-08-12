@@ -30,61 +30,30 @@
     /// </summary>
     public class QaRunTestManager : IQaRunTestManager
     {
-        #region Fields
+        /// <summary>
+        /// Gets the EventAggregator
+        /// </summary>
+        public IEventAggregator EventAggregator { get; }
 
         /// <summary>
-        /// Defines the _eventAggregator
+        /// Gets the Instrument
         /// </summary>
-        private readonly IEventAggregator _eventAggregator;
+        public Instrument Instrument { get; private set; }
 
         /// <summary>
-        /// Defines the _postTestCommands
+        /// Gets the TestStatus
         /// </summary>
-        private readonly IEnumerable<IPostTestAction> _postTestCommands;
+        public IObservable<string> Status => _testStatus.AsObservable();
 
         /// <summary>
-        /// Defines the _readingStabilizer
+        /// Gets the TestActionsManager
         /// </summary>
-        private readonly IReadingStabilizer _readingStabilizer;
+        public ITestActionsManager TestActionsManager { get; }
 
         /// <summary>
-        /// Defines the _settingsService
+        /// Gets or sets the VolumeTestManager
         /// </summary>
-        private readonly ISettingsService _settingsService;
-
-        /// <summary>
-        /// Defines the _tachometerService
-        /// </summary>
-        private readonly TachometerService _tachometerService;
-
-        /// <summary>
-        /// Defines the _testRunService
-        /// </summary>
-        private readonly TestRunService _testRunService;
-
-        /// <summary>
-        /// Defines the _testStatus
-        /// </summary>
-        private readonly Subject<string> _testStatus = new Subject<string>();
-
-        /// <summary>
-        /// Defines the _validators
-        /// </summary>
-        private readonly IEnumerable<IPreTestValidation> _validators;
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        protected static Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _communicationClient
-        /// </summary>
-        private EvcCommunicationClient _communicationClient;
-
-        #endregion
-
-        #region Constructors
+        public VolumeTestManager VolumeTestManager { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QaRunTestManager"/> class.
@@ -119,39 +88,6 @@
             _testStatus?
                 .Subscribe(s => this.Publish(new VerificationTestEvent(s)));
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the EventAggregator
-        /// </summary>
-        public IEventAggregator EventAggregator { get; }
-
-        /// <summary>
-        /// Gets the Instrument
-        /// </summary>
-        public Instrument Instrument { get; private set; }
-
-        /// <summary>
-        /// Gets the TestActionsManager
-        /// </summary>
-        public ITestActionsManager TestActionsManager { get; }
-
-        /// <summary>
-        /// Gets the TestStatus
-        /// </summary>
-        public IObservable<string> Status => _testStatus.AsObservable();
-
-        /// <summary>
-        /// Gets or sets the VolumeTestManager
-        /// </summary>
-        public VolumeTestManager VolumeTestManager { get; set; }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The Dispose
@@ -218,43 +154,15 @@
         /// <param name="commPort">The commPort<see cref="ICommPort"/></param>
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <param name="client">The client<see cref="Client"/></param>      
+        /// <param name="client">The client<see cref="Client"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public async Task InitializeTest(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings,
             CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
-        {       
+        {
             await GetInstrument(instrumentType, commPort, testSettings, client, ct);
-
-            if (runVerifiers)
-            {
-                await RunVerifiers();
-                await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
-            }        
-
-            await _communicationClient.Disconnect();
 
             CreateVolumeTestManager();
             await SaveAsync();
-        }
-
-        private async Task GetInstrument(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings, Client client, CancellationToken ct)
-        {
-            _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);           
-
-            await _communicationClient.Connect(ct);
-            var items = await _communicationClient.GetAllItems();
-
-            Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
-            
-            await RunVerifiers();
-            await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
-
-            await _communicationClient.Disconnect();
-
-            CreateVolumeTestManager();
-
-            if (testSettings.Local.AutoSave)
-                await SaveAsync();
         }
 
         /// <summary>
@@ -317,10 +225,9 @@
                 //Execute any Post test clean up methods
                 foreach (var command in _postTestCommands)
                     await command.Execute(_communicationClient, Instrument, _testStatus);
-              
             }
             catch (OperationCanceledException)
-            {               
+            {
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -332,7 +239,7 @@
         public async Task SaveAsync()
         {
             try
-            {               
+            {
                 await _testRunService.Save(Instrument);
             }
             catch (Exception ex)
@@ -342,11 +249,60 @@
         }
 
         /// <summary>
+        /// Defines the Log
+        /// </summary>
+        protected static Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _eventAggregator
+        /// </summary>
+        private readonly IEventAggregator _eventAggregator;
+
+        /// <summary>
+        /// Defines the _postTestCommands
+        /// </summary>
+        private readonly IEnumerable<IPostTestAction> _postTestCommands;
+
+        /// <summary>
+        /// Defines the _readingStabilizer
+        /// </summary>
+        private readonly IReadingStabilizer _readingStabilizer;
+
+        /// <summary>
+        /// Defines the _settingsService
+        /// </summary>
+        private readonly ISettingsService _settingsService;
+
+        /// <summary>
+        /// Defines the _tachometerService
+        /// </summary>
+        private readonly TachometerService _tachometerService;
+
+        /// <summary>
+        /// Defines the _testRunService
+        /// </summary>
+        private readonly TestRunService _testRunService;
+
+        /// <summary>
+        /// Defines the _testStatus
+        /// </summary>
+        private readonly Subject<string> _testStatus = new Subject<string>();
+
+        /// <summary>
+        /// Defines the _validators
+        /// </summary>
+        private readonly IEnumerable<IPreTestValidation> _validators;
+
+        /// <summary>
+        /// Defines the _communicationClient
+        /// </summary>
+        private EvcCommunicationClient _communicationClient;
+
+        /// <summary>
         /// The CreateVolumeTestManager
         /// </summary>
         private void CreateVolumeTestManager()
         {
-
             if (Instrument.VolumeTest.DriveType is RotaryDrive)
             {
                 VolumeTestManager = IoC.Get<RotaryAutoVolumeTestManager>();
@@ -396,6 +352,24 @@
             await _communicationClient.Disconnect();
         }
 
-        #endregion
-    } 
+        private async Task GetInstrument(InstrumentType instrumentType, ICommPort commPort, ISettingsService testSettings, Client client, CancellationToken ct)
+        {
+            _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);
+
+            await _communicationClient.Connect(ct);
+            var items = await _communicationClient.GetAllItems();
+
+            Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
+
+            await RunVerifiers();
+            await TestActionsManager.RunVerificationInitActions(_communicationClient, Instrument);
+
+            await _communicationClient.Disconnect();
+
+            CreateVolumeTestManager();
+
+            if (testSettings.Local.AutoSave)
+                await SaveAsync();
+        }
+    }
 }
