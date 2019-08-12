@@ -4,9 +4,10 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 {
     public class EmptyDInOutBoard : IDInOutBoard
     {
+        public decimal PulseTiming { get; set; }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public int ReadInput()
@@ -21,7 +22,5 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
         public void StopMotor()
         {
         }
-
-        public decimal PulseTiming { get; set; }
     }
 }

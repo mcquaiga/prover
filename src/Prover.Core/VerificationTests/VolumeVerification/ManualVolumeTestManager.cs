@@ -14,6 +14,34 @@ namespace Prover.Core.VerificationTests.VolumeVerification
         {
         }
 
+        public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
+        {
+            try
+            {
+                ct.ThrowIfCancellationRequested();
+                await CommClient.Connect(ct);
+
+                VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
+
+                //Frequency only instruments
+                if (VolumeTest.VerificationTest.FrequencyTest != null)
+                {
+                    VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
+                }
+            }
+            finally
+            {
+                await CommClient.Disconnect();
+            }
+        }
+
+        public override Task ExecuteSyncTest(CancellationToken ct)
+        {
+            return Task.Run(() =>
+             {
+             }, ct);
+        }
+
         public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct)
         {
             await CommClient.Connect(ct);
@@ -28,47 +56,17 @@ namespace Prover.Core.VerificationTests.VolumeVerification
             await CommClient.Disconnect();
         }
 
-        public override async Task RunTest(CancellationToken ct)
+        public override Task RunTest(CancellationToken ct)
         {
             RunningTest = true;
             ResetPulseCounts(VolumeTest);
 
-            await Task.Run(() =>
-            {
-                while (RunningTest || ct.IsCancellationRequested)
-                {
-
-                }
-            }, ct);
-        }
-
-        public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
-        {
-            await Task.Run(async () =>
-            {
-                try
-                {
-                    ct.ThrowIfCancellationRequested();
-                    await CommClient.Connect(ct);
-                    VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
-                    if (VolumeTest.VerificationTest.FrequencyTest != null)
-                    {
-                        VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
-                    }
-                }
-                finally
-                {
-                    await CommClient.Disconnect();
-                }
-            }, ct);
-        }
-
-        public override async Task ExecuteSyncTest(CancellationToken ct)
-        {
-            await Task.Run(() =>
-            {
-            }, ct);
+            return Task.Run(() =>
+             {
+                 while (RunningTest || ct.IsCancellationRequested)
+                 {
+                 }
+             }, ct);
         }
     }
 }
-
