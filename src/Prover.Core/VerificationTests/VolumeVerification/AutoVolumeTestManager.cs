@@ -216,44 +216,45 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, CancellationToken ct)
         {
-            var pulsesWaiting = 0;
-            var lastPulsesWaiting = 0;
-            var isComplete = false;
-
-            using (Observable
-                   .Interval(TimeSpan.FromSeconds(10))
-                   .StartWith(-1)
-                   .Select(_ => Observable.FromAsync(async () =>
-                   {
-                       pulsesWaiting = 0;
-
-                       if (!commClient.IsConnected)
-                           await commClient.Connect(ct);
-
-                       foreach (var i in await commClient.GetPulseOutputItems())
-                       {
-                           pulsesWaiting += (int)i.NumericValue;
-                       }
-
-                           //We'll stop listening if either we have no pulses left in the register or the evc hasn't spit
-                           //anything else out since our last check (pulses waiting shouldn't be the same after 10 seconds, it means something is wrong)
-                           if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
-                       {
-                           await commClient.Disconnect();
-                           lastPulsesWaiting = pulsesWaiting;
-                       }
-                       else
-                       {
-                           isComplete = true;
-                       }
-                   }))
-                   .Concat()
-                   .Subscribe())
+            await Task.Run(() =>
             {
-                while (!isComplete && !ct.IsCancellationRequested) { }
-            }
+                int pulsesWaiting;
+                int lastPulsesWaiting = 0;
+                bool keepWaiting = true;
 
-            _pulseInputsCancellationTokenSource.Cancel();
+                Status.OnNext("Waiting for residual pulses...");
+
+                using (Observable
+                       .Interval(TimeSpan.FromSeconds(10))
+                       .Subscribe(async _ =>
+                       {
+                           pulsesWaiting = 0;
+
+                           if (!commClient.IsConnected)
+                               await commClient.Connect(ct);
+
+                           foreach (var i in await commClient.GetPulseOutputItems())
+                           {
+                               pulsesWaiting += (int)i.NumericValue;
+                           }
+
+                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+                           if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
+                           {
+                               await commClient.Disconnect();
+                               lastPulsesWaiting = pulsesWaiting;
+                           }
+                           else
+                           {
+                               keepWaiting = false;
+                           }
+                       }))
+                {
+                    while (keepWaiting) { }
+                }
+
+                _pulseInputsCancellationTokenSource.Cancel();
+            });
         }
 
         /// <summary>
