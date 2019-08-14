@@ -216,48 +216,45 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, CancellationToken ct)
         {
-            await Task.Run(() =>
+            int pulsesWaiting;
+            int lastPulsesWaiting = 0;
+            bool keepWaiting = true;
+
+            Status.OnNext("Waiting for residual pulses...");
+
+            using (Observable
+                    .Interval(TimeSpan.FromSeconds(10))
+                    .Subscribe(async _ =>
+                    {
+                        pulsesWaiting = 0;
+
+                        if (!commClient.IsConnected)
+                            await commClient.Connect(ct);
+
+                        foreach (var i in await commClient.GetPulseOutputItems())
+                        {
+                            pulsesWaiting += (int)i.NumericValue;
+                        }
+
+                        Log.Debug($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
+                        Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
+                        if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
+                        {
+                            Log.Debug($"Pulses waiting...");
+                            await commClient.Disconnect();
+                            lastPulsesWaiting = pulsesWaiting;
+                        }
+                        else
+                        {
+                            Log.Debug($"No Pulses waiting!");
+                            keepWaiting = false;
+                        }
+                    }))
             {
-                int pulsesWaiting;
-                int lastPulsesWaiting = 0;
-                bool keepWaiting = true;
+                while (keepWaiting) { }
+            }
 
-                Status.OnNext("Waiting for residual pulses...");
-
-                using (Observable
-                       .Interval(TimeSpan.FromSeconds(10))
-                       .Subscribe(async _ =>
-                       {
-                           pulsesWaiting = 0;
-
-                           if (!commClient.IsConnected)
-                               await commClient.Connect(ct);
-
-                           foreach (var i in await commClient.GetPulseOutputItems())
-                           {
-                               pulsesWaiting += (int)i.NumericValue;
-                           }
-
-                           Log.Debug($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
-                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
-                           if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
-                           {
-                               Log.Debug($"Pulses waiting...");
-                               await commClient.Disconnect();
-                               lastPulsesWaiting = pulsesWaiting;
-                           }
-                           else
-                           {
-                               Log.Debug($"No Pulses waiting!");
-                               keepWaiting = false;
-                           }
-                       }))
-                {
-                    while (keepWaiting) { }
-                }
-
-                _pulseInputsCancellationTokenSource.Cancel();
-            });
+            _pulseInputsCancellationTokenSource.Cancel();
         }
 
         /// <summary>
