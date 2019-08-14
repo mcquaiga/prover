@@ -238,14 +238,17 @@
                                pulsesWaiting += (int)i.NumericValue;
                            }
 
-                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+                           Log.Debug($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
+                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining.");
                            if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                            {
+                               Log.Debug($"Pulses waiting...");
                                await commClient.Disconnect();
                                lastPulsesWaiting = pulsesWaiting;
                            }
                            else
                            {
+                               Log.Debug($"No Pulses waiting!");
                                keepWaiting = false;
                            }
                        }))
