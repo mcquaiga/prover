@@ -70,49 +70,47 @@
             <ScrollViewer Grid.Column="1"
                           VerticalScrollBarVisibility="Auto">
 
-                <Viewbox Stretch="Uniform">
-                    <Grid VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <ItemsControl ItemsSource="{Binding TestViews}"
+                    <ItemsControl ItemsSource="{Binding TestViews}"
                                   Grid.ColumnSpan="3">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid Rows="1" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Style="{StaticResource SubSectionDividerBorder}"
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SubSectionDividerBorder}"
                                         BorderThickness="0 0 1 0"
                                         Padding="4"
                                         MaxWidth="300">
-                                        <ContentControl cal:View.Model="{Binding }"
+                                    <ContentControl cal:View.Model="{Binding }"
                                                     cal:View.Context="CardNew" />
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                        <Border Style="{StaticResource SubSectionDividerBorder}"
+                    <Border Style="{StaticResource SubSectionDividerBorder}"
                             Grid.Column="0"
                             Grid.ColumnSpan="3"
                             Grid.Row="1"
                             Padding="4"
                             VerticalAlignment="Stretch">
-                            <ContentControl cal:View.Model="{Binding VolumeTestView}"
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}"
                                         cal:View.Context="CardNew" />
-                        </Border>
-                    </Grid>
-                </Viewbox>
+                    </Border>
+                </Grid>
             </ScrollViewer>
         </Grid>
 

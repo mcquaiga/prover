@@ -20,37 +20,6 @@
     /// </summary>
     public class VolumeTest : BaseVerificationTest
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the _testInstrumentData
-        /// </summary>
-        private string _testInstrumentData;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="VolumeTest"/> class from being created.
-        /// </summary>
-        private VolumeTest()
-        {
-        }
-
-        public VolumeTest(VerificationTest verificationTest, List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
-        {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = verificationTest.Id;
-
-            CreateDriveType(mechanicalUncorrectedTestLimits);
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets the ActualFactor
         /// </summary>
@@ -129,9 +98,6 @@
             }
         }
 
-        [NotMapped]
-        public int UncorrectedPulseTarget => DriveType.MaxUncorrectedPulses();
-
         /// <summary>
         /// Gets or sets the DriveType
         /// </summary>
@@ -143,39 +109,9 @@
         public string DriveTypeDiscriminator { get; set; }
 
         /// <summary>
-        /// Gets the EvcCorrected
-        /// </summary>
-        [NotMapped]
-        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
-
-        /// <summary>
         /// Gets the EvcFactor
         /// </summary>
         public override decimal? EvcFactor { get; }
-
-        /// <summary>
-        /// Gets the EvcUncorrected
-        /// </summary>
-        [NotMapped]
-        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
-
-        /// <summary>
-        /// Gets a value indicating whether HasPassed
-        /// </summary>
-        [NotMapped]
-        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
-                                     UnCorPulsesPassed && CorPulsesPassed;
-
-        /// <summary>
-        /// Gets the Instrument
-        /// </summary>
-        public Instrument Instrument => VerificationTest.Instrument;
-
-        /// <summary>
-        /// Gets the InstrumentType
-        /// </summary>
-        [NotMapped]
-        public override IEvcDevice InstrumentType => Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the PercentError
@@ -284,6 +220,9 @@
             }
         }
 
+        [NotMapped]
+        public int UncorrectedPulseTarget => DriveType.MaxUncorrectedPulses();
+
         /// <summary>
         /// Gets or sets the UncPulseCount
         /// </summary>
@@ -306,24 +245,44 @@
             }
         }
 
-        #endregion
-
-        #region Methods      
+        /// <summary>
+        /// Gets the EvcCorrected
+        /// </summary>
+        [NotMapped]
+        public decimal? EvcCorrected => VerificationTest.Instrument.EvcCorrected(Items, AfterTestItems);
 
         /// <summary>
-        /// The OnInitializing
+        /// Gets the EvcUncorrected
         /// </summary>
-        public override void OnInitializing()
+        [NotMapped]
+        public decimal? EvcUncorrected => VerificationTest.Instrument.EvcUncorrected(Items, AfterTestItems);
+
+        /// <summary>
+        /// Gets a value indicating whether HasPassed
+        /// </summary>
+        [NotMapped]
+        public new bool HasPassed => CorrectedHasPassed && UnCorrectedHasPassed && DriveType.HasPassed &&
+                                     UnCorPulsesPassed && CorPulsesPassed;
+
+        /// <summary>
+        /// Gets the Instrument
+        /// </summary>
+        public Instrument Instrument => VerificationTest.Instrument;
+
+        /// <summary>
+        /// Gets the InstrumentType
+        /// </summary>
+        [NotMapped]
+        public override IEvcDevice InstrumentType => Instrument.InstrumentType;
+
+        public VolumeTest(VerificationTest verificationTest, List<TestSettings.MechanicalUncorrectedTestLimit> mechanicalUncorrectedTestLimits)
         {
-            base.OnInitializing();
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsVolumeTest == true).ToList();
+            AfterTestItems = Items;
+            VerificationTest = verificationTest;
+            VerificationTestId = verificationTest.Id;
 
-            CreateDriveType();
-
-            if (!string.IsNullOrEmpty(_testInstrumentData))
-            {
-                var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
-                AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
-            }
+            CreateDriveType(mechanicalUncorrectedTestLimits);
         }
 
         /// <summary>
@@ -356,12 +315,15 @@
                     case Drives.Rotary:
                         DriveType = new RotaryDrive(Instrument);
                         break;
+
                     case Drives.Mechanical:
                         DriveType = new MechanicalDrive(Instrument, mechanicalUncorrectedTestLimits);
                         break;
+
                     case Drives.PulseInput:
                         DriveType = new PulseInputSensor(Instrument);
                         break;
+
                     default:
                         throw new NotSupportedException($"Drive type {DriveTypeDiscriminator} is not supported.");
                 }
@@ -370,6 +332,32 @@
                 throw new ArgumentNullException($"Could not determine drive type {DriveTypeDiscriminator}.");
         }
 
-        #endregion
+        /// <summary>
+        /// The OnInitializing
+        /// </summary>
+        public override void OnInitializing()
+        {
+            base.OnInitializing();
+
+            CreateDriveType();
+
+            if (!string.IsNullOrEmpty(_testInstrumentData))
+            {
+                var afterItemValues = JsonConvert.DeserializeObject<Dictionary<int, string>>(_testInstrumentData);
+                AfterTestItems = ItemHelpers.LoadItems(Instrument.InstrumentType, afterItemValues);
+            }
+        }
+
+        /// <summary>
+        /// Defines the _testInstrumentData
+        /// </summary>
+        private string _testInstrumentData;
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="VolumeTest"/> class from being created.
+        /// </summary>
+        private VolumeTest()
+        {
+        }
     }
 }

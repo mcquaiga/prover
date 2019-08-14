@@ -25,47 +25,12 @@
     using System.Threading;
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
-    
 
     /// <summary>
     /// Defines the <see cref="QaRunTestManager" />
     /// </summary>
     public class QaRunTestManager : IQaRunTestManager
     {
-
-        #region Public Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QaRunTestManager"/> class.
-        /// </summary>
-        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
-        /// <param name="readingStabilizer">The readingStabilizer<see cref="IReadingStabilizer"/></param>
-        /// <param name="tachometerService">The tachometerService<see cref="TachometerService"/></param>
-        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
-        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>    
-        public QaRunTestManager(
-            IEventAggregator eventAggregator,
-            TestRunService testRunService,
-            IReadingStabilizer readingStabilizer,
-            TachometerService tachometerService,
-            ITestActionsManager testActionsManager,
-            ISettingsService settingsService)
-        {
-            _eventAggregator = eventAggregator;
-            _testRunService = testRunService;
-            _readingStabilizer = readingStabilizer;
-            _tachometerService = tachometerService;
-            _settingsService = settingsService;
-            TestActionsManager = testActionsManager;
-
-            _testStatus.Subscribe(s => this.Publish(new VerificationTestEvent(s)));
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public EvcCommunicationClient CommunicationClient => _communicationClient;
 
         /// <summary>
@@ -93,9 +58,32 @@
         /// </summary>
         public VolumeTestManager VolumeTestManager { get; set; }
 
-        #endregion Public Properties
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QaRunTestManager"/> class.
+        /// </summary>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
+        /// <param name="readingStabilizer">The readingStabilizer<see cref="IReadingStabilizer"/></param>
+        /// <param name="tachometerService">The tachometerService<see cref="TachometerService"/></param>
+        /// <param name="testActionsManager">The testActionsManager<see cref="ITestActionsManager"/></param>
+        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
+        public QaRunTestManager(
+            IEventAggregator eventAggregator,
+            TestRunService testRunService,
+            IReadingStabilizer readingStabilizer,
+            TachometerService tachometerService,
+            ITestActionsManager testActionsManager,
+            ISettingsService settingsService)
+        {
+            _eventAggregator = eventAggregator;
+            _testRunService = testRunService;
+            _readingStabilizer = readingStabilizer;
+            _tachometerService = tachometerService;
+            _settingsService = settingsService;
+            TestActionsManager = testActionsManager;
 
-        #region Public Methods
+            _testStatus.Subscribe(s => this.Publish(new VerificationTestEvent(s)));
+        }
 
         /// <summary>
         /// The Dispose
@@ -164,7 +152,7 @@
             _communicationClient.Status.Subscribe(_testStatus);
 
             await _communicationClient.Connect(ct);
-            IEnumerable<CommProtocol.Common.Items.ItemValue> items = await _communicationClient.GetAllItems();
+            var items = await _communicationClient.GetAllItems();
 
             Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
 
@@ -230,7 +218,6 @@
                 await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
                 await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
-
             }
             catch (OperationCanceledException)
             {
@@ -257,24 +244,15 @@
             }
         }
 
-        #endregion Public Methods
-
-        #region Protected Fields
-
         /// <summary>
         /// Defines the Log
         /// </summary>
         protected static Logger Log = LogManager.GetCurrentClassLogger();
 
-        #endregion Protected Fields
-
-        #region Private Fields
-
         /// <summary>
         /// Defines the _eventAggregator
         /// </summary>
         private readonly IEventAggregator _eventAggregator;
-
 
         /// <summary>
         /// Defines the _readingStabilizer
@@ -300,21 +278,17 @@
         /// Defines the _testStatus
         /// </summary>
         private readonly Subject<string> _testStatus = new Subject<string>();
+
         /// <summary>
         /// Defines the _communicationClient
         /// </summary>
         private EvcCommunicationClient _communicationClient;
-
-        #endregion Private Fields
-
-        #region Private Methods
 
         /// <summary>
         /// The CreateVolumeTestManager
         /// </summary>
         private void CreateVolumeTestManager()
         {
-
             if (Instrument.VolumeTest.DriveType is RotaryDrive)
             {
                 VolumeTestManager = IoC.Get<RotaryAutoVolumeTestManager>();
@@ -367,8 +341,5 @@
 
             await _communicationClient.Disconnect();
         }
-
-        #endregion Private Methods
-
     }
 }
