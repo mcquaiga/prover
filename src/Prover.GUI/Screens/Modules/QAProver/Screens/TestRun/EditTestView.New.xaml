@@ -108,7 +108,7 @@
                             Padding="4"
                             VerticalAlignment="Stretch">
                         <ContentControl cal:View.Model="{Binding VolumeTestView}"
-                                        cal:View.Context="CardNew" />
+                                        cal:View.Context="Base" />
                     </Border>
                 </Grid>
             </ScrollViewer>

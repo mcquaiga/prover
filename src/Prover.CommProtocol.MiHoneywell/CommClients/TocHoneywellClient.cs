@@ -33,9 +33,9 @@ using System.Reactive.Subjects;
         /// <returns>The <see cref="Task{IFrequencyTestItems}"/></returns>
         public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
-            var mainResults = await GetItemValues(ItemDetails.FrequencyTestItems());
-            await Disconnect();          
-
+            var mainResults = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
+            await Disconnect();
+            Thread.Sleep(250);
             try
             {
                 InstrumentType = HoneywellInstrumentTypes.TibBoard;

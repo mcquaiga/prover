@@ -5,42 +5,57 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Prover.GUI.Controls"
             mc:Ignorable="d">
-    <Grid>
+    <UniformGrid Rows="1">
         <StackPanel>
             <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
-                       Text="Frequency" />
+                       Text="Pulse Inputs" />
+            <controls:ValueDescriptionControl Label="KMO (AAT Sim)"
+                                                   Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="False" />
+            <controls:ValueDescriptionControl Label="Main Pulses"
+                                                       Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       IsReadOnly="False" />
+
+            <controls:ValueDescriptionControl Label="Sense Pulses"
+                                                       Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       IsReadOnly="False" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Adjusted" />
             <controls:PercentageControlNew
                 HorizontalAlignment="Center"
-                DisplayValue="{Binding TestRun.PercentError}"
+                DisplayValue="{Binding TestRun.AdjustedVolumePercentError}"
                 Passed="{Binding TestRun.HasPassed}" />
             <StackPanel>
-                <controls:ValueDescriptionControl Label="KMO (AAT Sim)" 
-                                                   Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                   IsReadOnly="False"
-                                                   HorizontalAlignment="Center"/>
-                <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Main Pulses" 
-                                                       Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                       IsReadOnly="False"/>
-                        
-                    <controls:ValueDescriptionControl Label="Sense Pulses" 
-                                                       Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       IsReadOnly="False"/>
-                        
-                    <controls:ValueDescriptionControl Label="True Adj." 
-                                                       Value="{Binding AdjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="EVC Adj." 
-                                                       Value="{Binding EvcAdjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="True Unadj." 
-                                                       Value="{Binding UnadjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="EVC Unadj." 
-                                                       Value="{Binding EvcUnadjustedVolume}"/>
-                </UniformGrid>
 
+                <UniformGrid Columns="2">
+
+                    <controls:ValueDescriptionControl Label="True Adj."
+                                                       Value="{Binding AdjustedVolume}" />
+
+                    <controls:ValueDescriptionControl Label="EVC Adj."
+                                                       Value="{Binding EvcAdjustedVolume}" />
+                </UniformGrid>
             </StackPanel>
         </StackPanel>
-    </Grid>
+        <StackPanel>
+            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Unadjusted" />
+            <controls:PercentageControlNew
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
+                Passed="{Binding TestRun.HasPassed}" />
+            <StackPanel>
+                <UniformGrid Columns="2">
+
+                    <controls:ValueDescriptionControl Label="True Unadj."
+                                                       Value="{Binding UnadjustedVolume}" />
+
+                    <controls:ValueDescriptionControl Label="EVC Unadj."
+                                                       Value="{Binding EvcUnadjustedVolume}" />
+                </UniformGrid>
+            </StackPanel>
+        </StackPanel>
+    </UniformGrid>
 </UserControl>

@@ -6,18 +6,24 @@
   "CommClientType": "Prover.CommProtocol.MiHoneywell.CommClients.TocHoneywellClient",
   "OverrideItems": [
     {
+      "number": "182",
+      "code": "INPUTVOLCORRECTOR",
+      "shortDescription": "Input Vol to Corrector",
+      "description": "Input Vol to Corrector"
+    },
+    {
       "number": "850",
       "code": "ADJVOLUME",
       "shortDescription": "Adjusted Volume",
       "description": "Adjusted Volume",
-      "isFrequencyTest": "true"
+      "isFrequencyTest": true
     },
     {
       "number": "852",
       "code": "UNADJVOLUME",
       "shortDescription": "Unadjusted Volume",
       "description": "Unadjusted Volume",
-      "isFrequencyTest": "true"
+      "isFrequencyTest": true
     },
     {
       "number": "864",
