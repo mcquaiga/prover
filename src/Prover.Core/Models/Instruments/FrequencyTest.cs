@@ -25,7 +25,7 @@ namespace Prover.Core.Models.Instruments
         {
             get
             {
-                return AdjustedVolume() * TotalCorrection().Value;
+                return decimal.Round(AdjustedVolume() * TotalCorrection().Value, 4);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Prover.Core.Models.Instruments
             {
                 if (!TibAdjustedVolume().HasValue) return 0;
 
-                return TibAdjustedVolume().Value * TotalCorrection().Value;
+                return decimal.Round(TibAdjustedVolume().Value * TotalCorrection().Value, 4);
             }
         }
 
