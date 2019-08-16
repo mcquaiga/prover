@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Prover.GUI.Controls"
             mc:Ignorable="d">
-    <UniformGrid Rows="1">
-        <StackPanel>
-            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
-                       Text="Pulse Inputs" />
+    <StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
             <controls:ValueDescriptionControl Label="KMO (AAT Sim)"
                                                    Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                    IsReadOnly="False" />
@@ -20,7 +20,8 @@
                                                        Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        IsReadOnly="False" />
         </StackPanel>
-        <StackPanel>
+        <UniformGrid Rows="1">
+
             <StackPanel>
                 <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                        Text="Adjusted" />
@@ -59,24 +60,25 @@
                     </UniformGrid>
                 </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <StackPanel>
-            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                        Text="Unadjusted" />
-            <controls:PercentageControlNew
+                <controls:PercentageControlNew
                 HorizontalAlignment="Center"
                 DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
                 Passed="{Binding TestRun.HasPassed}" />
-            <StackPanel>
-                <UniformGrid Columns="2">
+                <StackPanel>
+                    <UniformGrid Columns="2">
 
-                    <controls:ValueDescriptionControl Label="True Unadj."
+                        <controls:ValueDescriptionControl Label="True Unadj."
                                                        Value="{Binding UnadjustedVolume}" />
 
-                    <controls:ValueDescriptionControl Label="EVC Unadj."
+                        <controls:ValueDescriptionControl Label="EVC Unadj."
                                                        Value="{Binding EvcUnadjustedVolume}" />
-                </UniformGrid>
+                    </UniformGrid>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-    </UniformGrid>
+        </UniformGrid>
+    </StackPanel>
 </UserControl>

@@ -12,27 +12,24 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class TemperatureTestViewModel : TestRunViewModelBase<TemperatureTestRun>
     {
-        
+        public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
+
+        public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
+
+        public double Gauge { get => _gauge; set => this.RaiseAndSetIfChanged(ref _gauge, value); }
 
         public TemperatureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-            TemperatureTestRun temperatureTest, ISubject<VerificationTest> changeObservable)
+                                    TemperatureTestRun temperatureTest, ISubject<VerificationTest> changeObservable)
             : base(screenManager, eventAggregator, temperatureTest, changeObservable)
-        {          
-
+        {
+            Gauge = temperatureTest.Gauge;
             this.WhenAnyValue(x => x.Gauge)
                 .Subscribe(x =>
                 {
                     TestRun.Gauge = x;
                     ChangedEvent.OnNext(TestRun.VerificationTest);
                 });
-
         }
-
-        private double _gauge;
-        public double Gauge { get => _gauge; set => this.RaiseAndSetIfChanged(ref _gauge, value); }
-
-        public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
-        public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
 
         protected override void RaisePropertyChangeEvents()
         {
@@ -43,5 +40,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => EvcFactor);
             NotifyOfPropertyChange(() => PercentColour);
         }
+
+        private double _gauge;
     }
 }

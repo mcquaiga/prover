@@ -31,7 +31,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
 
                 if (_instrument != null)
                 {
-                    _evcCorrected = _instrument.VolumeTest.EvcCorrected.Value;
+                    _evcCorrected = _instrument.VolumeTest.EvcCorrected;
                     TotalValue = _instrument.Items.GetItem(142).NumericValue;
                 }
 
