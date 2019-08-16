@@ -35,7 +35,7 @@ using System.Reactive.Subjects;
         {
             var mainResults = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
             await Disconnect();
-            Thread.Sleep(250);
+            Thread.Sleep(1000);
             try
             {
                 InstrumentType = HoneywellInstrumentTypes.TibBoard;
