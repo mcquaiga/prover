@@ -21,22 +21,43 @@
                                                        IsReadOnly="False" />
         </StackPanel>
         <StackPanel>
-            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                        Text="Adjusted" />
-            <controls:PercentageControlNew
+                <controls:PercentageControlNew
                 HorizontalAlignment="Center"
                 DisplayValue="{Binding TestRun.AdjustedVolumePercentError}"
                 Passed="{Binding TestRun.HasPassed}" />
-            <StackPanel>
+                <StackPanel>
 
-                <UniformGrid Columns="2">
+                    <UniformGrid Columns="2">
 
-                    <controls:ValueDescriptionControl Label="True Adj."
+                        <controls:ValueDescriptionControl Label="True Adj."
                                                        Value="{Binding AdjustedVolume}" />
 
-                    <controls:ValueDescriptionControl Label="EVC Adj."
+                        <controls:ValueDescriptionControl Label="EVC Adj."
                                                        Value="{Binding EvcAdjustedVolume}" />
-                </UniformGrid>
+                    </UniformGrid>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Adjusted Corrected" />
+                <controls:PercentageControlNew
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding TestRun.AdjustedCorrectedPercentError}"
+                Passed="{Binding TestRun.HasPassed}" />
+                <StackPanel>
+
+                    <UniformGrid Columns="2">
+
+                        <controls:ValueDescriptionControl Label="True Adj. Corr."
+                                                       Value="{Binding TestRun.AdjustedCorrectedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="EVC Adj. Corr."
+                                                       Value="{Binding TestRun.EvcAdjustedCorrectedVolume}" />
+                    </UniformGrid>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
         <StackPanel>
