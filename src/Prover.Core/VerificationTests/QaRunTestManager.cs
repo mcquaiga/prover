@@ -214,14 +214,15 @@
         {
             try
             {
-                VolumeTestManager.StatusMessage.Subscribe(_testStatus);
-                await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
+                using (VolumeTestManager.StatusMessage.Subscribe(_testStatus))
+                {
+                    await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
-                await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
+                    await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
+                }
             }
             catch (OperationCanceledException)
             {
-                _testStatus.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -234,7 +235,7 @@
         {
             try
             {
-                _testStatus.OnNext($"Saving test...");
+                //_testStatus.OnNext($"Saving test...");
 
                 await _testRunService.Save(Instrument);
             }
