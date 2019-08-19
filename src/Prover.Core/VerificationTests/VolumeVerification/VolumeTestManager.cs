@@ -13,8 +13,6 @@
     using System.Threading.Tasks;
     using LogManager = NLog.LogManager;
 
-    #region Enums
-
     public enum VolumeTestSteps
     {
         PreTest,
@@ -23,10 +21,6 @@
         PostTest
     }
 
-    #endregion
-
-    #region Interfaces
-
     /// <summary>
     /// Defines the <see cref="IPulseInputService" />
     /// </summary>
@@ -34,60 +28,11 @@
     {
     }
 
-    #endregion
-
     /// <summary>
     /// Defines the <see cref="VolumeTestManager" />
     /// </summary>
     public abstract class VolumeTestManager : IDisposable
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the Status
-        /// </summary>
-        protected readonly Subject<string> Status = new Subject<string>();
-
-        /// <summary>
-        /// Defines the EventAggreator
-        /// </summary>
-        protected IEventAggregator EventAggreator;
-
-        /// <summary>
-        /// Defines the FirstPortAInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortAInputBoard;
-
-        /// <summary>
-        /// Defines the FirstPortBInputBoard
-        /// </summary>
-        protected IDInOutBoard FirstPortBInputBoard;
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        protected Logger Log = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VolumeTestManager"/> class.
-        /// </summary>
-        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
-        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
-        protected VolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
-        {
-
-            SettingsService = settingsService;
-            EventAggreator = eventAggregator;           
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets a value indicating whether RunningTest
         /// </summary>
@@ -107,15 +52,6 @@
         /// Gets or sets the VolumeTest
         /// </summary>
         public VolumeTest VolumeTest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CommClient
-        /// </summary>
-        protected EvcCommunicationClient CommClient { get; set; }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The CompleteTest
@@ -170,7 +106,7 @@
                 Log.Info("Volume test started!");
 
                 commClient.Status.Subscribe(Status);
-                //TODO: Add setting to skip
+                
                 if (SettingsService.TestSettings.RunVolumeSyncTest)
                     await ExecuteSyncTest(ct);
 
@@ -184,7 +120,6 @@
                 await CompleteTest(testActionsManager, ct);
 
                 Log.Info("Volume test finished!");
-
             }
             catch (OperationCanceledException)
             {
@@ -205,6 +140,47 @@
         public abstract Task RunTest(CancellationToken ct);
 
         /// <summary>
+        /// Defines the Status
+        /// </summary>
+        protected readonly Subject<string> Status = new Subject<string>();
+
+        /// <summary>
+        /// Defines the EventAggreator
+        /// </summary>
+        protected IEventAggregator EventAggreator;
+
+        /// <summary>
+        /// Defines the FirstPortAInputBoard
+        /// </summary>
+        protected IDInOutBoard FirstPortAInputBoard;
+
+        /// <summary>
+        /// Defines the FirstPortBInputBoard
+        /// </summary>
+        protected IDInOutBoard FirstPortBInputBoard;
+
+        /// <summary>
+        /// Defines the Log
+        /// </summary>
+        protected Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Gets or sets the CommClient
+        /// </summary>
+        protected EvcCommunicationClient CommClient { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VolumeTestManager"/> class.
+        /// </summary>
+        /// <param name="eventAggregator">The eventAggregator<see cref="IEventAggregator"/></param>
+        /// <param name="settingsService">The settingsService<see cref="ISettingsService"/></param>
+        protected VolumeTestManager(IEventAggregator eventAggregator, ISettingsService settingsService)
+        {
+            SettingsService = settingsService;
+            EventAggreator = eventAggregator;
+        }
+
+        /// <summary>
         /// The ResetPulseCounts
         /// </summary>
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
@@ -213,7 +189,5 @@
             volumeTest.PulseACount = 0;
             volumeTest.PulseBCount = 0;
         }
-
-        #endregion
     }
 }

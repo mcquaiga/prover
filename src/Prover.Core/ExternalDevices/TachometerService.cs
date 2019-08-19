@@ -14,27 +14,6 @@
     /// </summary>
     public class TachometerService : IDisposable
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _outputBoard
-        /// </summary>
-        private readonly IDInOutBoard _outputBoard;
-
-        /// <summary>
-        /// Defines the _serialPort
-        /// </summary>
-        private readonly SerialPort _serialPort;
-
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TachometerService"/> class.
         /// </summary>
@@ -51,10 +30,6 @@
 
             _outputBoard = outputBoard;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The ParseTachValue
@@ -113,7 +88,7 @@
                 }
                 finally
                 {
-                    _serialPort.Close();
+                    //_serialPort?.Close();
                 }
             });
         }
@@ -148,6 +123,19 @@
             Thread.Sleep(2000);
         }
 
-        #endregion
+        /// <summary>
+        /// Defines the Log
+        /// </summary>
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _outputBoard
+        /// </summary>
+        private readonly IDInOutBoard _outputBoard;
+
+        /// <summary>
+        /// Defines the _serialPort
+        /// </summary>
+        private readonly SerialPort _serialPort;
     }
 }

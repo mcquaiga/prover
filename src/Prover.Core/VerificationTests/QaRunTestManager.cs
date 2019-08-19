@@ -82,7 +82,7 @@
             _settingsService = settingsService;
             TestActionsManager = testActionsManager;
 
-            _testStatus.Subscribe(s => this.Publish(new VerificationTestEvent(s)));
+            _testStatus?.Subscribe(s => this.Publish(new VerificationTestEvent(s)));
         }
 
         /// <summary>
@@ -149,7 +149,7 @@
         public virtual async Task InitializeTest(IEvcDevice instrumentType, ICommPort commPort, ISettingsService testSettings, CancellationToken ct = new CancellationToken(), Client client = null, bool runVerifiers = true)
         {
             _communicationClient = EvcCommunicationClient.Create(instrumentType, commPort);
-            _communicationClient.Status.Subscribe(_testStatus);
+            //_communicationClient.Status.Subscribe(_testStatus);
 
             await _communicationClient.Connect(ct);
             var items = await _communicationClient.GetAllItems();
@@ -214,15 +214,16 @@
         {
             try
             {
-                using (VolumeTestManager.StatusMessage.Subscribe(_testStatus))
-                {
-                    await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
+                //using (VolumeTestManager.StatusMessage.Subscribe(_testStatus))
+                //{
+                await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
-                    await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
-                }
+                await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
+                //}
             }
             catch (OperationCanceledException)
             {
+                //_testStatus?.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -323,20 +324,20 @@
 
             if (Instrument.CompositionType == EvcCorrectorType.PTZ)
             {
-                _testStatus.OnNext($"Downloading P & T items...");
+                _testStatus?.OnNext($"Downloading P & T items...");
                 await DownloadTemperatureTestItems(level);
                 await DownloadPressureTestItems(level);
             }
 
             if (Instrument.CompositionType == EvcCorrectorType.T)
             {
-                _testStatus.OnNext($"Downloading T items...");
+                _testStatus?.OnNext($"Downloading T items...");
                 await DownloadTemperatureTestItems(level);
             }
 
             if (Instrument.CompositionType == EvcCorrectorType.P)
             {
-                _testStatus.OnNext($"Downloading P items...");
+                _testStatus?.OnNext($"Downloading P items...");
                 await DownloadPressureTestItems(level);
             }
 

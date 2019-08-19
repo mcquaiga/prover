@@ -32,6 +32,6 @@
             });
         }
 
-        private readonly int TachometerCount = 2;
+        private readonly int TachometerCount = 100;
     }
 }
