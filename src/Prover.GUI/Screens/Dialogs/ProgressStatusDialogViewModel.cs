@@ -77,15 +77,16 @@
 
             CancellationTokenSource = new CancellationTokenSource();
             var statusObserver = Observer.Create<string>(s => StatusText = s);
-            TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token)
-                .ContinueWith(_ =>
-                {
-                    statusObserver.OnCompleted();
-                    this.Unsubscribe<LiveReadStatusEvent>();
-                    this.Unsubscribe<VolumeTestStatusEvent>();
-                    this.Unsubscribe<VerificationTestEvent>();
-                    //TryClose(true);
-                }));
+            TaskCommand = ReactiveCommand.CreateFromTask(
+                () => taskFunc(statusObserver, CancellationTokenSource.Token)
+                    .ContinueWith(_ =>
+                    {
+                        statusObserver.OnCompleted();
+                        this.Unsubscribe<LiveReadStatusEvent>();
+                        this.Unsubscribe<VolumeTestStatusEvent>();
+                        this.Unsubscribe<VerificationTestEvent>();
+                        //TryClose(true);
+                    }));
 
             TaskCommand.ThrownExceptions
                .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));

@@ -12,7 +12,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         public enum Units
         {
             Therms,
-            Dktherms,
+            DecaTherms,
             MegaJoules,
             GigaJoules,
             KiloCals,
@@ -40,7 +40,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
                     case Units.Therms:
                         return Math.Round(TotalValue * _evcCorrected.Value / 100000);
 
-                    case Units.Dktherms:
+                    case Units.DecaTherms:
                         return Math.Round(TotalValue * _evcCorrected.Value / 1000000);
 
                     case Units.GigaJoules:

@@ -48,6 +48,8 @@
         /// </summary>
         public IObservable<string> Status => _testStatus.AsObservable();
 
+        public IDisposable StatusDisposable { get; private set; }
+
         /// <summary>
         /// Gets the TestActionsManager
         /// </summary>
@@ -92,7 +94,6 @@
         {
             _communicationClient?.Dispose();
             _tachometerService?.Dispose();
-            VolumeTestManager?.Dispose();
         }
 
         /// <summary>
@@ -214,16 +215,16 @@
         {
             try
             {
-                //using (VolumeTestManager.StatusMessage.Subscribe(_testStatus))
-                //{
+                //StatusDisposable = VolumeTestManager.StatusMessage.Subscribe(_testStatus);
+
                 await VolumeTestManager.RunFullVolumeTest(_communicationClient, Instrument.VolumeTest, TestActionsManager, ct);
 
+                //StatusDisposable.Dispose();
+
                 await TestActionsManager.ExecuteValidations(VerificationStep.PostVolumeVerification, _communicationClient, Instrument);
-                //}
             }
             catch (OperationCanceledException)
             {
-                //_testStatus?.OnNext($"Volume test cancelled.");
                 Log.Info("Volume test cancelled.");
             }
         }
@@ -236,8 +237,6 @@
         {
             try
             {
-                //_testStatus.OnNext($"Saving test...");
-
                 await _testRunService.Save(Instrument);
             }
             catch (Exception ex)

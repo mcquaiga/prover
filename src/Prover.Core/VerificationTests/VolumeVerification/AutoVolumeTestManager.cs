@@ -73,11 +73,9 @@
         /// </summary>
         public override void Dispose()
         {
-            base.Dispose();
             _pulseInputsCancellationTokenSource?.Cancel();
             _pulseInputsCancellationTokenSource?.Dispose();
             TachometerCommunicator?.Dispose();
-            Status.Dispose();
         }
 
         /// <summary>
@@ -130,8 +128,6 @@
                 CommClient = commClient;
                 VolumeTest = volumeTest;
 
-                CommClient?.Status?.Subscribe(Status);
-
                 await CommClient.Connect(ct);
 
                 await testActionsManager.ExecuteValidations(TestActions.VerificationStep.PreVolumeVerification, CommClient, VolumeTest.Instrument);
@@ -162,37 +158,34 @@
         /// <returns>The <see cref="Task"/></returns>
         public override async Task RunTest(CancellationToken ct)
         {
-            await Task.Run(async () =>
+            _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+            Task listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
+
+            try
             {
-                _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-                Task listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
+                ct.ThrowIfCancellationRequested();
 
-                try
+                using (Observable
+                        .Interval(TimeSpan.FromMilliseconds(500))
+                        .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                 {
-                    ct.ThrowIfCancellationRequested();
+                    ResetPulseCounts(VolumeTest);
+                    OutputBoard?.StartMotor();
+                    await WaitForTestComplete(VolumeTest, ct);
+                }
 
-                    using (Observable
-                            .Interval(TimeSpan.FromMilliseconds(500))
-                            .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
-                    {
-                        ResetPulseCounts(VolumeTest);
-                        OutputBoard?.StartMotor();
-                        await WaitForTestComplete(VolumeTest, ct);
-                    }
-
-                    ct.ThrowIfCancellationRequested();
-                }
-                catch (OperationCanceledException)
-                {
-                    _pulseInputsCancellationTokenSource?.Cancel();
-                    Log.Info("Cancelling volume test.");
-                    throw;
-                }
-                finally
-                {
-                    OutputBoard?.StopMotor();
-                }
-            });
+                ct.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException)
+            {
+                _pulseInputsCancellationTokenSource?.Cancel();
+                Log.Info("Cancelling volume test.");
+                throw;
+            }
+            finally
+            {
+                OutputBoard?.StopMotor();
+            }
         }
 
         /// <summary>
@@ -235,7 +228,7 @@
                 Status.OnNext("Waiting for residual pulses...");
 
                 using (Observable
-                       .Interval(TimeSpan.FromSeconds(30))
+                       .Timer(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(15))
                        .Subscribe(async _ =>
                        {
                            pulsesWaiting = 0;

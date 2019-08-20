@@ -266,10 +266,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
         {
             try
             {
-                //TestManager.VolumeTestManager.StatusMessage
-                //    .ObserveOn(RxApp.MainThreadScheduler)
-                //    .Subscribe(status);
-
                 await TestManager.DownloadPostVolumeTest(ct);
                 ManualVolumeTestStep = TestStep.PreTest;
             }
@@ -286,7 +282,6 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 
         private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
         {
-            //TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
             await TestManager.DownloadPreVolumeTest(ct);
             ManualVolumeTestStep = TestStep.PostTest;
             ChangedEvent.OnNext(TestRun.VerificationTest);

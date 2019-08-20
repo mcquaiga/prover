@@ -66,7 +66,7 @@
         /// </summary>
         public virtual void Dispose()
         {
-            Status?.Dispose();
+            //Status?.Dispose();
         }
 
         /// <summary>
@@ -105,8 +105,8 @@
 
                 Log.Info("Volume test started!");
 
-                commClient.Status.Subscribe(Status);
-                
+                //commClient.Status.Subscribe(Status);
+
                 if (SettingsService.TestSettings.RunVolumeSyncTest)
                     await ExecuteSyncTest(ct);
 
