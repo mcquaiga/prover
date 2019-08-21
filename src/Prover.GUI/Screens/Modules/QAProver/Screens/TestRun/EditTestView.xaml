@@ -4,14 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:converters="clr-namespace:Prover.GUI.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter
+            x:Key="BoolToHiddenConverter"
+            TrueValue="Visible" FalseValue="Collapsed" />
+        <converters:NullToVisibilityConverter
+            x:Key="NullToHiddenConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-    
+            <ColumnDefinition Width="*" />        
+        </Grid.ColumnDefinitions>    
 
         <ContentControl Margin="2"
                         Grid.Column="0"
@@ -24,12 +31,23 @@
         <ScrollViewer Grid.Row="0"
                       Grid.Column="1"
                       VerticalScrollBarVisibility="Auto">
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ItemsControl Grid.Row="0"
+
+                <Button Grid.Row="0"
+                            Content="Next Test"
+                            HorizontalAlignment="Right"
+                            Margin="2"
+                            Width="150"
+                            Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                            Command="{Binding NextTestCommand}"/>
+
+                <ItemsControl Grid.Row="1"
                               ItemsSource="{Binding TestViews}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -43,15 +61,15 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-
                 <!-- Column 2 - Volume Verification -->
                 <ContentControl cal:View.Model="{Binding VolumeTestView}"
                                 cal:View.Context="Volume"
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 Margin="2" />
             </Grid>
 
         </ScrollViewer>
+
     </Grid>
 
 

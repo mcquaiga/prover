@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace Prover.GUI.Screens.QAProver.PTVerificationViews.VolumeTest
+namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews.VolumeTest
 {
     /// <summary>
     /// Interaction logic for Volume.xaml
     /// </summary>
-    public partial class Volume : UserControl
+    public partial class Base : UserControl
     {
-        public Volume()
+        public Base()
         {
             InitializeComponent();
         }

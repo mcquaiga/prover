@@ -14,27 +14,6 @@
     /// </summary>
     public class TachometerService : IDisposable
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _outputBoard
-        /// </summary>
-        private readonly IDInOutBoard _outputBoard;
-
-        /// <summary>
-        /// Defines the _serialPort
-        /// </summary>
-        private readonly SerialPort _serialPort;
-
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TachometerService"/> class.
         /// </summary>
@@ -51,10 +30,6 @@
 
             _outputBoard = outputBoard;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The ParseTachValue
@@ -94,7 +69,7 @@
             if (_serialPort == null)
                 return -1;
 
-            return await Task.Run(async () =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -104,7 +79,7 @@
                     _serialPort.DiscardInBuffer();
                     _serialPort.Write("@D0");
                     _serialPort.Write(((char)13).ToString());
-                    await Task.Delay(100);
+                    Thread.Sleep(100);
 
                     var tachString = _serialPort.ReadExisting();
 
@@ -113,6 +88,7 @@
                 }
                 finally
                 {
+                    //_serialPort?.Close();
                 }
             });
         }
@@ -147,6 +123,19 @@
             Thread.Sleep(2000);
         }
 
-        #endregion
+        /// <summary>
+        /// Defines the Log
+        /// </summary>
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _outputBoard
+        /// </summary>
+        private readonly IDInOutBoard _outputBoard;
+
+        /// <summary>
+        /// Defines the _serialPort
+        /// </summary>
+        private readonly SerialPort _serialPort;
     }
 }

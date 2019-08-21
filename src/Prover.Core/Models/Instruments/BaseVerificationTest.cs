@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.CommProtocol.Common.Models.Instrument;
 
 namespace Prover.Core.Models.Instruments
 {
@@ -22,6 +23,8 @@ namespace Prover.Core.Models.Instruments
 
         [Required]
         public virtual VerificationTest VerificationTest { get; set; }
+
+        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         protected decimal? CalculatePercentError(decimal? evcValue, decimal? actualValue)
         {

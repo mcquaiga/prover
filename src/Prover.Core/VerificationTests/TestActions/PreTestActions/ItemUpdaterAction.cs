@@ -7,12 +7,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Subjects;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
     /// Defines the <see cref="ItemUpdaterAction" />
     /// </summary>
-    public class ItemUpdaterAction : IPreVerificationAction, IPreVolumeTestAction, IPostVerificationAction, IPostVolumeTestAction
+    public class ItemUpdaterAction : IEvcDeviceValidationAction
     {
         #region Fields
 
@@ -29,13 +30,16 @@
         /// Initializes a new instance of the <see cref="ItemUpdaterAction"/> class.
         /// </summary>
         /// <param name="itemsForUpdate">The itemsForUpdate<see cref="Dictionary{int, string}"/></param>
-        public ItemUpdaterAction(Dictionary<int, string> itemsForUpdate)
+        public ItemUpdaterAction(VerificationStep verificationStep, Dictionary<int, string> itemsForUpdate)
         {
             if (itemsForUpdate == null || !itemsForUpdate.Any())
                 throw new ArgumentNullException(nameof(itemsForUpdate));
 
             _itemsForUpdate = itemsForUpdate;
+            VerificationStep = verificationStep;
         }
+
+        public VerificationStep VerificationStep { get; protected set; }
 
         #endregion
 
@@ -48,14 +52,18 @@
         /// <param name="instrument">The instrument<see cref="Instrument"/></param>
         /// <param name="statusUpdates">The statusUpdates<see cref="Subject{string}"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public virtual async Task Execute(EvcCommunicationClient commClient, Instrument instrument, Subject<string> statusUpdates = null)
+        public virtual async Task Execute(EvcCommunicationClient commClient, Instrument instrument, 
+            CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
             foreach (var item in _itemsForUpdate)
             {
-                await commClient.SetItemValue(item.Key, item.Value);
+                if (commClient.InstrumentType.Items.GetItem(item.Key) != null)
+                {
+                    await commClient.SetItemValue(item.Key, item.Value);
 
-                if (instrument.Items.GetItem(item.Key) != null)
-                    instrument.Items.GetItem(item.Key).RawValue = item.Value;
+                    if (instrument.Items.GetItem(item.Key) != null)
+                        instrument.Items.GetItem(item.Key).RawValue = item.Value;
+                }                
             }
         }
 
