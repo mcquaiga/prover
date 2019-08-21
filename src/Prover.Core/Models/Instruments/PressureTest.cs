@@ -5,6 +5,7 @@
     using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Extensions;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
@@ -13,50 +14,6 @@
     /// </summary>
     public sealed class PressureTest : BaseVerificationTest
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the _totalGauge
-        /// </summary>
-        private readonly decimal? _totalGauge;
-
-        #endregion
-
-        #region Constructors
-
-        private PressureTest() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PressureTest"/> class.
-        /// </summary>
-        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
-        /// <param name="percentOfGauge">The percentOfGauge<see cref="decimal"/></param>
-        public PressureTest(VerificationTest verificationTest, decimal percentOfGauge)
-        {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = VerificationTest.Id;
-
-            _totalGauge = GetGaugePressure(percentOfGauge);
-            AtmosphericGauge = default(decimal?);
-
-            switch (Transducer)
-            {
-                case TransducerType.Gauge:
-                    GasGauge = TotalGauge;
-                    AtmosphericGauge = VerificationTest.Instrument.Items.GetItem(14).NumericValue;
-                    break;
-                case TransducerType.Absolute:
-                    AtmosphericGauge = null;
-                    GasGauge = TotalGauge - (AtmosphericGauge ?? 0);
-                    break;
-            }
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets the ActualFactor
         /// </summary>
@@ -113,16 +70,16 @@
         public decimal GasPressurePsi => ConvertToPsi(GasPressure, VerificationTest.Instrument.PressureUnits());
 
         /// <summary>
-        /// Gets the InstrumentType
-        /// </summary>
-        [NotMapped]
-        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
-
-        /// <summary>
         /// Gets the TotalGauge
         /// </summary>
         [NotMapped]
         public decimal TotalGauge => _totalGauge ?? 0;
+
+        /// <summary>
+        /// Gets the InstrumentType
+        /// </summary>
+        [NotMapped]
+        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the Transducer
@@ -131,13 +88,33 @@
         public TransducerType? Transducer => VerificationTest?.Instrument?.Transducer;
 
         /// <summary>
-        /// Gets the PassTolerance
+        /// Initializes a new instance of the <see cref="PressureTest"/> class.
         /// </summary>
-        protected override decimal PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
+        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
+        /// <param name="percentOfGauge">The percentOfGauge<see cref="decimal"/></param>
+        public PressureTest(VerificationTest verificationTest, decimal percentOfGauge)
+        {
+            //Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsPressureTest == true).ToList();
+            Items = new List<ItemValue>();
+            VerificationTest = verificationTest;
+            VerificationTestId = VerificationTest.Id;
 
-        #endregion
+            _totalGauge = GetGaugePressure(percentOfGauge);
+            AtmosphericGauge = default(decimal?);
 
-        #region Methods
+            switch (Transducer)
+            {
+                case TransducerType.Gauge:
+                    GasGauge = TotalGauge;
+                    AtmosphericGauge = VerificationTest.Instrument.Items.GetItem(14).NumericValue;
+                    break;
+
+                case TransducerType.Absolute:
+                    AtmosphericGauge = null;
+                    GasGauge = TotalGauge - (AtmosphericGauge ?? 0);
+                    break;
+            }
+        }
 
         /// <summary>
         /// The ConvertTo
@@ -155,27 +132,35 @@
                 case "bar":
                     result = result * (6.894757m * (10 ^ -2));
                     break;
+
                 case "inwc":
                     result = result * 27.68067m;
                     break;
+
                 case "kgcm2":
                     result = result * (7.030696m * (10 ^ -2));
                     break;
+
                 case "kpa":
                     result = result * 6.894757m;
                     break;
+
                 case "mbar":
                     result = result * (6.894757m * (10 ^ 1));
                     break;
+
                 case "mpa":
                     result = result * (6.894757m * (10 ^ -3));
                     break;
+
                 case "inhg":
                     result = result * 2.03602m;
                     break;
+
                 case "mmhg":
                     result = result * 51.71492m;
                     break;
+
                 default:
                     result = result / 1;
                     break;
@@ -198,27 +183,35 @@
                 case "bar":
                     result = value / (6.894757m * (10 ^ -2));
                     break;
+
                 case "inwc":
                     result = value / 27.68067m;
                     break;
+
                 case "kgcm2":
                     result = value / (7.030696m * (10 ^ -2));
                     break;
+
                 case "kpa":
                     result = value / 6.894757m;
                     break;
+
                 case "mbar":
                     result = value / (6.894757m * (10 ^ 1));
                     break;
+
                 case "mpa":
                     result = value / (6.894757m * (10 ^ -3));
                     break;
+
                 case "inhg":
                     result = value / 2.03602m;
                     break;
+
                 case "mmhg":
                     result = value / 51.71492m;
                     break;
+
                 default:
                     result = value / 1;
                     break;
@@ -241,6 +234,18 @@
             return Decimal.Round(percentOfGauge * evcPressureRange, 2);
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the PassTolerance
+        /// </summary>
+        protected override decimal PassTolerance => Global.PRESSURE_ERROR_TOLERANCE;
+
+        /// <summary>
+        /// Defines the _totalGauge
+        /// </summary>
+        private readonly decimal? _totalGauge;
+
+        private PressureTest()
+        {
+        }
     }
 }
