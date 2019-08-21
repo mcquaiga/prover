@@ -35,22 +35,24 @@ namespace Prover.Core.Models.Instruments.DriveTypes
                     TotalValue = _instrument.Items.GetItem(142).NumericValue;
                 }
 
+                var evcCorrected = _evcCorrected.HasValue ? _evcCorrected.Value : 0;
+
                 switch (EnergyUnits)
                 {
                     case Units.Therms:
-                        return Math.Round(TotalValue * _evcCorrected.Value / 100000);
+                        return Math.Round(TotalValue * evcCorrected / 100000);
 
                     case Units.DecaTherms:
-                        return Math.Round(TotalValue * _evcCorrected.Value / 1000000);
+                        return Math.Round(TotalValue * evcCorrected / 1000000);
 
                     case Units.GigaJoules:
-                        return Math.Round(TotalValue * 0.028317m * _evcCorrected.Value / 1000000);
+                        return Math.Round(TotalValue * 0.028317m * evcCorrected / 1000000);
 
                     case Units.MegaJoules:
-                        return Math.Round(TotalValue * 0.028317m * _evcCorrected.Value / 1000);
+                        return Math.Round(TotalValue * 0.028317m * evcCorrected / 1000);
 
                     case Units.KiloCals:
-                        return Math.Round(TotalValue * 0.0283168m * _evcCorrected.Value);
+                        return Math.Round(TotalValue * 0.0283168m * evcCorrected);
 
                     default:
                         throw new Exception(string.Format("Energy units not supported: {0}", EnergyUnits));
