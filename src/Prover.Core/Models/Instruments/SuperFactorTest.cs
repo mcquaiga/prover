@@ -14,47 +14,6 @@
     /// </summary>
     public sealed class SuperFactorTest : BaseVerificationTest
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the _factorCalculator
-        /// </summary>
-        private readonly FactorCalculations _factorCalculator;
-
-        /// <summary>
-        /// Defines the _actualFactor
-        /// </summary>
-        private decimal? _actualFactor;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SuperFactorTest"/> class.
-        /// </summary>
-        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
-        public SuperFactorTest(VerificationTest verificationTest)
-        {
-            if (verificationTest == null)
-                throw new NullReferenceException(nameof(verificationTest));
-
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true).ToList();
-
-            VerificationTest = verificationTest;
-
-            _factorCalculator = new FactorCalculations(
-                (double)VerificationTest.Instrument.SpecGr().Value,
-                (double)VerificationTest.Instrument.CO2().Value,
-                (double)VerificationTest.Instrument.N2().Value,
-                0,
-                0);
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets the ActualFactor
         /// </summary>
@@ -78,7 +37,7 @@
         /// Gets the EvcUnsqrFactor
         /// </summary>
         [NotMapped]
-        public decimal? EvcUnsqrFactor => PressureTest?.Items.GetItem(ItemCodes.Pressure.UnsqrFactor).NumericValue;
+        public decimal? EvcUnsqrFactor => PressureTest?.Items.GetItem(ItemCodes.Pressure.UnsqrFactor)?.NumericValue;
 
         /// <summary>
         /// Gets the GaugePressure
@@ -93,20 +52,15 @@
         public decimal GaugeTemp => TemperatureTest.GaugeFahrenheit;
 
         /// <summary>
-        /// Gets the InstrumentType
-        /// </summary>
-        [NotMapped]
-        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
-
-        /// <summary>
         /// Gets the SuperFactorSquared
         /// </summary>
         public decimal? SuperFactorSquared => ActualFactor.HasValue ? (decimal?)Math.Pow((double)ActualFactor, 2) : null;
 
         /// <summary>
-        /// Gets the PassTolerance
+        /// Gets the InstrumentType
         /// </summary>
-        protected override decimal PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
+        [NotMapped]
+        public override IEvcDevice InstrumentType => VerificationTest.Instrument.InstrumentType;
 
         /// <summary>
         /// Gets the PressureTest
@@ -118,9 +72,26 @@
         /// </summary>
         private TemperatureTest TemperatureTest => VerificationTest.TemperatureTest;
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuperFactorTest"/> class.
+        /// </summary>
+        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
+        public SuperFactorTest(VerificationTest verificationTest)
+        {
+            if (verificationTest == null)
+                throw new NullReferenceException(nameof(verificationTest));
 
-        #region Methods
+            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsSuperFactor == true).ToList();
+
+            VerificationTest = verificationTest;
+
+            _factorCalculator = new FactorCalculations(
+                (double)VerificationTest.Instrument.SpecGr().Value,
+                (double)VerificationTest.Instrument.CO2().Value,
+                (double)VerificationTest.Instrument.N2().Value,
+                0,
+                0);
+        }
 
         /// <summary>
         /// The Calculate
@@ -129,6 +100,21 @@
         {
             _actualFactor = CalculateFpv();
         }
+
+        /// <summary>
+        /// Gets the PassTolerance
+        /// </summary>
+        protected override decimal PassTolerance => Global.SUPER_FACTOR_TOLERANCE;
+
+        /// <summary>
+        /// Defines the _factorCalculator
+        /// </summary>
+        private readonly FactorCalculations _factorCalculator;
+
+        /// <summary>
+        /// Defines the _actualFactor
+        /// </summary>
+        private decimal? _actualFactor;
 
         /// <summary>
         /// The CalculateFpv
@@ -144,7 +130,5 @@
 
             return decimal.Round((decimal)_factorCalculator.SuperFactor, 4);
         }
-
-        #endregion
     }
 }

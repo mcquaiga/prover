@@ -12,9 +12,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class TemperatureTestViewModel : TestRunViewModelBase<TemperatureTestRun>
     {
-        public decimal? EvcFactor => TestRun.Items?.GetItem(45).NumericValue;
+        public decimal? EvcFactor => TestRun.Items?.GetItem(45)?.NumericValue;
 
-        public decimal? EvcReading => TestRun.Items?.GetItem(26).NumericValue;
+        public decimal? EvcReading => TestRun.Items?.GetItem(26)?.NumericValue;
 
         public double Gauge { get => _gauge; set => this.RaiseAndSetIfChanged(ref _gauge, value); }
 

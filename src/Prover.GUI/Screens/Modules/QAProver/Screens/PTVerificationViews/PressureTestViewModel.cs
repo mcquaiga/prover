@@ -24,12 +24,34 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
     public class PressureTestViewModel : TestRunViewModelBase<Core.Models.Instruments.PressureTest>,
         IHandle<AtmosphericGaugePressureUpdateMessage>
     {
-        private readonly ISettingsService _settingsService;
+        public decimal? AbsolutePressure => _absolutePressure.Value;
+
+        public decimal? AtmosphericGauge
+        {
+            get => _atmosphericGauge;
+            set => this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
+        }
+
+        public decimal? EvcAtmPressure =>
+            TestRun.VerificationTest.Instrument.Items?.GetItem(ItemCodes.Pressure.Atm)?.NumericValue;
+
+        public decimal? EvcFactor => TestRun.Items?.GetItem(ItemCodes.Pressure.Factor)?.NumericValue;
+        public decimal? EvcGasPressure => TestRun.Items?.GetItem(ItemCodes.Pressure.GasPressure)?.NumericValue;
+
+        public decimal? GaugePressure
+        {
+            get => _gaugePressure;
+            set => this.RaiseAndSetIfChanged(ref _gaugePressure, value);
+        }
+
+        public bool LockGaugePressure { get; }
+        public bool ShowAbsolute => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
+        public bool ShowGaugeOnly => !ShowAbsolute;
 
         public PressureTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
             Core.Models.Instruments.PressureTest testRun, ISettingsService settingsService, ISubject<VerificationTest> changeObservable)
             : base(screenManager, eventAggregator, testRun, changeObservable)
-        {           
+        {
             _settingsService = settingsService;
             GaugePressure = TestRun.GasGauge;
             AtmosphericGauge = TestRun.AtmosphericGauge;
@@ -78,32 +100,14 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             AtmosphericGauge = TestRun.AtmosphericGauge;
         }
 
-        public bool LockGaugePressure { get; }
-        private readonly ObservableAsPropertyHelper<decimal?> _absolutePressure;
-        public decimal? AbsolutePressure => _absolutePressure.Value;
-        private decimal? _gaugePressure;
-
-        public decimal? GaugePressure
+        public void Handle(AtmosphericGaugePressureUpdateMessage message)
         {
-            get => _gaugePressure;
-            set => this.RaiseAndSetIfChanged(ref _gaugePressure, value);
+            if (message.Sender != this
+                && message.Sender.TestRun.VerificationTest.InstrumentId == TestRun.VerificationTest.InstrumentId)
+            {
+                AtmosphericGauge = message.Value;
+            }
         }
-
-        public bool ShowAbsolute => TestRun.VerificationTest.Instrument.Transducer == TransducerType.Absolute;
-        public bool ShowGaugeOnly => !ShowAbsolute;
-        private decimal? _atmosphericGauge;       
-
-        public decimal? AtmosphericGauge
-        {
-            get => _atmosphericGauge;
-            set => this.RaiseAndSetIfChanged(ref _atmosphericGauge, value);
-        }
-
-        public decimal? EvcGasPressure => TestRun.Items.GetItem(ItemCodes.Pressure.GasPressure).NumericValue;
-        public decimal? EvcFactor => TestRun.Items.GetItem(ItemCodes.Pressure.Factor).NumericValue;
-
-        public decimal? EvcAtmPressure =>
-            TestRun.VerificationTest.Instrument.Items.GetItem(ItemCodes.Pressure.Atm).NumericValue;
 
         protected override void RaisePropertyChangeEvents()
         {
@@ -117,13 +121,9 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             NotifyOfPropertyChange(() => PercentColour);
         }
 
-        public void Handle(AtmosphericGaugePressureUpdateMessage message)
-        {
-            if (message.Sender != this
-                && message.Sender.TestRun.VerificationTest.InstrumentId == TestRun.VerificationTest.InstrumentId)
-            {
-                AtmosphericGauge = message.Value;
-            }
-        }
+        private readonly ObservableAsPropertyHelper<decimal?> _absolutePressure;
+        private readonly ISettingsService _settingsService;
+        private decimal? _atmosphericGauge;
+        private decimal? _gaugePressure;
     }
 }
