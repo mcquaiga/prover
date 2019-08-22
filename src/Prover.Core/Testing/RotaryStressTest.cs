@@ -22,10 +22,6 @@ namespace Prover.Core.Testing
 {
     public class RotaryStressTest
     {
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-        private readonly ISettingsService _testSettings;
-        private readonly Func<string, int, ICommPort> _commPortFactory;
-
         public Subject<string> Status { get; } = new Subject<string>();
 
         public RotaryStressTest(ISettingsService testSettings, Func<string, int, ICommPort> commPortFactory)
@@ -52,7 +48,25 @@ namespace Prover.Core.Testing
             {
                 await _testSettings.RefreshSettings();
             }
+        }
 
+        private readonly Func<string, int, ICommPort> _commPortFactory;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly ISettingsService _testSettings;
+
+        private ICommPort GetCommPort()
+        {
+            return _commPortFactory.Invoke(_testSettings.Local.InstrumentCommPort, _testSettings.Local.InstrumentBaudRate);
+        }
+
+        private int GetMeterId(IEvcDevice instrumentType, MeterIndexItemDescription meterInfo)
+        {
+            if (instrumentType == HoneywellInstrumentTypes.Ec350)
+            {
+                return meterInfo.Ids.FirstOrDefault(i => i > 80);
+            }
+
+            return meterInfo.Ids.FirstOrDefault(i => i < 80);
         }
 
         private async Task RunMechanicalTest(IEvcDevice instrumentType, Client client, CancellationToken ct)
@@ -131,24 +145,12 @@ namespace Prover.Core.Testing
                     await qaRunTestManager.RunCorrectionTest(0, ct);
                     await qaRunTestManager.RunVolumeTest(ct);
                     await qaRunTestManager.SaveAsync();
+                    qaRunTestManager.VolumeTestManager.Dispose();
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 x++;
             }
-        }
-
-        private ICommPort GetCommPort()
-        {
-            return _commPortFactory.Invoke(_testSettings.Local.InstrumentCommPort, _testSettings.Local.InstrumentBaudRate);
-        }
-
-        private int GetMeterId(IEvcDevice instrumentType, MeterIndexItemDescription meterInfo)
-        {
-            if (instrumentType == HoneywellInstrumentTypes.Ec350)
-            {
-                return meterInfo.Ids.FirstOrDefault(i => i > 80);
-            }
-
-            return meterInfo.Ids.FirstOrDefault(i => i < 80);
         }
     }
 }
