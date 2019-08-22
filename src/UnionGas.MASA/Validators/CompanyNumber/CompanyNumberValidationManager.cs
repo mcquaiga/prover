@@ -13,6 +13,7 @@
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows;
     using UnionGas.MASA.DCRWebService;
     using UnionGas.MASA.Dialogs.CompanyNumberDialog;
     using LogManager = NLog.LogManager;
@@ -22,36 +23,7 @@
     /// </summary>
     public class CompanyNumberValidationManager : IEvcDeviceValidationAction
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the _log
-        /// </summary>
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _loginService
-        /// </summary>
-        private readonly ILoginService<EmployeeDTO> _loginService;
-
-        /// <summary>
-        /// Defines the _screenManager
-        /// </summary>
-        private readonly ScreenManager _screenManager;
-
-        /// <summary>
-        /// Defines the _testRunService
-        /// </summary>
-        private readonly TestRunService _testRunService;
-
-        /// <summary>
-        /// Defines the _webService
-        /// </summary>
-        private readonly DCRWebServiceCommunicator _webService;
-
-        #endregion
-
-        #region Constructors
+        public VerificationStep VerificationStep => VerificationStep.PreVerification;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompanyNumberValidationManager"/> class.
@@ -67,8 +39,6 @@
             _webService = webService;
             _loginService = loginService;
         }
-
-        public VerificationStep VerificationStep => VerificationStep.PreVerification;
 
         public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
         {
@@ -95,7 +65,6 @@
                     {
                         break;
                     }
-
                 } while (!string.IsNullOrEmpty(companyNumber));
 
                 if (meterDto != null)
@@ -109,10 +78,30 @@
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Defines the _log
+        /// </summary>
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        #region Methods
-       
+        /// <summary>
+        /// Defines the _loginService
+        /// </summary>
+        private readonly ILoginService<EmployeeDTO> _loginService;
+
+        /// <summary>
+        /// Defines the _screenManager
+        /// </summary>
+        private readonly ScreenManager _screenManager;
+
+        /// <summary>
+        /// Defines the _testRunService
+        /// </summary>
+        private readonly TestRunService _testRunService;
+
+        /// <summary>
+        /// Defines the _webService
+        /// </summary>
+        private readonly DCRWebServiceCommunicator _webService;
 
         /// <summary>
         /// The OpenCompanyNumberDialog
@@ -150,7 +139,13 @@
         /// <returns>The <see cref="Task{object}"/></returns>
         private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
         {
-            string newCompanyNumber = OpenCompanyNumberDialog();
+            string newCompanyNumber = string.Empty;
+
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                newCompanyNumber = OpenCompanyNumberDialog();
+            });
+
             if (string.IsNullOrEmpty(newCompanyNumber))
             {
                 return string.Empty;
@@ -184,7 +179,5 @@
             instrument.EmployeeId = _loginService.User?.Id;
             await _testRunService.Save(instrument);
         }
-
-        #endregion
     }
 }
