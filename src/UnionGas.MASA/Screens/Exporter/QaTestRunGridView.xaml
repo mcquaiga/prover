@@ -116,7 +116,7 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     Style="{DynamicResource LabelStyle}"
-                    Text="{Binding Instrument.CompositionType, FallbackValue='PTZ'}" />
+                    Text="{Binding DriveDescription, FallbackValue='LMMA'}" />
             </StackPanel>
             <UniformGrid
                 Grid.Column="2"

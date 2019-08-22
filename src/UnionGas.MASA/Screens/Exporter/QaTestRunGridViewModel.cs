@@ -49,6 +49,10 @@
                     return (Instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription;
                 }
 
+                //if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+                //{
+                //    return (Instrument.VolumeTest.DriveType as MechanicalDrive).Discriminator;
+                //}
                 return "";
             }
         }
