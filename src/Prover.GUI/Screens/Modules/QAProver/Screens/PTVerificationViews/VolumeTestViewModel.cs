@@ -164,12 +164,25 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                         .Subscribe(ex => Log.Error(ex));
                 }
 
-                this.WhenAnyValue(x => x.AppliedInput, x => x.UncorrectedPulseCount, x => x.CorrectedPulseCount)
-                    .Subscribe(_ =>
+                this.WhenAnyValue(x => x.AppliedInput)
+                    .Subscribe(i =>
                     {
-                        Volume.AppliedInput = _.Item1;
-                        Volume.UncPulseCount = _.Item2;
-                        Volume.CorPulseCount = _.Item3;
+                        Volume.AppliedInput = i;
+                        ChangedEvent.OnNext(TestRun.VerificationTest);
+                    });
+
+                this.WhenAnyValue(x => x.UncorrectedPulseCount)
+                    .Subscribe(i =>
+                    {
+                        Volume.UncPulseCount = i;
+
+                        ChangedEvent.OnNext(TestRun.VerificationTest);
+                    });
+
+                this.WhenAnyValue(x => x.CorrectedPulseCount)
+                    .Subscribe(i =>
+                    {
+                        Volume.CorPulseCount = i;
                         ChangedEvent.OnNext(TestRun.VerificationTest);
                     });
             }

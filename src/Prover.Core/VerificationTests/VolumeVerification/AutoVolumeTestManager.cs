@@ -169,7 +169,6 @@
                         .Interval(TimeSpan.FromMilliseconds(500))
                         .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                 {
-                    ResetPulseCounts(VolumeTest);
                     OutputBoard?.StartMotor();
                     await WaitForTestComplete(VolumeTest, ct);
                 }
@@ -300,9 +299,9 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="CancellationToken"/></returns>
-        private Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        private async Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
-            return Task.Run(() =>
+            await Task.Run(() =>
              {
                  do
                  {
