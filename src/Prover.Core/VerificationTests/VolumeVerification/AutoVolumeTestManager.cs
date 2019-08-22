@@ -95,11 +95,15 @@
 
                     ResetPulseCounts(VolumeTest);
                     OutputBoard.StartMotor();
-                    do
-                    {
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
+
+                    var cts = new CancellationTokenSource();
+                    var listen = ListenForPulseInputs(VolumeTest, cts.Token);
+
+                    while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested) { }
+                    OutputBoard.StopMotor();
+
+                    await Task.Delay(TimeSpan.FromSeconds(15));
+                    cts.Cancel();
                 }
                 catch (OperationCanceledException)
                 {
@@ -108,7 +112,6 @@
                 }
                 finally
                 {
-                    OutputBoard.StopMotor();
                 }
             });
 
@@ -159,6 +162,7 @@
         public override async Task RunTest(CancellationToken ct)
         {
             _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+            ResetPulseCounts(VolumeTest);
             Task listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
 
             try
@@ -299,18 +303,18 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="CancellationToken"/></returns>
-        private async Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        private Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(() =>
-             {
-                 do
-                 {
-                     //TODO: Raise events so the UI can respond
-                     volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                     volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                 }
-                 while (!ct.IsCancellationRequested);
-             });
+            return Task.Run(() =>
+              {
+                  do
+                  {
+                      //TODO: Raise events so the UI can respond
+                      volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                      volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                  }
+                  while (!ct.IsCancellationRequested);
+              });
         }
     }
 }

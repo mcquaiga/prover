@@ -35,6 +35,9 @@ namespace Prover.Core.Testing
             _testSettings.Local.AutoSave = false;
             _testSettings.TestSettings.StabilizeLiveReadings = false;
 
+            _testSettings.TestSettings.TestPoints.Clear();
+            _testSettings.TestSettings.TestPoints = _testPointSettings;
+
             try
             {
                 //await RunMechanicalTest(instrumentType, client, ct);
@@ -51,8 +54,35 @@ namespace Prover.Core.Testing
         }
 
         private readonly Func<string, int, ICommPort> _commPortFactory;
+
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         private readonly ISettingsService _testSettings;
+
+        private List<TestSettings.TestPointSetting> _testPointSettings = new List<TestSettings.TestPointSetting>()
+        {
+            new TestSettings.TestPointSetting()
+            {
+                Level = 0,
+                IsVolumeTest = true,
+                TemperatureGauge = 32,
+                PressureGaugePercent = 80
+            },
+            new TestSettings.TestPointSetting()
+            {
+                Level = 1,
+                IsVolumeTest = false,
+                TemperatureGauge = 32,
+                PressureGaugePercent = 80
+            },
+            new TestSettings.TestPointSetting()
+            {
+                Level = 2,
+                IsVolumeTest = false,
+                TemperatureGauge = 32,
+                PressureGaugePercent = 80
+            }
+        };
 
         private ICommPort GetCommPort()
         {
@@ -80,7 +110,7 @@ namespace Prover.Core.Testing
                 ICommPort commPort = GetCommPort();
                 using (EvcCommunicationClient commClient = EvcCommunicationClient.Create(instrumentType, commPort))
                 {
-                    commClient.Status.Subscribe(Status);
+                    //commClient.Status.Subscribe(Status);
                     await commClient.Connect(ct);
 
                     await commClient.SetItemValue(90, corUnits.Id);
@@ -128,7 +158,7 @@ namespace Prover.Core.Testing
                 commPort = GetCommPort();
                 using (EvcCommunicationClient commClient = EvcCommunicationClient.Create(instrumentType, commPort))
                 {
-                    commClient.Status.Subscribe(Status);
+                    //commClient.Status.Subscribe(Status);
                     await commClient.Connect(ct);
 
                     await commClient.SetItemValue(432, GetMeterId(instrumentType, meter));
@@ -140,9 +170,13 @@ namespace Prover.Core.Testing
                 commPort = GetCommPort();
                 using (IQaRunTestManager qaRunTestManager = IoC.Get<IQaRunTestManager>())
                 {
-                    qaRunTestManager.Status.Subscribe(Status);
+                    //qaRunTestManager.Status.Subscribe(Status);
                     await qaRunTestManager.InitializeTest(instrumentType, commPort, _testSettings, ct, client);
+
                     await qaRunTestManager.RunCorrectionTest(0, ct);
+                    await qaRunTestManager.RunCorrectionTest(1, ct);
+                    await qaRunTestManager.RunCorrectionTest(2, ct);
+
                     await qaRunTestManager.RunVolumeTest(ct);
                     await qaRunTestManager.SaveAsync();
                     qaRunTestManager.VolumeTestManager.Dispose();
