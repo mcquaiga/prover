@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cal="http://www.caliburnproject.org"
-    
+
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -30,7 +30,6 @@
 
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="FontSize" Value="18" />
-
             </Style>
 
             <Style x:Key="ValueStyle" TargetType="{x:Type TextBlock}">
@@ -103,7 +102,6 @@
                 HorizontalAlignment="Center"
                 Orientation="Vertical">
 
-
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="24"
@@ -115,6 +113,10 @@
                     Style="{DynamicResource LabelStyle}"
                     Text="{Binding Instrument.CompositionType, FallbackValue='PTZ'}" />
 
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource LabelStyle}"
+                    Text="{Binding Instrument.CompositionType, FallbackValue='PTZ'}" />
             </StackPanel>
             <UniformGrid
                 Grid.Column="2"
@@ -125,12 +127,10 @@
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Inventory #" />
                     <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding Instrument.SiteNumber2, FallbackValue=987654321}" />
-
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Serial #" />
                     <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding Instrument.SerialNumber, FallbackValue=123456789}" />
-
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Job #" />
@@ -140,7 +140,6 @@
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Date/Time" />
                     <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding DateTimePretty}" />
                 </StackPanel>
-
             </UniformGrid>
             <StackPanel
                 Grid.Column="3"
@@ -176,8 +175,6 @@
                     <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
                 </Button>
             </StackPanel>
-
         </Grid>
     </DockPanel>
-
 </UserControl>
