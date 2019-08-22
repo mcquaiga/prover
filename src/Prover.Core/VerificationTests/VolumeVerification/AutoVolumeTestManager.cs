@@ -102,7 +102,7 @@
                     while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested) { }
                     OutputBoard.StopMotor();
 
-                    await Task.Delay(TimeSpan.FromSeconds(15));
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                     cts.Cancel();
                 }
                 catch (OperationCanceledException)
