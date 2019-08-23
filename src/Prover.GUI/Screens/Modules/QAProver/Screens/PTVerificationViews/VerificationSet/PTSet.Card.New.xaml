@@ -25,8 +25,6 @@
                     Visibility="{Binding ShowDownloadButton, Converter={StaticResource BoolToHiddenConverter}}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Width="125"
-                    Height="50"
                     Margin="8 4" />
         </Grid>
 

@@ -68,7 +68,7 @@
             </Viewbox>
 
             <Viewbox Grid.Column="1"
-                          Stretch="UniformToFill">
+                          Stretch="Uniform">
 
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
