@@ -12,16 +12,18 @@
         <ItemsControl ItemsSource="{Binding Path=AppMainMenus}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Width="128" Height="150">
+                    <Button Width="240" Height="256">
                         <StackPanel>
                             <materialDesign:PackIcon Kind="{Binding Path=MenuIconKind}"
                                                      Foreground="White"
-                                                     Width="48" Height="48" 
-                                                     HorizontalAlignment="Center"/>
-                            <TextBlock TextAlignment="Center" 
+                                                     Width="100" Height="100"
+                                                     HorizontalAlignment="Center" />
+                            <TextBlock TextAlignment="Center"
                                        HorizontalAlignment="Center"
                                        TextWrapping="WrapWithOverflow"
                                        Foreground="White"
+                                       FontWeight="Light"
+                                       FontSize="22"
                                        Text="{Binding Path=MenuTitle}" />
                         </StackPanel>
                         <i:Interaction.Triggers>
