@@ -170,7 +170,7 @@
                 ct.ThrowIfCancellationRequested();
 
                 using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(500))
+                        .Interval(TimeSpan.FromMilliseconds(250))
                         .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                 {
                     OutputBoard?.StartMotor();
