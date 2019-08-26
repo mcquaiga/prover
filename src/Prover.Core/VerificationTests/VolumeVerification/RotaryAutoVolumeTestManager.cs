@@ -17,12 +17,10 @@
         {
             return Task.Run(() =>
             {
-                //volumeTest.DriveType.MaxUncorrectedPulses()
                 while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
                 {
                 }
-                OutputBoard.StopMotor();
-                Log.Debug($"Test stopped at {volumeTest.UncPulseCount}");
+                //Log.Debug($"Test stopped at {volumeTest.UncPulseCount}");
             });
         }
     }
