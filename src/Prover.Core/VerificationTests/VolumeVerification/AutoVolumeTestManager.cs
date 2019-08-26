@@ -161,34 +161,37 @@
         /// <returns>The <see cref="Task"/></returns>
         public override async Task RunTest(CancellationToken ct)
         {
-            _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-            ResetPulseCounts(VolumeTest);
-            Task listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
-
-            try
+            await Task.Run(async () =>
             {
-                ct.ThrowIfCancellationRequested();
+                _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+                ResetPulseCounts(VolumeTest);
+                var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
 
-                using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(250))
-                        .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
+                try
                 {
-                    OutputBoard?.StartMotor();
-                    await WaitForTestComplete(VolumeTest, ct);
-                }
+                    ct.ThrowIfCancellationRequested();
 
-                ct.ThrowIfCancellationRequested();
-            }
-            catch (OperationCanceledException)
-            {
-                _pulseInputsCancellationTokenSource?.Cancel();
-                Log.Info("Cancelling volume test.");
-                throw;
-            }
-            finally
-            {
-                OutputBoard?.StopMotor();
-            }
+                    using (Observable
+                            .Interval(TimeSpan.FromMilliseconds(200))
+                            .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
+                    {
+                        OutputBoard?.StartMotor();
+                        await WaitForTestComplete(VolumeTest, ct);
+                    }
+
+                    ct.ThrowIfCancellationRequested();
+                }
+                catch (OperationCanceledException)
+                {
+                    _pulseInputsCancellationTokenSource?.Cancel();
+                    Log.Info("Cancelling volume test.");
+                    throw;
+                }
+                finally
+                {
+                    OutputBoard?.StopMotor();
+                }
+            });
         }
 
         /// <summary>
