@@ -98,7 +98,7 @@
                     ResetPulseCounts(VolumeTest);
                     OutputBoard.StartMotor();
 
-                    var listen = ListenForPulseInputs(VolumeTest, cts.Token);
+                    var listen = ListenForPulseInputs(VolumeTest, cts.Token).ConfigureAwait(false);
 
                     while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested) { }
                     OutputBoard.StopMotor();
@@ -166,7 +166,7 @@
             {
                 _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                 ResetPulseCounts(VolumeTest);
-                var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
+                var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token).ConfigureAwait(false);
 
                 try
                 {
@@ -177,7 +177,7 @@
                             .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                     {
                         OutputBoard?.StartMotor();
-                        await WaitForTestComplete(VolumeTest, ct);
+                        await WaitForTestComplete(VolumeTest, ct).ConfigureAwait(false);
                     }
 
                     ct.ThrowIfCancellationRequested();
@@ -307,9 +307,9 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="CancellationToken"/></returns>
-        private async Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        private Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 do
                 {

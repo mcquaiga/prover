@@ -13,9 +13,9 @@
         {
         }
 
-        protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
+        protected override Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 //volumeTest.DriveType.MaxUncorrectedPulses()
                 while ((volumeTest.UncPulseCount < volumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
