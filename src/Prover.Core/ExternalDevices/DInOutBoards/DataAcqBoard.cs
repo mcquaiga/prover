@@ -9,50 +9,15 @@
     /// </summary>
     public class DataAcqBoard : IDisposable, IDInOutBoard
     {
-        #region Constants
+        /// <summary>
+        /// Gets the InputValue
+        /// </summary>
+        public short InputValue { get; private set; }
 
         /// <summary>
-        /// Defines the PulseTimingDefaultSeconds
+        /// Gets or sets the PulseTiming
         /// </summary>
-        private const decimal PulseTimingDefaultSeconds = 0.0625m;
-
-        #endregion
-
-        #region Fields
-
-        /// <summary>
-        /// Defines the _channelNum
-        /// </summary>
-        private readonly int _channelNum;
-
-        /// <summary>
-        /// Defines the _channelType
-        /// </summary>
-        private readonly DigitalPortType _channelType;
-
-        /// <summary>
-        /// Defines the _log
-        /// </summary>
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _board
-        /// </summary>
-        private MccBoard _board;
-
-        /// <summary>
-        /// Defines the _pulseIsCleared
-        /// </summary>
-        private bool _pulseIsCleared;
-
-        /// <summary>
-        /// Defines the _ulStatErrorInfo
-        /// </summary>
-        private ErrorInfo _ulStatErrorInfo;
-
-        #endregion
-
-        #region Constructors
+        public decimal PulseTiming { get; set; } = PulseTimingDefaultSeconds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAcqBoard"/> class.
@@ -63,12 +28,12 @@
         public DataAcqBoard(int boardNumber, DigitalPortType channelType, int channelNumber)
         {
             _ulStatErrorInfo = MccService.ErrHandling(ErrorReporting.PrintAll, ErrorHandling.DontStop);
-            
+
             string boardName = string.Empty;
             var errorInfo = MccService.GetBoardName(boardNumber, ref boardName);
             if (errorInfo.Value == ErrorInfo.ErrorCode.BadBoard)
                 throw new Exception("Board not found");
-            
+
             _board = new MccBoard(boardNumber);
 
             _channelType = channelType;
@@ -82,46 +47,6 @@
             //    throw new Exception("DAQ board could not be found or is not configured correctly.");
             //}
         }
-
-        #endregion
-
-        #region Enums
-
-        private enum MotorValues
-        {
-            Start = 1023,
-            Stop = 0
-        }
-
-        private enum OutputPorts
-        {
-            DaOut0 = 0,
-            DaOut1 = 1
-        }
-
-        private enum SignalValues
-        {
-            On = 254,
-            Off = 255
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the InputValue
-        /// </summary>
-        public short InputValue { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the PulseTiming
-        /// </summary>
-        public decimal PulseTiming { get; set; } = PulseTimingDefaultSeconds;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The Dispose
@@ -137,7 +62,6 @@
         /// <returns>The <see cref="int"/></returns>
         public int ReadInput()
         {
-
             _ulStatErrorInfo = _board.DIn(_channelType, out short value);
 
             if (_ulStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
@@ -180,6 +104,59 @@
             Out(MotorValues.Stop);
         }
 
+        private enum MotorValues
+        {
+            Start = 0,
+            Stop = 1023
+        }
+
+        private enum OutputPorts
+        {
+            DaOut0 = 0,
+            DaOut1 = 1
+        }
+
+        private enum SignalValues
+        {
+            On = 254,
+            Off = 255
+        }
+
+        /// <summary>
+        /// Defines the PulseTimingDefaultSeconds
+        /// </summary>
+        private const decimal PulseTimingDefaultSeconds = 0.0625m;
+
+        /// <summary>
+        /// Defines the _channelNum
+        /// </summary>
+        private readonly int _channelNum;
+
+        /// <summary>
+        /// Defines the _channelType
+        /// </summary>
+        private readonly DigitalPortType _channelType;
+
+        /// <summary>
+        /// Defines the _log
+        /// </summary>
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _board
+        /// </summary>
+        private MccBoard _board;
+
+        /// <summary>
+        /// Defines the _pulseIsCleared
+        /// </summary>
+        private bool _pulseIsCleared;
+
+        /// <summary>
+        /// Defines the _ulStatErrorInfo
+        /// </summary>
+        private ErrorInfo _ulStatErrorInfo;
+
         /// <summary>
         /// The Out
         /// </summary>
@@ -191,7 +168,5 @@
             if (_ulStatErrorInfo?.Value != ErrorInfo.ErrorCode.NoErrors && _ulStatErrorInfo?.Value != ErrorInfo.ErrorCode.BadBoard)
                 _log.Warn("DAQ Output error: {0}", _ulStatErrorInfo?.Message);
         }
-
-        #endregion
     }
 }
