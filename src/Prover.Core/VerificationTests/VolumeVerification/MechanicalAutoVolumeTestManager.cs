@@ -15,21 +15,18 @@
         {
         }
 
-        protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
+        protected override void WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
         {
-            await Task.Run(() =>
-            {
-                var tachCount = 0;
+            var tachCount = 0;
 
-                using (Observable
-                        .Interval(TimeSpan.FromMilliseconds(500))
-                        .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
-                        .Concat()
-                        .Subscribe())
-                {
-                    while (tachCount < TachometerCount && !ct.IsCancellationRequested) { }
-                }
-            });
+            using (Observable
+                    .Interval(TimeSpan.FromMilliseconds(500))
+                    .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
+                    .Concat()
+                    .Subscribe())
+            {
+                while (tachCount < TachometerCount && !ct.IsCancellationRequested) { }
+            }
         }
 
         private readonly int TachometerCount = 100;
