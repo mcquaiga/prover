@@ -99,7 +99,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task ResetTach()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 if (_serialPort == null)
                     return;
@@ -107,20 +107,20 @@
                 if (!_serialPort.IsOpen) _serialPort.Open();
 
                 _serialPort.Write($"@T1{(char)13}");
-                Thread.Sleep(50);
+                await Task.Delay(50);
                 _serialPort.Write($"6{(char)13}");
                 _serialPort.DiscardInBuffer();
             });
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 _outputBoard?.StartMotor();
-                Thread.Sleep(500);
+                await Task.Delay(500);
                 _outputBoard?.StopMotor();
-                Thread.Sleep(100);
+                await Task.Delay(100);
             });
 
-            Thread.Sleep(2000);
+            await Task.Delay(2000);
         }
 
         /// <summary>
