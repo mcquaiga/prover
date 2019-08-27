@@ -179,12 +179,7 @@
                               .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                       {
                           OutputBoard?.StartMotor();
-                          //await WaitForTestComplete(VolumeTest, ct).ConfigureAwait(true);
-
-                          while ((VolumeTest.UncPulseCount < VolumeTest.DriveType.MaxUncorrectedPulses()) && !ct.IsCancellationRequested)
-                          {
-                          }
-
+                          WaitForTestComplete(VolumeTest, ct);
                           OutputBoard.StopMotor();
                       }
 
@@ -219,7 +214,7 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        protected abstract Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct);
+        protected abstract void WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct);
 
         /// <summary>
         /// Defines the _pulseInputsCancellationTokenSource
