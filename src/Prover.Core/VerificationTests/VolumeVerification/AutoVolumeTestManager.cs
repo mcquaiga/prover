@@ -318,7 +318,7 @@
                 volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
                 volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
 
-                await Task.Delay(50);
+                await Task.Delay(25);
             }
         }
     }
