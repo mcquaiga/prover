@@ -15,12 +15,25 @@
         {
         }
 
+        protected override Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        {
+            return Task.Run(() =>
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    //TODO: Raise events so the UI can respond
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                }
+            });
+        }
+
         protected override void WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
         {
             var tachCount = 0;
 
             using (Observable
-                    .Interval(TimeSpan.FromMilliseconds(500))
+                    .Interval(TimeSpan.FromMilliseconds(900))
                     .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
                     .Concat()
                     .Subscribe())
