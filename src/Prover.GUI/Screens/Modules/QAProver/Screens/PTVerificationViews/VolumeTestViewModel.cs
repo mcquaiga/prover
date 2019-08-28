@@ -4,6 +4,7 @@ using Prover.Core.Models.Instruments;
 using Prover.Core.Models.Instruments.DriveTypes;
 using Prover.Core.VerificationTests;
 using Prover.Core.VerificationTests.VolumeVerification;
+using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 using System;
@@ -205,6 +206,8 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
                 AppliedInput = (long)Volume.AppliedInput;
                 UncorrectedPulseCount = Volume.UncPulseCount;
                 CorrectedPulseCount = Volume.CorPulseCount;
+
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
 

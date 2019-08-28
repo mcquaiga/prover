@@ -146,7 +146,7 @@
                 {
                     if (_pulseIsCleared)
                     {
-                        _log.Trace($"Pulse value read -> value = {value}");
+                        //_log.Trace($"Pulse value read -> value = {value}");
                         _pulseIsCleared = false;
                         return 1;
                     }
