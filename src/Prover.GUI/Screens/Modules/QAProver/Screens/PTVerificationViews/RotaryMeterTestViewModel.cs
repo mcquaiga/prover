@@ -6,19 +6,24 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
     public class RotaryMeterTestViewModel : ReactiveScreen
     {
-        public RotaryMeterTestViewModel(RotaryDrive rotaryDrive)
-        {
-            RotaryDriveType = rotaryDrive;
-        }
+        public bool MeterDisplacementHasPassed => RotaryDriveType.HasPassed;
+
+        public RotaryDrive RotaryDriveType { get; }
 
         //Meter properties
         public string DriveRateDescription => RotaryDriveType.Instrument.DriveRateDescription();
 
-        public string MeterTypeDescription => RotaryDriveType.Meter.MeterTypeDescription;
-        public decimal? MeterDisplacement => RotaryDriveType.Meter.MeterDisplacement;
-        public decimal? EvcMeterDisplacement => RotaryDriveType.Meter.EvcMeterDisplacement;
+        public string EvcMeterDisplacement => RotaryDriveType.Meter.EvcMeterDisplacement.Value.ToString("0.####");
+
+        public string MeterDisplacement => RotaryDriveType.Meter.MeterDisplacement.ToString("0.####");
+
         public decimal? MeterDisplacementPercentError => RotaryDriveType.Meter.MeterDisplacementPercentError;
-        public bool MeterDisplacementHasPassed => RotaryDriveType.HasPassed;
-        public RotaryDrive RotaryDriveType { get; }
+
+        public string MeterTypeDescription => RotaryDriveType.Meter.MeterTypeDescription;
+
+        public RotaryMeterTestViewModel(RotaryDrive rotaryDrive)
+        {
+            RotaryDriveType = rotaryDrive;
+        }
     }
 }
