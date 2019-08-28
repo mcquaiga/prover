@@ -145,6 +145,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             finally
             {
                 DataChangedObservable.OnNext(VerificationTest);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
     }
