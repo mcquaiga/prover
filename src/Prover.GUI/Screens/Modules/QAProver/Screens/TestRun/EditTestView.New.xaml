@@ -67,8 +67,8 @@
                             VerticalAlignment="Top" />
             </Viewbox>
 
-            <ScrollViewer Grid.Column="1"
-                          VerticalScrollBarVisibility="Auto">
+            <Viewbox Grid.Column="1"
+                          Stretch="Uniform">
 
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -111,7 +111,7 @@
                                         cal:View.Context="Base" />
                     </Border>
                 </Grid>
-            </ScrollViewer>
+            </Viewbox>
         </Grid>
 
         <Grid HorizontalAlignment="Right"
