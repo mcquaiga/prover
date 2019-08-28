@@ -50,8 +50,6 @@
 
             try
             {
-                await CheckForResidualPulses(CommClient, ct);
-
                 VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
                 if (VolumeTest.VerificationTest.FrequencyTest != null)
                 {
@@ -104,7 +102,7 @@
                     while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested) { }
                     OutputBoard.StopMotor();
 
-                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await Task.Delay(TimeSpan.FromSeconds(10));
                 }
                 catch (OperationCanceledException)
                 {
@@ -163,7 +161,7 @@
         /// <returns>The <see cref="Task"/></returns>
         public override Task RunTest(CancellationToken ct)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
               {
                   _pulseInputsCancellationTokenSource = new CancellationTokenSource();
                   ResetPulseCounts(VolumeTest);
@@ -181,6 +179,7 @@
                           OutputBoard?.StartMotor();
                           WaitForTestComplete(VolumeTest, ct);
                           OutputBoard.StopMotor();
+                          await CheckForResidualPulses(CommClient, ct);
                       }
 
                       ct.ThrowIfCancellationRequested();
