@@ -19,8 +19,6 @@
     /// </summary>
     public partial class Instrument : ProverBaseEntity
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the ArchivedDateTime
         /// </summary>
@@ -165,6 +163,10 @@
         /// </summary>
         public string JobId { get; set; }
 
+        public virtual Instrument LinkedTest { get; set; }
+
+        public Guid? LinkedTestId { get; set; }
+
         /// <summary>
         /// Gets the PulseAScaling
         /// </summary>
@@ -208,12 +210,6 @@
         public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
 
         /// <summary>
-        /// Gets the SerialNumber
-        /// </summary>
-        [NotMapped]
-        public int SerialNumber => (int)Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
-
-        /// <summary>
         /// Gets the SiteNumber1
         /// </summary>
         [NotMapped]
@@ -231,18 +227,9 @@
         public DateTime TestDateTime { get; set; }
 
         /// <summary>
-        /// Gets the Transducer
-        /// </summary>
-        [NotMapped]
-        public TransducerType Transducer => (TransducerType)Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
-
-        /// <summary>
         /// Gets or sets the Type
         /// </summary>
         public int Type { get; set; }
-
-        public Guid? LinkedTestId { get; set; }
-        public virtual Instrument LinkedTest { get; set; }
 
         /// <summary>
         /// Gets or sets the VerificationTests
@@ -267,9 +254,17 @@
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the SerialNumber
+        /// </summary>
+        [NotMapped]
+        public int SerialNumber => (int)Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
 
-        #region Methods
+        /// <summary>
+        /// Gets the Transducer
+        /// </summary>
+        [NotMapped]
+        public TransducerType Transducer => (TransducerType)Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
         /// <summary>
         /// The Create
@@ -291,12 +286,30 @@
                 Items = itemValues.ToList(),
 
                 Client = client,
-                ClientId = client?.Id
+                ClientId = client?.Id,
+                EventLogPassed = true,
+                CommPortsPassed = true
             };
 
             i.VerificationTests = AddVerificationTests(i, testSettings);
 
             return i;
+        }
+
+        public override void OnInitializing()
+        {
+            InstrumentType = HoneywellInstrumentTypes.GetById(Type);
+
+            base.OnInitializing();
+        }
+
+        /// <summary>
+        /// The ToString
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
+        public override string ToString()
+        {
+            return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) }";
         }
 
         private static List<VerificationTest> AddVerificationTests(Instrument instrument, TestSettings testSettings)
@@ -319,26 +332,6 @@
             }
             return results;
         }
-
-        
-
-        /// <summary>
-        /// The ToString
-        /// </summary>
-        /// <returns>The <see cref="string"/></returns>
-        public override string ToString()
-        {
-            return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) }";
-        }
-
-        public override void OnInitializing()
-        {
-            InstrumentType = HoneywellInstrumentTypes.GetById(Type);
-
-            base.OnInitializing();
-        }
-
-        #endregion
     }
 
     /// <summary>
@@ -346,44 +339,6 @@
     /// </summary>
     public partial class Instrument
     {
-        #region Methods
-        /// <summary>
-        /// The GetDateFormatted
-        /// </summary>
-        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
-        /// <returns>The <see cref="string"/></returns>
-        public string GetDateFormatted(DateTime dateTime)
-        {
-            var dateFormat = Items.GetItem(262).Description;
-            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
-            return dateTime.ToString(dateFormat);
-        }
-
-        /// <summary>
-        /// The GetDateTime
-        /// </summary>
-        /// <returns>The <see cref="DateTime"/></returns>
-        public DateTime GetDateTime()
-        {
-            var dateFormat = Items.GetItem(262).Description;
-            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
-            dateFormat = $"{dateFormat} HH mm ss";
-            var time = Items.GetItem(203).RawValue;
-            var date = Items.GetItem(204).RawValue;
-
-            return DateTime.ParseExact($"{date} {time}", dateFormat, null);
-        }
-
-        /// <summary>
-        /// The GetTimeFormatted
-        /// </summary>
-        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
-        /// <returns>The <see cref="string"/></returns>
-        public string GetTimeFormatted(DateTime dateTime)
-        {
-            return dateTime.ToString("HH mm ss");
-        }
-
         /// <summary>
         /// The CanExport
         /// </summary>
@@ -440,6 +395,41 @@
             return i => string.Equals(i.InstrumentType.Name, instrumentType, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(instrumentType) || string.Equals(instrumentType, "all", StringComparison.OrdinalIgnoreCase);
         }
 
-        #endregion
+        /// <summary>
+        /// The GetDateFormatted
+        /// </summary>
+        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
+        /// <returns>The <see cref="string"/></returns>
+        public string GetDateFormatted(DateTime dateTime)
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            return dateTime.ToString(dateFormat);
+        }
+
+        /// <summary>
+        /// The GetDateTime
+        /// </summary>
+        /// <returns>The <see cref="DateTime"/></returns>
+        public DateTime GetDateTime()
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            dateFormat = $"{dateFormat} HH mm ss";
+            var time = Items.GetItem(203).RawValue;
+            var date = Items.GetItem(204).RawValue;
+
+            return DateTime.ParseExact($"{date} {time}", dateFormat, null);
+        }
+
+        /// <summary>
+        /// The GetTimeFormatted
+        /// </summary>
+        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
+        /// <returns>The <see cref="string"/></returns>
+        public string GetTimeFormatted(DateTime dateTime)
+        {
+            return dateTime.ToString("HH mm ss");
+        }
     }
 }
