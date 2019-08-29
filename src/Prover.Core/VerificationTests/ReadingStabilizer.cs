@@ -195,7 +195,10 @@
         private Dictionary<ItemValue, AveragedReadingStabilizer> GetLiveReadItemNumbers(Instrument instrument, int level)
         {
             var test = instrument.VerificationTests.FirstOrDefault(x => x.TestNumber == level);
-            var pressure = test?.PressureTest?.GasPressure ?? 0m;
+
+            var pressure = test?.PressureTest == null ? 0m 
+                : test?.PressureTest.Transducer == TransducerType.Absolute ? test.PressureTest.GasPressure : test.PressureTest.GasGauge;
+
             var temperature = (decimal?)test?.TemperatureTest?.Gauge ?? 0m;
 
             var liveReadItems = new Dictionary<ItemValue, AveragedReadingStabilizer>();
@@ -204,7 +207,7 @@
                 liveReadItems.Add(instrument.Items.First(x => x.Metadata.IsLiveReadTemperature ?? false), new AveragedReadingStabilizer(temperature));
 
             if (instrument.CompositionType == EvcCorrectorType.P || instrument.CompositionType == EvcCorrectorType.PTZ)
-                liveReadItems.Add(instrument.Items.First(x => x.Metadata.IsLiveReadPressure ?? false), new AveragedReadingStabilizer(pressure));
+                liveReadItems.Add(instrument.Items.First(x => x.Metadata.IsLiveReadPressure ?? false), new AveragedReadingStabilizer(pressure.Value));
             return liveReadItems;
         }
     }

@@ -112,10 +112,9 @@
                 finally
                 {
                     cts.Cancel();
+                    await CommClient.Disconnect();
                 }
             }, ct);
-
-            await CommClient.Disconnect();
         }
 
         /// <summary>
@@ -173,7 +172,7 @@
                       ct.ThrowIfCancellationRequested();
 
                       using (Observable
-                              .Interval(TimeSpan.FromMilliseconds(750))
+                              .Interval(TimeSpan.FromSeconds(1))
                               .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
                       {
                           OutputBoard?.StartMotor();

@@ -55,9 +55,8 @@
         /// </summary>
         public void Dispose()
         {
-            _serialPort?.Close();
-            _serialPort?.Dispose();
-            _outputBoard?.Dispose();
+            _serialPort.Dispose();
+            _outputBoard.Dispose();
         }
 
         /// <summary>
@@ -69,28 +68,25 @@
             if (_serialPort == null)
                 return -1;
 
-            return await Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (!_serialPort.IsOpen)
-                        _serialPort.Open();
+                if (!_serialPort.IsOpen)
+                    _serialPort.Open();
 
-                    _serialPort.DiscardInBuffer();
-                    _serialPort.Write("@D0");
-                    _serialPort.Write(((char)13).ToString());
-                    Thread.Sleep(100);
+                _serialPort.DiscardInBuffer();
+                _serialPort.Write("@D0");
+                _serialPort.Write(((char)13).ToString());
+                await Task.Delay(100);
 
-                    var tachString = _serialPort.ReadExisting();
+                var tachString = _serialPort.ReadExisting();
 
-                    Log.Debug($"Read data from Tach: {tachString}");
-                    return ParseTachValue(tachString);
-                }
-                finally
-                {
-                    //_serialPort?.Close();
-                }
-            });
+                Log.Debug($"Read data from Tach: {tachString}");
+                return ParseTachValue(tachString);
+            }
+            finally
+            {
+                _serialPort?.Close();
+            }
         }
 
         /// <summary>
@@ -99,26 +95,20 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task ResetTach()
         {
-            await Task.Run(async () =>
-            {
-                if (_serialPort == null)
-                    return;
+            if (_serialPort == null)
+                return;
 
-                if (!_serialPort.IsOpen) _serialPort.Open();
+            if (!_serialPort.IsOpen) _serialPort.Open();
 
-                _serialPort.Write($"@T1{(char)13}");
-                await Task.Delay(50);
-                _serialPort.Write($"6{(char)13}");
-                _serialPort.DiscardInBuffer();
-            });
+            _serialPort.Write($"@T1{(char)13}");
+            await Task.Delay(50);
+            _serialPort.Write($"6{(char)13}");
+            _serialPort.DiscardInBuffer();
 
-            await Task.Run(async () =>
-            {
-                _outputBoard?.StartMotor();
-                await Task.Delay(500);
-                _outputBoard?.StopMotor();
-                await Task.Delay(100);
-            });
+            _outputBoard?.StartMotor();
+            await Task.Delay(500);
+            _outputBoard?.StopMotor();
+            await Task.Delay(100);
 
             await Task.Delay(2000);
         }
