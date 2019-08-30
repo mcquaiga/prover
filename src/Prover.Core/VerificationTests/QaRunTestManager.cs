@@ -80,7 +80,6 @@
             _eventAggregator = eventAggregator;
             _testRunService = testRunService;
             _readingStabilizer = readingStabilizer;
-            _tachometerService = tachometerService;
             _settingsService = settingsService;
             TestActionsManager = testActionsManager;
 

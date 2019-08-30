@@ -33,7 +33,7 @@
             var tachCount = 0;
 
             using (Observable
-                    .Interval(TimeSpan.FromMilliseconds(900))
+                    .Interval(TimeSpan.FromMilliseconds(500))
                     .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
                     .Concat()
                     .Subscribe())
