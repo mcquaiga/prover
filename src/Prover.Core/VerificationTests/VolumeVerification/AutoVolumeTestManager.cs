@@ -255,25 +255,32 @@
                    .Timer(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(20))
                    .Subscribe(async _ =>
                    {
-                       pulsesWaiting = 0;
-
-                       if (!commClient.IsConnected)
+                       try
                        {
-                           await commClient.Connect(ct);
-                       }
+                           pulsesWaiting = 0;
 
-                       foreach (CommProtocol.Common.Items.ItemValue i in await commClient.GetPulseOutputItems())
-                       {
-                           pulsesWaiting += (int)i.NumericValue;
-                       }
+                           if (!commClient.IsConnected)
+                           {
+                               await commClient.Connect(ct);
+                           }
 
-                       Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
-                       if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
-                       {
-                           await commClient.Disconnect();
-                           lastPulsesWaiting = pulsesWaiting;
+                           foreach (CommProtocol.Common.Items.ItemValue i in await commClient.GetPulseOutputItems())
+                           {
+                               pulsesWaiting += (int)i.NumericValue;
+                           }
+
+                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
+                           if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
+                           {
+                               await commClient.Disconnect();
+                               lastPulsesWaiting = pulsesWaiting;
+                           }
+                           else
+                           {
+                               keepWaiting = false;
+                           }
                        }
-                       else
+                       catch (OperationCanceledException)
                        {
                            keepWaiting = false;
                        }
