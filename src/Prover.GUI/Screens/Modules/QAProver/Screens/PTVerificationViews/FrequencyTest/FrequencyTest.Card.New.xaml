@@ -32,6 +32,11 @@
                 <StackPanel>
 
                     <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.EvcAdjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.EvcAdjustedEndReading}" />
 
                         <controls:ValueDescriptionControl Label="True Adj."
                                                        Value="{Binding AdjustedVolume}" />
@@ -51,6 +56,11 @@
                 <StackPanel>
 
                     <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.TibAdjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.TibAdjustedEndReading}" />
 
                         <controls:ValueDescriptionControl Label="True Adj. Corr."
                                                        Value="{Binding TestRun.AdjustedCorrectedVolume}" />
@@ -70,6 +80,11 @@
                 Passed="{Binding TestRun.HasPassed}" />
                 <StackPanel>
                     <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.UnadjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.UnadjustedEndReading}" />
 
                         <controls:ValueDescriptionControl Label="True Unadj."
                                                        Value="{Binding UnadjustedVolume}" />
