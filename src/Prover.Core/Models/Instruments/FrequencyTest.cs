@@ -117,8 +117,6 @@ namespace Prover.Core.Models.Instruments
 
         public FrequencyTest()
         {
-            //MainRotorPulseCount = 2600;
-            //SenseRotorPulseCount = 260;
             MechanicalOutputFactor = 70;
         }
 
