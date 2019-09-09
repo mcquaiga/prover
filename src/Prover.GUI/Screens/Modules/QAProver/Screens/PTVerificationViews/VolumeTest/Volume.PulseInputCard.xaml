@@ -24,16 +24,15 @@
                        Text="Frequency" />
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
+                        Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}"
                         Grid.Row="1">
                 <Button Content="Start"
                     Margin="15 5"
-                    Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding PreVolumeTestCommand}" />
 
                 <Button Content="Finish"
                     Margin="15 5"
-                    Visibility="{Binding ShowPostTestButton, Converter={StaticResource BoolToHiddenConverter}}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding PostVolumeTestCommand}" />
             </StackPanel>
