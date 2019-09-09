@@ -35,7 +35,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             set => this.RaiseAndSetIfChanged(ref _correctedPulseCount, value);
         }
 
-        public bool DisplayButtons => _displayButtons.Value;
+        public bool DisplayButtons => TestManager != null;
 
         public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
 

@@ -22,20 +22,22 @@
             </Grid.RowDefinitions>
             <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
                        Text="Frequency" />
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}"
-                        Grid.Row="1">
-                <Button Content="Start"
+
+            <Grid HorizontalAlignment="Center" Visibility="{Binding DisplayButtons, Converter={StaticResource BoolToHiddenConverter}}"
+                      Grid.Row="1">
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                    <Button Content="Start"
                     Margin="15 5"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding PreVolumeTestCommand}" />
 
-                <Button Content="Finish"
+                    <Button Content="Finish"
                     Margin="15 5"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding PostVolumeTestCommand}" />
-            </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1">
