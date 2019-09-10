@@ -43,6 +43,9 @@
 
                         <controls:ValueDescriptionControl Label="EVC Adj."
                                                        Value="{Binding EvcAdjustedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="Main equals Tib"
+                                                          Value="{Binding TestRun.DoesTibEqualMainAdjusted, Converter={StaticResource BoolToPassFailConverter}}" />
                     </UniformGrid>
                 </StackPanel>
             </StackPanel>

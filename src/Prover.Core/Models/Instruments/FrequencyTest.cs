@@ -40,6 +40,8 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
+        public bool DoesTibEqualMainAdjusted => (TibAdjustedVolume().Value == EvcAdjustedVolume().Value);
+
         public decimal EvcAdjustedCorrectedVolume
         {
             get
@@ -131,6 +133,13 @@ namespace Prover.Core.Models.Instruments
             var mainAdjVol = MainRotorPulseCount / VerificationTest.Instrument.Items.GetItem(865).NumericValue;
             var senseAdjVol = SenseRotorPulseCount / VerificationTest.Instrument.Items.GetItem(866).NumericValue;
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
+        }
+
+        public decimal? EvcAdjustedVolume()
+        {
+            var result = (EvcAdjustedEndReading - EvcAdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+
+            return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
         public decimal? EvcUnadjustedVolume()
