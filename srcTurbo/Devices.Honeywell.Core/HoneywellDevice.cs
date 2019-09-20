@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Devices.Honeywell.Core
 {
-    public class HoneywellDevice : HoneywellDeviceType, IDeviceWithValues
+    public class HoneywellDevice : IDeviceWithValues
     {
         public CompositionType Composition
         {
@@ -43,13 +43,6 @@ namespace Devices.Honeywell.Core
             ItemValues = itemValues;
             DeviceType = evcType;
 
-            AccessCode = evcType.AccessCode;
-            Id = evcType.Id;
-            CanUseIrDaPort = evcType.CanUseIrDaPort;
-            IsHidden = evcType.IsHidden;
-            MaxBaudRate = evcType.MaxBaudRate;
-            Name = evcType.Name;
-
             SiteInfo = GetItemValuesByGroup<ISiteInformationItems>();
             Pressure = GetItemValuesByGroup<IPressureItems>();
             Temperature = GetItemValuesByGroup<ITemperatureItems>();
@@ -62,11 +55,11 @@ namespace Devices.Honeywell.Core
             return GetItemValuesByGroup<T>(ItemValues);
         }
 
-        public override T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values)
+        public T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values)
         {
             var results = values.Union(ItemValues, new ItemValueComparer());
 
-            return base.GetItemValuesByGroup<T>(results);
+            return DeviceType.GetItemValuesByGroup<T>(results);
         }
 
         protected readonly HoneywellDeviceType DeviceType;
