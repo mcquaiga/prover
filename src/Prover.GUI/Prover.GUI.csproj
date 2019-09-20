@@ -743,6 +743,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Screens\Modules\Certificates\Reports\Resources\enbridge_primary_logo.jpg" />
     <Resource Include="Screens\Modules\QAProver\Screens\Designer\sample_instrument.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
