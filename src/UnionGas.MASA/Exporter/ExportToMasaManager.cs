@@ -16,32 +16,6 @@
     /// </summary>
     public class ExportToMasaManager : IExportTestRun
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _dcrWebService
-        /// </summary>
-        private readonly DCRWebServiceCommunicator _dcrWebService;
-
-        /// <summary>
-        /// Defines the _loginService
-        /// </summary>
-        private readonly ILoginService<EmployeeDTO> _loginService;
-
-        /// <summary>
-        /// Defines the _testRunService
-        /// </summary>
-        private readonly TestRunService _testRunService;
-
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportToMasaManager"/> class.
         /// </summary>
@@ -54,10 +28,6 @@
             _dcrWebService = dcrWebService;
             _loginService = loginService;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The Export
@@ -72,8 +42,7 @@
             var isSuccess = await _dcrWebService.SendQaTestResults(qaTestRuns);
 
             if (!isSuccess)
-                throw new Exception(
-                    "An error occured sending test results to web service. Please see log for details.");
+                throw new Exception("An error occured sending test results to web service. Please see log for details.");
 
             foreach (var instr in forExport)
             {
@@ -111,6 +80,24 @@
             return await _dcrWebService.SendQaTestResults(new[] { failedTest });
         }
 
-        #endregion
+        /// <summary>
+        /// Defines the Log
+        /// </summary>
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _dcrWebService
+        /// </summary>
+        private readonly DCRWebServiceCommunicator _dcrWebService;
+
+        /// <summary>
+        /// Defines the _loginService
+        /// </summary>
+        private readonly ILoginService<EmployeeDTO> _loginService;
+
+        /// <summary>
+        /// Defines the _testRunService
+        /// </summary>
+        private readonly TestRunService _testRunService;
     }
 }

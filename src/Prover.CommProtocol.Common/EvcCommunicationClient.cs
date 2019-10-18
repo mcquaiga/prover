@@ -80,7 +80,7 @@ namespace Prover.CommProtocol.Common
                         if (connectionAttempts < retryAttempts)
                         {
                             Log.Warn($"[{CommPort.Name}] Failed connecting to {InstrumentType.Name}.");
-                            Thread.Sleep(ConnectionRetryDelayMs);
+                            await Task.Delay(ConnectionRetryDelayMs);
                             connectionAttempts++;
                         }
                         else

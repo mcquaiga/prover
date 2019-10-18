@@ -14,21 +14,10 @@
     /// </summary>
     public class DCRWebServiceCommunicator
     {
-        #region Fields
-
         /// <summary>
-        /// Defines the _dcrWebService
+        /// Gets the SoapClient
         /// </summary>
-        private readonly DCRWebServiceSoap _dcrWebService;
-
-        /// <summary>
-        /// Defines the _log
-        /// </summary>
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructors
+        public DCRWebServiceSoapClient SoapClient => (DCRWebServiceSoapClient)_dcrWebService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DCRWebServiceCommunicator"/> class.
@@ -38,19 +27,6 @@
         {
             _dcrWebService = dcrWebService;
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the SoapClient
-        /// </summary>
-        public DCRWebServiceSoapClient SoapClient => (DCRWebServiceSoapClient)_dcrWebService;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The FindMeterByCompanyNumber
@@ -69,7 +45,6 @@
             var response = await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByInventoryCodeAsync(request)).ConfigureAwait(false);
 
             return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
-
         }
 
         /// <summary>
@@ -108,7 +83,6 @@
         /// <returns>The <see cref="Task{bool}"/></returns>
         public async Task<bool> SendQaTestResults(IEnumerable<QARunEvcTestResult> evcQaRuns)
         {
-
             var items = evcQaRuns.ToArray();
 
             if (items.Length == 0)
@@ -127,10 +101,20 @@
             }
             else
             {
-                _log.Error($"Web service return an error: {Environment.NewLine} {result}");
+                _log.Error($"Web service returned an error: {Environment.NewLine} {result}");
                 return false;
             }
         }
+
+        /// <summary>
+        /// Defines the _dcrWebService
+        /// </summary>
+        private readonly DCRWebServiceSoap _dcrWebService;
+
+        /// <summary>
+        /// Defines the _log
+        /// </summary>
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// The CallWebServiceMethod
@@ -152,7 +136,6 @@
                 _log.Warn($"Timed out contacting the web service. Skipping company number verification.");
                 throw;
             }
-
             catch (EndpointNotFoundException ex)
             {
                 _log.Error(ex, $"MASA Web service could not be reached. {Environment.NewLine}" +
@@ -160,14 +143,11 @@
                     $" State: {SoapClient.State.ToString()}");
                 throw;
             }
-
             catch (Exception ex)
             {
                 _log.Error(ex, $"An error occured contacting the web service. Skipping company number verification.");
                 throw;
             }
         }
-
-        #endregion
     }
 }
