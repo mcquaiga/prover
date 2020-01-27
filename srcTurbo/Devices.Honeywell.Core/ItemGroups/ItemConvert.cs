@@ -7,7 +7,7 @@ namespace Devices.Honeywell.Core.ItemGroups
 {
     internal static class ItemConvert
     {
-        public static IEnumerable<ItemValue> ToItemValues(this IDevice deviceType, IDictionary<int, string> values)
+        public static IEnumerable<ItemValue> ToItemValues(this IDeviceType deviceType, IDictionary<int, string> values)
         {
             return deviceType.Items.Join(values,
                 x => x.Number,

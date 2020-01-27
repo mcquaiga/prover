@@ -18,7 +18,7 @@ namespace Devices.Honeywell.Core
     /// <summary>
     /// Defines the <see cref="HoneywellDeviceType"/>
     /// </summary>
-    public class HoneywellDeviceType : IDevice
+    public class HoneywellDeviceType : IDeviceType
     {
         public virtual int AccessCode { get; set; }
 
@@ -69,15 +69,15 @@ namespace Devices.Honeywell.Core
             return ItemConvert.ToItemValues(this, (Dictionary<int, string>)values);
         }
 
-        public virtual IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues)
+        public virtual IDeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues)
         {
             var items = GetItemValuesByGroup<IVolumeItems>(itemValues);
             if (items.DriveRateDescription != "Rotary")
             {
-                return new MechanicalDevice(this, itemValues);
+                return new MechanicalDeviceInstance(this, itemValues);
             }
 
-            return new HoneywellDevice(this, itemValues);
+            return new HoneywellDeviceInstance(this, itemValues);
         }
 
         public virtual IEnumerable<ItemMetadata> GetItemNumbersByGroup<T>() where T : IItemsGroup

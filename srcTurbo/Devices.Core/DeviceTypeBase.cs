@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Devices.Core
 {
-    public abstract class DeviceTypeBase : IDevice
+    public abstract class DeviceTypeBase : IDeviceType
     {
         public virtual int AccessCode { get; set; }
 
@@ -27,7 +27,7 @@ namespace Devices.Core
 
         public abstract IEnumerable<ItemValue> Convert<T>(IDictionary<T, string> values) where T : struct;
 
-        public abstract IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues);
+        public abstract IDeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues);
 
         public abstract IEnumerable<ItemMetadata> GetItemNumbersByGroup<T>() where T : IItemsGroup;
 

@@ -21,16 +21,16 @@ namespace Devices.WebApi.Services
     {
         public ICommunicationsClient Client { get; }
 
-        public IDeviceWithValues Device { get; }
+        public IDeviceInstance Device { get; }
 
         public Guid Id { get; set; }
 
-        public RemoteConnection(ICommunicationsClient client, IDeviceWithValues device)
+        public RemoteConnection(ICommunicationsClient client, IDeviceInstance device)
            : this(Guid.NewGuid(), client, device)
         {
         }
 
-        public RemoteConnection(Guid id, ICommunicationsClient client, IDeviceWithValues device)
+        public RemoteConnection(Guid id, ICommunicationsClient client, IDeviceInstance device)
         {
             Id = id;
             Client = client;
@@ -84,7 +84,7 @@ namespace Devices.WebApi.Services
             return _sessions.ToList().Select(kv => new ConnectionGet(kv.Key, kv.Value.Device));
         }
 
-        public async Task<Guid> StartSession(IDevice device, string portName, IObserver<string> status)
+        public async Task<Guid> StartSession(IDeviceType device, string portName, IObserver<string> status)
         {
             if (!IsPortAvailable(portName))
                 throw new UnauthorizedAccessException($"{portName} is in use by another session. Please try a different port.");

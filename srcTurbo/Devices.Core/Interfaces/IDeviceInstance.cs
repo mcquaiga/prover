@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Devices.Core.Interfaces
 {
-    public interface IDeviceWithValues : IDevice
+    public interface IDeviceInstance : IDeviceType
     {
         CompositionType Composition { get; }
 
@@ -22,9 +22,11 @@ namespace Devices.Core.Interfaces
         IVolumeItems Volume { get; }
 
         T GetItemValuesByGroup<T>() where T : IItemsGroup;
+
+        T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup;
     }
 
-    public interface IMechanicalDeviceWithValues : IDeviceWithValues
+    public interface IMechanicalDeviceInstance : IDeviceInstance
     {
         IEnergyItems Energy { get; set; }
     }

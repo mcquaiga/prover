@@ -6,6 +6,6 @@
 
         decimal EnergyReading { get; }
 
-        EnergyUnits EnergyUnits { get; }
+        EnergyUnitType EnergyUnitType { get; }
     }
 }

@@ -7,19 +7,19 @@ using System.Linq;
 
 namespace Devices.Honeywell.Core
 {
-    public class HoneywellDevice : IDeviceWithValues
+    public class HoneywellDeviceInstance : HoneywellDeviceType, IDeviceInstance
     {
         public CompositionType Composition
         {
             get
             {
-                if (SiteInfo.PressureFactor == CorrectionFactor.Live && SiteInfo.TemperatureFactor == CorrectionFactor.Live)
+                if (SiteInfo.PressureFactor == CorrectionFactorType.Live && SiteInfo.TemperatureFactor == CorrectionFactorType.Live)
                     return CompositionType.PressureTemperature;
 
-                if (SiteInfo.PressureFactor == CorrectionFactor.Live)
+                if (SiteInfo.PressureFactor == CorrectionFactorType.Live)
                     return CompositionType.PressureOnly;
 
-                if (SiteInfo.TemperatureFactor == CorrectionFactor.Live)
+                if (SiteInfo.TemperatureFactor == CorrectionFactorType.Live)
                     return CompositionType.TemperatureOnly;
 
                 return CompositionType.PressureTemperature;
@@ -38,10 +38,9 @@ namespace Devices.Honeywell.Core
 
         public IVolumeItems Volume { get; }
 
-        public HoneywellDevice(HoneywellDeviceType evcType, IEnumerable<ItemValue> itemValues) : base(evcType.Items)
+        public HoneywellDeviceInstance(HoneywellDeviceType evcType, IEnumerable<ItemValue> itemValues) : base(evcType.Items)
         {
             ItemValues = itemValues;
-            DeviceType = evcType;
 
             SiteInfo = GetItemValuesByGroup<ISiteInformationItems>();
             Pressure = GetItemValuesByGroup<IPressureItems>();
@@ -55,13 +54,11 @@ namespace Devices.Honeywell.Core
             return GetItemValuesByGroup<T>(ItemValues);
         }
 
-        public T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values)
+        public T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup
         {
             var results = values.Union(ItemValues, new ItemValueComparer());
 
-            return DeviceType.GetItemValuesByGroup<T>(results);
+            return GetItemValuesByGroup<T>();
         }
-
-        protected readonly HoneywellDeviceType DeviceType;
     }
 }

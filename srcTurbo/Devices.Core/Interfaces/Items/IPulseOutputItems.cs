@@ -12,6 +12,6 @@ namespace Devices.Core.Interfaces.Items
     public interface IPulseOutputs
     {
         decimal Scaling { get; }
-        PulseOutputUnits Units { get; }
+        PulseOutputUnitType Units { get; }
     }
 }

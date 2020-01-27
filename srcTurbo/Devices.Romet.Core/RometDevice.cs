@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Devices.Romet.Core
 {
-    public class RometDevice : IDevice
+    public class RometDevice : IDeviceType
     {
         public bool? CanUseIrDaPort => throw new NotImplementedException();
 
@@ -23,7 +23,7 @@ namespace Devices.Romet.Core
             throw new NotImplementedException();
         }
 
-        public IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues)
+        public IDeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues)
         {
             throw new NotImplementedException();
         }

@@ -19,7 +19,7 @@ namespace Devices.Communications
     public static class DeviceConnection
     {
         public static Task<ICommunicationsClient> ConnectAsync<T>(this T deviceType, ICommPort commPort, int retryAttempts = 10, TimeSpan? timeout = null, IObserver<string> statusObserver = null)
-            where T : IDevice
+            where T : IDeviceType
         {
             var a = Assembly.Load("Devices.Honeywell.Comm");
             var factory = a.GetExportedTypes().FirstOrDefault(t => t.Name.Contains("Factory"));

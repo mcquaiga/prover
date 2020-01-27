@@ -3,29 +3,27 @@ namespace Devices.Core
     public enum CompositionType
     {
         TemperatureOnly,
-
         PressureOnly,
-
         PressureTemperature
     }
 
-    public enum CorrectionFactor
+    public enum CorrectionFactorType
     {
         Fixed,
         Live
     }
 
-    public enum DriveTypeDescripter
+    public enum DriveType
     {
         Mechanical,
-
+        PulseInput,
         Rotary
     }
 
-    public enum EnergyUnits
+    public enum EnergyUnitType
     {
         Therms,
-        Dktherms,
+        DkTherms,
         MegaJoules,
         GigaJoules,
         KiloCals,
@@ -39,30 +37,21 @@ namespace Devices.Core
         Gauge
     }
 
-    public enum PressureUnits
+    public enum PressureUnitType
     {
-        PSIA,
-
-        PSIG,
-
+        Psia,
+        Psig,
         kPa,
-
         mPa,
-
         BAR,
-
         mBAR,
-
         KGcm2,
-
         inWC,
-
         inHG,
-
         mmHG
     }
 
-    public enum PulseOutputUnits
+    public enum PulseOutputUnitType
     {
         CorVol,
         PCorVol,
@@ -71,7 +60,7 @@ namespace Devices.Core
         Time
     }
 
-    public enum TemperatureUnits
+    public enum TemperatureUnitType
     {
         C,
 

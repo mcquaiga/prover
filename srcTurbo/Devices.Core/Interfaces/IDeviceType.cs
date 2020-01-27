@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Devices.Core.Interfaces
 {
-    public interface IDevice
+    public interface IDeviceType
     {
         bool? CanUseIrDaPort { get; }
 
@@ -19,10 +19,10 @@ namespace Devices.Core.Interfaces
 
         IEnumerable<ItemValue> Convert<T>(IDictionary<T, string> values) where T : struct;
 
-        IDeviceWithValues CreateInstance(IEnumerable<ItemValue> itemValues);
+        IDeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues);
 
         IEnumerable<ItemMetadata> GetItemNumbersByGroup<T>() where T : IItemsGroup;
 
-        T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup;
+        //T GetItemValuesByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup;
     }
 }

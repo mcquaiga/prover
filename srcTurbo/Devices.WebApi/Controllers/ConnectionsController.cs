@@ -63,14 +63,14 @@ namespace Devices.WebApi.Controllers
 
         // GET: api/Sessions/5
         [HttpGet("{id}", Name = nameof(GetDeviceInfo))]
-        public async Task<ActionResult<IDeviceWithValues>> GetDeviceInfo(Guid id)
+        public async Task<ActionResult<IDeviceInstance>> GetDeviceInfo(Guid id)
         {
             var session = SessionsManager.Get(id);
 
             if (!session.Client.IsConnected)
                 await session.Client.ConnectAsync();
 
-            return new ActionResult<IDeviceWithValues>(session.Device);
+            return new ActionResult<IDeviceInstance>(session.Device);
         }
 
         [Route("{id}/Disconnect")]

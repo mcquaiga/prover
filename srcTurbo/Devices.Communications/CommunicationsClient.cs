@@ -19,8 +19,8 @@ namespace Devices.Communications
     {
         public ICommPort CommPort { get; }
 
-        public virtual IDeviceWithValues Device { get; protected set; }
-        public virtual IDevice DeviceType { get; protected set; }
+        public virtual IDeviceInstance Device { get; protected set; }
+        public virtual IDeviceType DeviceType { get; protected set; }
 
         /// <summary>
         /// Is this client already connected to an instrument
@@ -53,7 +53,7 @@ namespace Devices.Communications
             CommPort?.Dispose();
         }
 
-        public async Task<IDeviceWithValues> GetDeviceAsync()
+        public async Task<IDeviceInstance> GetDeviceAsync()
         {
             var values = await GetItemsAsync();
             Device = DeviceType.CreateInstance(values);
@@ -80,7 +80,7 @@ namespace Devices.Communications
             return DeviceType.GetItemValuesByGroup<T>(values);
         }
 
-        internal virtual async Task TryConnectAsync(IDevice deviceType, int retryAttempts = MaxConnectionAttempts, TimeSpan? timeout = null)
+        internal virtual async Task TryConnectAsync(IDeviceType deviceType, int retryAttempts = MaxConnectionAttempts, TimeSpan? timeout = null)
         {
             if (IsConnected)
                 return;
@@ -147,14 +147,14 @@ namespace Devices.Communications
         /// <param name="commPort">Communcations interface to the device</param>
         /// <param name="EvcDeviceType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected CommunicationsClient(ICommPort commPort, IDevice deviceType)
+        protected CommunicationsClient(ICommPort commPort, IDeviceType deviceType)
         {
             CommPort = commPort;
             DeviceType = deviceType;
             CreateStreams();
         }
 
-        protected abstract Task EstablishConnectionAsync<T>(T deviceType, CancellationToken ct) where T : IDevice;
+        protected abstract Task EstablishConnectionAsync<T>(T deviceType, CancellationToken ct) where T : IDeviceType;
 
         protected virtual void ExecuteCommand(string command)
         {

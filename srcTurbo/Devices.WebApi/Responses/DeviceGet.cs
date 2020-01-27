@@ -22,7 +22,7 @@ namespace Devices.WebApi.Responses
         public string Type => _device.GetType().Name;
         public string Name => _device.Name;
 
-        public DeviceGet(Guid id, IDevice device, IUrlHelper urlHelper)
+        public DeviceGet(Guid id, IDeviceType device, IUrlHelper urlHelper)
         {
             Id = id;
             _device = device;
@@ -30,7 +30,7 @@ namespace Devices.WebApi.Responses
             _port = CommPorts.GetPorts().FirstOrDefault(x => x.Contains("COM"));
         }
 
-        private readonly IDevice _device;
+        private readonly IDeviceType _device;
         private readonly string _port;
     }
 }

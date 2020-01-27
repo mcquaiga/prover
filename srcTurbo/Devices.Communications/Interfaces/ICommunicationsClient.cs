@@ -19,8 +19,8 @@ namespace Devices.Communications.Interfaces
     {
         ICommPort CommPort { get; }
 
-        IDeviceWithValues Device { get; }
-        IDevice DeviceType { get; }
+        IDeviceInstance Device { get; }
+        IDeviceType DeviceType { get; }
         bool IsConnected { get; }
 
         IObservable<string> Status { get; }
@@ -33,7 +33,7 @@ namespace Devices.Communications.Interfaces
 
         void Dispose();
 
-        Task<IDeviceWithValues> GetDeviceAsync();
+        Task<IDeviceInstance> GetDeviceAsync();
 
         Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers);
 

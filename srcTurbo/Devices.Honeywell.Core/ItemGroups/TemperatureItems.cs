@@ -16,6 +16,6 @@ namespace Devices.Honeywell.Core.ItemGroups
         public decimal GasTemperature { get; protected set; }
 
         [ItemInfo(89)]
-        public TemperatureUnits Units { get; protected set; }
+        public TemperatureUnitType Units { get; protected set; }
     }
 }

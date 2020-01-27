@@ -11,9 +11,9 @@ namespace Devices.Terminal.Wpf
     {
         public static void Start()
         {
-            Locator.CurrentMutable.Register(() => HoneywellDeviceDataSourceFactory.Instance, typeof(IDeviceDataSource<IDevice>));
+            Locator.CurrentMutable.Register(() => HoneywellDeviceDataSourceFactory.Instance, typeof(IDeviceDataSource<IDeviceType>));
 
-            Locator.CurrentMutable.Register(() => new DeviceRepository(Locator.Current.GetServices<IDeviceDataSource<IDevice>>()), typeof(DeviceRepository));
+            Locator.CurrentMutable.Register(() => new DeviceRepository(Locator.Current.GetServices<IDeviceDataSource<IDeviceType>>()), typeof(DeviceRepository));
 
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
 

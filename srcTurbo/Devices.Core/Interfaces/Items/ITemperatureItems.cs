@@ -8,6 +8,6 @@ namespace Devices.Core.Interfaces.Items
 
         decimal GasTemperature { get; }
 
-        TemperatureUnits Units { get; }
+        TemperatureUnitType Units { get; }
     }
 }

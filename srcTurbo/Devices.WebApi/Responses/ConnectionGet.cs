@@ -19,7 +19,7 @@ namespace Devices.WebApi.Responses
         public string Status { get; protected set; }
         public string SerialNumber => _device?.SiteInfo.SerialNumber;
 
-        public ConnectionGet(Guid sessionId, IDeviceWithValues device)
+        public ConnectionGet(Guid sessionId, IDeviceInstance device)
         {
             SessionId = sessionId;
             _device = device;
@@ -32,12 +32,12 @@ namespace Devices.WebApi.Responses
             Status = "Your request has been queued to run. Check the DeviceRef url shortly.";
         }
 
-        private readonly IDeviceWithValues _device;
+        private readonly IDeviceInstance _device;
     }
 
     public class DisconnectGet : ConnectionGet
     {
-        public DisconnectGet(Guid sessionId, IDeviceWithValues device) : base(sessionId, device)
+        public DisconnectGet(Guid sessionId, IDeviceInstance device) : base(sessionId, device)
         {
             Status = $"Disconnected from {device.Name}. Reconnect with the DeviceRef";
         }

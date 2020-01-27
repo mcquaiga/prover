@@ -20,7 +20,7 @@ namespace Devices.Mobile.Services
         public static string IPAddress = DeviceInfo.Platform == DevicePlatform.Android ? "10.0.2.2" : "localhost";
         public static DeviceService Instance { get { return _lazyDeviceService.Value; } }
 
-        public ISubject<IDeviceWithValues> DeviceInfoStream { get; private set; } = new Subject<IDeviceWithValues>();
+        public ISubject<IDeviceInstance> DeviceInfoStream { get; private set; } = new Subject<IDeviceInstance>();
 
         public IConnectableObservable<string> ResponseMessageStream => _responseMessageStream.Publish();
 
@@ -107,7 +107,7 @@ namespace Devices.Mobile.Services
             }
         }
 
-        public async Task<IDeviceWithValues> GetDeviceInfoAsync(ConnectionGetDto connection)
+        public async Task<IDeviceInstance> GetDeviceInfoAsync(ConnectionGetDto connection)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace Devices.Mobile.Services
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<IDeviceWithValues>(json);
+                return JsonConvert.DeserializeObject<IDeviceInstance>(json);
             }
             catch (Exception ex)
             {

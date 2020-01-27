@@ -25,7 +25,7 @@ namespace Devices.Honeywell.Core.ItemGroups
         public PressureTransducerType TransducerType { get; protected set; }
 
         [ItemInfo(87)]
-        public PressureUnits Units { get; protected set; }
+        public PressureUnitType UnitType { get; protected set; }
 
         [ItemInfo(47)]
         public decimal UnsqrFactor { get; protected set; }

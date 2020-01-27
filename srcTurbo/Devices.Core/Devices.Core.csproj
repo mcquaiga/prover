@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Calculators\**" />
+    <EmbeddedResource Remove="Calculators\**" />
+    <None Remove="Calculators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.6.3" />
     <PackageReference Include="System.Reactive" Version="4.1.5" />
@@ -14,8 +20,5 @@
     <ProjectReference Include="..\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Calculators\Helpers\" />
-  </ItemGroup>
 
 </Project>

@@ -27,7 +27,7 @@ namespace Devices.Mobile.ViewModels
         public DeviceSignalRClient DeviceClient { get; }
 
         [Reactive]
-        public IDeviceWithValues DeviceInstance { get; set; }
+        public IDeviceInstance DeviceInstance { get; set; }
 
         public ReactiveCommand<Unit, Unit> DisconnectCommand { get; }
         public bool IsConnected { [ObservableAsProperty] get; }

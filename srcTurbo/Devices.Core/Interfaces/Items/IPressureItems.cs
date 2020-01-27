@@ -14,7 +14,7 @@ namespace Devices.Core.Interfaces.Items
 
         PressureTransducerType TransducerType { get; }
 
-        PressureUnits Units { get; }
+        PressureUnitType UnitType { get; }
 
         decimal UnsqrFactor { get; }
     }

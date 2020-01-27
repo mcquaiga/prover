@@ -16,6 +16,6 @@ namespace Devices.Honeywell.Core.ItemGroups
         public decimal EnergyReading { get; protected set; }
 
         [ItemInfo(141)]
-        public EnergyUnits EnergyUnits { get; protected set; }
+        public EnergyUnitType EnergyUnitType { get; protected set; }
     }
 }

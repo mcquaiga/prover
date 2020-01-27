@@ -6,9 +6,7 @@ namespace Devices.Communications
 {
     public class FailedConnectionException : Exception
     {
-        #region Constructors
-
-        public FailedConnectionException(ICommPort commPort, IDevice evcType, int retryAttempts, Exception reason = null)
+        public FailedConnectionException(ICommPort commPort, IDeviceType evcType, int retryAttempts, Exception reason = null)
             : base($"{commPort.Name} Could not connect to {evcType.Name} after {retryAttempts} retries.", reason)
         {
         }
@@ -24,7 +22,5 @@ namespace Devices.Communications
         private FailedConnectionException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        #endregion
     }
 }
