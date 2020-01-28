@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="InTheHand.Devices.Bluetooth" Version="4.0.1803.22-preview" />
+    <PackageReference Include="SerialPortStream" Version="2.2.0" />
+    <PackageReference Include="System.Reactive" Version="4.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+  </ItemGroup>
+
+</Project>
