@@ -9,28 +9,12 @@ using Devices.Honeywell.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core
 {
-    public static class HoneywellDeviceInstanceFactory
+    public interface IHoneywellDeviceInstance : IDeviceInstance
     {
-        public static HoneywellDeviceInstance CreateInstance(this HoneywellDeviceType deviceType,
-            IEnumerable<ItemValue> itemValues = null)
-        {
-            if (itemValues == null)
-                itemValues = new List<ItemValue>();
-
-            var instance = new HoneywellDeviceInstance { DeviceType = deviceType };
-            instance.SetItemValueGroups(itemValues);
-            return instance;
-        }
-
-        public static HoneywellDeviceInstance CreateInstance(this HoneywellDeviceType deviceType,
-            IDictionary<int, string> valuesDictionary)
-        {
-            var itemValues = valuesDictionary.ToItemValues(deviceType);
-            return CreateInstance(deviceType, itemValues);
-        }
+  
     }
 
-    public class HoneywellDeviceInstance : IDeviceInstance
+    public class HoneywellDeviceInstance : IHoneywellDeviceInstance
     {
         public IDeviceType DeviceType { get; set; }
 

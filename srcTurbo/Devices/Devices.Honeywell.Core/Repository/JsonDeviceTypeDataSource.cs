@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Devices.Core.Repository;
 
 namespace Devices.Honeywell.Core.Repository
 {
-    public class JsonDeviceTypeDataSource : IDeviceTypeDataSource<HoneywellDeviceType>
+    public class JsonDeviceTypeDataSource : IDeviceTypeDataSource<IHoneywellDeviceType>
     {
         public JsonDeviceTypeDataSource(IStreamReader streamReader)
         {
@@ -18,7 +19,7 @@ namespace Devices.Honeywell.Core.Repository
             _itemConverter = new JsonItemsConverter(this);
         }
 
-        public IObservable<HoneywellDeviceType> GetDeviceTypes()
+        public IObservable<IHoneywellDeviceType> GetDeviceTypes()
         {
             var converter = new JsonDeviceConverter(GetItems().ToEnumerable(), _itemConverter);
 
@@ -35,7 +36,7 @@ namespace Devices.Honeywell.Core.Repository
                 .Merge();
         }
 
-        public IEnumerable<HoneywellDeviceType> GetDeviceTypesEnumerable()
+        public IEnumerable<IHoneywellDeviceType> GetDeviceTypesEnumerable()
         {
             return GetDeviceTypes().ToEnumerable();
         }

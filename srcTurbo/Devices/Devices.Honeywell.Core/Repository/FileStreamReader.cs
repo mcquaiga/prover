@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Devices.Core.Repository;
 
 namespace Devices.Honeywell.Core.Repository
 {

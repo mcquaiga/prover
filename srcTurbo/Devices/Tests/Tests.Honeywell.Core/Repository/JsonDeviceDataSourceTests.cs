@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository;
 using ExpectedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

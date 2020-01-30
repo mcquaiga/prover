@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Repository;
 
 namespace Devices.Honeywell.Core.Repository
 {
@@ -17,6 +18,7 @@ namespace Devices.Honeywell.Core.Repository
         public HoneywellDeviceRepository(IDeviceTypeDataSource<HoneywellDeviceType> deviceTypeDataSource)
         {
             _deviceTypeDataSource = deviceTypeDataSource;
+
         }
 
         #endregion
@@ -36,12 +38,20 @@ namespace Devices.Honeywell.Core.Repository
 
         public async Task<IEnumerable<HoneywellDeviceType>> GetAll(bool fromCache = true)
         {
-            if (!fromCache
-                || _deviceCache.Count == 0)
-                _deviceCache.UnionWith(await _deviceTypeDataSource.GetDeviceTypes()
-                    .ToList().RunAsync(new CancellationToken()));
+            if (!fromCache || _deviceCache?.Count == 0)
+                await LoadDevices();
 
             return _deviceCache;
+        }
+
+        private async Task LoadDevices()
+        {
+            _deviceCache.Clear();
+           
+            _deviceCache.UnionWith(
+                await _deviceTypeDataSource.GetDeviceTypes()
+                    .ToList().RunAsync(new CancellationToken())
+            );
         }
 
         public async Task<HoneywellDeviceType> GetByName(string name, bool fromCache = true)

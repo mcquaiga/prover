@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Devices.Core.Interfaces
+namespace Devices.Core.Repository
 {
     public interface IStreamReader
     {

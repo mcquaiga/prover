@@ -12,14 +12,23 @@ using Newtonsoft.Json;
 
 namespace Devices.Honeywell.Core
 {
+    public interface IHoneywellDeviceType : IDeviceType
+    {
+        int AccessCode { get; set; }
+        int Id { get; set; }
+
+        IObservable<ItemMetadata> ItemsObservable { get; }
+    }
+
     /// <summary>
     ///     Defines the <see cref="HoneywellDeviceType" />
     /// </summary>
-    public class HoneywellDeviceType : IDeviceType
+    public class HoneywellDeviceType : IHoneywellDeviceType
     {
         public HoneywellDeviceType(IEnumerable<ItemMetadata> items)
         {
             ItemsObservable = items.ToObservable().SubscribeOn(NewThreadScheduler.Default);
+            InstanceFactory = new HoneywellDeviceInstanceFactory(this);
             ItemsObservable
                 .ToList()
                 .Subscribe(x => _itemDefinitions.UnionWith(x));
@@ -40,6 +49,8 @@ namespace Devices.Honeywell.Core
                 .OrderBy(i => i.Number)
                 .ToObservable()
                 .SubscribeOn(NewThreadScheduler.Default);
+
+            InstanceFactory = new HoneywellDeviceInstanceFactory(this);
 
             ItemsObservable
                 .ToList()
@@ -64,16 +75,8 @@ namespace Devices.Honeywell.Core
 
         public virtual string Name { get; set; }
 
-        public IDeviceInstance CreateDeviceInstance(IEnumerable<ItemValue> itemValues)
-        {
-            return this.CreateInstance(itemValues);
-        }
+        public IDeviceInstanceFactory InstanceFactory { get; }
 
-        public IDeviceInstance CreateDeviceInstance(IDictionary<int, string> itemValuesDictionary)
-        {
-            return this.CreateInstance(itemValuesDictionary);
-        }
-        
         public virtual IEnumerable<ItemMetadata> GetItemMetadataByGroup<T>() where T : IItemsGroup
         {
             var itemType = ItemGroupHelpers.GetMatchingItemGroupClass(typeof(T));

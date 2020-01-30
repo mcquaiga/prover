@@ -207,13 +207,13 @@ namespace Devices.Core.Items
         /// <summary>
         /// The GetItemDescription
         /// </summary>
-        /// <param name="rawValue">The rawValue <see cref="string"/></param>
+        /// <param name="value">The rawValue <see cref="string"/></param>
         /// <returns>The <see cref="ItemDescription"/></returns>
-        public virtual ItemDescription GetItemDescription(string rawValue)
+        public virtual ItemDescription GetItemDescription(object value)
         {
             if (ItemDescriptions != null && ItemDescriptions.Any())
             {
-                if (!int.TryParse(rawValue.Trim(), out var intValue))
+                if (!int.TryParse(value.ToString(), out var intValue))
                     return null;
 
                 var result = ItemDescriptions.FirstOrDefault(x => (x as IHaveManyId)?.Ids.Contains(intValue) ?? false);

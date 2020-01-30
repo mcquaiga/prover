@@ -39,19 +39,6 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         {
             return deviceType.Items.GetItem(itemNumber);
         }
-        
-        public static IEnumerable<ItemValue> ToItemValues(this IDictionary<int, string> values, IDeviceType deviceType)
-        {
-            return deviceType.Items.Join(values,
-                x => x.Number,
-                y => y.Key,
-                (im, value) => new ItemValue(im, value.Value));
-        }
-        //public T GetItemsByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup
-        //{
-        //    var results = values.Union(ItemValues, new ItemValueComparer());
 
-        //    return GetItemValuesByGroup<T>();
-        //}
     }
 }

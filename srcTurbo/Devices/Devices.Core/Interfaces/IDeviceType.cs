@@ -16,9 +16,8 @@ namespace Devices.Core.Interfaces
 
         string Name { get; }
 
-        IDeviceInstance CreateDeviceInstance(IEnumerable<ItemValue> itemValues);
+        IDeviceInstanceFactory InstanceFactory { get; }
 
-        IDeviceInstance CreateDeviceInstance(IDictionary<int, string> itemValuesDictionary);
 
         IEnumerable<ItemMetadata> GetItemMetadataByGroup<T>() where T : IItemsGroup;
     }

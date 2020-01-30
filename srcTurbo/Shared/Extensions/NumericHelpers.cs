@@ -3,6 +3,38 @@ using System.Collections.Generic;
 
 namespace Shared.Extensions
 {
+    public static class TypeHelpers
+    {
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte
+                   || value is byte
+                   || value is short
+                   || value is ushort
+                   || value is int
+                   || value is uint
+                   || value is long
+                   || value is ulong
+                   || value is float
+                   || value is double
+                   || value is decimal;
+        }
+
+        public static bool IsInteger(this object value)
+        {
+            return value is int
+                   || value is uint
+                   || value is ulong;
+        }
+
+        public static bool IsDecimal(this object value)
+        {
+            return value is decimal
+                   || value is double
+                   || value is float;
+        }
+    }
+
     public static class NumericHelpers
     {
         #region Methods

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using static Devices.Core.Items.ItemMetadata;
 
@@ -98,5 +99,20 @@ namespace Devices.Honeywell.Core.Items
 
         public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
                     => items.Where(i => i.IsVolumeTest == true);
+
+        public static IEnumerable<ItemValue> ConvertKeyValuesToItemValues(this IDeviceType deviceType, IDictionary<int, string> itemValuesDictionary)
+        {
+            return deviceType.Items.Join(itemValuesDictionary,
+                x => x.Number,
+                y => y.Key,
+                (im, value) => new ItemValue(im, value.Value));
+        }
+
+        public static IDeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
+            IDictionary<int, string> itemValuesDictionary)
+        {
+            var items = (factory as HoneywellDeviceInstanceFactory)?.DeviceType.ConvertKeyValuesToItemValues(itemValuesDictionary);
+            return factory.CreateInstance(items);
+        }
     }
 }

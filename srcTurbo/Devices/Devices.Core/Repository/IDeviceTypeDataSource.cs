@@ -1,9 +1,10 @@
-using Devices.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
 
-namespace Devices.Core.Interfaces
+namespace Devices.Core.Repository
 {
     public interface IDeviceTypeDataSource<out TDevice>
         where TDevice : IDeviceType

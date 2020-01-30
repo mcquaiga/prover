@@ -99,15 +99,15 @@ namespace Devices.Communications
             return DeviceInstance.GetItemsByGroup<T>(values);
         }
 
-        public Task<IDeviceInstance> GetDeviceAsync()
+        public async Task<IDeviceInstance> GetDeviceAsync()
         {
-            throw new NotImplementedException();
+            return await GetDeviceAsync(DeviceType);
         }
 
         public async Task<IDeviceInstance> GetDeviceAsync(IDeviceType deviceType)
         {
             var values = await GetItemsAsync();
-            DeviceInstance = deviceType.CreateDeviceInstance(values);
+            DeviceInstance = deviceType.InstanceFactory.CreateInstance(values);
             return DeviceInstance;
         }
 
