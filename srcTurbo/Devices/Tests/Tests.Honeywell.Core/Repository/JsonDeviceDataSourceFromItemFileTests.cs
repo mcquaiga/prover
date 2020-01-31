@@ -10,6 +10,7 @@ using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -28,9 +29,9 @@ namespace Tests.Honeywell.Core.Repository
         [TestMethod]
         public async Task LoadDeviceSuccessfulTest()
         {
-            var ds = new JsonDeviceTypeDataSource(new FileStreamReader());
+            var ds = MiJsonDeviceTypeDataSource.Instance;
 
-            var devices = new ConcurrentBag<HoneywellDeviceType>();
+            var devices = new ConcurrentBag<IHoneywellDeviceType>();
 
             await ds.GetDeviceTypes()
                 .ForEachAsync(d =>
@@ -51,7 +52,7 @@ namespace Tests.Honeywell.Core.Repository
         [TestMethod]
         public async Task ParseOneItemTest()
         {
-            var ds = new JsonDeviceTypeDataSource(new FileStreamReader());
+            var ds = MiJsonDeviceTypeDataSource.Instance;
 
             var itemsBag = new ConcurrentBag<ItemMetadata>();
 

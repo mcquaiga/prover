@@ -1,20 +1,18 @@
-﻿using Devices.Core.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Devices.Core.Repository;
 
-namespace Devices.Honeywell.Core.Repository
+namespace Devices.Core.Repository
 {
     public class FileStreamReader : IStreamReader
     {
         public FileStreamReader(string devicesRootDirectory = null)
         {
-            ItemDefinitionsFolder = $@"{devicesRootDirectory}/DeviceTypes";
+            ItemDefinitionsFolder = $@"{devicesRootDirectory}";
 
             if (string.IsNullOrEmpty(devicesRootDirectory))
-                ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}/DeviceTypes";
+                ItemDefinitionsFolder = $@"{Environment.CurrentDirectory}\\DeviceTypes";
 
             if (!Directory.Exists(ItemDefinitionsFolder))
                 throw new DirectoryNotFoundException($"Directory path {ItemDefinitionsFolder} does not exist.");
@@ -28,13 +26,13 @@ namespace Devices.Honeywell.Core.Repository
 
         public StreamReader GetItemDefinitionsReader(string name)
         {
-            var path = $@"{ItemDefinitionsFolder}/{name}.json";
+            var path = $@"{ItemDefinitionsFolder}\\{name}.json";
             return new StreamReader(path);
         }
 
         public StreamReader GetItemsReader()
         {
-            var path = $@"{ItemDefinitionsFolder}/{ItemDefinitionFileName}.json";
+            var path = $@"{ItemDefinitionsFolder}\\{ItemDefinitionFileName}.json";
             return new StreamReader(path);
         }
 

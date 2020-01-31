@@ -55,7 +55,7 @@ namespace Devices.Core.Repository
 
         private readonly ConcurrentDictionary<Guid, IDeviceType> _devicesDict = new ConcurrentDictionary<Guid, IDeviceType>();
 
-        private IEnumerable<T> FilterCacheByType<T>() where T : class, IDeviceType
+        public IEnumerable<T> FilterCacheByType<T>() where T : class, IDeviceType
         {
             var results = _deviceCache.Where(d => typeof(T).IsAssignableFrom(d.GetType()))
                             .Select(t => (T)t);
@@ -63,7 +63,7 @@ namespace Devices.Core.Repository
             return results;
         }
 
-        private IEnumerable<IDeviceTypeDataSource<IDeviceType>> FilterDataSourceTypes<TDevice>() where TDevice : IDeviceType
+        public IEnumerable<IDeviceTypeDataSource<IDeviceType>> FilterDataSourceTypes<TDevice>() where TDevice : IDeviceType
         {
             return _deviceDataSources.Where(
                 s => s.GetType()
@@ -72,7 +72,7 @@ namespace Devices.Core.Repository
                         .Any(t => t.GetGenericArguments().Any(g => g == typeof(TDevice))));
         }
 
-        private async Task GetAllDevicesAsync<T>(IEnumerable<IDeviceTypeDataSource<T>> dataSources, bool fromCache = true) where T : class, IDeviceType
+        public async Task GetAllDevicesAsync<T>(IEnumerable<IDeviceTypeDataSource<T>> dataSources, bool fromCache = true) where T : class, IDeviceType
         {
             if (!fromCache || _deviceCache.Count == 0)
             {

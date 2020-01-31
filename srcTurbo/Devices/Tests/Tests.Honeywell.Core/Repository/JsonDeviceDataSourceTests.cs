@@ -9,6 +9,7 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 using ExpectedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -34,7 +35,7 @@ namespace Tests.Honeywell.Core.Repository
             _streamMock.Setup(s => s.GetItemsReader())
                           .Returns(ItemTestData.MeterTypeJson.ToStream());
 
-            var ds = new JsonDeviceTypeDataSource(_streamMock.Object);
+            var ds = new MiJsonDeviceTypeDataSource(_streamMock.Object);
 
             var actual = await ds.GetItems()
                 .ToList()
@@ -51,7 +52,7 @@ namespace Tests.Honeywell.Core.Repository
             _streamMock.Setup(s => s.GetItemsReader())
                            .Returns(_expectedItems.ToStream());
 
-            var ds = new JsonDeviceTypeDataSource(_streamMock.Object);
+            var ds = new MiJsonDeviceTypeDataSource(_streamMock.Object);
 
             var items = await ds.GetItems()
                 .ToList()

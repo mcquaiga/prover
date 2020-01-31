@@ -1,35 +1,22 @@
+using System.Text;
 using Devices.Communications.IO;
 using Devices.Honeywell.Comm.Messaging;
+using InvertedTomato.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Honeywell.Comm.Messaging
 {
     /// <summary>
-    /// Summary description for CrcChecksumTests
+    ///     Summary description for CrcChecksumTests
     /// </summary>
     [TestClass]
     public class CrcChecksumTests
     {
         /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        public CrcChecksumTests()
-        {
-            // TODO: Add constructor logic here
-        }
+        ///     Gets or sets the test context which provides
+        ///     information about and functionality for the current test run.
+        /// </summary>
+        public TestContext TestContext { get; set; }
 
         [TestMethod]
         public void CrcChecksumTest()
@@ -42,6 +29,18 @@ namespace Tests.Honeywell.Comm.Messaging
         }
 
         [TestMethod]
+        public void CrcLibrary()
+        {
+            var expected = "415D";
+            var cmd = $"SN,33333{ControlCharacters.STX}vq03{ControlCharacters.ETX}";
+
+            var crc = CrcAlgorithm.CreateCrc16CcittFalse();
+            crc.Append(Encoding.ASCII.GetBytes(cmd));
+            Assert.AreEqual(expected, crc.ToHexString());
+        }
+
+
+        [TestMethod]
         public void CrcChecksumFailedTest()
         {
             var expected = "415D";
@@ -50,8 +49,6 @@ namespace Tests.Honeywell.Comm.Messaging
 
             Assert.AreNotEqual(expected, actual);
         }
-
-        private TestContext testContextInstance;
 
         // You can use the following additional attributes as you write your tests:
         //

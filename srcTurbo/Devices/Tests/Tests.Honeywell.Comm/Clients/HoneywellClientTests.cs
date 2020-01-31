@@ -52,7 +52,7 @@ namespace Tests.Honeywell.Comm.Clients
 
             try
             {
-                var conn = await DeviceConnection.ConnectAsync(Device, commMock.Object, 2, TimeSpan.FromMilliseconds(25));
+                var conn = await DeviceConnection.ConnectAsync(Device, commMock.Object, 1, TimeSpan.FromMilliseconds(25));
             }
             catch (Exception ex)
             {

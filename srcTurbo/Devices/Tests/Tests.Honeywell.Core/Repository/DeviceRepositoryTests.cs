@@ -7,13 +7,14 @@ using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace Tests.Honeywell.Core.Repository
 {
     [TestClass]
-    public class DeviceRepositoryTests : BaseHoneywellTest
+    public class JsonDeviceRepositoryTests : BaseHoneywellTest
     {
         #region Properties
 
@@ -26,13 +27,13 @@ namespace Tests.Honeywell.Core.Repository
         [TestInitialize]
         public void Initialize()
         {
-            var dataSourceMock = new Mock<IDeviceTypeDataSource<HoneywellDeviceType>>();
+            var dataSourceMock = new Mock<IDeviceTypeDataSource<IHoneywellDeviceType>>();
             dataSourceMock.Setup(ds => ds.GetDeviceTypes())
                 .Returns((IObservable<HoneywellDeviceType>) DevicesList.ToObservable());
 
-            var sources = new List<IDeviceTypeDataSource<IDeviceType>>()
+            var sources = new List<IDeviceTypeDataSource<IHoneywellDeviceType>>()
             {
-                HoneywellDeviceDataSourceFactory.Instance,
+                MiJsonDeviceTypeDataSource.Instance,
                 dataSourceMock.Object
             };
 

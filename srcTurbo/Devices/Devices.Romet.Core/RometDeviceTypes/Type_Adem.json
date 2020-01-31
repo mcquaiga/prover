@@ -2,7 +2,7 @@
   "Id": "50",
   "Name": "Romet AdEM",
   "AccessCode": "0A",
-  "MaxBaudRate": "38400",
+  "MaxBaudRate": "9600",
   "CanUseIrDaPort": false,
   "OverrideItems": [],
   "ExcludeItems": []

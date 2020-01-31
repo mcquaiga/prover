@@ -5,7 +5,12 @@ using Newtonsoft.Json;
 
 namespace Devices.Romet.Core
 {
-    public class RometDeviceType : HoneywellDeviceType
+    public interface IRometDeviceType : IHoneywellDeviceType
+    {
+
+    }
+
+    public class RometDeviceType : HoneywellDeviceType, IRometDeviceType
     {
         public RometDeviceType(IEnumerable<ItemMetadata> items)
             : base(items)

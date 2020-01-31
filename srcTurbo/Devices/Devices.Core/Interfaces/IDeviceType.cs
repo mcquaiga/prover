@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
-using System.Collections.Generic;
 
 namespace Devices.Core.Interfaces
 {

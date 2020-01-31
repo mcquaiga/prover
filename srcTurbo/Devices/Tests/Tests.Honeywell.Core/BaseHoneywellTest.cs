@@ -41,7 +41,7 @@ namespace Tests.Honeywell.Core
                 .Returns(3);
 
             Device.Setup(d => d.AccessCode)
-                .Returns(3);
+                .Returns("3");
 
             var items2 = new List<ItemMetadata>(){
                     new ItemMetadata()
@@ -63,7 +63,7 @@ namespace Tests.Honeywell.Core
                 .Returns(14);
 
             Device2.Setup(d => d.AccessCode)
-                .Returns(3);
+                .Returns("3");
 
             DevicesList = new List<HoneywellDeviceType>()
             {

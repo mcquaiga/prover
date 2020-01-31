@@ -4,6 +4,7 @@ using Devices.Core.Repository;
 using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Honeywell.Core.Items
@@ -39,7 +40,7 @@ namespace Tests.Honeywell.Core.Items
         [TestInitialize]
         public async Task Initialize()
         {
-            _repo = new DeviceRepository(HoneywellDeviceDataSourceFactory.Instance);
+            _repo = new DeviceRepository(MiJsonDeviceTypeDataSource.Instance);
             var all = await _repo.GetAll();
         }
     }

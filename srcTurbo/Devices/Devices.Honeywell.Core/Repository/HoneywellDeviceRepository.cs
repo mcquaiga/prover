@@ -15,19 +15,18 @@ namespace Devices.Honeywell.Core.Repository
     {
         #region Constructors
 
-        public HoneywellDeviceRepository(IDeviceTypeDataSource<HoneywellDeviceType> deviceTypeDataSource)
+        public HoneywellDeviceRepository(IDeviceTypeDataSource<IHoneywellDeviceType> deviceTypeDataSource)
         {
             _deviceTypeDataSource = deviceTypeDataSource;
-
         }
 
         #endregion
 
         #region Fields
 
-        private readonly HashSet<HoneywellDeviceType> _deviceCache = new HashSet<HoneywellDeviceType>();
+        private readonly HashSet<IHoneywellDeviceType> _deviceCache = new HashSet<IHoneywellDeviceType>();
 
-        private readonly IDeviceTypeDataSource<HoneywellDeviceType> _deviceTypeDataSource;
+        private readonly IDeviceTypeDataSource<IHoneywellDeviceType> _deviceTypeDataSource;
 
         private readonly ConcurrentDictionary<string, HashSet<ItemMetadata>> _itemsCache = new
             ConcurrentDictionary<string, HashSet<ItemMetadata>>();
@@ -36,25 +35,27 @@ namespace Devices.Honeywell.Core.Repository
 
         #region Methods
 
-        public async Task<IEnumerable<HoneywellDeviceType>> GetAll(bool fromCache = true)
+        public async Task<IEnumerable<IHoneywellDeviceType>> GetAll(bool fromCache = true)
         {
             if (!fromCache || _deviceCache?.Count == 0)
                 await LoadDevices();
 
-            return _deviceCache;
+            return _deviceCache.AsEnumerable();
         }
 
         private async Task LoadDevices()
         {
             _deviceCache.Clear();
-           
-            _deviceCache.UnionWith(
+
+            var devices =
                 await _deviceTypeDataSource.GetDeviceTypes()
-                    .ToList().RunAsync(new CancellationToken())
-            );
+                    .ToList()
+                    .RunAsync(new CancellationToken());
+
+            _deviceCache.UnionWith(devices);
         }
 
-        public async Task<HoneywellDeviceType> GetByName(string name, bool fromCache = true)
+        public async Task<IHoneywellDeviceType> GetByName(string name, bool fromCache = true)
         {
             await GetAll(fromCache);
 

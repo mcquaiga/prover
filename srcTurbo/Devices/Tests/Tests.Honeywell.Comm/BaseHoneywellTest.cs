@@ -32,7 +32,7 @@ namespace Tests.Honeywell.Comm
             {
                 Name = "Mini-At",
                 Id = 3,
-                AccessCode = 3
+                AccessCode = "3"
             };
         }
 

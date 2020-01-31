@@ -14,7 +14,7 @@ namespace Devices.Honeywell.Core
 {
     public interface IHoneywellDeviceType : IDeviceType
     {
-        int AccessCode { get; set; }
+        string AccessCode { get; set; }
         int Id { get; set; }
 
         IObservable<ItemMetadata> ItemsObservable { get; }
@@ -59,7 +59,7 @@ namespace Devices.Honeywell.Core
 
         private readonly HashSet<ItemMetadata> _itemDefinitions = new HashSet<ItemMetadata>();
 
-        public virtual int AccessCode { get; set; }
+        public virtual string AccessCode { get; set; }
 
         public virtual int Id { get; set; }
 

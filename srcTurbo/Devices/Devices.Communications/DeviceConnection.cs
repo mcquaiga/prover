@@ -13,7 +13,8 @@ namespace Devices.Communications
         public static Task<ICommunicationsClient> ConnectAsync<T>(this T deviceType, ICommPort commPort, int retryAttempts = 10, TimeSpan? timeout = null, IObserver<string> statusObserver = null)
             where T : IDeviceType
         {
-            var a = Assembly.Load("Devices.Honeywell.Comm");
+            var type = typeof(T);
+            var a = Assembly.Load(type.Assembly.ToString());
             var factory = a.GetExportedTypes().FirstOrDefault(t => t.Name.Contains("Factory"));
             var obj = Activator.CreateInstance(factory);
             var method = factory.GetMethod("Create");

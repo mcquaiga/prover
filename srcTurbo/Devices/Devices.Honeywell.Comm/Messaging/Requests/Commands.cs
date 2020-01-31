@@ -64,7 +64,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
             if (string.IsNullOrEmpty(password))
                 password = DefaultPassword;
 
-            var code = evcType.AccessCode < 10 ? string.Concat("0", evcType.AccessCode) : evcType.AccessCode.ToString();
+            var code = evcType.AccessCode.Length < 2 ? string.Concat("0", evcType.AccessCode) : evcType.AccessCode.ToString();
             var cmd = $"SN,{password}{ControlCharacters.STX}vq{code}";
             return new MiCommandDefinition<StatusResponseMessage>(cmd, ResponseProcessors.ResponseCode);
         }
