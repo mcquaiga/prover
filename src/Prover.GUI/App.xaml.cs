@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using NLog;
 
 namespace Prover.GUI
 {
@@ -11,6 +14,15 @@ namespace Prover.GUI
         public App()
         {
             InitializeComponent();
+        }
+
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("An unhandled exception just occurred: " + e.Exception.Message, "Exception Sample",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            e.Handled = true;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -25,7 +37,7 @@ namespace Prover.GUI
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            (sender as TextBox).SelectAll();
+            (sender as TextBox)?.SelectAll();
         }
     }
 }

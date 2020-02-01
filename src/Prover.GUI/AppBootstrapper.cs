@@ -32,19 +32,20 @@ namespace Prover.GUI
         {
             var sw = Stopwatch.StartNew();
             try
-            {               
+            {
                 _log.Info("Starting EVC Prover Application.");
 
                 _splashScreen.Show();
 
                 Initialize();
-                
-                _log.Info($"Finished starting application in {sw.ElapsedMilliseconds} ms.");                
+
+                _log.Info($"Finished starting application in {sw.ElapsedMilliseconds} ms.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _log.Error($"Application failed to load in {sw.ElapsedMilliseconds}. See exception for more details.");
-                _log.Error(e);
+                _log.Error(ex + Environment.NewLine + "Shutting down unexpectedly.");
+                MessageBox.Show(ex.Message + Environment.NewLine + "Shutting down unexpectedly.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
             }
             finally
             {
@@ -64,7 +65,7 @@ namespace Prover.GUI
                 Builder = new ContainerBuilder();
                 CoreBootstrapper.RegisterServices(Builder);
 
-                Builder.Register(c => new WindowManager())
+                Builder.RegisterType<WindowManager>()
                     .As<IWindowManager>()
                     .SingleInstance();
 
@@ -88,7 +89,7 @@ namespace Prover.GUI
                 Builder.RegisterScreen(Assemblies);
 
                 Container = Builder.Build();
-
+               
                 RxAppAutofacExtension.UseAutofacDependencyResolver(Container);
             }
             catch (Exception ex)
@@ -102,11 +103,14 @@ namespace Prover.GUI
             var assemblies = new List<Assembly>();
             assemblies.AddRange(base.SelectAssemblies());
 
-            if (!File.Exists(_moduleFilePath))
+            if (_moduleFilePath == null || !File.Exists(_moduleFilePath))
                 throw new Exception("Could not find a modules.json in the current directory.");
 
             var modulesString = File.ReadAllText(_moduleFilePath);
-            var mods = (JsonConvert.DeserializeObject(modulesString) as JObject)["modules"];
+            var mods = (JsonConvert.DeserializeObject(modulesString) as JObject)?["modules"];
+
+            if (mods == null)
+                throw new Exception("Incorrectly formatted modules.json.");
 
             assemblies.AddRange(from module in mods.Children()
                                 where File.Exists($"{module}.dll")
@@ -126,6 +130,7 @@ namespace Prover.GUI
 
         protected override object GetInstance(Type serviceType, string key)
         {
+           
             if (string.IsNullOrWhiteSpace(key))
             {
                 if (Container.IsRegistered(serviceType))
@@ -136,8 +141,8 @@ namespace Prover.GUI
                 if (Container.IsRegisteredWithName(key, serviceType))
                     return Container.ResolveNamed(key, serviceType);
             }
-
-            return null;
+            
+            throw new Exception($"Could not locate instance for type {serviceType} with key {key}.");
         }
 
         protected override void BuildUp(object instance)
@@ -147,9 +152,18 @@ namespace Prover.GUI
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            _splashScreen.Hide();
-            DisplayRootViewFor<ShellViewModel>();
-            _splashScreen.Close();
+            try
+            {
+                _splashScreen.Hide();
+                DisplayRootViewFor<ShellViewModel>();
+                _splashScreen.Close();
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+                MessageBox.Show(ex.Message + Environment.NewLine + "Shutting down application.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
         }
 
         protected override void OnExit(object sender, EventArgs e)
