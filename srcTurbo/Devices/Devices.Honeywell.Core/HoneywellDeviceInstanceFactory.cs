@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Honeywell.Core.Devices;
 using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups;
 using NLog.LayoutRenderers.Wrappers;
@@ -13,33 +15,39 @@ namespace Devices.Honeywell.Core
         private static readonly Dictionary<string, Func<HoneywellDeviceType,HoneywellDeviceInstanceFactory>> _factories = new Dictionary<string, Func<HoneywellDeviceType,HoneywellDeviceInstanceFactory>>()
         {
             { "Mini-AT", type => new MiniAtDeviceInstanceFactory(type) },
-
         };
 
         public readonly HoneywellDeviceType DeviceType;
+        private HoneywellDeviceBuilder _deviceBuilder;
 
         public HoneywellDeviceInstanceFactory(HoneywellDeviceType deviceType)
         {
             DeviceType = deviceType;
+            
         }
 
-        public DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
+        public virtual DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
         {
-            if (itemValues == null)
-                itemValues = new List<ItemValue>();
+            var values = itemValues as ItemValue[] ?? itemValues.ToArray();
+            
+            _deviceBuilder = new HoneywellDeviceBuilder(DeviceType, values);
+            
+            _deviceBuilder
+                .BuildPtz()
+                .BuildAttributes()
+                .BuildDriveType();
 
-            var instance = new HoneywellDeviceInstance(this.DeviceType);
-            instance.SetItemGroups(itemValues);
-            return instance;
+            return _deviceBuilder.GetDeviceInstance();
         }
 
         public static IDeviceInstanceFactory Find(HoneywellDeviceType honeywellDeviceType)
         {
+            return new HoneywellDeviceInstanceFactory(honeywellDeviceType);
+
             if (_factories.TryGetValue(honeywellDeviceType.Name, out var factory))
             {
                 return factory.Invoke(honeywellDeviceType);
             }
-            return new HoneywellDeviceInstanceFactory(honeywellDeviceType);
         }
     }
 
@@ -47,6 +55,11 @@ namespace Devices.Honeywell.Core
     {
         public MiniAtDeviceInstanceFactory(HoneywellDeviceType deviceType) : base(deviceType)
         {
+        }
+
+        public override DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
+        {
+            return base.CreateInstance(itemValues);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         public string FirmwareVersion { get; protected set; }
 
         [ItemInfo(109)]
-        public CorrectionFactorType PressureFactor { get; protected set; }
+        public CorrectionFactorType PressureFactorLive { get; protected set; }
 
         [ItemInfo(62)]
         public string SerialNumber { get; protected set; }
@@ -22,9 +22,9 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         public string SiteId2 { get; protected set; }
 
         [ItemInfo(110)]
-        public CorrectionFactorType SuperFactor { get; protected set; }
+        public CorrectionFactorType SuperFactorLive { get; protected set; }
 
         [ItemInfo(111)]
-        public CorrectionFactorType TemperatureFactor { get; protected set; }
+        public CorrectionFactorType TemperatureFactorLive { get; protected set; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
@@ -20,7 +21,11 @@ namespace Devices.Honeywell.Core
 
         #region Public Methods
 
-   
+        public override T GetItemsByGroup<T>()
+        {
+            return (T) GetItemsByGroup<T>(ItemValues);
+        }
+
         public override T GetItemsByGroup<T>(IEnumerable<ItemValue> values)
         {
             return (T) (IItemGroup) GetItemGroup(values, typeof(T));
@@ -31,6 +36,25 @@ namespace Devices.Honeywell.Core
             ItemValues.Clear();
             ItemValues.UnionWith(itemValues);
 
+            //LookupClasses();
+            //LookupProperties();
+        }
+
+        private void LookupClasses()
+        {
+            var ts = Assembly.GetCallingAssembly().GetTypes();
+
+            var types = ts.Where(t => t.GetInterfaces().Contains(typeof(IItemGroup)) && !t.IsAbstract);
+            
+            types.ToList().ForEach(x =>
+            {
+                var group = GetItemGroup(ItemValues, x);
+                this.AddAttribute(group);
+            });
+        }
+
+        private void LookupProperties()
+        {
             var props = GetType()
                 .GetProperties()
                 .Where(p => p.PropertyType.GetInterfaces().Contains(typeof(IItemGroup)));
@@ -38,7 +62,7 @@ namespace Devices.Honeywell.Core
             foreach (var p in props)
             {
                 var group = GetItemGroup(ItemValues, p.PropertyType);
-                p.SetValue(this, group);
+                p.SetValue(this, @group);
             }
         }
 
@@ -69,29 +93,3 @@ namespace Devices.Honeywell.Core
     }
     
 }
-
-//public abstract class DeviceDecorator : HoneywellDeviceInstance
-//{
-//    protected DeviceDecorator(DeviceInstance instance) : base(instance.DeviceType)
-//    {
-//        SetItemGroups(instance.ItemValues);
-//    }
-//} 
-
-//public class MechanicalHoneywellDeviceInstance : DeviceDecorator
-//{
-//    public MechanicalHoneywellDeviceInstance(DeviceInstance instance) : base(instance)
-//    {
-//    }
-
-//    public IEnergyItems EnergyItems { get; set; }
-//}
-
-//public class PressureOnlyHoneywellDeviceInstance : DeviceDecorator
-//{
-//    public IPressureItems PressureItems { get; set; }
-
-//    public PressureOnlyHoneywellDeviceInstance(DeviceInstance instance) : base(instance)
-//    {
-//    }
-//}

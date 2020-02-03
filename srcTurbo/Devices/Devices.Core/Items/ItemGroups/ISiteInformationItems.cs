@@ -7,13 +7,13 @@ namespace Devices.Core.Items.ItemGroups
         #region Public Properties
 
         string FirmwareVersion { get; }
-        CorrectionFactorType PressureFactor { get; }
+        CorrectionFactorType PressureFactorLive { get; }
         string SerialNumber { get; }
         string SiteId1 { get; }
         string SiteId2 { get; }
 
-        CorrectionFactorType SuperFactor { get; }
-        CorrectionFactorType TemperatureFactor { get; }
+        CorrectionFactorType SuperFactorLive { get; }
+        CorrectionFactorType TemperatureFactorLive { get; }
 
         #endregion
     }

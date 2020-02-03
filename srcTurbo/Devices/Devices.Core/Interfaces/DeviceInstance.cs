@@ -17,9 +17,9 @@ namespace Devices.Core.Interfaces
         #region Public Properties
 
         public DeviceType DeviceType { get; }
+
         public HashSet<ItemValue> ItemValues { get; protected set; } = new HashSet<ItemValue>();
 
-        public ISiteInformationItems SiteInfo { get; protected set; }
         public virtual Dictionary<Type, IItemGroup> Attributes { get; } = new Dictionary<Type, IItemGroup>();
 
         #endregion
@@ -27,12 +27,13 @@ namespace Devices.Core.Interfaces
         #region Public Methods
 
         public abstract T GetItemsByGroup<T>(IEnumerable<ItemValue> values) where T : IItemGroup;
+        public abstract T GetItemsByGroup<T>() where T : IItemGroup;
 
         public abstract void SetItemGroups(IEnumerable<ItemValue> itemValues);
 
-        public virtual void AddAttribute<TGroup>(TGroup itemGroup) where TGroup : ItemGroup
+        public virtual void AddAttribute<TGroup>(TGroup itemGroup) where TGroup : IItemGroup
         {
-            Attributes.Add(typeof(TGroup), itemGroup);
+            Attributes.Add(itemGroup.GetType(), itemGroup);
         }
 
         public virtual TGroup FindAttribute<TGroup>() where TGroup : IItemGroup

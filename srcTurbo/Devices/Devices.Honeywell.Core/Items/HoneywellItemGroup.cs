@@ -10,7 +10,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items
 {
-    public class HoneywellItemGroup : ItemGroup
+    public abstract class HoneywellItemGroup : ItemGroup
     {
         #region Public Methods
 
