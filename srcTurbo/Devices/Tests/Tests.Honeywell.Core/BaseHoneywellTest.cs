@@ -32,7 +32,7 @@ namespace Tests.Honeywell.Core
                     }
                 };
 
-            Device = new Mock<HoneywellDeviceType>(MockBehavior.Strict, new object[] { items });
+            Device = new Mock<HoneywellDeviceType>(MockBehavior.Loose, new object[] { items });
 
             Device.Setup(d => d.Name)
                 .Returns("Honeywell");
@@ -54,7 +54,7 @@ namespace Tests.Honeywell.Core
                     }
                 };
 
-            Device2 = new Mock<HoneywellDeviceType>(MockBehavior.Strict, new object[] { items2 });
+            Device2 = new Mock<HoneywellDeviceType>(MockBehavior.Loose, new object[] { items2 });
 
             Device2.Setup(d => d.Name)
                .Returns("Honeywell 2");

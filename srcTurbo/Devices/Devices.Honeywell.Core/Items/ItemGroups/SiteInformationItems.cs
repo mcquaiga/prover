@@ -1,10 +1,10 @@
 using Devices.Core;
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class SiteInformationItems : ItemGroupBase, ISiteInformationItems
+    internal class SiteInformationItems : HoneywellItemGroup, ISiteInformationItems
     {
         [ItemInfo(122)]
         public string FirmwareVersion { get; protected set; }

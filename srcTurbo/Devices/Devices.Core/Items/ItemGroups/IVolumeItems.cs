@@ -3,12 +3,7 @@ using Devices.Core.Items.DriveTypes;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IMechanicalVolumeItems : IVolumeItems
-    {
-        IEnergyItems EnergyItems { get; }
-    }
-
-    public interface IVolumeItems : IItemsGroup
+    public interface IVolumeItems : IItemGroup
     {
         decimal CorrectedMultiplier { get; }
 
@@ -19,8 +14,6 @@ namespace Devices.Core.Items.ItemGroups
         decimal DriveRate { get; }
 
         string DriveRateDescription { get; }
-
-        IDriveType DriveType { get; }
 
         decimal UncorrectedMultiplier { get; }
 

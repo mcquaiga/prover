@@ -1,9 +1,9 @@
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class SuperFactorItems : ItemGroupBase, ISuperFactorItems
+    internal class SuperFactorItems : HoneywellItemGroup, ISuperFactorItems
     {
         [ItemInfo(55)]
         public decimal Co2 { get; protected set; }

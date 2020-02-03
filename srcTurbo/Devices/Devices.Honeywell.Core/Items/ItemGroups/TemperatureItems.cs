@@ -1,10 +1,10 @@
 using Devices.Core;
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class TemperatureItems : ItemGroupBase, ITemperatureItems
+    internal class TemperatureItems : HoneywellItemGroup, ITemperatureItems
     {
         [ItemInfo(34)]
         public decimal Base { get; protected set; }

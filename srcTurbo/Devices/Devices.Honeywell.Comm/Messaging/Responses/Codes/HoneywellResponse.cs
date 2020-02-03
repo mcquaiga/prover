@@ -1,6 +1,9 @@
 ﻿using Devices.Communications.Messaging;
 using Devices.Honeywell.Comm.CommClients;
 using System;
+using Devices.Communications.Interfaces;
+using Devices.Core.Interfaces;
+using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 {
@@ -19,7 +22,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
             Code = code;
         }
 
-        public HoneywellResponse(ResponseCode code, Action<BaseHoneywellClient> recoveryAction) : this(code)
+        public HoneywellResponse(ResponseCode code, Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> recoveryAction) : this(code)
         {
             RecoveryAction = recoveryAction;
         }
@@ -28,12 +31,12 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 
         public bool ThrowsException => _exceptionFactory != null;
 
-        protected virtual Action<BaseHoneywellClient> RecoveryAction { get; } = _ => { };
+        protected virtual Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> RecoveryAction { get; } = _ => { };
 
         public EvcResponseException RaiseException(StatusResponseMessage response)
                             => _exceptionFactory.Invoke(response);
 
-        public virtual void TryRecover(BaseHoneywellClient client)
+        public virtual void TryRecover(HoneywellClientBase<HoneywellDeviceType, DeviceInstance> client)
         {
             RecoveryAction.Invoke(client);
         }

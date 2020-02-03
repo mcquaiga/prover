@@ -2,7 +2,7 @@ using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface ITemperatureItems : IItemsGroup
+    public interface ITemperatureItems : IItemGroup
     {
         decimal Base { get; }
 

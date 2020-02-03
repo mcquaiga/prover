@@ -1,71 +1,97 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
+using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
+using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core
 {
-    public interface IHoneywellDeviceInstance : IDeviceInstance
+    public class HoneywellDeviceInstance : DeviceInstance
     {
-  
-    }
-
-    public class HoneywellDeviceInstance : IHoneywellDeviceInstance
-    {
-        public IDeviceType DeviceType { get; set; }
-
-        public CompositionType Composition
+        public HoneywellDeviceInstance(DeviceType deviceType)
+            : base(deviceType)
         {
-            get
+        }
+
+        #region Public Methods
+
+   
+        public override T GetItemsByGroup<T>(IEnumerable<ItemValue> values)
+        {
+            return (T) (IItemGroup) GetItemGroup(values, typeof(T));
+        }
+
+        public sealed override void SetItemGroups(IEnumerable<ItemValue> itemValues)
+        {
+            ItemValues.Clear();
+            ItemValues.UnionWith(itemValues);
+
+            var props = GetType()
+                .GetProperties()
+                .Where(p => p.PropertyType.GetInterfaces().Contains(typeof(IItemGroup)));
+
+            foreach (var p in props)
             {
-                if (SiteInfo.PressureFactor == CorrectionFactorType.Live && SiteInfo.TemperatureFactor == CorrectionFactorType.Live)
-                    return CompositionType.PressureTemperature;
-
-                if (SiteInfo.PressureFactor == CorrectionFactorType.Live)
-                    return CompositionType.PressureOnly;
-
-                if (SiteInfo.TemperatureFactor == CorrectionFactorType.Live)
-                    return CompositionType.TemperatureOnly;
-
-                return CompositionType.PressureTemperature;
+                var group = GetItemGroup(ItemValues, p.PropertyType);
+                p.SetValue(this, group);
             }
         }
 
-        public IEnumerable<ItemValue> ItemValues { get; set; }
-
-        public IPressureItems Pressure { get; set; }
-
-        public ISiteInformationItems SiteInfo { get; set; }
-
-        public ISuperFactorItems SuperFactor { get; set; }
-
-        public ITemperatureItems Temperature { get; set; }
-
-        public IVolumeItems Volume { get; set; }
-
-        public T GetItemsByGroup<T>() where T : IItemsGroup
+        public override string ToString()
         {
-            return ItemGroupHelpers.GetItemGroup<T>();
+            return $"Device Type: {DeviceType.Name}";
         }
 
-        public T GetItemsByGroup<T>(IEnumerable<ItemValue> values) where T : IItemsGroup
-        {
-            return ItemGroupHelpers.GetItemGroup<T>(values);
-        }
+        #endregion
 
-        internal void SetItemValueGroups(IEnumerable<ItemValue> itemValues)
+        private static ItemGroup GetItemGroup(IEnumerable<ItemValue> values, Type groupType)
         {
-            ItemValues = itemValues.ToList();
+            //if (!groupType.GetInterfaces().Contains(typeof(IItemGroup)))
+            //    throw new Exception($"Type {groupType.Name} must inherit from {typeof(ItemGroup).Name}.");
 
-            SiteInfo = ItemGroupHelpers.GetItemGroup<ISiteInformationItems>(ItemValues);
-            Pressure = ItemGroupHelpers.GetItemGroup<IPressureItems>(ItemValues);
-            Temperature = ItemGroupHelpers.GetItemGroup<ITemperatureItems>(ItemValues);
-            SuperFactor = ItemGroupHelpers.GetItemGroup<ISuperFactorItems>(ItemValues);
-            Volume = ItemGroupHelpers.GetItemGroup<IVolumeItems>(ItemValues);
+            var itemType = groupType.GetMatchingItemGroupClass();
+            if (itemType == null)
+                throw new Exception($"Type {groupType.Name} could not be found.");
+
+            var itemGroup = (ItemGroup) Activator.CreateInstance(itemType);
+
+            if (values == null) values = new List<ItemValue>();
+
+            itemGroup.SetValues(values);
+
+            return itemGroup;
         }
     }
+    
 }
+
+//public abstract class DeviceDecorator : HoneywellDeviceInstance
+//{
+//    protected DeviceDecorator(DeviceInstance instance) : base(instance.DeviceType)
+//    {
+//        SetItemGroups(instance.ItemValues);
+//    }
+//} 
+
+//public class MechanicalHoneywellDeviceInstance : DeviceDecorator
+//{
+//    public MechanicalHoneywellDeviceInstance(DeviceInstance instance) : base(instance)
+//    {
+//    }
+
+//    public IEnergyItems EnergyItems { get; set; }
+//}
+
+//public class PressureOnlyHoneywellDeviceInstance : DeviceDecorator
+//{
+//    public IPressureItems PressureItems { get; set; }
+
+//    public PressureOnlyHoneywellDeviceInstance(DeviceInstance instance) : base(instance)
+//    {
+//    }
+//}

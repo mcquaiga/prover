@@ -67,11 +67,11 @@ namespace Tests.Honeywell.Comm
                 .Returns(true);
 
             var connectable = dataStream.Publish();
-            commMock.Setup(c => c.DataReceivedObservable)
+            commMock.Setup(c => c.DataReceived)
                 .Returns(connectable);
             connectable.Connect();
 
-            commMock.Setup(c => c.DataSentObservable)
+            commMock.Setup(c => c.DataSent)
                 .Returns(writeStream);
         }
     }

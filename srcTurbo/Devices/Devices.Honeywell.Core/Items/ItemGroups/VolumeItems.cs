@@ -1,10 +1,11 @@
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Attributes;
+using Devices.Honeywell.Core.Items.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class VolumeItems : ItemGroupBase, IVolumeItems
+    public class VolumeItems : HoneywellItemGroup, IVolumeItems
     {
         [ItemInfo(90)]
         public decimal CorrectedMultiplier { get; protected set; }
@@ -20,8 +21,6 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
         [ItemInfo(98)]
         public string DriveRateDescription { get; protected set; }
-
-        public IDriveType DriveType { get; protected set; }
 
         [ItemInfo(92)]
         public decimal UncorrectedMultiplier { get; protected set; }

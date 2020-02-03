@@ -26,7 +26,7 @@ namespace Tests.Romet.Core
         #region Methods
 
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
             //var dataSourceMock = new Mock<IDeviceTypeDataSource<IRometDeviceType>>();
             //dataSourceMock.Setup(ds => ds.GetDeviceTypes())
@@ -38,7 +38,7 @@ namespace Tests.Romet.Core
             //    dataSourceMock.Object
             //};
 
-            //Repository = new DeviceRepository(sources);
+            Repository = await DeviceRepository.Instance.RegisterDataSourceAsync(RometDeviceRepository.DataSource);
         }
 
 
@@ -73,10 +73,10 @@ namespace Tests.Romet.Core
         [TestMethod]
         public async Task GetDevicesFromCoreRepository()
         {
-            var devices = await Repository.GetAll();
+            var devices = Repository.GetAll();
 
             Assert.IsNotNull(devices);
-            Assert.IsTrue(devices.Count() > 1);
+            Assert.IsTrue(devices.Count() == 1);
             Assert.IsTrue(devices.First().Items.First(i => i.Number == 90).ItemDescriptions.Count > 0);
         }
 

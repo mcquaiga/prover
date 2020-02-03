@@ -1,91 +1,137 @@
-using Devices.Core.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
+using Shared.Queues;
 
 namespace Devices.Core.Repository
 {
     public class DeviceRepository
     {
-        public Dictionary<Guid, IDeviceType> Devices => _devicesDict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        private static readonly Lazy<DeviceRepository> _lazy = new Lazy<DeviceRepository>(()=> new DeviceRepository());
 
-        public DeviceRepository(IEnumerable<IDeviceTypeDataSource<IDeviceType>> deviceDataSource)
+        private readonly ConcurrentDictionary<DeviceType, bool> _deviceCache = new ConcurrentDictionary<DeviceType, bool>();
+
+        private readonly ConcurrentDictionary<IDeviceTypeDataSource<DeviceType>, bool> _deviceDataSources
+            = new ConcurrentDictionary<IDeviceTypeDataSource<DeviceType>, bool>();
+
+        private readonly BackgroundQueue _queue = new BackgroundQueue();
+
+        private readonly DateTime _timeCreated = DateTime.UtcNow;
+        private DeviceRepository()
         {
-            _deviceDataSources.UnionWith(deviceDataSource);
         }
 
-        public DeviceRepository(IDeviceTypeDataSource<IDeviceType> deviceTypeDataSource)
+        #region Public Properties
+
+        public static DeviceRepository Instance => _lazy.Value;
+
+        #endregion
+
+        #region Public Methods
+
+        public IEnumerable<T> FilterCacheByType<T>() where T : DeviceType
         {
-            _deviceDataSources.Add(deviceTypeDataSource);
-        }
-
-        public async Task<T> Find<T>(Func<T, bool> predicate, bool fromCache = true) where T : class, IDeviceType
-        {
-            var results = await GetAll<T>(fromCache);
-
-            return results.FirstOrDefault(predicate);
-        }
-
-        public async Task<IEnumerable<IDeviceType>> GetAll(bool fromCache = true)
-        {
-            await GetAllDevicesAsync(_deviceDataSources, fromCache);
-            return _deviceCache;
-        }
-
-        public async Task<IEnumerable<T>> GetAll<T>(bool fromCache = true) where T : class, IDeviceType
-        {
-            await GetAllDevicesAsync(FilterDataSourceTypes<T>(), fromCache);
-            return FilterCacheByType<T>();
-        }
-
-        public async Task<IDeviceType> GetByName(string name, bool fromCache = true)
-        {
-            await GetAll(fromCache);
-
-            return _deviceCache.FirstOrDefault(d => string.Equals(d.Name, name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private readonly HashSet<IDeviceType> _deviceCache = new HashSet<IDeviceType>();
-
-        private readonly HashSet<IDeviceTypeDataSource<IDeviceType>> _deviceDataSources
-            = new HashSet<IDeviceTypeDataSource<IDeviceType>>();
-
-        private readonly ConcurrentDictionary<Guid, IDeviceType> _devicesDict = new ConcurrentDictionary<Guid, IDeviceType>();
-
-        public IEnumerable<T> FilterCacheByType<T>() where T : class, IDeviceType
-        {
-            var results = _deviceCache.Where(d => typeof(T).IsAssignableFrom(d.GetType()))
-                            .Select(t => (T)t);
-
+            var results = _deviceCache.OfType<T>();
             return results;
         }
 
-        public IEnumerable<IDeviceTypeDataSource<IDeviceType>> FilterDataSourceTypes<TDevice>() where TDevice : IDeviceType
+        public IEnumerable<IDeviceTypeDataSource<DeviceType>> FilterDataSourceTypes<TDevice>()
+            where TDevice : DeviceType
         {
-            return _deviceDataSources.Where(
-                s => s.GetType()
-                        .GetInterfaces()
+            return _deviceDataSources
+                .Select(t => t.Key)
+                .Where(s =>
+                    s.GetType().GetInterfaces()
                         .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDeviceTypeDataSource<>))
                         .Any(t => t.GetGenericArguments().Any(g => g == typeof(TDevice))));
         }
 
-        public async Task GetAllDevicesAsync<T>(IEnumerable<IDeviceTypeDataSource<T>> dataSources, bool fromCache = true) where T : class, IDeviceType
+        public T Find<T>(Func<T, bool> predicate) where T : DeviceType
         {
-            if (!fromCache || _deviceCache.Count == 0)
-            {
-                foreach (var ds in dataSources)
-                {
-                    await ds.GetDeviceTypes()
-                        .ForEachAsync(d =>
-                        {
-                            _devicesDict.GetOrAdd(Guid.NewGuid(), d);
-                        });
-                }
-                _deviceCache.UnionWith(_devicesDict.Select(kvp => kvp.Value));
-            }
+            return FilterCacheByType<T>().FirstOrDefault(predicate);
         }
+
+        public IEnumerable<T> GetAll<T>() where T : DeviceType
+        {
+            return FilterCacheByType<T>();
+        }
+
+        public IEnumerable<DeviceType> GetAll()
+        {
+            return _deviceCache
+                .Select(kv => kv.Key)
+                .ToList();
+        }
+
+        public DeviceType GetByName(string name)
+        {
+            return FindInSetByName(GetAll(), name);
+        }
+
+        public T GetByName<T>(string name)
+            where T : DeviceType
+        {
+            var r = FilterCacheByType<T>();
+            return (T) FindInSetByName(r, name);
+        }
+
+        public DeviceRepository RegisterDataSource(IDeviceTypeDataSource<DeviceType> dataSource)
+        {
+            return RegisterDataSource(new[] {dataSource});
+        }
+
+        public DeviceRepository RegisterDataSource(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
+        {
+            var task = RegisterDataSourceAsync(dataSources);
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<DeviceRepository> RegisterDataSourceAsync(IDeviceTypeDataSource<DeviceType> dataSource)
+        {
+            return await RegisterDataSourceAsync(new[] {dataSource});
+        }
+
+        public async Task<DeviceRepository> RegisterDataSourceAsync(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
+        {
+            var uniques = dataSources.Except(_deviceDataSources.Select(k => k.Key)).ToList();
+            uniques
+                .ForEach(u => _deviceDataSources.GetOrAdd(u, false));
+
+            await LoadFromDataSources(uniques);
+            
+            return Instance;
+        }
+
+        #endregion
+
+        #region Private
+
+        private DeviceType FindInSetByName(IEnumerable<DeviceType> devices, string name)
+        {
+            var result = devices.FirstOrDefault(d => string.Equals(d.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (result == null)
+                throw new KeyNotFoundException($"Device with name {name} not found.");
+
+            return result;
+        }
+
+        private async Task LoadFromDataSources(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
+        {
+            foreach (var ds in dataSources)
+            {
+                await ds.GetDeviceTypes().ForEachAsync(d => _deviceCache.GetOrAdd(d, true));
+                
+                _deviceDataSources.TryUpdate(ds, true, false);
+            }
+            Console.WriteLine("Completed!");
+        }
+
+        #endregion
     }
 }

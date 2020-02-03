@@ -11,8 +11,8 @@ namespace Devices.Core
 
     public enum CorrectionFactorType
     {
-        Fixed,
-        Live
+        Fixed = 1,
+        Live = 0
     }
 
     public enum DriveType

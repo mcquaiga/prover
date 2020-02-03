@@ -1,12 +1,12 @@
-﻿using Devices.Core.Interfaces.Items;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Devices.Core.Interfaces.Items;
 
-namespace Devices.Honeywell.Core.Attributes
+namespace Devices.Core.Items.Attributes
 {
-    internal static class ItemInfoAttributeHelpers
+    public static class ItemInfoAttributeHelpers
     {
         public static CustomAttributeData GetByNumber(this IList<CustomAttributeData> attributes, int number)
         {
@@ -16,7 +16,7 @@ namespace Devices.Honeywell.Core.Attributes
             return cad ?? default;
         }
 
-        public static ICollection<int> GetItemIdentifiers<T>() where T : IItemsGroup
+        public static ICollection<int> GetItemIdentifiers<T>() where T : IItemGroup
         {
             return GetItemIdentifiers(typeof(T));
         }

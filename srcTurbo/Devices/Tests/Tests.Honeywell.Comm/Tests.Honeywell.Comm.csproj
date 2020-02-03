@@ -80,7 +80,6 @@
     <Compile Include="Messaging\CommandHelpers.cs" />
     <Compile Include="Messaging\CrcChecksumTests.cs" />
     <Compile Include="Messaging\Responses\ResponseMessageTests.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,9 +9,9 @@ namespace Devices.Communications.IO
     {
         #region Public Properties
 
-        IConnectableObservable<char> DataReceivedObservable { get; }
+        IConnectableObservable<char> DataReceived { get; }
 
-        ISubject<string> DataSentObservable { get; }
+        IObservable<string> DataSent { get; }
 
         string Name { get; }
 
@@ -21,14 +21,11 @@ namespace Devices.Communications.IO
 
         Task Close();
 
-        ICommPort CreateNew();
-
         bool IsOpen();
 
         Task Open(CancellationToken ct);
 
         Task Send(string data);
-        void Setup(string portName, int baudRate, int timeoutMs = 250);
 
         #endregion Public Methods
     }

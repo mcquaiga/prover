@@ -80,6 +80,7 @@
     <Compile Include="BaseHoneywellTest.cs" />
     <Compile Include="Items\PressureItemsTest.cs" />
     <Compile Include="ItemTestFixtures.cs" />
+    <Compile Include="Playground.cs" />
     <Compile Include="Repository\JsonDeviceDataSourceTests.cs" />
     <Compile Include="Repository\DeviceRepositoryTests.cs" />
     <Compile Include="Repository\JsonDeviceDataSourceFromItemFileTests.cs" />

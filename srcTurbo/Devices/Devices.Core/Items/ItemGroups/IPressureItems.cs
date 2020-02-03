@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IPressureItems : IItemsGroup
+    public interface IPressureItems : IItemGroup
     {
         decimal AtmosphericPressure { get; }
 

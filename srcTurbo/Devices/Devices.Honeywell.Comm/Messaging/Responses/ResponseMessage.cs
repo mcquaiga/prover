@@ -55,7 +55,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses
         #endregion
     }
 
-    internal class ItemGroupResponseMessage : BaseResponseMessage
+    public class ItemGroupResponseMessage : BaseResponseMessage
     {
         #region Constructors
 
@@ -73,7 +73,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses
         #endregion
     }
 
-    internal class ItemValueResponseMessage : BaseResponseMessage
+    public class ItemValueResponseMessage : BaseResponseMessage
     {
         #region Constructors
 

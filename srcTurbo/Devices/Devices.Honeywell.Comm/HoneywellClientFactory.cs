@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Devices.Honeywell.Comm
 {
-    public class HoneywellClientFactory : ICommClientFactory<HoneywellDeviceType>
+    public class HoneywellClientFactory : ICommClientFactory<HoneywellDeviceType, HoneywellDeviceInstance>
     {
-        public async Task<ICommunicationsClient> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
+        public async Task<ICommunicationsClient<HoneywellDeviceType, HoneywellDeviceInstance>> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
             IObserver<string> statusObserver = null)
         {
             var client = new HoneywellClient(commPort, deviceType);
 
             if (statusObserver != null)
-                client.Status.Subscribe(statusObserver);
+                client.StatusMessages.Subscribe(statusObserver);
 
             await client.ConnectAsync(retryAttempts, timeout);
 

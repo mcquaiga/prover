@@ -2,8 +2,10 @@ using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface ISiteInformationItems : IItemsGroup
+    public interface ISiteInformationItems : IItemGroup
     {
+        #region Public Properties
+
         string FirmwareVersion { get; }
         CorrectionFactorType PressureFactor { get; }
         string SerialNumber { get; }
@@ -12,5 +14,7 @@ namespace Devices.Core.Items.ItemGroups
 
         CorrectionFactorType SuperFactor { get; }
         CorrectionFactorType TemperatureFactor { get; }
+
+        #endregion
     }
 }

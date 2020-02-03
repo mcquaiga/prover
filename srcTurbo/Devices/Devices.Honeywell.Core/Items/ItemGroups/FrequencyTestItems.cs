@@ -3,10 +3,11 @@ using System.Linq;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Newtonsoft.Json;
+using ItemGroup = Devices.Core.Items.ItemGroups.ItemGroup;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class FrequencyItems : ItemGroupBase, IFrequencyTestItems
+    internal class FrequencyItems : HoneywellItemGroup, IFrequencyTestItems
     {
         public long MainAdjustedVolumeReading { get; set; }
 

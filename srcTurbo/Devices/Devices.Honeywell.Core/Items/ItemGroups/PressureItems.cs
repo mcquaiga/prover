@@ -1,10 +1,10 @@
 using Devices.Core;
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class PressureItems : ItemGroupBase, IPressureItems
+    public class PressureItems : HoneywellItemGroup, IPressureItems
     {
         [ItemInfo(14)]
         public decimal AtmosphericPressure { get; protected set; }
@@ -29,5 +29,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
         [ItemInfo(47)]
         public decimal UnsqrFactor { get; protected set; }
+
+        
     }
 }

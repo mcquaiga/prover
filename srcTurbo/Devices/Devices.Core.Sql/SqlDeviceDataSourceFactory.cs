@@ -7,7 +7,7 @@ using Devices.Core.Repository;
 
 namespace Devices.Core.Database
 {
-    public class SqlDeviceTypeDataSource : IDeviceTypeDataSource<IDeviceType>
+    public class SqlDeviceTypeDataSource : IDeviceTypeDataSource<DeviceType>
     {
 
         public SqlDeviceTypeDataSource()
@@ -15,7 +15,7 @@ namespace Devices.Core.Database
 
         }
 
-        public IObservable<IDeviceType> GetDeviceTypes()
+        public IObservable<DeviceType> GetDeviceTypes()
         {
             throw new NotImplementedException();
         }

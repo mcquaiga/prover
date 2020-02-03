@@ -37,8 +37,8 @@ namespace Devices.Honeywell.Core.Items
             if (itemValues == null) return 0m;
 
             var items = itemValues as ItemValue[] ?? itemValues.ToArray();
-            decimal? lowResValue = items?.GetItem(lowResItemNumber)?.NumericValue ?? 0;
-            decimal? highResValue = items?.GetItem(highResItemNumber)?.NumericValue ?? 0;
+            var lowResValue = items?.GetItem(lowResItemNumber)?.DecimalValue() ?? 0;
+            var highResValue = items?.GetItem(highResItemNumber)?.DecimalValue() ?? 0;
 
             return JoinLowResHighResReading(lowResValue, highResValue);
         }

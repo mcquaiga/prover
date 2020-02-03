@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 namespace Devices.Core.Repository
 {
     public abstract class JsonDeviceTypeDataSource<T> : IDeviceTypeDataSource<T>
-        where T : IDeviceType
+        where T : DeviceType
     {
 
         protected JsonDeviceTypeDataSource(IStreamReader streamReader)

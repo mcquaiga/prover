@@ -1,5 +1,6 @@
 using Devices.Core.Items;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Devices.Core.Interfaces.Items
 {
@@ -8,7 +9,7 @@ namespace Devices.Core.Interfaces.Items
         ICollection<ItemMetadata> RelatedItems();
     }
 
-    public interface IItemsGroup
+    public interface IItemGroup
     {
         void SetValues(IEnumerable<ItemValue> values);
     }

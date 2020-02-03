@@ -6,8 +6,10 @@ using Castle.Core.Internal;
 using Devices.Communications;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm;
+using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Exceptions;
 using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,12 +34,11 @@ namespace Tests.Honeywell.Comm.Clients
             SetupComm(_commMock, _incoming, _outgoing);
         }
 
-        private async Task<ICommunicationsClient> GetConnectionAsync(ISubject<string> status = null)
+        private async Task<ICommunicationsClient<DeviceType, DeviceInstance>> GetConnectionAsync(ISubject<string> status = null)
         {
             MockConnectionHandshake(_commMock, _incoming);
 
-            var client = await Device.ConnectAsync(_commMock.Object, statusObserver: status);
-            return client;
+            return await Device.ConnectAsync(_commMock.Object, statusObserver: status);
         }
 
 
@@ -52,7 +53,7 @@ namespace Tests.Honeywell.Comm.Clients
 
             try
             {
-                var conn = await DeviceConnection.ConnectAsync(Device, commMock.Object, 1, TimeSpan.FromMilliseconds(25));
+                var conn = await Device.ConnectAsync(commMock.Object, 1, TimeSpan.FromMilliseconds(25));
             }
             catch (Exception ex)
             {
@@ -60,7 +61,7 @@ namespace Tests.Honeywell.Comm.Clients
             }
 
             await Assert.ThrowsExceptionAsync<FailedConnectionException>(async ()
-                => await DeviceConnection.ConnectAsync(Device, commMock.Object, 0, TimeSpan.FromMilliseconds(25)));
+                => await Device.ConnectAsync(commMock.Object, 0, TimeSpan.FromMilliseconds(25)));
         }
 
         [TestMethod]

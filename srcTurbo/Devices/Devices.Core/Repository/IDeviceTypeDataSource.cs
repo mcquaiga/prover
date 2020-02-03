@@ -7,7 +7,7 @@ using Devices.Core.Items;
 namespace Devices.Core.Repository
 {
     public interface IDeviceTypeDataSource<out TDevice>
-        where TDevice : IDeviceType
+        where TDevice : DeviceType
     {
 
         IObservable<TDevice> GetDeviceTypes();

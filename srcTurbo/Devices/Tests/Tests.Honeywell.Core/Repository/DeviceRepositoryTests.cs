@@ -25,19 +25,19 @@ namespace Tests.Honeywell.Core.Repository
         #region Methods
 
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
-            var dataSourceMock = new Mock<IDeviceTypeDataSource<IHoneywellDeviceType>>();
+            var dataSourceMock = new Mock<IDeviceTypeDataSource<HoneywellDeviceType>>();
             dataSourceMock.Setup(ds => ds.GetDeviceTypes())
-                .Returns((IObservable<HoneywellDeviceType>) DevicesList.ToObservable());
+                .Returns(DevicesList.ToObservable());
 
-            var sources = new List<IDeviceTypeDataSource<IHoneywellDeviceType>>()
+            var sources = new List<IDeviceTypeDataSource<HoneywellDeviceType>>()
             {
                 MiJsonDeviceTypeDataSource.Instance,
                 dataSourceMock.Object
             };
 
-            Repository = new DeviceRepository(sources);
+            Repository = DeviceRepository.Instance.RegisterDataSource(sources);
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Tests.Honeywell.Core.Repository
         [TestMethod]
         public async Task GetDevicesFromCoreRepository()
         {
-            var devices = await Repository.GetAll();
+            var devices = Repository.GetAll();
 
             Assert.IsNotNull(devices);
             Assert.IsTrue(devices.Count() > 1);

@@ -2,6 +2,8 @@
 using Devices.Honeywell.Comm.Exceptions;
 using System;
 using System.Collections.Generic;
+using Devices.Core.Interfaces;
+using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 {
@@ -53,7 +55,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
         }
 
 
-        protected override Action<BaseHoneywellClient> RecoveryAction => client =>
+        protected override Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> RecoveryAction => client =>
         {
             client.CommPort.Close();
         };

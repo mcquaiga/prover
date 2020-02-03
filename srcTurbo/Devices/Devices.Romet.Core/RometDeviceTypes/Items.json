@@ -16,57 +16,6 @@
     "isVolumeTest": "true"
   },
   {
-    "number": "5",
-    "code": "PULSER_A",
-    "shortDescription": "Pulser A #",
-    "description": "Pulser A # o"
-  },
-  {
-    "number": "6",
-    "code": "PULSER_B",
-    "shortDescription": "Pulser B #",
-    "description": "Pulser B # o"
-  },
-  {
-    "number": "8",
-    "code": "GAS_PRESS",
-    "shortDescription": "Pressure",
-    "description": "Gas Pressure",
-    "isPressureTest": "true",
-    "isLiveReadPressure": true
-  },
-  {
-    "number": "10",
-    "shortDescription": "Press High A",
-    "description": "Pressure High Alarm",
-    "isAlarm": "true"
-  },
-  {
-    "number": "11",
-    "shortDescription": "Press Low A",
-    "description": "Pressure Low Alarm",
-    "isAlarm": "true"
-  },
-  {
-    "number": "12",
-    "shortDescription": "P Cal Atmos",
-    "description": "Pressure Corrected Atmospheric"
-  },
-  {
-    "number": "13",
-    "code": "BASE_PRESS",
-    "shortDescription": "Base Press",
-    "description": "Base Pressure",
-    "isPressure": "true"
-  },
-  {
-    "number": "14",
-    "code": "ATM_PRESS",
-    "shortDescription": "ATM Press",
-    "description": "ATM Pressure",
-    "isPressure": "true"
-  },
-  {
     "number": "26",
     "code": "GAS_TEMP",
     "shortDescription": "Temperature",
@@ -93,52 +42,11 @@
     "isTemperature": "true"
   },
   {
-    "number": "35",
-    "shortDescription": "Temperature",
-    "description": "EVC Temperature",
-    "isTemperatureTest": "true"
-  },
-  {
-    "number": "44",
-    "code": "PRESS_FACTOR",
-    "shortDescription": "Press Factor",
-    "description": "Pressure Factor",
-    "isPressureTest": "true"
-  },
-  {
     "number": "45",
     "code": "TEMP_FACTOR",
     "shortDescription": "Temperature Factor",
     "description": "Temperature Factor",
     "isTemperatureTest": "true"
-  },
-  {
-    "number": "47",
-    "code": "UNSQRD_SUPER_FACTOR",
-    "shortDescription": "Unsqrd. Super Factor",
-    "description": "Unsquared Supercompresibility Factor",
-    "isPressureTest": "true"
-  },
-  {
-    "number": "53",
-    "code": "SPEC_GR",
-    "shortDescription": "Specific Gravity",
-    "description": "Specific Gravity",
-    "isSuper": "true"
-  },
-  {
-    "number": "54",
-    "code": "N2",
-    "shortDescription": "% N2",
-    "description": "% N2",
-    "isSuper": "true"
-  },
-  {
-    "number": "55",
-    "code": "CO2",
-    "shortDescription": "% CO2",
-    "description": "% CO2",
-    "isSuper": "true"
   },
   {
     "number": "56",
@@ -166,65 +74,6 @@
     "code": "SERIAL_NUM",
     "shortDescription": "Serial Number",
     "description": "Serial Number"
-  },
-  {
-    "number": "87",
-    "code": "PRESS_UNITS",
-    "shortDescription": "Press Units",
-    "description": "Pressure Units",
-    "isPressure": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "PSIG",
-        "numericvalue": "0"
-      },
-      {
-        "id": "1",
-        "description": "PSIA",
-        "numericvalue": "1"
-      },
-      {
-        "id": "2",
-        "description": "kPa",
-        "numericvalue": "2"
-      },
-      {
-        "id": "3",
-        "description": "mPa",
-        "numericvalue": "3"
-      },
-      {
-        "id": "4",
-        "description": "BAR",
-        "numericvalue": "4"
-      },
-      {
-        "id": "5",
-        "description": "mBAR",
-        "numericvalue": "5"
-      },
-      {
-        "id": "6",
-        "description": "KGcm2",
-        "numericvalue": "6"
-      },
-      {
-        "id": "7",
-        "description": "inWC",
-        "numericvalue": "7"
-      },
-      {
-        "id": "8",
-        "description": "inHG",
-        "numericvalue": "8"
-      },
-      {
-        "id": "9",
-        "description": "mmHG",
-        "numericvalue": "9"
-      }
-    ]
   },
   {
     "number": "89",
@@ -615,65 +464,6 @@
     ]
   },
   {
-    "number": "110",
-    "code": "FIXED_SUPER_FACTOR",
-    "shortDescription": "F Super Factor",
-    "description": "Fixed Super Factor",
-    "isSuper": "true",
-    "isVolume": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
-      },
-      {
-        "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
-      }
-    ]
-  },
-  {
-    "number": "111",
-    "code": "FIXED_TEMP_FACTOR",
-    "shortDescription": "F Temp Factor",
-    "description": "Fixed Temp Factor",
-    "isTemperature": "true",
-    "isVolume": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
-      },
-      {
-        "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
-      }
-    ]
-  },
-  {
-    "number": "112",
-    "code": "TRANSDUCER_TYPE",
-    "shortDescription": "Transducer Type",
-    "description": "Transducer Type",
-    "isPressure": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "Gauge",
-        "numericvalue": "0"
-      },
-      {
-        "id": "1",
-        "description": "Absolute",
-        "numericvalue": "1"
-      }
-    ]
-  },
-  {
     "number": "113",
     "code": "HIGH_RES_CORRECTED",
     "shortDescription": "High Res COR",
@@ -692,74 +482,6 @@
     "code": "INSTRUMENT_TYPE",
     "shortDescription": "Instrument Type",
     "description": "Instrument Type"
-  },
-  {
-    "number": "137",
-    "code": "PRESS_RANGE",
-    "shortDescription": "Pressure Range",
-    "description": "Pressure Range",
-    "isPressure": "true"
-  },
-  {
-    "number": "140",
-    "code": "ENERGY",
-    "shortDescription": "Energy",
-    "description": "Energy",
-    "isVolume": "true",
-    "isVolumeTest": "true"
-  },
-  {
-    "number": "141",
-    "code": "ENERGY_UNITS",
-    "shortDescription": "Energy Units",
-    "description": "Energy Units",
-    "isVolume": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "Therms"
-      },
-      {
-        "id": "1",
-        "description": "DecaTherms"
-      },
-      {
-        "id": "2",
-        "description": "MegaJoules"
-      },
-      {
-        "id": "3",
-        "description": "GigaJoules"
-      },
-      {
-        "id": "4",
-        "description": "KiloCals"
-      },
-      {
-        "id": "5",
-        "description": "KiloWattHours"
-      }
-    ]
-  },
-  {
-    "number": "142",
-    "code": "GAS_ENERGY_VALUE",
-    "shortDescription": "Gas Energy Value",
-    "description": "Gas Energy Value",
-    "isVolume": "true"
-  },
-  {
-    "number": "147",
-    "code": "SUPER_TABLE",
-    "shortDescription": "Super Compress. Table",
-    "description": "Super Compress. Table",
-    "isVolume": "true",
-    "ItemDescriptions": [
-      {
-        "id": "0",
-        "description": "NX-19"
-      }
-    ]
   },
   {
     "number": "200",
@@ -816,22 +538,7 @@
         "definitionPath": "Item_MeterType"
       }
     ],
-    "number": "432",
+    "number": "768",
     "shortDescription": "Meter Type"
-  },
-  {
-    "number": "439",
-    "code": "METER_DISPLACEMENT",
-    "shortDescription": "Meter Displacement",
-    "description": "Meter Displacement",
-    "isVolume": "true"
-  },
-  {
-    "number": "892",
-    "code": "HIGH_RES_UNCOR",
-    "shortDescription": "High Res. Uncor. Volume",
-    "description": "High Resolution Uncor. Volume",
-    "isVolume": "true",
-    "isVolumeTest": "true"
   }
 ]

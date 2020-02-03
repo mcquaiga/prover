@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
+using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Repository;
@@ -15,33 +19,45 @@ namespace Tests.Honeywell.Core.Items
         private DeviceRepository _repo;
 
         [TestMethod]
-        public async Task Test_GetPressureItemsFromDeviceType()
+        public void Test_GetPressureItemsFromDeviceType()
         {
-            var mini = await _repo.GetByName("Mini-Max");
+            var mini = _repo.GetByName("Mini-Max");
 
-            var instance = mini.InstanceFactory.CreateInstance(MiniMaxItemFile);
+            var instance = mini.CreateInstance(MiniMaxItemFile);
 
-            Assert.IsNotNull(instance.Pressure);
+            Assert.IsNotNull(instance);
         }
 
         [TestMethod]
-        public async Task Test_GetPressureItemsFromJsonTest()
+        public void Test_GetPressureItemsFromJsonTest()
         {
-            var mini = await _repo.GetByName("Mini-Max");
+            var device = _repo.GetByName("Mini-Max");
+            var instance = device.CreateInstance(MiniMaxItemFile);
 
-            var instance = mini.InstanceFactory.CreateInstance(MiniMaxItemFile);
-
-            var myItems = mini.ConvertKeyValuesToItemValues(MiniMaxPressureItemFile);
+            var myItems = device.ToItemValuesEnumerable(MiniMaxPressureItemFile);
             var pItems = instance.GetItemsByGroup<IPressureItems>(myItems);
 
             Assert.IsNotNull(pItems);
+            Assert.IsNotNull(instance.ItemValues);
+            Assert.IsFalse(instance.ItemValues.Count == 0);
+        }
+
+        [TestMethod]
+        public void Test_GetMiniMaxInstance()
+        {
+            var device = _repo.GetByName("Mini-Max");
+            var instance = device.CreateInstance(MiniMaxItemFile);
+            var pItems = device.GetItemsByGroup<IPressureItems>();
+            Assert.IsNotNull(instance.ItemValues);
+            Assert.IsFalse(instance.ItemValues.Count == 0);
+           
+            Console.WriteLine("");
         }
 
         [TestInitialize]
         public async Task Initialize()
         {
-            _repo = new DeviceRepository(MiJsonDeviceTypeDataSource.Instance);
-            var all = await _repo.GetAll();
+            _repo = await DeviceRepository.Instance.RegisterDataSourceAsync(MiJsonDeviceTypeDataSource.Instance);
         }
     }
 }

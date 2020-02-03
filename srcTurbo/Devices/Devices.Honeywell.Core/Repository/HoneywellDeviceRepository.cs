@@ -3,66 +3,26 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 
 namespace Devices.Honeywell.Core.Repository
 {
-    public class HoneywellDeviceRepository
+    public static class HoneywellDeviceRepository
     {
-        #region Constructors
+        public static IDeviceTypeDataSource<DeviceType> DataSource => MiJsonDeviceTypeDataSource.Instance;
 
-        public HoneywellDeviceRepository(IDeviceTypeDataSource<IHoneywellDeviceType> deviceTypeDataSource)
+        public static DeviceRepository Devices => _lazy.Value;
+        private static readonly Lazy<DeviceRepository> _lazy = new Lazy<DeviceRepository>(Factory);
+        
+        private static DeviceRepository Factory()
         {
-            _deviceTypeDataSource = deviceTypeDataSource;
+            return DeviceRepository.Instance.RegisterDataSource(DataSource);
         }
-
-        #endregion
-
-        #region Fields
-
-        private readonly HashSet<IHoneywellDeviceType> _deviceCache = new HashSet<IHoneywellDeviceType>();
-
-        private readonly IDeviceTypeDataSource<IHoneywellDeviceType> _deviceTypeDataSource;
-
-        private readonly ConcurrentDictionary<string, HashSet<ItemMetadata>> _itemsCache = new
-            ConcurrentDictionary<string, HashSet<ItemMetadata>>();
-
-        #endregion
-
-        #region Methods
-
-        public async Task<IEnumerable<IHoneywellDeviceType>> GetAll(bool fromCache = true)
-        {
-            if (!fromCache || _deviceCache?.Count == 0)
-                await LoadDevices();
-
-            return _deviceCache.AsEnumerable();
-        }
-
-        private async Task LoadDevices()
-        {
-            _deviceCache.Clear();
-
-            var devices =
-                await _deviceTypeDataSource.GetDeviceTypes()
-                    .ToList()
-                    .RunAsync(new CancellationToken());
-
-            _deviceCache.UnionWith(devices);
-        }
-
-        public async Task<IHoneywellDeviceType> GetByName(string name, bool fromCache = true)
-        {
-            await GetAll(fromCache);
-
-            return _deviceCache.FirstOrDefault(d => string.Equals(d.Name, name,
-                StringComparison.OrdinalIgnoreCase));
-        }
-
-        #endregion
     }
 }

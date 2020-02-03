@@ -31,7 +31,7 @@ namespace Tests.Honeywell.Core.Repository
         {
             var ds = MiJsonDeviceTypeDataSource.Instance;
 
-            var devices = new ConcurrentBag<IHoneywellDeviceType>();
+            var devices = new ConcurrentBag<HoneywellDeviceType>();
 
             await ds.GetDeviceTypes()
                 .ForEachAsync(d =>

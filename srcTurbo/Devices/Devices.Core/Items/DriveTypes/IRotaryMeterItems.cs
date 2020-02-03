@@ -2,12 +2,10 @@
 
 namespace Devices.Core.Items.DriveTypes
 {
-    public interface IRotaryMeterItems : IItemsGroup
+    public interface IRotaryMeterItems : IItemGroup
     {
-        decimal MeterDisplacement { get; }
+        MeterIndexItemDescription MeterType { get; set; }
 
-        string MeterModel { get; }
-
-        int MeterModelId { get; }
+        decimal MeterDisplacement { get; set; }
     }
 }

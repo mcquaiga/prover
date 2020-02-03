@@ -1,23 +1,7 @@
 using System;
-using Devices.Honeywell.Core.Items;
 
-namespace Devices.Honeywell.Core.Attributes
+namespace Devices.Honeywell.Core.Items.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class ItemInfoAttribute : Attribute
-    {
-        public int Number { get; set; }
-
-        public ItemInfoAttribute()
-        {
-        }
-
-        public ItemInfoAttribute(int number)
-        {
-            Number = number;
-        }
-    }
-
     [AttributeUsage(AttributeTargets.Property)]
     public class JoinLowResHighResValueAttribute : Attribute
     {

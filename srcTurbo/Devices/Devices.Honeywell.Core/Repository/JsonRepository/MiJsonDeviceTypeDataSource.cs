@@ -8,7 +8,7 @@ using Devices.Honeywell.Core.Repository.JsonRepository.JsonConverters;
 
 namespace Devices.Honeywell.Core.Repository.JsonRepository
 {
-    public class MiJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<IHoneywellDeviceType>
+    public class MiJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<HoneywellDeviceType>
     {
         private static readonly string _directory = $"{AppDomain.CurrentDomain.BaseDirectory}\\MiDeviceTypes";
 
@@ -16,17 +16,17 @@ namespace Devices.Honeywell.Core.Repository.JsonRepository
         {
         }
 
-        public static IDeviceTypeDataSource<IHoneywellDeviceType> Instance { get; } = _lazy.Value;
+        public static IDeviceTypeDataSource<HoneywellDeviceType> Instance => _lazy.Value;
 
-        protected static readonly Lazy<IDeviceTypeDataSource<IHoneywellDeviceType>> _lazy
-            = new Lazy<IDeviceTypeDataSource<IHoneywellDeviceType>>(Factory);
+        protected static readonly Lazy<IDeviceTypeDataSource<HoneywellDeviceType>> _lazy
+            = new Lazy<IDeviceTypeDataSource<HoneywellDeviceType>>(Factory);
 
-        protected static IDeviceTypeDataSource<IHoneywellDeviceType> Factory()
+        protected static IDeviceTypeDataSource<HoneywellDeviceType> Factory()
         {
             return new MiJsonDeviceTypeDataSource(new FileStreamReader(_directory));
         }
 
-        protected override JsonDeviceConverter<IHoneywellDeviceType> DeviceConverter(IEnumerable<ItemMetadata> items, JsonItemsConverter itemsConverter)
+        protected override JsonDeviceConverter<HoneywellDeviceType> DeviceConverter(IEnumerable<ItemMetadata> items, JsonItemsConverter itemsConverter)
         {
             return new MiJsonDeviceConverter(items, itemsConverter);
         }

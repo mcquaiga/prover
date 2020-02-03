@@ -1,10 +1,11 @@
 ﻿using Devices.Core;
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.DriveTypes;
-using Devices.Honeywell.Core.Attributes;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class EnergyItems : ItemGroupBase, IEnergyItems
+    internal class EnergyItems : HoneywellItemGroup, IEnergyItems
     {
         [ItemInfo(142)]
         public decimal EnergyGasValue { get; protected set; }

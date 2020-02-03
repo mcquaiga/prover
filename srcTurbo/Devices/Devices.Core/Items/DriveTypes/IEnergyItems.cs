@@ -2,7 +2,7 @@
 
 namespace Devices.Core.Items.DriveTypes
 {
-    public interface IEnergyItems : IItemsGroup
+    public interface IEnergyItems : IItemGroup
     {
         decimal EnergyGasValue { get; }
 

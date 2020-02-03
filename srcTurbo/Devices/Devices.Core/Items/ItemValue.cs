@@ -1,55 +1,93 @@
 using System;
-using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace Devices.Core.Items
 {
-    public class ItemValue
+    public abstract class ItemValue
     {
-        //public ItemValue(ItemMetadata metadata, string value)
-        //{
-        //    RawValue = value;
-        //    Metadata = metadata;
-        //}
-
-        public ItemValue(ItemMetadata metadata, object value)
+        public static ItemValue Create(ItemMetadata metadata, object value)
         {
-            Value = value;
+            if (metadata.ItemDescriptions.Any())
+            {
+                return new ItemValueWithDescription(metadata, value);
+            }
+
+            return new ItemValueBasic(metadata, value);
+        }
+
+        protected ItemValue(ItemMetadata metadata, object value)
+        {
+            RawValue = value;
+
+            var myVal = value.ToString().Trim().TrimStart(new[] {'0'});
+
+            if (decimal.TryParse(myVal, out var result))
+                Value = result;
+            else
+                Value = myVal;
+
             Metadata = metadata;
         }
 
-        public object Value { get; }
+        #region Public Properties
 
-        public int Id => Metadata != null ? Metadata.Number : -1;
-        public bool IsInteger => Value is int || Value is uint || Value is ulong;
-
-        public bool IsDecimal => Value is decimal || Value is double || Value is float;
+        public object RawValue { get; }
+        public object Value { get; protected set; }
+        public int Id => Metadata?.Number ?? -1;
+        public Type ValueType => Value.GetType();
 
         public ItemMetadata Metadata { get; }
 
-        public virtual decimal NumericValue
+        public decimal? DecimalValue()
         {
-            get
-            {
-                //if (!decimal.TryParse(Value, out var result)) return 0;
-                if (Value == null) return 0;
-
-                return ItemDescription?.NumericValue ?? decimal.Parse(Value.ToString());
-            }
+            return decimal.TryParse(Value.ToString(), out var result) ? result : default(decimal?);
         }
 
-        //public string RawValue { get; set; }
+        public int? IntValue()
+        {
+            return int.TryParse(Value.ToString(), out var result) ? result : default(int?);
+        }
 
-        public virtual string Description
-            => ItemDescription?.Description ?? NumericValue.ToString(CultureInfo.InvariantCulture);
+        #endregion
 
-        public ItemMetadata.ItemDescription ItemDescription => Metadata?.GetItemDescription(Value);
+        #region Public Methods
 
         public override string ToString()
         {
             return $" {Metadata?.Description} - #{Metadata?.Number} {Environment.NewLine}" +
-                   $"   Item Value: {Value} {Environment.NewLine}" +
-                   $"   Item Description: {Description} {Environment.NewLine}" +
-                   $"   Numeric Value: {NumericValue} {Environment.NewLine}";
+                   $"   Item Value: {Value} {Environment.NewLine}";
         }
+
+        #endregion
+    }
+
+    public class ItemValueBasic : ItemValue
+    {
+        public ItemValueBasic(ItemMetadata metadata, object value) : base(metadata, value)
+        {
+        }
+    }
+
+    public class ItemValueWithDescription : ItemValue
+    {
+        public ItemValueWithDescription(ItemMetadata metadata, object value) : base(metadata, value)
+        {
+            Description = Metadata?.GetItemDescription(value);
+
+            if (Description != null)
+            {
+                if (Description.NumericValue != null)
+                    Value = Description.NumericValue;
+                else
+                    Value = Description.Description;
+            }
+        }
+
+        #region Public Properties
+
+        public ItemMetadata.ItemDescription Description { get; }
+
+        #endregion
     }
 }

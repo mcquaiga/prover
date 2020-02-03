@@ -25,67 +25,7 @@ namespace Devices.Core.Items
         /// </summary>
         int Id { get; set; }
     }
-
-    /// <summary>
-    /// Defines the <see cref="ItemGroup"/>
-    /// </summary>
-    public class ItemGroup
-    {
-        /// <summary>
-        /// Gets or sets the Description
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Id
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsAlarm
-        /// </summary>
-        public bool? IsAlarm { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsFrequencyTest
-        /// </summary>
-        public bool? IsFrequencyTest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsPressure
-        /// </summary>
-        public bool? IsPressure { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsPressureTest
-        /// </summary>
-        public bool? IsPressureTest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsSuperFactor
-        /// </summary>
-        public bool? IsSuperFactor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsTemperature
-        /// </summary>
-        public bool? IsTemperature { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsTemperatureTest
-        /// </summary>
-        public bool? IsTemperatureTest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsVolume
-        /// </summary>
-        public bool? IsVolume { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IsVolumeTest
-        /// </summary>
-        public bool? IsVolumeTest { get; set; }
-    }
+    
 
     /// <summary>
     /// Defines the <see cref="ItemMetadata"/>

@@ -2,7 +2,7 @@ using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IPulseOutputChannels : IItemsGroup
+    public interface IPulseOutputChannels : IItemGroup
     {
         IPulseOutputs ChannelA { get; }
         IPulseOutputs ChannelB { get; }

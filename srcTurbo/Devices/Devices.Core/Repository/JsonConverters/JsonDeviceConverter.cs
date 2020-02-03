@@ -10,7 +10,7 @@ using Shared.Json;
 namespace Devices.Core.Repository.JsonConverters
 {
     public abstract class JsonDeviceConverter<T> : JsonCreationConverter<T>
-        where T : IDeviceType
+        where T : DeviceType
     {
         #region Fields
 

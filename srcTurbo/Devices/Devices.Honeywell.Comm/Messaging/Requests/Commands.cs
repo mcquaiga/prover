@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Devices.Honeywell.Comm.Messaging.Requests
 {
-    internal static class Commands
+    public static class Commands
     {
         public const string DefaultPassword = "33333";
 
@@ -113,7 +113,7 @@ namespace Devices.Honeywell.Comm.Messaging.Requests
         private const string CommandPrefix = "LR";
     }
 
-    internal class MiCommandDefinition<TResponse> : CommandDefinition<TResponse>
+    public class MiCommandDefinition<TResponse> : CommandDefinition<TResponse>
             where TResponse : ResponseMessage
     {
         public override ResponseProcessor<TResponse> ResponseProcessor { get; }
