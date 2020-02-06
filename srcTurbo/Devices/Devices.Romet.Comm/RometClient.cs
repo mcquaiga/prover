@@ -20,7 +20,7 @@ namespace Devices.Romet.Comm
         {
         }
 
-        public override RometDeviceInstance DeviceInstance { get; protected set; }
+        
 
         public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
         {

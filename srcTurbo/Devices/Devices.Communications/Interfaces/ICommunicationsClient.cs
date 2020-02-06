@@ -5,6 +5,7 @@ using Devices.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications.Interfaces
 {
@@ -58,8 +59,6 @@ namespace Devices.Communications.Interfaces
 
         TDevice DeviceType { get; }
 
-        TInstance DeviceInstance { get; }
-
         bool IsConnected { get; }
 
         IObservable<string> StatusMessages { get; }
@@ -72,13 +71,11 @@ namespace Devices.Communications.Interfaces
 
         void Dispose();
 
-        Task<TInstance> GetDeviceAsync();
-
         Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers);
 
         Task<IEnumerable<ItemValue>> GetItemsAsync();
 
-        Task<T> GetItemsAsync<T>() where T : IItemGroup;
+        Task<T> GetItemsAsync<T>() where T : ItemGroup;
 
         //Task<ItemValue> LiveReadItemValue(int itemNumber);
 

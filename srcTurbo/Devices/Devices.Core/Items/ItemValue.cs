@@ -20,7 +20,7 @@ namespace Devices.Core.Items
         {
             RawValue = value;
 
-            var myVal = value.ToString().Trim().TrimStart(new[] {'0'});
+            var myVal = value.ToString().Trim();
 
             if (decimal.TryParse(myVal, out var result))
                 Value = result;
@@ -73,7 +73,8 @@ namespace Devices.Core.Items
     {
         public ItemValueWithDescription(ItemMetadata metadata, object value) : base(metadata, value)
         {
-            Description = Metadata?.GetItemDescription(value);
+
+            Description = Metadata?.GetItemDescription(Value);
 
             if (Description != null)
             {

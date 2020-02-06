@@ -48,5 +48,10 @@
       "shortDescription": "KMO Meter Factor",
       "description": "KMO Meter Factor"
     }
+  ],
+  "ExcludeItems": [
+    { "number": "432" },
+    { "number": "439" },
+    { "number": "892" }
   ]
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Devices.Communications.IO;
 using Devices.Honeywell.Core;
 

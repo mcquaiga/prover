@@ -176,53 +176,51 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "PSIG",
-        "numericvalue": "0"
+        "description": "PSIG"
+       
       },
       {
         "id": "1",
-        "description": "PSIA",
-        "numericvalue": "1"
+        "description": "PSIA"
+     
       },
       {
         "id": "2",
-        "description": "kPa",
-        "numericvalue": "2"
+        "description": "kPa"
+       
       },
       {
         "id": "3",
-        "description": "mPa",
-        "numericvalue": "3"
+        "description": "mPa"
       },
       {
         "id": "4",
-        "description": "BAR",
-        "numericvalue": "4"
+        "description": "BAR"
+        
       },
       {
         "id": "5",
-        "description": "mBAR",
-        "numericvalue": "5"
+        "description": "mBAR"
+       
       },
       {
         "id": "6",
-        "description": "KGcm2",
-        "numericvalue": "6"
+        "description": "KGcm2"
+      
       },
       {
         "id": "7",
-        "description": "inWC",
-        "numericvalue": "7"
+        "description": "inWC"
+      
       },
       {
         "id": "8",
-        "description": "inHG",
-        "numericvalue": "8"
+        "description": "inHG"
+       
       },
       {
         "id": "9",
-        "description": "mmHG",
-        "numericvalue": "9"
+        "description": "mmHG"
       }
     ]
   },
@@ -235,23 +233,19 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "F",
-        "numericvalue": "0"
+        "description": "F"
       },
       {
         "id": "1",
-        "description": "C",
-        "numericvalue": "1"
+        "description": "C"
       },
       {
         "id": "2",
-        "description": "R",
-        "numericvalue": "2"
+        "description": "R"
       },
       {
         "id": "3",
-        "description": "K",
-        "numericvalue": "3"
+        "description": "K"
       }
     ]
   },
@@ -604,13 +598,12 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
+        "description": "Live"
       },
       {
         "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
+        "description": "Fixed"
+     
       }
     ]
   },
@@ -624,13 +617,12 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
+        "description": "Live"
+        
       },
       {
         "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
+        "description": "Fixed"
       }
     ]
   },
@@ -644,13 +636,11 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
+        "description": "Live"
       },
       {
         "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
+        "description": "Fixed"
       }
     ]
   },
@@ -663,13 +653,11 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "Gauge",
-        "numericvalue": "0"
+        "description": "Gauge"
       },
       {
         "id": "1",
-        "description": "Absolute",
-        "numericvalue": "1"
+        "description": "Absolute"
       }
     ]
   },

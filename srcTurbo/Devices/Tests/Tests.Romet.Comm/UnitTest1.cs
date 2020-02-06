@@ -32,9 +32,19 @@ namespace Tests.Romet.Comm
             var client = await RometClientFactory.CreateAsync(_adem, commPort);
 
             await client.ConnectAsync();
-            var instance = await client.GetDeviceAsync();
+            var items = await client.GetItemsAsync();
             await client.Disconnect();
-            var site = instance.GetItemsByGroup<ISiteInformationItems>(instance.ItemValues);
+
+            var instance = _adem.CreateInstance(items);
+
+            var site = instance.ItemGroup<ISiteInformationItems>();
+            var pressure = instance.ItemGroup<IPressureItems>();
+            var temp = instance.ItemGroup<ITemperatureItems>();
+            var v = instance.ItemGroup<IVolumeItems>();
+
+            Assert.IsNotNull(site);
+            Assert.IsNotNull(pressure);
+            Assert.IsNotNull(temp);
         }
     }
 }

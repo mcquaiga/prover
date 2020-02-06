@@ -5,16 +5,17 @@ namespace Devices.Core.Items.ItemGroups
     public interface ISiteInformationItems : IItemGroup
     {
         #region Public Properties
+        CompositionType CompositionType { get; set; }
+        string FirmwareVersion { get; set; }
+        CorrectionFactorType PressureFactorLive { get; set; }
+        string SerialNumber { get; set; }
+        string SiteId1 { get; set; }
+        string SiteId2 { get; set; }
 
-        string FirmwareVersion { get; }
-        CorrectionFactorType PressureFactorLive { get; }
-        string SerialNumber { get; }
-        string SiteId1 { get; }
-        string SiteId2 { get; }
-
-        CorrectionFactorType SuperFactorLive { get; }
-        CorrectionFactorType TemperatureFactorLive { get; }
+        CorrectionFactorType SuperFactorLive { get; set; }
+        CorrectionFactorType TemperatureFactorLive { get; set; }
 
         #endregion
     }
+
 }

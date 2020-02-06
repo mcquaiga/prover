@@ -84,23 +84,19 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "F",
-        "numericvalue": "0"
+        "description": "F"
       },
       {
         "id": "1",
-        "description": "C",
-        "numericvalue": "1"
+        "description": "C"
       },
       {
         "id": "2",
-        "description": "R",
-        "numericvalue": "2"
+        "description": "R"
       },
       {
         "id": "3",
-        "description": "K",
-        "numericvalue": "3"
+        "description": "K"
       }
     ]
   },
@@ -453,13 +449,12 @@
     "ItemDescriptions": [
       {
         "id": "0",
-        "description": "Live",
-        "numericvalue": "0"
+        "description": "Live"
+      
       },
       {
         "id": "1",
-        "description": "Fixed",
-        "numericvalue": "1"
+        "description": "Fixed"
       }
     ]
   },

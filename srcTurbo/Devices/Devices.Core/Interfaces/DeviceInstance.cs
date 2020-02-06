@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
-using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Interfaces
 {
     public abstract class DeviceInstance
     {
+        protected readonly HashSet<ItemValue> ItemValues = new HashSet<ItemValue>();
+        protected readonly ConcurrentDictionary<Type, IItemGroup> GroupCache = new ConcurrentDictionary<Type, IItemGroup>();
+
         protected DeviceInstance(DeviceType deviceType)
         {
             DeviceType = deviceType;
@@ -18,33 +22,31 @@ namespace Devices.Core.Interfaces
 
         public DeviceType DeviceType { get; }
 
-        public HashSet<ItemValue> ItemValues { get; protected set; } = new HashSet<ItemValue>();
-
-        public virtual Dictionary<Type, IItemGroup> Attributes { get; } = new Dictionary<Type, IItemGroup>();
+        public ICollection<ItemValue> Values => ItemValues.ToList();
 
         #endregion
 
         #region Public Methods
 
-        public abstract T GetItemsByGroup<T>(IEnumerable<ItemValue> values) where T : IItemGroup;
-        public abstract T GetItemsByGroup<T>() where T : IItemGroup;
-
-        public abstract void SetItemGroups(IEnumerable<ItemValue> itemValues);
-
-        public virtual void AddAttribute<TGroup>(TGroup itemGroup) where TGroup : IItemGroup
+        public virtual TGroup ItemGroup<TGroup>() where TGroup : IItemGroup
         {
-            Attributes.Add(itemGroup.GetType(), itemGroup);
-        }
-
-        public virtual TGroup FindAttribute<TGroup>() where TGroup : IItemGroup
-        {
-            if (Attributes.TryGetValue(typeof(TGroup), out var result))
+            if (GroupCache.TryGetValue(typeof(TGroup), out var cacheItem))
             {
-                return (TGroup)result;
+                return (TGroup) cacheItem;
             }
 
-            return default(TGroup);
+            var result = DeviceType.GetGroupValues<TGroup>(Values);
+            GroupCache.TryAdd(typeof(TGroup), result);
+            return result;
         }
+
+        public virtual void SetItemValues(IEnumerable<ItemValue> itemValues)
+        {
+            GroupCache.Clear();
+            SetValues(itemValues);
+        }
+
+        protected abstract void SetValues(IEnumerable<ItemValue> itemValues);
 
         #endregion
     }

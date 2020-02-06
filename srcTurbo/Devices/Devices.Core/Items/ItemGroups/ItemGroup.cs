@@ -14,7 +14,7 @@ namespace Devices.Core.Items.ItemGroups
   
         #region Protected
 
-        public abstract void SetValues(IEnumerable<ItemValue> values);
+        //public abstract void SetValues(IEnumerable<ItemValue> values);
 
 
         #endregion

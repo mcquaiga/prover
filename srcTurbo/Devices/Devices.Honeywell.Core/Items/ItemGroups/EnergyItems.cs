@@ -5,7 +5,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class EnergyItems : HoneywellItemGroup, IEnergyItems
+    public class EnergyItems : HoneywellItemGroup, IEnergyItems
     {
         [ItemInfo(142)]
         public decimal EnergyGasValue { get; protected set; }

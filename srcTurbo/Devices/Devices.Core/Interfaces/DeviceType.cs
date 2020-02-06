@@ -4,12 +4,18 @@ using System.Linq;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Devices.Core.Items.ItemGroups.Builders;
 
 namespace Devices.Core.Interfaces
 {
     public abstract class DeviceType
     {
         protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
+        protected ItemGroupFactoryBase ItemFactory;
+        protected DeviceType(IEnumerable<ItemMetadata> itemDefinitions)
+        {
+            ItemDefinitions.UnionWith(itemDefinitions);
+        }
 
         #region Public Properties
 
@@ -25,21 +31,14 @@ namespace Devices.Core.Interfaces
 
         public virtual DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
         {
-            return Factory.CreateInstance(itemValues);
+            return Factory?.CreateInstance(itemValues);
         }
 
-        public abstract IEnumerable<ItemMetadata> GetItemsByGroup<T>() where T : IItemGroup;
+        public abstract IEnumerable<ItemMetadata> GetItemMetadata<T>() where T : IItemGroup;
+
+        public abstract TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : IItemGroup;
+
         #endregion
     }
 
-    //public abstract class DeviceType
-    //{
-    //    public bool? CanUseIrDaPort { get; }
-    //    public bool IsHidden { get; }
-    //    public ICollection<ItemMetadata> Items { get; }
-    //    public int? MaxBaudRate { get; }
-    //    public string Name { get; }
-    //    public IDeviceInstanceFactory InstanceFactory { get; protected set; }
-    //    public abstract IEnumerable<ItemMetadata> GetItemMetadataByGroup<T>() where T : IItemGroup;
-    //}
 }

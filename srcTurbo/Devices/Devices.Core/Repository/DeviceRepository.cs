@@ -129,7 +129,6 @@ namespace Devices.Core.Repository
                 
                 _deviceDataSources.TryUpdate(ds, true, false);
             }
-            Console.WriteLine("Completed!");
         }
 
         #endregion

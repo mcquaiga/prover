@@ -3,7 +3,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class SuperFactorItems : HoneywellItemGroup, ISuperFactorItems
+    public class SuperFactorItems : HoneywellItemGroup, ISuperFactorItems
     {
         [ItemInfo(55)]
         public decimal Co2 { get; protected set; }

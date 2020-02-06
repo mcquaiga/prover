@@ -41,15 +41,17 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Devices.Honeywell.Comm.Crc"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Honeywell.Core", "srcTurbo\Devices\Tests\Tests.Honeywell.Core\Tests.Honeywell.Core.csproj", "{B5FD4950-6004-473D-A08C-3C275CD43F07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Core.Database", "srcTurbo\Devices\Devices.Core.Sql\Devices.Core.Database.csproj", "{AB5A9F9D-DDEC-474F-A818-4A4D8591013A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core.Database", "srcTurbo\Devices\Devices.Core.Sql\Devices.Core.Database.csproj", "{AB5A9F9D-DDEC-474F-A818-4A4D8591013A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Romet.Comm", "srcTurbo\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj", "{B833D521-075E-4D98-9CCB-7DE1A7A1106E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Comm", "srcTurbo\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj", "{B833D521-075E-4D98-9CCB-7DE1A7A1106E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DDC548BC-7EA0-4CC1-B77B-E112F5BA72E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Comm", "srcTurbo\Devices\Tests\Tests.Romet.Comm\Tests.Romet.Comm.csproj", "{44B479FE-76A4-4821-AFE4-9FD165527B86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Core", "srcTurbo\Devices\Tests\Tests.Romet.Core\Tests.Romet.Core.csproj", "{D65A94A6-8E8F-4AAF-87B1-34843308896E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices", "srcTurbo\Devices\Devices\Devices.csproj", "{B65FBC23-DE8D-4186-BA84-32871107AEF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -388,6 +390,24 @@ Global
 		{D65A94A6-8E8F-4AAF-87B1-34843308896E}.Release|iPhone.Build.0 = Release|Any CPU
 		{D65A94A6-8E8F-4AAF-87B1-34843308896E}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{D65A94A6-8E8F-4AAF-87B1-34843308896E}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|iPhone.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|iPhone.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.MiProtocolConsole|iPhoneSimulator.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|iPhone.Build.0 = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{B65FBC23-DE8D-4186-BA84-32871107AEF0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

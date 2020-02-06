@@ -169,7 +169,7 @@ namespace Devices.Honeywell.Comm.CommClients
             return ItemValue.Create(itemDetails, response.RawValue);
         }
 
-        public override async Task Disconnect()
+        protected override async Task TryDisconnect()
         {
             if (IsConnected)
             {

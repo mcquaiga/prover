@@ -11,6 +11,6 @@ namespace Devices.Core.Interfaces.Items
 
     public interface IItemGroup
     {
-        void SetValues(IEnumerable<ItemValue> values);
+        //void SetValues(IEnumerable<ItemValue> values);
     }
 }

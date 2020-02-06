@@ -4,7 +4,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    internal class TemperatureItems : HoneywellItemGroup, ITemperatureItems
+    public class TemperatureItems : HoneywellItemGroup, ITemperatureItems
     {
         [ItemInfo(34)]
         public decimal Base { get; protected set; }

@@ -6,7 +6,7 @@ using Devices.Core.Items;
 
 namespace Devices.Honeywell.Core.Items
 {
-    internal static class ItemValueParses
+    public static class ItemValueParses
     {
         public static decimal GetHighResFractionalValue(decimal highResValue)
         {

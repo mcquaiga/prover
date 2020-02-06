@@ -4,9 +4,10 @@ namespace Devices.Core
 {
     public enum CompositionType
     {
-        TemperatureOnly,
-        PressureOnly,
-        PressureTemperature
+        T,
+        P,
+        PTZ,
+        Fixed
     }
 
     public enum CorrectionFactorType
@@ -25,7 +26,7 @@ namespace Devices.Core
     public enum EnergyUnitType
     {
         Therms,
-        DkTherms,
+        DecaTherms,
         MegaJoules,
         GigaJoules,
         KiloCals,
@@ -35,7 +36,6 @@ namespace Devices.Core
     public enum PressureTransducerType
     {
         Absolute,
-
         Gauge
     }
 

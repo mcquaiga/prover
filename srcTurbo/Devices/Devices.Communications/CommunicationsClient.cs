@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Communications.Messaging;
 using Devices.Core.Interfaces;
 using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
+using System;
+using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications
 {
@@ -43,11 +43,7 @@ namespace Devices.Communications
             SetupStreams();
         }
 
-        #region Public
-
-        #region Properties
-
-        public virtual TInstance DeviceInstance { get; protected set; }
+        #region Public Properties
 
         /// <summary>
         ///     Is this client already connected to an instrument
@@ -64,7 +60,7 @@ namespace Devices.Communications
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         public void Cancel()
         {
@@ -74,12 +70,8 @@ namespace Devices.Communications
             }
             catch (AggregateException ae)
             {
-                foreach (var ex in ae.InnerExceptions)
-                {
-                    Console.WriteLine($"Exception {ex.Message}");
-                }
+                foreach (var ex in ae.InnerExceptions) Console.WriteLine($"Exception {ex.Message}");
             }
-            
         }
 
         public Task ConnectAsync(int retryAttempts = MaxConnectionAttempts, TimeSpan? timeout = null)
@@ -87,16 +79,17 @@ namespace Devices.Communications
             return TryConnectAsync(retryAttempts, timeout);
         }
 
-        public async Task<TInstance> GetDeviceAsync()
+        /// <summary>
+        ///     Disconnect the current link with the EVC, if one exists
+        /// </summary>
+        public async Task Disconnect()
         {
-            return await GetDeviceAsync(DeviceType);
-        }
-
-        public virtual async Task<TInstance> GetDeviceAsync(TDevice deviceType)
-        {
-            var values = await GetItemsAsync();
-            DeviceInstance = (TInstance) deviceType.CreateInstance(values);
-            return DeviceInstance;
+            await TryDisconnect();
+          
+            StatusObservable.OnCompleted();
+            _messagingConnection.Dispose();
+            _statusConnection.Dispose();
+     
         }
 
         public Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
@@ -112,28 +105,25 @@ namespace Devices.Communications
         }
 
         public async Task<T> GetItemsAsync<T>()
-            where T : IItemGroup
+            where T : ItemGroup
         {
-            var items = DeviceType.GetItemsByGroup<T>();
+            var items = DeviceType.GetItemMetadata<T>();
             var values = await GetItemValuesAsync(items);
-            return DeviceInstance.GetItemsByGroup<T>(values);
+            return DeviceType.GetGroupValues<T>(values);
         }
 
         public virtual void Dispose()
         {
-            Disconnect();
+            Disconnect().Wait(TimeSpan.FromMilliseconds(500));
             StatusObservable.OnCompleted();
             _statusConnection.Dispose();
             _messagingConnection.Dispose();
             CommPort?.Dispose();
         }
 
-        /// <summary>
-        ///     Disconnect the current link with the EVC, if one exists
-        /// </summary>
-        public abstract Task Disconnect();
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
 
-        #endregion
+        public abstract Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers);
 
         #endregion
 
@@ -173,9 +163,6 @@ namespace Devices.Communications
             }
         }
 
-        public abstract Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers);
-        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
-
         protected void PublishStatusMessage(string message)
         {
             var formattedMessage = $"[{CommPort.Name}] {message}";
@@ -191,6 +178,8 @@ namespace Devices.Communications
             if (DeviceType == null)
                 throw new NullReferenceException(
                     "Device type is not initialized. Call this method with the device type first.");
+
+            SetupStreams();
 
             if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
                 CancellationTokenSource = new CancellationTokenSource();
@@ -238,6 +227,8 @@ namespace Devices.Communications
             //throw new FailedConnectionException(CommPort, deviceType, retryAttempts, exception);
         }
 
+        protected abstract Task TryDisconnect();
+
         #endregion
 
         #region Private
@@ -254,11 +245,11 @@ namespace Devices.Communications
                 .Merge(outgoing)
                 .Publish();
 
+
             _messagingConnection = _messagingStream.Connect();
 
             _statusConnectableObservable = StatusObservable.Publish();
             _statusConnection = _statusConnectableObservable.Connect();
-
         }
 
         #endregion

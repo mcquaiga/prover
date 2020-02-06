@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using Devices.Core.Interfaces;
+using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items;
+using Devices.Honeywell.Core.Items.ItemGroups.Builders;
 using Newtonsoft.Json;
 
 namespace Devices.Honeywell.Core
@@ -16,11 +18,10 @@ namespace Devices.Honeywell.Core
     public class HoneywellDeviceType : DeviceType
     {
         [JsonConstructor]
-        public HoneywellDeviceType(IEnumerable<ItemMetadata> items)
+        public HoneywellDeviceType(IEnumerable<ItemMetadata> items) : base(items)
         {
-            Factory = HoneywellDeviceInstanceFactory.Find(this);
-
-            ItemDefinitions.UnionWith(items);
+            Factory = new HoneywellDeviceInstanceFactory(this);
+            ItemFactory = new HoneywellItemGroupFactory(this);
         }
 
         #region Public Properties
@@ -39,10 +40,15 @@ namespace Devices.Honeywell.Core
 
         #region Methods
 
-        public override IEnumerable<ItemMetadata> GetItemsByGroup<T>()
+        public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
         {
             var items = ItemMetadataExtensions.GetItemNumbersByGroup<T>();
             return Items.GetMatchingItemMetadata(items);
+        }
+
+        public override TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues)
+        {
+            return (TGroup) ItemFactory.Create<TGroup>(itemValues);
         }
 
         #endregion

@@ -24,6 +24,45 @@ namespace Devices.Core.Items
             return result;
         }
 
+        public static TItem GetItem<TItem>(this IEnumerable<ItemValue> items, int itemNumber) where TItem : ItemValue
+        {
+            return (TItem) GetItem(items, itemNumber);
+        }
+
+        public static decimal GetItemValue(this IEnumerable<ItemValue> items, int itemNumber)
+        {
+            var i = GetItem(items, itemNumber);
+            var x = i?.DecimalValue();
+            
+            if (!x.HasValue) 
+                throw new NullReferenceException($"Item #{itemNumber} has a null value.");
+
+            return x.Value;
+        }
+
+        public static ItemMetadata.ItemDescription GetItemDescription(this IEnumerable<ItemValue> items, int itemNumber)
+        {
+            return (GetItem(items, itemNumber) as ItemValueWithDescription)?.Description;
+        }
+
+        public static decimal? GetValue(this ItemValue value)
+        {
+            return value.DecimalValue();
+        }
+
+        public static decimal GetValue(this ItemValueWithDescription value)
+        {
+            if (value.Description.NumericValue == null)
+                return value.Description.Id;
+
+            return value.Description.NumericValue.Value;
+        }
+
+        public static string GetDescription(this ItemValueWithDescription value)
+        {
+            return value.Description.Description;
+        }
+
         public static string Serialize(this IEnumerable<ItemValue> items)
         {
             if (items == null) return string.Empty;

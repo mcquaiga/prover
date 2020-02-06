@@ -14,5 +14,22 @@ namespace Devices.Core.Items.ItemGroups
         {
             return items.Join(itemNumbers, im => im.Number, i => i, (x, y) => x);
         }
+
+        public static Type GetMatchingItemGroupClass(this Type itemGroupType)
+        {
+            if (itemGroupType.IsInterface)
+                return Assembly.GetCallingAssembly().GetTypes().FirstOrDefault(itemGroupType.IsAssignableFrom);
+
+            return itemGroupType;
+        }
+
+        public static Type GetMatchingItemGroupClass(this Type itemGroupType, Assembly baseAssembly)
+        {
+            var groupClass = itemGroupType.GetMatchingItemGroupClass();
+            if (groupClass == null && baseAssembly != null)
+                groupClass = baseAssembly.GetTypes().FirstOrDefault(itemGroupType.IsAssignableFrom);
+
+            return groupClass;
+        }
     }
 }

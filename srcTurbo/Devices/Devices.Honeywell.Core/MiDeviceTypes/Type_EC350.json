@@ -13,48 +13,40 @@
       "ItemDescriptions": [
         {
           "id": "0",
-          "description": "PSI",
-          "numericvalue": "0"
+          "description": "PSI"
+
         },
         {
           "id": "1",
-          "description": "kPa",
-          "numericvalue": "1"
+          "description": "kPa"
         },
         {
           "id": "2",
-          "description": "mPa",
-          "numericvalue": "2"
+          "description": "mPa"
         },
         {
           "id": "3",
-          "description": "BAR",
-          "numericvalue": "3"
+          "description": "BAR"
         },
         {
           "id": "4",
-          "description": "mBAR",
-          "numericvalue": "4"
+          "description": "mBAR"
         },
         {
           "id": "5",
-          "description": "KGcm2",
-          "numericvalue": "5"
+          "description": "KGcm2"
         },
         {
           "id": "6",
-          "description": "inWC",
-          "numericvalue": "6"
+          "description": "inWC"
         },
         {
           "id": "7",
-          "description": "inHG",
-          "numericvalue": "7"
+          "description": "inHG"
         },
         {
           "id": "8",
-          "description": "mmHG",
-          "numericvalue": "8"
+          "description": "mmHG"
         }
       ]
     },
@@ -290,13 +282,30 @@
       "ItemDescriptions": [
         {
           "id": "0",
-          "description": "Fixed",
-          "numericvalue": "0"
+          "description": "Fixed"
         },
         {
           "id": "1",
-          "description": "Live",
-          "numericvalue": "1"
+          "description": "Live"
+        }
+      ]
+    },
+    {
+      "number": "110",
+      "code": "FIXED_SUPER_FACTOR",
+      "shortDescription": "F Super Factor",
+      "description": "Fixed Super Factor",
+      "isSuper": "true",
+      "isVolume": "true",
+      "ItemDescriptions": [
+        {
+          "id": "0",
+          "description": "Fixed"
+
+        },
+        {
+          "id": "1",
+          "description": "Live"
         }
       ]
     },
@@ -310,13 +319,11 @@
       "ItemDescriptions": [
         {
           "id": "0",
-          "description": "Fixed",
-          "numericvalue": "0"
+          "description": "Fixed"
         },
         {
           "id": "1",
-          "description": "Live",
-          "numericvalue": "1"
+          "description": "Live"
         }
       ]
     },
