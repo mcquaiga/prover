@@ -16,17 +16,21 @@ namespace Devices.Romet.Core
             _deviceType = deviceType;
         }
 
+        #region Public Methods
+
         public DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
         {
             var values = itemValues as ItemValue[] ?? itemValues.ToArray();
-            
+
             _deviceBuilder = new HoneywellDeviceBuilder(_deviceType, values);
-            
+
             _deviceBuilder
                 .BuildPtz()
                 .BuildDriveType();
 
             return _deviceBuilder.GetDeviceInstance();
         }
+
+        #endregion
     }
 }

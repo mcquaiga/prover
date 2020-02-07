@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,18 +88,19 @@ namespace Devices.Honeywell.Comm.CommClients
             }
         }
 
-        //public override async Task<bool> SetItemValue(int itemNumber, string value)
-        //{
-        //    var result = await ExecuteCommandAsync(Commands.WriteItem(itemNumber, value));
+        public override async Task<bool> SetItemValue(int itemNumber, string value)
+        {
+            var result = await ExecuteCommandAsync(Commands.WriteItem(itemNumber, value));
 
-        //    return result.IsSuccess;
-        //}
+            return result.IsSuccess;
+        }
 
-        //public override async Task<bool> SetItemValue(int itemNumber, decimal value)
-        //    => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
+        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
+            => await SetItemValue(itemNumber, value.ToString(CultureInfo.CurrentCulture));
 
-        //public override async Task<bool> SetItemValue(int itemNumber, long value)
-        //    => await SetItemValue(itemNumber, value.ToString());
+        public override async Task<bool> SetItemValue(int itemNumber, long value)
+            => await SetItemValue(itemNumber, value.ToString());
+
         protected async Task<bool> WakeUpInstrument(CancellationToken ct)
         {
             await ExecuteCommandAsync(Commands.WakeupOne());
@@ -157,16 +159,29 @@ namespace Devices.Honeywell.Comm.CommClients
 
         public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
         {
-            var itemDetails = itemNumber;
             var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));
+            return ItemValue.Create(itemNumber, response.RawValue);
+        }
+
+        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        {
+            var itemDetails = DeviceType.Items.GetItem(itemNumber);
+            if (itemDetails == null)
+                throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
+
+            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
             return ItemValue.Create(itemDetails, response.RawValue);
         }
 
-        public async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        public override async Task LiveReadItemValue(int itemNumber, IObserver<ItemValue> updates,
+            CancellationToken ct)
         {
-            var itemDetails = DeviceType.Items.GetItem(itemNumber);
-            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
-            return ItemValue.Create(itemDetails, response.RawValue);
+            do
+            {
+                var i = await LiveReadItemValue(itemNumber);
+                updates.OnNext(i);
+                await Task.Delay(500, ct);
+            } while (!ct.IsCancellationRequested);
         }
 
         protected override async Task TryDisconnect()

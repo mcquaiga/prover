@@ -1,5 +1,8 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Devices.Communications.IO;
+using Devices.Core.Items;
 using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.CommClients

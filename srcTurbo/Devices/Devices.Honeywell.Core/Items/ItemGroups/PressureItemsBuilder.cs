@@ -10,20 +10,11 @@ using Devices.Honeywell.Core.Items.ItemGroups.Builders;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    public class PressureItemsBuilder : ItemGroupBuilderBase<IPressureItems>, IBuildItemsFor<PressureItems>
+    public class PressureItemsBuilder : ItemGroupBuilderBase<PressureItems>, IBuildItemsFor<PressureItems>
     {
-        public PressureItemsBuilder(HoneywellDeviceType honeywellDeviceType) : base(honeywellDeviceType)
-        {
-        }
-
         #region Public Methods
 
-        public override IPressureItems Build<T>(DeviceType device, IEnumerable<ItemValue> values)
-        {
-            return Build(device, values);
-        }
-
-        public override IPressureItems Build(DeviceType device, IEnumerable<ItemValue> values)
+        public PressureItems Build(DeviceType device, IEnumerable<ItemValue> values)
         {
             var items = values.ToList();
 

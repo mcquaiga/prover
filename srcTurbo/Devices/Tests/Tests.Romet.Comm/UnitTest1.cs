@@ -43,7 +43,7 @@ namespace Tests.Romet.Comm
             var v = instance.ItemGroup<IVolumeItems>();
 
             Assert.IsNotNull(site);
-            Assert.IsNotNull(pressure);
+            Assert.IsNull(pressure);
             Assert.IsNotNull(temp);
         }
     }

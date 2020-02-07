@@ -1,20 +1,20 @@
-using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
-using Devices.Communications.Messaging;
-using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
-using Devices.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Devices.Communications.Interfaces;
+using Devices.Communications.IO;
+using Devices.Communications.Messaging;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications
 {
-    public abstract class CommunicationsClient<TDevice, TInstance> : ICommunicationsClient<TDevice, TInstance>, IDisposable
+    public abstract class CommunicationsClient<TDevice, TInstance> : ICommunicationsClient<TDevice, TInstance>,
+        IDisposable
         where TDevice : DeviceType
         where TInstance : DeviceInstance
     {
@@ -39,8 +39,14 @@ namespace Devices.Communications
         protected CommunicationsClient(ICommPort commPort, TDevice deviceType)
         {
             CommPort = commPort;
+
             DeviceType = deviceType;
-            SetupStreams();
+
+            _statusConnectableObservable = StatusObservable.Publish();
+            _statusConnection = _statusConnectableObservable.Connect();
+
+            _messagingStream = Observable.Empty<string>().Publish();
+            _messagingConnection = _messagingStream.Connect();
         }
 
         #region Public Properties
@@ -51,7 +57,6 @@ namespace Devices.Communications
         public abstract bool IsConnected { get; protected set; }
 
         public ICommPort CommPort { get; }
-
         public IObservable<string> CommunicationMessages => _messagingStream;
 
         public TDevice DeviceType { get; }
@@ -85,23 +90,19 @@ namespace Devices.Communications
         public async Task Disconnect()
         {
             await TryDisconnect();
-          
-            StatusObservable.OnCompleted();
             _messagingConnection.Dispose();
-            _statusConnection.Dispose();
-     
         }
 
-        public Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
+        public async Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
             PublishStatusMessage("Downloading items...");
-            return GetItemValuesAsync(itemNumbers);
+            return await GetItemValuesAsync(itemNumbers);
         }
 
-        public Task<IEnumerable<ItemValue>> GetItemsAsync()
+        public async Task<IEnumerable<ItemValue>> GetItemsAsync()
         {
             PublishStatusMessage("Downloading items...");
-            return GetItemValuesAsync(DeviceType.Items);
+            return await GetItemValuesAsync(DeviceType.Items);
         }
 
         public async Task<T> GetItemsAsync<T>()
@@ -124,6 +125,16 @@ namespace Devices.Communications
         public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
 
         public abstract Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers);
+
+        public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
+
+        public abstract Task LiveReadItemValue(int itemNumber, IObserver<ItemValue> updates,
+            CancellationToken ct);
+
+        public abstract Task<bool> SetItemValue(int itemNumber, decimal value);
+        public abstract Task<bool> SetItemValue(int itemNumber, long value);
+
+        public abstract Task<bool> SetItemValue(int itemNumber, string value);
 
         #endregion
 
@@ -184,6 +195,8 @@ namespace Devices.Communications
             if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
                 CancellationTokenSource = new CancellationTokenSource();
 
+            CancellationToken.ThrowIfCancellationRequested();
+
             timeout = timeout.HasValue ? timeout.Value : _timeout;
 
             Exception exception = null;
@@ -193,8 +206,6 @@ namespace Devices.Communications
             {
                 PublishStatusMessage($"Connecting to {DeviceType.Name}... {attempts} of {MaxConnectionAttempts}");
 
-                if (CancellationToken.IsCancellationRequested)
-                    CancellationToken.ThrowIfCancellationRequested();
 
                 if (!CommPort.IsOpen())
                     await CommPort.Open(CancellationToken);
@@ -209,6 +220,10 @@ namespace Devices.Communications
                         $"Failed connecting to {DeviceType.Name}: Response Message {responseException.Message}.");
                     exception = responseException;
                 }
+                catch (OperationCanceledException)
+                {
+                    PublishStatusMessage($"Failed connecting to {DeviceType.Name}: Operation canceled.");
+                }
                 catch (Exception ex)
                 {
                     PublishStatusMessage(
@@ -220,7 +235,7 @@ namespace Devices.Communications
                     await Task.Delay(ConnectionRetryDelayMs, CancellationToken);
 
                 attempts++;
-            } while (attempts <= retryAttempts && !IsConnected);
+            } while (attempts <= retryAttempts && !IsConnected && !CancellationToken.IsCancellationRequested);
 
             if (!IsConnected && exception != null)
                 throw exception;
@@ -244,7 +259,6 @@ namespace Devices.Communications
             _messagingStream = incoming
                 .Merge(outgoing)
                 .Publish();
-
 
             _messagingConnection = _messagingStream.Connect();
 

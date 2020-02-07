@@ -9,8 +9,8 @@ namespace Devices.Core.Items.ItemGroups.Builders
 {
     public abstract class ItemGroupFactoryBase : IItemGroupFactory
     {
-        protected readonly Dictionary<Type, IItemGroupBuilder<IItemGroup>> BuildersCache =
-            new Dictionary<Type, IItemGroupBuilder<IItemGroup>>();
+        protected readonly Dictionary<Type, IBuildItemsFor<IItemGroup>> BuildersCache =
+            new Dictionary<Type, IBuildItemsFor<IItemGroup>>();
 
         protected readonly DeviceType DeviceType;
         protected ItemGroupBuilderBase<IItemGroup> BasicGroupBuilder;
@@ -27,7 +27,10 @@ namespace Devices.Core.Items.ItemGroups.Builders
         public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : IItemGroup
         {
             var builder = findGroupBuilder(typeof(TGroup));
-            return (TGroup) builder.Build<TGroup>(DeviceType, values);
+            if (builder != null)
+                return (TGroup) builder.Build(DeviceType, values);
+
+            return (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
         }
 
         #endregion
@@ -36,14 +39,11 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected abstract Assembly BaseAssembly { get; }
 
-        //protected abstract Assembly ThisAssembly { get; }
-
-
-        protected IItemGroupBuilder<IItemGroup> findGroupBuilder(Type type)
+        protected IBuildItemsFor<IItemGroup> findGroupBuilder(Type type)
         {
             loadGroupBuilders();
 
-            var groupClass = type.GetMatchingItemGroupClass(BaseAssembly);
+            var groupClass = type.GetMatchingItemGroupClass(Assembly.GetAssembly(typeof(Type)), BaseAssembly);
 
             if (groupClass != null)
             {
@@ -56,7 +56,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 if (builder != null)
                 {
-                    var instance = Activator.CreateInstance(builder, DeviceType) as IItemGroupBuilder<IItemGroup>;
+                    var instance = Activator.CreateInstance(builder) as IBuildItemsFor<IItemGroup>;
 
                     BuildersCache.Add(groupClass, instance);
                     return instance;
@@ -67,7 +67,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
             //var obj = Activator.CreateInstance(make, DeviceType) as IItemGroupBuilder<IItemGroup>;
             //BuildersCache.Add(groupClass, obj);
 
-            return (IItemGroupBuilder<IItemGroup>) BasicGroupBuilder;
+            return null;
         }
 
         protected virtual void loadGroupBuilders()
@@ -76,27 +76,18 @@ namespace Devices.Core.Items.ItemGroups.Builders
             {
                 BuilderTypes = new HashSet<Type>();
 
-                var type = typeof(IBuildItemsFor<>);
+                var myType = typeof(IBuildItemsFor<>);
 
-                var iBuilders = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(s => s.GetTypes())
-                    .Where(p => type.IsAssignableFrom(p));
+                var builders = Assembly.GetAssembly(this.GetType()).GetTypes().Where(p =>
+                    p.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == myType));
+                BuilderTypes.UnionWith(builders.ToList());
 
-                //var localBuilders = Assembly.GetCallingAssembly().GetTypes().Where(x => x.Name.Contains("Builder"));
-                //var baseBuilders = BaseAssembly.GetTypes().Where(x => x.Name.Contains("Builder"));
-
-                //var builders = localBuilders
-                //    .Where(t => t.GetInterfaces().Any())
-                //    .ToList();
-
-                //BuilderTypes.UnionWith(builders);
-
-                //if (BaseAssembly != null)
-                //    builders = baseBuilders
-                //        .Where(t => t.GetInterfaces().Any())
-                //        .ToList();
-
-                BuilderTypes.UnionWith(iBuilders);
+                if (BaseAssembly != null)
+                {
+                    builders = BaseAssembly.GetTypes().Where(p =>
+                        p.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == myType));
+                    BuilderTypes.UnionWith(builders.ToList());
+                }
             }
         }
 

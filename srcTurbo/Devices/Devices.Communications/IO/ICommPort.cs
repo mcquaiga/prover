@@ -15,7 +15,7 @@ namespace Devices.Communications.IO
 
         string Name { get; }
 
-        #endregion Public Properties
+        #endregion
 
         #region Public Methods
 
@@ -27,6 +27,6 @@ namespace Devices.Communications.IO
 
         Task Send(string data);
 
-        #endregion Public Methods
+        #endregion
     }
 }

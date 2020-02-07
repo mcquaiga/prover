@@ -20,8 +20,6 @@ namespace Devices.Romet.Comm
         {
         }
 
-        
-
         public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
         {
             var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));

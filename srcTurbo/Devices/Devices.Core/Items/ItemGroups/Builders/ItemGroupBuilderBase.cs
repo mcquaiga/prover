@@ -12,26 +12,23 @@ namespace Devices.Core.Items.ItemGroups.Builders
     {
         protected DeviceType DeviceType;
 
-        protected ItemGroupBuilderBase(DeviceType deviceType)
+        #region Public Methods
+
+        public virtual TGroup GetItemGroupInstance(Type type, IEnumerable<ItemValue> itemValues)
         {
-            DeviceType = deviceType;
+            var itemGroup = GetItemGroupInstance(type);
+            return SetValues((TGroup) itemGroup, itemValues);
         }
 
-        public virtual TGroup Build<T>(DeviceType device, IEnumerable<ItemValue> values) where T : IItemGroup
-        {
-            return GetItemGroupInstance(typeof(T), values);
-        }
+        #endregion
 
-        public virtual TGroup Build(DeviceType device, IEnumerable<ItemValue> values)
-        {
-            return GetItemGroupInstance(typeof(TGroup), values);
-        }
+        #region Protected
 
-        //protected abstract Assembly ThisAssembly { get; }
+        protected virtual Assembly BaseAssembly { get; }
 
         protected virtual IItemGroup GetItemGroupInstance(Type groupType)
         {
-            var itemType = groupType.GetMatchingItemGroupClass();
+            var itemType = groupType.GetMatchingItemGroupClass(Assembly.GetAssembly(GetType()), BaseAssembly);
             if (itemType == null)
                 throw new Exception($"Type {groupType.Name} could not be found.");
 
@@ -40,23 +37,18 @@ namespace Devices.Core.Items.ItemGroups.Builders
             return itemGroup;
         }
 
-        protected virtual TGroup GetItemGroupInstance(Type type, IEnumerable<ItemValue> itemValues)
-        {
-            var itemGroup = GetItemGroupInstance(type);
-            return SetValues((TGroup) itemGroup, itemValues);
-        }
-
         protected virtual IEnumerable<PropertyInfo> ItemInfoAttributes(Type groupType)
         {
             return groupType.GetProperties()
                 .Where(p => p.GetCustomAttribute(typeof(Attributes.ItemInfoAttribute)) != null);
         }
 
-        protected IEnumerable<Tuple<PropertyInfo, ItemValue>> MatchItemValuesWithPropertyInfo(Type groupType, IEnumerable<ItemValue> values)
+        protected IEnumerable<Tuple<PropertyInfo, ItemValue>> MatchItemValuesWithPropertyInfo(Type groupType,
+            IEnumerable<ItemValue> values)
         {
-            return (from value in values
+            return from value in values
                 join prop in ItemInfoAttributes(groupType) on value.Id equals prop.GetNumber()
-                select new Tuple<PropertyInfo, ItemValue>(prop, value));
+                select new Tuple<PropertyInfo, ItemValue>(prop, value);
         }
 
         protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, string valueString)
@@ -81,6 +73,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
                         throw new ArgumentException(
                             $"Value for property {property.Name} with type {property.PropertyType} is the wrong data type.");
                 }
+
                 property.SetValue(itemGroup, i);
             }
             else if (property.PropertyType == typeof(string))
@@ -98,13 +91,9 @@ namespace Devices.Core.Items.ItemGroups.Builders
         protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, ItemValue value)
         {
             if (property.PropertyType.IsSubclassOf(typeof(ItemMetadata.ItemDescription)))
-            {
                 property.SetValue(itemGroup, (value as ItemValueWithDescription)?.Description);
-            }
             else
-            {
                 return SetPropertyValue(itemGroup, property, value.Value.ToString());
-            }
 
             return property;
         }
@@ -120,5 +109,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
             return itemGroup;
         }
+
+        #endregion
     }
 }

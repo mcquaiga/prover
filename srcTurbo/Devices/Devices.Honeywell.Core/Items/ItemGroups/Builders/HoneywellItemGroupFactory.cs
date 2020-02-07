@@ -13,7 +13,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
     {
         public HoneywellItemGroupFactory(HoneywellDeviceType deviceType) : base (deviceType)
         {
-            BasicGroupBuilder = new HoneywellItemGroupBuilder<IItemGroup>(deviceType);
+            BasicGroupBuilder = new HoneywellItemGroupBuilder<IItemGroup>();
         }
 
         #region Public Methods
@@ -21,7 +21,10 @@ namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
         public override TGroup Create<TGroup>(IEnumerable<ItemValue> values)
         {
             var builder = findGroupBuilder(typeof(TGroup));
-            return (TGroup) builder.Build<TGroup>(DeviceType, values);
+            if (builder != null)
+                return (TGroup) builder.Build(DeviceType, values);
+
+            return (TGroup)BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
         }
 
         protected override Assembly BaseAssembly => null;

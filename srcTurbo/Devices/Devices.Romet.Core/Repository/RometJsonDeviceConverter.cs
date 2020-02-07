@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items;
 using Devices.Core.Repository.JsonConverters;
-using Devices.Honeywell.Core;
-using Devices.Honeywell.Core.Repository.JsonRepository.JsonConverters;
 using Newtonsoft.Json.Linq;
 
 namespace Devices.Romet.Core.Repository
 {
     public class RometJsonDeviceConverter : JsonDeviceConverter<RometDeviceType>
     {
-        public RometJsonDeviceConverter(IEnumerable<ItemMetadata> globalItems, JsonItemsConverter itemConverter) : base(globalItems, itemConverter)
+        public RometJsonDeviceConverter(IEnumerable<ItemMetadata> globalItems, JsonItemsConverter itemConverter) : base(
+            globalItems, itemConverter)
         {
         }
+
+        #region Protected
 
         protected override RometDeviceType Create(Type objectType, JObject jObject)
         {
@@ -27,9 +28,13 @@ namespace Devices.Romet.Core.Repository
             var excludes = DeserializeItems("ExcludeItems", jObject);
 
 
-
             return new RometDeviceType(GenerateItemsList(GlobalItems.ToList(), includes, excludes));
         }
+
+        #endregion
+
+        #region Private
+
         private IEnumerable<ItemMetadata> GenerateItemsList(IEnumerable<ItemMetadata> globalItems,
             IEnumerable<ItemMetadata> overrideItems,
             IEnumerable<ItemMetadata> excludeItems)
@@ -44,5 +49,7 @@ namespace Devices.Romet.Core.Repository
                 .Select(group => group.Aggregate((_, next) => next))
                 .OrderBy(i => i.Number);
         }
+
+        #endregion
     }
 }

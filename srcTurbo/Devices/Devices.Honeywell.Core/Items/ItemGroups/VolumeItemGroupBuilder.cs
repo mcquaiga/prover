@@ -8,20 +8,11 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 {
     public class VolumeItemGroupBuilder : ItemGroupBuilderBase<VolumeItems>, IBuildItemsFor<VolumeItems>
     {
-        public VolumeItemGroupBuilder(HoneywellDeviceType honeywellDeviceType) : base(honeywellDeviceType)
-        {
-        }
-
-        public override VolumeItems Build<T>(DeviceType device, IEnumerable<ItemValue> values)
-        {
-            return Build(device, values);
-        }
-
-        public override VolumeItems Build(DeviceType device, IEnumerable<ItemValue> values)
+        public VolumeItems Build(DeviceType device, IEnumerable<ItemValue> values)
         {
             var items = values.ToList();
 
-            var volume = base.Build(device, items);
+            var volume = GetItemGroupInstance(typeof(VolumeItems), items);
 
             volume.DriveRateDescription = items.GetItemDescription(98).Description;
 
