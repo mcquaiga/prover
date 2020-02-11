@@ -1,6 +1,5 @@
 ﻿using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Shared.Extensions;
 
 namespace Domain.EvcVerifications.CorrectionTests
 {
@@ -66,7 +65,7 @@ namespace Domain.EvcVerifications.CorrectionTests
 
         #region Public Methods
 
-        public CorrectedVolumeTestRun Create(IVolumeCorrectedItems startItems, IVolumeCorrectedItems endItems,
+        public CorrectionTest Create(IVolumeCorrectedItems startItems, IVolumeCorrectedItems endItems,
             decimal totalCorrectionFactor, decimal uncorrectedInputVolume)
         {
             var test = new CorrectedVolumeTestRun(startItems.CorrectedReading, endItems.CorrectedReading,
@@ -74,15 +73,15 @@ namespace Domain.EvcVerifications.CorrectionTests
             return test;
         }
 
-        public CorrectedVolumeTestRun Update(
-            CorrectedVolumeTestRun testRun, IVolumeCorrectedItems startItems, IVolumeCorrectedItems endItems,
+        public CorrectionTest Update(
+            CorrectionTest testRun, IVolumeCorrectedItems startItems, IVolumeCorrectedItems endItems,
             decimal totalCorrectionFactor, decimal uncorrectedInputVolume)
         {
-            testRun.ItemsStart = startItems;
-            testRun.ItemsEnd = endItems;
+            //testRun.ItemsStart = startItems;
+            //testRun.ItemsEnd = endItems;
 
-            testRun.Actual = testRun.ItemsEnd.CorrectedReading - testRun.ItemsStart.CorrectedReading;
-            testRun.Expected = VolumeCalculator.Corrected(totalCorrectionFactor, uncorrectedInputVolume);
+            testRun.ActualValue = endItems.CorrectedReading - startItems.CorrectedReading;
+            testRun.ExpectedValue = VolumeCalculator.Corrected(totalCorrectionFactor, uncorrectedInputVolume);
 
             return testRun;
         }
@@ -90,47 +89,35 @@ namespace Domain.EvcVerifications.CorrectionTests
         #endregion
     }
 
-    public class CorrectedVolumeTestRun : TestRunBase<IVolumeCorrectedItems>
+    public class CorrectedVolumeTestRun : CorrectionTest
     {
         internal CorrectedVolumeTestRun(decimal startCorrectedReading, decimal endCorrectedReading,
-            decimal totalCorrectionFactor, decimal uncorrectedInputVolume)
+            decimal totalCorrectionFactor, decimal uncorrectedInputVolume) 
+            : base(CorrectionFactorTestType.CorrectedVolume)
         {
-            Actual = endCorrectedReading - startCorrectedReading;
-            Expected = VolumeCalculator.Corrected(totalCorrectionFactor, uncorrectedInputVolume);
-        }
-
-        private CorrectedVolumeTestRun()
-        {
+            ActualValue = endCorrectedReading - startCorrectedReading;
+            ExpectedValue = VolumeCalculator.Corrected(totalCorrectionFactor, uncorrectedInputVolume);
         }
 
         #region Public Properties
 
-        public decimal PassTolerance => Global.COR_ERROR_THRESHOLD;
-
-        #endregion
-
-        #region Public Methods
-
-        public override bool HasPassed()
-        {
-            return Variance(Expected, Actual).IsBetween(PassTolerance);
-        }
+        public override decimal PassTolerance => Global.COR_ERROR_THRESHOLD;
 
         #endregion
     }
 
-    public class UncorrectedVolumeTestRun : TestRunBase<IVolumeUncorrectedItems>
+    public class UncorrectedVolumeTestRun : CorrectionTest
     {
         internal UncorrectedVolumeTestRun(decimal startUncorrectedReading, decimal endUncorrectedReading,
-            decimal uncorrectedVolumeInput)
+            decimal uncorrectedVolumeInput) : base(CorrectionFactorTestType.UncorrectedVolume)
         {
-            Actual = endUncorrectedReading - startUncorrectedReading;
-            Expected = uncorrectedVolumeInput;
+            ActualValue = endUncorrectedReading - startUncorrectedReading;
+            ExpectedValue = uncorrectedVolumeInput;
         }
 
         #region Public Properties
 
-        public decimal PassTolerance => Global.UNCOR_ERROR_THRESHOLD;
+        public override decimal PassTolerance => Global.UNCOR_ERROR_THRESHOLD;
 
         #endregion
 

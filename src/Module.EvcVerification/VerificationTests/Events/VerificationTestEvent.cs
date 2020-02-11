@@ -1,3 +1,5 @@
+using Domain.EvcVerifications;
+
 namespace Module.EvcVerification.VerificationTests.Events
 {
     public class VerificationTestEvent
@@ -12,13 +14,13 @@ namespace Module.EvcVerification.VerificationTests.Events
 
     public class VolumeTestStatusEvent
     {
-        public VolumeTestStatusEvent(string headerText, VolumeTest volumeTest)
+        public VolumeTestStatusEvent(string headerText, VerificationTestPoint testPoint)
         {
             HeaderText = headerText;
-            VolumeTest = volumeTest;
+            TestPoint = testPoint;
         }
 
         public string HeaderText { get; }
-        public VolumeTest VolumeTest { get; }
+        public VerificationTestPoint TestPoint { get; }
     }
 }

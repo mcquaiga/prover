@@ -98,11 +98,11 @@ namespace Application.ViewModels.Services
                 AfterValues = testPoint.AfterValues,
 
                 Pressure = MakePressureVieWModel(
-                    testPoint.GetCorrectionTest<CorrectionTestWithGauge>(CorrectionFactorTestType.Pressure),
+                    testPoint.GetCorrectionTest<PressureCorrectionTest>(CorrectionFactorTestType.Pressure),
                     device.ItemGroup<IPressureItems>(testPoint.BeforeValues)),
 
                 Temperature = MakeTemperatureViewModel(
-                    testPoint.GetCorrectionTest<CorrectionTestWithGauge>(CorrectionFactorTestType.Temperature),
+                    testPoint.GetCorrectionTest<TemperatureCorrectionTest>(CorrectionFactorTestType.Temperature),
                     device.ItemGroup<ITemperatureItems>(testPoint.BeforeValues)),
             };
 

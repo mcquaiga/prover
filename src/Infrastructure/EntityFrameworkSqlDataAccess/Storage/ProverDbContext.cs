@@ -14,29 +14,17 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Storage
         {
         }
 
-        internal DbSet<EvcVerificationSql> EvcVerifications { get; set; }
+        internal DbSet<EvcVerificationDto> EvcVerifications { get; set; }
 
-        internal DbSet<VerificationTestPointSql> VerificationTestPoints { get; set; }
+        internal DbSet<VerificationTestPointJson> VerificationTestPoints { get; set; }
 
-        internal DbSet<BaseVerificationTestSql> VerificationTests { get; set; }
+        internal DbSet<VerificationTestFactorJson> VerificationTests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<EvcVerificationSql>()
-                .HasMany<BaseVerificationTestSql>(evc => evc.ChildTests);
-
-            builder.Entity<EvcVerificationSql>().OwnsMany(evc => evc.ChildTests)
-                .WithOwner();
-
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //optionsBuilder.UseSqlite(connectionString);
-            base.OnConfiguring(optionsBuilder);
         }
     }
 }

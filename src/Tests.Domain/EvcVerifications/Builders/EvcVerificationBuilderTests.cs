@@ -79,7 +79,7 @@ namespace Tests.Domain.EvcVerifications.Builders
 
             //CorrectionTest.Update<ITemperatureItems>(tempTest, ti, ti.Factor)
             var tempVm = new TemperatureFactorViewModel(ti, 32);
-            var factor = tempVm.FactorTest.ExpectedFactor;
+            var factor = tempVm.FactorTest.ExpectedValue;
             
             var midTemp = _deviceType.ToItemValuesEnumerable(ItemFiles.TempMidItems);
             ti = _device.ItemGroup<ITemperatureItems>(midTemp);
@@ -87,7 +87,7 @@ namespace Tests.Domain.EvcVerifications.Builders
             tempVm.Gauge = 60;
             tempVm.Update(ti);
 
-            var factor2 = tempVm.FactorTest.ExpectedFactor;
+            var factor2 = tempVm.FactorTest.ExpectedValue;
 
             Assert.AreNotEqual(factor, factor2);
         }

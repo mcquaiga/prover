@@ -15,7 +15,7 @@ namespace Application.ViewModels
             Temperature = temperature;
             Pressure = pressure;
 
-            FactorTestCalculatorDecorator = CorrectionTest.CreateWithCalculator(CorrectionFactorTestType.Super,
+            FactorTestCalculatorDecorator = CorrectionFactory.CreateWithCalculator(CorrectionFactorTestType.Super,
                 CalculatorFactory.Invoke(), Items.Factor);
         }
 
@@ -25,7 +25,7 @@ namespace Application.ViewModels
         public override void Update(ISuperFactorItems items)
         {
             base.Update(items);
-            FactorTest.ActualFactor = Items.Factor;
+            FactorTest.ActualValue = Items.Factor;
         }
     }
 }

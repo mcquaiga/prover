@@ -12,7 +12,7 @@ namespace Application.ViewModels
         public TemperatureFactorViewModel(ITemperatureItems items, decimal gauge) : base(items)
         {
             Gauge = gauge;
-            FactorTestCalculatorDecorator = CorrectionTest.CreateWithCalculator(CorrectionFactorTestType.Temperature, CalculatorFactory.Invoke(),
+            FactorTestCalculatorDecorator = CorrectionFactory.CreateWithCalculator(CorrectionFactorTestType.Temperature, CalculatorFactory.Invoke(),
                 Items.Factor, Gauge);
         }
 
@@ -22,8 +22,8 @@ namespace Application.ViewModels
         public override void Update(ITemperatureItems items)
         {
             base.Update(items);
-            ((CorrectionTestWithGauge) FactorTest).Gauge = Gauge;
-            FactorTest.ActualFactor = Items.Factor;
+            (FactorTest as TemperatureCorrectionTest).Gauge = Gauge;
+            FactorTest.ActualValue = Items.Factor;
         }
     }
 }

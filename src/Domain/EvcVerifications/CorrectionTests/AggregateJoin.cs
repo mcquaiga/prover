@@ -6,12 +6,12 @@ using Shared.Domain;
 
 namespace Domain.EvcVerifications.CorrectionTests
 {
-    public class AggregateJoin<TTest> : AggregateRoot
-        where TTest : IVerificationTest
+    public class AggregateRootWithChildTests<TTest> : AggregateRoot
+        where TTest : class
     {
-        protected AggregateJoin() { }
+        protected AggregateRootWithChildTests() { }
 
-        protected AggregateJoin(ICollection<TTest> testsCollection)
+        protected AggregateRootWithChildTests(ICollection<TTest> testsCollection)
         {
             TestsCollection.ToList()
                 .AddRange(testsCollection);

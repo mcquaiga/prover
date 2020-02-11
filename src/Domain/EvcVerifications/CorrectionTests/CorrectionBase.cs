@@ -1,6 +1,8 @@
 using System;
+using System.Runtime.Serialization;
 using Core.GasCalculations;
 using Devices.Core.Interfaces;
+using Devices.Core.Items.ItemGroups;
 using Domain.Interfaces;
 using Shared.Domain;
 using Shared.Extensions;
@@ -9,47 +11,36 @@ namespace Domain.EvcVerifications.CorrectionTests
 {
     public interface IVerificationTest : IAssertPassFail
     {
-        //void Update();
-    }
-
-    public class BaseVerificationTest : BaseEntity, IVerificationTest
-    {
-        public virtual bool HasPassed()
-        {
-            return false;
-        }
-    }
-
-    public interface ICalculateCorrectionFactor
-    {
-        #region Public Methods
-
-        void CalculateFactors();
-
-        #endregion
     }
 
     public enum CorrectionFactorTestType
     {
         Super,
         Pressure,
-        Temperature
+        Temperature,
+        CorrectedVolume,
+        UncorrectedVolume,
+        Energy
     }
 
-
-    public partial class CorrectionTest : VerificationTestBaseEntity
+    public class CorrectionTest : BaseEntity, IVerificationTest
     {
         public CorrectionTest(CorrectionFactorTestType testType, decimal actualFactor, decimal expectedFactor)
         {
             TestType = testType;
-            ActualFactor = actualFactor;
-            ExpectedFactor = expectedFactor;
+            ActualValue = actualFactor;
+            ExpectedValue = expectedFactor;
         }
 
         public CorrectionTest(CorrectionFactorTestType testType, decimal actualFactor)
         {
             TestType = testType;
-            ActualFactor = actualFactor;
+            ActualValue = actualFactor;
+        }
+
+        public CorrectionTest(CorrectionFactorTestType testType)
+        {
+            TestType = testType;
         }
 
         private CorrectionTest()
@@ -57,20 +48,18 @@ namespace Domain.EvcVerifications.CorrectionTests
         }
 
         #region Public Properties
+
         public CorrectionFactorTestType TestType { get; }
 
-        public decimal ExpectedFactor { get; set; }
+        public decimal ExpectedValue { get; set; }
 
-        public decimal ActualFactor { get; set; }
+        public decimal ActualValue { get; set; }
+
+        public virtual decimal PassTolerance => Global.TEMP_ERROR_TOLERANCE;
 
         #endregion
 
         #region Public Methods
-
-        public override bool HasPassed()
-        {
-            return Variance(ExpectedFactor, ActualFactor).IsBetween(1);
-        }
 
         public virtual CorrectionTest GetValue()
         {
@@ -79,14 +68,26 @@ namespace Domain.EvcVerifications.CorrectionTests
 
         public virtual void SetValues(decimal actualFactor, decimal expectedFactor)
         {
-            ActualFactor = actualFactor;
-            ExpectedFactor = expectedFactor;
-
+            ActualValue = actualFactor;
+            ExpectedValue = expectedFactor;
         }
+
+        public virtual decimal Variance(decimal expectedValue, decimal actualValue)
+        {
+            return expectedValue == 0
+                ? 100m
+                : Round.Factor((actualValue - expectedValue) / expectedValue * 100);
+        }
+
+        public bool HasPassed()
+        {
+            return Variance(ExpectedValue, ActualValue).IsBetween(PassTolerance);
+        }
+
         #endregion
     }
 
-    public partial class CorrectionTest
+    public static class CorrectionFactory
     {
         #region Public Methods
 
@@ -100,7 +101,8 @@ namespace Domain.EvcVerifications.CorrectionTests
             //return testCalc;
         }
 
-        public static CorrectionTest Create(CorrectionFactorTestType testType, decimal actualFactor, decimal expectedFactor)
+        public static CorrectionTest Create(CorrectionFactorTestType testType, decimal actualFactor,
+            decimal expectedFactor)
         {
             return new CorrectionTest(testType, actualFactor, expectedFactor);
         }
@@ -125,20 +127,16 @@ namespace Domain.EvcVerifications.CorrectionTests
             //return testCalc;
         }
 
-        public static CorrectionTestCalculatorDecorator CreateWithCalculator(CorrectionFactorTestType testType,
-            ICorrectionCalculator calculator,
-            decimal actualFactor)
+        public static CorrectionTestCalculatorDecorator CreateWithCalculator(CorrectionFactorTestType testType, ICorrectionCalculator calculator, decimal actualFactor)
         {
             var test = new CorrectionTest(testType, actualFactor);
             var testCalc = new CorrectionTestCalculatorDecorator(calculator, test);
             testCalc.CalculateFactors();
-           
+
             return testCalc;
         }
 
-        public static CorrectionTestCalculatorDecorator CreateWithCalculator(CorrectionFactorTestType testType,
-            ICorrectionCalculator calculator,
-            decimal actualFactor, decimal gauge)
+        public static CorrectionTestCalculatorDecorator CreateWithCalculator(CorrectionFactorTestType testType, ICorrectionCalculator calculator, decimal actualFactor, decimal gauge)
         {
             var test = new CorrectionTestWithGauge(testType, actualFactor, gauge);
             var testCalc = new CorrectionTestCalculatorDecorator(calculator, test);
@@ -152,23 +150,76 @@ namespace Domain.EvcVerifications.CorrectionTests
         {
             //correctionTest.Calculator = correctionTest.CalculatorFactory.Invoke(itemValues);
 
-            correctionTest.ActualFactor = actualFactor;
+            correctionTest.ActualValue = actualFactor;
             correctionTest.CalculateFactors();
             return correctionTest;
         }
 
+        public abstract class CorrectionTestDecorator : CorrectionTest
+        {
+            protected CorrectionTest CorrectionTest;
+
+            protected CorrectionTestDecorator(CorrectionTest correctionTest) : base(correctionTest.TestType,
+                correctionTest.ActualValue)
+            {
+                CorrectionTest = correctionTest;
+            }
+        }
+
+        public class CorrectionTestCalculatorDecorator : CorrectionTestDecorator, ICalculateCorrectionFactor
+        {
+            public CorrectionTestCalculatorDecorator(ICorrectionCalculator calculator, CorrectionTest correctionTest,
+                Func<IItemGroup, ICorrectionCalculator> calculatorFactory = null) :
+                base(correctionTest)
+            {
+                Calculator = calculator;
+                BaseType = correctionTest.GetType();
+            }
+
+            #region Public Properties
+
+            public ICorrectionCalculator Calculator { get; set; }
+
+            public Type BaseType { get; }
+
+            #endregion
+
+            #region Public Methods
+
+            public void CalculateFactors()
+            {
+                ExpectedValue = Calculator.CalculateFactor();
+
+                SetValues(ActualValue, ExpectedValue);
+            }
+
+            public override CorrectionTest GetValue()
+            {
+                return CorrectionTest;
+            }
+
+            public override void SetValues(decimal actualFactor, decimal expectedFactor)
+            {
+                base.SetValues(actualFactor, expectedFactor);
+                CorrectionTest.SetValues(actualFactor, expectedFactor);
+            }
+
+            #endregion
+        }
         #endregion
     }
 
     public class CorrectionTestWithGauge : CorrectionTest
     {
-        public CorrectionTestWithGauge(CorrectionFactorTestType testType, decimal actualFactor, decimal expectedFactor, decimal gauge) 
+        public CorrectionTestWithGauge(CorrectionFactorTestType testType, decimal actualFactor, decimal expectedFactor,
+            decimal gauge)
             : base(testType, actualFactor, expectedFactor)
         {
             Gauge = gauge;
         }
 
-        public CorrectionTestWithGauge(CorrectionFactorTestType testType, decimal actualFactor, decimal gauge) : base(testType, actualFactor)
+        public CorrectionTestWithGauge(CorrectionFactorTestType testType, decimal actualFactor, decimal gauge) : base(
+            testType, actualFactor)
         {
             Gauge = gauge;
         }
@@ -180,63 +231,35 @@ namespace Domain.EvcVerifications.CorrectionTests
         #endregion
     }
 
-    public class PressureFactorTest : CorrectionTestWithGauge
+    public class CorrectionTestWithItems<T> : CorrectionTest
+        where T : IItemGroup
     {
-        protected PressureFactorTest(CorrectionFactorTestType testType, decimal actualFactor, decimal gauge) : base(
-            testType, actualFactor, gauge)
+        protected CorrectionTestWithItems(CorrectionFactorTestType testType, T items) : base(testType)
         {
+
         }
+
+        public T Values { get; set; }
     }
 
-    public abstract class CorrectionTestDecorator : CorrectionTest
+    public class PressureCorrectionTest : CorrectionTestWithItems<IPressureItems>
     {
-        protected CorrectionTest CorrectionTest;
-
-        protected CorrectionTestDecorator(CorrectionTest correctionTest) : base(correctionTest.TestType,
-            correctionTest.ActualFactor)
+        protected PressureCorrectionTest(CorrectionFactorTestType testType, IPressureItems items) : base(testType, items)
         {
-            CorrectionTest = correctionTest;
+
         }
+
+        public decimal Gauge { get; set; }
+        public decimal AtmGauge { get; set; }
     }
 
-    public class CorrectionTestCalculatorDecorator : CorrectionTestDecorator, ICalculateCorrectionFactor
+    public class TemperatureCorrectionTest : CorrectionTestWithItems<ITemperatureItems>
     {
-        public CorrectionTestCalculatorDecorator(ICorrectionCalculator calculator, CorrectionTest correctionTest,
-            Func<IItemGroup, ICorrectionCalculator> calculatorFactory = null) :
-            base(correctionTest)
+        protected TemperatureCorrectionTest(CorrectionFactorTestType testType, ITemperatureItems items) : base(testType, items)
         {
-            Calculator = calculator;
-            BaseType = correctionTest.GetType();
         }
 
-        #region Public Properties
-
-        public ICorrectionCalculator Calculator { get; set; }
-
-        public Type BaseType { get; }
-
-        #endregion
-
-        #region Public Methods
-
-        public void CalculateFactors()
-        {
-            ExpectedFactor = Calculator.CalculateFactor();
-
-            SetValues(ActualFactor, ExpectedFactor);
-        }
-
-        public override void SetValues(decimal actualFactor, decimal expectedFactor)
-        {
-            base.SetValues(actualFactor, expectedFactor);
-            CorrectionTest.SetValues(actualFactor, expectedFactor);
-        }
-
-        public override CorrectionTest GetValue()
-        {
-            return CorrectionTest;
-        }
-
-        #endregion
+        public decimal Gauge { get; set; }
     }
+  
 }

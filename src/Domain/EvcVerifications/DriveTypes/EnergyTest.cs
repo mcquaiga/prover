@@ -5,14 +5,14 @@ using Domain.EvcVerifications.CorrectionTests;
 
 namespace Domain.EvcVerifications.DriveTypes
 {
-    public class EnergyTest : TestRunBase<IEnergyItems>
+    public class EnergyTest : CorrectionTest
     {
-        private EnergyTest(EnergyUnitType energyUnitType, decimal startEnergyReading, decimal endEnergyReading,
+        public EnergyTest(EnergyUnitType energyUnitType, decimal startEnergyReading, decimal endEnergyReading,
             decimal evcCorrected,
-            decimal energyGasValue)
+            decimal energyGasValue) : base(CorrectionFactorTestType.Energy)
         {
-            Actual = endEnergyReading - startEnergyReading;
-            Expected = EnergyCalculator.Calculated(energyUnitType, evcCorrected, energyGasValue);
+            ActualValue = endEnergyReading - startEnergyReading;
+            ExpectedValue = EnergyCalculator.Calculated(energyUnitType, evcCorrected, energyGasValue);
         }
 
         #region Public Methods
@@ -25,28 +25,4 @@ namespace Domain.EvcVerifications.DriveTypes
 
         #endregion
     }
-
-    //public class MechanicalDrive : IDriveType
-    //{
-    //    public string Discriminator => Drives.Mechanical;
-    //    public Energy Energy { get; set; }
-
-    //    public MechanicalDrive(IEnergyItems energyItems)
-    //    {
-    //        Energy = new Energy(energyItems);
-    //    }
-
-    //    public int MaxUncorrectedPulses()
-    //    {
-    //        return _mechanicalUncorrectedTestLimits?
-    //                   .FirstOrDefault(x => x.CuFtValue == _uncorUnits)?.UncorrectedPulses ?? 10;
-    //    }
-
-    //    public decimal UnCorrectedInputVolume(decimal appliedInput)
-    //    {
-    //        return appliedInput * Volume.DriveRate;
-    //    }
-
-    //    private readonly List<CorrectionTestDefinition.MechanicalUncorrectedTestLimit> _mechanicalUncorrectedTestLimits;
-    //}
 }

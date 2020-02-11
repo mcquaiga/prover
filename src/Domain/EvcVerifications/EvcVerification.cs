@@ -1,18 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Domain.EvcVerifications.CorrectionTests;
 using Domain.EvcVerifications.DriveTypes;
-using Newtonsoft.Json;
-using Shared.Domain;
 
 namespace Domain.EvcVerifications
 {
     public static class EvcVerificationExtensions
     {
+        #region Public Methods
+
+        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp,
+            CorrectionFactorTestType correctionFactorType)
+            where T : CorrectionTest
+        {
+            return vtp.GetTest<T>(t => t.TestType == correctionFactorType);
+
+            //var tc = vtp.GetTest<CorrectionTest>().GetValue();
+
+            //return (T)tc.GetValue();
+        }
+
+        public static CorrectionTest GetCorrectionTest(this VerificationTestPoint vtp,
+            CorrectionFactorTestType correctionFactorType)
+        {
+            return vtp.GetTest<CorrectionTest>(t => t.TestType == correctionFactorType);
+        }
+
         public static VerificationTestPoint GetTestPointWithVolume(this EvcVerificationTest evcVerification)
         {
             return evcVerification.Tests
@@ -26,32 +42,19 @@ namespace Domain.EvcVerifications
             return point.Tests.Any(t => t.GetType() == typeof(CorrectedVolumeTestRun));
         }
 
-        public static void UpdateValues(this VerificationTestPoint vtp, IEnumerable<ItemValue> beforeValues, IEnumerable<ItemValue> afterValues, decimal appliedInput)
+        public static void UpdateValues(this VerificationTestPoint vtp, IEnumerable<ItemValue> beforeValues,
+            IEnumerable<ItemValue> afterValues, decimal appliedInput)
         {
-
         }
 
-        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp, CorrectionFactorTestType correctionFactorType)
-            where T : CorrectionTest
-        {
-            return vtp.GetTest<T>(t => t.TestType == correctionFactorType);
-            
-            //var tc = vtp.GetTest<CorrectionTest>().GetValue();
-
-            //return (T)tc.GetValue();
-        }
-
-        public static CorrectionTest GetCorrectionTest(this VerificationTestPoint vtp, CorrectionFactorTestType correctionFactorType)
-        {
-            return vtp.GetTest<CorrectionTest>(t => t.TestType == correctionFactorType);
-        }
+        #endregion
     }
 
 
     /// <summary>
     ///     Defines the <see cref="EvcVerificationTest" />
     /// </summary>
-    public class EvcVerificationTest : AggregateJoin<IVerificationTest>
+    public class EvcVerificationTest : AggregateRootWithChildTests<IVerificationTest>
     {
         protected EvcVerificationTest()
         {
@@ -61,7 +64,7 @@ namespace Domain.EvcVerifications
         {
             Device = device;
             DeviceType = device.DeviceType;
-            TestDateTime = DateTimeOffset.UtcNow;
+            TestDateTime = DateTimeOffset.Now;
         }
 
         #region Public Properties
@@ -91,10 +94,6 @@ namespace Domain.EvcVerifications
         ///     Gets or sets the TestDateTime
         /// </summary>
         public DateTimeOffset TestDateTime { get; set; }
-
-        #endregion
-
-        #region Public Methods
 
         #endregion
     }

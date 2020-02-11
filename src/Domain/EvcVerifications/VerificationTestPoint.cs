@@ -6,7 +6,7 @@ using Domain.Interfaces;
 
 namespace Domain.EvcVerifications
 {
-    public class VerificationTestPoint : AggregateJoin<IVerificationTest>, IVerificationTest
+    public class VerificationTestPoint : AggregateRootWithChildTests<CorrectionTest>, IVerificationTest
     {
         protected VerificationTestPoint()
         {
@@ -20,7 +20,7 @@ namespace Domain.EvcVerifications
 
         #region Public Properties
 
-        public decimal? AppliedInput { get; set; }
+        public virtual decimal? AppliedInput { get; set; }
 
         public virtual IEnumerable<ItemValue> BeforeValues { get; set; }
 

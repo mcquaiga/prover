@@ -10,36 +10,40 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 {
 
-    public class BaseVerificationTestMapping : IEntityTypeConfiguration<BaseVerificationTestSql>
-    {
-        private readonly DeviceRepository _deviceRepository;
+    //public class BaseVerificationTestMapping : IEntityTypeConfiguration<BaseVerificationTestSql>
+    //{
+    //    private readonly DeviceRepository _deviceRepository;
 
-        public BaseVerificationTestMapping()
-        {
-            _deviceRepository = Devices.Devices.Repository().Result;
-        }
+    //    public BaseVerificationTestMapping()
+    //    {
+    //        _deviceRepository = Devices.Devices.Repository().Result;
+    //    }
 
       
 
-        public void Configure(EntityTypeBuilder<BaseVerificationTestSql> builder)
-        {
-            var options = new JsonSerializerOptions
-            {
-                IgnoreReadOnlyProperties = true,
-                WriteIndented = true
-            };
+    //    public void Configure(EntityTypeBuilder<BaseVerificationTestSql> builder)
+    //    {
+    //        var options = new JsonSerializerOptions
+    //        {
+    //            IgnoreReadOnlyProperties = true,
+    //            WriteIndented = true
+    //        };
 
-            builder.Property(c => c.Id)
-                .HasColumnName("Id");
+    //        builder.Property(c => c.Id)
+    //            .HasColumnName("Id");
 
-            builder.Property(c => c.ParentId).IsRequired();
+    //        builder.Property(c => c.ParentId).IsRequired();
 
-        }
-    }
+    //    }
+    //}
 
-    public class BaseVerificationTestSql : BaseVerificationTest
+    public class BaseVerificationTestSql : VerificationTest
     {
 
+
+
         public virtual Guid ParentId { get; set; }
+
+        public string Discriminator { get; set; }
     }
 }

@@ -11,8 +11,7 @@ namespace Application.ViewModels
         {
             Gauge = gauge;
             AtmosphericGauge = atmosphericGauge;
-
-            FactorTestCalculatorDecorator = CorrectionTest.CreateWithCalculator(CorrectionFactorTestType.Pressure, CalculatorFactory.Invoke(), Items.Factor, Gauge);
+            FactorTestCalculatorDecorator = CorrectionFactory.CreateWithCalculator(CorrectionFactorTestType.Pressure, CalculatorFactory.Invoke(), Items.Factor, Gauge);
         }
 
         public decimal Gauge { get; set; }
@@ -24,7 +23,7 @@ namespace Application.ViewModels
         {
             base.Update(items);
             ((CorrectionTestWithGauge) FactorTest).Gauge = Gauge;
-            FactorTest.ActualFactor = Items.Factor;
+            FactorTest.ActualValue = Items.Factor;
         }
     }
 }

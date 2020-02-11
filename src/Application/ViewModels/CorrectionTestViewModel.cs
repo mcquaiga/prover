@@ -7,7 +7,7 @@ namespace Application.ViewModels
 {
     public abstract class CorrectionTestViewModel<T> where T : IItemGroup
     {
-        protected CorrectionTestCalculatorDecorator FactorTestCalculatorDecorator;
+        protected CorrectionFactory.CorrectionTestCalculatorDecorator FactorTestCalculatorDecorator;
         protected CorrectionTestViewModel(T items)
         {
             Items = items;

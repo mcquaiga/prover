@@ -117,7 +117,7 @@ namespace Domain.EvcVerifications.Builders
                 var calc = new PressureCalculator(p.UnitType, p.TransducerType, p.Base, gauge, p.AtmosphericPressure);
 
                 _testPoint.AddTest(
-                    CorrectionTest.Create(CorrectionFactorTestType.Pressure, calc, p.Factor, gauge)
+                    CorrectionFactory.Create(CorrectionFactorTestType.Pressure, calc, p.Factor, gauge)
                 );
                
             }
@@ -137,7 +137,7 @@ namespace Domain.EvcVerifications.Builders
                 var calc = new SuperFactorCalculator(si.Co2, si.N2, si.SpecGr, temp.Gauge, pressure.Gauge);
 
                 _testPoint.AddTest(
-                    CorrectionTest.Create(CorrectionFactorTestType.Super, calc, si.Factor)
+                    CorrectionFactory.Create(CorrectionFactorTestType.Super, calc, si.Factor)
                 );
             }
 
@@ -151,7 +151,7 @@ namespace Domain.EvcVerifications.Builders
                 var calc = new TemperatureCalculator(tempItems.Units, tempItems.Base, gaugeTemp);
 
                 _testPoint.AddTest(
-                    CorrectionTest.Create(CorrectionFactorTestType.Temperature, calc, tempItems.Factor, gaugeTemp)
+                    CorrectionFactory.Create(CorrectionFactorTestType.Temperature, calc, tempItems.Factor, gaugeTemp)
                 );
             }
             
@@ -193,11 +193,11 @@ namespace Domain.EvcVerifications.Builders
         {
             var totalCorrection = Calculators.TotalCorrectionFactor(
                 testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Temperature)
-                    ?.ActualFactor,
+                    ?.ActualValue,
                 testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Pressure)
-                    ?.ActualFactor,
+                    ?.ActualValue,
                 testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Super)
-                    ?.ActualFactor);
+                    ?.ActualValue);
 
 
             var uncorVolume = inputType.UnCorrectedInputVolume(testPoint.AppliedInput ?? 0);
@@ -271,7 +271,7 @@ namespace Domain.EvcVerifications.Builders
                 EnergyTest.Create(
                     startValues,
                     endValues,
-                    testPoint.GetTest<CorrectedVolumeTestRun>()?.Actual)
+                    testPoint.GetTest<CorrectedVolumeTestRun>()?.ActualValue)
             );
 
             return this;

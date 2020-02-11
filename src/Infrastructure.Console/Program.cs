@@ -24,13 +24,11 @@ namespace Infrastructure.Console
 
         public static async Task Main(string[] args)
         {
-            var builder = CreateHostBuilder(args);
-            var host = builder.Build();
-
+            using var host = CreateHostBuilder(args).Build();
             var context = host.Services.GetRequiredService<ProverDbContext>();
             await context.Database.EnsureCreatedAsync();
             
-            await builder.RunConsoleAsync();
+            host.Start();
         }
 
         #endregion
