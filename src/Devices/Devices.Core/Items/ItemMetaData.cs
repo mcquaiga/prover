@@ -1,3 +1,5 @@
+using Devices.Core.Items.Descriptions;
+
 namespace Devices.Core.Items
 {
     using Newtonsoft.Json;
@@ -148,13 +150,13 @@ namespace Devices.Core.Items
         /// The GetItemDescription
         /// </summary>
         /// <param name="value">The rawValue <see cref="string"/></param>
-        /// <returns>The <see cref="ItemDescription"/></returns>
+        /// <returns>The <see cref="ItemDescriptionBasic"/></returns>
         public virtual ItemDescription GetItemDescription(object value)
         {
             if (ItemDescriptions != null && ItemDescriptions.Any())
             {
                 if (!int.TryParse(value.ToString(), out var intValue))
-                    return null;
+                    return ItemDescriptions.FirstOrDefault(x => x.Description.Contains(value.ToString()));
 
                 var result = ItemDescriptions.FirstOrDefault(x => (x as IHaveManyId)?.Ids.Contains(intValue) ?? false);
 
@@ -175,50 +177,7 @@ namespace Devices.Core.Items
         {
             return $"{Number} - {Description}";
         }
-
-        /// <summary>
-        /// Defines the <see cref="ItemDescription"/>
-        /// </summary>
-        public class ItemDescription : ItemDescriptionBase, IHaveOneId
-        {
-            /// <summary>
-            /// Gets or sets the Id
-            /// </summary>
-            public int Id { get; set; }
-
-            /// <summary>
-            /// The ToString
-            /// </summary>
-            /// <returns>The <see cref="string"/></returns>
-            public override string ToString()
-            {
-                return $"{Id} - {Description}";
-            }
-        }
-
-        /// <summary>
-        /// Defines the <see cref="ItemDescriptionBase"/>
-        /// </summary>
-        public abstract class ItemDescriptionBase
-        {
-            /// <summary>
-            /// Gets or sets the Description
-            /// </summary>
-            public string Description { get; set; }
-
-            /// <summary>
-            /// Gets or sets the NumericValue
-            /// </summary>
-            public decimal? NumericValue { get; set; }
-
-            /// <summary>
-            /// The ToString
-            /// </summary>
-            /// <returns>The <see cref="string"/></returns>
-            public override string ToString()
-            {
-                return $"{Description} - Value: {NumericValue}";
-            }
-        }
     }
+
+    
 }

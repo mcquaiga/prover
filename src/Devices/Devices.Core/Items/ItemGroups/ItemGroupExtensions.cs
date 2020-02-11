@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups
 {

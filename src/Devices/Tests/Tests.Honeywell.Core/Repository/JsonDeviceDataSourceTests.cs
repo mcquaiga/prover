@@ -5,10 +5,9 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Items.Descriptions;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using ExpectedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,7 +19,7 @@ namespace Tests.Honeywell.Core.Repository
     [TestClass]
     public class JsonDeviceDataSourceTests
     {
-        private List<ItemMetadata.ItemDescription> _expectedDescriptions;
+        private List<ItemDescription> _expectedDescriptions;
 
         private IList<ItemMetadata> _expectedItems;
 
@@ -43,7 +42,7 @@ namespace Tests.Honeywell.Core.Repository
 
             Assert.IsNotNull(actual.First());
             Assert.IsTrue(actual.First().ItemDescriptions.Count == 2);
-            Assert.IsTrue(actual.First().ItemDescriptions.First().GetType() == typeof(MeterIndexItemDescription));
+            Assert.IsTrue(actual.First().ItemDescriptions.First().GetType() == typeof(RotaryMeterTypeDescription));
         }
 
         [TestMethod]
@@ -67,15 +66,15 @@ namespace Tests.Honeywell.Core.Repository
         [TestInitialize]
         public void Setup()
         {
-            _expectedDescriptions = new List<ItemMetadata.ItemDescription>()
+            _expectedDescriptions = new List<ItemDescription>()
             {
-                new ItemMetadata.ItemDescription()
+                new ItemDescriptionWithNumericValue()
                 {
                     Description = "Description 1",
                     Id = 23,
                     NumericValue = 1000
                 },
-                new ItemMetadata.ItemDescription()
+                new ItemDescriptionWithNumericValue()
                 {
                     Description = "Description 2",
                     Id = 25,

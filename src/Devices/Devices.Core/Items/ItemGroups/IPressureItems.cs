@@ -1,36 +1,34 @@
-using System.Collections.Generic;
-using Devices.Core.Interfaces.Items;
+using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IPressureItems : IItemGroup
+    public interface IPressureCorrectionItems : IHaveFactor
     {
         decimal AtmosphericPressure { get; set; }
-
-        decimal Base { get; set; }
-
-        decimal Factor { get; set; }
-
         decimal GasPressure { get; set; }
+        decimal UnsqrFactor { get; set; }
+    }
+
+    public interface IPressureItems : IItemGroup, IPressureCorrectionItems
+    {
+        decimal Base { get; set; }
 
         int Range { get; set; }
 
         PressureTransducerType TransducerType { get; set; }
 
         PressureUnitType UnitType { get; set; }
-
-        decimal UnsqrFactor { get; set; }
     }
 
-    public abstract class PressureItems : IPressureItems
+    public abstract class PressureItemsBase : ItemGroup, IPressureItems
     {
-        public decimal AtmosphericPressure { get; set; }
-        public decimal Base { get; set; }
-        public decimal Factor { get; set; }
-        public decimal GasPressure { get; set; }
-        public int Range { get; set; }
-        public PressureTransducerType TransducerType { get; set; }
-        public PressureUnitType UnitType { get; set; }
-        public decimal UnsqrFactor { get; set; }
+        public abstract decimal AtmosphericPressure { get; set; }
+        public abstract decimal Base { get; set; }
+        public abstract decimal Factor { get; set; }
+        public abstract decimal GasPressure { get; set; }
+        public abstract int Range { get; set; }
+        public abstract PressureTransducerType TransducerType { get; set; }
+        public abstract PressureUnitType UnitType { get; set; }
+        public abstract decimal UnsqrFactor { get; set; }
     }
 }

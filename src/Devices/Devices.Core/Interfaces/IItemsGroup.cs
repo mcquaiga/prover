@@ -1,8 +1,8 @@
-using Devices.Core.Items;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Reflection;
+using Devices.Core.Items;
 
-namespace Devices.Core.Interfaces.Items
+namespace Devices.Core.Interfaces
 {
     public interface IHaveItemInformation
     {
@@ -11,6 +11,6 @@ namespace Devices.Core.Interfaces.Items
 
     public interface IItemGroup
     {
-        //void SetValues(IEnumerable<ItemValue> values);
+        void SetValue(PropertyInfo property, ItemValue value);
     }
 }

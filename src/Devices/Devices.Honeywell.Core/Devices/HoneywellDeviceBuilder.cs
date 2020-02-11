@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items;
 
 namespace Devices.Honeywell.Core.Devices
 {

@@ -1,15 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Items;
-using Devices.Honeywell.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

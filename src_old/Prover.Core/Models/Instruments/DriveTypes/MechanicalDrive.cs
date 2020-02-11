@@ -52,7 +52,7 @@ namespace Prover.Core.Models.Instruments.DriveTypes
         }
 
         public decimal? EvcEnergy
-        {
+        {   
             get
             {
                 if (_instrument != null)

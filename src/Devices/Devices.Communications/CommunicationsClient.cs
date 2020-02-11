@@ -42,11 +42,13 @@ namespace Devices.Communications
 
             DeviceType = deviceType;
 
-            _statusConnectableObservable = StatusObservable.Publish();
-            _statusConnection = _statusConnectableObservable.Connect();
+            //_statusConnectableObservable = StatusObservable.Publish();
+            //_statusConnection = _statusConnectableObservable.Connect();
 
-            _messagingStream = Observable.Empty<string>().Publish();
-            _messagingConnection = _messagingStream.Connect();
+            //_messagingStream = Observable.Empty<string>().Publish();
+            //_messagingConnection = _messagingStream.Connect();
+
+            SetupStreams();
         }
 
         #region Public Properties
@@ -90,7 +92,7 @@ namespace Devices.Communications
         public async Task Disconnect()
         {
             await TryDisconnect();
-            _messagingConnection.Dispose();
+            //_messagingConnection.Dispose();
         }
 
         public async Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
@@ -185,19 +187,15 @@ namespace Devices.Communications
         {
             if (IsConnected)
                 return;
-
-            if (DeviceType == null)
-                throw new NullReferenceException(
-                    "Device type is not initialized. Call this method with the device type first.");
-
-            SetupStreams();
+            
+            //SetupStreams();
 
             if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
                 CancellationTokenSource = new CancellationTokenSource();
 
             CancellationToken.ThrowIfCancellationRequested();
 
-            timeout = timeout.HasValue ? timeout.Value : _timeout;
+            timeout = timeout ?? _timeout;
 
             Exception exception = null;
 
@@ -251,10 +249,10 @@ namespace Devices.Communications
         private void SetupStreams()
         {
             var incoming = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceived)
-                .Select(msg => $"[R] - {ControlCharacters.Prettify(msg)}");
+                .Select(msg => $"[R] << {ControlCharacters.Prettify(msg)}");
 
             var outgoing = CommPort.DataSent
-                .Select(msg => $"[W] - {ControlCharacters.Prettify(msg)}");
+                .Select(msg => $"[S] >> {ControlCharacters.Prettify(msg)}");
 
             _messagingStream = incoming
                 .Merge(outgoing)

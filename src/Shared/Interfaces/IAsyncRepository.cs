@@ -1,27 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Shared.Domain;
 
 namespace Shared.Interfaces
 {
-    public interface IAsyncRepository<T> where T : BaseEntity
+    public interface IAsyncRepository<in TId, T> 
+        where TId : struct
+        where T : BaseEntity
     {
         #region Methods
 
         Task<T> AddAsync(T entity);
 
-        Task<int> CountAsync(ISpecification<T> spec);
+        Task<int> CountAsync(Expression<Func<T, bool>> predicate);
 
         Task DeleteAsync(T entity);
 
-        Task<T> GetByIdAsync(int id);
+        Task DeleteAsync(TId id);
 
-        Task<IReadOnlyList<T>> ListAllAsync();
+        Task<T> GetAsync(TId id);
 
-        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
+        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate);
 
         Task UpdateAsync(T entity);
 
         #endregion
+    }
+
+    public interface IAsyncRepositoryGuid<T> : IAsyncRepository<Guid, T>
+        where T : BaseEntity
+    {
+
     }
 }

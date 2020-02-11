@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items.Attributes;
+using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {
     public abstract class ItemGroupBuilderBase<TGroup> where TGroup : IItemGroup
     {
-        protected DeviceType DeviceType;
+        protected DeviceType DeviceType { get; }
+
+        protected ItemGroupBuilderBase(DeviceType deviceType)
+        {
+            DeviceType = deviceType;
+        }
 
         #region Public Methods
 
@@ -28,7 +33,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected virtual IItemGroup GetItemGroupInstance(Type groupType)
         {
-            var itemType = groupType.GetMatchingItemGroupClass(Assembly.GetAssembly(GetType()), BaseAssembly);
+            var itemType = groupType.GetMatchingItemGroupClass(Assembly.GetAssembly(DeviceType.GetType()), BaseAssembly);
             if (itemType == null)
                 throw new Exception($"Type {groupType.Name} could not be found.");
 
@@ -51,52 +56,49 @@ namespace Devices.Core.Items.ItemGroups.Builders
                 select new Tuple<PropertyInfo, ItemValue>(prop, value);
         }
 
-        protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, string valueString)
-        {
-            if (property.PropertyType.IsEnum)
-            {
-                var e = Enum.Parse(property.PropertyType, valueString);
-                property.SetValue(itemGroup, e);
-            }
-            else if (property.PropertyType == typeof(decimal))
-            {
-                if (decimal.TryParse(valueString, out var d))
-                    property.SetValue(itemGroup, d);
-            }
-            else if (property.PropertyType == typeof(int))
-            {
-                if (!int.TryParse(valueString, out var i))
-                {
-                    if (decimal.TryParse(valueString, out var d))
-                        i = decimal.ToInt32(d);
-                    else
-                        throw new ArgumentException(
-                            $"Value for property {property.Name} with type {property.PropertyType} is the wrong data type.");
-                }
+        //protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, string valueString)
+        //{
+        //    if (property.PropertyType.IsEnum)
+        //    {
+        //        var e = Enum.Parse(property.PropertyType, valueString);
+        //        property.SetValue(itemGroup, e);
+        //    }
+        //    else if (property.PropertyType == typeof(decimal))
+        //    {
+        //        if (decimal.TryParse(valueString, out var d))
+        //            property.SetValue(itemGroup, d);
+        //    }
+        //    else if (property.PropertyType == typeof(int))
+        //    {
+        //        if (!int.TryParse(valueString, out var i))
+        //        {
+        //            if (decimal.TryParse(valueString, out var d))
+        //                i = decimal.ToInt32(d);
+        //            else
+        //                throw new ArgumentException(
+        //                    $"Value for property {property.Name} with type {property.PropertyType} is the wrong data type.");
+        //        }
 
-                property.SetValue(itemGroup, i);
-            }
-            else if (property.PropertyType == typeof(string))
-            {
-                property.SetValue(itemGroup, valueString);
-            }
-            else
-            {
-                throw new NotImplementedException($"{property.PropertyType} is not yet supported.");
-            }
+        //        property.SetValue(itemGroup, i);
+        //    }
+        //    else if (property.PropertyType == typeof(string))
+        //    {
+        //        property.SetValue(itemGroup, valueString);
+        //    }
+        //    else
+        //    {
+        //        throw new NotImplementedException($"{property.PropertyType} is not yet supported.");
+        //    }
 
-            return property;
-        }
+        //    return property;
+        //}
 
-        protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, ItemValue value)
-        {
-            if (property.PropertyType.IsSubclassOf(typeof(ItemMetadata.ItemDescription)))
-                property.SetValue(itemGroup, (value as ItemValueWithDescription)?.Description);
-            else
-                return SetPropertyValue(itemGroup, property, value.Value.ToString());
+        //protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, ItemValue value)
+        //{
+        //    itemGroup.SetValue(property, value);
 
-            return property;
-        }
+        //    return property;
+        //}
 
         protected virtual TGroup SetValues(TGroup itemGroup, IEnumerable<ItemValue> itemValues)
         {
@@ -104,7 +106,8 @@ namespace Devices.Core.Items.ItemGroups.Builders
                 .ForEach(pair =>
                 {
                     var (prop, item) = pair;
-                    SetPropertyValue(itemGroup, prop, item);
+                    itemGroup.SetValue(prop, item);
+                    //SetPropertyValue(itemGroup, prop, item);
                 });
 
             return itemGroup;

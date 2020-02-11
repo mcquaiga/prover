@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {

@@ -5,11 +5,9 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core;
-using Devices.Honeywell.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -38,7 +36,7 @@ namespace Tests.Honeywell.Core.Repository
                 {
                     Assert.IsNotNull(d);
                     Assert.IsNotNull(d.CanUseIrDaPort);
-                    Assert.IsTrue(d.Id != 0);
+                    Assert.IsTrue(d.Id != Guid.Empty);
 
                     Assert.IsFalse(d.Items
                         .GroupBy(n => n.Number)

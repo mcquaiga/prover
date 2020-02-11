@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Newtonsoft.Json;

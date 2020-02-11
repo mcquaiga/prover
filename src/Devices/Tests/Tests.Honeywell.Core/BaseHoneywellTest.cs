@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Devices.Core.Items;
@@ -38,7 +39,7 @@ namespace Tests.Honeywell.Core
                 .Returns("Honeywell");
 
             Device.Setup(d => d.Id)
-                .Returns(3);
+                .Returns(Guid.NewGuid());
 
             Device.Setup(d => d.AccessCode)
                 .Returns("3");
@@ -60,7 +61,7 @@ namespace Tests.Honeywell.Core
                .Returns("Honeywell 2");
 
             Device2.Setup(d => d.Id)
-                .Returns(14);
+                .Returns(Guid.NewGuid());
 
             Device2.Setup(d => d.AccessCode)
                 .Returns("3");

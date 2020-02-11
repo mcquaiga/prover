@@ -6,13 +6,28 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 {
     public class SiteInformationItems : HoneywellItemGroup, ISiteInformationItems
     {
-        public CompositionType CompositionType { get; set; }
+        public CompositionType CompositionType
+        {
+            get
+            {
+                if (PressureFactor == CorrectionFactorType.Live && TemperatureFactor == CorrectionFactorType.Live)
+                    return CompositionType.PTZ;
+
+                if (PressureFactor == CorrectionFactorType.Live)
+                    return CompositionType.P;
+
+                if (TemperatureFactor == CorrectionFactorType.Live)
+                    return CompositionType.T;
+
+                return CompositionType.Fixed;
+            }
+        }
 
         [ItemInfo(122)]
         public string FirmwareVersion { get; set; }
 
         [ItemInfo(109)]
-        public CorrectionFactorType PressureFactorLive { get; set; }
+        public CorrectionFactorType PressureFactor { get; set; }
 
         [ItemInfo(62)]
         public string SerialNumber { get; set; }
@@ -24,10 +39,10 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         public string SiteId2 { get; set; }
 
         [ItemInfo(110)]
-        public CorrectionFactorType SuperFactorLive { get; set; }
+        public CorrectionFactorType SuperFactor { get; set; }
 
         [ItemInfo(111)]
-        public CorrectionFactorType TemperatureFactorLive { get; set; }
+        public CorrectionFactorType TemperatureFactor { get; set; }
 
     }
 

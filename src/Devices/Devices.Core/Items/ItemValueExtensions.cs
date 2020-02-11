@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Devices.Core.Items.Descriptions;
 using Newtonsoft.Json;
 
 namespace Devices.Core.Items
@@ -40,9 +41,14 @@ namespace Devices.Core.Items
             return x.Value;
         }
 
-        public static ItemMetadata.ItemDescription GetItemDescription(this IEnumerable<ItemValue> items, int itemNumber)
+        public static decimal? GetItemValueNullable(this IEnumerable<ItemValue> items, int itemNumber)
         {
-            return (GetItem(items, itemNumber) as ItemValueWithDescription)?.Description;
+            return GetItem(items, itemNumber)?.DecimalValue();
+        }
+
+        public static ItemDescription GetItemDescription(this IEnumerable<ItemValue> items, int itemNumber)
+        {
+            return (GetItem(items, itemNumber) as ItemValueWithDescription)?.ItemDescription;
         }
 
         public static decimal? GetValue(this ItemValue value)
@@ -50,33 +56,33 @@ namespace Devices.Core.Items
             return value.DecimalValue();
         }
 
-        public static decimal GetValue(this ItemValueWithDescription value)
-        {
-            if (value.Description.NumericValue == null)
-                return value.Description.Id;
+        //public static decimal GetValue(this ItemValueWithDescription value)
+        //{
+        //    if (decimal.TryParse(value.ItemDescription.GetValue(), ))
+        //        return value.ItemDescription.Id;
 
-            return value.Description.NumericValue.Value;
-        }
+        //    return value.ItemDescription.NumericValue.Value;
+        //}
 
         public static string GetDescription(this ItemValueWithDescription value)
         {
-            return value.Description.Description;
+            return value.ItemDescription.Description;
         }
 
         public static string Serialize(this IEnumerable<ItemValue> items)
         {
             if (items == null) return string.Empty;
-            return JsonConvert.SerializeObject(items.ToDictionary());
+            return JsonConvert.SerializeObject(items.ToItemValuesDictionary());
         }
 
-        public static Dictionary<int, string> ToDictionary(this IEnumerable<ItemValue> items)
+        public static Dictionary<int, string> ToItemValuesDictionary(this IEnumerable<ItemValue> items)
         {
             try
             {
                 if (items == null) return new Dictionary<int, string>();
                 return items
                     .Where(i => i.Metadata != null)
-                    .ToDictionary(k => k.Metadata.Number, v => v.Value.ToString());
+                    .ToDictionary(k => k.Metadata.Number, v => v.RawValue.ToString());
             }
             catch (Exception e)
             {

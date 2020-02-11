@@ -1,7 +1,7 @@
 {
   "AccessCode": "99",
   "CanUseIrDaPort": true,
-  "Id": "12",
+  "Id": "62757db6-2332-4c14-8560-489456deede2",
   "Name": "TCI",
   "OverrideItems": [
     {
@@ -26,5 +26,5 @@
       ]
     }
   ],
-  "ExcludeItems": [] 
+  "ExcludeItems": []
 }

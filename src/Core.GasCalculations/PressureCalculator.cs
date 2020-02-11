@@ -1,49 +1,100 @@
 ﻿using System;
-using Core.GasCalculations.Helpers;
 using Devices.Core;
 using Devices.Core.Items.ItemGroups;
+using Shared.Extensions;
 
 namespace Core.GasCalculations
 {
-    public class PressureCalculator
-    {
-        private readonly IPressureItems _values;
+    //public static class Calculators
+    //{
+    //    #region Public Properties
 
-        public PressureCalculator(IPressureItems values)
+    //    public static PressureCalculator Pressure => new PressureCalculator();
+
+    //    #endregion
+
+    //    #region Public Methods
+
+    //    public static PressureCalculator CalculatePressure(IPressureItems items, decimal gauge,
+    //        decimal? atmosphericGauge)
+    //    {
+    //        return PressureCalculator.Calculate(items, gauge, atmosphericGauge);
+    //    }
+
+    //    #endregion
+    //}
+
+    public class PressureCalculator : ICorrectionCalculator
+    {
+        private readonly decimal _basePressure;
+
+        private readonly PressureTransducerType _transducerType;
+        private readonly PressureUnitType _unitType;
+
+        public PressureCalculator(PressureUnitType unitType, PressureTransducerType transducerType,
+            decimal basePressure, decimal gaugePressure, decimal atmPressure)
         {
-            _values = values;
+            _unitType = unitType;
+            _transducerType = transducerType;
+            _basePressure = basePressure;
+
+            Gauge = gaugePressure;
+            Atmospheric = atmPressure;
         }
 
+        #region Public Properties
+
+        public decimal Gauge { get; }
+        public decimal Atmospheric { get; }
+
+        public decimal GasPressure => GetGasPressure(_transducerType, Gauge, Atmospheric);
+
+        #endregion
+
         #region Public Methods
+
+        public decimal CalculateFactor()
+        {
+            if (_basePressure == 0)
+                return 0;
+
+            var psiGas = GasPressure.ConvertToPsi(_unitType);
+            var psiBase = _basePressure.ConvertToPsi(_unitType);
+
+            return Round.Factor(psiGas / psiBase);
+        }
+
+        
 
         /// <summary>
         ///     Gets the GasPressure
         /// </summary>
-        /// <param name="gasGauge"></param>
+        /// <param name="transducerType"></param>
+        /// <param name="gauge"></param>
         /// <param name="atmosphericGauge"></param>
-        public decimal GasPressure(decimal gasGauge, decimal atmosphericGauge)
+        /// <param name="items"></param>
+        public static decimal GetGasPressure(PressureTransducerType transducerType, decimal gauge,
+            decimal atmosphericGauge)
         {
-            var result = gasGauge + atmosphericGauge;
-            return Math.Round(result, 4);
+            switch (transducerType)
+            {
+                case PressureTransducerType.Gauge:
+                    return Round.Gauge(gauge + atmosphericGauge);
+
+                case PressureTransducerType.Absolute:
+                    return Round.Gauge(gauge);
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
-        public static decimal Factor(decimal baseValue, decimal gasValue)
+        public static decimal GetGaugePressure(int range, decimal percentOfRange)
         {
-            if (baseValue == 0)
-                throw new DivideByZeroException(nameof(baseValue));
+            if (percentOfRange > 1)
+                percentOfRange /= 100;
 
-            //var psiGas = gasValue.ConvertToPsi(units);
-            //var psiBase = baseValue.ConvertToPsi(units);
-
-            return Round.Factor(gasValue / baseValue);
-        }
-
-        public static decimal GetGaugePressure(int range, decimal percentOfGauge)
-        {
-            if (percentOfGauge > 1)
-                percentOfGauge /= 100;
-
-            return Math.Round(percentOfGauge * range, 2);
+            return Round.Gauge(percentOfRange * range);
         }
 
         #endregion
@@ -53,7 +104,7 @@ namespace Core.GasCalculations
     {
         #region Public Methods
 
-        public static decimal ConvertToPsi(decimal value, PressureUnitType fromUnit)
+        public static decimal ConvertToPsi(this decimal value, PressureUnitType fromUnit)
         {
             decimal result;
             switch (fromUnit)

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-
 namespace Devices.Core.Repository
 {
     public interface IDeviceRepository

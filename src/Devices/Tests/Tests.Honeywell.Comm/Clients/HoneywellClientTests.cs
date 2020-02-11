@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -7,11 +6,8 @@ using Devices.Communications;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
-using Devices.Core.Items;
 using Devices.Honeywell.Comm;
-using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Exceptions;
-using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Tests.Honeywell.Comm.Messaging;

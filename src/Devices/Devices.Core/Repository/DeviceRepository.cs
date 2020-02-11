@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -71,6 +70,11 @@ namespace Devices.Core.Repository
         public DeviceType GetByName(string name)
         {
             return FindInSetByName(GetAll(), name);
+        }
+
+        public DeviceType GetById(Guid id)
+        {
+            return _deviceCache.FirstOrDefault(d => d.Key.Id == id).Key;
         }
 
         public T GetByName<T>(string name)

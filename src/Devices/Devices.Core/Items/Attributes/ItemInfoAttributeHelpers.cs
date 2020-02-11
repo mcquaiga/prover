@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Devices.Core.Interfaces.Items;
+using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.Attributes
 {

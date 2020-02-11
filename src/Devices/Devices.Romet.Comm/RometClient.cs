@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Messaging.Requests;
-using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Items;
 using Devices.Romet.Core;
 
@@ -34,11 +30,20 @@ namespace Devices.Romet.Comm
             {
                 var value = await GetItemValue(itemNumber);
 
-                if (value.Value.ToString().Trim() != "NA") 
+                if (value.GetValue().ToString().Trim() != "NA") 
                     results.Add(value);
             }
 
             return results;
+        }
+
+        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        {
+            var itemDetails = DeviceType.Items.GetItem(itemNumber);
+            if (itemDetails == null)
+                throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
+            
+            return await GetItemValue(itemDetails);
         }
     }
 }

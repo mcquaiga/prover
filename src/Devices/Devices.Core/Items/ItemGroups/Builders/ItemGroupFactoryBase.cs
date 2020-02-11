@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {
@@ -43,7 +42,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
         {
             loadGroupBuilders();
 
-            var groupClass = type.GetMatchingItemGroupClass(Assembly.GetAssembly(typeof(Type)), BaseAssembly);
+            var groupClass = type.GetMatchingItemGroupClass(Assembly.GetAssembly(DeviceType.GetType()), BaseAssembly);
 
             if (groupClass != null)
             {
@@ -56,7 +55,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 if (builder != null)
                 {
-                    var instance = Activator.CreateInstance(builder) as IBuildItemsFor<IItemGroup>;
+                    var instance = Activator.CreateInstance(builder, DeviceType) as IBuildItemsFor<IItemGroup>;
 
                     BuildersCache.Add(groupClass, instance);
                     return instance;
@@ -78,7 +77,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 var myType = typeof(IBuildItemsFor<>);
 
-                var builders = Assembly.GetAssembly(this.GetType()).GetTypes().Where(p =>
+                var builders = Assembly.GetAssembly(DeviceType.GetType()).GetTypes().Where(p =>
                     p.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == myType));
                 BuilderTypes.UnionWith(builders.ToList());
 

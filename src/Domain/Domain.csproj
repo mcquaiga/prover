@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>

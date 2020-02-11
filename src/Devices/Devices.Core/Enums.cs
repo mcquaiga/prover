@@ -9,14 +9,19 @@ namespace Devices.Core
         PTZ,
         Fixed
     }
-
+    public enum RotaryMeterMountType
+    {
+        B3,
+        LMMA,
+        RM
+    }
     public enum CorrectionFactorType
     {
         Fixed = 1,
         Live = 0
     }
 
-    public enum DriveType
+    public enum VolumeInputType
     {
         Mechanical,
         PulseInput,

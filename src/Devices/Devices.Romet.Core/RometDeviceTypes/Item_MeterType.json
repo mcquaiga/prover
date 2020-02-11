@@ -1,6 +1,5 @@
 ﻿{
-  "type":
-    "Devices.Core.Items.MeterIndexItemDescription, Devices.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "type": "Devices.Core.Items.Descriptions.RotaryMeterTypeDescription, Devices.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
   "ItemDescriptions": [
     {
       "description": "No Meter Type",
@@ -8,7 +7,7 @@
       "UnCorPulsesX100": "0",
       "MeterDisplacement": "0.00",
       "MountType": "LMMA",
-      "ids": ["0"]
+      "ids": [ "0" ]
     },
     {
       "description": "Roots 2M",
@@ -170,7 +169,7 @@
       "UnCorPulsesX100": "2",
       "MeterDisplacement": "0.0",
       "MountType": "RM",
-      "ids": ["156"]
+      "ids": [ "156" ]
     },
     {
       "description": "RM 3000",

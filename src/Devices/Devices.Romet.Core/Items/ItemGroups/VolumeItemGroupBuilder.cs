@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
@@ -9,29 +10,38 @@ using Devices.Honeywell.Core.Items.ItemGroups;
 
 namespace Devices.Romet.Core.Items.ItemGroups
 {
-    internal class VolumeItemGroupBuilder : ItemGroupBuilderBase<VolumeItems>, IBuildItemsFor<VolumeItems>
+    internal class VolumeItemGroupBuilderRomet : VolumeItemGroupBuilder, IBuildItemsFor<VolumeItems>
     {
+        private const int HighResUncorItemNumber = 767;
+        private const int MeterSizeItemNumber = 768;
+        private const int UncorrectedItemNumber = 2;
+        private const int HighResCorItemNumber = 113;
+        private const int CorrectedItemNumber = 0;
+
         #region Public Methods
 
-        public VolumeItems Build(DeviceType device, IEnumerable<ItemValue> values)
+        public VolumeItemGroupBuilderRomet(DeviceType deviceType) : base(deviceType)
+        {
+        }
+
+        public override VolumeItems Build(DeviceType device, IEnumerable<ItemValue> values)
         {
             var items = values.ToList();
+            var volume = base.Build(device, items);
 
-            var volume = GetItemGroupInstance(typeof(VolumeItems), items);
+            volume.VolumeInputType = !string.IsNullOrEmpty(items.GetItem(MeterSizeItemNumber).GetValue().ToString())
+                ? VolumeInputType.Rotary
+                : VolumeInputType.Mechanical;
 
-            volume.DriveRateDescription = items.GetItemDescription(98).Description;
+            volume.CorrectedReading =
+                JoinLowResHighResReading(
+                    items.GetItemValue(CorrectedItemNumber),
+                    items.GetItemValue(HighResCorItemNumber));
 
-            volume.CorrectedReading = JoinLowResHighResReading(items.GetItemValue(0),
-                items.GetItemValue(113));
-
-            volume.UncorrectedReading = JoinLowResHighResReading(items.GetItemValue(2), 0);
-
-            volume.CorrectedMultiplier = items.GetItem<ItemValueWithDescription>(90).GetValue();
-            volume.CorrectedUnits = items.GetItem<ItemValueWithDescription>(90).GetDescription();
-
-            volume.UncorrectedMultiplier = items.GetItemValue(92);
-
-            volume.UncorrectedUnits = items.GetItemDescription(92).Description;
+            volume.UncorrectedReading =
+                JoinLowResHighResReading(
+                    items.GetItemValue(UncorrectedItemNumber),
+                    items.GetItemValueNullable(HighResUncorItemNumber) ?? 0);
 
             return volume;
         }
@@ -51,9 +61,5 @@ namespace Devices.Romet.Core.Items.ItemGroups
         }
 
         #endregion
-    }
-
-    internal class SiteInformationItemsRomet : SiteInformationItems, ISiteInformationItems
-    {
     }
 }

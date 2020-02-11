@@ -2,9 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Interfaces
 {
@@ -39,6 +37,24 @@ namespace Devices.Core.Interfaces
             GroupCache.TryAdd(typeof(TGroup), result);
             return result;
         }
+
+        public virtual TGroup ItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : IItemGroup
+        {
+            var v = values.ToList();
+
+            var joined = Values.Except(v, new ItemValueComparer()).ToList();
+
+            var result = DeviceType.GetGroupValues<TGroup>(joined.Union(v));
+            return result;
+        }
+
+        public virtual TGroup CreateItemGroup<TGroup>() where TGroup : IItemGroup
+        {
+            var result = DeviceType.GetGroupValues<TGroup>(Values);
+            return result;
+        }
+
+
 
         public virtual void SetItemValues(IEnumerable<ItemValue> itemValues)
         {

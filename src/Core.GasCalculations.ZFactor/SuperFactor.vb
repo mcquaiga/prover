@@ -69,6 +69,7 @@
 
     Public ReadOnly Property SuperFactor As Decimal
         Get
+            CalcFPV()
             Return CDec(fpv)
         End Get
     End Property

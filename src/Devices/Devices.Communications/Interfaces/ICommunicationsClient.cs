@@ -1,6 +1,5 @@
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using System;
 using System.Collections.Generic;

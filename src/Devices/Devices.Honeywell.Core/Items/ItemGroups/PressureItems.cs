@@ -4,6 +4,15 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
+    //public class PressureCorrectionItems : IPressureCorrectionItems
+    //{
+    //    public decimal AtmosphericPressure { get; set; }
+    //    public decimal Factor { get; set; }
+    //    public decimal GasPressure { get; set; }
+    //    public decimal UnsqrFactor { get; set; }
+    //}
+
+
     public class PressureItems : HoneywellItemGroup, IPressureItems
     {
         #region Public Properties
@@ -20,7 +29,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
         [ItemInfo(112)] public PressureTransducerType TransducerType { get; set; }
 
-        [ItemInfo(87)] public PressureUnitType UnitType { get; set; }
+        [ItemInfo(87)] public  PressureUnitType UnitType { get; set; }
 
         [ItemInfo(47)] public decimal UnsqrFactor { get; set; }
 

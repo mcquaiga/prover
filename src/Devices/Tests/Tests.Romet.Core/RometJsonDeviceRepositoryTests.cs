@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core;
-using Devices.Honeywell.Core.Repository;
 using Devices.Romet.Core;
 using Devices.Romet.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace Tests.Romet.Core
 {
@@ -58,7 +54,7 @@ namespace Tests.Romet.Core
                 {
                     Assert.IsNotNull(d);
                     Assert.IsNotNull(d.CanUseIrDaPort);
-                    Assert.IsTrue(d.Id != 0);
+                    Assert.IsTrue(d.Id != Guid.Empty);
 
                     Assert.IsFalse(d.Items
                         .GroupBy(n => n.Number)

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Core.Items.Attributes;
-using Devices.Core.Items.ItemGroups;
-using static Devices.Core.Items.ItemMetadata;
+using Devices.Core.Items.Descriptions;
 
 namespace Devices.Honeywell.Core.Items
 {
@@ -27,7 +25,7 @@ namespace Devices.Honeywell.Core.Items
             IDictionary<int, string> itemValuesDictionary)
         {
             var items = deviceType.ToItemValuesEnumerable(itemValuesDictionary);
-            return deviceType.CreateInstance(items);
+            return deviceType.Factory.CreateInstance(items);
         }
 
         public static IEnumerable<ItemMetadata> FrequencyTestItems(this IEnumerable<ItemMetadata> items)
@@ -73,7 +71,7 @@ namespace Devices.Honeywell.Core.Items
         {
             return items.FirstOrDefault(i => i.Number == itemNumber)?.ItemDescriptions;
         }
-        
+
         public static IEnumerable<int> GetItemNumbersByGroup<T>()
         {
             var itemType = typeof(T).GetMatchingItemGroupClass();
@@ -130,6 +128,13 @@ namespace Devices.Honeywell.Core.Items
                 x => x.Number,
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
+        }
+
+        public static IEnumerable<ItemValue> ToItemValuesEnumerable(this DeviceType deviceType,
+            Dictionary<string, string> itemValuesDictionary)
+        {
+            var dict = itemValuesDictionary.ToDictionary(k => int.Parse(k.Key), v => v.Value);
+            return deviceType.ToItemValuesEnumerable(dict);
         }
 
         public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)

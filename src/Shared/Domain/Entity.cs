@@ -8,16 +8,21 @@ namespace Shared.Domain
 {
     public abstract class GenericEntity<TId>
     {
+        #region Public Properties
+
         /// <summary>
         ///     Gets or sets the id.
         /// </summary>
-        public TId Id { get; set; }
+        public TId Id { get; protected set; }
+
+        #endregion
     }
+
 
     /// <summary>
     ///     Entity base class for domain objects with Ids
     /// </summary>
-    ///     Id type
+    /// Id type
     /// </typeparam>
     public abstract class BaseEntity : GenericEntity<Guid>
     {
@@ -29,10 +34,14 @@ namespace Shared.Domain
         protected BaseEntity(Guid id)
         {
             Id = id;
-        }     
+        }
+
+        #region Public Methods
 
         public virtual void OnInitializing()
         {
         }
+
+        #endregion
     }
 }

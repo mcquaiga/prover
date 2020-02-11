@@ -13,5 +13,8 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
         [ItemInfo(53)]
         public decimal SpecGr { get; protected set; }
+
+        [ItemInfo(47)]
+        public decimal Factor { get; set; }
     }
 }

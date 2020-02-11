@@ -1,14 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
-using Devices.Core.Items.DriveTypes;
-using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items;
-using Devices.Honeywell.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core
 {

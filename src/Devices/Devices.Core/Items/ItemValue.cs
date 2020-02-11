@@ -1,19 +1,27 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items
 {
-    public abstract class ItemValue
+    public class ItemValue
     {
+        private ItemValue() { }
+
         public static ItemValue Create(ItemMetadata metadata, object value)
         {
-            if (metadata.ItemDescriptions.Any())
+            if (value.ToString().Equals("! Unsupported"))
+            {
+
+            }
+            else if (metadata.ItemDescriptions.Any())
             {
                 return new ItemValueWithDescription(metadata, value);
             }
 
-            return new ItemValueBasic(metadata, value);
+            return new ItemValue(metadata, value);
         }
 
         protected ItemValue(ItemMetadata metadata, object value)
@@ -28,12 +36,13 @@ namespace Devices.Core.Items
                 Value = myVal;
 
             Metadata = metadata;
+
         }
 
         #region Public Properties
 
         public object RawValue { get; }
-        public object Value { get; protected set; }
+        protected object Value { get; set; }
         public int Id => Metadata?.Number ?? -1;
         public Type ValueType => Value.GetType();
 
@@ -41,12 +50,22 @@ namespace Devices.Core.Items
 
         public decimal? DecimalValue()
         {
-            return decimal.TryParse(Value.ToString(), out var result) ? result : default(decimal?);
+            return decimal.TryParse(GetValue().ToString(), out var result) ? result : default(decimal?);
         }
 
         public int? IntValue()
         {
-            return int.TryParse(Value.ToString(), out var result) ? result : default(int?);
+            return int.TryParse(GetValue().ToString(), out var result) ? result : default(int?);
+        }
+
+        public virtual object GetValue()
+        {
+            return Value;
+        }
+
+        public virtual string GetDescription()
+        {
+            return Value.ToString();
         }
 
         #endregion
@@ -62,33 +81,51 @@ namespace Devices.Core.Items
         #endregion
     }
 
-    public class ItemValueBasic : ItemValue
-    {
-        public ItemValueBasic(ItemMetadata metadata, object value) : base(metadata, value)
-        {
-        }
-    }
 
     public class ItemValueWithDescription : ItemValue
     {
         public ItemValueWithDescription(ItemMetadata metadata, object value) : base(metadata, value)
         {
+            ItemDescription = Metadata?.GetItemDescription(Value);
 
-            Description = Metadata?.GetItemDescription(Value);
-
-            if (Description != null)
-            {
-                if (Description.NumericValue != null)
-                    Value = Description.NumericValue;
-                else
-                    Value = Description.Description;
-            }
+            if (ItemDescription == null)
+                throw new ArgumentNullException($"Item #{metadata.Number}: Couldn't find description matching value {Value}");
         }
 
-        #region Public Properties
+        public ItemDescription ItemDescription { get; }
 
-        public ItemMetadata.ItemDescription Description { get; }
+        public override object GetValue()
+        {
+            return ItemDescription.GetValue();
+        }
 
-        #endregion
+        public override string GetDescription()
+        {
+            return ItemDescription.Description;
+        }
     }
+
+    //public class ItemValueWithDescription44 : ItemValue
+    //{
+    //    public ItemValueWithDescription44(ItemMetadata metadata, object value) : base(metadata, value)
+    //    {
+    //        ItemDescription = Metadata?.GetItemDescription(Value);
+    //    }
+
+    //    #region Public Properties
+
+    //    public ItemDescription ItemDescription { get; }
+
+    //    public override object GetValue()
+    //    {
+    //        return ItemDescription.GetValue();
+    //    }
+
+    //    public override string GetDescription()
+    //    {
+    //        return ItemDescription.Description;
+    //    }
+
+    //    #endregion
+    //}
 }

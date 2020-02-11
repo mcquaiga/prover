@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Items.Descriptions;
 using Devices.Core.Repository;
 
 namespace Devices.Core.Database
@@ -20,7 +21,7 @@ namespace Devices.Core.Database
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ItemMetadata.ItemDescription>> GetItemDescriptionsAsync(string name)
+        public Task<IEnumerable<ItemDescription>> GetItemDescriptionsAsync(string name)
         {
             throw new NotImplementedException();
         }

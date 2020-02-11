@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using Devices.Core.Interfaces;
-using Devices.Core.Interfaces.Items;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items;
@@ -27,8 +26,6 @@ namespace Devices.Honeywell.Core
         #region Public Properties
 
         public virtual string AccessCode { get; set; }
-
-        public virtual int Id { get; set; }
 
         public override ICollection<ItemMetadata> Items => ItemDefinitions.OrderBy(i => i.Number).ToList();
 

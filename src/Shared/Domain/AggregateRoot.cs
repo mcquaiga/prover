@@ -23,6 +23,7 @@ namespace Shared.Domain
 
         protected AggregateRoot() : base()
         {
+
         }
 
         protected AggregateRoot(Guid id) : base(id)

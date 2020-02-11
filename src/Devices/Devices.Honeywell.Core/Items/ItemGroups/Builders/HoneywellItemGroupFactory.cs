@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Devices.Core.Interfaces.Items;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
@@ -13,7 +10,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
     {
         public HoneywellItemGroupFactory(HoneywellDeviceType deviceType) : base (deviceType)
         {
-            BasicGroupBuilder = new HoneywellItemGroupBuilder<IItemGroup>();
+            BasicGroupBuilder = new HoneywellItemGroupBuilder<IItemGroup>(deviceType);
         }
 
         #region Public Methods

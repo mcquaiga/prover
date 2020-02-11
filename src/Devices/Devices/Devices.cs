@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Devices.Romet.Core.Repository;
@@ -18,7 +14,5 @@ namespace Devices
 
             return DeviceRepository.Instance;
         }
-
-        public static 
     }
 }

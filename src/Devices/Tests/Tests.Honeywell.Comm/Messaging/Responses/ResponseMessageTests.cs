@@ -6,9 +6,7 @@ using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Honeywell.Comm;
-using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Exceptions;
-using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

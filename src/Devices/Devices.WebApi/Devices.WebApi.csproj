@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
+   
     <ProjectReference Include="..\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj" />
     <ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />

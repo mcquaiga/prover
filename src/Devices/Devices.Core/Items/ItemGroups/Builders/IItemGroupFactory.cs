@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Devices.Core.Interfaces.Items;
+using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {

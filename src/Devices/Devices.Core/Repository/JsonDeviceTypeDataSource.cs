@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository.JsonConverters;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Devices.Core.Repository
 {

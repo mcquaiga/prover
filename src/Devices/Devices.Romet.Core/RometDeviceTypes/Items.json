@@ -108,79 +108,7 @@
     "isVolume": "true",
     "ItemDescriptions": [
       {
-        "id": "0",
-        "description": "CuFT",
-        "numericvalue": "1"
-      },
-      {
-        "id": "1",
-        "description": "CuFTx10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "2",
-        "description": "CuFTx100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "3",
-        "description": "CF",
-        "numericvalue": "1"
-      },
-      {
-        "id": "4",
-        "description": "CFx10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "5",
-        "description": "CFx100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "6",
-        "description": "CFx1000",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "7",
-        "description": "CCF",
-        "numericvalue": "100"
-      },
-      {
-        "id": "8",
-        "description": "MCF",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "9",
-        "description": "m3x0.1",
-        "numericvalue": "0.1"
-      },
-      {
-        "id": "10",
-        "description": "m3",
-        "numericvalue": "1"
-      },
-      {
-        "id": "11",
-        "description": "m3x10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "12",
-        "description": "m3x100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "13",
-        "description": "m3x1000",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "14",
-        "description": "CFx10000",
-        "numericvalue": "10000"
+        "definitionPath": "Item_VolumeUnits"
       }
     ]
   },
@@ -192,79 +120,7 @@
     "isVolume": "true",
     "ItemDescriptions": [
       {
-        "id": "0",
-        "description": "CuFT",
-        "numericvalue": "1"
-      },
-      {
-        "id": "1",
-        "description": "CuFTx10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "2",
-        "description": "CuFTx100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "3",
-        "description": "CF",
-        "numericvalue": "1"
-      },
-      {
-        "id": "4",
-        "description": "CFx10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "5",
-        "description": "CFx100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "6",
-        "description": "CFx1000",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "7",
-        "description": "CCF",
-        "numericvalue": "100"
-      },
-      {
-        "id": "8",
-        "description": "MCF",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "9",
-        "description": "m3x0.1",
-        "numericvalue": "0.1"
-      },
-      {
-        "id": "10",
-        "description": "m3",
-        "numericvalue": "1"
-      },
-      {
-        "id": "11",
-        "description": "m3x10",
-        "numericvalue": "10"
-      },
-      {
-        "id": "12",
-        "description": "m3x100",
-        "numericvalue": "100"
-      },
-      {
-        "id": "13",
-        "description": "m3x1000",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "14",
-        "description": "CFx10000",
-        "numericvalue": "10000"
+        "definitionPath": "Item_VolumeUnits"
       }
     ]
   },
@@ -535,5 +391,13 @@
     ],
     "number": "768",
     "shortDescription": "Meter Type"
+  },
+  {
+    "number": "767",
+    "code": "HIGH_RES_UNCOR",
+    "shortDescription": "High Res. Uncor. Volume",
+    "description": "High Resolution Uncor. Volume",
+    "isVolume": "true",
+    "isVolumeTest": "true"
   }
 ]
