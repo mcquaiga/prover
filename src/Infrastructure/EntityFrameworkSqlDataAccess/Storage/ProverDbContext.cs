@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using System.Reflection;
-using Domain.EvcVerifications.CorrectionTests;
+﻿using System.Reflection;
+using Domain.EvcVerifications;
+using Domain.EvcVerifications.Verifications;
 using Infrastructure.EntityFrameworkSqlDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +14,11 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Storage
         {
         }
 
-        internal DbSet<EvcVerificationDto> EvcVerifications { get; set; }
+        internal DbSet<EvcVerificationSql> EvcVerifications { get; set; }
 
-        internal DbSet<VerificationTestPointJson> VerificationTestPoints { get; set; }
+        //internal DbSet<VerificationTestPoint> TestPoints { get; set; }
 
-        internal DbSet<VerificationTestFactorJson> VerificationTests { get; set; }
+        //internal DbSet<VerificationTestEntity> VerificationTests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -2,10 +2,15 @@
 
 namespace Application.ViewModels
 {
-    public class VolumeViewModel
+    public class VolumeViewModel : BaseViewModel
     {
-        public IVolumeItems StartItems { get; set; }
-        public IVolumeItems EndItems { get; set; }
+        public VolumeViewModel()
+        {
+
+        }
+
+        public VolumeItems StartItems { get; set; }
+        public VolumeItems EndItems { get; set; }
         public decimal AppliedInput { get; set; }
 
     }

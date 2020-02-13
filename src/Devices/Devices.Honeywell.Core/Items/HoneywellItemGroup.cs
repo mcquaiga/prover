@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items
 {

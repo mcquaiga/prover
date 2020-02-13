@@ -1,21 +1,22 @@
 using Devices.Core;
+using Devices.Core.Interfaces;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    public class TemperatureItems : HoneywellItemGroup, ITemperatureItems
+    public class TemperatureItemsHoneywell : TemperatureItems
     {
         [ItemInfo(34)]
-        public decimal Base { get; set; }
+        public override decimal Base { get; set; }
 
         [ItemInfo(45)]
-        public decimal Factor { get; set; }
+        public override decimal Factor { get; set; }
 
         [ItemInfo(26)]
-        public decimal GasTemperature { get; set; }
+        public override decimal GasTemperature { get; set; }
 
         [ItemInfo(89)]
-        public TemperatureUnitType Units { get; set; }
+        public override TemperatureUnitType Units { get; set; }
     }
 }

@@ -1,13 +1,11 @@
-﻿using Devices.Core.Interfaces;
+﻿using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Items.DriveTypes
 {
-    public interface IEnergyItems : IItemGroup
+    public class EnergyItems : ItemGroup
     {
-        decimal EnergyGasValue { get; }
-
-        decimal EnergyReading { get; }
-
-        EnergyUnitType EnergyUnitType { get; }
+        public virtual decimal EnergyGasValue { get; set; }
+        public virtual decimal EnergyReading { get; set; }
+        public virtual EnergyUnitType EnergyUnitType { get; set; }
     }
 }

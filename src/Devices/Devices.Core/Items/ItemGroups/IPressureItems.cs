@@ -1,34 +1,36 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IPressureCorrectionItems : IHaveFactor
+
+    public class PressureItems :  ItemGroup, IHaveFactor
     {
-        decimal AtmosphericPressure { get; set; }
-        decimal GasPressure { get; set; }
-        decimal UnsqrFactor { get; set; }
-    }
+        #region Public Properties
 
-    public interface IPressureItems : IItemGroup, IPressureCorrectionItems
-    {
-        decimal Base { get; set; }
+        public virtual decimal AtmosphericPressure { get; set; }
+        public virtual decimal Base { get; set; }
+        public virtual decimal Factor { get; set; }
+        public virtual decimal GasPressure { get; set; }
+        public virtual int Range { get; set; }
+        public virtual PressureTransducerType TransducerType { get; set; }
+        public virtual PressureUnitType UnitType { get; set; }
+        public virtual decimal UnsqrFactor { get; set; }
 
-        int Range { get; set; }
+        #endregion
 
-        PressureTransducerType TransducerType { get; set; }
+        public override ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues)
+        {
+            var items = itemValues.ToList();
 
-        PressureUnitType UnitType { get; set; }
-    }
+            var site = deviceType.GetGroupValues<SiteInformationItems>(items);
+            
+            if (site.PressureFactor == CorrectionFactorType.Fixed) 
+                return null;
 
-    public abstract class PressureItemsBase : ItemGroup, IPressureItems
-    {
-        public abstract decimal AtmosphericPressure { get; set; }
-        public abstract decimal Base { get; set; }
-        public abstract decimal Factor { get; set; }
-        public abstract decimal GasPressure { get; set; }
-        public abstract int Range { get; set; }
-        public abstract PressureTransducerType TransducerType { get; set; }
-        public abstract PressureUnitType UnitType { get; set; }
-        public abstract decimal UnsqrFactor { get; set; }
+            return base.SetValues(deviceType, items);
+        }
     }
 }

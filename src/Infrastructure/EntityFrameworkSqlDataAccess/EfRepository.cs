@@ -15,7 +15,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
     ///     https://blogs.msdn.microsoft.com/pfxteam/2012/04/13/should-i-expose-synchronous-wrappers-for-asynchronous-methods/
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class EfRepository<T> : IAsyncRepositoryGuid<T>
+    public class EfRepository<T> : IAsyncRepository<T>
         where T : BaseEntity
     {
         #region Fields
@@ -44,35 +44,35 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
 
         #region Methods
 
-        public async Task<T> AddAsync(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             Context.Set<T>().Add(entity);
             await Context.SaveChangesAsync();
             return entity;
         }
 
-        public Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<int> CountAsync(ISpecification<T> spec)
         {
-            throw new NotImplementedException();
+            return await ApplySpecification(spec).CountAsync();
         }
-
-        public async Task DeleteAsync(T entity)
+        
+        public virtual  async Task DeleteAsync(T entity)
         {
             Context.Set<T>().Remove(entity);
             await Context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public virtual Task DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<T> GetAsync(Guid id)
+        public virtual async Task<T> GetAsync(Guid id)
         {
             return await Context.Set<T>().FindAsync(new[] {id});
         }
 
-        public Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate)
+        public virtual Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
         {
             throw new NotImplementedException();
         }
@@ -82,12 +82,12 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
             return await Context.Set<T>().FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<T>> ListAllAsync()
+        public virtual async Task<IReadOnlyList<T>> ListAllAsync()
         {
             return await Context.Set<T>().ToListAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync();

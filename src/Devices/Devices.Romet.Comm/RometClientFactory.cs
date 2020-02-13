@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Devices.Communications.IO;
 using Devices.Romet.Core;
 

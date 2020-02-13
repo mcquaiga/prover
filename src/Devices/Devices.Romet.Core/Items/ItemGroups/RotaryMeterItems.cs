@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Devices.Core.Items.Attributes;
+﻿using Devices.Core.Items.Attributes;
 using Devices.Core.Items.Descriptions;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Romet.Core.Items.ItemGroups
 {
-    internal class RotaryMeterItems : ItemGroup, IRotaryMeterItems
+    internal class RotaryMeterItemsRomet : RotaryMeterItems
     {
         [ItemInfo(768)]
-        public RotaryMeterTypeDescription MeterType { get; set; }
+        public override RotaryMeterTypeDescription MeterType { get; set; }
 
 
-        public decimal MeterDisplacement { get; set; }
+        public override decimal MeterDisplacement { get; set; }
     }
 }

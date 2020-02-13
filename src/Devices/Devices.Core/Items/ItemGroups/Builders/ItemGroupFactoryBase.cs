@@ -6,13 +6,13 @@ using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {
-    public abstract class ItemGroupFactoryBase : IItemGroupFactory
+    public abstract class ItemGroupFactoryBase : ItemGroupFactory
     {
-        protected readonly Dictionary<Type, IBuildItemsFor<IItemGroup>> BuildersCache =
-            new Dictionary<Type, IBuildItemsFor<IItemGroup>>();
+        protected readonly Dictionary<Type, IBuildItemsFor<ItemGroup>> BuildersCache =
+            new Dictionary<Type, IBuildItemsFor<ItemGroup>>();
 
         protected readonly DeviceType DeviceType;
-        protected ItemGroupBuilderBase<IItemGroup> BasicGroupBuilder;
+        protected ItemGroupBuilderBase<ItemGroup> BasicGroupBuilder;
 
         protected HashSet<Type> BuilderTypes;
 
@@ -23,11 +23,11 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         #region Public Methods
 
-        public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : IItemGroup
+        public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
         {
-            var builder = findGroupBuilder(typeof(TGroup));
-            if (builder != null)
-                return (TGroup) builder.Build(DeviceType, values);
+            //var builder = findGroupBuilder(typeof(TGroup));
+            //if (builder != null)
+            //    return (TGroup) builder.Build(DeviceType, values);
 
             return (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
         }
@@ -38,7 +38,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected abstract Assembly BaseAssembly { get; }
 
-        protected IBuildItemsFor<IItemGroup> findGroupBuilder(Type type)
+        protected IBuildItemsFor<ItemGroup> findGroupBuilder(Type type)
         {
             loadGroupBuilders();
 
@@ -55,7 +55,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 if (builder != null)
                 {
-                    var instance = Activator.CreateInstance(builder, DeviceType) as IBuildItemsFor<IItemGroup>;
+                    var instance = Activator.CreateInstance(builder, DeviceType) as IBuildItemsFor<ItemGroup>;
 
                     BuildersCache.Add(groupClass, instance);
                     return instance;
@@ -63,7 +63,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
             }
             //var make = ItemGroupBuilderType.MakeGenericType(new[] {groupClass});
             //var x = Activator.CreateInstance(make, DeviceType);
-            //var obj = Activator.CreateInstance(make, DeviceType) as IItemGroupBuilder<IItemGroup>;
+            //var obj = Activator.CreateInstance(make, DeviceType) as ItemGroupBuilder<ItemGroup>;
             //BuildersCache.Add(groupClass, obj);
 
             return null;

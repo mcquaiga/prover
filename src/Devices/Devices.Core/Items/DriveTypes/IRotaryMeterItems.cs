@@ -1,12 +1,11 @@
-﻿using Devices.Core.Interfaces;
-using Devices.Core.Items.Descriptions;
+﻿using Devices.Core.Items.Descriptions;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Items.DriveTypes
 {
-    public interface IRotaryMeterItems : IItemGroup
+    public class RotaryMeterItems : ItemGroup
     {
-        RotaryMeterTypeDescription MeterType { get; set; }
-
-        decimal MeterDisplacement { get; set; }
+        public virtual RotaryMeterTypeDescription MeterType { get; set; }
+        public virtual decimal MeterDisplacement { get; set; }
     }
 }

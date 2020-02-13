@@ -3,18 +3,18 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    public class SuperFactorItems : HoneywellItemGroup, ISuperFactorItems
+    public class SuperFactorItemsHoneywell : SuperFactorItems
     {
         [ItemInfo(55)]
-        public decimal Co2 { get; protected set; }
+        public override decimal Co2 { get; set; }
 
         [ItemInfo(54)]
-        public decimal N2 { get; protected set; }
+        public override decimal N2 { get; set; }
 
         [ItemInfo(53)]
-        public decimal SpecGr { get; protected set; }
+        public override decimal SpecGr { get; set; }
 
         [ItemInfo(47)]
-        public decimal Factor { get; set; }
+        public override decimal Factor { get; set; }
     }
 }

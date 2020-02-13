@@ -1,8 +1,6 @@
-using Devices.Core.Interfaces;
-
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IPulseOutputChannels : IItemGroup
+    public interface IPulseOutputChannels
     {
         IPulseOutputs ChannelA { get; }
         IPulseOutputs ChannelB { get; }

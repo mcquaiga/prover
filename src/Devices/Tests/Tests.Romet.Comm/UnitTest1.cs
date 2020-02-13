@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reactive;
 using System.Threading.Tasks;
 using Devices.Communications.IO;
-using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
@@ -12,7 +8,6 @@ using Devices.Romet.Comm;
 using Devices.Romet.Core;
 using Devices.Romet.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Tests.Romet.Comm
 {
@@ -45,16 +40,13 @@ namespace Tests.Romet.Comm
             await client.Disconnect();
 
             var instance = _adem.Factory.CreateInstance(items);
-            var rt = instance.ItemGroup<IRotaryMeterItems>();
+            var rt = instance.ItemGroup<RotaryMeterItems>();
 
-            var site = instance.ItemGroup<ISiteInformationItems>();
-            var pressure = instance.ItemGroup<IPressureItems>();
-            var temp = instance.ItemGroup<ITemperatureItems>();
-            var v = instance.ItemGroup<IVolumeItems>();
-            IVolumeCorrectedItems vc = instance.ItemGroup<IVolumeCorrectedItems>();
-
-
-         
+            var site = instance.ItemGroup<SiteInformationItems>();
+            var pressure = instance.ItemGroup<PressureItems>();
+            var temp = instance.ItemGroup<TemperatureItems>();
+            var v = instance.ItemGroup<VolumeItems>();
+            VolumeItems vc = instance.ItemGroup<VolumeItems>();
 
             Assert.IsNotNull(site);
             Assert.IsNull(pressure);

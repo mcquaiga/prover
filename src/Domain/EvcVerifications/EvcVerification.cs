@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Domain.EvcVerifications.CorrectionTests;
-using Domain.EvcVerifications.DriveTypes;
+using Devices.Core.Items.ItemGroups;
+using Domain.EvcVerifications.Verifications;
+using Domain.EvcVerifications.Verifications.Volume;
+using Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
 namespace Domain.EvcVerifications
 {
@@ -12,24 +14,19 @@ namespace Domain.EvcVerifications
     {
         #region Public Methods
 
-        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp,
-            CorrectionFactorTestType correctionFactorType)
-            where T : CorrectionTest
-        {
-            return vtp.GetTest<T>(t => t.TestType == correctionFactorType);
-
-            //var tc = vtp.GetTest<CorrectionTest>().GetValue();
-
-            //return (T)tc.GetValue();
+        public static T GetVerificationTest<T>(this VerificationTestPoint vtp)
+            where T : VerificationEntity
+        { 
+            return vtp.GetTest<T>();
         }
 
-        public static CorrectionTest GetCorrectionTest(this VerificationTestPoint vtp,
-            CorrectionFactorTestType correctionFactorType)
+        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp)
+            where T : VerificationTestEntity<ItemGroup>
         {
-            return vtp.GetTest<CorrectionTest>(t => t.TestType == correctionFactorType);
+            return vtp.GetTest<T>();
         }
 
-        public static VerificationTestPoint GetTestPointWithVolume(this EvcVerificationTest evcVerification)
+        public static VerificationTestPoint GetVolumeTest(this EvcVerificationTest evcVerification)
         {
             return evcVerification.Tests
                 .Where(t => t.GetType() == typeof(VerificationTestPoint))
@@ -54,13 +51,13 @@ namespace Domain.EvcVerifications
     /// <summary>
     ///     Defines the <see cref="EvcVerificationTest" />
     /// </summary>
-    public class EvcVerificationTest : AggregateRootWithChildTests<IVerificationTest>
+    public class EvcVerificationTest : AggregateRootWithChildTests<VerificationEntity>
     {
-        protected EvcVerificationTest()
+        private EvcVerificationTest()
         {
         }
 
-        internal EvcVerificationTest(DeviceInstance device)
+        public EvcVerificationTest(DeviceInstance device)
         {
             Device = device;
             DeviceType = device.DeviceType;

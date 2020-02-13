@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Application.Helpers.Query;
+using Application.Specifications;
 using Domain.EvcVerifications;
 using Shared.Interfaces;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 {
-    public class EvcVerificationSpecificationEvaluator : ISpecification<EvcVerificationTest>
+    public sealed class EvcVerificationSpecificationEvaluator : BaseSpecification<EvcVerificationTest>
     {
-        #region Public Properties
-
-        public Expression<Func<EvcVerificationTest, bool>> Criteria { get; }
-        public List<Expression<Func<EvcVerificationTest, object>>> Includes { get; }
-        public List<string> IncludeStrings { get; }
-        public bool isPagingEnabled { get; }
-        public Expression<Func<EvcVerificationTest, object>> OrderBy { get; }
-        public Expression<Func<EvcVerificationTest, object>> OrderByDescending { get; }
-        public int Skip { get; }
-        public int Take { get; }
-
-        #endregion
+        public EvcVerificationSpecificationEvaluator(Guid id) : base(v => v.Id == id)
+        {
+            AddInclude(v => v.Tests);
+            AddIncludes(agg => agg.Include(v => v.Tests));
+        }
     }
 }

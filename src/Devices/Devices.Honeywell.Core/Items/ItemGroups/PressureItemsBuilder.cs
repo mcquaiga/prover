@@ -20,10 +20,10 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         {
             var items = values.ToList();
 
-            var site = device.GetGroupValues<ISiteInformationItems>(items);
+            var site = device.GetGroupValues<global::Devices.Core.Items.ItemGroups.SiteInformationItems>(items);
             if (site.PressureFactor == CorrectionFactorType.Fixed) return default;
 
-            var p = new PressureItems();
+            var p = new PressureItemsHoneywell();
             return SetValues(p, items);
         }
 

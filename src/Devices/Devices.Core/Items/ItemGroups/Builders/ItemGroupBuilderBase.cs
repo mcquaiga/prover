@@ -4,11 +4,10 @@ using System.Linq;
 using System.Reflection;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.Attributes;
-using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {
-    public abstract class ItemGroupBuilderBase<TGroup> where TGroup : IItemGroup
+    public abstract class ItemGroupBuilderBase<TGroup> where TGroup : ItemGroup
     {
         protected DeviceType DeviceType { get; }
 
@@ -22,7 +21,8 @@ namespace Devices.Core.Items.ItemGroups.Builders
         public virtual TGroup GetItemGroupInstance(Type type, IEnumerable<ItemValue> itemValues)
         {
             var itemGroup = GetItemGroupInstance(type);
-            return SetValues((TGroup) itemGroup, itemValues);
+
+            return (TGroup) itemGroup.SetValues(DeviceType, itemValues);
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected virtual Assembly BaseAssembly { get; }
 
-        protected virtual IItemGroup GetItemGroupInstance(Type groupType)
+        protected virtual ItemGroup GetItemGroupInstance(Type groupType)
         {
             var itemType = groupType.GetMatchingItemGroupClass(Assembly.GetAssembly(DeviceType.GetType()), BaseAssembly);
             if (itemType == null)
@@ -106,7 +106,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
                 .ForEach(pair =>
                 {
                     var (prop, item) = pair;
-                    itemGroup.SetValue(prop, item);
+                    itemGroup.SetPropertyValue(prop, item);
                     //SetPropertyValue(itemGroup, prop, item);
                 });
 

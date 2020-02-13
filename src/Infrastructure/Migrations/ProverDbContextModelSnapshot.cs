@@ -19,82 +19,181 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.EvcVerificationDto", b =>
+            modelBuilder.Entity("Domain.EvcVerifications.Verifications.VerificationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ArchivedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceData")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("DeviceTypeId")
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("EvcVerificationSqlId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("InputDriveType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TestDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EvcVerifications");
-                });
-
-            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.VerificationTestFactorJson", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("JsonData")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("VerificationTestPointId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Verified")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EvcVerificationSqlId");
 
                     b.HasIndex("VerificationTestPointId");
 
-                    b.ToTable("VerificationTests");
+                    b.ToTable("Verifications.TestRunTests");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("VerificationEntity");
                 });
 
-            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.VerificationTestPointJson", b =>
+            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.EvcVerificationSql", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EvcVerificationId")
+                    b.Property<DateTimeOffset?>("ArchivedDateTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Device")
+                        .HasColumnName("Device")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<Guid?>("DeviceType")
+                        .HasColumnName("DeviceTypeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("JsonData")
+                    b.Property<string>("InputDriveType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TestDateTime")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EvcVerificationId");
-
-                    b.ToTable("VerificationTestPoints");
+                    b.ToTable("Verifications.TestRun");
                 });
 
-            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.VerificationTestFactorJson", b =>
+            modelBuilder.Entity("Domain.EvcVerifications.VerificationTestPoint", b =>
                 {
-                    b.HasOne("Infrastructure.EntityFrameworkSqlDataAccess.Entities.VerificationTestPointJson", "VerificationTestPoint")
-                        .WithMany("TestFactors")
+                    b.HasBaseType("Domain.EvcVerifications.Verifications.VerificationEntity");
+
+                    b.Property<decimal?>("AppliedInput")
+                        .HasColumnType("decimal");
+
+                    b.Property<int>("TestNumber")
+                        .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue("VerificationTestPoint");
+                });
+
+            modelBuilder.Entity("Domain.EvcVerifications.Verifications.CorrectionFactors.PressureCorrectionTest", b =>
+                {
+                    b.HasBaseType("Domain.EvcVerifications.Verifications.VerificationEntity");
+
+                    b.Property<decimal>("ActualValue")
+                        .HasColumnName("ActualValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("AtmosphericGauge")
+                        .HasColumnName("AtmosphericGauge")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("ExpectedValue")
+                        .HasColumnName("ExpectedValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("Gauge")
+                        .HasColumnName("GaugePressure")
+                        .HasColumnType("decimal");
+
+                    b.Property<string>("Items")
+                        .HasColumnName("Values")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<decimal>("PercentError")
+                        .HasColumnName("PercentError")
+                        .HasColumnType("decimal");
+
+                    b.HasDiscriminator().HasValue("PressureCorrectionTest");
+                });
+
+            modelBuilder.Entity("Domain.EvcVerifications.Verifications.CorrectionFactors.SuperCorrectionTest", b =>
+                {
+                    b.HasBaseType("Domain.EvcVerifications.Verifications.VerificationEntity");
+
+                    b.Property<decimal>("ActualValue")
+                        .HasColumnName("ActualValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("ExpectedValue")
+                        .HasColumnName("ExpectedValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("GaugePressure")
+                        .HasColumnName("GaugePressure")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("GaugeTemp")
+                        .HasColumnName("GaugeTemperature")
+                        .HasColumnType("decimal");
+
+                    b.Property<string>("Items")
+                        .HasColumnName("Values")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<decimal>("PercentError")
+                        .HasColumnName("PercentError")
+                        .HasColumnType("decimal");
+
+                    b.HasDiscriminator().HasValue("SuperCorrectionTest");
+                });
+
+            modelBuilder.Entity("Domain.EvcVerifications.Verifications.CorrectionFactors.TemperatureCorrectionTest", b =>
+                {
+                    b.HasBaseType("Domain.EvcVerifications.Verifications.VerificationEntity");
+
+                    b.Property<decimal>("ActualValue")
+                        .HasColumnName("ActualValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("ExpectedValue")
+                        .HasColumnName("ExpectedValue")
+                        .HasColumnType("decimal");
+
+                    b.Property<decimal>("Gauge")
+                        .HasColumnName("GaugeTemperature")
+                        .HasColumnType("decimal");
+
+                    b.Property<string>("Items")
+                        .HasColumnName("Values")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<decimal>("PercentError")
+                        .HasColumnName("PercentError")
+                        .HasColumnType("decimal");
+
+                    b.HasDiscriminator().HasValue("TemperatureCorrectionTest");
+                });
+
+            modelBuilder.Entity("Domain.EvcVerifications.Verifications.VerificationEntity", b =>
+                {
+                    b.HasOne("Infrastructure.EntityFrameworkSqlDataAccess.Entities.EvcVerificationSql", null)
+                        .WithMany("Tests")
+                        .HasForeignKey("EvcVerificationSqlId");
+
+                    b.HasOne("Domain.EvcVerifications.VerificationTestPoint", null)
+                        .WithMany("Tests")
                         .HasForeignKey("VerificationTestPointId");
-                });
-
-            modelBuilder.Entity("Infrastructure.EntityFrameworkSqlDataAccess.Entities.VerificationTestPointJson", b =>
-                {
-                    b.HasOne("Infrastructure.EntityFrameworkSqlDataAccess.Entities.EvcVerificationDto", "EvcVerification")
-                        .WithMany("TestPoints")
-                        .HasForeignKey("EvcVerificationId");
                 });
 #pragma warning restore 612, 618
         }

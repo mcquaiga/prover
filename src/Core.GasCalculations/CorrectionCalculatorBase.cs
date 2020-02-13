@@ -1,5 +1,4 @@
-﻿using Devices.Core.Interfaces;
-using Shared.Extensions;
+﻿using Devices.Core.Items.ItemGroups;
 
 namespace Core.GasCalculations
 {
@@ -12,7 +11,7 @@ namespace Core.GasCalculations
         decimal CalculateFactor();
     }
 
-    public abstract class CorrectionCalculatorBase<T> : ICorrectionCalculator where T : IItemGroup
+    public abstract class CorrectionCalculatorBase<T> : ICorrectionCalculator where T : ItemGroup
     {
         protected  CorrectionCalculatorBase(){ }
         protected CorrectionCalculatorBase(T items)

@@ -11,7 +11,7 @@ namespace Tests.Core.GasCalculations
         [TestInitialize]
         public void Initialize()
         {
-            Items = new Mock<ISuperFactorItems>();
+            Items = new Mock<SuperFactorItems>();
 
             Items.Setup(p => p.Co2).Returns(0.6320m); //55
             Items.Setup(p => p.N2).Returns(0.8190m); //54
@@ -19,7 +19,7 @@ namespace Tests.Core.GasCalculations
             //","53":"  0.5773","54":"  0.8190","55":"  0.6320"
         }
 
-        public Mock<ISuperFactorItems> Items
+        public Mock<SuperFactorItems> Items
         { get; set; }
 
         

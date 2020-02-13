@@ -36,7 +36,7 @@ namespace Devices.Honeywell.Core.Devices
             return this;
         }
 
-        //private void AddItemGroupToAttributes<T>() where T : IItemGroup
+        //private void AddItemGroupToAttributes<T>() where T : ItemGroup
         //{
         //    DeviceInstance.AddAttribute(DeviceInstance.<T>());
         //}

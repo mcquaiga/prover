@@ -1,27 +1,21 @@
+using System.Reflection;
 using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface IVolumeCorrectedItems : IItemGroup
+
+
+    public class VolumeItems : ItemGroup
     {
-        decimal CorrectedMultiplier { get; }
-        decimal CorrectedReading { get; }
-        string CorrectedUnits { get; }
+        public virtual decimal CorrectedMultiplier { get; set; }
+        public virtual decimal CorrectedReading { get; set; }
+        public virtual string CorrectedUnits { get; set; }
+        public virtual decimal UncorrectedMultiplier { get; set; }
+        public virtual decimal UncorrectedReading { get; set; }
+        public virtual string UncorrectedUnits { get; set; }
+        public virtual VolumeInputType VolumeInputType { get; set; }
+        public virtual decimal DriveRate { get; set; }
+        public virtual string DriveRateDescription { get; set; }
     }
 
-    public interface IVolumeUncorrectedItems : IItemGroup
-    {
-        decimal UncorrectedMultiplier { get; }
-        decimal UncorrectedReading { get; }
-        string UncorrectedUnits { get; }
-    }
-
-    public interface IVolumeItems : IItemGroup, IVolumeCorrectedItems, IVolumeUncorrectedItems
-    {
-        VolumeInputType VolumeInputType { get; }
-
-        decimal DriveRate { get; }
-
-        string DriveRateDescription { get; }
-    }
 }

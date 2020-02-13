@@ -7,10 +7,10 @@ namespace Core.GasCalculations
 {
     public class EnergyCalculator
     {
-        public IEnergyItems StartEnergyItems { get; }
-        public IEnergyItems EndEnergyItems { get; }
+        public EnergyItems StartEnergyItems { get; }
+        public EnergyItems EndEnergyItems { get; }
     
-        public EnergyCalculator(IEnergyItems startEnergyItems, IEnergyItems endEnergyItems)
+        public EnergyCalculator(EnergyItems startEnergyItems, EnergyItems endEnergyItems)
         {
             StartEnergyItems = startEnergyItems;
             EndEnergyItems = endEnergyItems;

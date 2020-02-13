@@ -75,14 +75,14 @@ namespace Devices.Core.Items
             return JsonConvert.SerializeObject(items.ToItemValuesDictionary());
         }
 
-        public static Dictionary<int, string> ToItemValuesDictionary(this IEnumerable<ItemValue> items)
+        public static Dictionary<string, string> ToItemValuesDictionary(this IEnumerable<ItemValue> items)
         {
             try
             {
-                if (items == null) return new Dictionary<int, string>();
+                if (items == null) return new Dictionary<string, string>();
                 return items
                     .Where(i => i.Metadata != null)
-                    .ToDictionary(k => k.Metadata.Number, v => v.RawValue.ToString());
+                    .ToDictionary(k => k.Metadata.Number.ToString(), v => v.RawValue.ToString());
             }
             catch (Exception e)
             {

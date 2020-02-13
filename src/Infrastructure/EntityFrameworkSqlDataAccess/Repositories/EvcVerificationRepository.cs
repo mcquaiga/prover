@@ -11,79 +11,90 @@ using Shared.Interfaces;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 {
-    //public class EvcVerificationRepository : IAsyncRepositoryGuid<EvcVerificationTest>
-    //{
-    //    private readonly ProverDbContext _context;
+    public class EvcVerificationRepository : EfRepository<EvcVerificationTest>
+    {
+   
+        public EvcVerificationRepository(ProverDbContext context) : base(context)
+        {
+            
+        }
 
-    //    public EvcVerificationRepository(ProverDbContext context)
-    //    {
-    //        _context = context;
-    //    }
+        #region Public Methods
 
-    //    #region Public Methods
+        public override async Task<EvcVerificationTest> AddAsync(EvcVerificationTest entity)
+        {
+            await Context.EvcVerifications.AddAsync((EvcVerificationSql)entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
 
-    //    public async Task<EvcVerificationTest> AddAsync(EvcVerificationTest entity)
-    //    {
-    //        await _context.EvcVerifications.AddAsync((EvcVerificationDto) entity);
-    //        await _context.SaveChangesAsync();
-    //        return entity;
-    //    }
+        public Task<int> CountAsync(ISpecification<EvcVerificationTest> spec)
+        {
+            throw new NotImplementedException();
+        }
 
-    //    public async Task<int> CountAsync(Expression<Func<EvcVerificationTest, bool>> predicate)
-    //    {
-    //        return await ApplyPredicate(predicate).CountAsync();
-    //    }
+        public async Task<int> CountAsync(Expression<Func<EvcVerificationTest, bool>> predicate)
+        {
+            return await ApplyPredicate(predicate).CountAsync();
+        }
 
-    //    public async Task DeleteAsync(EvcVerificationTest entity)
-    //    {
-    //        if (_context.Entry((EvcVerificationSql) entity).State == EntityState.Detached)
-    //            _context.EvcVerifications.Attach((EvcVerificationSql) entity);
+        public async Task DeleteAsync(EvcVerificationTest entity)
+        {
+            if (Context.Entry((EvcVerificationSql)entity).State == EntityState.Detached)
+                Context.EvcVerifications.Attach((EvcVerificationSql)entity);
 
-    //        _context.EvcVerifications.Remove((EvcVerificationSql) entity);
+            Context.EvcVerifications.Remove((EvcVerificationSql)entity);
 
-    //        await _context.SaveChangesAsync();
-    //    }
+            await Context.SaveChangesAsync();
+        }
 
-    //    public async Task DeleteAsync(Guid id)
-    //    {
-    //        var entity = await _context.EvcVerifications.FindAsync(new[] {id});
-    //        if (entity != null)
-    //            await DeleteAsync(entity);
-    //    }
+        public async Task DeleteAsync(Guid id)
+        {
+            var entity = await Context.EvcVerifications.FindAsync(new[] { id });
+            if (entity != null)
+                await DeleteAsync(entity);
+        }
 
-    //    public async Task<EvcVerificationTest> GetAsync(Guid id)
-    //    {
-    //        return await _context.EvcVerifications.FindAsync(new[] {id});
-    //    }
+        public async Task<EvcVerificationTest> GetAsync(Guid id)
+        {
+            return await Context.EvcVerifications
+                    .FindAsync(new[] { id });
+        }
 
-    //    public async Task<IReadOnlyList<EvcVerificationTest>> ListAsync(Expression<Func<EvcVerificationTest, bool>> predicate)
-    //    {
-    //        return await ApplyPredicate(predicate).ToListAsync();
-    //    }
+        public Task<IReadOnlyList<EvcVerificationTest>> ListAsync(ISpecification<EvcVerificationTest> spec)
+        {
+            throw new NotImplementedException();
+        }
 
-    //    public async Task UpdateAsync(EvcVerificationTest entity)
-    //    {
-    //        _context.Attach((EvcVerificationSql) entity);
-    //        _context.Entry((EvcVerificationSql) entity).State = EntityState.Modified;
-    //        await _context.SaveChangesAsync();
-    //    }
+        public async Task<IReadOnlyList<EvcVerificationTest>> ListAsync(Expression<Func<EvcVerificationTest, bool>> predicate)
+        {
+            return await ApplyPredicate(predicate)
+                .ToListAsync();
+        }
 
-    //    #endregion
+        public async Task UpdateAsync(EvcVerificationTest entity)
+        {
+            Context.Attach((EvcVerificationSql)entity);
+            Context.Entry((EvcVerificationSql)entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+        }
 
-    //    #region Private
+        #endregion
 
-    //    private IQueryable<EvcVerificationTest> ApplyPredicate(Expression<Func<EvcVerificationTest, bool>> predicate)
-    //    {
-    //        return _context.EvcVerifications.AsQueryable().Where(predicate);
-    //    }
+        #region Private
 
-    //    private IQueryable<EvcVerificationTest> ApplySpecification(ISpecification<EvcVerificationTest> spec)
-    //    {
-    //        var query = _context.EvcVerifications.AsQueryable();
+        private IQueryable<EvcVerificationTest> ApplyPredicate(Expression<Func<EvcVerificationTest, bool>> predicate)
+        {
+            return Context.EvcVerifications.AsQueryable().Where(predicate);
+        }
 
-    //        return SpecificationEvaluator<EvcVerificationTest>.GetQuery(query, spec);
-    //    }
+        private IQueryable<EvcVerificationTest> ApplySpecification(ISpecification<EvcVerificationTest> spec)
+        {
+            var query = Context.EvcVerifications.AsQueryable();
 
-    //    #endregion
-    //}
+            return SpecificationEvaluator<EvcVerificationTest>.GetQuery(query, spec);
+        }
+
+        #endregion
+    }
 }

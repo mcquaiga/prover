@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.ViewModels;
+using AutoMapper;
 using Devices.Core.Interfaces;
+using Devices.Core.Items.ItemGroups;
 using Domain.EvcVerifications;
 using Domain.EvcVerifications.Builders;
+using Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Shared.Interfaces;
 
 namespace Application.Services
 {
     public class EvcVerificationTestService
     {
-        private readonly IAsyncRepositoryGuid<EvcVerificationTest> _verificationRepository;
+        private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+        
 
-        public EvcVerificationTestService(IAsyncRepositoryGuid<EvcVerificationTest> verificationRepository)
+        public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
         {
             _verificationRepository = verificationRepository;
+            
         }
 
         public EvcVerificationTestCreator Factory(DeviceInstance device) => new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
@@ -57,7 +62,7 @@ namespace Application.Services
             _evcBuilder.SetTestDateTime();
 
             testViewModels.ToList()
-                .ForEach(test => CreateTestPoint(test.Level, test));
+                .ForEach(test => CreateTestPoint(test.TestNumber, test));
         
             return await _callback.Invoke(_evcBuilder.GetEvcVerification());
         }
@@ -78,7 +83,7 @@ namespace Application.Services
                 builder.BuildTemperatureTest(correctionTest.Temperature.Items, correctionTest.Temperature.Gauge);
 
             if (correctionTest.Pressure != null)
-                builder.BuildPressureTest(correctionTest.Pressure.Items, correctionTest.Pressure.Gauge);
+                builder.BuildPressureTest(correctionTest.Pressure.Items, correctionTest.Pressure.Gauge, correctionTest.Pressure.AtmosphericGauge);
 
             if (correctionTest.SuperFactor != null)
                 builder.BuildSuperFactorTest(correctionTest.SuperFactor.Items);

@@ -3,8 +3,8 @@ using Devices.Core.Interfaces;
 
 namespace Devices.Core.Items.ItemGroups.Builders
 {
-    public interface IItemGroupFactory
+    public interface ItemGroupFactory
     {
-        TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : IItemGroup;
+        TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup;
     }
 }

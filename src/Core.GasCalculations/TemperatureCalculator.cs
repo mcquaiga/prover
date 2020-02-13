@@ -1,5 +1,4 @@
 ﻿using Devices.Core;
-using Devices.Core.Items.ItemGroups;
 using Shared.Extensions;
 
 namespace Core.GasCalculations

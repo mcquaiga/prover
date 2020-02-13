@@ -31,15 +31,15 @@ namespace Tests.Honeywell.Core.Items
             var instance = device.CreateInstance(MiniMaxItemFile);
 
             var myItems = device.ToItemValuesEnumerable(MiniMaxPressureItemFile);
-            var pItems = device.GetGroupValues<IPressureItems>(myItems);
-            var pItems2 = instance.ItemGroup<IPressureItems>();
+            var pItems = device.GetGroupValues<PressureItems>(myItems);
+            var pItems2 = instance.ItemGroup<PressureItems>();
 
-            var t = instance.ItemGroup<ITemperatureItems>();
-            var v = instance.ItemGroup<IVolumeItems>();
-            var e = instance.ItemGroup<IEnergyItems>();
-            var s = instance.ItemGroup<ISiteInformationItems>();
-            var rotary = instance.ItemGroup<IRotaryMeterItems>();
-            var super = instance.ItemGroup<ISuperFactorItems>();
+            var t = instance.ItemGroup<TemperatureItems>();
+            var v = instance.ItemGroup<VolumeItems>();
+            var e = instance.ItemGroup<EnergyItems>();
+            var s = instance.ItemGroup<SiteInformationItems>();
+            var rotary = instance.ItemGroup<RotaryMeterItems>();
+            var super = instance.ItemGroup<SuperFactorItems>();
 
             Assert.IsNotNull(pItems);
             Assert.IsNotNull(instance.Values);
@@ -51,7 +51,7 @@ namespace Tests.Honeywell.Core.Items
         {
             var device = _repo.GetByName("Mini-Max");
             var instance = device.CreateInstance(MiniMaxItemFile);
-            var pItems = device.GetItemMetadata<IPressureItems>();
+            var pItems = device.GetItemMetadata<PressureItems>();
             Assert.IsNotNull(instance.Values);
             Assert.IsFalse(instance.Values.Count == 0);
            

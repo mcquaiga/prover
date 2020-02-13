@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Devices.Core.Interfaces;
@@ -41,11 +40,11 @@ namespace Tests.Romet.Core
         {
             Assert.IsNotNull(_instance);
 
-            var temp = _instance.ItemGroup<ITemperatureItems>();
+            var temp = _instance.ItemGroup<TemperatureItems>();
             Assert.IsNotNull(temp);
             Assert.AreEqual(_itemValues.GetItemValue(26), temp.GasTemperature);
 
-            var rotary = _instance.ItemGroup<IRotaryMeterItems>();
+            var rotary = _instance.ItemGroup<RotaryMeterItems>();
             Assert.IsNotNull(rotary);
             Assert.IsNotNull(rotary.MeterType);
 
@@ -54,7 +53,7 @@ namespace Tests.Romet.Core
         [TestMethod]
         public void PressureItemsIsNullTest()
         {
-            Assert.IsNull(_instance.ItemGroup<IPressureItems>());
+            Assert.IsNull(_instance.ItemGroup<PressureItems>());
         }
 
         [TestMethod]
@@ -66,13 +65,13 @@ namespace Tests.Romet.Core
 
             Assert.AreNotSame(newInstance.Values, _instance.Values);
 
-            var rotary1 = _instance.ItemGroup<IRotaryMeterItems>();
+            var rotary1 = _instance.ItemGroup<RotaryMeterItems>();
             rotary1.MeterDisplacement = expected;
 
-            var rotary2 = _instance.ItemGroup<IRotaryMeterItems>();
+            var rotary2 = _instance.ItemGroup<RotaryMeterItems>();
             Assert.AreEqual(expected, rotary2.MeterDisplacement);
             Assert.AreSame(rotary1, rotary2);
-            var rotary3 = _instance.CreateItemGroup<IRotaryMeterItems>();
+            var rotary3 = _instance.CreateItemGroup<RotaryMeterItems>();
             Assert.AreNotSame(rotary2, rotary3);
             //Assert.IsNull(_instance.ItemGroup<IPressureItems>());
         }

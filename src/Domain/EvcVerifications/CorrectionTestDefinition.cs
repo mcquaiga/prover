@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Domain.EvcVerifications
+﻿namespace Domain.EvcVerifications
 {
     public class CorrectionTestDefinition
     {

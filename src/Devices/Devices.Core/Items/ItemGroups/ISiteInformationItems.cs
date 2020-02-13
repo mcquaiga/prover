@@ -1,21 +1,14 @@
-using Devices.Core.Interfaces;
-
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface ISiteInformationItems : IItemGroup
+    public class SiteInformationItems : ItemGroup
     {
-        #region Public Properties
-        CompositionType CompositionType { get; }
-        string FirmwareVersion { get; set; }
-        CorrectionFactorType PressureFactor { get; set; }
-        string SerialNumber { get; set; }
-        string SiteId1 { get; set; }
-        string SiteId2 { get; set; }
-
-        CorrectionFactorType SuperFactor { get; set; }
-        CorrectionFactorType TemperatureFactor { get; set; }
-
-        #endregion
+        public virtual CompositionType CompositionType { get; set; }
+        public virtual string FirmwareVersion { get; set; }
+        public virtual CorrectionFactorType PressureFactor { get; set; }
+        public virtual string SerialNumber { get; set; }
+        public virtual string SiteId1 { get; set; }
+        public virtual string SiteId2 { get; set; }
+        public virtual CorrectionFactorType SuperFactor { get; set; }
+        public virtual CorrectionFactorType TemperatureFactor { get; set; }
     }
-
 }

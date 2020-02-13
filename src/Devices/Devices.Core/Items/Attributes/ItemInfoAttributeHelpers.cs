@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Devices.Core.Interfaces;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Items.Attributes
 {
@@ -16,7 +16,7 @@ namespace Devices.Core.Items.Attributes
             return cad ?? default;
         }
 
-        public static ICollection<int> GetItemIdentifiers<T>() where T : IItemGroup
+        public static ICollection<int> GetItemIdentifiers<T>() where T : ItemGroup
         {
             return GetItemIdentifiers(typeof(T));
         }

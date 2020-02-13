@@ -6,32 +6,26 @@ using Shared.Domain;
 
 namespace Shared.Interfaces
 {
-    public interface IAsyncRepository<in TId, T> 
-        where TId : struct
+    public interface IAsyncRepository<T>
         where T : BaseEntity
     {
         #region Methods
 
         Task<T> AddAsync(T entity);
 
-        Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+        Task<int> CountAsync(ISpecification<T> spec);
 
         Task DeleteAsync(T entity);
 
-        Task DeleteAsync(TId id);
+        Task DeleteAsync(Guid id);
 
-        Task<T> GetAsync(TId id);
+        Task<T> GetAsync(Guid id);
 
-        Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> predicate);
+        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
 
         Task UpdateAsync(T entity);
 
         #endregion
     }
 
-    public interface IAsyncRepositoryGuid<T> : IAsyncRepository<Guid, T>
-        where T : BaseEntity
-    {
-
-    }
 }

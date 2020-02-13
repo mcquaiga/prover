@@ -20,7 +20,7 @@
     "Web.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "devices",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

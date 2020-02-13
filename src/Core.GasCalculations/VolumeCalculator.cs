@@ -4,14 +4,19 @@ namespace Core.GasCalculations
 {
     public class VolumeCalculator
     {
-        public static decimal Corrected(decimal totalCorrectionFactor, decimal uncorrectedVolume)
+        public static decimal TrueCorrected(decimal totalCorrectionFactor, decimal uncorrectedVolume)
         {
-            return Round.Factor(totalCorrectionFactor * uncorrectedVolume);
+            return Round.Volume(totalCorrectionFactor * uncorrectedVolume);
         }
 
-        public static decimal Uncorrected(decimal rate, decimal appliedInput)
+        public static decimal TrueUncorrected(decimal rate, decimal appliedInput)
         {
-            return Round.Factor(rate * appliedInput);
+            return Round.Volume(rate * appliedInput);
+        }
+
+        public static decimal TotalVolume(decimal startReading, decimal endReading)
+        {
+            return Round.Volume(endReading - startReading);
         }
 
         //public static class Mechanical

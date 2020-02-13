@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Devices.Core.Interfaces;
-using Domain.EvcVerifications.DriveTypes;
+using Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
 namespace Application.ViewModels
 {
-    public class EvcVerificationViewModel
+    public class EvcVerificationViewModel : BaseViewModel
     {
         #region Public Properties
-
-        public Guid Id { get; set; }
 
         public DeviceInstance Device { get; set; }
 

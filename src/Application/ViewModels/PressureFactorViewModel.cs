@@ -1,29 +1,38 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.CorrectionTests;
+using Domain;
+using DynamicData.Binding;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels
 {
-    public sealed class PressureFactorViewModel : CorrectionTestViewModel<IPressureItems>
+    public sealed class PressureFactorViewModel : CorrectionTestViewModel<PressureItems>
     {
-        public PressureFactorViewModel(IPressureItems items, decimal gauge, decimal atmosphericGauge) : base(items)
+        private const decimal Tolerance = Global.PRESSURE_ERROR_TOLERANCE;
+
+        public PressureFactorViewModel(PressureItems items, decimal gauge, decimal atmosphericGauge) : base(items, Tolerance)
         {
             Gauge = gauge;
             AtmosphericGauge = atmosphericGauge;
-            FactorTestCalculatorDecorator = CorrectionFactory.CreateWithCalculator(CorrectionFactorTestType.Pressure, CalculatorFactory.Invoke(), Items.Factor, Gauge);
+
+            this.WhenAnyValue(x => x.Items)
+                .Select(i => i.Factor)
+                .ToPropertyEx(this, x => x.ActualValue, Items.Factor);
+
+            this.WhenAnyValue(x => x.Gauge, x => x.AtmosphericGauge)
+                .Select(_ => Unit.Default)
+                .InvokeCommand(UpdateCommand);
         }
 
-        public decimal Gauge { get; set; }
-        public decimal AtmosphericGauge { get; set; }
-        public override Func<ICorrectionCalculator> CalculatorFactory
+        [Reactive] public decimal Gauge { get; set; }
+        [Reactive] public decimal AtmosphericGauge { get; set; }
+
+        protected override Func<ICorrectionCalculator> CalculatorFactory
             => () => new PressureCalculator(Items.UnitType, Items.TransducerType, Items.Base, Gauge, AtmosphericGauge);
-
-        public override void Update(IPressureItems items)
-        {
-            base.Update(items);
-            ((CorrectionTestWithGauge) FactorTest).Gauge = Gauge;
-            FactorTest.ActualValue = Items.Factor;
-        }
+        
     }
 }

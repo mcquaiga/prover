@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.GasCalculations;
 using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.CorrectionTests;
-using Domain.EvcVerifications.DriveTypes;
+using Domain.EvcVerifications.Verifications;
+using Domain.EvcVerifications.Verifications.Volume;
+using Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 
 namespace Domain.EvcVerifications.Builders
 {
@@ -36,7 +37,7 @@ namespace Domain.EvcVerifications.Builders
             _device = device;
             _instance = new EvcVerificationTest(device);
 
-            VolumeBuilder(_device.ItemGroup<IVolumeItems>().VolumeInputType)
+            VolumeBuilder(_device.ItemGroup<VolumeItems>().VolumeInputType)
                 .BuildVolumeInputType(_device, _instance)
                 .BuildVerificationTests(_instance);
         }
@@ -98,67 +99,67 @@ namespace Domain.EvcVerifications.Builders
         public VerificationTestPointBuilder CreateNew(int level, IEnumerable<ItemValue> beforeValues,
             IEnumerable<ItemValue> afterValues)
         {
-            _testPoint = new VerificationTestPoint(level)
-            {
-                BeforeValues = beforeValues,
-                AfterValues = afterValues
-            };
+            _testPoint = new VerificationTestPoint(level);
 
             return this;
         }
 
         #region Public Methods
 
-        public VerificationTestPointBuilder BuildPressureTest(IPressureItems pressureItems, decimal gauge)
+        public VerificationTestPointBuilder BuildPressureTest(PressureItems pressureItems, decimal gauge, decimal? atmGauge)
         {
-            if (pressureItems != null)
-            {
-                var p = pressureItems;
-                var calc = new PressureCalculator(p.UnitType, p.TransducerType, p.Base, gauge, p.AtmosphericPressure);
+            //if (pressureItems != null)
+            //{
+            //    var p = pressureItems;
+            //    var calc = new PressureCalculator(p.UnitType, p.TransducerType, p.Base, gauge, p.AtmosphericPressure);
 
-                _testPoint.AddTest(
-                    CorrectionFactory.Create(CorrectionFactorTestType.Pressure, calc, p.Factor, gauge)
-                );
+            //    _testPoint.AddTest(
+            //        new PressureCorrectionTest(pressureItems, gauge, atmGauge ?? pressureItems.AtmosphericPressure)
+            //    );
                
-            }
+            //}
 
             return this;
         }
 
-        public VerificationTestPointBuilder BuildSuperFactorTest(ISuperFactorItems superItems)
+        public VerificationTestPointBuilder BuildSuperFactorTest(SuperFactorItems superItems)
         {
-            var temp = _testPoint.GetCorrectionTest<CorrectionTestWithGauge>(CorrectionFactorTestType.Temperature);
-            var pressure =  _testPoint.GetCorrectionTest<CorrectionTestWithGauge>(CorrectionFactorTestType.Pressure);
+            //var temp = _testPoint.GetVerificationTest<TemperatureCorrectionTest>();
+            //var pressure =  _testPoint.GetVerificationTest<PressureCorrectionTest>();
 
-            if (temp != null && pressure != null)
-            {
-                var si = superItems;
+            //if (temp != null && pressure != null)
+            //{
+            //    var si = superItems;
 
-                var calc = new SuperFactorCalculator(si.Co2, si.N2, si.SpecGr, temp.Gauge, pressure.Gauge);
+            //    var calc = new SuperFactorCalculator(si.Co2, si.N2, si.SpecGr, temp.Gauge, pressure.Gauge);
 
-                _testPoint.AddTest(
-                    CorrectionFactory.Create(CorrectionFactorTestType.Super, calc, si.Factor)
-                );
-            }
+            //    _testPoint.AddTest(
+            //        new SuperCorrectionTest(superItems, temp, pressure)
+            //    );
+            //}
 
             return this;
         }
 
-        public VerificationTestPointBuilder BuildTemperatureTest(ITemperatureItems tempItems, decimal gaugeTemp)
+        public VerificationTestPointBuilder BuildTemperatureTest(TemperatureItems tempItems, decimal gaugeTemp)
         {
-            if (tempItems != null)
-            {
-                var calc = new TemperatureCalculator(tempItems.Units, tempItems.Base, gaugeTemp);
+            //if (tempItems != null)
+            //{
+            //    var tempTest = CorrectionTestFactory.CreateTemperatureTest(tempItems, gaugeTemp);
 
-                _testPoint.AddTest(
-                    CorrectionFactory.Create(CorrectionFactorTestType.Temperature, calc, tempItems.Factor, gaugeTemp)
-                );
-            }
+            //    //ICorrectionCalculator Calc(TemperatureCorrectionTest temp) => new TemperatureCalculator(temp.Values.Units, temp.Values.Base, temp.Gauge);
+
+            //    //tempTest.WithCalculator((Func<VerificationTestEntity<TemperatureItems>, ICorrectionCalculator>)Calc);
+
+            //    _testPoint.AddTest(
+            //        tempTest
+            //    );
+            //}
             
             return this;
         }
 
-        public VerificationTestPointBuilder BuildVolumeTest(IVolumeItems startVolumeItems, IVolumeItems endVolumeItems,
+        public VerificationTestPointBuilder BuildVolumeTest(VolumeItems startVolumeItems, VolumeItems endVolumeItems,
             decimal appliedInput)
         {
             _testPoint.AppliedInput = appliedInput;
@@ -179,129 +180,5 @@ namespace Domain.EvcVerifications.Builders
         #endregion
     }
 
-    internal abstract class VolumeInputBuilder
-    {
-        #region Public Methods
-
-        public virtual VolumeInputBuilder BuildVerificationTests(EvcVerificationTest evcVerification)
-        {
-            return this;
-        }
-
-        public virtual VolumeInputBuilder BuildVolumeTestPointTests(IVolumeInputType inputType, DeviceInstance device,
-            VerificationTestPoint testPoint)
-        {
-            var totalCorrection = Calculators.TotalCorrectionFactor(
-                testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Temperature)
-                    ?.ActualValue,
-                testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Pressure)
-                    ?.ActualValue,
-                testPoint.GetTest<CorrectionTest>(c => c.TestType == CorrectionFactorTestType.Super)
-                    ?.ActualValue);
-
-
-            var uncorVolume = inputType.UnCorrectedInputVolume(testPoint.AppliedInput ?? 0);
-
-            var startVolumeItems = device.ItemGroup<IVolumeItems>(testPoint.BeforeValues);
-            var endVolumeItems = device.ItemGroup<IVolumeItems>(testPoint.AfterValues);
-
-            testPoint.AddTest(
-                CorrectedVolumeTestRunFactory.Factory.Create(startVolumeItems, endVolumeItems, totalCorrection,
-                    uncorVolume)
-            );
-
-            testPoint.AddTest(
-                UncorrectedVolumeTestRun.Create(startVolumeItems, endVolumeItems, uncorVolume)
-            );
-
-            return this;
-        }
-
-        public abstract VolumeInputBuilder BuildVolumeInputType(DeviceInstance device, EvcVerificationTest evcVerification);
-
-        #endregion
-    }
-
-    internal class RotaryVolumeInputBuilder : VolumeInputBuilder
-    {
-        #region Public Methods
-
-        public override VolumeInputBuilder BuildVerificationTests(EvcVerificationTest evcVerification)
-        {
-            base.BuildVerificationTests(evcVerification);
-
-            evcVerification.AddTest(
-                new RotaryMeterTest(evcVerification.Device.ItemGroup<IRotaryMeterItems>())
-            );
-
-            return this;
-        }
-
-        public override VolumeInputBuilder BuildVolumeInputType(DeviceInstance device, EvcVerificationTest evcVerification)
-        {
-            evcVerification.DriveType = new RotaryVolumeInputType(device.ItemGroup<IVolumeItems>(),
-                device.ItemGroup<IRotaryMeterItems>());
-
-            return this;
-        }
-
-        #endregion
-    }
-
-    internal class MechanicalVolumeInputBuilder : VolumeInputBuilder
-    {
-        #region Public Methods
-
-        public override VolumeInputBuilder BuildVolumeInputType(DeviceInstance device, EvcVerificationTest evcVerification)
-        {
-            evcVerification.DriveType = new MechanicalVolumeInputType(device.ItemGroup<IVolumeItems>());
-
-            return this;
-        }
-
-        public override VolumeInputBuilder BuildVolumeTestPointTests(IVolumeInputType inputType, DeviceInstance device,
-            VerificationTestPoint testPoint)
-        {
-            base.BuildVolumeTestPointTests(inputType, device, testPoint);
-
-            var startValues = device.ItemGroup<IEnergyItems>(testPoint.BeforeValues);
-            var endValues = device.ItemGroup<IEnergyItems>(testPoint.AfterValues);
-
-            testPoint.AddTest(
-                EnergyTest.Create(
-                    startValues,
-                    endValues,
-                    testPoint.GetTest<CorrectedVolumeTestRun>()?.ActualValue)
-            );
-
-            return this;
-        }
-
-        #endregion
-    }
-
-    internal class PulseInputVolumeBuilder : VolumeInputBuilder
-    {
-        #region Public Methods
-
-        public override VolumeInputBuilder BuildVerificationTests(EvcVerificationTest evcVerification)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override VolumeInputBuilder BuildVolumeInputType(DeviceInstance device, EvcVerificationTest evcVerification)
-        {
-            evcVerification.DriveType = new PulseInputSensor(device);
-
-            return this;
-        }
-
-        public override VolumeInputBuilder BuildVolumeTestPointTests(IVolumeInputType inputType, DeviceInstance device,
-            VerificationTestPoint testPoint)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-    }
+   
 }

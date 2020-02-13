@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Domain.EvcVerifications;
-using Shared.Interfaces;
-
-namespace Domain.Repositories
+﻿namespace Domain.Repositories
 {
     //public interface IEvcVerificationRepository : IAsyncRepositoryGuid<EvcVerificationTest>
     //{

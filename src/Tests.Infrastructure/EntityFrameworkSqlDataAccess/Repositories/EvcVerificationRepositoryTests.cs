@@ -1,12 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Infrastructure.EntityFrameworkSqlDataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Infrastructure.EntityFrameworkSqlDataAccess.Storage;
-using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.EntityFrameworkSqlDataAccess.Repositories.Tests
+namespace Tests.Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 {
     [TestClass()]
     public class EvcVerificationRepositoryTests

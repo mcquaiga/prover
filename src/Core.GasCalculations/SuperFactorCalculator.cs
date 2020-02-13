@@ -1,6 +1,4 @@
-﻿using System;
-using Core.GasCalculations.ZFactor;
-using Devices.Core.Items.ItemGroups;
+﻿using Core.GasCalculations.ZFactor;
 using Shared.Extensions;
 
 namespace Core.GasCalculations

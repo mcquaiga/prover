@@ -1,13 +1,12 @@
-using Devices.Core.Interfaces;
+using System.Reflection;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public interface ITemperatureItems : IHaveFactor, IItemGroup
+    public class TemperatureItems : ItemGroup, IHaveFactor
     {
-        decimal Base { get; }
-
-        decimal GasTemperature { get; }
-
-        TemperatureUnitType Units { get; }
+        public virtual decimal Factor { get; set; }
+        public virtual decimal Base { get; set; }
+        public virtual decimal GasTemperature { get; set; }
+        public virtual TemperatureUnitType Units { get; set; }
     }
 }

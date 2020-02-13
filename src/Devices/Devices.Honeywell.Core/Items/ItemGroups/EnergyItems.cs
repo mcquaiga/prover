@@ -4,15 +4,15 @@ using Devices.Core.Items.DriveTypes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    public class EnergyItems : HoneywellItemGroup, IEnergyItems
+    public class EnergyItemsHoneywell : EnergyItems
     {
         [ItemInfo(142)]
-        public decimal EnergyGasValue { get; protected set; }
+        public override decimal EnergyGasValue { get; set; }
 
         [ItemInfo(140)]
-        public decimal EnergyReading { get; protected set; }
+        public override decimal EnergyReading { get; set; }
 
         [ItemInfo(141)]
-        public EnergyUnitType EnergyUnitType { get; protected set; }
+        public override EnergyUnitType EnergyUnitType { get; set; }
     }
 }

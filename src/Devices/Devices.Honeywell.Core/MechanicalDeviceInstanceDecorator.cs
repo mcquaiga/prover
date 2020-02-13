@@ -10,7 +10,7 @@ namespace Devices.Honeywell.Core
 
         #region Public Properties
 
-        public IEnergyItems EnergyItems { get; set; }
+        public EnergyItems EnergyItems { get; set; }
 
         #endregion
     }

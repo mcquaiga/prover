@@ -1,31 +1,51 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.CorrectionTests;
+using Domain;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels
 {
-    public sealed class SuperFactorViewModel : CorrectionTestViewModel<ISuperFactorItems>
+    public sealed class SuperFactorViewModel : CorrectionTestViewModel<SuperFactorItems>
     {
-        public TemperatureFactorViewModel Temperature { get; set; }
-        public PressureFactorViewModel Pressure { get; set; }
+        private const decimal Tolerance = Global.SUPER_FACTOR_TOLERANCE;
 
-        public SuperFactorViewModel(ISuperFactorItems items, TemperatureFactorViewModel temperature, PressureFactorViewModel pressure) : base(items)
+        public SuperFactorViewModel(SuperFactorItems items, TemperatureFactorViewModel temperature, PressureFactorViewModel pressure)
+            : base(items, Tolerance)
         {
             Temperature = temperature;
             Pressure = pressure;
 
-            FactorTestCalculatorDecorator = CorrectionFactory.CreateWithCalculator(CorrectionFactorTestType.Super,
-                CalculatorFactory.Invoke(), Items.Factor);
+            this.WhenAnyValue(x => x.Pressure.Items)
+                .Select(i => i.UnsqrFactor)
+                .ToPropertyEx(this, x => x.ActualValue, Pressure.Items.UnsqrFactor);
+
+            this.WhenAnyValue(x => x.Temperature.Gauge, x => x.Pressure.Gauge, x => x.Pressure.AtmosphericGauge)
+                .Select(_ => Unit.Default)
+                .InvokeCommand(UpdateCommand);
+
+            this.WhenAnyValue(x => x.ExpectedValue)
+                .Select(Calculators.SquaredFactor)
+                .ToPropertyEx(this, x => x.SquaredFactor, deferSubscription: true);
         }
 
-        public override Func<ICorrectionCalculator> CalculatorFactory 
+        #region Public Properties
+
+        public extern decimal SquaredFactor { [ObservableAsProperty] get; }
+
+        public TemperatureFactorViewModel Temperature { get; }
+        public PressureFactorViewModel Pressure { get; }
+
+        #endregion
+
+        #region Protected
+
+        protected override Func<ICorrectionCalculator> CalculatorFactory
             => () => new SuperFactorCalculator(Items.Co2, Items.N2, Items.SpecGr, Temperature.Gauge, Pressure.Gauge);
 
-        public override void Update(ISuperFactorItems items)
-        {
-            base.Update(items);
-            FactorTest.ActualValue = Items.Factor;
-        }
+        #endregion
     }
 }

@@ -33,7 +33,7 @@ namespace Devices.Honeywell.Core
 //{
 //    var ts = Assembly.GetCallingAssembly().GetTypes();
 
-//    var types = ts.Where(t => t.GetInterfaces().Contains(typeof(IItemGroup)) && !t.IsAbstract);
+//    var types = ts.Where(t => t.GetInterfaces().Contains(typeof(ItemGroup)) && !t.IsAbstract);
             
 //    types.ToList().ForEach(x =>
 //    {
@@ -46,7 +46,7 @@ namespace Devices.Honeywell.Core
 //{
 //    var props = GetType()
 //        .GetProperties()
-//        .Where(p => p.PropertyType.GetInterfaces().Contains(typeof(IItemGroup)));
+//        .Where(p => p.PropertyType.GetInterfaces().Contains(typeof(ItemGroup)));
 
 //    foreach (var p in props)
 //    {

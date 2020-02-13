@@ -21,6 +21,14 @@ namespace Devices.Honeywell.Core.Items
             return factory.CreateInstance(items);
         }
 
+        public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
+            IDictionary<string, string> itemValuesDictionary)
+        {
+            var items =
+                (factory as HoneywellDeviceInstanceFactory)?.DeviceType.ToItemValuesEnumerable(itemValuesDictionary);
+            return factory.CreateInstance(items);
+        }
+
         public static DeviceInstance CreateInstance(this DeviceType deviceType,
             IDictionary<int, string> itemValuesDictionary)
         {
@@ -131,7 +139,7 @@ namespace Devices.Honeywell.Core.Items
         }
 
         public static IEnumerable<ItemValue> ToItemValuesEnumerable(this DeviceType deviceType,
-            Dictionary<string, string> itemValuesDictionary)
+            IDictionary<string, string> itemValuesDictionary)
         {
             var dict = itemValuesDictionary.ToDictionary(k => int.Parse(k.Key), v => v.Value);
             return deviceType.ToItemValuesEnumerable(dict);

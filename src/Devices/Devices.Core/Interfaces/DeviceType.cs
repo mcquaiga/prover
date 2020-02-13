@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
 
 namespace Devices.Core.Interfaces
@@ -38,9 +39,9 @@ namespace Devices.Core.Interfaces
         //    return CreateInstance(items);
         //}
 
-        public abstract IEnumerable<ItemMetadata> GetItemMetadata<T>() where T : IItemGroup;
+        public abstract IEnumerable<ItemMetadata> GetItemMetadata<T>() where T : ItemGroup;
 
-        public abstract TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : IItemGroup;
+        public abstract TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup;
 
         #endregion
 

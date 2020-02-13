@@ -12,7 +12,7 @@ namespace Tests.Core.GasCalculations
         [TestInitialize]
         public void Initialize()
         {
-            PressureValues = new Mock<IPressureItems>();
+            PressureValues = new Mock<PressureItems>();
 
             PressureValues.Setup(p => p.AtmosphericPressure).Returns(14.7300m);
             PressureValues.Setup(p => p.Base).Returns(14.7300m);
@@ -24,7 +24,7 @@ namespace Tests.Core.GasCalculations
             PressureValues.Setup(p => p.UnsqrFactor).Returns(1.0076m);
         }
 
-        public Mock<IPressureItems> PressureValues
+        public Mock<PressureItems> PressureValues
         { get; set; }
 
 
@@ -41,7 +41,7 @@ namespace Tests.Core.GasCalculations
             var atm = 14.73m;
             var expected = gauge + atm;
 
-            var mock = new Mock<IPressureItems>();
+            var mock = new Mock<PressureItems>();
             mock.Setup(p => p.TransducerType).Returns(PressureTransducerType.Gauge);
 
             var calc = mock.Object.GetCalculator(gauge, atm);
@@ -55,7 +55,7 @@ namespace Tests.Core.GasCalculations
             var atm = 14.73m;
             var expected = gauge;
 
-            var mock = new Mock<IPressureItems>();
+            var mock = new Mock<PressureItems>();
             mock.Setup(p => p.TransducerType).Returns(PressureTransducerType.Absolute);
 
             var calc = mock.Object.GetCalculator(gauge, atm);

@@ -24,6 +24,17 @@ namespace Devices.Core.Items.ItemGroups
 
                 return groupClass;
             }
+            else
+            {
+                var baseClass = assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(itemGroupType));
+                if (baseClass == null && baseAssembly != null)
+                {
+                    baseClass = baseAssembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(itemGroupType));
+                }
+
+
+                return baseClass;
+            }
 
             return itemGroupType;
         }

@@ -8,6 +8,6 @@ namespace Devices.Honeywell.Core
         {
         }
 
-        public IPressureItems PressureItems2 { get; set; }
+        public PressureItems PressureItems2 { get; set; }
     }
 }

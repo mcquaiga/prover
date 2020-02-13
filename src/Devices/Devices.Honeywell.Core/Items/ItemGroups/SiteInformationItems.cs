@@ -4,9 +4,9 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    public class SiteInformationItems : HoneywellItemGroup, ISiteInformationItems
+    public class SiteInformationItemsHoneywell : SiteInformationItems
     {
-        public CompositionType CompositionType
+        public override CompositionType CompositionType
         {
             get
             {
@@ -24,25 +24,25 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         }
 
         [ItemInfo(122)]
-        public string FirmwareVersion { get; set; }
+        public override string FirmwareVersion { get; set; }
 
         [ItemInfo(109)]
-        public CorrectionFactorType PressureFactor { get; set; }
+        public override CorrectionFactorType PressureFactor { get; set; }
 
         [ItemInfo(62)]
-        public string SerialNumber { get; set; }
+        public override string SerialNumber { get; set; }
 
         [ItemInfo(200)]
-        public string SiteId1 { get; set; }
+        public override string SiteId1 { get; set; }
 
         [ItemInfo(201)]
-        public string SiteId2 { get; set; }
+        public override string SiteId2 { get; set; }
 
         [ItemInfo(110)]
-        public CorrectionFactorType SuperFactor { get; set; }
+        public override CorrectionFactorType SuperFactor { get; set; }
 
         [ItemInfo(111)]
-        public CorrectionFactorType TemperatureFactor { get; set; }
+        public override CorrectionFactorType TemperatureFactor { get; set; }
 
     }
 

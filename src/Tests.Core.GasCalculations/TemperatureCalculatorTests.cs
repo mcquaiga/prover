@@ -11,7 +11,7 @@ namespace Tests.Core.GasCalculations
     {
         #region Public Properties
 
-        public Mock<ITemperatureItems> TempItems { get; set; }
+        public Mock<TemperatureItems> TempItems { get; set; }
 
         #endregion
 
@@ -20,7 +20,7 @@ namespace Tests.Core.GasCalculations
         [TestInitialize]
         public void Initialize()
         {
-            TempItems = new Mock<ITemperatureItems>();
+            TempItems = new Mock<TemperatureItems>();
 
             TempItems.Setup(p => p.Units).Returns(TemperatureUnitType.F);
             TempItems.Setup(p => p.Base).Returns(60m);

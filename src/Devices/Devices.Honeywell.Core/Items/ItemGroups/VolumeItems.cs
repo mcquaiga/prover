@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
@@ -10,7 +11,7 @@ using Devices.Honeywell.Core.Items.Attributes;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
-    //public class VolumeCorrectedItems : HoneywellItemGroup, IVolumeCorrectedItems
+    //public class VolumeCorrectedItems : HoneywellItemGroup, VolumeItems
     //{
     //    [ItemInfo(90)]
     //    public decimal CorrectedMultiplier { get; set; }
@@ -22,62 +23,56 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
     //    public string CorrectedUnits { get; set; }
     //}
 
-    public class VolumeItems : HoneywellItemGroup, IVolumeItems
+    public class VolumeItemsHoneywell : VolumeItems
     {
-        public VolumeInputType VolumeInputType { get; set; }
+        public override VolumeInputType VolumeInputType { get; set; }
 
         [ItemInfo(90)]
-        public decimal CorrectedMultiplier { get; set; }
+        public override decimal CorrectedMultiplier { get; set; }
 
         [JoinLowResHighResValue(0, 113)]
-        public decimal CorrectedReading { get; set; }
+        public override decimal CorrectedReading { get; set; }
 
         [ItemInfo(90)]
-        public string CorrectedUnits { get; set; }
+        public override string CorrectedUnits { get; set; }
 
         [ItemInfo(98)]
-        public decimal DriveRate { get; set; }
+        public override decimal DriveRate { get; set; }
 
         [ItemInfo(98)]
-        public string DriveRateDescription { get; set; }
+        public override string DriveRateDescription { get; set; }
 
         [ItemInfo(92)]
-        public decimal UncorrectedMultiplier { get; set; }
+        public override decimal UncorrectedMultiplier { get; set; }
 
         [JoinLowResHighResValue(2, 892)]
-        public decimal UncorrectedReading { get; set; }
+        public override decimal UncorrectedReading { get; set; }
 
         [ItemInfo(92)]
-        public string UncorrectedUnits { get; set; }
-    }
+        public override string UncorrectedUnits { get; set; }
 
-    public class VolumeItemGroupBuilder : ItemGroupBuilderBase<VolumeItems>, IBuildItemsFor<VolumeItems>
-    {
-        public VolumeItemGroupBuilder(DeviceType deviceType) : base(deviceType)
+        public override ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues)
         {
-        }
+            var items = itemValues.ToList();
 
-        public virtual VolumeItems Build(DeviceType device, IEnumerable<ItemValue> values)
-        {
-            var items = values.ToList();
+            base.SetValues(deviceType, items);
 
-            var volume = GetItemGroupInstance(typeof(VolumeItems), items);
+            this.DriveRateDescription = items.GetItemDescription(98).Description;
 
-            volume.DriveRateDescription = items.GetItemDescription(98).Description;
-
-            volume.VolumeInputType = volume.DriveRateDescription.Contains("Rotary") 
+            this.VolumeInputType = this.DriveRateDescription.Contains("Rotary") 
                 ? VolumeInputType.Rotary 
                 : VolumeInputType.Mechanical;
 
-            volume.CorrectedReading = ItemValueParses.JoinLowResHighResReading(items.GetItemValue(0), items.GetItemValue(113));
-            volume.CorrectedMultiplier = items.GetItemValue(90);
-            volume.CorrectedUnits = items.GetItem<ItemValueWithDescription>(90).GetDescription();
+            this.CorrectedReading = ItemValueParses.JoinLowResHighResReading(items.GetItemValue(0), items.GetItemValue(113));
+            this.CorrectedMultiplier = items.GetItemValue(90);
+            this.CorrectedUnits = items.GetItem<ItemValueWithDescription>(90).GetDescription();
 
-            volume.UncorrectedReading = ItemValueParses.JoinLowResHighResReading(items.GetItemValue(2), items.GetItemValueNullable(892) ?? 0);
-            volume.UncorrectedMultiplier = items.GetItemValue(92);
-            volume.UncorrectedUnits = items.GetItemDescription(92).Description;
+            this.UncorrectedReading = ItemValueParses.JoinLowResHighResReading(items.GetItemValue(2), items.GetItemValueNullable(892) ?? 0);
+            this.UncorrectedMultiplier = items.GetItemValue(92);
+            this.UncorrectedUnits = items.GetItemDescription(92).Description;
 
-            return volume;
+            return this;
         }
     }
+
 }
