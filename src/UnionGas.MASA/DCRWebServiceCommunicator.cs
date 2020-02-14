@@ -143,11 +143,13 @@ namespace UnionGas.MASA
         /// <typeparam name="TResult"></typeparam>
         /// <param name="webServiceMethod">The webServiceMethod<see cref="Func{Task{TResult}}" /></param>
         /// <returns>The <see cref="Task{TResult}" /></returns>
-        private async Task<TResult> CallWebServiceMethod<TResult>(Func<Task<TResult>> webServiceMethod)
+        private async Task<TResult> CallWebServiceMethod<TResult>(Func<Task<TResult>> webServiceMethod, CancellationTokenSource tokenSource = null)
         {
             try
             {
-                var tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
+                if (tokenSource == null)
+                    tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
+
                 tokenSource.Token.ThrowIfCancellationRequested();
 
                 return await Task.Run(async () => await webServiceMethod.Invoke(), tokenSource.Token)

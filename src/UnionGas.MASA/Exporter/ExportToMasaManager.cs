@@ -48,7 +48,9 @@
         /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
         /// <param name="loginService">The loginService<see cref="ILoginService{EmployeeDTO}"/></param>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceCommunicator"/></param>
-        public ExportToMasaManager(TestRunService testRunService, ILoginService<EmployeeDTO> loginService, DCRWebServiceCommunicator dcrWebService)
+        public ExportToMasaManager(TestRunService testRunService, 
+            ILoginService<EmployeeDTO> loginService, 
+            DCRWebServiceCommunicator dcrWebService)
         {
             _testRunService = testRunService;
             _dcrWebService = dcrWebService;

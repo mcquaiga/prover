@@ -40,8 +40,23 @@
         /// </summary>
         public string DateTimePretty => $"{Instrument.TestDateTime:g}";
 
-        public string DriveDescription => 
-            Instrument.VolumeTest.DriveType is RotaryDrive ? (Instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription : Instrument.VolumeTest.DriveType.Discriminator;
+
+        public string DriveDescription
+        {
+            get
+            {
+                if (Instrument.VolumeTest.DriveType is RotaryDrive rt)
+                {
+                    return rt.Meter.MeterTypeDescription;
+                }
+
+                //if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+                //{
+                //    return (Instrument.VolumeTest.DriveType as MechanicalDrive).Discriminator;
+                //}
+                return "";
+            }
+        }
 
         //if (Instrument.VolumeTest.DriveType is MechanicalDrive)
         //{
