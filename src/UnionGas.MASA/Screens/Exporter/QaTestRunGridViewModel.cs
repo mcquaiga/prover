@@ -40,23 +40,13 @@
         /// </summary>
         public string DateTimePretty => $"{Instrument.TestDateTime:g}";
 
-        public string DriveDescription
-        {
-            get
-            {
-                if (Instrument.VolumeTest.DriveType is RotaryDrive)
-                {
-                    return (Instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription;
-                }
+        public string DriveDescription => 
+            Instrument.VolumeTest.DriveType is RotaryDrive ? (Instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription : Instrument.VolumeTest.DriveType.Discriminator;
 
-                //if (Instrument.VolumeTest.DriveType is MechanicalDrive)
-                //{
-                //    return (Instrument.VolumeTest.DriveType as MechanicalDrive).Discriminator;
-                //}
-                return "";
-            }
-        }
-
+        //if (Instrument.VolumeTest.DriveType is MechanicalDrive)
+        //{
+        //    return (Instrument.VolumeTest.DriveType as MechanicalDrive).Discriminator;
+        //}
         /// <summary>
         /// Gets the ExportQaTestRunCommand
         /// </summary>

@@ -60,6 +60,9 @@ namespace UnionGas.MASA
         /// <returns>The <see cref="Task{MeterDTO}" /></returns>
         public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber)
         {
+            if (string.IsNullOrEmpty(companyNumber))
+                throw new ArgumentNullException(nameof(companyNumber));
+
             _log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
 
             var request = new GetValidatedEvcDeviceByInventoryCodeRequest

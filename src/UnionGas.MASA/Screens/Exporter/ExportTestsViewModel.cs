@@ -122,6 +122,7 @@
                      && !string.IsNullOrEmpty(x.Instrument.EmployeeId));
 
             ExportAllPassedQaRunsCommand = ReactiveCommand.CreateFromTask(ExportAllPassedQaRuns);
+
             ExportFailedTestCommand = ReactiveCommand.CreateFromTask(ExportFailedTest);
           
             TestsByJobNumber = testsByJobNumber;
@@ -237,8 +238,11 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task ExportFailedTest()
         {
-            await _exportTestRun.ExportFailedTest(FailedCompanyNumber);
-            FailedCompanyNumber = null;
+            if (await _exportTestRun.ExportFailedTest(FailedCompanyNumber))
+            {
+                FailedCompanyNumber = null;
+            }
+            
         }
 
         /// <summary>
