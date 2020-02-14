@@ -107,7 +107,7 @@
             if (meterDto == null)
                 throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
-            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.Id);
+            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService?.User?.Id);
             return await _dcrWebService.SendQaTestResults(new[] { failedTest });
         }
 

@@ -24,15 +24,21 @@ namespace UnionGas.MASA.Exporter
 
         public static QARunEvcTestResult RunTranslationForExport(Instrument instrument)
         {
+
+            var basePressure = instrument.EvcBasePressure() ?? 0;
+            var atmPressure = instrument.EvcAtmosphericPressure() ?? 0;
+            var baseTemp = instrument.EvcBaseTemperature() ?? 0;
+
             var qaRun = new QARunEvcTestResult
             {
                 InstrumentType = instrument.InstrumentType.Name,
                 InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture).PadLeft(7, '0'),
                 TestDate = instrument.TestDateTime,
                 DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
-                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
+                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
+                    (instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterTypeDescription : string.Empty,
                 MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
-                    Convert.ToDouble((instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement) : 0,
+                    Convert.ToDouble((instrument.VolumeTest.DriveType as RotaryDrive)?.Meter.MeterDisplacement) : 0,
                 ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
                 FirmwareVersion = Convert.ToDouble(instrument.FirmwareVersion),
                 SerialNumber = instrument.SerialNumber.ToString(),
@@ -43,29 +49,20 @@ namespace UnionGas.MASA.Exporter
                 CommPortPassedInd = instrument.CommPortsPassed.HasValue ? instrument.CommPortsPassed.Value ? "Y" : "N" : null,
                 PressureInfo = new PressureHeader
                 {
-                    BasePressure =
-                        instrument.EvcBasePressure().HasValue
-                            ? Convert.ToDouble(decimal.Round(instrument.EvcBasePressure().Value, 2)) : 0,
+                    BasePressure = Convert.ToDouble(decimal.Round(basePressure, 2)),
                     PressureRange = Convert.ToDouble(instrument.EvcPressureRange()),
                     PressureUnits = instrument.PressureUnits(),
                     TransducerType = instrument.GetTransducerType().ToString().Substring(0, 1),
-                    ProgrammedAtmosphericPressure =
-                        instrument.EvcAtmosphericPressure().HasValue ? Convert.ToDouble(decimal.Round(instrument.EvcAtmosphericPressure().Value, 2)) : 0
+                    ProgrammedAtmosphericPressure = Convert.ToDouble(decimal.Round(atmPressure, 2))
                 },
                 TemperatureInfo = new TemperatureHeader
                 {
-                    BaseTemperature =
-                        instrument.EvcBaseTemperature().HasValue ? Convert.ToDouble(decimal.Round(instrument.EvcBaseTemperature().Value, 2)) : 0,
+                    BaseTemperature = Convert.ToDouble(decimal.Round(baseTemp, 2)),
                     TemperatureRange = "-40 to 170",
                     TemperatureUnits = $"deg{instrument.TemperatureUnits()}"
                 },
-                SuperFactorInfo = new SuperFactorHeader
-                {
-                    CO2 = instrument.CO2().HasValue ? Convert.ToDouble(decimal.Round(instrument.CO2().Value, 4)) : 0,
-                    SpecGr = instrument.SpecGr().HasValue ? Convert.ToDouble(decimal.Round(instrument.SpecGr().Value, 4)) : 0,
-                    N2 = instrument.N2().HasValue ? Convert.ToDouble(decimal.Round(instrument.N2().Value, 4)) : 0,
-                    FPVTable = "NX19"
-                },
+
+                
                 VolumeInfo = new VolumeHeader
                 {
                     CorrectedMultiplierDescription = instrument.CorrectedMultiplierDescription(),
@@ -93,6 +90,19 @@ namespace UnionGas.MASA.Exporter
                 SubmitRunIndicator = "Y"
             };
 
+            var co2 = instrument.CO2() ?? 0;
+            var specGr = instrument.SpecGr() ?? 0;
+            var n2 = instrument.N2() ?? 0;
+
+            qaRun.SuperFactorInfo = new SuperFactorHeader
+            {
+                CO2 = Convert.ToDouble(decimal.Round(co2, 4)),
+                SpecGr = Convert.ToDouble(decimal.Round(specGr, 4)),
+                N2 =  Convert.ToDouble(decimal.Round(n2, 4)),
+                FPVTable = "NX19"
+            };
+
+
             Task.Run(() =>
             {
                 var objectString = JsonConvert.SerializeObject(qaRun, Formatting.Indented,
@@ -103,9 +113,10 @@ namespace UnionGas.MASA.Exporter
             return qaRun;
         }
 
-        public static QARunEvcTestResult CreateFailedTestForExport(MeterDTO meterDto, string employeeId)
+        public static QARunEvcTestResult CreateFailedTestForExport(MeterDTO meterDto, string employeeId = null)
         {
             Log.Info(JsonConvert.SerializeObject(meterDto));
+
             try
             {
                 var qaRun = new QARunEvcTestResult
@@ -121,7 +132,7 @@ namespace UnionGas.MASA.Exporter
                     SerialNumber = meterDto.SerialNumber,
                     InstrumentData = string.Empty,
                     InstrumentComposition = string.Empty,
-                    EmployeeId = employeeId,
+                    EmployeeId = employeeId ?? string.Empty,
                     EventLogPassedInd = "N",
                     CommPortPassedInd = "N",
                     PressureInfo = new PressureHeader
@@ -160,13 +171,14 @@ namespace UnionGas.MASA.Exporter
 
                     IndexReading = 0,
                     Comments = string.Empty,
-                    JobNumber = meterDto.JobNumber.Value,
+                    JobNumber = meterDto.JobNumber ?? -1,
                     ProverNumber = ProverNumberId.ToString(), //
                     MeterClassCode = "EV",
                     TestReason = "6",
                     FieldMeterDesc = string.Empty,
                     SubmitRunIndicator = "Y"
                 };
+
                 Log.Info("Failed Object:" + JsonConvert.SerializeObject(qaRun).ToString());
                 
                 return qaRun;
@@ -261,10 +273,7 @@ namespace UnionGas.MASA.Exporter
 
         private static decimal RoundTo(decimal? value, int places)
         {
-            if (value.HasValue)
-                return decimal.Round(value.Value, places);
-
-            return 0;
+            return value.HasValue ? decimal.Round(value.Value, places) : 0;
         }
     }
 }
