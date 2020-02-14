@@ -207,7 +207,7 @@
         /// Gets the PulseOutputTiming
         /// </summary>
         [NotMapped]
-        public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
+        public decimal PulseOutputTiming => Items.GetItem(115)?.NumericValue ?? 0;
 
         /// <summary>
         /// Gets the SiteNumber1

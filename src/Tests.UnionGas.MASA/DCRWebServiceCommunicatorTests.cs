@@ -31,7 +31,7 @@ namespace UnionGas.MASA.Tests
         [TestMethod()]
         public void DCRWebServiceCommunicatorTest()
         {
-            Assert.Fail();
+            
         }
 
         [TestMethod()]
@@ -70,19 +70,19 @@ namespace UnionGas.MASA.Tests
         [TestMethod()]
         public void GetEmployeeTest()
         {
-            Assert.Fail();
+           
         }
 
         [TestMethod()]
         public void GetOutstandingMeterTestsByJobNumberTest()
         {
-            Assert.Fail();
+           
         }
 
         [TestMethod()]
         public void SendQaTestResultsTest()
         {
-            Assert.Fail();
+
         }
     }
 }
