@@ -7,7 +7,6 @@ using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 using UnionGas.MASA.Validators;
 using UnionGas.MASA.Validators.CompanyNumber;
-using Module = Autofac.Module;
 
 namespace UnionGas.MASA
 {
@@ -15,19 +14,24 @@ namespace UnionGas.MASA
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));            
-            builder.RegisterType<DCRWebServiceCommunicator>();
+            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
+
+            builder.RegisterType<DCRWebServiceCommunicator>()
+                .SingleInstance();
 
             //Login service
-            builder.RegisterType<LoginService>().As<ILoginService<EmployeeDTO>>();                       
+            builder.RegisterType<LoginService>()
+                .As<ILoginService<EmployeeDTO>>()
+                .SingleInstance();
+
+
             builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
-            
+
             builder.RegisterType<CompanyNumberValidationManager>()
                 .As<IEvcDeviceValidationAction>()
                 .AsSelf();
 
             builder.RegisterType<UserLoggedInValidator>().As<IValidator>();
-           
         }
     }
 }

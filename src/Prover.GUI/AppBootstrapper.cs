@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -156,6 +157,10 @@ namespace Prover.GUI
             {
                 _splashScreen.Hide();
                 DisplayRootViewFor<ShellViewModel>();
+
+                Container.Resolve<IEnumerable<IDisplayOnStartup>>().ToObservable()
+                    .ForEachAsync(d => d.Show());
+                
                 _splashScreen.Close();
             }
             catch (Exception ex)

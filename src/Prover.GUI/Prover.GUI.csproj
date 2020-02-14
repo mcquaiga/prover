@@ -233,6 +233,7 @@
     <Compile Include="Screens\Dialogs\ProgressStatusDialog\VolumeTestStatusView.xaml.cs">
       <DependentUpon>VolumeTestStatusView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\IDisplayOnStartup.cs" />
     <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Screens\Modules\Certificates\Screens\EditCertificateView.xaml.cs">
       <DependentUpon>EditCertificateView.xaml</DependentUpon>
