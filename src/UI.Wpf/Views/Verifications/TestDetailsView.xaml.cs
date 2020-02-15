@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,15 +10,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Client.Wpf.ViewModels.Verifications;
+using ReactiveUI;
 
-namespace UI.Wpf
+namespace Client.Wpf.Views.Verifications
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TestDetailsView : ReactiveUserControl<TestDetailsViewModel>
     {
-        public MainWindow()
+        public TestDetailsView()
         {
             InitializeComponent();
         }

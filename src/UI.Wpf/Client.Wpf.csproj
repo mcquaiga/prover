@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamicData" Version="6.14.8" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
+    <PackageReference Include="MvvmDialogs" Version="7.0.0" />
+    <PackageReference Include="ReactiveUI" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.1.23" />
+    <PackageReference Include="Splat" Version="9.3.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MaterialDesignThemes.Wpf">
+      <HintPath>..\..\src_old\packages\MaterialDesignThemes.2.4.1.1101\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controls\LabelValueControl.xaml.cs">
+      <DependentUpon>LabelValueControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\MainMenuButton.xaml.cs">
+      <DependentUpon>MainMenuButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PercentageControl.xaml.cs">
+      <DependentUpon>PercentageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PercentageControlNew.xaml.cs">
+      <DependentUpon>PercentageControlNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\ValueDescriptionControl.xaml.cs">
+      <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Clients\ClientManagerView.xaml.cs">
+      <DependentUpon>ClientManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\LabelValueControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\MainMenuButton.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\PercentageControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\PercentageControlNew.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\ValueDescriptionControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Clients\ClientManagerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Styles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Screens\Dialogs\" />
+  </ItemGroup>
+
+</Project>

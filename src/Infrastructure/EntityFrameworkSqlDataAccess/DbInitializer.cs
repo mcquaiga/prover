@@ -45,7 +45,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
             var evc = await context.EvcVerifications.ToListAsync();
 
             
-            var repo = await Devices.Devices.Repository();
+            var repo = await Devices.Repository.GetAsync();
 
             var deviceType = repo.GetByName("Mini-Max");
             var device = deviceType.Factory.CreateInstance(ItemFiles.MiniMaxItemFile);
@@ -63,7 +63,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
 
             testRun.AddTests(t.Tests);
 
-            context.EvcVerifications.AddAsync(testRun);
+            await context.EvcVerifications.AddAsync(testRun);
           
             await context.SaveChangesAsync();
 

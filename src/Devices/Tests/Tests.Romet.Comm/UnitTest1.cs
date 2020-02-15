@@ -21,7 +21,7 @@ namespace Tests.Romet.Comm
         [TestInitialize]
         public async Task Initialize()
         {
-            Repository = await DeviceRepository.Instance.RegisterDataSourceAsync(RometDeviceRepository.DataSource);
+            Repository = await new DeviceRepository().RegisterDataSourceAsync(RometDeviceRepository.DataSource);
             _adem = (RometDeviceType) Repository.GetByName("Adem");
             
         }
@@ -32,7 +32,7 @@ namespace Tests.Romet.Comm
             var commPort = new SerialPort("COM1", 9600);
             var client = RometClientFactory.Create(_adem, commPort);
             
-            client.CommunicationMessages.Subscribe(Console.WriteLine);
+            
             client.StatusMessages.Subscribe(Console.WriteLine);
 
             await client.ConnectAsync();

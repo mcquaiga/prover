@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -7,27 +8,25 @@ using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Communications.Messaging;
+using Devices.Communications.Status;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications
 {
-    public abstract class CommunicationsClient<TDevice, TInstance> : ICommunicationsClient<TDevice, TInstance>,
-        IDisposable
+    public abstract class CommunicationsClient<TDevice, TInstance> : ICommunicationsClient<TDevice, TInstance>, IDisposable
         where TDevice : DeviceType
         where TInstance : DeviceInstance
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
 
+        private readonly ISubject<StatusMessage> _statusSubject = new Subject<StatusMessage>();
+
         private readonly TimeSpan _timeout = TimeSpan.FromSeconds(3);
 
-        protected readonly ISubject<string> StatusObservable = new Subject<string>();
-        private IDisposable _messagingConnection;
-        private IConnectableObservable<string> _messagingStream;
-        private IConnectableObservable<string> _statusConnectableObservable;
-        private IDisposable _statusConnection;
+        private CompositeDisposable _cleanup;
 
         /// <summary>
         ///     A client to communicate with a wide range of EVCs
@@ -42,14 +41,22 @@ namespace Devices.Communications
 
             DeviceType = deviceType;
 
-            //_statusConnectableObservable = StatusObservable.Publish();
-            //_statusConnection = _statusConnectableObservable.Connect();
+            var disposable = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceived).Select(Messages.DataRecieved)
+                .Merge(CommPort.DataSent.Select(Messages.DataSent))
+                .Subscribe(_statusSubject);
 
-            //_messagingStream = Observable.Empty<string>().Publish();
-            //_messagingConnection = _messagingStream.Connect();
+            var status = _statusSubject.Publish();
+            StatusMessageObservable = status.AsObservable();
 
-            SetupStreams();
+            _cleanup = new CompositeDisposable(disposable, status.Connect());
         }
+
+
+        public IObservable<StatusMessage> StatusMessageObservable { get; }
+
+        #region Private
+
+        #endregion
 
         #region Public Properties
 
@@ -58,13 +65,11 @@ namespace Devices.Communications
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
 
+        public IObservable<string> StatusMessages { get; }
+
         public ICommPort CommPort { get; }
-        public IObservable<string> CommunicationMessages => _messagingStream;
 
         public TDevice DeviceType { get; }
-
-        public IObservable<string> StatusMessages => _statusConnectableObservable;
-
         #endregion
 
         #region Public Methods
@@ -97,13 +102,11 @@ namespace Devices.Communications
 
         public async Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
-            PublishStatusMessage("Downloading items...");
             return await GetItemValuesAsync(itemNumbers);
         }
 
         public async Task<IEnumerable<ItemValue>> GetItemsAsync()
         {
-            PublishStatusMessage("Downloading items...");
             return await GetItemValuesAsync(DeviceType.Items);
         }
 
@@ -118,9 +121,8 @@ namespace Devices.Communications
         public virtual void Dispose()
         {
             Disconnect().Wait(TimeSpan.FromMilliseconds(500));
-            StatusObservable.OnCompleted();
-            _statusConnection.Dispose();
-            _messagingConnection.Dispose();
+            _statusSubject.OnCompleted();
+            _cleanup.Dispose();
             CommPort?.Dispose();
         }
 
@@ -178,8 +180,13 @@ namespace Devices.Communications
 
         protected void PublishStatusMessage(string message)
         {
-            var formattedMessage = $"[{CommPort.Name}] {message}";
-            StatusObservable.OnNext(formattedMessage);
+            //var formattedMessage = $"[{CommPort.Name}] {message}";
+            //_statusSubject.OnNext(formattedMessage);
+        }
+
+        protected void PublishMessage(StatusMessage message)
+        {
+            _statusSubject.OnNext(message);
         }
 
         protected virtual async Task TryConnectAsync(int retryAttempts = MaxConnectionAttempts,
@@ -187,7 +194,7 @@ namespace Devices.Communications
         {
             if (IsConnected)
                 return;
-            
+
             //SetupStreams();
 
             if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
@@ -202,8 +209,7 @@ namespace Devices.Communications
             var attempts = 1;
             do
             {
-                PublishStatusMessage($"Connecting to {DeviceType.Name}... {attempts} of {MaxConnectionAttempts}");
-
+                PublishMessage(Messages.Info($"Connecting to {DeviceType.Name}... {attempts} of {MaxConnectionAttempts}"));
 
                 if (!CommPort.IsOpen())
                     await CommPort.Open(CancellationToken);
@@ -214,18 +220,16 @@ namespace Devices.Communications
                 }
                 catch (EvcResponseException responseException)
                 {
-                    PublishStatusMessage(
-                        $"Failed connecting to {DeviceType.Name}: Response Message {responseException.Message}.");
+                    PublishMessage(Messages.Error($"Failed connecting to {DeviceType.Name}: Response Message {responseException.Message}."));
                     exception = responseException;
                 }
                 catch (OperationCanceledException)
                 {
-                    PublishStatusMessage($"Failed connecting to {DeviceType.Name}: Operation canceled.");
+                    PublishMessage(Messages.Error($"Failed connecting to {DeviceType.Name}: Operation canceled."));
                 }
                 catch (Exception ex)
                 {
-                    PublishStatusMessage(
-                        $"Failed connecting to {DeviceType.Name}. {Environment.NewLine} Exception: {ex.Message}.");
+                    PublishMessage(Messages.Error($"Failed connecting to {DeviceType.Name}. {Environment.NewLine} Exception: {ex.Message}."));
                     exception = ex;
                 }
 
@@ -241,28 +245,6 @@ namespace Devices.Communications
         }
 
         protected abstract Task TryDisconnect();
-
-        #endregion
-
-        #region Private
-
-        private void SetupStreams()
-        {
-            var incoming = ResponseProcessors.MessageProcessor.ResponseObservable(CommPort.DataReceived)
-                .Select(msg => $"[R] << {ControlCharacters.Prettify(msg)}");
-
-            var outgoing = CommPort.DataSent
-                .Select(msg => $"[S] >> {ControlCharacters.Prettify(msg)}");
-
-            _messagingStream = incoming
-                .Merge(outgoing)
-                .Publish();
-
-            _messagingConnection = _messagingStream.Connect();
-
-            _statusConnectableObservable = StatusObservable.Publish();
-            _statusConnection = _statusConnectableObservable.Connect();
-        }
 
         #endregion
     }

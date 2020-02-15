@@ -27,7 +27,7 @@ namespace Devices.Romet.Core.Repository
 
         private static DeviceRepository Factory()
         {
-            return DeviceRepository.Instance.RegisterDataSource(DataSource);
+            return new DeviceRepository().RegisterDataSource(DataSource);
         }
 
         #endregion

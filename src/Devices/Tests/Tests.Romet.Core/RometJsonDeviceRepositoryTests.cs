@@ -34,7 +34,7 @@ namespace Tests.Romet.Core
             //    dataSourceMock.Object
             //};
 
-            Repository = await DeviceRepository.Instance.RegisterDataSourceAsync(RometDeviceRepository.DataSource);
+            Repository = await new DeviceRepository().RegisterDataSourceAsync(RometDeviceRepository.DataSource);
         }
 
 

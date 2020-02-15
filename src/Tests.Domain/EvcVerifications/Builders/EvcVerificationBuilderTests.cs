@@ -24,7 +24,7 @@ namespace Tests.Domain.EvcVerifications.Builders
         public async Task Init()
         {
             _instance = new Mock<DeviceInstance>();
-            _repo = await Devices.Devices.Repository();
+            _repo = await Devices.Repository.GetAsync();
             _deviceType = _repo.GetByName("Mini-Max");
 
             var items = ItemFiles.MiniMaxItemFile;

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Devices.Communications;
 using Devices.Communications.IO;
+using Devices.Communications.Status;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;
@@ -79,7 +80,7 @@ namespace Devices.Honeywell.Comm.CommClients
                 if (HandleResponseMessage<HoneywellDeviceType>(response))
                 {
                     IsConnected = true;
-                    StatusObservable.OnNext($"[{CommPort.Name}] Connected to {DeviceType.Name}!");
+                    PublishMessage(Messages.Info($"[{CommPort.Name}] Connected to {DeviceType.Name}!"));
                 }
                 else
                 {

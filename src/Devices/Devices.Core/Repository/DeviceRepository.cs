@@ -5,14 +5,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
+using DynamicData;
 using Shared.Queues;
 
 namespace Devices.Core.Repository
 {
     public class DeviceRepository
     {
-        private static readonly Lazy<DeviceRepository> _lazy = new Lazy<DeviceRepository>(()=> new DeviceRepository());
-
         private readonly ConcurrentDictionary<DeviceType, bool> _deviceCache = new ConcurrentDictionary<DeviceType, bool>();
 
         private readonly ConcurrentDictionary<IDeviceTypeDataSource<DeviceType>, bool> _deviceDataSources
@@ -21,13 +20,19 @@ namespace Devices.Core.Repository
         private readonly BackgroundQueue _queue = new BackgroundQueue();
 
         private readonly DateTime _timeCreated = DateTime.UtcNow;
-        private DeviceRepository()
+
+        private readonly SourceList<DeviceType> _deviceSourceCache = new SourceList<DeviceType>();
+
+        // We expose the Connect() since we are interested in a stream of changes.
+        // If we have more than one subscriber, and the subscribers are known, 
+        // it is recommended you look into the Reactive Extension method Publish().
+        public IObservable<IChangeSet<DeviceType>> Connect() => _deviceSourceCache.Connect();
+
+        public DeviceRepository()
         {
         }
 
         #region Public Properties
-
-        public static DeviceRepository Instance => _lazy.Value;
 
         #endregion
 
@@ -91,7 +96,7 @@ namespace Devices.Core.Repository
 
         public DeviceRepository RegisterDataSource(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
         {
-            var task = RegisterDataSourceAsync(dataSources);
+            var task = Task.Run(() => RegisterDataSourceAsync(dataSources));
             task.Wait();
             return task.Result;
         }
@@ -109,7 +114,7 @@ namespace Devices.Core.Repository
 
             await LoadFromDataSources(uniques);
             
-            return Instance;
+            return this;
         }
 
         #endregion
@@ -129,7 +134,12 @@ namespace Devices.Core.Repository
         {
             foreach (var ds in dataSources)
             {
-                await ds.GetDeviceTypes().ForEachAsync(d => _deviceCache.GetOrAdd(d, true));
+                await ds.GetDeviceTypes()
+                    .ForEachAsync(d =>
+                    {
+                        _deviceCache.GetOrAdd(d, true);
+                        _deviceSourceCache.Add(d);
+                    });
                 
                 _deviceDataSources.TryUpdate(ds, true, false);
             }

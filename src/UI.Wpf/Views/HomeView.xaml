@@ -1,0 +1,51 @@
+﻿<rxui:ReactiveUserControl
+    x:TypeArguments="viewModels:HomeViewModel"
+    x:Class="Client.Wpf.Views.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Client.Wpf.ViewModels"
+    mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <ItemsControl  
+                      x:Name="MenuItems">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Width="128" Height="150" 
+                            x:Name="MenuButton"
+                            Command="{Binding Path=OpenCommand}"
+                            >
+                        <StackPanel>
+                            <materialDesign:PackIcon Kind="{Binding Path=MenuIconKind}"
+                                                     Foreground="White"
+                                                     Width="48" Height="48" 
+                                                     HorizontalAlignment="Center"/>
+                            <TextBlock TextAlignment="Center" 
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="WrapWithOverflow"
+                                       Foreground="White"
+                                       Text="{Binding Path=MenuTitle}" />
+                        </StackPanel>
+                        <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="ActionCommand">
+                                    <cal:Parameter Value="{Binding Path=OpenAction}" />
+                                </cal:ActionMessage>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>-->
+                        
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</rxui:ReactiveUserControl>
