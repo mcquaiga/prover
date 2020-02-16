@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Client.Wpf.ViewModels;
-using Client.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Splat;
 
-namespace Client.Wpf
+namespace Client.Wpf.Views
 {
     public class WindowFactory : IWindowFactory
     {
@@ -22,16 +19,14 @@ namespace Client.Wpf
             var model = _resolver.GetService<MainViewModel>();
 
             window.ViewModel = model;
-
+            
             if (showMenu) 
                 model.ShowMenu();
 
-
+            
             window.Closing += (sender, e) =>
             {
-                //if (TabablzControl.GetIsClosingAsPartOfDragOperation(window)) return;
-
-                (((MainWindow)sender).DataContext as IDisposable)?.Dispose();
+                (((MainWindow)sender).ViewModel as IDisposable)?.Dispose();
             };
 
             return window;

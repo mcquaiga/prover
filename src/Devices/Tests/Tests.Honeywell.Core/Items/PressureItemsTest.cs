@@ -61,7 +61,7 @@ namespace Tests.Honeywell.Core.Items
         [TestInitialize]
         public async Task Initialize()
         {
-            _repo = await new DeviceRepository().RegisterDataSourceAsync(MiJsonDeviceTypeDataSource.Instance);
+            _repo = await new DeviceRepository().DeviceDataSource.RegisterDataSourceAsync(MiJsonDeviceTypeDataSource.Instance);
         }
     }
 }

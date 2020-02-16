@@ -11,6 +11,11 @@ namespace Devices.Honeywell.Core
         public readonly HoneywellDeviceType DeviceType;
         private HoneywellDeviceBuilder _deviceBuilder;
 
+        protected HoneywellDeviceInstanceFactory()
+        {
+
+        }
+
         public HoneywellDeviceInstanceFactory(HoneywellDeviceType deviceType)
         {
             DeviceType = deviceType;

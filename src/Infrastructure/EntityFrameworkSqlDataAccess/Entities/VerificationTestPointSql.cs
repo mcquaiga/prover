@@ -66,7 +66,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public VerificationMapping()
         {
-            _deviceRepository = Devices.Repository.Get();
+            _deviceRepository = Devices.DeviceService.CreateDefault();
         }
 
         public VerificationMapping(DeviceRepository deviceRepository)
@@ -90,7 +90,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public VerificationTestPointMapping()
         {
-            _deviceRepository = Devices.Repository.Get();
+            _deviceRepository = Devices.DeviceService.Repository;
         }
 
         public VerificationTestPointMapping(DeviceRepository deviceRepository)

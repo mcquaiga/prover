@@ -4,40 +4,39 @@ using System.Linq;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
+using LiteDB;
+using Shared.Domain;
 
 namespace Devices.Core.Interfaces
 {
-    public abstract class DeviceType
+    public abstract class DeviceType : IKeyValueEntity
     {
-        protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
+        //protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
+
         protected ItemGroupFactoryBase ItemFactory;
+
         protected DeviceType(IEnumerable<ItemMetadata> itemDefinitions)
         {
-            ItemDefinitions.UnionWith(itemDefinitions);
+            Items = new List<ItemMetadata>(itemDefinitions);
+        }
+
+        protected DeviceType()
+        {
+            Items = new List<ItemMetadata>();
         }
 
         #region Public Properties
         public virtual Guid Id { get; set; }
         public virtual bool? CanUseIrDaPort { get; set; }
         public virtual bool IsHidden { get; set; }
-        public virtual ICollection<ItemMetadata> Items => ItemDefinitions.ToList();
+        public ICollection<ItemMetadata> Items { get; set; }
         public virtual int? MaxBaudRate { get; set; }
         public virtual string Name { get; set; }
+
         public IDeviceInstanceFactory Factory { get; protected set; }
         #endregion
 
         #region Public Methods
-
-        //public virtual DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null)
-        //{
-        //    return Factory?.CreateInstance(itemValues);
-        //}
-
-        //public virtual DeviceInstance CreateInstance(IDictionary<int, string> itemValuesDictionary)
-        //{
-        //    var items = ToItemValuesEnumerable(this, itemValuesDictionary);
-        //    return CreateInstance(items);
-        //}
 
         public abstract IEnumerable<ItemMetadata> GetItemMetadata<T>() where T : ItemGroup;
 
@@ -53,6 +52,8 @@ namespace Devices.Core.Interfaces
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
         }
+
+        public string Key => Id.ToString();
     }
 
 }

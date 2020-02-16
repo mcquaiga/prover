@@ -11,11 +11,11 @@ namespace Tests.Honeywell.Core
         [TestMethod]
         public async Task TestMethod1()
         {
-            var devices = HoneywellDeviceRepository.Devices.GetAll();
+            //var devices = HoneywellDeviceRepository.Devices.GetAll();
 
-            var mi = devices.FirstOrDefault();
+            //var mi = devices.FirstOrDefault();
 
-            var i = mi.Factory.CreateInstance();
+            //var i = mi.Factory.CreateInstance();
         }
     }
 }

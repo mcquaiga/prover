@@ -16,27 +16,23 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected HashSet<Type> BuilderTypes;
 
-        protected ItemGroupFactoryBase(DeviceType deviceType)
+        protected ItemGroupFactoryBase()
         {
-            DeviceType = deviceType;
         }
 
-        #region Public Methods
-
-        public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
-        {
-            //var builder = findGroupBuilder(typeof(TGroup));
-            //if (builder != null)
-            //    return (TGroup) builder.Build(DeviceType, values);
-
-            return (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
-        }
-
-        #endregion
-
-        #region Protected
+        protected ItemGroupFactoryBase(DeviceType deviceType) => DeviceType = deviceType;
 
         protected abstract Assembly BaseAssembly { get; }
+
+        #region ItemGroupFactory Members
+
+        //var builder = findGroupBuilder(typeof(TGroup));
+        //if (builder != null)
+        //    return (TGroup) builder.Build(DeviceType, values);
+        public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup =>
+            (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
+
+        #endregion
 
         protected IBuildItemsFor<ItemGroup> findGroupBuilder(Type type)
         {
@@ -89,7 +85,5 @@ namespace Devices.Core.Items.ItemGroups.Builders
                 }
             }
         }
-
-        #endregion
     }
 }

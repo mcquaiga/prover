@@ -67,16 +67,9 @@
                 Grid.Column="1"
                 Header="Instrument Settings">
                 <StackPanel>
-                    <ComboBox
-                        x:Name="CommPorts"
-                        materialDesign:HintAssist.Hint="Port"
-                        IsEnabled="{Binding DisableCommPortAndBaudRate}"
-                        Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-                    <ComboBox
-                        x:Name="BaudRate"
-                        materialDesign:HintAssist.Hint="Baud Rate"
-                        IsEnabled="{Binding DisableCommPortAndBaudRate}"
-                        Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    <ComboBox x:Name="CommPorts" materialDesign:HintAssist.Hint="Port" Style="{StaticResource MaterialDesignComboBox}" DisplayMemberPath="." />
+                    <ComboBox x:Name="BaudRates" materialDesign:HintAssist.Hint="Baud Rate" Style="{StaticResource MaterialDesignComboBox}" DisplayMemberPath="."/>
+                    <!--IsEnabled="{Binding DisableCommPortAndBaudRate}"-->
                     <CheckBox
                         x:Name="UseIrDaPort"
                         Margin="0,5"
@@ -95,10 +88,10 @@
                 Header="Tach. Settings">
                 <StackPanel>
                     <ComboBox
-                        x:Name="TachCommPorts"
-                        materialDesign:HintAssist.Hint="Port"
+                        x:Name="TachCommPorts" DisplayMemberPath="."
+                        materialDesign:HintAssist.Hint="Tach. Comm Port"
                         IsEnabled="{Binding TachDisableCommPort}"
-                        Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        Style="{StaticResource MaterialDesignComboBox}" />
 
                     <CheckBox x:Name="TachIsNotUsed" Content="Not available" />
                 </StackPanel>

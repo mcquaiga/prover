@@ -1,125 +1,102 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
-using Shared.Queues;
 
 namespace Devices.Core.Repository
 {
-    public class DeviceRepository
+    public class DeviceRepository : IDisposable
     {
-        private readonly ConcurrentDictionary<DeviceType, bool> _deviceCache = new ConcurrentDictionary<DeviceType, bool>();
+        private readonly SourceList<IDeviceTypeDataSource<DeviceType>> _dataSources =
+            new SourceList<IDeviceTypeDataSource<DeviceType>>();
 
-        private readonly ConcurrentDictionary<IDeviceTypeDataSource<DeviceType>, bool> _deviceDataSources
-            = new ConcurrentDictionary<IDeviceTypeDataSource<DeviceType>, bool>();
+        private readonly SourceCache<DeviceType, Guid>
+            _deviceSourceCache = new SourceCache<DeviceType, Guid>(v => v.Id);
 
-        private readonly BackgroundQueue _queue = new BackgroundQueue();
+        private readonly CompositeDisposable _disposer;
 
-        private readonly DateTime _timeCreated = DateTime.UtcNow;
+        internal IDeviceTypeCacheSource<DeviceType> CacheSource;
 
-        private readonly SourceList<DeviceType> _deviceSourceCache = new SourceList<DeviceType>();
-
-        // We expose the Connect() since we are interested in a stream of changes.
-        // If we have more than one subscriber, and the subscribers are known, 
-        // it is recommended you look into the Reactive Extension method Publish().
-        public IObservable<IChangeSet<DeviceType>> Connect() => _deviceSourceCache.Connect();
+        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository) : this() =>
+            CacheSource = cacheRepository;
 
         public DeviceRepository()
         {
+            var devices = _deviceSourceCache.Connect().Publish();
+            All = devices.AsObservableCache();
+
+            All.Connect()
+                .Bind(out var deviceTypes)
+                .Subscribe();
+            Devices = deviceTypes;
+
+            _disposer = new CompositeDisposable(All, _deviceSourceCache, _dataSources, devices.Connect());
         }
 
-        #region Public Properties
+        public ReadOnlyObservableCollection<DeviceType> Devices { get; }
+
+        public IObservableCache<DeviceType, Guid> All { get; }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _deviceSourceCache?.Dispose();
+            _dataSources?.Dispose();
+            _disposer?.Dispose();
+            All?.Dispose();
+        }
 
         #endregion
 
-        #region Public Methods
+        public IObservable<IChangeSet<DeviceType, Guid>> Connect() => _deviceSourceCache.Connect();
 
-        public IEnumerable<T> FilterCacheByType<T>() where T : DeviceType
-        {
-            var results = _deviceCache.OfType<T>();
-            return results;
-        }
-
-        public IEnumerable<IDeviceTypeDataSource<DeviceType>> FilterDataSourceTypes<TDevice>()
-            where TDevice : DeviceType
-        {
-            return _deviceDataSources
-                .Select(t => t.Key)
-                .Where(s =>
-                    s.GetType().GetInterfaces()
-                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDeviceTypeDataSource<>))
-                        .Any(t => t.GetGenericArguments().Any(g => g == typeof(TDevice))));
-        }
+        public IEnumerable<T> FilterCacheByType<T>() where T : DeviceType => All.Items.OfType<T>();
 
         public T Find<T>(Func<T, bool> predicate) where T : DeviceType
+            => FilterCacheByType<T>().FirstOrDefault(predicate);
+
+        public IEnumerable<T> GetAll<T>() where T : DeviceType => FilterCacheByType<T>();
+
+        public IEnumerable<DeviceType> GetAll() => All.Items;
+
+        public DeviceType GetById(Guid id) => All.Lookup(id).Value;
+
+        public DeviceType GetByName(string name) => FindInSetByName(GetAll(), name);
+
+        public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
         {
-            return FilterCacheByType<T>().FirstOrDefault(predicate);
+            CacheSource = cacheSource;
+
+            return await UpdateCachedTypes(cacheSource);
         }
 
-        public IEnumerable<T> GetAll<T>() where T : DeviceType
+        public async Task<bool> UpdateCachedTypes() => await UpdateCachedTypes(CacheSource);
+
+        public async Task<bool> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource)
         {
-            return FilterCacheByType<T>();
+            if (dataSource == null)
+                return false;
+
+            await dataSource.GetDeviceTypes()
+                .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
+
+            CacheSource?.Save(_deviceSourceCache.Items);
+
+            return true;
         }
 
-        public IEnumerable<DeviceType> GetAll()
+        public async Task<bool> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
         {
-            return _deviceCache
-                .Select(kv => kv.Key)
-                .ToList();
+            foreach (var s in sources) await UpdateCachedTypes(s);
+
+            return true;
         }
-
-        public DeviceType GetByName(string name)
-        {
-            return FindInSetByName(GetAll(), name);
-        }
-
-        public DeviceType GetById(Guid id)
-        {
-            return _deviceCache.FirstOrDefault(d => d.Key.Id == id).Key;
-        }
-
-        public T GetByName<T>(string name)
-            where T : DeviceType
-        {
-            var r = FilterCacheByType<T>();
-            return (T) FindInSetByName(r, name);
-        }
-
-        public DeviceRepository RegisterDataSource(IDeviceTypeDataSource<DeviceType> dataSource)
-        {
-            return RegisterDataSource(new[] {dataSource});
-        }
-
-        public DeviceRepository RegisterDataSource(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
-        {
-            var task = Task.Run(() => RegisterDataSourceAsync(dataSources));
-            task.Wait();
-            return task.Result;
-        }
-
-        public async Task<DeviceRepository> RegisterDataSourceAsync(IDeviceTypeDataSource<DeviceType> dataSource)
-        {
-            return await RegisterDataSourceAsync(new[] {dataSource});
-        }
-
-        public async Task<DeviceRepository> RegisterDataSourceAsync(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
-        {
-            var uniques = dataSources.Except(_deviceDataSources.Select(k => k.Key)).ToList();
-            uniques
-                .ForEach(u => _deviceDataSources.GetOrAdd(u, false));
-
-            await LoadFromDataSources(uniques);
-            
-            return this;
-        }
-
-        #endregion
-
-        #region Private
 
         private DeviceType FindInSetByName(IEnumerable<DeviceType> devices, string name)
         {
@@ -129,22 +106,5 @@ namespace Devices.Core.Repository
 
             return result;
         }
-
-        private async Task LoadFromDataSources(IEnumerable<IDeviceTypeDataSource<DeviceType>> dataSources)
-        {
-            foreach (var ds in dataSources)
-            {
-                await ds.GetDeviceTypes()
-                    .ForEachAsync(d =>
-                    {
-                        _deviceCache.GetOrAdd(d, true);
-                        _deviceSourceCache.Add(d);
-                    });
-                
-                _deviceDataSources.TryUpdate(ds, true, false);
-            }
-        }
-
-        #endregion
     }
 }

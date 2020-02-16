@@ -7,31 +7,6 @@ using Devices.Core.Repository.JsonConverters;
 
 namespace Devices.Romet.Core.Repository
 {
-    public static class RometDeviceRepository
-    {
-        public static string Adem = "Adem";
-
-        private static readonly Lazy<DeviceRepository> _lazy = new Lazy<DeviceRepository>(Factory);
-
-        #region Public Properties
-
-        public static DeviceType GetAdem => Devices.GetByName(Adem);
-
-        public static IDeviceTypeDataSource<DeviceType> DataSource => RometJsonDeviceTypeDataSource.Instance;
-
-        public static DeviceRepository Devices => _lazy.Value;
-
-        #endregion
-
-        #region Private
-
-        private static DeviceRepository Factory()
-        {
-            return new DeviceRepository().RegisterDataSource(DataSource);
-        }
-
-        #endregion
-    }
 
     public class RometJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<RometDeviceType>
     {

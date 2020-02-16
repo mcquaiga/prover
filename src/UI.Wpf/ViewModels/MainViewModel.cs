@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Client.Wpf.ViewModels
         void ShowDialog(INotifyPropertyChanged viewModel);
     }
 
-    public class MainViewModel : ReactiveObject, IScreenManager, IScreen
+    public class MainViewModel : ReactiveObject, IScreenManager, IDisposable
     {
         private readonly IServiceProvider _services;
         private readonly IDialogService _dialogService;
@@ -86,6 +87,14 @@ namespace Client.Wpf.ViewModels
         {
             GoNext.Execute(_services.GetService<HomeViewModel>());
             //Task.Run(() => ChangeViews<HomeViewModel>());
+        }
+
+        public void Dispose()
+        {
+            GoNext?.Dispose();
+            GoBack?.Dispose();
+
+            Router.NavigationStack.ToList().ForEach(vm => (vm as IDisposable)?.Dispose());
         }
     }
 }

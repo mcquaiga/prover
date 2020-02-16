@@ -4,14 +4,37 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>Client.Wpf.Program</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.Development.json" />
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DynamicData" Version="6.14.8" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.1" />
     <PackageReference Include="MvvmDialogs" Version="7.0.0" />
     <PackageReference Include="ReactiveUI" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.23" />
@@ -22,6 +45,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
@@ -50,6 +74,9 @@
     <Compile Update="Controls\ValueDescriptionControl.xaml.cs">
       <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Startup\StartScreen.xaml.cs">
+      <DependentUpon>StartScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Clients\ClientManagerView.xaml.cs">
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>
@@ -74,6 +101,9 @@
     <Page Update="Controls\ValueDescriptionControl.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Startup\StartScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Clients\ClientManagerView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -86,7 +116,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Communications\" />
     <Folder Include="Screens\Dialogs\" />
+    <Folder Include="ViewModels\Devices\" />
+    <Folder Include="Views\Devices\" />
   </ItemGroup>
 
 </Project>

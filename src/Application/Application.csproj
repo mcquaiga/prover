@@ -18,6 +18,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
     <PackageReference Include="ReactiveUI" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="System.Linq" Version="4.3.0" />

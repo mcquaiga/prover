@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Client.Wpf": {
+      "commandName": "Project",
+      "commandLineArgs": "Development"
+    }
+  }
+}

@@ -59,10 +59,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repository.cs" />
+    <Compile Include="DeviceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.csproj">
+      <Project>{22A1D2D7-C25D-4F4E-94AF-77E1E639CC78}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj">
       <Project>{ec7ddf34-f555-414f-9998-744a85516ed4}</Project>
       <Name>Devices.Core</Name>

@@ -21,15 +21,19 @@ namespace Devices.Honeywell.Core
         {
             Factory = new HoneywellDeviceInstanceFactory(this);
             ItemFactory = new HoneywellItemGroupFactory(this);
+
+            Items = Items.OrderBy(i => i.Number).ToList();
+        }
+
+        public HoneywellDeviceType()
+        {
+            Factory = new HoneywellDeviceInstanceFactory(this);
+            ItemFactory = new HoneywellItemGroupFactory(this);
         }
 
         #region Public Properties
 
         public virtual string AccessCode { get; set; }
-
-        public override ICollection<ItemMetadata> Items => ItemDefinitions.OrderBy(i => i.Number).ToList();
-
-        public IObservable<ItemMetadata> ItemsObservable => Items.ToObservable();
 
         #endregion
 

@@ -4,12 +4,13 @@ using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Core;
 using System;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 
 namespace Devices.Honeywell.Comm
 {
-    public class HoneywellClientFactory : ICommClientFactory<HoneywellDeviceType, HoneywellDeviceInstance>
+    public class HoneywellClientFactory : ICommClientFactory<HoneywellDeviceType>
     {
-        public async Task<ICommunicationsClient<HoneywellDeviceType, HoneywellDeviceInstance>> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
+        public async Task<ICommunicationsClient> Create(HoneywellDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
             IObserver<string> statusObserver = null)
         {
             var client = new HoneywellClient(commPort, deviceType);

@@ -6,7 +6,11 @@ using System;
 
 namespace Shared.Domain
 {
-    public abstract class GenericEntity<TId>
+    public interface IEntity
+    {
+    }
+
+    public abstract class GenericEntity<TId> : IEntity
     {
         #region Public Properties
 

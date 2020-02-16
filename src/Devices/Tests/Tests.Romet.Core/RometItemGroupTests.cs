@@ -23,7 +23,7 @@ namespace Tests.Romet.Core
         [ClassInitialize]
         public static void TestFixtureSetup(TestContext context)
         {
-            _deviceType = RometDeviceRepository.GetAdem;
+            //_deviceType = RometDeviceRepository.GetAdem;
             AdemItemFile = JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("Adem.json"));
 
             _itemValues = _deviceType.ToItemValuesEnumerable(AdemItemFile).ToList();

@@ -17,9 +17,8 @@ using Devices.Honeywell.Core.Items;
 
 namespace Devices.Honeywell.Comm.CommClients
 {
-    public abstract class HoneywellClientBase<TDevice, TInstance> : CommunicationsClient<TDevice, TInstance>
+    public abstract class HoneywellClientBase<TDevice> : CommunicationsClient
         where TDevice : HoneywellDeviceType
-        where TInstance : DeviceInstance
     {
         protected HoneywellClientBase(ICommPort commPort, TDevice deviceType) : base(commPort, deviceType)
         {
@@ -75,7 +74,10 @@ namespace Devices.Honeywell.Comm.CommClients
         {
             if (await WakeUpInstrument(ct))
             {
-                var response = await ExecuteCommandAsync(Commands.SignOn(DeviceType));
+                var response = 
+                        await ExecuteCommandAsync(
+                            Commands.SignOn((TDevice)DeviceType)
+                            );
 
                 if (HandleResponseMessage<HoneywellDeviceType>(response))
                 {

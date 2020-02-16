@@ -13,5 +13,11 @@ namespace Devices.Romet.Core
             Factory = new RometDeviceInstanceFactory(this);
             ItemFactory = new RometItemGroupFactory(this);
         }
+
+        public RometDeviceType()
+        {
+            Factory = new RometDeviceInstanceFactory(this);
+            ItemFactory = new RometItemGroupFactory(this);
+        }
     }
 }

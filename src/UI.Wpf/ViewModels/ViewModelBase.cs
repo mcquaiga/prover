@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using System;
+using ReactiveUI;
 
 namespace Client.Wpf.ViewModels
 {
@@ -10,5 +11,9 @@ namespace Client.Wpf.ViewModels
         {
             ScreenManager = screenManager;
         }
+
+        //public virtual void Dispose()
+        //{
+        //}
     }
 }

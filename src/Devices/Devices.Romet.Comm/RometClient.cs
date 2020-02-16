@@ -10,7 +10,7 @@ using Devices.Romet.Core;
 
 namespace Devices.Romet.Comm
 {
-    public class RometClient : HoneywellClientBase<RometDeviceType, RometDeviceInstance>
+    public class RometClient : HoneywellClientBase<RometDeviceType>
     {
         public RometClient(ICommPort commPort, RometDeviceType deviceType) : base(commPort, deviceType)
         {

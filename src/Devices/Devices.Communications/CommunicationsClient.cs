@@ -15,9 +15,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications
 {
-    public abstract class CommunicationsClient<TDevice, TInstance> : ICommunicationsClient<TDevice, TInstance>, IDisposable
-        where TDevice : DeviceType
-        where TInstance : DeviceInstance
+    public abstract class CommunicationsClient : ICommunicationsClient, IDisposable
     {
         private const int ConnectionRetryDelayMs = 3000;
         private const int MaxConnectionAttempts = 10;
@@ -35,7 +33,7 @@ namespace Devices.Communications
         /// <param name="deviceType"></param>
         /// <param name="EvcDeviceType">Instrument type of device</param>
         /// <param name="statusSubject">Subject for listening to status updates</param>
-        protected CommunicationsClient(ICommPort commPort, TDevice deviceType)
+        protected CommunicationsClient(ICommPort commPort, DeviceType deviceType)
         {
             CommPort = commPort;
 
@@ -69,7 +67,7 @@ namespace Devices.Communications
 
         public ICommPort CommPort { get; }
 
-        public TDevice DeviceType { get; }
+        public DeviceType DeviceType { get; }
         #endregion
 
         #region Public Methods

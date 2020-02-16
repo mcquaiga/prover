@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Splat;
 
-namespace Client.Wpf
+namespace Client.Wpf.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="MicrosoftDependencyResolver"/>.

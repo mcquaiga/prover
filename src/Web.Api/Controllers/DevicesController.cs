@@ -25,7 +25,7 @@ namespace Web.Api.Controllers
         [HttpGet]
         public async Task< IEnumerable<DeviceType>> GetDeviceTypes()
         {
-            _deviceRepository = await Devices.Repository.GetAsync();
+            _deviceRepository = await Devices.DeviceService.GetAsync();
 
             return _deviceRepository.GetAll();
         }

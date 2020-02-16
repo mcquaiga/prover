@@ -12,7 +12,5 @@ namespace Devices.Core.Repository
 
 
         IObservable<ItemMetadata> GetItems();
-
-
     }
 }
