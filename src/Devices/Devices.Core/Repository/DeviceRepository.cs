@@ -69,33 +69,33 @@ namespace Devices.Core.Repository
 
         public DeviceType GetByName(string name) => FindInSetByName(GetAll(), name);
 
-        public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
-        {
-            CacheSource = cacheSource;
+        //public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
+        //{
+        //    CacheSource = cacheSource;
 
-            return await UpdateCachedTypes(cacheSource);
-        }
+        //    return await UpdateCachedTypes(cacheSource);
+        //}
 
-        public async Task<bool> UpdateCachedTypes() => await UpdateCachedTypes(CacheSource);
+        public async Task<DeviceRepository> UpdateCachedTypes() => await UpdateCachedTypes(CacheSource);
 
-        public async Task<bool> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource)
+        public async Task<DeviceRepository> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource)
         {
             if (dataSource == null)
-                return false;
+                return this;
 
             await dataSource.GetDeviceTypes()
                 .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
 
             CacheSource?.Save(_deviceSourceCache.Items);
 
-            return true;
+            return this;
         }
 
-        public async Task<bool> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
+        public async Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
         {
             foreach (var s in sources) await UpdateCachedTypes(s);
 
-            return true;
+            return this;
         }
 
         private DeviceType FindInSetByName(IEnumerable<DeviceType> devices, string name)

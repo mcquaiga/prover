@@ -30,7 +30,7 @@ namespace Tests.Honeywell.Comm.Clients
             SetupComm(_commMock, _incoming, _outgoing);
         }
 
-        private async Task<ICommunicationsClient<DeviceType, DeviceInstance>> GetConnectionAsync(ISubject<string> status = null)
+        private async Task<ICommunicationsClient> GetConnectionAsync(ISubject<string> status = null)
         {
             MockConnectionHandshake(_commMock, _incoming);
 

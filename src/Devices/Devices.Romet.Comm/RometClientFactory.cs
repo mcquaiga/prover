@@ -6,17 +6,13 @@ using Devices.Romet.Core;
 
 namespace Devices.Romet.Comm
 {
-    public class RometClientFactory : ICommClientFactory<RometDeviceType>
+    public class RometClientFactory : IDeviceTypeCommClientFactory<RometDeviceType>
     {
-        public async Task<ICommunicationsClient> Create(RometDeviceType deviceType, ICommPort commPort, int retryAttempts = 1, TimeSpan? timeout = null,
-            IObserver<string> statusObserver = null)
+        public ICommunicationsClient Create(RometDeviceType deviceType, ICommPort commPort)
         {
             var client = new RometClient(commPort, deviceType);
 
-            if (statusObserver != null)
-                client.StatusMessages.Subscribe(statusObserver);
-
-            await client.ConnectAsync(retryAttempts, timeout);
+            //await client.ConnectAsync(retryAttempts, timeout);
 
             return client;
         }

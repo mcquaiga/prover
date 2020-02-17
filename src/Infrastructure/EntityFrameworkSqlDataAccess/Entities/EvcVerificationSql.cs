@@ -19,7 +19,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public EvcVerificationMapping()
         {
-            _deviceRepository = Devices.DeviceService.CreateDefault();
+            _deviceRepository = Devices.RepositoryFactory.CreateDefault();
         }
 
         public EvcVerificationMapping(DeviceRepository deviceRepository)

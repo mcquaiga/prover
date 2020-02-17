@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Devices.Communications.Status;
 using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Communications.Interfaces
@@ -14,7 +15,7 @@ namespace Devices.Communications.Interfaces
     {
         ICommPort CommPort { get; }
         bool IsConnected { get; }
-        IObservable<string> StatusMessages { get; }
+        IObservable<StatusMessage> StatusMessageObservable { get; }
         void Cancel();
         Task ConnectAsync(int retryAttempts = 10, TimeSpan? timeout = null);
         Task Disconnect();

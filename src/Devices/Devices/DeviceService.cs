@@ -8,11 +8,11 @@ using Devices.Romet.Core.Repository;
 
 namespace Devices
 {
-    public class DeviceService
+    public class RepositoryFactory
     {
         private static DeviceRepository _instance;
 
-        public static DeviceRepository Repository
+        public static DeviceRepository Instance
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Devices
             }
         }
 
-        public static DeviceRepository Get => Repository;
+        public static DeviceRepository Get => Instance;
 
         public static async Task<DeviceRepository> Create(IDeviceTypeCacheSource<DeviceType> cacheSource,
             IEnumerable<IDeviceTypeDataSource<DeviceType>> sources = null)

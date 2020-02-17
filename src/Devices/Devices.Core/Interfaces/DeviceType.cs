@@ -9,7 +9,7 @@ using Shared.Domain;
 
 namespace Devices.Core.Interfaces
 {
-    public abstract class DeviceType : IKeyValueEntity
+    public abstract class DeviceType
     {
         //protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
 
@@ -24,6 +24,8 @@ namespace Devices.Core.Interfaces
         {
             Items = new List<ItemMetadata>();
         }
+
+        public string ClientFactoryType { get; set; }
 
         #region Public Properties
         public virtual Guid Id { get; set; }
@@ -52,8 +54,6 @@ namespace Devices.Core.Interfaces
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
         }
-
-        public string Key => Id.ToString();
     }
 
 }

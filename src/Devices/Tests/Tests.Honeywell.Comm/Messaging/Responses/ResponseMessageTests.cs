@@ -29,7 +29,7 @@ namespace Tests.Honeywell.Comm.Messaging.Responses
             await TryConnection(ResponseCode.SignOnError);
         }
 
-        private Task<ICommunicationsClient<DeviceType, DeviceInstance>> TryConnection(ResponseCode response)
+        private Task<ICommunicationsClient> TryConnection(ResponseCode response)
         {
             var commMock = new Mock<ICommPort>();
             var incoming = new Subject<string>();

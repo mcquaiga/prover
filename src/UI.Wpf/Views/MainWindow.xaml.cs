@@ -18,11 +18,20 @@ namespace Client.Wpf.Views
                 // Bind the view model router to RoutedViewHost.Router property.
                 this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router)
                     .DisposeWith(disposables);
-                //this.BindCommand(ViewModel, x => x.GoNext, x => x.GoNextButton)
-                //    .DisposeWith(disposables);
+           
                 this.BindCommand(ViewModel, x => x.GoBack, x => x.GoBackButton)
                     .DisposeWith(disposables);
+
+                this.OneWayBind(ViewModel, x => x.DialogContent, x => x.Dialog.DialogContent)
+                    .DisposeWith(disposables);
+
+                this.OneWayBind(ViewModel, vm => vm.DialogViewOpen, v => v.Dialog.IsOpen);
             });
+        }
+
+        private void GoBackButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+
         }
     }
 }

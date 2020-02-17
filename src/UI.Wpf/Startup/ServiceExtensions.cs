@@ -2,15 +2,53 @@
 using System.Reflection;
 using Client.Wpf.Screens;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ReactiveUI;
 
 namespace Client.Wpf.Startup
 {
     public static class ServiceExtensions
     {
+        private static Assembly GetAssembly => Assembly.GetCallingAssembly();
+
         public static void AddViewsAndViewModels(this IServiceCollection services)
         {
-            var assembly = Assembly.GetCallingAssembly();
+            var assembly = GetAssembly;
+            
+            AddViews(services, assembly);
+            
+            AddViewModels(services, assembly);
+
+            //AddReactiveObjects(services, assembly);
+        }
+
+        public static void AddDialogViews(this IServiceCollection services)
+        {
+            foreach (var ti in GetAssembly.DefinedTypes.Where(t => t.Name.Contains("Dialog"))
+                .Where(ti =>
+                    ti.BaseType?.IsGenericType == true &&
+                    ti.BaseType?.GetGenericTypeDefinition() == typeof(ReactiveDialog<>).GetGenericTypeDefinition() &&
+                    !ti.IsAbstract))
+            {
+                services.AddTransient(ti, ti);
+            }
+
+            // grab the first _implemented_ interface that also implements IViewFor, this should be the expected IViewFor<>
+        }
+
+        private static void AddViewModels(IServiceCollection services, Assembly assembly)
+        {
+            foreach (var ti in assembly.DefinedTypes
+                .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
+                if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
+                {
+                    services.AddTransient(ti, ti);
+                    services.AddTransient(typeof(IRoutableViewModel), ti);
+                }
+        }
+
+        private static void AddViews(IServiceCollection services, Assembly assembly)
+        {
             // for each type that implements IViewFor
             foreach (var ti in assembly.DefinedTypes
                 .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IViewFor)) && !ti.IsAbstract))
@@ -24,17 +62,16 @@ namespace Client.Wpf.Startup
                 if (ivf != null && !ivf.ContainsGenericParameters)
                     services.AddTransient(ivf, ti);
             }
+        }
 
-
+        private static void AddReactiveObjects(IServiceCollection services, Assembly assembly)
+        {
             foreach (var ti in assembly.DefinedTypes
-                .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
+                .Where(ti => ti.BaseType == typeof(ReactiveObject) && !ti.IsAbstract))
                 if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
                 {
-                    services.AddTransient(ti, ti);
-                    services.AddTransient(typeof(IRoutableViewModel), ti);
+                    services.TryAddTransient(ti, ti);
                 }
-
-            // grab the first _implemented_ interface that also implements IViewFor, this should be the expected IViewFor<>
         }
 
         public static void AddMainMenuItems(this IServiceCollection services)

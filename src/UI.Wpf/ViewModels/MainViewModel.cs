@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Client.Wpf.Screens.Dialogs;
+using Microsoft.Extensions.DependencyInjection;
+using MvvmDialogs;
+using ReactiveUI;
+using Splat;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Client.Wpf.Views;
-using Client.Wpf.Views.Dialogs;
-using Microsoft.Extensions.DependencyInjection;
-using MvvmDialogs;
-using NLog.LayoutRenderers.Wrappers;
-using ReactiveUI;
-using Splat;
+using System.Windows;
+using System.Windows.Controls;
+using Client.Wpf.Screens;
+using ReactiveUI.Fody.Helpers;
 
 namespace Client.Wpf.ViewModels
 {
@@ -29,7 +31,7 @@ namespace Client.Wpf.ViewModels
     public class MainViewModel : ReactiveObject, IScreenManager, IDisposable
     {
         private readonly IServiceProvider _services;
-        private readonly IDialogService _dialogService;
+        private readonly DialogGuy _dialogService;
 
         public RoutingState Router { get; }
         // The command that navigates a user to first view model.
@@ -38,7 +40,7 @@ namespace Client.Wpf.ViewModels
         // The command that navigates a user back.
         public ReactiveCommand<Unit, Unit> GoBack { get; }
 
-        public MainViewModel(IServiceProvider services, IDialogService dialogService)
+        public MainViewModel(IServiceProvider services, DialogGuy dialogService)
         {
             _services = services;
             _dialogService = dialogService;
@@ -48,6 +50,16 @@ namespace Client.Wpf.ViewModels
             GoNext = ReactiveCommand.CreateFromObservable<IRoutableViewModel, IRoutableViewModel>(Navigate);
 
             GoBack = Router.NavigateBack;
+
+
+            var dialogs =_dialogService;
+
+            dialogs.WhenAnyValue(d => d.DialogView)
+                .ToPropertyEx(this, model => model.DialogContent);
+
+            this.WhenAnyValue(x => x.DialogContent)
+                .Select(x => x != null)
+                .ToPropertyEx(this, x => x.DialogViewOpen);
         }
 
         private IObservable<IRoutableViewModel> Navigate(IRoutableViewModel viewModel)
@@ -69,13 +81,13 @@ namespace Client.Wpf.ViewModels
 
         public bool? ShowDialog<TViewModel>(ReactiveObject owner, IModalDialogViewModel viewModel) where TViewModel : IWindow
         {
-           _dialogService.ShowCustom<TViewModel>(owner, viewModel);
+           //_dialogService.ShowCustom<TViewModel>(owner, viewModel);
            return false;
         }
 
         public void ShowModalDialog(ReactiveObject owner, IModalDialogViewModel viewModel)
         {
-            _dialogService.ShowDialog(owner, viewModel);
+            //_dialogService.ShowDialog(owner, viewModel);
         }
 
         public void ShowDialog(INotifyPropertyChanged viewModel)
@@ -86,8 +98,17 @@ namespace Client.Wpf.ViewModels
         public void ShowMenu()
         {
             GoNext.Execute(_services.GetService<HomeViewModel>());
+           
             //Task.Run(() => ChangeViews<HomeViewModel>());
         }
+
+        public extern UserControl DialogContent { [ObservableAsProperty]get; }
+        public extern bool DialogViewOpen { [ObservableAsProperty]get; }
+
+        //[Reactive]public ReactiveUserControl<DialogManager> DialogContent { get; set; }
+
+
+        [Reactive] public IDialogService DialogManager { get; set; }
 
         public void Dispose()
         {

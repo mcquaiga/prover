@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Devices.Communications.IO;
 using Devices.Core.Items;
+using DynamicData.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Devices.Communications.Status
@@ -18,25 +19,37 @@ namespace Devices.Communications.Status
         public static StatusMessage Error(string message) => new StatusMessage(LogLevel.Error, message);
         public static StatusMessage Info(string message) => new StatusMessage(LogLevel.Information, message);
 
-        public static CommunicationsMessage DataRecieved(string data) => new CommunicationsMessage(LogLevel.Debug, CommDirectionEnum.Received, data);
-        public static CommunicationsMessage DataSent(string data) => new CommunicationsMessage(LogLevel.Debug, CommDirectionEnum.Sent, data);
+        public static ConnectionStatusMessage Connection => new ConnectionStatusMessage(LogLevel.Information, "");
+
+        public static CommunicationsMessage DataRecieved(string data) => new CommunicationsMessage(CommDirectionEnum.Received, data);
+        public static CommunicationsMessage DataSent(string data) => new CommunicationsMessage(CommDirectionEnum.Sent, data);
+
+        //public static void PublishStatus(this CommunicationsClient commClient, StatusMessage message)
+        //{
+        //    commClient.StatusMessageObservable.
+        //}
     }
 
     public class StatusMessage
     {
-        protected StatusMessage(LogLevel logLevel)
+        protected StatusMessage(LogLevel logLevel, string titleMessage = null)
         {
             LogLevel = logLevel;
+            TitleMessage = titleMessage;
             Message = string.Empty;
         }
 
-        public StatusMessage(LogLevel logLevel, string message)
+        public StatusMessage(LogLevel logLevel, string message, string titleMessage = null)
         {
             LogLevel = logLevel;
             Message = message;
+            TitleMessage = titleMessage;
         }
 
         public LogLevel LogLevel { get; protected set; }
+
+        public string TitleMessage { get; set; }
+
         protected string Message { get; set; }
 
         public override string ToString()
@@ -45,11 +58,23 @@ namespace Devices.Communications.Status
         }
     }
 
+    public class ConnectionStatusMessage : StatusMessage
+    {
+        protected ConnectionStatusMessage(LogLevel logLevel) : base(logLevel, $"Connection to")
+        {
+            
+        }
+
+        public ConnectionStatusMessage(LogLevel logLevel, string message, string titleMessage = null) : base(logLevel, message, titleMessage)
+        {
+        }
+    }
+
     public class CommunicationsMessage : StatusMessage
     {
         public CommDirectionEnum Direction { get; }
 
-        public CommunicationsMessage(LogLevel logLevel, CommDirectionEnum direction, string data) : base(logLevel)
+        public CommunicationsMessage(CommDirectionEnum direction, string data) : base(LogLevel.Debug)
         {
             Direction = direction;
             Message = $"{ControlCharacters.Prettify(data)}";

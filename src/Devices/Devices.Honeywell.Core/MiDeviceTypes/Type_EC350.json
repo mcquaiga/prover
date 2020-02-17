@@ -3,6 +3,7 @@
   "Name": "EC-350",
   "AccessCode": "99",
   "CanUseIrDaPort": true,
+  "ClientFactoryType": "Devices.Honeywell.Core.HoneywellDeviceType, Devices.Honeywell.Core",
   "OverrideItems": [
     {
       "number": "87",

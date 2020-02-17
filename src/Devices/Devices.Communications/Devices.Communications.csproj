@@ -6,13 +6,19 @@
 
   <ItemGroup>
     <PackageReference Include="InTheHand.Devices.Bluetooth" Version="4.0.1803.22-preview" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
     <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>..\..\..\src_old\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

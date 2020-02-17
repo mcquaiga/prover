@@ -14,6 +14,25 @@ namespace Tests.Honeywell.Core.Items
     {
         private DeviceRepository _repo;
 
+        [TestInitialize]
+        public async Task Initialize()
+        {
+            _repo = new DeviceRepository();
+            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+        }
+
+        [TestMethod]
+        public void Test_GetMiniMaxInstance()
+        {
+            var device = _repo.GetByName("Mini-Max");
+            var instance = device.CreateInstance(MiniMaxItemFile);
+            var pItems = device.GetItemMetadata<PressureItems>();
+            Assert.IsNotNull(instance.Values);
+            Assert.IsFalse(instance.Values.Count == 0);
+
+            Console.WriteLine("");
+        }
+
         [TestMethod]
         public void Test_GetPressureItemsFromDeviceType()
         {
@@ -44,24 +63,6 @@ namespace Tests.Honeywell.Core.Items
             Assert.IsNotNull(pItems);
             Assert.IsNotNull(instance.Values);
             Assert.IsFalse(instance.Values.Count == 0);
-        }
-
-        [TestMethod]
-        public void Test_GetMiniMaxInstance()
-        {
-            var device = _repo.GetByName("Mini-Max");
-            var instance = device.CreateInstance(MiniMaxItemFile);
-            var pItems = device.GetItemMetadata<PressureItems>();
-            Assert.IsNotNull(instance.Values);
-            Assert.IsFalse(instance.Values.Count == 0);
-           
-            Console.WriteLine("");
-        }
-
-        [TestInitialize]
-        public async Task Initialize()
-        {
-            _repo = await new DeviceRepository().DeviceDataSource.RegisterDataSourceAsync(MiJsonDeviceTypeDataSource.Instance);
         }
     }
 }

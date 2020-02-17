@@ -21,7 +21,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
             Code = code;
         }
 
-        public HoneywellResponse(ResponseCode code, Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> recoveryAction) : this(code)
+        public HoneywellResponse(ResponseCode code, Action<HoneywellClientBase<HoneywellDeviceType>> recoveryAction) : this(code)
         {
             RecoveryAction = recoveryAction;
         }
@@ -30,12 +30,12 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
 
         public bool ThrowsException => _exceptionFactory != null;
 
-        protected virtual Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> RecoveryAction { get; } = _ => { };
+        protected virtual Action<HoneywellClientBase<HoneywellDeviceType>> RecoveryAction { get; } = _ => { };
 
         public EvcResponseException RaiseException(StatusResponseMessage response)
                             => _exceptionFactory.Invoke(response);
 
-        public virtual void TryRecover(HoneywellClientBase<HoneywellDeviceType, DeviceInstance> client)
+        public virtual void TryRecover(HoneywellClientBase<HoneywellDeviceType> client)
         {
             RecoveryAction.Invoke(client);
         }

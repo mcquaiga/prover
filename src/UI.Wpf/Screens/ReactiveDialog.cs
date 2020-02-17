@@ -21,4 +21,5 @@ namespace Client.Wpf.Screens
         public bool? DialogResult { get; set; }
         public ContentControl Owner { get; set; }
     }
+
 }

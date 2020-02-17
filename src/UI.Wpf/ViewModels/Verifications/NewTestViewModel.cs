@@ -5,12 +5,15 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Application.Services;
 using Application.Settings;
 using Client.Wpf.Common;
+using Client.Wpf.Communications;
 using Client.Wpf.ViewModels.Dialogs;
 using Client.Wpf.Views.Dialogs;
 using Devices;
+using Devices.Communications;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
@@ -22,12 +25,13 @@ namespace Client.Wpf.ViewModels.Verifications
 {
     public class NewTestViewModel : ViewModelBase, IRoutableViewModel, IDisposable
     {
-        private readonly CommunicationsService _commService;
+        private readonly DeviceSessionManager _sessionManager;
+       
 
-        public NewTestViewModel(IScreenManager screenManager, ISettingsService settingsService, CommunicationsService commService = null) : base(
+        public NewTestViewModel(IScreenManager screenManager, DeviceSessionManager sessionManager) : base(
             screenManager)
         {
-            _commService = commService;
+            _sessionManager = sessionManager;
 
             StartTestCommand = ReactiveCommand.CreateFromTask(StartTest);
 
@@ -56,7 +60,7 @@ namespace Client.Wpf.ViewModels.Verifications
 
         private void SetupScreenData()
         {
-            DeviceService.Repository.Connect()
+            RepositoryFactory.Instance.Connect()
                 .Filter(d => !d.IsHidden)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out var deviceTypes)
@@ -76,18 +80,6 @@ namespace Client.Wpf.ViewModels.Verifications
             BaudRates = baudRates;
         }
 
-        private async Task Begin(CancellationToken ct)
-        {
-            Console.WriteLine("Hey!");
-
-            await Task.Run(() =>
-            {
-                do
-                {
-                } while (!ct.IsCancellationRequested);
-            }, ct);
-        }
-
         private IObservable<long> GenerateObservable()
         {
             return Observable.Interval(TimeSpan.FromMilliseconds(500));
@@ -95,38 +87,15 @@ namespace Client.Wpf.ViewModels.Verifications
 
         private async Task StartTest()
         {
-            //var model = new BackgroundWorkDialogViewModel(Begin);
-
-            //var obs = Observable.Start(() => Begin(new CancellationToken()), RxApp.TaskpoolScheduler);
-
-            //ScreenManager.ShowDialog<BackgroundWorkDialog>(this, model);
-            //GenerateObservable().ObserveOn(RxApp.MainThreadScheduler)
-            //    .Subscribe(x =>
-            //    {
-            //        model.Progress = (int) x;
-            //        model.TitleText = $"Adam #{x}";
-            //        model.StatusText = $"Loop #{x}";
-            //    });
-            ////model.RegisterObservable<long, BackgroundWorkDialogViewModel>(GenerateObservable(), (x, vm) =>
-            ////    {
-            ////        vm.Progress = (int)x;
-            ////        vm.TitleText = $"Adam #{x}";
-            ////        vm.StatusText = $"Loop #{x}";
-            ////    });
-
-            //await obs.RunAsync(new CancellationToken());
-            //await ScreenManager.ChangeView<TestDetailsViewModel>();
-            await ApplicationSettings.Instance.SaveSettings();
-
+            await _sessionManager.StartSession(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, this);
+            await _sessionManager.DownloadItemFile();
         }
 
-        private async Task CreateTest()
-        {
-        }
 
         public void Dispose()
         {
             StartTestCommand?.Dispose();
+            Task.Run(() => _sessionManager.EndSession());
         }
     }
 }

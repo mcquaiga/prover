@@ -63,8 +63,6 @@ namespace Devices.Communications
         /// </summary>
         public abstract bool IsConnected { get; protected set; }
 
-        public IObservable<string> StatusMessages { get; }
-
         public ICommPort CommPort { get; }
 
         public DeviceType DeviceType { get; }

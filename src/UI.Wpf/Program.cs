@@ -7,8 +7,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Forms;
 using System.Windows.Threading;
 using Client.Wpf.Startup;
+using Client.Wpf.ViewModels;
+using Devices.Communications.Interfaces;
+using Devices.Communications.IO;
 using Microsoft.Extensions.Logging.EventLog;
 
 namespace Client.Wpf
@@ -16,6 +21,9 @@ namespace Client.Wpf
     internal static class Program
     {
         private static App _app;
+        private static AppBootstrapper _bootstrapper;
+        private static IHost _host;
+        private static MainWindow _mainWindow;
 
         /// <summary>
         ///     The main entry point for the application.
@@ -30,12 +38,14 @@ namespace Client.Wpf
 
             _app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            var task = StartAsync(args);
+            var task = Initialize(args);
             HandleExceptions(task);
-
-            _app.InitializeComponent();
+            using (IHost host = task.Result)
+            {
+                _app.InitializeComponent();
             // Shows the Window specified by StartupUri
-            _app.Run();
+                _app.Run();
+            }
         }
 
         private static async void HandleExceptions(Task task)
@@ -47,56 +57,66 @@ namespace Client.Wpf
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 _app.Shutdown();
             }
         }
 
         [STAThread]
-        private static async Task StartAsync(string[] args)
+        private static async Task<IHost> Initialize(string[] args)
         {
             using (var splashScreen = new StartScreen())
             {
-                var booter = new AppBootstrapper();
                 splashScreen.Show();
+                
+                _bootstrapper = 
+                    await AppBootstrapper.StartAsync(args);
+                _host = _bootstrapper.AppHost;
 
-                var appHost = await Host.CreateDefaultBuilder()
-                    .ConfigureHostConfiguration(builder =>
-                    {
-                    })
-                    .ConfigureAppConfiguration(builder =>
-                    {
-                        booter.ConfigureAppConfiguration(builder);
-                        booter.Config = builder.Build();
-                    })
-                    .ConfigureServices(services =>
-                    {
-                        booter.AddServices(services);
-                    })
-                    .ConfigureLogging(loggingBuilder =>
-                    {
-                        var eventLoggers = loggingBuilder.Services
-                            .Where(l => l.ImplementationType == typeof(EventLogLoggerProvider))
-                            .ToList();
+                _mainWindow = LoadMainWindow();
 
-                        foreach (var el in eventLoggers)
-                            loggingBuilder.Services.Remove(el);
-                    })
-                    .UseEnvironment(args[0])
-                    .StartAsync();
-
-                var main = appHost.Services.GetService<IWindowFactory>().Create();
-
-                main.Closed += (sender, args) =>
-                {
-                    _app.Shutdown();
-                };
-
-                main.Show();
-                splashScreen.Owner = main;
+                splashScreen.Owner = _mainWindow;
+                
                 splashScreen.Close();
             }
 
-            // This applies the XAML, e.g. StartupUri, Application.Resources
+            return _host;
+        }
+
+        private static MainWindow LoadMainWindow()
+        {
+            _mainWindow = _host.Services.GetService<MainWindow>();
+            var model = _host.Services.GetService<MainViewModel>();
+
+            _mainWindow.ViewModel = model;
+            model.ShowMenu();
+
+            _mainWindow.Closed += (sender, args) =>
+            {
+                (_mainWindow.ViewModel as IDisposable)?.Dispose();
+
+                _bootstrapper.AppHost.Services.GetServices<IHostedService>().ToList()
+                    .ForEach(h => h.StopAsync(new CancellationToken()));
+
+                _app.Shutdown();
+            };
+
+            _mainWindow.InitializeComponent();
+
+            _mainWindow.Show();
+
+            return _mainWindow;
+        }
+
+        public static event EventHandler<EventArgs> ExitRequested;
+        public static void viewModel_CloseRequested(object sender, EventArgs e)
+        {
+            _app.Shutdown();
+        }
+
+        private static void OnExitRequested(EventArgs e)
+        {
+            ExitRequested?.Invoke(_mainWindow, e);
         }
     }
 }

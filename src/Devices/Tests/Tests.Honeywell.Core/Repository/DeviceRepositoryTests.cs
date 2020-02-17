@@ -34,7 +34,7 @@ namespace Tests.Honeywell.Core.Repository
                 dataSourceMock.Object
             };
 
-            Repository = new DeviceRepository().DeviceDataSource.RegisterDataSource(sources);
+            Repository = await new DeviceRepository().UpdateCachedTypes(sources);
         }
 
         #endregion

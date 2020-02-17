@@ -15,12 +15,12 @@ namespace Devices.Communications
         {
             var ass = Assembly.Load(deviceType.GetType().Assembly.ToString());
 
-            var factory = ass.DefinedTypes.FirstOrDefault(t => t.ImplementedInterfaces.Contains(typeof(ICommClientFactory<>)) && !t.IsInterface && !t.IsAbstract);
+            var factory = ass.DefinedTypes.FirstOrDefault(t => t.ImplementedInterfaces.Contains(typeof(IDeviceTypeCommClientFactory<>)) && !t.IsInterface && !t.IsAbstract);
 
             if (factory == null)
                 throw new ArgumentNullException($"Could not locate factory method for device type {typeof(T)}.");
             
-            var clientFactory = (ICommClientFactory<T>)Activator.CreateInstance(factory);
+            var clientFactory = (IDeviceTypeCommClientFactory<T>)Activator.CreateInstance(factory);
             var method = factory.GetMethod("Create");
 
             return (Task<ICommunicationsClient>)method?.Invoke(clientFactory, new object[] { deviceType, commPort, retryAttempts, timeout, statusObserver });

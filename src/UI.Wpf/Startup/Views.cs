@@ -1,5 +1,6 @@
 ﻿using Client.Wpf.Extensions;
 using Client.Wpf.Screens;
+using Client.Wpf.Screens.Dialogs;
 using Client.Wpf.ViewModels;
 using Client.Wpf.Views;
 using Client.Wpf.Views.Dialogs;
@@ -23,26 +24,38 @@ namespace Client.Wpf.Startup
 
             services.AddSingleton<IWindowFactory, WindowFactory>();
 
-            services.AddSingleton(c => new MainViewModel(c, c.GetService<IDialogService>()));
+            //services.AddSingleton(c => new MainViewModel(c, c.GetRequiredService<IDialogService>()));
+            //services.AddSingleton<ReactiveDialog<DialogManager>, DialogUserControl>(c => new DialogUserControl(){ ViewModel = (DialogManager)c.GetService<IDialogService>()});
+
+            services.AddSingleton(c =>
+                new DialogGuy(c, dialogTypeLocator: new DialogTypeLocator(c), dialogFactory: new DialogFactory(c)));
+
+            services.AddSingleton(c => new MainWindow());
+            services.AddSingleton(c => new MainViewModel(c, c.GetService<DialogGuy>()));
             services.AddSingleton<IScreen, MainViewModel>(c => c.GetService<MainViewModel>());
             services.AddSingleton<IScreenManager, MainViewModel>(c => c.GetService<MainViewModel>());
+
+            services.AddMainMenuItems();
             services.AddSingleton<HomeViewModel>();
-            services.AddSingleton<HomeView>();
+            services.AddSingleton(c => new HomeView());
 
             services.AddViewsAndViewModels();
-            services.AddMainMenuItems();
 
             AddDialogs(services);
         }
 
         private static void AddDialogs(IServiceCollection services)
         {
+            //services.AddSingleton<IDialogService>(c =>
+            //    new DialogService(dialogTypeLocator: new DialogTypeLocator(c), dialogFactory: new DialogFactory(c)));
+
             services.AddSingleton<IDialogService>(c =>
-                new DialogService(dialogTypeLocator: new DialogTypeLocator(c), dialogFactory: new DialogFactory(c))
-            );
+                new DialogManager(c, dialogTypeLocator: new DialogTypeLocator(c), dialogFactory: new DialogFactory(c)));
 
 
-            services.AddScoped<BackgroundWorkDialog>();
+            services.AddDialogViews();
+
+            //services.AddScoped<BackgroundWorkDialog>();
         }
     }
 }

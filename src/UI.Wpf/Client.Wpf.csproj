@@ -40,12 +40,18 @@
     <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.1.23" />
+    <PackageReference Include="ShowMeTheXAML.MSBuild" Version="1.0.12" />
     <PackageReference Include="Splat" Version="9.3.11" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
@@ -113,13 +119,6 @@
     <Page Update="Views\HomeView.xaml">
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Communications\" />
-    <Folder Include="Screens\Dialogs\" />
-    <Folder Include="ViewModels\Devices\" />
-    <Folder Include="Views\Devices\" />
   </ItemGroup>
 
 </Project>

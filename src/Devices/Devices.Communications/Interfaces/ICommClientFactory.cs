@@ -5,10 +5,15 @@ using System.Threading.Tasks;
 
 namespace Devices.Communications.Interfaces
 {
-    public interface ICommClientFactory<in TDevice>
+    public interface IDeviceTypeCommClientFactory<in TDevice>
         where TDevice : DeviceType
     {
-    Task<ICommunicationsClient> Create(TDevice deviceType, ICommPort commPort, int retryAttempts = 1,
-        TimeSpan? timeout = null, IObserver<string> statusObserver = null);
+    ICommunicationsClient Create(TDevice deviceType, ICommPort commPort);
+    }
+
+    public interface ICommClientFactory
+    { 
+        ICommunicationsClient Create<T>(T deviceType, string portName = null, int? baudRate = null) where T : DeviceType;
+        ICommunicationsClient Create<T>(T deviceType, ICommPort commPort) where T : DeviceType;
     }
 }

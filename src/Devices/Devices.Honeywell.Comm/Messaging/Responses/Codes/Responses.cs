@@ -55,7 +55,7 @@ namespace Devices.Honeywell.Comm.Messaging.Responses.Codes
         }
 
 
-        protected override Action<HoneywellClientBase<HoneywellDeviceType, DeviceInstance>> RecoveryAction => client =>
+        protected override Action<HoneywellClientBase<HoneywellDeviceType>> RecoveryAction => client =>
         {
             client.CommPort.Close();
         };

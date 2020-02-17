@@ -32,24 +32,18 @@ namespace Client.Wpf.Startup
 
             services.AddSingleton<ILiteDatabase>(c => new LiteDatabase(c.GetService<IConfiguration>().GetConnectionString(KeyValueStoreConnectionString)));
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
-
-            services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => MiJsonDeviceTypeDataSource.Instance);
-            services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => RometJsonDeviceTypeDataSource.Instance);
-            services.AddSingleton<IDeviceTypeCacheSource<DeviceType>>(c => new KeyValueDeviceTypeDataSource(c.GetService<IKeyValueStore>()));
-
-            services.AddSingleton(c => DeviceService.Repository);
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await DeviceService.Create(
-                _provider.GetService<IDeviceTypeCacheSource<DeviceType>>(), 
-                _provider.GetServices<IDeviceTypeDataSource<DeviceType>>());
+
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+           
         }
     }
+
+
 }
