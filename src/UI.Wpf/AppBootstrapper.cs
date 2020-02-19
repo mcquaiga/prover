@@ -1,20 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Client.Wpf.Startup;
-using Devices.Communications.Interfaces;
+using Hocon.Extensions.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.EventLog;
 
 namespace Client.Wpf
 {
     public class AppBootstrapper
     {
+        public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         public IConfiguration Config { get; set; }
 
         public IHost AppHost { get; set; }
@@ -25,40 +25,51 @@ namespace Client.Wpf
             Storage.AddServices(services, Config);
             UserInterface.AddServices(services, Config);
             DeviceServices.AddServices(services, Config);
+
+            UpdaterService.AddServices(services, Config);
         }
 
-        public void ConfigureAppConfiguration(IConfigurationBuilder configHost)
+        public void ConfigureAppConfiguration(IConfigurationBuilder config)
         {
-            var fp = new PhysicalFileProvider(Directory.GetCurrentDirectory());
-            configHost.SetBasePath(Directory.GetCurrentDirectory());
+            
+            config.SetBasePath(Directory.GetCurrentDirectory());
 
-            // configHost.AddJsonFile("appsettings.json", false);
-            //configHost.AddEnvironmentVariables(prefix: "PREFIX_");
-            //configHost.AddCommandLine(args);
+            
         }
 
         public static async Task<AppBootstrapper> StartAsync(string[] args)
         {
             var booter = new AppBootstrapper();
+            booter.AppHost = ConfigureBuilder(booter, args);
 
-            booter.AppHost = await Host
-                .CreateDefaultBuilder()
-                .ConfigureLogging(log =>
-                {
-                    log.ClearProviders();
-                    log.AddDebug();
-                })
-                .ConfigureAppConfiguration(builder =>
-                {
-                    booter.ConfigureAppConfiguration(builder);
-                    booter.Config = builder.Build();
-                })
-                .ConfigureServices(services => { booter.AddServices(services); })
-                .UseEnvironment(Environments.Development)
-                .StartAsync();
+            await booter.AppHost.Services.GetServices<IHaveStartupTask>()
+                .ToObservable()
+                .ForEachAsync(t => t.StartAsync(CancellationTokenSource.Token));
 
+            await booter.AppHost.StartAsync();
 
             return booter;
         }
+
+        private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
+            Host.CreateDefaultBuilder()
+                
+                .ConfigureLogging(log => {
+
+                    //log.ClearProviders();
+                    //log.AddDebug();
+                })
+                
+                .ConfigureAppConfiguration(builder =>
+                {
+                   
+                    booter.ConfigureAppConfiguration(builder);
+                    booter.Config = builder.Build();
+                  
+                })
+
+                .ConfigureServices(booter.AddServices)
+                .UseEnvironment(Environments.Development)
+                .Build();
     }
 }

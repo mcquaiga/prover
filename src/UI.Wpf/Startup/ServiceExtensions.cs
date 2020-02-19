@@ -82,5 +82,10 @@ namespace Client.Wpf.Startup
                 .ToList()
                 .ForEach(ti => services.AddSingleton(typeof(IMainMenuItem), ti));
         }
+
+        public static void AddStartTask<T>(this IServiceCollection services) where T : class, IHaveStartupTask
+        {
+            services.AddSingleton<IHaveStartupTask, T>();
+        }
     }
 }

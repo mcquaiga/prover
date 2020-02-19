@@ -22,7 +22,7 @@ namespace Client.Wpf
     {
         private static App _app;
         private static AppBootstrapper _bootstrapper;
-        private static IHost _host;
+        private static IHost _host =>_bootstrapper.AppHost;
         private static MainWindow _mainWindow;
 
         /// <summary>
@@ -69,14 +69,10 @@ namespace Client.Wpf
             {
                 splashScreen.Show();
                 
-                _bootstrapper = 
-                    await AppBootstrapper.StartAsync(args);
-                _host = _bootstrapper.AppHost;
+                _bootstrapper = await AppBootstrapper.StartAsync(args);
 
-                _mainWindow = LoadMainWindow();
 
-                splashScreen.Owner = _mainWindow;
-                
+                splashScreen.Owner = LoadMainWindow();
                 splashScreen.Close();
             }
 

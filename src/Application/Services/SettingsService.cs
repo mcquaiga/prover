@@ -32,11 +32,11 @@ namespace Application.Services
             }
         }
 
-        public static ISettingsService Initialize(IConfiguration config,
+        public static ISettingsService Initialize(string settingsFilePath,
             IKeyValueStore keyValueStore)
         {
             if (_instance == null)
-                _instance = new SettingsService(config, keyValueStore);
+                _instance = new SettingsService(settingsFilePath, keyValueStore);
 
             return _instance;
         }
@@ -49,21 +49,7 @@ namespace Application.Services
     {
         private readonly IKeyValueStore _keyValueStore;
 
-        /// <summary>
-        ///     Defines the SettingsFileName
-        /// </summary>
-        private const string SettingsFileName = "settings.conf";
-
-        /// <summary>
-        ///     Defines the AppDirectory
-        /// </summary>
-        private static readonly string DefaultAppDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "EvcProver");
-
-        private readonly string _appDirectory;
-        /// <summary>
-        ///     Defines the SettingsPath
-        /// </summary>
-        private string SettingsPath => Path.Combine(_appDirectory, SettingsFileName);
+      
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SettingsService" /> class.
@@ -71,20 +57,10 @@ namespace Application.Services
         /// <param name="config"></param>
         /// <param name="keyValueStore"></param>
         /// <param name="keyValueRepository"></param>
-        internal SettingsService(IConfiguration config,
-            IKeyValueStore keyValueStore)
+        internal SettingsService(string localSettingsPath, IKeyValueStore keyValueStore)
         {
-            var path = config.GetSection("Paths")?["AppData"];
-            
-            if (path != null)
-            {
-                _appDirectory = Environment.ExpandEnvironmentVariables(path);
-            }
-            else
-            {
-                _appDirectory = DefaultAppDirectory;
-            }
-            
+            SettingsPath = localSettingsPath;
+
             _keyValueStore = keyValueStore;
             
             Local = new LocalSettings();
@@ -149,6 +125,8 @@ namespace Application.Services
             //await EventAggregator.PublishOnUIThreadAsync(new SettingsChangeEvent());
         }
 
+        public string SettingsPath { get; set; }
+
         #endregion
 
         /// <summary>
@@ -159,9 +137,11 @@ namespace Application.Services
         /// <returns>The <see cref="Task{LocalSettings}" /></returns>
         private async Task<LocalSettings> LoadLocalSettings(string filePath)
         {
-            if (!File.Exists(filePath) || !Directory.Exists(_appDirectory))
+            var dirPath = Path.GetDirectoryName(filePath);
+
+            if (!File.Exists(filePath) || !Directory.Exists(dirPath))
             {
-                Directory.CreateDirectory(DefaultAppDirectory);
+                Directory.CreateDirectory(dirPath);
             }
 
             using (var sourceStream = File.Open(filePath, FileMode.Open))

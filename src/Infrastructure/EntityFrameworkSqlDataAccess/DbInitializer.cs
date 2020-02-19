@@ -44,7 +44,6 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
             await context.EvcVerifications.LoadAsync();
             var evc = await context.EvcVerifications.ToListAsync();
 
-            
             var repo = await Devices.RepositoryFactory.CreateDefaultAsync();
 
             var deviceType = repo.GetByName("Mini-Max");
