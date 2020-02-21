@@ -6,6 +6,7 @@ using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Domain.EvcVerifications;
+using Domain.EvcVerifications.Builders;
 using Domain.EvcVerifications.Verifications;
 using Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Microsoft.EntityFrameworkCore;
@@ -90,16 +91,16 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
         //public virtual ICollection<VerificationEntity> VerificationTests { get; set; }
 
 
-        [NotMapped]
-        public override IVolumeInputType DriveType
-        {
-            get => _driveType;
-            set
-            {
-                _driveType = value;
-                InputDriveType = value.InputType;
-            }
-        }
+        //[NotMapped]
+        //public override IVolumeInputType DriveType
+        //{
+        //    get => _driveType;
+        //    set
+        //    {
+        //        _driveType = value;
+        //        InputDriveType = value.InputType;
+        //    }
+        //}
 
         public virtual VolumeInputType InputDriveType { get; set; }
 

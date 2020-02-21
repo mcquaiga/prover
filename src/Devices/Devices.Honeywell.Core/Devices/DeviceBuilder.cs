@@ -30,10 +30,6 @@ namespace Devices.Honeywell.Core.Devices
 
         //public abstract DeviceBuilder BuildAttributes();
 
-        public abstract DeviceBuilder BuildDriveType();
-
-        public abstract DeviceBuilder BuildPtz();
-
         public abstract DeviceBuilder SetItemValues(IEnumerable<ItemValue> values);
 
         #endregion

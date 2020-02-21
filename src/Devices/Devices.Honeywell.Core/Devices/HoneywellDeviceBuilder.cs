@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Devices.Core.Items;
+using Devices.Core.Items.DriveTypes;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Devices
 {
@@ -11,9 +13,9 @@ namespace Devices.Honeywell.Core.Devices
             SetItemValues(itemValues);
         }
 
-        public override DeviceBuilder BuildDriveType()
+        public DeviceBuilder BuildDriveType()
         {
-            //var volume = DeviceInstance.ItemGroup<IVolumeItems>();
+            //var volume = DeviceInstance.ItemGroup<VolumeItems>();
 
             //if (volume.DriveRateDescription.Equals("Rotary"))
             //{
@@ -27,7 +29,7 @@ namespace Devices.Honeywell.Core.Devices
             return this;
         }
 
-        public override DeviceBuilder BuildPtz()
+        public DeviceBuilder BuildPtz()
         {
             //var site = DeviceInstance.GetItemsByGroup<ISiteInformationItems>();
             //if (site.PressureFactorLive == CorrectionFactorType.Live)

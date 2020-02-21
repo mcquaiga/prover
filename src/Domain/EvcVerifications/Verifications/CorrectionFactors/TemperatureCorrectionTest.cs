@@ -7,8 +7,8 @@ namespace Domain.EvcVerifications.Verifications.CorrectionFactors
     {
         #region Public Properties
         protected  TemperatureCorrectionTest() { }
-        public TemperatureCorrectionTest(TemperatureItems items, decimal expectedValue, decimal actualValue, decimal percentError, bool verified, decimal gauge) 
-            : base(items, expectedValue, actualValue, percentError, verified)
+        public TemperatureCorrectionTest(TemperatureItems items, decimal expectedValue, decimal actualValue, decimal percentError, decimal gauge) 
+            : base(items, expectedValue, actualValue, percentError)
         {
             Gauge = gauge;
         }

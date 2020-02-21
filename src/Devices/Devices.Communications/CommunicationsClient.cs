@@ -98,6 +98,9 @@ namespace Devices.Communications
 
         public async Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
+            if (itemNumbers == null)
+                return await GetItemsAsync();
+
             return await GetItemValuesAsync(itemNumbers);
         }
 
@@ -180,7 +183,7 @@ namespace Devices.Communications
             //_statusSubject.OnNext(formattedMessage);
         }
 
-        protected void PublishMessage(StatusMessage message)
+        internal void PublishMessage(StatusMessage message)
         {
             _statusSubject.OnNext(message);
         }
@@ -205,7 +208,7 @@ namespace Devices.Communications
             var attempts = 1;
             do
             {
-                PublishMessage(Messages.Info($"Connecting to {DeviceType.Name}... {attempts} of {MaxConnectionAttempts}"));
+                this.MessageConnection(attempts, MaxConnectionAttempts);
 
                 if (!CommPort.IsOpen())
                     await CommPort.Open(CancellationToken);

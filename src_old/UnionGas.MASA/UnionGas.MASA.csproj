@@ -184,10 +184,6 @@
     <Compile Include="Validators\UserLoggedInValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
-      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
-      <Name>Prover.CommProtocol.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
       <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
       <Name>Prover.CommProtocol.MiHoneywell</Name>

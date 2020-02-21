@@ -5,6 +5,8 @@ using Application.ViewModels.Services;
 using Domain.EvcVerifications;
 using Infrastructure.EntityFrameworkSqlDataAccess;
 using Infrastructure.EntityFrameworkSqlDataAccess.Storage;
+using Infrastructure.KeyValueStore;
+using LiteDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +32,7 @@ namespace Infrastructure.Console
             });
 
         private static readonly string connectionString = "Server=.\\sqlexpress;Database=prover;Trusted_Connection=True;";
+        private static string litDbConnectionString = "cached_data.db";
 
         #region Public Methods
 
@@ -42,13 +45,16 @@ namespace Infrastructure.Console
                         c.UseLoggerFactory(MyLoggerFactory)
                             .EnableSensitiveDataLogging() 
                             .UseSqlServer(connectionString));
+                    //services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c => new EfRepository<EvcVerificationTest>(c.GetService<ProverDbContext>()));
+                    //services.AddScoped<DbInitializer>();
 
-                    services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c => new EfRepository<EvcVerificationTest>(c.GetService<ProverDbContext>()));
+                    var deviceRepo = Devices.RepositoryFactory.CreateDefault();
+                    services.AddSingleton<ILiteDatabase>(c => new LiteDatabase(litDbConnectionString));
+                    services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c => new VerificationsLiteDbRepository(c.GetService<ILiteDatabase>(), deviceRepo));
+                    //services.AddSingleton(c => ActivatorUtilities.CreateInstance<LiteDbInitializer>(c, deviceRepo));
+
 
                     services.AddScoped<EvcVerificationTestService>();
-
-                    services.AddScoped<DbInitializer>();
-
                     services.AddScoped<VerificationViewModelService>();
                 });
         }
@@ -58,8 +64,10 @@ namespace Infrastructure.Console
             using var host = CreateHostBuilder(args).Build();
             var context = host.Services.GetRequiredService<ProverDbContext>();
 
-            var db = host.Services.GetRequiredService<DbInitializer>();
-            await db.Initialize(context);
+            //var db = host.Services.GetRequiredService<DbInitializer>();
+            //await db.Initialize(context);
+            //var db = host.Services.GetRequiredService<LiteDbInitializer>();
+            //db.Initialize();
 
             host.Start();
         }

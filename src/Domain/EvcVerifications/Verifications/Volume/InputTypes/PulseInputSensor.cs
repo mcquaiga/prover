@@ -1,5 +1,6 @@
 using Devices.Core;
 using Devices.Core.Interfaces;
+using Domain.EvcVerifications.Builders;
 
 namespace Domain.EvcVerifications.Verifications.Volume.InputTypes
 {

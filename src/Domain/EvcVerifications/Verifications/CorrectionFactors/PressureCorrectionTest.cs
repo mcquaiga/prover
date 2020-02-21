@@ -7,8 +7,8 @@ namespace Domain.EvcVerifications.Verifications.CorrectionFactors
         protected PressureCorrectionTest() {}
 
         #region Public Properties
-        public PressureCorrectionTest(PressureItems items, decimal expectedValue, decimal actualValue, decimal percentError, bool verified, decimal gauge, decimal atmGauge) 
-            : base(items, expectedValue, actualValue, percentError, verified)
+        public PressureCorrectionTest(PressureItems items, decimal expectedValue, decimal actualValue, decimal percentError, decimal gauge, decimal atmGauge) 
+            : base(items, expectedValue, actualValue, percentError)
         {
             Gauge = gauge;
             AtmosphericGauge = atmGauge;

@@ -4,25 +4,6 @@ using Shared.Extensions;
 
 namespace Core.GasCalculations
 {
-    //public static class Calculators
-    //{
-    //    #region Public Properties
-
-    //    public static PressureCalculator Pressure => new PressureCalculator();
-
-    //    #endregion
-
-    //    #region Public Methods
-
-    //    public static PressureCalculator CalculatePressure(IPressureItems items, decimal gauge,
-    //        decimal? atmosphericGauge)
-    //    {
-    //        return PressureCalculator.Calculate(items, gauge, atmosphericGauge);
-    //    }
-
-    //    #endregion
-    //}
-
     public class PressureCalculator : ICorrectionCalculator
     {
         private readonly decimal _basePressure;

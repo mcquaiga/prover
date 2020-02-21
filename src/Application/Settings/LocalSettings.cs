@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -25,37 +28,37 @@ namespace Application.Settings
         /// <summary>
         /// Gets or sets the InstrumentBaudRate
         /// </summary>
-        public int InstrumentBaudRate { get; set; }
+        public int InstrumentBaudRate { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the InstrumentCommPort
         /// </summary>
-        public string InstrumentCommPort { get; set; }
+        public string InstrumentCommPort { get; set; } = "";
 
         /// <summary>
         /// Gets or sets a value indicating whether InstrumentUseIrDaPort
         /// </summary>
-        public bool InstrumentUseIrDaPort { get; set; }
+        public bool InstrumentUseIrDaPort { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the LastClientSelected
         /// </summary>
-        public string LastClientSelected { get; set; }
+        public string LastClientSelected { get; set; } = "";
 
         /// <summary>
         /// Gets or sets the LastInstrumentTypeUsed
         /// </summary>
-        public string LastInstrumentTypeUsed { get; set; }
+        public Guid LastDeviceTypeUsed { get; set; } = Guid.Empty;
 
         /// <summary>
         /// Gets or sets the TachCommPort
         /// </summary>
-        public string TachCommPort { get; set; }
+        public string TachCommPort { get; set; } = "";
 
         /// <summary>
         /// Gets or sets a value indicating whether TachIsNotUsed
         /// </summary>
-        public bool TachIsNotUsed { get; set; }
+        public bool TachIsNotUsed { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the WindowHeight
@@ -79,6 +82,14 @@ namespace Application.Settings
         }
 
         public string Key => "LocalSettings";
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+
+        //[NotifyPropertyChangedInvocator]
+        //protected virtual void OnPropertyChanged(string propertyName, object before, object after)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
     }
 
 }

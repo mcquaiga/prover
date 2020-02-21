@@ -21,23 +21,13 @@ namespace Application.Services
         public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
         {
             _verificationRepository = verificationRepository;
-            
         }
 
         public EvcVerificationTestCreator Factory(DeviceInstance device) => new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
 
         public async Task<EvcVerificationTest> AddOrUpdateVerificationTest(EvcVerificationTest evcVerificationTest)
         {
-            var existing = await _verificationRepository.GetAsync(evcVerificationTest.Id);
-            
-            if (existing == null)
-            {
-                await _verificationRepository.AddAsync(evcVerificationTest);
-            }
-            else
-            {
-                await _verificationRepository.UpdateAsync(evcVerificationTest);
-            }
+            await _verificationRepository.AddAsync(evcVerificationTest);
 
             return evcVerificationTest;
         }
@@ -77,7 +67,7 @@ namespace Application.Services
 
         public void CreateTestPoint(int level, VerificationTestPointViewModel correctionTest)
         {
-            var builder = _evcBuilder.TestPointFactory().CreateNew(level, correctionTest.BeforeValues, correctionTest.AfterValues);
+            var builder = _evcBuilder.TestPointFactory().CreateNew(level);
 
             if (correctionTest.Temperature != null) 
                 builder.BuildTemperatureTest(correctionTest.Temperature.Items, correctionTest.Temperature.Gauge);
@@ -89,7 +79,7 @@ namespace Application.Services
                 builder.BuildSuperFactorTest(correctionTest.SuperFactor.Items);
 
             if (correctionTest.Volume != null)
-                builder.BuildVolumeTest(correctionTest.Volume.StartItems, correctionTest.Volume.EndItems, correctionTest.Volume.AppliedInput);
+                builder.BuildVolumeTest(correctionTest.Volume.StartValues, correctionTest.Volume.EndValues, correctionTest.Volume.AppliedInput);
 
             builder.Commit();
         }

@@ -5,37 +5,29 @@ using Shared.Extensions;
 
 namespace Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
 {
-    public class RotaryMeterTest : VerificationEntity
+    public class RotaryMeterTest : VerificationTestEntity<RotaryMeterItems>
     {
-        public RotaryMeterTest(RotaryMeterItems rotaryItems) : base("Rotary Meter Test")
+        private RotaryMeterTest()
         {
-            RotaryItems = rotaryItems;
+        }
 
-            if (RotaryItems.MeterType == null)
+        public RotaryMeterTest(RotaryMeterItems rotaryItems)
+        {
+            Items = rotaryItems;
+
+            if (Items.MeterType == null)
                 throw new KeyNotFoundException(
                     "Could not find a meter type that match the instruments value in item 432.");
 
-            if (RotaryItems.MeterDisplacement == 0)
-                ActualValue = RotaryItems.MeterType.MeterDisplacement ?? 0;
+            ActualValue = Items.MeterDisplacement != 0
+                ? Items.MeterDisplacement
+                : Items.MeterType.MeterDisplacement ?? 0;
 
-            ExpectedValue = RotaryItems.MeterType.MeterDisplacement ?? 0;
+            ExpectedValue = Items.MeterType.MeterDisplacement ?? 0;
 
-            DisplacementPercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
 
-            Verified = DisplacementPercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD);
+            Verified = PercentError.IsBetween(Global.METER_DIS_ERROR_THRESHOLD);
         }
-
-        #region Public Properties
-
-        public RotaryMeterItems RotaryItems { get; }
-
-        public decimal ExpectedValue { get; private set; }
-
-        public decimal ActualValue { get; private set; }
-
-        public decimal DisplacementPercentError { get; private set; }
-
-        #endregion
-
     }
 }

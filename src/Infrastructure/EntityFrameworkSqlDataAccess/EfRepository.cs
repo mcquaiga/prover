@@ -77,6 +77,13 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
             throw new NotImplementedException();
         }
 
+        public async Task<IReadOnlyList<T>> ListAsync()
+        {
+            return await Context.Set<T>().ToListAsync();
+        }
+
+        public IObservable<T> List(Expression<Func<T, bool>> predicate = null) => throw new NotImplementedException();
+
         public virtual async Task<T> GetByIdAsync(Guid id)
         {
             return await Context.Set<T>().FindAsync(id);

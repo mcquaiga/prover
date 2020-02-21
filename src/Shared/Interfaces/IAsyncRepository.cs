@@ -22,6 +22,9 @@ namespace Shared.Interfaces
         Task<int> CountAsync(ISpecification<T> spec);
 
         Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
+        Task<IReadOnlyList<T>> ListAsync();
+
+        IObservable<T> List(Expression<Func<T, bool>> predicate = null);
 
         #endregion
     }

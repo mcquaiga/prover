@@ -2,75 +2,74 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.EvcVerifications.Verifications;
+using LiteDB;
 
 namespace Domain.EvcVerifications
 {
     public class VerificationTestPoint : VerificationEntity, IVerification
     {
-        protected VerificationTestPoint() {}
+        private ICollection<VerificationEntity> _tests = new List<VerificationEntity>();
 
-        protected internal VerificationTestPoint(int testNumber) : base($"Level #{testNumber}")
+        protected VerificationTestPoint()
         {
-            TestNumber = testNumber;
         }
 
-        public VerificationTestPoint(int testNumber, IEnumerable<VerificationEntity> tests, decimal? appliedInput = null) 
+        protected internal VerificationTestPoint(int testNumber) => TestNumber = testNumber;
+
+        public VerificationTestPoint(int testNumber, IEnumerable<VerificationEntity> tests, decimal? appliedInput = null)
             : this(testNumber)
         {
             AddTests(tests);
             AppliedInput = appliedInput;
         }
 
-        #region Public Properties
         public decimal? AppliedInput { get; set; }
         public int TestNumber { get; set; }
-        #endregion
 
-        //public string Description { get; }
-        //public bool Verified => Tests.All(t => t.Verified);
+        public override bool Verified => Tests.All(t => t.Verified);
 
+        public ICollection<VerificationEntity> Tests
+        {
+            get => _tests.ToList();
+            private set => _tests = value;
+        }
 
-        protected ICollection<VerificationEntity> TestsCollection => _tests;
-        private ICollection<VerificationEntity> _tests = new List<VerificationEntity>();
+        public void AddTests(VerificationEntity test)
+        {
+            if (test == null)
+                return;
+
+            if (!_tests.Contains(test))
+                _tests.Add(test);
+        }
+
+        public void AddTests(IEnumerable<VerificationEntity> verificationTests)
+        {
+            foreach (var vt in verificationTests)
+                AddTests(vt);
+        }
 
 
         public T GetTest<T>() where T : class
         {
-            return TestsCollection.FirstOrDefault(t => t.GetType() == typeof(T)) as T;
+            return _tests.FirstOrDefault(t => t.GetType() == typeof(T)) as T;
         }
 
         public T GetTest<T>(Func<T, bool> filter) where T : class
         {
-            var ts = TestsCollection
+            var ts = _tests
                 .OfType<T>()
                 .ToList();
 
-            return (T) ts
+            return ts
                 .Where(filter)
                 .FirstOrDefault();
         }
 
         public IEnumerable<T> GetTests<T>() where T : IVerification
         {
-            return TestsCollection
+            return _tests
                 .Where(t => t.GetType() == typeof(T)) as IEnumerable<T>;
-        }
-
-        public ICollection<VerificationEntity> Tests
-        {
-            get => _tests;
-            set => _tests = value;
-        }
-
-        public void AddTest(VerificationEntity test)
-        {
-            if (!TestsCollection.Contains(test))
-                TestsCollection.Add(test);
-        }
-
-        public void AddTests(IEnumerable<VerificationEntity> test)
-        {
-            test.ToList().ForEach(AddTest);
         }
     }
 }

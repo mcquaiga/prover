@@ -44,6 +44,8 @@ namespace Devices.Core.Interfaces
 
         public abstract TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup;
 
+        public abstract ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType);
+
         #endregion
 
         private static IEnumerable<ItemValue> ToItemValuesEnumerable(DeviceType deviceType,

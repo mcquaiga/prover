@@ -14,8 +14,8 @@ namespace Domain.EvcVerifications.Builders
 {
     public class EvcVerificationBuilder
     {
-        private readonly Dictionary<VolumeInputType, Func<VolumeInputBuilder>> _volumeInputTypeBuilders =
-            new Dictionary<VolumeInputType, Func<VolumeInputBuilder>>
+        private readonly Dictionary<VolumeInputType, Func<IVolumeInputBuilder>> _volumeInputTypeBuilders =
+            new Dictionary<VolumeInputType, Func<IVolumeInputBuilder>>
             {
                 {VolumeInputType.Rotary, () => new RotaryVolumeInputBuilder()},
                 {VolumeInputType.Mechanical, () => new MechanicalVolumeInputBuilder()},
@@ -38,8 +38,8 @@ namespace Domain.EvcVerifications.Builders
             _instance = new EvcVerificationTest(device);
 
             VolumeBuilder(_device.ItemGroup<VolumeItems>().VolumeInputType)
-                .BuildVolumeInputType(_device, _instance)
-                .BuildVerificationTests(_instance);
+                .BuildVolumeInputType(_device);
+                //.CreateVerificationTests(_instance);
         }
 
         public EvcVerificationTest GetEvcVerification()
@@ -51,7 +51,7 @@ namespace Domain.EvcVerifications.Builders
 
         public void SetTestDateTime()
         {
-            _instance.TestDateTime = DateTimeOffset.UtcNow;
+            _instance.TestDateTime = DateTime.Now;
         }
 
         public VerificationTestPointBuilder TestPointFactory()
@@ -70,7 +70,7 @@ namespace Domain.EvcVerifications.Builders
             return testPoint;
         }
 
-        private VolumeInputBuilder VolumeBuilder(VolumeInputType volumeInputType)
+        private IVolumeInputBuilder VolumeBuilder(VolumeInputType volumeInputType)
         {
             return _volumeInputTypeBuilders[volumeInputType].Invoke();
         }
@@ -83,12 +83,12 @@ namespace Domain.EvcVerifications.Builders
         private readonly Func<VerificationTestPoint, VerificationTestPoint> _callback;
 
         private readonly EvcVerificationTest _evcVerification;
-        private readonly VolumeInputBuilder _volumeBuilder;
+        private readonly IVolumeInputBuilder _volumeBuilder;
 
 
         private VerificationTestPoint _testPoint;
 
-        internal VerificationTestPointBuilder(EvcVerificationTest evcVerification, VolumeInputBuilder volumeBuilder, Func<VerificationTestPoint, VerificationTestPoint> callback)
+        internal VerificationTestPointBuilder(EvcVerificationTest evcVerification, IVolumeInputBuilder volumeBuilder, Func<VerificationTestPoint, VerificationTestPoint> callback)
         {
             _evcVerification = evcVerification;
             _volumeBuilder = volumeBuilder;
@@ -96,8 +96,7 @@ namespace Domain.EvcVerifications.Builders
             
         }
 
-        public VerificationTestPointBuilder CreateNew(int level, IEnumerable<ItemValue> beforeValues,
-            IEnumerable<ItemValue> afterValues)
+        public VerificationTestPointBuilder CreateNew(int level)
         {
             _testPoint = new VerificationTestPoint(level);
 
@@ -164,7 +163,7 @@ namespace Domain.EvcVerifications.Builders
         {
             _testPoint.AppliedInput = appliedInput;
 
-            _volumeBuilder.BuildVolumeTestPointTests(_evcVerification.DriveType, _evcVerification.Device, _testPoint);
+            //_volumeBuilder.CreateTestPointTests(_evcVerification.DriveType, _evcVerification.Device, _testPoint);
 
             return this;
         }

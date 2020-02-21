@@ -5,8 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Settings;
-using Microsoft.Extensions.Configuration;
-using Shared.Extensions;
 using Shared.Interfaces;
 
 namespace Application.Services
@@ -23,10 +21,15 @@ namespace Application.Services
             get
             {
                 if (_instance == null)
-                    throw new InvalidOperationException("Call Initialize method before accessing Instance.");
+                {
+                    if (!string.IsNullOrEmpty(SettingsFilePath) && KeyValueStore != null)
+                        return Initialize(SettingsFilePath, KeyValueStore);
 
-                //if (!_instance.HasInitialized)
-                //    _instance.RefreshSettings();
+                    throw new InvalidOperationException("Call Initialize method before accessing Instance.");
+                }
+
+                if (!_instance.HasInitialized)
+                    _instance.RefreshSettings();
 
                 return _instance;
             }
@@ -35,11 +38,18 @@ namespace Application.Services
         public static ISettingsService Initialize(string settingsFilePath,
             IKeyValueStore keyValueStore)
         {
+            SettingsFilePath = settingsFilePath;
+            KeyValueStore = keyValueStore;
+
             if (_instance == null)
                 _instance = new SettingsService(settingsFilePath, keyValueStore);
 
             return _instance;
         }
+
+        public static string SettingsFilePath { get; set; }
+
+        public static IKeyValueStore KeyValueStore { get; set; }
     }
 
     /// <summary>
@@ -49,12 +59,11 @@ namespace Application.Services
     {
         private readonly IKeyValueStore _keyValueStore;
 
-      
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="SettingsService" /> class.
         /// </summary>
         /// <param name="config"></param>
+        /// <param name="localSettingsPath"></param>
         /// <param name="keyValueStore"></param>
         /// <param name="keyValueRepository"></param>
         internal SettingsService(string localSettingsPath, IKeyValueStore keyValueStore)
@@ -62,10 +71,10 @@ namespace Application.Services
             SettingsPath = localSettingsPath;
 
             _keyValueStore = keyValueStore;
-            
+
             Local = new LocalSettings();
             Shared = new SharedSettings();
-            
+
             HasInitialized = false;
         }
 
@@ -139,10 +148,7 @@ namespace Application.Services
         {
             var dirPath = Path.GetDirectoryName(filePath);
 
-            if (!File.Exists(filePath) || !Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
+            if (!File.Exists(filePath) || !Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
 
             using (var sourceStream = File.Open(filePath, FileMode.Open))
             {
@@ -158,7 +164,6 @@ namespace Application.Services
             }
         }
 
-        
 
         /// <summary>
         ///     The SaveLocalSettings
@@ -183,6 +188,5 @@ namespace Application.Services
 
             //FileStream.WriteAllText(path, jsonText);
         }
-
     }
 }

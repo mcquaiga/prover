@@ -4,8 +4,6 @@ namespace Domain.EvcVerifications.Verifications
     {
         #region Public Properties
 
-        string Description { get; }
-
         bool Verified { get; }
 
         #endregion

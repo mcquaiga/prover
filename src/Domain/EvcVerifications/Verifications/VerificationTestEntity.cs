@@ -3,36 +3,14 @@ using Shared.Domain;
 
 namespace Domain.EvcVerifications.Verifications
 {
-    public enum VerificationTestType
-    {
-        Super,
-        Pressure,
-        Temperature,
-        CorrectedVolume,
-        UncorrectedVolume,
-        Energy
-    }
-
     public class VerificationEntity : BaseEntity, IVerification
     {
-        protected VerificationEntity() { }
-
-        public VerificationEntity(string description)
-        {
-            Description = description;
-            Verified = false;
-        }
-
-        public VerificationEntity(bool verified)
-        {
-            Verified = verified;
-        }
+        public VerificationEntity() { }
 
         #region Public Properties
 
-        public string Description { get; private set; }
 
-        public bool Verified { get; protected set; }
+        public virtual bool Verified { get; protected set; } = false;
 
         #endregion
     }
@@ -45,20 +23,16 @@ namespace Domain.EvcVerifications.Verifications
         }
 
         protected VerificationTestEntity(decimal expectedValue, decimal actualValue,
-            decimal percentError, bool verified) : base(verified)
+            decimal percentError) : base()
         {
             ExpectedValue = expectedValue;
             ActualValue = actualValue;
             PercentError = percentError;
-            Verified = verified;
         }
 
         #region Public Properties
 
-
-
         public decimal ExpectedValue { get; protected set; }
-
         public decimal ActualValue { get; protected set; }
         public decimal PercentError { get; protected set; }
 
@@ -71,8 +45,8 @@ namespace Domain.EvcVerifications.Verifications
         protected VerificationTestEntity() {}
         #region Public Properties
 
-        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError, bool verified) 
-            : base(expectedValue, actualValue, percentError, verified)
+        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError) 
+            : base(expectedValue, actualValue, percentError)
         {
             Items = items;
         }
@@ -86,9 +60,11 @@ namespace Domain.EvcVerifications.Verifications
         where TStart : ItemGroup
         where TEnd : ItemGroup
     {
+        protected VerificationTestEntity() {}
+
         #region Public Properties
-        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified) 
-            : base(expectedValue, actualValue, percentError, verified)
+        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false) 
+            : base(expectedValue, actualValue, percentError)
         {
             StartValues = startValues;
             EndValues = endValues;

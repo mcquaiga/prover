@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Devices.Communications.IO;
+using Devices.Communications.Status;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Messaging.Requests;
@@ -25,13 +27,15 @@ namespace Devices.Romet.Comm
         public override async Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
             var results = new List<ItemValue>();
-
-            foreach (var itemNumber in itemNumbers)
+            var itemDetails = itemNumbers.ToList();
+            foreach (var itemNumber in itemDetails)
             {
                 var value = await GetItemValue(itemNumber);
 
                 if (value.GetValue().ToString().Trim() != "NA") 
                     results.Add(value);
+
+                this.MessageItemReadStatus(itemDetails, results);
             }
 
             return results;

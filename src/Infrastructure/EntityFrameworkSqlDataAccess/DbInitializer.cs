@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Services;
 using Application.ViewModels;
+using Application.ViewModels.Corrections;
 using Application.ViewModels.Services;
+using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups;
@@ -55,8 +57,8 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
             //CorrectionTest.Update<TemperatureItems>(tempTest, ti, ti.Factor)
             var tempVm = new TemperatureFactorViewModel(ti, 32);
 
-            var testVm = await _viewModelService.CreateNewTest(device);
-            var t = _viewModelService.ConvertViewModelToModel(testVm);
+            var testVm = _viewModelService.NewTest(device);
+            var t = _viewModelService.CreateVerificationTestFromViewModel(testVm);
 
             var testRun = new EvcVerificationSql(device);
 
@@ -73,7 +75,7 @@ namespace Infrastructure.EntityFrameworkSqlDataAccess
 
             evc = await context.EvcVerifications.ToListAsync();
 
-            var myVm = await _viewModelService.CreateViewModelFromVerification(evc.First());
+            var myVm = await _viewModelService.GetVerificationTests(evc);
 
 
         }

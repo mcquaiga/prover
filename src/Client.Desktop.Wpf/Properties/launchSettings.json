@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Client.Wpf": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PROVER_ENVIRONMENT": "Developement"
+      }
+    }
+  }
+}

@@ -8,7 +8,13 @@ using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items.ItemGroups
 {
-    public abstract class ItemGroup
+    public interface IItemGroup
+    {
+        void SetPropertyValue(PropertyInfo property, ItemValue value);
+        ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues);
+    }
+
+    public abstract class ItemGroup : IItemGroup
     {
         public virtual void SetPropertyValue(PropertyInfo property, ItemValue value)
         {

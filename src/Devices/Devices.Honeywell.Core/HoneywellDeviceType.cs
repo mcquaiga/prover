@@ -52,6 +52,9 @@ namespace Devices.Honeywell.Core
             return (TGroup) ItemFactory.Create<TGroup>(itemValues);
         }
 
+        public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
+            => ItemFactory.Create(itemValues, groupType);
+
         #endregion
 
         #endregion

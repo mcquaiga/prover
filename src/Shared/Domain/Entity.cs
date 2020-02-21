@@ -37,6 +37,9 @@ namespace Shared.Domain
 
         protected BaseEntity(Guid id)
         {
+            if (id == Guid.Empty)
+                id = Guid.NewGuid();
+
             Id = id;
         }
 

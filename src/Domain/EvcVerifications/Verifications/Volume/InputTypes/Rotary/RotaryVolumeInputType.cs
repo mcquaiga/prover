@@ -2,21 +2,29 @@ using Core.GasCalculations;
 using Devices.Core;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
+using Domain.EvcVerifications.Builders;
 
 namespace Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
 {
     public class RotaryVolumeInputType : IVolumeInputType
     {
+        private RotaryVolumeInputType(){}
+
         public RotaryVolumeInputType(VolumeItems volumeItems, RotaryMeterItems rotaryItems)
         {
             VolumeItems = volumeItems;
             RotaryItems = rotaryItems;
         }
 
+        public RotaryVolumeInputType(RotaryMeterItems rotaryItems)
+        {
+            RotaryItems = rotaryItems;
+        }
+
         #region Public Properties
 
-        public VolumeItems VolumeItems { get; }
-        public RotaryMeterItems RotaryItems { get; }
+        public VolumeItems VolumeItems { get; set; }
+        public RotaryMeterItems RotaryItems { get; set; }
 
         #endregion
 

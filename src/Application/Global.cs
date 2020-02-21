@@ -13,17 +13,17 @@ namespace Application
 
     public static class AppDefaults
     {
-        public static string DataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "EvcProver");
+        public static string AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EvcProver");
 
         public class Settings
         {
-            public static string FilePath = Path.Combine(DataDirectory, "settings.conf");
+            public static string FilePath = Path.Combine(AppDataDirectory, "settings.conf");
         }
 
-        public static void SetValues(IConfiguration config)
-        {
-            AppDefaults.DataDirectory = FindValue(config, Keys.AppDataSettingsKey);
-        }
+        //public static void SetValues(IConfiguration config)
+        //{
+        //    AppDefaults.DataDirectory = FindValue(config, Keys.AppDataSettingsKey);
+        //}
 
         private static string FindValue(IConfiguration config, string key)
         {

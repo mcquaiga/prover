@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using Devices.Core;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 
@@ -10,8 +6,6 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 {
     internal class PressureItemsHoneywell : PressureItems
     {
-        #region Public Properties
-
         [ItemInfo(14)] public override decimal AtmosphericPressure { get; set; }
 
         [ItemInfo(13)] public override decimal Base { get; set; }
@@ -28,14 +22,12 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
         [ItemInfo(47)] public override decimal UnsqrFactor { get; set; }
 
-        #endregion
-
         //public override ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues)
         //{
         //    var items = itemValues.ToList();
 
         //    var site = deviceType.GetGroupValues<SiteInformationItems>(items);
-            
+
         //    if (site.PressureFactor == CorrectionFactorType.Fixed) 
         //        return default;
 

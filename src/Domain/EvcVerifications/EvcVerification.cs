@@ -4,6 +4,7 @@ using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Domain.EvcVerifications.Builders;
 using Domain.EvcVerifications.Verifications;
 using Domain.EvcVerifications.Verifications.Volume;
 using Domain.EvcVerifications.Verifications.Volume.InputTypes;
@@ -12,19 +13,11 @@ namespace Domain.EvcVerifications
 {
     public static class EvcVerificationExtensions
     {
-        #region Public Methods
+        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp)
+            where T : VerificationTestEntity<ItemGroup> => vtp.GetTest<T>();
 
         public static T GetVerificationTest<T>(this VerificationTestPoint vtp)
-            where T : VerificationEntity
-        { 
-            return vtp.GetTest<T>();
-        }
-
-        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp)
-            where T : VerificationTestEntity<ItemGroup>
-        {
-            return vtp.GetTest<T>();
-        }
+            where T : VerificationEntity => vtp.GetTest<T>();
 
         public static VerificationTestPoint GetVolumeTest(this EvcVerificationTest evcVerification)
         {
@@ -43,8 +36,6 @@ namespace Domain.EvcVerifications
             IEnumerable<ItemValue> afterValues, decimal appliedInput)
         {
         }
-
-        #endregion
     }
 
 
@@ -61,38 +52,35 @@ namespace Domain.EvcVerifications
         {
             Device = device;
             DeviceType = device.DeviceType;
-            TestDateTime = DateTimeOffset.Now;
+            DriveType = VolumeInputTypes.Create(Device);
         }
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets or sets the ArchivedDateTime
         /// </summary>
-        public DateTimeOffset? ArchivedDateTime { get; set; }
+        public DateTime? ArchivedDateTime { get; set; } = null;
 
         /// <summary>
-        ///     Gets or sets the CommPortsPassed
+        ///     Gets or sets the TestDateTime
         /// </summary>
-        //public bool? CommPortsPassed { get; set; }
+        public DateTime TestDateTime { get; set; } = DateTime.Now;
 
-        public virtual DeviceInstance Device { get; protected set; }
+        public DateTime? ExportedDateTime { get; set; } = null;
 
-        public virtual DeviceType DeviceType { get; protected set; }
+        public DeviceInstance Device { get; protected set; }
 
-        public virtual IVolumeInputType DriveType { get; set; }
+        public DeviceType DeviceType { get; protected set; }
+
+        public IVolumeInputType DriveType { get; set; }
 
         /// <summary>
         ///     Gets or sets the EventLogPassed
         /// </summary>
         //public bool? EventLogPassed { get; set; }
-
         /// <summary>
-        ///     Gets or sets the TestDateTime
+        ///     Gets or sets the CommPortsPassed
         /// </summary>
-        public DateTimeOffset TestDateTime { get; set; }
-
-        #endregion
+        //public bool? CommPortsPassed { get; set; }
     }
 }
 

@@ -32,6 +32,10 @@ namespace Devices.Core.Items.ItemGroups.Builders
         public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup =>
             (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
 
+        public virtual ItemGroup Create(IEnumerable<ItemValue> values, Type groupType)
+        {
+            return BasicGroupBuilder.GetItemGroupInstance(groupType, values);
+        }
         #endregion
 
         protected IBuildItemsFor<ItemGroup> findGroupBuilder(Type type)

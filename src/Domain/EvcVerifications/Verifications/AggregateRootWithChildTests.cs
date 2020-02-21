@@ -12,11 +12,11 @@ namespace Domain.EvcVerifications.Verifications
         {
         }
 
-        protected AggregateRootWithChildTests(ICollection<TTest> Tests)
-        {
-            _tests.ToList()
-                .AddRange(Tests);
-        }
+        //protected AggregateRootWithChildTests(ICollection<TTest> Tests)
+        //{
+        //    _tests.ToList()
+        //        .AddRange(Tests);
+        //}
 
         private ICollection<TTest> _tests = new List<TTest>();
 

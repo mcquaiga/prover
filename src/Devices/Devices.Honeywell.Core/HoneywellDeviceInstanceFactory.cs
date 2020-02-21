@@ -8,7 +8,6 @@ namespace Devices.Honeywell.Core
 {
     public class HoneywellDeviceInstanceFactory : IDeviceInstanceFactory
     {
-        public readonly HoneywellDeviceType DeviceType;
         private HoneywellDeviceBuilder _deviceBuilder;
 
         protected HoneywellDeviceInstanceFactory()
@@ -27,6 +26,8 @@ namespace Devices.Honeywell.Core
         {
             return CreateWithBuilder(itemValues);
         }
+
+        public DeviceType DeviceType { get; }
 
         public static IDeviceInstanceFactory Find(HoneywellDeviceType honeywellDeviceType)
         {
@@ -49,11 +50,11 @@ namespace Devices.Honeywell.Core
         {
             var values = itemValues as ItemValue[] ?? itemValues.ToArray();
 
-            _deviceBuilder = new HoneywellDeviceBuilder(DeviceType, values);
+            _deviceBuilder = new HoneywellDeviceBuilder((HoneywellDeviceType) DeviceType, values);
 
-            _deviceBuilder
-                .BuildPtz()
-                .BuildDriveType();
+            //_deviceBuilder
+            //    .BuildPtz()
+            //    .BuildDriveType();
 
             return _deviceBuilder.GetDeviceInstance();
         }

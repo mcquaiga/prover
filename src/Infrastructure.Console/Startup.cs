@@ -9,6 +9,8 @@ namespace Infrastructure.Console
     public class Startup
     {
         private static string connectionString = "Data Source=prover_data.db;";
+        
+
         IConfigurationRoot Configuration { get; }
 
         public Startup()

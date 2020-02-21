@@ -42,7 +42,7 @@ namespace Devices.Honeywell.Comm.CommClients
             items = items.OrderBy(x => x).ToArray();
 
             var y = 0;
-
+            
             while (true)
             {
                 var set = items.Skip(y).Take(15).ToList();
@@ -55,6 +55,8 @@ namespace Devices.Honeywell.Comm.CommClients
                 {
                     var metadata = itemDetails.FirstOrDefault(x => x.Number == item.Key);
                     results.Add(ItemValue.Create(metadata, item.Value));
+
+                    this.MessageItemReadStatus(itemDetails, results);
                 }
 
                 y += 15;
@@ -82,7 +84,7 @@ namespace Devices.Honeywell.Comm.CommClients
                 if (HandleResponseMessage<HoneywellDeviceType>(response))
                 {
                     IsConnected = true;
-                    PublishMessage(Messages.Info($"[{CommPort.Name}] Connected to {DeviceType.Name}!"));
+                    this.MessageDebug($"Connected to {DeviceType.Name}!");
                 }
                 else
                 {

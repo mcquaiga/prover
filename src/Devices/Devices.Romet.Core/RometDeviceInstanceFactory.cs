@@ -2,13 +2,13 @@
 using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Honeywell.Core;
 using Devices.Honeywell.Core.Devices;
 
 namespace Devices.Romet.Core
 {
     public class RometDeviceInstanceFactory : IDeviceInstanceFactory
     {
-        private readonly RometDeviceType _deviceType;
         private HoneywellDeviceBuilder _deviceBuilder;
 
         protected RometDeviceInstanceFactory()
@@ -18,7 +18,7 @@ namespace Devices.Romet.Core
 
         public RometDeviceInstanceFactory(RometDeviceType deviceType)
         {
-            _deviceType = deviceType;
+            DeviceType = deviceType;
         }
 
         #region Public Methods
@@ -27,14 +27,16 @@ namespace Devices.Romet.Core
         {
             var values = itemValues as ItemValue[] ?? itemValues.ToArray();
 
-            _deviceBuilder = new HoneywellDeviceBuilder(_deviceType, values);
+            _deviceBuilder = new HoneywellDeviceBuilder((HoneywellDeviceType) DeviceType, values);
 
-            _deviceBuilder
-                .BuildPtz()
-                .BuildDriveType();
+            //_deviceBuilder
+            //    .BuildPtz()
+            //    .BuildDriveType();
 
             return _deviceBuilder.GetDeviceInstance();
         }
+
+        public DeviceType DeviceType { get; }
 
         #endregion
     }

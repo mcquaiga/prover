@@ -6,8 +6,8 @@ namespace Domain.EvcVerifications.Verifications.CorrectionFactors
     {
         protected SuperCorrectionTest(){}
 
-        public SuperCorrectionTest(SuperFactorItems items, decimal expectedValue, decimal actualValue, decimal gaugePressure, decimal gaugeTemp, decimal percentError, bool verified)
-            : base(items, expectedValue, actualValue, percentError, verified)
+        public SuperCorrectionTest(SuperFactorItems items, decimal expectedValue, decimal actualValue, decimal gaugePressure, decimal gaugeTemp, decimal percentError)
+            : base(items, expectedValue, actualValue, percentError)
         {
             GaugePressure = gaugePressure;
             GaugeTemp = gaugeTemp;

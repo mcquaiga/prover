@@ -1,0 +1,32 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Client.Wpf.Views.Verifications.Details.Volume.UncorrectedVolumeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Client.Wpf.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Client.Wpf.Views.Verifications.Details.Volume"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    xmlns:volume="clr-namespace:Application.ViewModels.Volume;assembly=Application"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="volume:UncorrectedVolumeTestViewModel"
+    mc:Ignorable="d">
+    <StackPanel Grid.Column="2" VerticalAlignment="Top">
+        <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}" Text="Uncorrected" />
+        <controls:PercentageControlNew
+            HorizontalAlignment="Center"
+            DisplayValue="{Binding Volume.UnCorrectedPercentError, FallbackValue='0.01'}"
+            Passed="{Binding Volume.UnCorrectedHasPassed, FallbackValue=true}" />
+
+        <UniformGrid Columns="2">
+            <controls:ValueDescriptionControl Label="Start" Value="{Binding StartUncorrected}" />
+            <controls:ValueDescriptionControl Label="End" Value="{Binding EndUncorrected}" />
+
+            <controls:ValueDescriptionControl Label="Actual" Value="{Binding TrueUncorrected}" />
+            <controls:ValueDescriptionControl Label="EVC" Value="{Binding EvcUncorrected}" />
+            <controls:ValueDescriptionControl Label="Pulses Ver'd" Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
+        </UniformGrid>
+    </StackPanel>
+
+</reactiveUi:ReactiveUserControl>
