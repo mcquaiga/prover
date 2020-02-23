@@ -1,7 +1,4 @@
-﻿using Client.Wpf.Screens;
-using ReactiveUI;
-using System;
-using System.Reactive.Disposables;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;

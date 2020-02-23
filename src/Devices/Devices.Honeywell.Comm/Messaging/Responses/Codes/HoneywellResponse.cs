@@ -1,7 +1,6 @@
 ﻿using Devices.Communications.Messaging;
 using Devices.Honeywell.Comm.CommClients;
 using System;
-using Devices.Core.Interfaces;
 using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.Messaging.Responses.Codes

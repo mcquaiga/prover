@@ -1,25 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Application.Services;
-using Application.ViewModels;
 using Application.ViewModels.Corrections;
-using Application.ViewModels.Services;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items;
-using Devices.Honeywell.Core.Items.ItemGroups;
 using Domain.EvcVerifications;
-using Domain.EvcVerifications.Verifications;
-using Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Infrastructure.EntityFrameworkSqlDataAccess.Entities;
 using Infrastructure.EntityFrameworkSqlDataAccess.Storage;
 using Infrastructure.SampleData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Newtonsoft.Json;
-using JsonConverter = System.Text.Json.Serialization.JsonConverter;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess
 {

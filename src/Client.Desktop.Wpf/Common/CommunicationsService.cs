@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using Devices.Communications.Interfaces;
-using Devices.Core.Interfaces;
-using MvvmDialogs;
-
-namespace Client.Wpf.Common
+﻿namespace Client.Wpf.Common
 {
 
     //public class CommunicationsService

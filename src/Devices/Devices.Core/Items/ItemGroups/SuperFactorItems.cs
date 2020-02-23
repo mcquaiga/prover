@@ -1,6 +1,3 @@
-using System.Reflection;
-using Devices.Core.Interfaces;
-
 namespace Devices.Core.Items.ItemGroups
 {
     //public abstract class SuperFactorItems : ItemGroup, IHaveFactor

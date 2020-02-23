@@ -3,6 +3,7 @@ using System.IO;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Wpf.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,11 +27,11 @@ namespace Client.Wpf.Startup
 
             if (host.HostingEnvironment.EnvironmentName != Environments.Development)
             {
-                UpdaterService.AddServices(services, host);
+                //UpdaterService.AddServices(services, host);
             }
         }
 
-        public void ConfigureAppConfiguration(IConfigurationBuilder config, HostBuilderContext host)
+        public void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
         {
             config.SetBasePath(Directory.GetCurrentDirectory());
         }
@@ -51,7 +52,7 @@ namespace Client.Wpf.Startup
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
             Host.CreateDefaultBuilder()
-                .UseEnvironment(Environment.GetEnvironmentVariable("PROVER_ENVIRONMENT") ?? Environments.Production)
+               
                 .ConfigureLogging((host, log) => {
 
                     //log.ClearProviders();
@@ -60,13 +61,18 @@ namespace Client.Wpf.Startup
                 
                 .ConfigureAppConfiguration((host, config) =>
                 {
-                    booter.ConfigureAppConfiguration(config, host);
+                    booter.AddConfiguration(config, host);
                 })
                 
                 .ConfigureServices((host, services) =>
                 {
+                    host.ConfigureModules(services);
+
                     booter.AddServices(services, host);
                 })
+               
+                .UseEnvironment(Environment.GetEnvironmentVariable("PROVER_ENVIRONMENT") ?? Environments.Production)
+                
                 .Build();
     }
 }

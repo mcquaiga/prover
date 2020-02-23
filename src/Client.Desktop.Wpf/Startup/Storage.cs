@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Services;
-using Application.ViewModels.Services;
 using Client.Wpf.Extensions;
 using Devices.Core.Repository;
 using Domain.EvcVerifications;
@@ -37,15 +36,18 @@ namespace Client.Wpf.Startup
         {
             services.AddStartTask<Storage>();
 
+            var connectionString = Environment.ExpandEnvironmentVariables(
+                host.Configuration.GetConnectionString(KeyValueStoreConnectionString)
+                );
+            var db = new LiteDatabase(connectionString);
             //LiteDb
-            services.AddSingleton<ILiteDatabase>(c =>
-                new LiteDatabase(c.GetService<IConfiguration>().GetConnectionString(KeyValueStoreConnectionString)));
+            services.AddSingleton<ILiteDatabase>(c => db);
 
             services.AddScoped<EvcVerificationTestService>();
             services.AddScoped<VerificationViewModelService>();
 
             services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c 
-                => new LiteDbRepository<EvcVerificationTest>(c.GetService<ILiteDatabase>(), c.GetService<DeviceRepository>()));
+                => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

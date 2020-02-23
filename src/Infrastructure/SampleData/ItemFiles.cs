@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Infrastructure.SampleData

@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reactive;
-using System.Threading.Tasks;
 using Client.Wpf.Screens;
-using Client.Wpf.Views;
-using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

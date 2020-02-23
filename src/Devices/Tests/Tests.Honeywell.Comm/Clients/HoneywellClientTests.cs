@@ -5,7 +5,6 @@ using Castle.Core.Internal;
 using Devices.Communications;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
-using Devices.Core.Interfaces;
 using Devices.Honeywell.Comm;
 using Devices.Honeywell.Comm.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

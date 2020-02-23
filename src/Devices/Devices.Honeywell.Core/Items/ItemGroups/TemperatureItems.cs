@@ -1,7 +1,6 @@
-using Devices.Core;
-using Devices.Core.Interfaces;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
+using Shared;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {

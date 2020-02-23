@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Domain;
-using NLog.LayoutRenderers.Wrappers;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -13,6 +12,7 @@ namespace Application.ViewModels.Corrections
     public sealed class SuperFactorViewModel : CorrectionTestViewModel<SuperFactorItems>
     {
         private const decimal Tolerance = Global.SUPER_FACTOR_TOLERANCE;
+
 
         public SuperFactorViewModel(SuperFactorItems items) : base(items, Tolerance)
         {

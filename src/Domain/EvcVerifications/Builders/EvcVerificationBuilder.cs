@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Devices.Core;
 using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.Verifications;
-using Domain.EvcVerifications.Verifications.Volume;
-using Domain.EvcVerifications.Verifications.Volume.InputTypes;
-using Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
+using Shared;
 
 namespace Domain.EvcVerifications.Builders
 {

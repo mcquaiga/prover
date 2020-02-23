@@ -1,4 +1,5 @@
 ﻿using Devices.Core.Items.ItemGroups;
+using Shared;
 
 namespace Devices.Core.Items.DriveTypes
 {

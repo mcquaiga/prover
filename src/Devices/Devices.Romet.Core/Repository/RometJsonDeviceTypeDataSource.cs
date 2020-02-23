@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Core.Repository.JsonConverters;

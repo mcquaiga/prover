@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Core.GasCalculations;
-using Devices.Core;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.Builders;
+using Shared;
 
 namespace Domain.EvcVerifications.Verifications.Volume.InputTypes
 {
     public class MechanicalVolumeInputType : IVolumeInputType
     {
+        protected MechanicalVolumeInputType()
+        {
+
+        }
+
         public VolumeItems VolumeItems { get; }
         public IEnumerable<VolumeInputTestSample> UncorrectedTestLimits { get; }
 

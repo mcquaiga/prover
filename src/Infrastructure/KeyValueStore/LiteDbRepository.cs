@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Infrastructure.EntityFrameworkSqlDataAccess.Entities;
+using DynamicData.Binding;
 using LiteDB;
 using Shared.Domain;
 using Shared.Interfaces;
@@ -55,6 +55,9 @@ namespace Infrastructure.KeyValueStore
 
         public IObservable<T> List(Expression<Func<T, bool>> predicate = null)
         {
+            if (predicate == null)
+                return Context.GetCollection<T>().FindAll().ToObservable();
+
             return Context.GetCollection<T>().Find(predicate).ToObservable();
         }
     }

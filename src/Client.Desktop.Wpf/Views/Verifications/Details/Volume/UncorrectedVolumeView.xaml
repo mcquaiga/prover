@@ -25,6 +25,11 @@
 
             <controls:ValueDescriptionControl Label="Actual" Value="{Binding TrueUncorrected}" />
             <controls:ValueDescriptionControl Label="EVC" Value="{Binding EvcUncorrected}" />
+            <controls:ValueDescriptionControl
+                IsReadOnly="False"
+                Label="Uncor Pulses"
+                TabIndex="1"
+                Value="{Binding UncorrectedPulseCount, Mode=TwoWay}" />
             <controls:ValueDescriptionControl Label="Pulses Ver'd" Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
         </UniformGrid>
     </StackPanel>

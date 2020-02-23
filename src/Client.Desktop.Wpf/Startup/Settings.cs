@@ -5,7 +5,6 @@ using Application;
 using Application.Services;
 using Application.Settings;
 using Client.Wpf.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shared.Interfaces;

@@ -1,13 +1,9 @@
 ﻿using Client.Wpf.Extensions;
-using Client.Wpf.Screens;
 using Client.Wpf.Screens.Dialogs;
 using Client.Wpf.ViewModels;
 using Client.Wpf.Views;
-using Client.Wpf.Views.Dialogs;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MvvmDialogs;
 using ReactiveUI;
 using Splat;
 

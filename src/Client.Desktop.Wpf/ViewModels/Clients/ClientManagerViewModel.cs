@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Client.Wpf.Screens;
-using Client.Wpf.Views.Clients;
-using MaterialDesignThemes.Wpf;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Client.Wpf.ViewModels.Clients
 {

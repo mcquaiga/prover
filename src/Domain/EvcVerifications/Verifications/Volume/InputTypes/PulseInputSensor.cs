@@ -1,12 +1,13 @@
-using Devices.Core;
 using Devices.Core.Interfaces;
-using Domain.EvcVerifications.Builders;
+using Shared;
 
 namespace Domain.EvcVerifications.Verifications.Volume.InputTypes
 {
     public class PulseInputSensor : IVolumeInputType
     {
         private readonly DeviceInstance _device;
+
+        protected PulseInputSensor(){}
 
         public PulseInputSensor(DeviceInstance device)
         {

@@ -1,17 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Extensions;
-using Application.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Shared.Domain;
-using Shared.Interfaces;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Application.Settings
 {

@@ -1,24 +1,15 @@
 ﻿using System;
-using Devices.Core;
-using Devices.Core.Items.DriveTypes;
+using Shared;
 using Shared.Extensions;
 
 namespace Core.GasCalculations
 {
     public class EnergyCalculator
     {
-        public EnergyItems StartEnergyItems { get; }
-        public EnergyItems EndEnergyItems { get; }
-    
-        public EnergyCalculator(EnergyItems startEnergyItems, EnergyItems endEnergyItems)
-        {
-            StartEnergyItems = startEnergyItems;
-            EndEnergyItems = endEnergyItems;
-        }
 
         public decimal EnergyValueCalculated()
         {
-            return EndEnergyItems.EnergyGasValue - StartEnergyItems.EnergyGasValue;
+            return 0m; //EndEnergyItems.EnergyGasValue - StartEnergyItems.EnergyGasValue;
         }
 
         public static decimal Calculated(EnergyUnitType energyUnits, decimal totalCorrectedVolume, decimal totalEnergyValue)

@@ -122,9 +122,7 @@
                     <controls1:ValueDescriptionControl Label="EVC" Value="{Binding EvcCorrected}" />
                     <controls1:ValueDescriptionControl Label="Pulses Ver'd" Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
-
             </StackPanel>
-
 
             <Border
                 Grid.Column="5"

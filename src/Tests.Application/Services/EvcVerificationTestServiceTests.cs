@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Application.ViewModels;
-using Application.ViewModels.Corrections;
-using DeepEqual.Syntax;
+﻿using DeepEqual.Syntax;
 using Devices;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Items;
 using Domain.EvcVerifications;
-using Infrastructure.EntityFrameworkSqlDataAccess.Repositories;
+using DynamicData;
 using Infrastructure.KeyValueStore;
 using LiteDB;
+using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using ReactiveUI;
 using Shared.Interfaces;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Tests.Shared;
 
 namespace Application.Services.Tests
@@ -30,11 +30,9 @@ namespace Application.Services.Tests
         private DeviceType _deviceType;
         private DeviceRepository _repo;
 
-        private Mock<IAsyncRepository<EvcVerificationTest>> _repoMock =
-            new Mock<IAsyncRepository<EvcVerificationTest>>();
-
         private IAsyncRepository<EvcVerificationTest> _testRepo;
         private VerificationViewModelService _viewModelService;
+        private EvcVerificationTestService _modelService;
 
         [TestMethod]
         public async Task AddOrUpdateVerificationTestTest()
@@ -72,17 +70,42 @@ namespace Application.Services.Tests
             do
             {
                 var newTest = _viewModelService.NewTest(_device);
+                //newTest.ExportedDateTime = DateTime.Now;
                 var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
                 await _testRepo.AddAsync(model);
                 x++;
             } while (x < 10);
 
             var tests = await _testRepo.ListAsync();
-            var views = await _viewModelService.GetVerificationTests(tests.Take(10).ToList());
-            
-            //views.ElementAt(0).ShouldDeepEqual(views.ElementAt(5));
-            
+            var views = await _viewModelService.GetVerificationTests(tests);
+
             Assert.IsFalse(views.ElementAt(0).IsDeepEqual(views.ElementAt(5)));
+        }
+
+        [TestMethod]
+        public async Task CreateObservableStream()
+        {
+            var scheduler = new TestScheduler();
+            scheduler.StartStopwatch();
+            
+            var results = _modelService.VerificationTests.Connect(t => t.ExportedDateTime == null)
+                //.Transform(t =>  _viewModelService.GetTest(t))
+                //.ObserveOn(Scheduler.Default)
+                .Bind(out var data, 25)
+                //.DisposeMany()
+                .Subscribe();
+           
+            //scheduler.AdvanceBy(TimeSpan.FromSeconds(5).Ticks);
+            scheduler.Start();
+            Assert.IsNotNull(data);
+            //var evc = new SourceList<EvcVerificationTest>();
+            //_testRepo.List()
+            //    .Subscribe(t => evc.Add(t));
+
+            //evc.Connect()
+            //    .TransformAsync(t => _viewModelService.GetTest(t))
+            //    .Bind(out var data)
+            //    .Subscribe();
         }
 
         [TestMethod]
@@ -110,9 +133,15 @@ namespace Application.Services.Tests
             _deviceType = _repo.GetByName("Mini-Max");
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
 
-
             _testRepo = new VerificationsLiteDbRepository(_db, _repo);
-            _viewModelService = new VerificationViewModelService(_testRepo);
+            _modelService = new EvcVerificationTestService(_testRepo);
+            _viewModelService = new VerificationViewModelService(_modelService);
         }
+    }
+
+    [TestClass]
+    public class EvcVerificationTestServiceReactiveTests : ReactiveTest
+    {
+
     }
 }

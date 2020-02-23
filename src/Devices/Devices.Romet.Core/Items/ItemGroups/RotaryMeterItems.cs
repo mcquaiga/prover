@@ -1,7 +1,6 @@
 ﻿using Devices.Core.Items.Attributes;
 using Devices.Core.Items.Descriptions;
 using Devices.Core.Items.DriveTypes;
-using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Romet.Core.Items.ItemGroups
 {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Devices.Core.Items.ItemGroups
 {
     // ReSharper disable InconsistentNaming
@@ -14,5 +16,14 @@ namespace Devices.Core.Items.ItemGroups
         public virtual string C_Units { get; set; }
         public virtual decimal C_Scaling { get; set; }
 
+        public virtual ICollection<PulseOutputChannelItems> Channels { get; set; } = new List<PulseOutputChannelItems>();
+    }
+
+    public class PulseOutputChannelItems : ItemGroup
+    {
+        public virtual string Name { get; set; }
+        public virtual int Count { get; set; }
+        public virtual string Units { get; set; }
+        public virtual decimal Scaling { get; set; }
     }
 }

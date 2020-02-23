@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Shared.Domain;
-using Shared.Interfaces;
+﻿using Shared.Domain;
 
 namespace Application.Settings
 {

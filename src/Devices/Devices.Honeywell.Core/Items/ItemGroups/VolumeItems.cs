@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Core.Items.ItemGroups.Builders;
 using Devices.Honeywell.Core.Items.Attributes;
+using Shared;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using Devices.Core.Interfaces;
-using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository.JsonRepository;
-
-namespace Devices.Honeywell.Core.Repository
+﻿namespace Devices.Honeywell.Core.Repository
 {
     public static class HoneywellDeviceRepository
     {

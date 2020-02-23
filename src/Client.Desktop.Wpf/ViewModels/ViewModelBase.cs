@@ -1,5 +1,4 @@
-﻿using System;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Client.Wpf.ViewModels
 {

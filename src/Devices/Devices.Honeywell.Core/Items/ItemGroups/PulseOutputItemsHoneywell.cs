@@ -15,5 +15,15 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         [ItemInfo(56)] public override decimal A_Scaling { get; set; }
         [ItemInfo(57)] public override decimal B_Scaling { get; set; }
         [ItemInfo(58)] public override decimal C_Scaling { get; set; }
+
+
+    }
+
+    public class PulseOutputChannel_A : PulseOutputChannelItems
+    {
+        public override string Name { get; set; }
+        public override int Count { get; set; }
+        public override decimal Scaling { get; set; }
+        public override string Units { get; set; }
     }
 }

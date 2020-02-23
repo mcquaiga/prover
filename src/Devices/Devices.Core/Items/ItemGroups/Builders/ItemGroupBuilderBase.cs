@@ -33,7 +33,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected virtual ItemGroup GetItemGroupInstance(Type groupType)
         {
-            var itemType = groupType.GetMatchingItemGroupClass(Assembly.GetAssembly(DeviceType.GetType()), BaseAssembly);
+            var itemType = groupType.GetMatchingItemGroupClass(DeviceType);
             if (itemType == null)
                 throw new Exception($"Type {groupType.Name} could not be found.");
 

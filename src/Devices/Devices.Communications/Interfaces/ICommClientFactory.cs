@@ -1,7 +1,5 @@
 ﻿using Devices.Communications.IO;
 using Devices.Core.Interfaces;
-using System;
-using System.Threading.Tasks;
 
 namespace Devices.Communications.Interfaces
 {

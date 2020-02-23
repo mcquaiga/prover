@@ -1,6 +1,4 @@
-﻿using Devices.Core.Items.ItemGroups;
-
-namespace Domain.EvcVerifications.Verifications.Volume
+﻿namespace Domain.EvcVerifications.Verifications.Volume
 {
     public class VolumeTestRunFactory
     {

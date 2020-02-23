@@ -9,6 +9,14 @@
     <RootNamespace>Client.Desktop.Wpf</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\Users\mcqua\source\repos\EvcProver\build\Release\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
@@ -30,7 +38,6 @@
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.7.0" />
     <PackageReference Include="DynamicData" Version="6.14.8" />
-    <PackageReference Include="Hocon.Configuration" Version="2.0.0" />
     <PackageReference Include="Hocon.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
@@ -46,13 +53,11 @@
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.1.23" />
     <PackageReference Include="Splat" Version="9.3.11" />
-    <PackageReference Include="squirrel.windows" Version="1.4.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Client.Core\Client.Core.csproj" />
-    <ProjectReference Include="..\Client.Desktop.Installer\Client.Desktop.Installer.csproj" />
     <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj" />
     <ProjectReference Include="..\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
@@ -102,6 +107,12 @@
     <Compile Update="Views\Verifications\Details\PressureTestView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -132,6 +143,12 @@
     <Page Update="Views\Verifications\Details\PressureTestView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Verifications\Styles.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -141,6 +158,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\UnionGas\Exporter\" />
     <Folder Include="ViewModels\Certificates\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>

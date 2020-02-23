@@ -4,7 +4,6 @@ using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

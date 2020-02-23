@@ -37,6 +37,10 @@ namespace Infrastructure.KeyValueStore
                     var device = _deviceRepository.GetById(temp.DeviceTypeId);
                     return device.Factory.CreateInstance(temp.Values);
                 });
+
+            Context.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ExportedDateTime);
+            Context.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ArchivedDateTime);
+            Context.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.DeviceType);
         }
 
         private class Device

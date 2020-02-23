@@ -42,7 +42,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
         {
             loadGroupBuilders();
 
-            var groupClass = type.GetMatchingItemGroupClass(Assembly.GetAssembly(DeviceType.GetType()), BaseAssembly);
+            var groupClass = type.GetMatchingItemGroupClass(DeviceType);
 
             if (groupClass != null)
             {

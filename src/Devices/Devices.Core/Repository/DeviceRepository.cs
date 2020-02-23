@@ -30,12 +30,12 @@ namespace Devices.Core.Repository
             var devices = _deviceSourceCache.Connect().Publish();
             All = devices.AsObservableCache();
 
-            All.Connect()
+            var allDevice = All.Connect()
                 .Bind(out var deviceTypes)
                 .Subscribe();
             Devices = deviceTypes;
 
-            _disposer = new CompositeDisposable(All, _deviceSourceCache, _dataSources, devices.Connect());
+            _disposer = new CompositeDisposable(All, _deviceSourceCache, _dataSources, devices.Connect(), allDevice);
         }
 
         public ReadOnlyObservableCollection<DeviceType> Devices { get; }
@@ -86,9 +86,12 @@ namespace Devices.Core.Repository
             await dataSource.GetDeviceTypes()
                 .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
 
-            CacheSource?.Save(_deviceSourceCache.Items);
-
             return this;
+        }
+
+        public void Save()
+        {
+            CacheSource.Save(_deviceSourceCache.Items);
         }
 
         public async Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)

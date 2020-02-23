@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Items;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 {

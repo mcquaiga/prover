@@ -5,9 +5,9 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels.Volume
 {
-    public abstract class VolumeTestRunViewModel : VarianceTestViewModel
+    public abstract class VolumeTestRunViewModelBase : VarianceTestViewModel
     {
-        protected VolumeTestRunViewModel(decimal passTolerance, IVolumeInputType driveType, VolumeItems startValues, VolumeItems endValues) : base(passTolerance)
+        protected VolumeTestRunViewModelBase(decimal passTolerance, IVolumeInputType driveType, VolumeItems startValues, VolumeItems endValues) : base(passTolerance)
         {
             DriveType = driveType;
             StartValues = startValues;

@@ -5,8 +5,6 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items;
-using Devices.Romet.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 

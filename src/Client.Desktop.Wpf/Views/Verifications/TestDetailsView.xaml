@@ -72,13 +72,8 @@
             </Viewbox>
 
             <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-                <Viewbox x:Name="TestPointsViewBox" Stretch="Fill">
+                <Viewbox x:Name="TestPointsViewBox" Stretch="Uniform">
                     <Grid VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -86,7 +81,7 @@
 
                         <ItemsControl
                             x:Name="TestPointItems"
-                            Grid.ColumnSpan="3"
+                            Grid.Row="0"
                             DataContext="{Binding}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -108,7 +103,7 @@
                                                 VerticalAlignment="Center"
                                                 Command="{Binding ViewModel.DownloadCommand, ElementName=TestDetailsUserControl}"
                                                 CommandParameter="{Binding}"
-                                                Content="Download"
+                                                Content="Run Test"
                                                 Style="{StaticResource MaterialDesignRaisedDarkButton}" />
                                             <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
                                         </StackPanel>
@@ -121,12 +116,21 @@
 
                         <Border
                             Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
                             Padding="4"
                             VerticalAlignment="Stretch"
                             Style="{StaticResource SubSectionDividerBorder}">
-                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
+                                    <Button
+                                        x:Name="RunVolumeTestButton"
+                                        Margin="15,5"
+                                        Content="Run Volume Test"
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+                                </StackPanel>
+                                <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                            </StackPanel>
+
                         </Border>
                     </Grid>
 

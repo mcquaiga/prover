@@ -1,13 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Globalization;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-
-namespace Client.Wpf.Converters
+﻿namespace Client.Wpf.Converters
 {
     /// <summary>
     /// Converts a DialogType to the corresponding system icon.

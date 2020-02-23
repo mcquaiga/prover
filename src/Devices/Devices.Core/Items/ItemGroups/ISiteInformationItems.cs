@@ -1,3 +1,5 @@
+using Shared;
+
 namespace Devices.Core.Items.ItemGroups
 {
     public class SiteInformationItems : ItemGroup

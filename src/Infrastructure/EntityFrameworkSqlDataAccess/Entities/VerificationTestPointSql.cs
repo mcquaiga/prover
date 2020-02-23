@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Items.ItemGroups;
 using Domain.EvcVerifications;
 using Domain.EvcVerifications.Verifications;
 using Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.Domain;
-using ItemValue = Devices.Core.Items.ItemValue;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Entities
 {

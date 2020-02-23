@@ -1,20 +1,14 @@
-﻿using Client.Wpf.Views;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Splat;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Forms;
 using System.Windows.Threading;
 using Client.Wpf.Startup;
 using Client.Wpf.ViewModels;
-using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
-using Microsoft.Extensions.Logging.EventLog;
+using Client.Wpf.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Client.Wpf
 {
@@ -22,28 +16,39 @@ namespace Client.Wpf
     {
         private static App _app;
         private static AppBootstrapper _bootstrapper;
-        private static IHost _host =>_bootstrapper.AppHost;
         private static MainWindow _mainWindow;
+        private static IHost _host => _bootstrapper.AppHost;
 
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             _app = new App();
 
-            SynchronizationContext.SetSynchronizationContext(
-                new DispatcherSynchronizationContext());
+            SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
 
             _app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             var task = Initialize(args);
             HandleExceptions(task);
 
-            _app.InitializeComponent();
-            _app.Run();
+            try
+            {
+                _app.InitializeComponent();
+                _app.Run();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Unhandled error occured. {Environment.NewLine} Exception: {ex.Message} {Environment.NewLine} {ex.InnerException?.Message}.");
+                Console.WriteLine(ex.Message);
+                ShutdownApp();
+            }
         }
+
+        public static event EventHandler<EventArgs> ExitRequested;
 
         private static async void HandleExceptions(Task task)
         {
@@ -52,6 +57,12 @@ namespace Client.Wpf
                 await Task.Yield();
                 await task;
             }
+            catch (AggregateException aggEx)
+            {
+                foreach (var ex in aggEx.InnerExceptions) Console.WriteLine(ex.Message);
+                _app.Shutdown();
+            }
+
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -65,7 +76,7 @@ namespace Client.Wpf
             using (var splashScreen = new StartScreen())
             {
                 splashScreen.Show();
-                
+
                 _bootstrapper = await new AppBootstrapper().StartAsync(args);
 
                 splashScreen.Owner = LoadMainWindow();
@@ -83,15 +94,7 @@ namespace Client.Wpf
 
             model.ShowMenu();
 
-            _mainWindow.Closed += (sender, args) =>
-            {
-                using (_host)
-                {
-                    (_mainWindow.ViewModel as IDisposable)?.Dispose();
-                    ShutdownHostedServices();
-                    _app.Shutdown();
-                }
-            };
+            _mainWindow.Closed += (sender, args) => { ShutdownApp(); };
 
             _mainWindow.InitializeComponent();
             _mainWindow.Show();
@@ -99,25 +102,34 @@ namespace Client.Wpf
             return _mainWindow;
         }
 
-        public static event EventHandler<EventArgs> ExitRequested;
-        public static void viewModel_CloseRequested(object sender, EventArgs e)
-        {
-            _app.Shutdown();
-        }
-
         private static void OnExitRequested(EventArgs e)
         {
             ExitRequested?.Invoke(_mainWindow, e);
         }
 
+        private static void ShutdownApp()
+        {
+            (_mainWindow?.ViewModel as IDisposable)?.Dispose();
+            ShutdownHostedServices();
+            _app.Shutdown();
+        }
+
         private static void ShutdownHostedServices()
         {
-            var services = _bootstrapper.AppHost.Services.GetServices<IHostedService>().ToList();
+            using (_host)
+            {
+                var services = _bootstrapper.AppHost.Services.GetServices<IHostedService>().ToList();
 
-            var t = Task.WhenAll(services.Select(s => 
-                Task.Run(() => s.StopAsync(new CancellationToken()))));
+                var t = Task.WhenAll(services.Select(s =>
+                    Task.Run(() => s.StopAsync(new CancellationToken()))));
 
-            t.Wait();
+                t.Wait();
+            }
+        }
+
+        private static void viewModel_CloseRequested(object sender, EventArgs e)
+        {
+            ShutdownApp();
         }
     }
 }

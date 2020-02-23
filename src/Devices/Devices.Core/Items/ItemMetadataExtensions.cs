@@ -5,6 +5,7 @@ using System.Reflection;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.Descriptions;
+using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Items
 {
@@ -77,12 +78,6 @@ namespace Devices.Core.Items
             return items.FirstOrDefault(i => i.Number == itemNumber)?.ItemDescriptions;
         }
 
-        public static IEnumerable<int> GetItemNumbersByGroup<T>()
-        {
-            var itemType = typeof(T).GetMatchingItemGroupClass();
-            return ItemInfoAttributeHelpers.GetItemIdentifiers(itemType);
-        }
-
         public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
             string code)
         {
@@ -101,14 +96,6 @@ namespace Devices.Core.Items
         {
             var result = items.GetItemString(itemValues, code);
             return decimal.Parse(result);
-        }
-
-        public static Type GetMatchingItemGroupClass(this Type itemGroupType)
-        {
-           
-                return Assembly.GetCallingAssembly().GetTypes().FirstOrDefault(itemGroupType.IsAssignableFrom);
-
-            return itemGroupType;
         }
 
         public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)

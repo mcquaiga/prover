@@ -1,7 +1,6 @@
 ﻿using Client.Wpf.ViewModels.Verifications;
 using ReactiveUI;
 using System.Reactive.Disposables;
-using Client.Wpf.Views.Verifications.Details;
 
 namespace Client.Wpf.Views.Verifications
 {
@@ -22,9 +21,7 @@ namespace Client.Wpf.Views.Verifications
                     this.OneWayBind(ViewModel, vm => vm.EvcVerification.VolumeTest, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
 
                     this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
-
-                   // this.BindCommand(ViewModel, vm => vm.DownloadCommand, v => v.TestPointItems.ItemTemplate.)
-
+                    
                 });
         }
     }

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Devices.Core.Items;
-using Devices.Core.Items.DriveTypes;
-using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Honeywell.Core.Devices
 {

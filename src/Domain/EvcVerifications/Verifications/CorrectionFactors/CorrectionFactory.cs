@@ -1,8 +1,3 @@
-using System;
-using Core.GasCalculations;
-using Devices.Core.Interfaces;
-using Devices.Core.Items.ItemGroups;
-
 namespace Domain.EvcVerifications.Verifications.CorrectionFactors
 {
     public static class CorrectionTestFactory

@@ -1,6 +1,5 @@
 ﻿using System;
-using Devices.Core;
-using Devices.Core.Items.ItemGroups;
+using Shared;
 using Shared.Extensions;
 
 namespace Core.GasCalculations
@@ -18,10 +17,10 @@ namespace Core.GasCalculations
 
         #region Temperature
 
-        public static TemperatureCalculator GetCalculator(this TemperatureItems items, decimal gauge)
-        {
-            return new TemperatureCalculator(items.Units, items.Base, gauge);
-        }
+        //public static TemperatureCalculator GetCalculator(this TemperatureItems items, decimal gauge)
+        //{
+        //    return new TemperatureCalculator(items.Units, items.Base, gauge);
+        //}
 
         #endregion
 
@@ -53,11 +52,11 @@ namespace Core.GasCalculations
 
         #region SuperFactor
 
-        public static SuperFactorCalculator Calculate(this SuperFactorItems items, decimal gaugeTempF,
-            decimal gaugePressurePsi)
-        {
-            return new SuperFactorCalculator(items.Co2, items.N2, items.SpecGr, gaugeTempF, gaugePressurePsi);
-        }
+        //public static SuperFactorCalculator Calculate(this SuperFactorItems items, decimal gaugeTempF,
+        //    decimal gaugePressurePsi)
+        //{
+        //    return new SuperFactorCalculator(items.Co2, items.N2, items.SpecGr, gaugeTempF, gaugePressurePsi);
+        //}
 
         public static decimal CalculateFactor(decimal co2, decimal n2, decimal specGr, decimal gaugeTempF,
             decimal gaugePressurePsi)
@@ -74,18 +73,18 @@ namespace Core.GasCalculations
 
         #region Pressure
 
-        public static PressureCalculator GetCalculator(this PressureItems items, decimal gauge,
-            decimal? atmosphericGauge)
-        {
-            return new PressureCalculator(items.UnitType, items.TransducerType, items.Base, gauge,
-                atmosphericGauge ?? items.AtmosphericPressure);
-        }
+        //public static PressureCalculator GetCalculator(this PressureItems items, decimal gauge,
+        //    decimal? atmosphericGauge)
+        //{
+        //    return new PressureCalculator(items.UnitType, items.TransducerType, items.Base, gauge,
+        //        atmosphericGauge ?? items.AtmosphericPressure);
+        //}
 
-        public static decimal CalculateFactor(this PressureItems items, decimal gauge, decimal? atmosphericGauge)
-        {
-            return GetPressureFactor(items.UnitType, items.TransducerType, items.Base, gauge,
-                atmosphericGauge ?? items.AtmosphericPressure);
-        }
+        //public static decimal CalculateFactor(this PressureItems items, decimal gauge, decimal? atmosphericGauge)
+        //{
+        //    return GetPressureFactor(items.UnitType, items.TransducerType, items.Base, gauge,
+        //        atmosphericGauge ?? items.AtmosphericPressure);
+        //}
 
         public static decimal GetPressureFactor(PressureUnitType unitType, PressureTransducerType transducerType,
             decimal basePressure, decimal gauge, decimal atmosphericGauge)

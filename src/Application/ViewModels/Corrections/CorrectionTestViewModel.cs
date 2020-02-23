@@ -2,19 +2,30 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using Core.GasCalculations;
+using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Shared.Domain;
 using Shared.Extensions;
 
 namespace Application.ViewModels.Corrections
 {
-    public interface IVerificationViewModel
+    public interface IVerify
     {
         bool Verified { get; }
         void SetVerified(bool verified);
     }
 
-    public abstract class VerificationViewModel : BaseViewModel, IVerificationViewModel
+    public abstract class VerificationTestProxy : AbstractNotifyPropertyChanged, IVerify
+    {
+        public virtual bool Verified { get; }
+        public void SetVerified(bool verified)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public abstract class VerificationViewModel : BaseViewModel, IVerify
     {
         private readonly ReactiveCommand<bool, bool> _setVerified;
 
@@ -37,6 +48,37 @@ namespace Application.ViewModels.Corrections
             _setVerified.Execute(verified);
         }
     }
+
+    //public abstract class VarianceTestProxy : AbstractNotifyPropertyChanged, IVerify
+    //{
+    //    public IProperty<decimal> PassTolerance { get; protected set; }
+    //    public virtual decimal ExpectedValue { get; protected set; }
+    //    public virtual decimal ActualValue { get; protected set; }
+
+    //    public virtual decimal PercentError { get; protected set; }
+    //    public virtual bool Verified { get; }
+    //    public void SetVerified(bool verified)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    //public abstract class VarianceTestViewModelTest : ReactiveObject
+    //{
+    //    public VarianceTestProxy Proxy { get; }
+
+    //    protected VarianceTestViewModelTest(VarianceTestProxy proxy)
+    //    {
+    //        Proxy = proxy;
+
+    //        this.WhenAnyValue(x => x.Proxy.PercentError)
+    //            .Select(p => p.IsBetween(Proxy.PassTolerance))
+    //            .ToPropertyEx(this, x => x.Proxy.Verified, deferSubscription: true);
+
+    //        this.WhenAnyValue(x => x.Proxy.ExpectedValue, x => x.Proxy.ActualValue, Calculators.PercentDeviation)
+    //            .ToPropertyEx(this, x => x.PercentError, 100m, true);
+    //    }
+    //}
 
     public abstract class VarianceTestViewModel : VerificationViewModel
     {

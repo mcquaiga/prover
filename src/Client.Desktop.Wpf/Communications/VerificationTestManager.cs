@@ -3,16 +3,14 @@ using System.Threading.Tasks;
 using Application.Services;
 using Application.ViewModels;
 using Application.ViewModels.Corrections;
-using Application.ViewModels.Services;
 using Client.Wpf.Screens.Dialogs;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using DynamicData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using Shared;
 
 namespace Client.Wpf.Communications
 {

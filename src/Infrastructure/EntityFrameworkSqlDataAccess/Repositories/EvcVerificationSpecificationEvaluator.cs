@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Application.Helpers.Query;
 using Application.Specifications;
 using Domain.EvcVerifications;
-using Shared.Interfaces;
 
 namespace Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 {

@@ -9,7 +9,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels.Volume
 {
-    public class CorrectedVolumeTestViewModel : VolumeTestRunViewModel
+    public class CorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
     {
         private const decimal Tolerance = Global.COR_ERROR_THRESHOLD;
 
@@ -45,4 +45,8 @@ namespace Application.ViewModels.Volume
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
     }
 
+    public class PulseOutputTestViewModel : VarianceTestViewModel
+    {
+
+    }
 }

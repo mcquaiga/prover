@@ -2,7 +2,6 @@
 using Devices.Honeywell.Comm.Exceptions;
 using System;
 using System.Collections.Generic;
-using Devices.Core.Interfaces;
 using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.Messaging.Responses.Codes

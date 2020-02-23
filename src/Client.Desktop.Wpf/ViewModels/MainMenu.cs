@@ -9,52 +9,59 @@ using ReactiveUI;
 
 namespace Client.Wpf.ViewModels
 {
-    public static class MainMenuItems
+    internal static class MainMenuItems
     {
-        public static IMainMenuItem VerificationsMainMenu(IScreenManager screenManager) 
-            => new MainMenu(screenManager, "New QA Test Run", PackIconKind.ClipboardCheck, s => s.ChangeView<NewTestViewModel>(), 1);
-        public static IMainMenuItem ClientsMainMenu(IScreenManager screenManager) 
-            => new MainMenu(screenManager, "Clients", PackIconKind.User, s => s.ChangeView<ClientManagerViewModel>(), 2);
+        public static IMainMenuItem CertificatesMainMenu(IScreenManager screenManager)
+            => new MainMenu(screenManager, "Certificates", PackIconKind.ClipboardText,
+                s => s.ChangeView<ClientManagerViewModel>(), 4);
 
-        public static IMainMenuItem CertificatesMainMenu(IScreenManager screenManager) 
-            => new MainMenu(screenManager, "Certificates", PackIconKind.ClipboardText, s => s.ChangeView<ClientManagerViewModel>(), 4);
+        public static IMainMenuItem ClientsMainMenu(IScreenManager screenManager)
+            => new MainMenu(screenManager, "Clients", PackIconKind.User, s => s.ChangeView<ClientManagerViewModel>(),
+                2);
 
+        public static IMainMenuItem VerificationsMainMenu(IScreenManager screenManager)
+            => new MainMenu(screenManager, "New QA Test Run", PackIconKind.ClipboardCheck,
+                s => s.ChangeView<NewTestViewModel>(), 1);
 
-        private class MainMenu : IMainMenuItem
-        {
-            protected readonly IScreenManager ScreenManager;
-
-            protected MainMenu() { }
-
-            protected MainMenu(IScreenManager screenManager, PackIconKind menuIconKind, string menuTitle, int order)
-            {
-                ScreenManager = screenManager;
-                MenuIconKind = menuIconKind;
-                MenuTitle = menuTitle;
-                Order = order;
-            }
-
-            public MainMenu(IScreenManager screenManager, 
-                string menuTitle, 
-                PackIconKind menuIconKind, 
-                Func<IScreenManager, Task<IRoutableViewModel>> openFunc, int? order = null)
-            {
-                ScreenManager = screenManager;
-                MenuIconKind = menuIconKind;
-                MenuTitle = menuTitle;
-                Order = order;
-
-                OpenCommand =
-                    ReactiveCommand.CreateFromTask<Unit, IRoutableViewModel>(_ => openFunc.Invoke(ScreenManager));
-            }
-
-            public PackIconKind MenuIconKind { get; }
-            public string MenuTitle { get; }
-            public virtual ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
-            public int? Order { get; }
-        }
+        //public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager) 
+        //    => new MainMenu(screenManager, "Export Test Runs ", PackIconKind.CloudUpload, s => s.ChangeView<ClientManagerViewModel>(), 4);
     }
 
+    public class MainMenu : IMainMenuItem
+    {
+        protected readonly IScreenManager ScreenManager;
+
+        protected MainMenu()
+        {
+        }
+
+        protected MainMenu(IScreenManager screenManager, PackIconKind menuIconKind, string menuTitle, int order)
+        {
+            ScreenManager = screenManager;
+            MenuIconKind = menuIconKind;
+            MenuTitle = menuTitle;
+            Order = order;
+        }
+
+        public MainMenu(IScreenManager screenManager,
+            string menuTitle,
+            PackIconKind menuIconKind,
+            Func<IScreenManager, Task<IRoutableViewModel>> openFunc, int? order = null)
+        {
+            ScreenManager = screenManager;
+            MenuIconKind = menuIconKind;
+            MenuTitle = menuTitle;
+            Order = order;
+
+            OpenCommand =
+                ReactiveCommand.CreateFromTask<Unit, IRoutableViewModel>(_ => openFunc.Invoke(ScreenManager));
+        }
+
+        public PackIconKind MenuIconKind { get; }
+        public string MenuTitle { get; }
+        public virtual ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
+        public int? Order { get; }
+    }
 
     //public class CertificateManagerModule : MainMenu
     //{

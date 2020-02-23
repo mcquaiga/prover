@@ -1,5 +1,4 @@
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items.ItemGroups;
 
 namespace Domain.EvcVerifications.Verifications.CorrectionFactors
 {

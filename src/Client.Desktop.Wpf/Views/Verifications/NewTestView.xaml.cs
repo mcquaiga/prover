@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Reactive.Disposables;
-using Client.Wpf.ViewModels;
 using Client.Wpf.ViewModels.Verifications;
 using ReactiveUI;
 

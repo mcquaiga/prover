@@ -1,5 +1,4 @@
 using Devices.Communications.IO;
-using Devices.Core.Interfaces;
 using Devices.Honeywell.Core;
 
 namespace Devices.Honeywell.Comm.CommClients

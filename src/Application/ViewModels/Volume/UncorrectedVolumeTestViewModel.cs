@@ -8,7 +8,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels.Volume
 {
-    public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModel
+    public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
     {
         private const decimal Tolerance = Global.UNCOR_ERROR_THRESHOLD;
 

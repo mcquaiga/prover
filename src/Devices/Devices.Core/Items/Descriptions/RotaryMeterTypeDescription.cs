@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Shared;
 
 namespace Devices.Core.Items.Descriptions
 {

@@ -60,7 +60,10 @@ namespace Domain.EvcVerifications.Verifications
         where TStart : ItemGroup
         where TEnd : ItemGroup
     {
-        protected VerificationTestEntity() {}
+        protected VerificationTestEntity()
+        {
+
+        }
 
         #region Public Properties
         protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false) 

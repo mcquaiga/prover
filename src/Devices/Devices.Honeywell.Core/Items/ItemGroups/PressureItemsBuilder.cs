@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
+using Shared;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {

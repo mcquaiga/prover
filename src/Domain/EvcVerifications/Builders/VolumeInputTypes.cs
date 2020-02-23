@@ -1,13 +1,11 @@
-﻿using Core.GasCalculations;
-using Devices.Core;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
-using Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 using System;
 using System.Collections.Generic;
+using Shared;
 
 namespace Domain.EvcVerifications.Builders
 {

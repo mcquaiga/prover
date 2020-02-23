@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
-using Client.Wpf.ViewModels.Clients;
+﻿using Client.Wpf.ViewModels.Clients;
 using ReactiveUI;
 
 namespace Client.Wpf.Views.Clients

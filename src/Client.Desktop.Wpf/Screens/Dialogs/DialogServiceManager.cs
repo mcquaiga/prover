@@ -2,13 +2,8 @@
 using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Windows.Controls;
 using Client.Wpf.ViewModels.Devices;
 using Client.Wpf.Views.Devices;
-using Microsoft.Extensions.DependencyInjection;
-using MvvmDialogs.DialogFactories;
-using MvvmDialogs.DialogTypeLocators;
-using MvvmDialogs.FrameworkDialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

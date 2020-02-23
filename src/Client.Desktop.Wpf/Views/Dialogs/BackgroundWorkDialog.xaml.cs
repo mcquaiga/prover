@@ -1,10 +1,6 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows.Controls;
+﻿using System.Reactive.Disposables;
 using Client.Wpf.Screens;
 using Client.Wpf.ViewModels.Dialogs;
-using MvvmDialogs;
 using ReactiveUI;
 
 namespace Client.Wpf.Views.Dialogs

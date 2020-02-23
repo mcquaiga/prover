@@ -1,23 +1,13 @@
 using System;
+using Devices.Core.Items.ItemGroups;
 using Domain.Interfaces;
 using Shared.Extensions;
 
 namespace Domain.EvcVerifications.Verifications
 {
-    public class PulseOutputChannel : IAssertPassFail, ICompareTestResults<int>
+    public class PulseOutputChannelTest : VerificationTestEntity<PulseOutputItems>
     {
-        #region Public Properties
-
-        public int ActualValue { get; set; }
-
-        public int ExpectedValue { get; set; }
-
         public bool HasPassed() => Math.Abs(ExpectedValue - ActualValue).IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
         
-        #endregion
-        public int Variance(int expectedValue, int actualValue)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

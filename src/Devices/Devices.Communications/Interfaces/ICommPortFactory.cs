@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Devices.Communications.IO;
+﻿using Devices.Communications.IO;
 
 namespace Devices.Communications.Interfaces
 {

@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 using Devices.Communications;
 using Devices.Communications.IO;
 using Devices.Communications.Status;
-using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;
 using Devices.Honeywell.Comm.Messaging.Responses;
 using Devices.Honeywell.Comm.Messaging.Responses.Codes;
 using Devices.Honeywell.Core;
-using Devices.Honeywell.Core.Items;
 
 namespace Devices.Honeywell.Comm.CommClients
 {

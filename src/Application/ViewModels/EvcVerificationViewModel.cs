@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Volume;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using ReactiveUI.Fody.Helpers;
+using Shared;
 
 namespace Application.ViewModels
 {

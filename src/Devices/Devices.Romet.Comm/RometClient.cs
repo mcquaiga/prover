@@ -7,7 +7,6 @@ using Devices.Communications.Status;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Messaging.Requests;
-using Devices.Honeywell.Core.Items;
 using Devices.Romet.Core;
 
 namespace Devices.Romet.Comm

@@ -1,15 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-using Client.Wpf.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.EventLog;
-using ReactiveUI;
-using Splat;
 
 namespace Client.Wpf
 {
@@ -29,6 +19,5 @@ namespace Client.Wpf
         {
             Console.WriteLine(args.LoadedAssembly);
         }
-
     }
 }

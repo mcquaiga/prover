@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Devices.Romet.Comm;
 using Devices.Romet.Core;
 using Devices.Romet.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

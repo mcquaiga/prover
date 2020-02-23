@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Application.Services;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Volume;
 using Application.ViewModels.Volume.Rotary;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Domain.EvcVerifications;
-using Domain.EvcVerifications.Builders;
-using Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using Shared;
 
 namespace Application.ViewModels.Services
 {

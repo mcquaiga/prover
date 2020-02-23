@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Devices.Core.Items;
+using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
-using LiteDB;
-using Shared.Domain;
 
 namespace Devices.Core.Interfaces
 {
@@ -55,6 +55,14 @@ namespace Devices.Core.Interfaces
                 x => x.Number,
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
+        }
+
+        public abstract Type GetBaseItemGroupClass(Type itemGroupType);
+      
+        public IEnumerable<int> GetItemNumbersByGroup<T>()
+        {
+            var itemType = GetBaseItemGroupClass(typeof(T));
+            return ItemInfoAttributeHelpers.GetItemIdentifiers(itemType);
         }
     }
 

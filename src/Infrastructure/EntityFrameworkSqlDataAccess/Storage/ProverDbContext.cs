@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using Domain.EvcVerifications;
-using Domain.EvcVerifications.Verifications;
 using Infrastructure.EntityFrameworkSqlDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 

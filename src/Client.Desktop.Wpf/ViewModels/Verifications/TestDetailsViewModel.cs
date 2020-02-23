@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Reactive.Linq;
-using Application.Settings;
 using Application.ViewModels;
 using Application.ViewModels.Volume;
 using Client.Wpf.Communications;
-using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -26,8 +20,6 @@ namespace Client.Wpf.ViewModels.Verifications
 
             SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
             DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(test => TestManager.DownloadItems(test));
-
-            BuildChildViewModels();
         }
 
         public TestDetailsViewModel(IScreenManager screenManager, EvcVerificationViewModel evcViewModel)
@@ -35,24 +27,12 @@ namespace Client.Wpf.ViewModels.Verifications
             EvcVerification = evcViewModel;
             _screenManager = screenManager;
 
-            SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
-            //SaveCommand = ReactiveCommand.Create(() => );
-
-            BuildChildViewModels();
+            //SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
         }
 
         public VerificationTestManager TestManager { get; protected set; }
 
-        private void BuildChildViewModels()
-        {
-            //EvcVerification.Tests
-            //    .Select(p => new CorrectionTestPointsViewModel(p))
-            //    .AsObservableChangeSet()
-            //    .ObserveOn(RxApp.MainThreadScheduler)
-            //    .Bind(out var testPoints)
-            //    .Subscribe();
-            //TestPoints = testPoints;
-        }
+     
 
         [Reactive] public VolumeViewModel VolumeViewModel { get; set; }
 

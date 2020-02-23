@@ -1,17 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Items;
 using Domain.EvcVerifications;
-using LiteDB;
 using Moq;
 using Shared.Interfaces;
 using Tests.Shared;
@@ -28,6 +21,9 @@ namespace Application.Services.Tests
         private DeviceRepository _repo;
 
         private Mock<IAsyncRepository<EvcVerificationTest>> _repoMock = new Mock<IAsyncRepository<EvcVerificationTest>>();
+        private Mock<EvcVerificationTestService> _serviceMock = new Mock<EvcVerificationTestService>();
+
+        private EvcVerificationTestService _testService;
         private VerificationViewModelService _service;
         //private IAsyncRepository<EvcVerificationTest> _repository;
 
@@ -36,7 +32,9 @@ namespace Application.Services.Tests
         [TestInitialize]
         public async Task Init()
         {
-            _service = new VerificationViewModelService(_repoMock.Object);
+            _serviceMock = new Mock<EvcVerificationTestService>();
+            
+            _service = new VerificationViewModelService(_serviceMock.Object);
 
             _instance = new Mock<DeviceInstance>();
             _repo = await Devices.RepositoryFactory.CreateDefaultAsync();

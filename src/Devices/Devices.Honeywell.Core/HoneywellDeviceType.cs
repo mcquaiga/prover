@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
+using System.Reflection;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using Devices.Honeywell.Core.Items;
 using Devices.Honeywell.Core.Items.ItemGroups.Builders;
 using Newtonsoft.Json;
 
@@ -43,7 +42,7 @@ namespace Devices.Honeywell.Core
 
         public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
         {
-            var items = ItemMetadataExtensions.GetItemNumbersByGroup<T>();
+            var items = GetItemNumbersByGroup<T>();
             return Items.GetMatchingItemMetadata(items);
         }
 
@@ -54,6 +53,18 @@ namespace Devices.Honeywell.Core
 
         public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
             => ItemFactory.Create(itemValues, groupType);
+
+        public override Type GetBaseItemGroupClass(Type itemGroupType)
+        {
+            var groupClass = GetType().Assembly.DefinedTypes.FirstOrDefault(t => t.IsSubclassOf(itemGroupType));
+
+            if (groupClass == null)
+            {
+                groupClass = typeof(HoneywellDeviceType).Assembly.DefinedTypes.FirstOrDefault(t => t.IsSubclassOf(itemGroupType));
+            }
+
+            return groupClass;
+        }
 
         #endregion
 

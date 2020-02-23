@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Services;
-using Application.ViewModels.Services;
 using Client.Wpf.Communications;
 using Client.Wpf.Extensions;
 using Devices;
@@ -27,9 +26,11 @@ namespace Client.Wpf.Startup
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await RepositoryFactory.Create(
+            var repo = await RepositoryFactory.Create(
                 _provider.GetService<IDeviceTypeCacheSource<DeviceType>>(),
                 _provider.GetServices<IDeviceTypeDataSource<DeviceType>>());
+
+            repo.Save();
         }
 
         #endregion

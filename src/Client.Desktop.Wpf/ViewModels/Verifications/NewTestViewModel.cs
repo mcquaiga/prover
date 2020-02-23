@@ -5,7 +5,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Application.Services;
-using Application.ViewModels.Services;
 using Client.Wpf.Communications;
 using Devices;
 using Devices.Communications.IO;
