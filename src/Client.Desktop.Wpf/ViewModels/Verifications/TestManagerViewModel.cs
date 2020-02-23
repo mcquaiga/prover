@@ -5,8 +5,10 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Application.Services;
+using Application.Settings;
+using Application.ViewModels;
+using Application.ViewModels.Volume;
 using Client.Wpf.Communications;
-using Client.Wpf.ViewModels.Verifications;
 using Devices;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
@@ -19,38 +21,47 @@ using Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public class NewTestViewModel : ViewModelBase, IRoutableViewModel, IDisposable
+    public class TestManagerViewModel : ViewModelBase, IRoutableViewModel
     {
-        private readonly IAsyncRepository<EvcVerificationTest> _repository;
-        private readonly VerificationViewModelService _service;
-        private readonly VerificationTestManager _testManager;
-
-
-        public NewTestViewModel(IScreenManager screenManager,
-            VerificationTestManager testManager,
-            IAsyncRepository<EvcVerificationTest> repository,
-            VerificationViewModelService service) : base(screenManager)
+        public enum TestManagerState
         {
-            _testManager = testManager;
-            _repository = repository;
-            _service = service;
+            Start,
+            InProgress
+        }
+
+        public TestManagerViewModel(IScreenManager screenManager, VerificationTestManager testManager) : base(screenManager)
+        {
+            TestManager = testManager;
 
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort, x => x.SelectedBaudRate,
-                (device, comm, baud) =>
-                    device != null &&
-                    !string.IsNullOrEmpty(comm) &&
-                    baud != 0);
+                (device, comm, baud) => device != null && !string.IsNullOrEmpty(comm) && baud != 0);
 
-            StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                SetLastUsedSettings();
-                await _testManager.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
-                var vm = new TestDetailsViewModel(ScreenManager, _testManager);
-                await ScreenManager.ChangeView(vm);
-            }, canStartTest);
+            StartTestCommand = ReactiveCommand.CreateFromTask(StartTest, canStartTest);
+            StartTestCommand.Subscribe(_ => SetLastUsedSettings());
 
-            SetupScreenData();
+            StartTestCommand
+                .Select(x => TestManagerState.InProgress)
+                .ToPropertyEx(this, x => x.TestManagerScreenState, TestManagerState.Start);
+
+            SetupNewTestView();
         }
+
+        public LocalSettings Settings => ApplicationSettings.Local;
+
+        public extern TestManagerState TestManagerScreenState { [ObservableAsProperty] get; }
+
+        public VerificationTestManager TestManager { get; protected set; }
+
+        [Reactive] public VolumeViewModelBase VolumeViewModel { get; set; }
+
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; protected set; }
+
+        public ReactiveCommand<VerificationTestPointViewModel, Unit> DownloadCommand { get; protected set; }
+
+        //[Reactive] public EvcVerificationViewModel EvcVerification { get; set; }
+
+        public string UrlPathSegment => "/VerificationTests/Details";
+        public IScreen HostScreen => ScreenManager;
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
 
@@ -61,18 +72,14 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public ReactiveCommand<Unit, Unit> StartTestCommand { get; set; }
 
         [Reactive] public string SelectedTachCommPort { get; set; }
-        [Reactive] public string SelectedCommPort { get; set; }
+        public string SelectedCommPort
+        {
+            get => ApplicationSettings.Local.InstrumentCommPort;
+            set => ApplicationSettings.Local.InstrumentCommPort = value;
+        }
+
         [Reactive] public DeviceType SelectedDeviceType { get; set; }
         [Reactive] public int SelectedBaudRate { get; set; }
-
-        public string UrlPathSegment => "/VerificationTests";
-        public IScreen HostScreen => ScreenManager;
-
-        public void Dispose()
-        {
-            StartTestCommand?.Dispose();
-            Task.Run(() => _testManager.Complete());
-        }
 
         private void SetLastUsedSettings()
         {
@@ -82,7 +89,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ApplicationSettings.Instance.SaveSettings();
         }
 
-        private void SetupScreenData()
+        private void SetupNewTestView()
         {
             var devTypes = RepositoryFactory.Instance.Connect()
                 .Filter(d => !d.IsHidden)
@@ -114,15 +121,20 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
         }
 
-//        private async Task LoadStatic()
-//        {
-//            var mini = await _repository.GetAsync(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
+        private async Task StartTest()
+        {
+            SetLastUsedSettings();
 
-////            var testVm = await _service.CreateViewModelFromVerification(mini);
-//            var testVm = _service.NewTest(mini.Device);
-//            var vm = new TestManagerViewModel(ScreenManager, testVm);
+            await TestManager.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
 
-//            await ScreenManager.ChangeView(vm);
-//        }
+            SetupTestManagerView();
+        }
+
+        private void SetupTestManagerView()
+        {
+            //EvcVerification = TestManager.TestViewModel;
+            SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
+            DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(test => TestManager.DownloadItems(test));
+        }
     }
 }

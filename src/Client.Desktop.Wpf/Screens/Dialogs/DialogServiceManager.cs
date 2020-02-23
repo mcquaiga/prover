@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Linq;
-using Client.Wpf.ViewModels.Devices;
+using Client.Desktop.Wpf.ViewModels.Devices;
 using Client.Wpf.Views.Devices;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

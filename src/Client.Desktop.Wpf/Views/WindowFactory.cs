@@ -1,5 +1,5 @@
 ﻿using System;
-using Client.Wpf.ViewModels;
+using Client.Desktop.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Client.Wpf.Views

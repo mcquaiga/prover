@@ -1,10 +1,9 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Wpf.Views.Verifications.Details.SiteInformationView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.SiteInformationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="clr-namespace:Application.ViewModels;assembly=Application"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Client.Wpf.Views.Verifications.Details"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"

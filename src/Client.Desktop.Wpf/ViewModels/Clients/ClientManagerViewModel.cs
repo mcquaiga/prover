@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Client.Wpf.ViewModels.Clients
+namespace Client.Desktop.Wpf.ViewModels.Clients
 {
     public class ClientManagerViewModel : ViewModelBase, IRoutableViewModel
     {

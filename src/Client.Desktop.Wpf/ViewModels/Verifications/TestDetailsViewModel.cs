@@ -2,6 +2,7 @@
 using System.Reactive;
 using Application.ViewModels;
 using Application.ViewModels.Volume;
+using Client.Desktop.Wpf.ViewModels;
 using Client.Wpf.Communications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -26,15 +27,11 @@ namespace Client.Wpf.ViewModels.Verifications
         {
             EvcVerification = evcViewModel;
             _screenManager = screenManager;
-
-            //SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
         }
 
         public VerificationTestManager TestManager { get; protected set; }
 
-     
-
-        [Reactive] public VolumeViewModel VolumeViewModel { get; set; }
+        [Reactive] public VolumeViewModelBase VolumeViewModel { get; set; }
 
         public ReactiveCommand<Unit, Unit> SaveCommand { get; protected set; }
 

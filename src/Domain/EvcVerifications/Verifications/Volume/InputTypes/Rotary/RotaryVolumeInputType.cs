@@ -7,27 +7,27 @@ namespace Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
 {
     public class RotaryVolumeInputType : IVolumeInputType
     {
-        private RotaryVolumeInputType(){}
+        private RotaryVolumeInputType()
+        {
+        }
 
         public RotaryVolumeInputType(VolumeItems volumeItems, RotaryMeterItems rotaryItems)
         {
             VolumeItems = volumeItems;
             RotaryItems = rotaryItems;
+
+            MeterDisplacement = RotaryItems.MeterType?.MeterDisplacement ??
+                                (RotaryItems.MeterDisplacement != 0 ? RotaryItems.MeterDisplacement : -1);
         }
 
-        public RotaryVolumeInputType(RotaryMeterItems rotaryItems)
-        {
-            RotaryItems = rotaryItems;
-        }
+        public RotaryVolumeInputType(RotaryMeterItems rotaryItems) => RotaryItems = rotaryItems;
 
-        #region Public Properties
+        public decimal MeterDisplacement { get; }
 
         public VolumeItems VolumeItems { get; set; }
         public RotaryMeterItems RotaryItems { get; set; }
 
-        #endregion
-
-        #region Public Methods
+        public VolumeInputType InputType => VolumeInputType.Rotary;
 
         public int MaxUncorrectedPulses()
         {
@@ -40,13 +40,7 @@ namespace Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
             return 10; //Low standard number if we can't find anything
         }
 
-        public VolumeInputType InputType => VolumeInputType.Rotary;
-
-        public decimal UnCorrectedInputVolume(decimal appliedInput)
-        {
-            return VolumeCalculator.TrueUncorrected(RotaryItems.MeterDisplacement, appliedInput);
-        }
-
-        #endregion
+        public decimal UnCorrectedInputVolume(decimal appliedInput) =>
+            VolumeCalculator.TrueUncorrected(MeterDisplacement, appliedInput);
     }
 }

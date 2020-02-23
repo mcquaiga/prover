@@ -1,7 +1,7 @@
 using Client.Wpf.Screens.Dialogs;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.ViewModels.Dialogs
+namespace Client.Desktop.Wpf.ViewModels.Dialogs
 {
     public class TextDialogViewModel : DialogViewModel
     {

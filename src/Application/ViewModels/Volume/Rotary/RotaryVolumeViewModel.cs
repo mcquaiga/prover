@@ -4,7 +4,7 @@ using Devices.Core.Items.ItemGroups;
 
 namespace Application.ViewModels.Volume.Rotary
 {
-    public class RotaryVolumeViewModel : VolumeViewModel
+    public class RotaryVolumeViewModel : VolumeViewModelBase
     {
         public RotaryVolumeViewModel(VolumeItems startValues, VolumeItems endValues) : base(startValues, endValues)
         {

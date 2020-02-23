@@ -7,9 +7,9 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Application.ViewModels.Volume
 {
-    public abstract class VolumeViewModel : VerificationViewModel
+    public abstract class VolumeViewModelBase : VerificationViewModel
     {
-        protected VolumeViewModel(VolumeItems startValues, VolumeItems endValues)
+        protected VolumeViewModelBase(VolumeItems startValues, VolumeItems endValues)
         {
             StartValues = startValues;
             EndValues = endValues;

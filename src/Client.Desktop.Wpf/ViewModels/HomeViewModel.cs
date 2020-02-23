@@ -4,7 +4,7 @@ using Client.Wpf.Screens;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.ViewModels
+namespace Client.Desktop.Wpf.ViewModels
 {
     public class HomeViewModel : ViewModelBase, IRoutableViewModel
     {

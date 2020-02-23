@@ -15,17 +15,18 @@
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="DynamicData" Version="6.14.8" />
     <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
-    <PackageReference Include="Fody" Version="6.1.0">
+    <PackageReference Include="Fody" Version="6.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.2" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.6" />
     <PackageReference Include="ReactiveUI" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
 </Project>

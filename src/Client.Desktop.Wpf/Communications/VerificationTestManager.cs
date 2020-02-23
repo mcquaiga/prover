@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.Services;
 using Application.ViewModels;
 using Application.ViewModels.Corrections;
@@ -10,6 +11,7 @@ using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Shared;
 
 namespace Client.Wpf.Communications
@@ -38,11 +40,29 @@ namespace Client.Wpf.Communications
             _dialogService = dialogService;
         }
 
-        public EvcVerificationViewModel TestViewModel { get; set; }
+        [Reactive] public EvcVerificationViewModel TestViewModel { get; set; }
+
+       [Reactive] public VolumeTestManager VolumeTestManager { get; set; }
 
         public async Task Complete()
         {
             //await SaveCurrentState();
+        }
+
+        public async Task DownloadItems(VerificationTestPointViewModel test)
+        {
+            var toDownload = GetItemsToDownload(TestViewModel.CompositionType);
+
+            var values = await _deviceManager.DownloadCorrectionItems(toDownload);
+
+            test.UpdateItemValues(values);
+
+            foreach (var correction in test.GetCorrectionTests())
+            {
+                var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+                itemType?.SetValue(correction,
+                    _deviceManager.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            }
         }
 
         public async Task SaveCurrentState()
@@ -56,27 +76,6 @@ namespace Client.Wpf.Communications
             await _deviceManager.StartSession(deviceType, commPortName, baudRate, this);
 
             TestViewModel = _testViewModelService.NewTest(_deviceManager.Instance);
-        }
-
-        public async Task DownloadItems(VerificationTestPointViewModel test)
-        {
-            var toDownload = GetItemsToDownload(TestViewModel.CompositionType);
-
-            var values = await _deviceManager.DownloadCorrectionItems(toDownload);
-
-            test.UpdateItemValues(values);
-
-            foreach (var correction in test.TestsCollection)
-            {
-                var testType = correction.GetType();
-                if (testType.BaseType != null && testType.BaseType.IsGenericType &&
-                    testType.BaseType.GetGenericTypeDefinition() == typeof(CorrectionTestViewModel<>))
-                {
-                    var itemType = testType.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
-                    itemType?.SetValue(correction,
-                        _deviceManager.DeviceType.GetGroupValues(values, itemType.PropertyType));
-                }
-            }
         }
 
         private ICollection<ItemMetadata> GetItemsToDownload(CompositionType compType)
@@ -94,5 +93,14 @@ namespace Client.Wpf.Communications
 
             return items;
         }
+    }
+
+    public class VolumeTestManager
+    {
+        public VolumeTestManager(EvcVerificationViewModel verificationTest, DeviceSessionManager deviceManager)
+        {
+
+        }
+
     }
 }

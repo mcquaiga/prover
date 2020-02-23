@@ -41,18 +41,19 @@
     <PackageReference Include="Hocon.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.2" />
     <PackageReference Include="MvvmDialogs" Version="7.0.0" />
     <PackageReference Include="ReactiveUI" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.1.23" />
     <PackageReference Include="Splat" Version="9.3.11" />
+    <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -159,6 +160,7 @@
 
   <ItemGroup>
     <Folder Include="Modules\UnionGas\Exporter\" />
+    <Folder Include="Not Used\" />
     <Folder Include="ViewModels\Certificates\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>

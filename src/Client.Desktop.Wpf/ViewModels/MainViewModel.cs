@@ -11,7 +11,7 @@ using MvvmDialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.ViewModels
+namespace Client.Desktop.Wpf.ViewModels
 {
     public interface IScreenManager : IScreen
     {

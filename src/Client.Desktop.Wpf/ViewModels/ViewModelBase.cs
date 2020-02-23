@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Client.Wpf.ViewModels
+namespace Client.Desktop.Wpf.ViewModels
 {
     public abstract class ViewModelBase : ReactiveObject
     {

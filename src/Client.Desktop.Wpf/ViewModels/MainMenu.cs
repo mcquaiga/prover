@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Reactive;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.ViewModels.Clients;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using Client.Wpf.Screens;
-using Client.Wpf.ViewModels.Clients;
-using Client.Wpf.ViewModels.Verifications;
 using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 
-namespace Client.Wpf.ViewModels
+namespace Client.Desktop.Wpf.ViewModels
 {
     internal static class MainMenuItems
     {

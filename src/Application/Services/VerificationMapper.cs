@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Application.Config;
+using Application.Extensions;
 using Application.ViewModels;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Services;
@@ -31,13 +32,13 @@ namespace Application.Services
             {
                 var tp = _mapper.Map<VerificationTestPointViewModel, VerificationTestPoint>(vm);
 
-                tp.AddTests(_mapper.Map<PressureCorrectionTest>(vm.Pressure));
-                tp.AddTests(_mapper.Map<TemperatureCorrectionTest>(vm.Temperature));
-                tp.AddTests(_mapper.Map<SuperCorrectionTest>(vm.SuperFactor));
+                tp.AddTests(_mapper.Map<PressureCorrectionTest>(vm.GetPressureTest()));
+                tp.AddTests(_mapper.Map<TemperatureCorrectionTest>(vm.GetTemperatureTest()));
+                tp.AddTests(_mapper.Map<SuperCorrectionTest>(vm.GetSuperFactorTest()));
 
-                if (vm.Volume != null)
+                if (vm.GetVolumeTest() != null)
                 {
-                    var volumeTests = vm.Volume?.AllTests().Select(v =>
+                    var volumeTests = vm.GetVolumeTest()?.AllTests().Select(v =>
                     {
                         var destinationType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps()
                             .First(map => map.SourceType == v.GetType()).DestinationType;
@@ -88,7 +89,7 @@ namespace Application.Services
                     if (point.HasVolume())
                     {
                         VolumeViewModelFactory.Create(test.Device, evcViewModel, pointViewModel);
-                        var volumeTests = pointViewModel.Volume.AllTests().Select(vm =>
+                        var volumeTests = pointViewModel.GetVolumeTest().AllTests().Select(vm =>
                         {
                             var sourceType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps()
                                 .First(map => map.DestinationType == vm.GetType()).SourceType;

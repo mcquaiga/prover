@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Application.Extensions;
 using Application.Services;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Volume;
@@ -33,7 +35,7 @@ namespace Application.ViewModels.Services
         {
             var viewModel = evcTest.ToViewModel();
             _testDefinitions
-                .ForEach(td => 
+                .ForEach(td =>
                     BuildTestPointViewModel(evcTest.Device, viewModel, td)
                 );
 
@@ -68,8 +70,9 @@ namespace Application.ViewModels.Services
             if (compType == CompositionType.PTZ)
 
                 tpViewModel.TestsCollection.Add(
-                    MakeSuperFactorViewModel(device.CreateItemGroup<SuperFactorItems>(), tpViewModel.Temperature,
-                        tpViewModel.Pressure)
+                    MakeSuperFactorViewModel(device.CreateItemGroup<SuperFactorItems>(),
+                        tpViewModel.GetTemperatureTest(),
+                        tpViewModel.GetPressureTest())
                 );
 
 
@@ -102,30 +105,10 @@ namespace Application.ViewModels.Services
 
             return null;
         }
-
-        private void MakeVolumeViewModel(DeviceInstance device, EvcVerificationViewModel viewModel,
-            VerificationTestPointViewModel testPoint)
-        {
-            //var uncorModel = new UncorrectedVolumeTestViewModel(viewModel.DriveType,
-            //    device.CreateItemGroup<VolumeItems>(), device.CreateItemGroup<VolumeItems>());
-
-            //var vm = new VolumeViewModel(device.CreateItemGroup<VolumeItems>(), device.CreateItemGroup<VolumeItems>())
-            //{
-            //    AppliedInput = 0,
-            //    Uncorrected = uncorModel,
-            //    Corrected = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, testPoint,
-            //        device.CreateItemGroup<VolumeItems>(), device.CreateItemGroup<VolumeItems>())
-            //};
-
-            //return vm;
-        }
     }
 
     public class VolumeViewModelFactory
     {
-        public VolumeItems StartVolumeItems { get; }
-        public VolumeItems EndVolumeItems { get; }
-
         //private static readonly Dictionary<VolumeInputType, Func<>> _volumeInputTypeBuilders =
         //    new Dictionary<VolumeInputType, Func<VolumeInputBuilder>>
         //    {
@@ -139,6 +122,11 @@ namespace Application.ViewModels.Services
             EndVolumeItems = endVolumeItems;
         }
 
+        public VolumeItems StartVolumeItems { get; }
+        public VolumeItems EndVolumeItems { get; }
+
+        protected static CalculationsViewModel SharedCalculator;
+
         public static void Create(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
@@ -146,6 +134,8 @@ namespace Application.ViewModels.Services
             var endVolumeItems = device.CreateItemGroup<VolumeItems>();
 
             VolumeViewModelFactory factory = null;
+
+            SharedCalculator = GetSharedCalculator(device, testPoint);
 
             switch (viewModel.DriveType.InputType)
             {
@@ -163,15 +153,31 @@ namespace Application.ViewModels.Services
             factory.CreateSpecificTests(device, viewModel, testPoint);
         }
 
+        protected static CalculationsViewModel GetSharedCalculator(DeviceInstance device, VerificationTestPointViewModel testPoint)
+        {
+            switch (device.ItemGroup<SiteInformationItems>().CompositionType)
+            {
+                case CompositionType.T:
+                    return new CalculationsViewModel(testPoint.GetTemperatureTest());
+                case CompositionType.P:
+                    return new CalculationsViewModel(testPoint.GetPressureTest());
+                case CompositionType.PTZ:
+                    return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(), testPoint.GetSuperFactorTest());
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+        }
+
         protected virtual void CreateCorrectedUncorrectedDefault(DeviceInstance device,
             EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
             var uncorModel = new UncorrectedVolumeTestViewModel(viewModel.DriveType, StartVolumeItems, EndVolumeItems);
-            var corModel = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, testPoint,
+            var corModel = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, SharedCalculator,
                 StartVolumeItems, EndVolumeItems);
-            testPoint.Volume.Corrected = corModel;
-            testPoint.Volume.Uncorrected = uncorModel;
+            testPoint.GetVolumeTest().Corrected = corModel;
+            testPoint.GetVolumeTest().Uncorrected = uncorModel;
         }
 
         protected virtual void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
@@ -202,29 +208,29 @@ namespace Application.ViewModels.Services
 
     internal class MechanicalVolumeViewModelFactory : VolumeViewModelFactory
     {
+        public MechanicalVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
+            startVolumeItems, endVolumeItems)
+        {
+        }
+
         protected override void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
             base.CreateSpecificTests(device, viewModel, testPoint);
-        }
-
-        public MechanicalVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
-            startVolumeItems, endVolumeItems)
-        {
         }
     }
 
     internal class PulseInputVolumeViewModelFactory : VolumeViewModelFactory
     {
+        public PulseInputVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
+            startVolumeItems, endVolumeItems)
+        {
+        }
+
         protected override void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
             base.CreateSpecificTests(device, viewModel, testPoint);
-        }
-
-        public PulseInputVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
-            startVolumeItems, endVolumeItems)
-        {
         }
     }
 }

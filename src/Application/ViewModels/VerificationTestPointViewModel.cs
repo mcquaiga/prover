@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Application.Extensions;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Volume;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using DynamicData;
 using ReactiveUI.Fody.Helpers;
 
@@ -13,7 +16,6 @@ namespace Application.ViewModels
     {
 
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
-        private ICollection<VerificationViewModel> _testsCollection = new List<VerificationViewModel>();
 
         public IObservable<IChangeSet<ItemValue, int>> Connect() => _items.Connect();
         public VerificationTestPointViewModel()
@@ -22,23 +24,21 @@ namespace Application.ViewModels
 
         [Reactive] public int TestNumber { get; set; }
 
-        public ICollection<VerificationViewModel> TestsCollection
-        {
-            get => _testsCollection;
-            set => _testsCollection = value;
-        }
+        public ICollection<VerificationViewModel> TestsCollection { get; set; } = new List<VerificationViewModel>();
 
-        public PressureFactorViewModel Pressure => TestsCollection.OfType<PressureFactorViewModel>().FirstOrDefault();
+        public PressureFactorViewModel Pressure => this.GetPressureTest();
 
-        public TemperatureFactorViewModel Temperature => TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
+        public TemperatureFactorViewModel Temperature => this.GetTemperatureTest();
 
-        public SuperFactorViewModel SuperFactor => TestsCollection.OfType<SuperFactorViewModel>().FirstOrDefault();
+        public SuperFactorViewModel SuperFactor => this.GetSuperFactorTest();
 
-        public VolumeViewModel Volume => TestsCollection.OfType<VolumeViewModel>().FirstOrDefault();
+        public VolumeViewModelBase Volume => this.GetVolumeTest();
 
         public void UpdateItemValues(ICollection<ItemValue> itemValues)
         {
             _items.Edit(update => update.AddOrUpdate(itemValues));
+
+          
         }
 
         public void AddTest(VerificationViewModel test)

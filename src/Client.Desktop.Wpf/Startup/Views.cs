@@ -1,6 +1,7 @@
-﻿using Client.Wpf.Extensions;
+﻿using Client.Desktop.Wpf.ViewModels;
+using Client.Wpf.Controls;
+using Client.Wpf.Extensions;
 using Client.Wpf.Screens.Dialogs;
-using Client.Wpf.ViewModels;
 using Client.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +20,7 @@ namespace Client.Wpf.Startup
             resolver.InitializeSplat();
             resolver.InitializeReactiveUI();
 
+            services.AddSingleton<ICreatesObservableForProperty, CustomPropertyResolver>();
             services.AddSingleton<IWindowFactory, WindowFactory>();
 
             //services.AddSingleton(c => new MainViewModel(c, c.GetRequiredService<IDialogService>()));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Application.Extensions;
 using Application.ViewModels.Corrections;
 using Application.ViewModels.Volume;
 using Devices.Core.Interfaces;
@@ -49,7 +50,7 @@ namespace Application.ViewModels
         //public VolumeItems Volume { get; protected set; }
 
 
-        public VolumeViewModel VolumeTest => Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
+        public VolumeViewModelBase VolumeTest => this.GetVolumeTest();
 
         public void Initialize()
         {

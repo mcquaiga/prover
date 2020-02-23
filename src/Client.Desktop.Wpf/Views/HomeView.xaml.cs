@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Disposables;
-using Client.Wpf.ViewModels;
+using Client.Desktop.Wpf.ViewModels;
 using ReactiveUI;
 
 namespace Client.Wpf.Views

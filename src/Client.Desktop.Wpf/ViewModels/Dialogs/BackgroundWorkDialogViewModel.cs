@@ -7,7 +7,7 @@ using Client.Wpf.Screens.Dialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.ViewModels.Dialogs
+namespace Client.Desktop.Wpf.ViewModels.Dialogs
 {
     public class BackgroundWorkDialogViewModel : DialogViewModel
     {

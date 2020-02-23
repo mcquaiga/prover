@@ -1,7 +1,8 @@
-﻿using Application.ViewModels.Volume;
+﻿using System.Reactive.Disposables;
+using Application.ViewModels.Volume;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Verifications.Details.Volume
+namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
 {
     /// <summary>
     /// Interaction logic for UncorrectedVolumeView.xaml
@@ -11,6 +12,20 @@ namespace Client.Wpf.Views.Verifications.Details.Volume
         public CorrectedVolumeView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                this.OneWayBind(ViewModel, vm => vm.PercentError, v => v.PercentErrorControl.DisplayValue).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Verified, v => v.PercentErrorControl.Passed).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.StartValues.CorrectedReading, v => v.StartReadingControl.Value).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.EndValues.CorrectedReading, v => v.EndReadingControl.Value).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.ExpectedValueControl.Value).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
+
+
+            });
         }
     }
 }

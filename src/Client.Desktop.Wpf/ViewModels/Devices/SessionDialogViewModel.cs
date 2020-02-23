@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.ViewModels.Devices
+namespace Client.Desktop.Wpf.ViewModels.Devices
 {
     public class SessionDialogViewModel : DialogViewModel
     {

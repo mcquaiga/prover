@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Client.Desktop.Wpf.ViewModels;
 using Client.Wpf.Screens;
 using Client.Wpf.Startup;
-using Client.Wpf.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

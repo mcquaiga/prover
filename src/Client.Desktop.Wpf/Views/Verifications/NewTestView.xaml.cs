@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Reactive.Disposables;
-using Client.Wpf.ViewModels.Verifications;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Verifications
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     /// Interaction logic for VerificationTest.xaml

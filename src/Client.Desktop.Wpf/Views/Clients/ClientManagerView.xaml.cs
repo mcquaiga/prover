@@ -1,4 +1,4 @@
-﻿using Client.Wpf.ViewModels.Clients;
+﻿using Client.Desktop.Wpf.ViewModels.Clients;
 using ReactiveUI;
 
 namespace Client.Wpf.Views.Clients

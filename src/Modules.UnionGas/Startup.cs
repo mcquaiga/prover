@@ -1,9 +1,8 @@
 ﻿using System.Reactive;
+using Client.Desktop.Wpf.ViewModels;
 using Client.Wpf.Extensions;
 using Client.Wpf.Screens;
 using Client.Wpf.Startup;
-using Client.Wpf.ViewModels;
-using Client.Wpf.ViewModels.Clients;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

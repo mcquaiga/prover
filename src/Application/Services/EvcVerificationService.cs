@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using Application.Extensions;
 using Application.ViewModels;
 using Devices.Core.Interfaces;
 using Domain.EvcVerifications;
@@ -21,7 +22,6 @@ namespace Application.Services
             new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
 
         private CompositeDisposable _cleanup;
-
 
         public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
         {
@@ -103,19 +103,19 @@ namespace Application.Services
         {
             var builder = _evcBuilder.TestPointFactory().CreateNew(level);
 
-            if (correctionTest.Temperature != null)
-                builder.BuildTemperatureTest(correctionTest.Temperature.Items, correctionTest.Temperature.Gauge);
+            if (correctionTest.GetTemperatureTest() != null)
+                builder.BuildTemperatureTest(correctionTest.GetTemperatureTest().Items, correctionTest.GetTemperatureTest().Gauge);
 
-            if (correctionTest.Pressure != null)
-                builder.BuildPressureTest(correctionTest.Pressure.Items, correctionTest.Pressure.Gauge,
-                    correctionTest.Pressure.AtmosphericGauge);
+            if (correctionTest.GetPressureTest() != null)
+                builder.BuildPressureTest(correctionTest.GetPressureTest().Items, correctionTest.GetPressureTest().Gauge,
+                    correctionTest.GetPressureTest().AtmosphericGauge);
 
-            if (correctionTest.SuperFactor != null)
-                builder.BuildSuperFactorTest(correctionTest.SuperFactor.Items);
+            if (correctionTest.GetSuperFactorTest() != null)
+                builder.BuildSuperFactorTest(correctionTest.GetSuperFactorTest().Items);
 
-            if (correctionTest.Volume != null)
-                builder.BuildVolumeTest(correctionTest.Volume.StartValues, correctionTest.Volume.EndValues,
-                    correctionTest.Volume.AppliedInput);
+            if (correctionTest.GetVolumeTest() != null)
+                builder.BuildVolumeTest(correctionTest.GetVolumeTest().StartValues, correctionTest.GetVolumeTest().EndValues,
+                    correctionTest.GetVolumeTest().AppliedInput);
 
             builder.Commit();
         }

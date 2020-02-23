@@ -1,5 +1,5 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Wpf.Views.Verifications.Details.Volume.CorrectedVolumeView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.Volume.CorrectedVolumeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Client.Wpf.Controls"
@@ -14,7 +14,7 @@
     <StackPanel VerticalAlignment="Top">
         <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}" Text="Corrected" />
         <controls:PercentageControlNew
-            x:Name=""
+            x:Name="PercentErrorControl"
             HorizontalAlignment="Center"
             DisplayValue="{Binding Volume.CorrectedPercentError}"
             Passed="{Binding Volume.CorrectedHasPassed}" />

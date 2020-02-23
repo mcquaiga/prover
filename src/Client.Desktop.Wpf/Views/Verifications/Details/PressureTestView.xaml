@@ -1,5 +1,5 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Wpf.Views.Verifications.Details.PressureTestView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.PressureTestView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Client.Wpf.Controls"
@@ -30,9 +30,7 @@
         <controls:PercentageControlNew
             x:Name="PercentError"
             Grid.Row="1"
-            HorizontalAlignment="Center"
-            DisplayValue="{Binding TestRun.PercentError}"
-            Passed="{Binding TestRun.HasPassed}" />
+            HorizontalAlignment="Center" />
         <StackPanel Grid.Row="2" Margin="4">
             <UniformGrid
                 x:Name="GaugeTransducer"

@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:screens="clr-namespace:Client.Wpf.Screens"
-    xmlns:viewModels="clr-namespace:Client.Wpf.ViewModels.Devices"
+    xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels.Devices"
     x:TypeArguments="viewModels:SessionDialogViewModel"
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

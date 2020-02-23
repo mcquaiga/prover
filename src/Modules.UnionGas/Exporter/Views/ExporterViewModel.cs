@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using Application.Services;
-using Client.Wpf.ViewModels;
+using Client.Desktop.Wpf.ViewModels;
 using Domain.EvcVerifications;
 using ReactiveUI;
 using Shared.Interfaces;
