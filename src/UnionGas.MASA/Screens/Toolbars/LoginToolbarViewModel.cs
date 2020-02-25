@@ -6,7 +6,7 @@ using UnionGas.MASA.DCRWebService;
 
 namespace UnionGas.MASA.Screens.Toolbars
 {
-    public class LoginToolbarViewModel : ViewModelBase, IToolbarItem, IHandle<UserLoggedInEvent>
+    public class LoginToolbarViewModel : ViewModelBase, IToolbarItem, IHandle<UserLoggedInEvent>, IDisplayOnStartup
     {
         private const string LoginViewContext = "Login";
         private const string LoggedInViewContext = "LoggedIn";
@@ -27,12 +27,12 @@ namespace UnionGas.MASA.Screens.Toolbars
         public async Task LoginButton()
         {
             ChangeContext(WaitingForLogInViewContext);
-            var success = await _loginService.GetLoginDetails();                         
+            await _loginService.GetLoginDetails();                         
         }
 
         public async Task LogoutButton()
         {
-            await Task.Run(() => _loginService.Logout());     
+            await _loginService.Logout();     
         }
 
         private void ChangeContext(string contextName)
@@ -50,6 +50,11 @@ namespace UnionGas.MASA.Screens.Toolbars
 
             if (message.LoginStatus == UserLoggedInEvent.LogInState.LoggedOut)
                 ChangeContext(LoginViewContext);
+        }
+
+        public async Task Show()
+        {
+            await _loginService.GetLoginDetails();
         }
     }
 }

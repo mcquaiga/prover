@@ -7,7 +7,7 @@ namespace Prover.Core.Login
     {
         Task<bool> GetLoginDetails();
         Task<bool> Login(string username = null, string password = null);
-        bool Logout();
+        Task<bool> Logout();
         T User { get; }
         bool IsLoggedIn { get; }
     }
