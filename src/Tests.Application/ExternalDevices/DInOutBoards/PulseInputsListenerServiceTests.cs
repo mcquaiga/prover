@@ -7,6 +7,7 @@ using DynamicData;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Prover.Application.Hardware;
 using Prover.Application.Services;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
@@ -73,7 +74,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
                 .Bind(out var pulses)
                 .Subscribe();
 
-            service.StartListening(_pulseOutputItems);
+            service.StartListening();
 
             /*            
              *   off      on        off        on         off         on
@@ -107,6 +108,86 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             Assert.IsTrue(pulses[0].TotalPulses == 3);
         }
 
+        [TestMethod] 
+        public void RandomIntervalSimulatorInputChannelTest()
+        {
+            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, _schedulers.TaskPool);
+
+            var value = 0;
+            var changes = 0;
+            var pulses = 0;
+
+            simulator.GetRandomSimulator()
+                //.Do(v => Debug.WriteLine($"Pulse Received {v}"))
+                .ObserveOn(_schedulers.Dispatcher)
+                .Subscribe(v =>
+                {
+                    value = v;
+                    changes++;
+                    if (value != simulator.OffValue)
+                    {
+                        pulses++;
+                        Debug.WriteLine($"Total = {pulses}");
+                    }
+
+                    Assert.IsTrue(simulator.GetValue() == value);
+                });
+
+            //_schedulers.TaskPool.AdvanceBySeconds(5);
+            _schedulers.TaskPool.Start();
+            
+            do
+            {
+                _schedulers.Dispatcher.AdvanceByMilliSeconds(60);
+            } while (pulses < 10);
+            Assert.IsTrue(changes > 0);
+            Assert.IsTrue(pulses == 10);
+        }
+
+        [TestMethod] 
+        public void ConstantIntervalSimulatorInputChannelTest()
+        {
+            var myThread = _schedulers.TaskPool;
+
+            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, myThread);
+
+            var value = 0;
+            var changes = 0;
+            var pulses = 0;
+
+            simulator.GetRandomSimulator(1000)
+                //.Do(v => Debug.WriteLine($"Pulse Received {v}")
+                .ObserveOn(_schedulers.Dispatcher)
+                //.SubscribeOn(_schedulers.TaskPool)
+                .Subscribe(v =>
+                {
+                    value = v;
+                    changes++;
+                    if (value != simulator.OffValue)
+                    {
+                        pulses++;
+                        Debug.WriteLine($"Total = {pulses}");
+                    }
+
+                    Assert.IsTrue(simulator.GetValue() == value);
+                });
+
+            //_schedulers.TaskPool.AdvanceBySeconds(5);
+            myThread.Start();
+            do
+            {
+                _schedulers.Dispatcher.AdvanceByMilliSeconds(60);
+            } while (pulses < 10);
+            Assert.IsTrue(changes > 0);
+            Assert.IsTrue(pulses == 10);
+        }
+
+        [TestMethod]
+        public void TwoInputChannelsStartedByOutputChannel()
+        {
+
+        }
+
         [TestMethod]
         public void ListenToTwoPulseOutChannels()
         {
@@ -125,7 +206,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
                 .Bind(out var pulses)
                 .Subscribe();
 
-            service.StartListening(_pulseOutputItems);
+            service.StartListening();
             Assert.IsTrue(pulses.Count == 2);
             /*            
              *   off      on        off        on         off         on
@@ -140,11 +221,6 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
 
             Assert.IsTrue(pulses[0].TotalPulses == expected);
             Assert.IsTrue(pulses[1].TotalPulses == expected);
-        }
-
-        [TestMethod]
-        public void PulseInputsListenerServiceTest()
-        {
         }
 
 

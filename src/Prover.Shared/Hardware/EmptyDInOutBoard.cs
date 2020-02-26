@@ -19,7 +19,6 @@ namespace Prover.Shared.Hardware
             return 0;
         }
 
-       
         public void OutputValue(short value)
         {
             _logger.LogDebug($"EmptyInOutBoard - Output value {value}");

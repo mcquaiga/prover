@@ -6,9 +6,10 @@ using AutoMapper.Configuration;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
 using Devices.Core.Interfaces;
+using Devices.Core.Items.ItemGroups;
+using DynamicData;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Services;
-using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
@@ -18,7 +19,8 @@ namespace Client.Desktop.Wpf.Communications
     public interface IVolumeTestManagerFactory
     {
         //VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
-        VolumeTestManager CreateInstance(DeviceInstance deviceManagerDevice, VolumeViewModelBase volumeTest, string tachPortName = null);
+        VolumeTestManager CreateInstance(DeviceInstance deviceManagerDevice, VolumeViewModelBase volumeTest,
+            string tachPortName = null);
     }
 
     public class VolumeTestManagerFactory : IVolumeTestManagerFactory
@@ -29,15 +31,25 @@ namespace Client.Desktop.Wpf.Communications
         private readonly DialogServiceManager _dialogService;
 
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IOutputChannelFactory _outputChannelFactory;
+        private readonly Func<OutputChannelType, IOutputChannel> _outputChannelFactory;
+        private readonly PulseInputsListenerService _pulseListenerService;
 
-        private PulseInputsListenerService _pulseListenerService;
+        public VolumeTestManagerFactory(
+            ILoggerFactory loggerFactory,
+            DialogServiceManager dialogService,
+            DeviceSessionManager deviceManager,
+            PulseInputsListenerService pulseListenerService,
+            IOutputChannelFactory outputChannelFactory)
+            : this(loggerFactory, dialogService, deviceManager, pulseListenerService,
+                outputChannelFactory.CreateOutputChannel)
+        {
+        }
 
         public VolumeTestManagerFactory(ILoggerFactory loggerFactory,
             DialogServiceManager dialogService,
             DeviceSessionManager deviceManager,
             PulseInputsListenerService pulseListenerService,
-            IOutputChannelFactory outputChannelFactory)
+            Func<OutputChannelType, IOutputChannel> outputChannelFactory)
         {
             _loggerFactory = loggerFactory;
             _dialogService = dialogService;
@@ -46,49 +58,58 @@ namespace Client.Desktop.Wpf.Communications
             _deviceManager = deviceManager;
         }
 
-        public VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest, string tachPortName = null)
+        public VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest,
+            string tachPortName = null)
         {
             var logger = _loggerFactory.CreateLogger(typeof(VolumeTestManager));
+            var tachometerService = GetTachometerService(tachPortName, device);
+            var pulseInputListener = GetPulseOutputListener(device);
+            var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
 
-            var tachometerService = GetTachometerService(tachPortName);
-
-            return new VolumeTestManager(logger, _dialogService, _deviceManager, tachometerService, _pulseListenerService,
-                volumeTest);
+            return new VolumeTestManager(logger, _dialogService, _deviceManager, tachometerService,
+                pulseInputListener, volumeTest, motorControl);
         }
 
-        private ITachometerService GetTachometerService(string portName)
+        private PulseInputsListenerService GetPulseOutputListener(DeviceInstance device)
         {
-            if (string.IsNullOrEmpty(portName))
-            {
-                return new NullTachometerService();
-            }
+            _pulseListenerService.Initialize(device.ItemGroup<PulseOutputItems>());
+            return _pulseListenerService;
+        }
 
-            var outputChannel = _outputChannelFactory.CreateOutputChannel(OutputChannelType.Tachometer);
-            return new TachometerService(_loggerFactory.CreateLogger(nameof(TachometerService)), portName, outputChannel);
+        private ITachometerService GetTachometerService(string portName, DeviceInstance device)
+        {
+            if (string.IsNullOrEmpty(portName)) return new NullTachometerService();
+
+            var outputChannel = _outputChannelFactory.Invoke(OutputChannelType.Tachometer);
+            return new TachometerService(_loggerFactory.CreateLogger(nameof(TachometerService)), portName,
+                outputChannel);
         }
     }
 
 
     public class VolumeTestManager : ReactiveObject
     {
-        private readonly ILogger _logger;
         private readonly DialogServiceManager _dialogService;
+        private readonly ILogger _logger;
+        private readonly IOutputChannel _motorControl;
         protected readonly PulseInputsListenerService PulseListenerService;
         protected readonly ITachometerService TachometerService;
         private CancellationTokenSource _cancellationToken;
 
         protected IObservable<VolumeTestStatusMessage> TestStatusObservable;
 
-        internal VolumeTestManager(
-            ILogger logger,
+        internal VolumeTestManager(ILogger logger,
             DialogServiceManager dialogService,
             DeviceSessionManager deviceManager,
             ITachometerService tachometerService,
             PulseInputsListenerService pulseListenerService,
-            VolumeViewModelBase volumeTest            )
+            VolumeViewModelBase volumeTest, 
+            IOutputChannel motorControl)
         {
             _logger = logger;
             _dialogService = dialogService;
+            _motorControl = motorControl;
+
             TachometerService = tachometerService;
             PulseListenerService = pulseListenerService;
             VolumeTest = volumeTest;
@@ -106,13 +127,14 @@ namespace Client.Desktop.Wpf.Communications
         {
             _cancellationToken = new CancellationTokenSource();
 
-            SetupIODevices();
-
             var startValues = await DeviceManager.GetItemValues();
             VolumeTest.UpdateStartValues(startValues);
 
             DisplayDialog();
-
+            var pulses = PulseListenerService.StartListening().Connect()
+                .Transform(p => );
+            _motorControl.SignalStart();
+            
             await Task.Delay(TimeSpan.FromSeconds(5));
         }
 
@@ -129,15 +151,10 @@ namespace Client.Desktop.Wpf.Communications
             var dialog = new VolumeTestDialogViewModel(TestStatusObservable, _cancellationToken);
             _dialogService.ShowDialog.Execute(dialog);
         }
-
-        private void SetupIODevices()
-        {
-            //Setup DAQ board
-            //Setup Tachometer
-        }
     }
 
     public class VolumeTestStatusMessage
     {
+        public VolumeTestStatusMessage()
     }
 }

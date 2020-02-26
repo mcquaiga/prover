@@ -22,25 +22,34 @@ namespace Prover.Application.Services
     {
         private const double CheckIntervalTime = 31.25;
         private readonly IScheduler _background;
-        private readonly IInputChannelFactory _channelFactory;
+        private readonly Func<PulseOutputChannel, IInputChannel> _channelFactoryFunc;
+        private readonly IConnectableObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> _listeners;
         private CancellationTokenSource _cancellation;
-        private CompositeDisposable _cleanup = new CompositeDisposable();
+        private CompositeDisposable _cleanup;
         private ICollection<PulseChannelListener> _inputChannels = new List<PulseChannelListener>();
         private ILogger _logger;
-        private IConnectableObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> _listeners;
+
+        private PulseInputsListenerService(ILoggerFactory loggerFactory, IScheduler backgroundThread = null)
+        {
+            _logger = loggerFactory?.CreateLogger(typeof(PulseInputsListenerService)) ?? NullLogger.Instance;
+            _background = backgroundThread ?? TaskPoolScheduler.Default;
+
+
+            _listeners = PulseCheckerObservable().Publish();
+            PulseListener = _listeners.AsObservableCache();
+
+            _cleanup = new CompositeDisposable(PulseListener);
+        }
 
         public PulseInputsListenerService(ILoggerFactory loggerFactory, IInputChannelFactory channelFactory,
             IScheduler backgroundThread)
-        {
-            _channelFactory = channelFactory;
-            _logger = loggerFactory?.CreateLogger(typeof(PulseInputsListenerService)) ?? NullLogger.Instance;
+            : this(loggerFactory, backgroundThread) => _channelFactoryFunc = channelFactory.CreateInputChannel;
 
-            _background = backgroundThread;
+        public PulseInputsListenerService(ILoggerFactory loggerFactory,
+            Func<PulseOutputChannel, IInputChannel> channelFactoryFunc, IScheduler backgroundThread)
+            : this(loggerFactory, backgroundThread) => _channelFactoryFunc = channelFactoryFunc;
 
-            _listeners = PulseCheckerObservable().Publish();
-
-            PulseListener = _listeners.AsObservableCache();
-        }
+        public IObservableCache<PulseChannelListener, PulseOutputChannel> PulseListener { get; }
 
         public void Dispose()
         {
@@ -48,22 +57,26 @@ namespace Prover.Application.Services
             _cleanup?.Dispose();
         }
 
-        public IObservableCache<PulseChannelListener, PulseOutputChannel> StartListening(PulseOutputItems pulseOutputItems)
+        public void Initialize(PulseOutputItems pulseOutputItems)
         {
             if (pulseOutputItems?.Channels == null || pulseOutputItems.Channels.Count == 0)
                 throw new NullReferenceException(nameof(pulseOutputItems));
 
             _inputChannels = pulseOutputItems.Channels
                 .Where(p => p.Units == PulseOutputUnitType.CorVol || p.Units == PulseOutputUnitType.UncVol)
-                .Select(pout => new PulseChannelListener(pout, _channelFactory.CreateInputChannel(pout.Name)))
+                .Select(pout => new PulseChannelListener(pout, _channelFactoryFunc.Invoke(pout.Name)))
                 .ToList();
+        }
 
-            _cleanup = new CompositeDisposable(_listeners.Connect());
+        public IObservableCache<PulseChannelListener, PulseOutputChannel> StartListening()
+        {
+            if (!_inputChannels.Any())
+                throw new Exception("Pulse input channels haven't been configured. Call Initialize first.");
+
+            _cleanup = new CompositeDisposable(_cleanup, _listeners.Connect());
 
             return PulseListener;
         }
-
-        public IObservableCache<PulseChannelListener, PulseOutputChannel> PulseListener { get; set; }
 
         private IObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> PulseCheckerObservable()
         {
@@ -72,17 +85,16 @@ namespace Prover.Application.Services
             return ObservableChangeSet.Create<PulseChannelListener, PulseOutputChannel>(cache =>
             {
                 var recurring = _inputChannels.ForEach(i =>
+                {
+                    cache.AddOrUpdate(i);
+                    _background.ScheduleRecurringAction(TimeSpan.FromMilliseconds(CheckIntervalTime), () =>
                     {
-                        cache.AddOrUpdate(i);
-                        _background.ScheduleRecurringAction(TimeSpan.FromMilliseconds(CheckIntervalTime), () =>
-                        {
-                            var newPulse = i.CheckForPulse();
-                            if (newPulse)
-                                cache.AddOrUpdate(i);
-                        });
+                        var newPulse = i.CheckForPulse();
+                        if (newPulse)
+                            cache.AddOrUpdate(i);
                     });
-                       
-                        
+                });
+
 
                 return new CompositeDisposable(recurring);
             }, listener => listener.Name);
@@ -105,8 +117,7 @@ namespace Prover.Application.Services
         // If we have more than one subscriber, and the subscribers are known, 
         // it is recommended you look into the Reactive Extension method Publish().
 
-        public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel
-        )
+        public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel)
         {
             Items = items;
             Channel = channel;
@@ -169,7 +180,6 @@ namespace Prover.Application.Services
 
                 if (_scheduler.ThreadPool is ThreadPoolScheduler poolScheduler)
                 {
-                 
                 }
                 else
                 {

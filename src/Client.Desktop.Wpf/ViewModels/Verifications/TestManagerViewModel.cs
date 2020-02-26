@@ -62,7 +62,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
     //    }
     //}
 
-    public class TestManagerViewModel : ReactiveObject, IRoutableViewModel, ITestManagerViewModelFactory
+    public partial class TestManagerViewModel : ReactiveObject, IRoutableViewModel
     {
         private readonly DeviceSessionManager _deviceManager;
         private readonly DialogServiceManager _dialogService;
@@ -172,6 +172,11 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             return items;
         }
 
+       
+    }
+
+    public partial class TestManagerViewModel : ITestManagerViewModelFactory
+    {
         public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate, string tachPortName)
         {
             await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
