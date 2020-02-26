@@ -60,14 +60,17 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
 
 
         protected PulseOutputChannelHoneywell CreateChannel(ICollection<ItemValue> values, PulseOutputChannel channel,
-            int? countItemNumber, int scalingItemNumber, int unitsItemNumber) => new PulseOutputChannelHoneywell
+            int? countItemNumber, int scalingItemNumber, int unitsItemNumber)
         {
-            Name = channel,
-            Count = countItemNumber != null ? values.GetItemValue<int>(countItemNumber.Value) : 0,
-            Scaling = values.GetItemValue<decimal>(scalingItemNumber),
-            Units = (PulseOutputUnitType) Enum.Parse(typeof(PulseOutputUnitType),
-                values.GetItemValue<string>(unitsItemNumber))
-        };
+            return new PulseOutputChannelHoneywell
+            {
+                Name = channel,
+                Count = countItemNumber.HasValue ? values.GetItemValueAsInt(countItemNumber.Value) : 0,
+                Scaling = values.GetItemValueAsDecimal(scalingItemNumber),
+                Units = (PulseOutputUnitType) Enum.Parse(typeof(PulseOutputUnitType),
+                    values.GetItem(unitsItemNumber).GetDescription())
+            };
+        }
 
         #region Nested type: PulseOutputChannelHoneywell
 

@@ -1,44 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Prover.Domain.EvcVerifications.Builders;
 using Prover.Domain.EvcVerifications.Verifications;
-using Prover.Domain.EvcVerifications.Verifications.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
 namespace Prover.Domain.EvcVerifications
 {
-    public static class EvcVerificationExtensions
-    {
-        public static T GetCorrectionTest<T>(this VerificationTestPoint vtp)
-            where T : VerificationTestEntity<ItemGroup> => vtp.GetTest<T>();
-
-        public static T GetVerificationTest<T>(this VerificationTestPoint vtp)
-            where T : VerificationEntity => vtp.GetTest<T>();
-
-        public static VerificationTestPoint GetVolumeTest(this EvcVerificationTest evcVerification)
-        {
-            return evcVerification.Tests
-                .Where(t => t.GetType() == typeof(VerificationTestPoint))
-                .Select(t => (VerificationTestPoint) t)
-                .FirstOrDefault(ct => ct.GetTest<CorrectedVolumeTestRun>() != null);
-        }
-
-        public static bool HasVolume(this VerificationTestPoint point)
-        {
-            return point.Tests.Any(t => t.GetType() == typeof(CorrectedVolumeTestRun));
-        }
-
-        public static void UpdateValues(this VerificationTestPoint vtp, IEnumerable<ItemValue> beforeValues,
-            IEnumerable<ItemValue> afterValues, decimal appliedInput)
-        {
-        }
-    }
-
-
     /// <summary>
     ///     Defines the <see cref="EvcVerificationTest" />
     /// </summary>
@@ -51,25 +18,16 @@ namespace Prover.Domain.EvcVerifications
         public EvcVerificationTest(DeviceInstance device)
         {
             Device = device;
-            DeviceType = device.DeviceType;
             DriveType = VolumeInputTypes.Create(Device);
         }
 
-        /// <summary>
-        ///     Gets or sets the ArchivedDateTime
-        /// </summary>
         public DateTime? ArchivedDateTime { get; set; } = null;
 
-        /// <summary>
-        ///     Gets or sets the TestDateTime
-        /// </summary>
         public DateTime TestDateTime { get; set; } = DateTime.Now;
 
         public DateTime? ExportedDateTime { get; set; } = null;
 
         public DeviceInstance Device { get; protected set; }
-
-        public DeviceType DeviceType { get; protected set; }
 
         public IVolumeInputType DriveType { get; set; }
 

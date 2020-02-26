@@ -2,7 +2,7 @@
 using Moq;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
-namespace Tests.Domain.Models.EvcVerifications.CorrectionTests
+namespace Tests.Application.Models.EvcVerifications.CorrectionTests
 {
     [TestClass()]
     public class VolumeTestRunFactoryTests
@@ -14,10 +14,5 @@ namespace Tests.Domain.Models.EvcVerifications.CorrectionTests
       
         }
 
-        [TestMethod()]
-        public void UpdateTest()
-        {
-            Assert.Fail();
-        }
     }
 }

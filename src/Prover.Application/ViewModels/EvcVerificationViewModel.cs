@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
@@ -18,7 +19,6 @@ namespace Prover.Application.ViewModels
         }
 
         [Reactive] public DeviceInstance Device { get; set; }
-        [Reactive] public DeviceType DeviceType { get; set; }
 
         [Reactive] public CompositionType CompositionType { get; set; }
 
@@ -38,7 +38,7 @@ namespace Prover.Application.ViewModels
 
         public DeviceInfoViewModel DeviceInfo { get; set; }
 
-        public VolumeViewModelBase VolumeTest => this.GetVolumeTest();
+        public VolumeViewModelBase VolumeTest => Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
 
         public void Initialize()
         {
@@ -48,11 +48,8 @@ namespace Prover.Application.ViewModels
 
     public class DeviceInfoViewModel
     {
-        public EvcVerificationViewModel Test { get; }
-
         public DeviceInfoViewModel(DeviceInstance device, EvcVerificationViewModel test)
         {
-            Test = test;
             SiteInfo = device.ItemGroup<SiteInformationItems>();
             Pressure = device.ItemGroup<PressureItems>();
             Temperature = device.ItemGroup<TemperatureItems>();

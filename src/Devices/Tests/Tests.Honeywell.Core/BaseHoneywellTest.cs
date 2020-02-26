@@ -38,8 +38,8 @@ namespace Tests.Honeywell.Core
             Device.Setup(d => d.Name)
                 .Returns("Honeywell");
 
-            Device.Setup(d => d.Id)
-                .Returns(Guid.NewGuid());
+            //Device.Setup(d => d.Id)
+            //    .Returns(Guid.NewGuid());
 
             Device.Setup(d => d.AccessCode)
                 .Returns("3");
@@ -60,8 +60,8 @@ namespace Tests.Honeywell.Core
             Device2.Setup(d => d.Name)
                .Returns("Honeywell 2");
 
-            Device2.Setup(d => d.Id)
-                .Returns(Guid.NewGuid());
+            //Device2.Setup(d => d.Id)
+            //    .Returns(Guid.NewGuid());
 
             Device2.Setup(d => d.AccessCode)
                 .Returns("3");

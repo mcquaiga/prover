@@ -24,4 +24,9 @@
     <ProjectReference Include="..\Tests\Tests.Shared\Tests.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EvcVerifications\Builders\" />
+    <Folder Include="Models\EvcVerifications\CorrectionTests\" />
+  </ItemGroup>
+
 </Project>

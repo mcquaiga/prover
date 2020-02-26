@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application;
+using Prover.Application.Interfaces;
+using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {
@@ -23,6 +25,9 @@ namespace Client.Desktop.Wpf.Startup
 
         public void AddServices(IServiceCollection services, HostBuilderContext host)
         {
+            services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
+            services.AddSingleton<UnhandledExceptionHandler>();
+
             Settings.AddServices(services, host);
             Storage.AddServices(services, host);
             UserInterface.AddServices(services, host);
@@ -96,7 +101,7 @@ namespace Client.Desktop.Wpf.Startup
                 
                 .ConfigureServices((host, services) =>
                 {
-                    services.AddSingleton<UnhandledExceptionHandler>();
+                    
 
                     host.ConfigureModules(services);
 

@@ -13,14 +13,13 @@ namespace Prover.Application.Extensions
             return testPoint.TestsCollection.OfType<PressureFactorViewModel>().FirstOrDefault();
         }
 
-        public static TemperatureFactorViewModel GetTemperatureTest(this VerificationTestPointViewModel testPoint) =>
-            testPoint.TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
+        public static TemperatureFactorViewModel GetTemperatureTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
 
         public static VolumeViewModelBase GetVolumeTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<VolumeViewModelBase>().FirstOrDefault();
 
         public static SuperFactorViewModel GetSuperFactorTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<SuperFactorViewModel>().FirstOrDefault();
 
-        public static VolumeViewModelBase GetVolumeTest(this EvcVerificationViewModel test) => test.Tests.FirstOrDefault(t => t.GetVolumeTest() != null)?.GetVolumeTest();
+        public static VolumeViewModelBase GetVolumeTest(this EvcVerificationViewModel test) => test.Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
 
         public static ICollection<VerificationViewModel> GetCorrectionTests(this VerificationTestPointViewModel test)
         {

@@ -14,13 +14,13 @@ namespace Devices.Romet.Core
             : base(items)
         {
             Factory = new RometDeviceInstanceFactory(this);
-            ItemFactory = new RometItemGroupFactory(this);
+            ItemFactory = new RometItemGroupFactory();
         }
 
         public RometDeviceType()
         {
             Factory = new RometDeviceInstanceFactory(this);
-            ItemFactory = new RometItemGroupFactory(this);
+            ItemFactory = new RometItemGroupFactory();
         }
 
         public override Type GetBaseItemGroupClass(Type itemGroupType)

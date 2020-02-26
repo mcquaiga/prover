@@ -11,7 +11,7 @@ namespace Devices.Romet.Core.Items.ItemGroups.Builders
     {
         #region Protected
 
-        public RometItemGroupBuilder(DeviceType deviceType) : base(deviceType)
+        public RometItemGroupBuilder()
         {
         }
 

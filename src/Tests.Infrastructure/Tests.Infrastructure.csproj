@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Shared\Prover.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EntityFrameworkSqlDataAccess\Repositories\" />
+  </ItemGroup>
+
 </Project>

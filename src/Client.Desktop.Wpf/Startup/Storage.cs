@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
+using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
 
@@ -39,15 +40,15 @@ namespace Client.Desktop.Wpf.Startup
             var connectionString = Environment.ExpandEnvironmentVariables(
                 host.Configuration.GetConnectionString(KeyValueStoreConnectionString)
                 );
-            var db = new LiteDatabase(connectionString);
+
             //LiteDb
-            services.AddSingleton<ILiteDatabase>(c => db);
+            services.AddSingleton(c => StorageDefaults.CreateDatabase(connectionString));
 
             services.AddScoped<EvcVerificationTestService>();
             services.AddScoped<VerificationViewModelService>();
 
             services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c 
-                => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
+                => new VerificationsLiteDbRepository(StorageDefaults.Database, c.GetService<DeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

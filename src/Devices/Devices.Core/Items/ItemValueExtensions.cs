@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Devices.Core.Items.Descriptions;
 using Newtonsoft.Json;
 
@@ -41,9 +42,28 @@ namespace Devices.Core.Items
             return x.Value;
         }
 
-        public static T GetItemValue<T>(this IEnumerable<ItemValue> items, int itemNumber)
+        public static int GetItemValueAsInt(this IEnumerable<ItemValue> items, int itemNumber)
         {
-            return (T) GetItem(items, itemNumber).GetValue();
+            var item = GetItem(items, itemNumber);
+            var obj = item.GetValue();
+            if (int.TryParse(obj.ToString(), out var result))
+            {
+                return result;
+            }
+
+            throw new InvalidCastException($"Cannot cast value of item {item.Metadata} to integer.");
+        }
+
+        public static decimal GetItemValueAsDecimal(this IEnumerable<ItemValue> items, int itemNumber)
+        {
+            var item = GetItem(items, itemNumber);
+            var obj = item.GetValue();
+            if (decimal.TryParse(obj.ToString(), out var result))
+            {
+                return result;
+            }
+
+            throw new InvalidCastException($"Cannot cast value of item {item.Metadata} to decimal.");
         }
 
         public static decimal? GetItemValueNullable(this IEnumerable<ItemValue> items, int itemNumber)

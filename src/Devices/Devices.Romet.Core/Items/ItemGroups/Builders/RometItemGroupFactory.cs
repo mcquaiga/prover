@@ -7,9 +7,9 @@ namespace Devices.Romet.Core.Items.ItemGroups.Builders
 {
     public class RometItemGroupFactory : ItemGroupFactoryBase
     {
-        public RometItemGroupFactory(RometDeviceType deviceType) : base(deviceType)
+        public RometItemGroupFactory()
         {
-            BasicGroupBuilder = new RometItemGroupBuilder<ItemGroup>(deviceType);
+            BasicGroupBuilder = new RometItemGroupBuilder<ItemGroup>();
         }
 
         #region Protected

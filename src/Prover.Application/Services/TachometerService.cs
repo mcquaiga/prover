@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.ExternalDevices.DInOutBoards;
+using Prover.Shared.Interfaces;
 using RJCP.IO.Ports;
 
-namespace Prover.Application.ExternalDevices
+namespace Prover.Application.Services
 {
     public interface ITachometerService
     {

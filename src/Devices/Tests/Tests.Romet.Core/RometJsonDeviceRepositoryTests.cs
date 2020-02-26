@@ -69,7 +69,8 @@ namespace Tests.Romet.Core
         [TestMethod]
         public async Task GetDevicesFromCoreRepository()
         {
-            var devices = Repository.GetAll();
+            var repo = await RometDeviceRepository.CreateDefault();
+            var devices = repo.GetAll();
 
             Assert.IsNotNull(devices);
             Assert.IsTrue(devices.Count() == 1);

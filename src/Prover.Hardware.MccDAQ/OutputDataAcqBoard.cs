@@ -1,14 +1,14 @@
 ﻿using System;
 using MccDaq;
 using Microsoft.Extensions.Logging;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ExternalDevices.DInOutBoards
+namespace Prover.Hardware.MccDAQ
 {
     public class OutputChannelDataAcqBoard : DataAcqBoardBase, IOutputChannel, IDisposable
     {
-        public OutputChannelDataAcqBoard(ILogger logger, int boardNumber, int channelNumber) : base(logger,
-            boardNumber,
-            0, channelNumber)
+        public OutputChannelDataAcqBoard(ILogger logger, MccBoard boardNumber, int channelNumber) 
+            : base(logger, boardNumber, 0, channelNumber)
         {
         }
 

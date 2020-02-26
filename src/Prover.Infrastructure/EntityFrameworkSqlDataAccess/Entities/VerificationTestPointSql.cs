@@ -61,7 +61,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public VerificationMapping()
         {
-            _deviceRepository = RepositoryFactory.CreateDefault();
+            //_deviceRepository = RepositoryFactory.CreateDefault();
         }
 
         public VerificationMapping(DeviceRepository deviceRepository)
@@ -85,7 +85,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public VerificationTestPointMapping()
         {
-            _deviceRepository = RepositoryFactory.Instance;
+           // _deviceRepository = RepositoryFactory.Instance;
         }
 
         public VerificationTestPointMapping(DeviceRepository deviceRepository)

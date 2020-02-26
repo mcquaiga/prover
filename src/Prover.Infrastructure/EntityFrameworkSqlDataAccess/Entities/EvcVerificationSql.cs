@@ -19,7 +19,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
 
         public EvcVerificationMapping()
         {
-            _deviceRepository = RepositoryFactory.CreateDefault();
+            //_deviceRepository = RepositoryFactory.CreateDefault();
         }
 
         public EvcVerificationMapping(DeviceRepository deviceRepository)
@@ -43,12 +43,12 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
             builder.Property(c => c.Id)
                 .HasColumnName("Id");
 
-            builder.Property(c => c.DeviceType)
-                .HasColumnName("DeviceTypeId")
-                .HasConversion(
-                    dt => dt.Id,
-                    t => _deviceRepository.GetById(t)
-                ).HasColumnType("uniqueidentifier");
+            //builder.Property(c => c.DeviceType)
+            //    .HasColumnName("DeviceTypeId")
+            //    .HasConversion(
+            //        dt => dt.Id,
+            //        t => _deviceRepository.GetById(t)
+            //    ).HasColumnType("uniqueidentifier");
 
             builder.Property(c => c.Device)
                 .HasColumnName("Device")

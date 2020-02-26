@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ExternalDevices.DInOutBoards
+namespace Prover.Shared.Hardware
 {
     public class EmptyDInOutBoard : IInputChannel, IOutputChannel
     {

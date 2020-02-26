@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Core.Items;
 using Devices.Honeywell.Core;
@@ -15,11 +16,14 @@ namespace Tests.Honeywell.Comm
     public abstract class BaseHoneywellTest
     {
         protected HoneywellDeviceType Device;
+        protected ICommClientFactory ClientFactory;
 
         [TestInitialize]
         public virtual void Setup()
         {
             SetupDevice();
+
+           
         }
 
         public virtual void SetupDevice()

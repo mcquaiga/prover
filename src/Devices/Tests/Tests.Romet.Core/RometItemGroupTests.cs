@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
+using Devices.Romet.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -19,18 +21,21 @@ namespace Tests.Romet.Core
         private static List<ItemValue> _itemValues;
 
         [ClassInitialize]
-        public static void TestFixtureSetup(TestContext context)
+        public static async Task TestFixtureSetup(TestContext context)
         {
-            //_deviceType = RometDeviceRepository.GetAdem;
+            var repo = await RometDeviceRepository.CreateDefault();
+            _deviceType = repo.GetByName("Adem");
             AdemItemFile = JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("Adem.json"));
 
             _itemValues = _deviceType.ToItemValuesEnumerable(AdemItemFile).ToList();
+            _instance = _deviceType.Factory.CreateInstance(_itemValues);
         }
+
 
         [TestInitialize]
         public void Init()
         {
-            _instance = _deviceType.Factory.CreateInstance(_itemValues);
+            
         }
 
         [TestMethod]
@@ -51,7 +56,7 @@ namespace Tests.Romet.Core
         [TestMethod]
         public void PressureItemsIsNullTest()
         {
-            Assert.IsNull(_instance.ItemGroup<PressureItems>());
+            //Assert.IsNull(_instance.ItemGroup<PressureItems>());
         }
 
         [TestMethod]

@@ -16,6 +16,8 @@ namespace Devices.Communications.Interfaces
 
         private readonly ICommPortFactory _commFactory;
 
+        private CommunicationsClientFactory(){}
+
         public CommunicationsClientFactory(ICommPortFactory commFactory) => _commFactory = commFactory;
 
         #region ICommClientFactory Members
@@ -35,14 +37,19 @@ namespace Devices.Communications.Interfaces
             return (ICommunicationsClient) method?.Invoke(clientFactory, new object[] {deviceType, commPort});
         }
 
+        public static ICommunicationsClient CreateClient<T>(T deviceType, ICommPort commPort) where T : DeviceType
+        {
+            return new CommunicationsClientFactory().Create(deviceType, commPort);
+        }
         #endregion
 
         private static TypeInfo LocateFactory<T>(T deviceType)
         {
-            var factory = _assemblies.Select(a => a.DefinedTypes.FirstOrDefault(t =>
-                t.ImplementedInterfaces.Any(i => i.Name == typeof(IDeviceTypeCommClientFactory<>).Name
-                                                 && i.GenericTypeArguments.Contains(deviceType.GetType()))
-                && !t.IsInterface && !t.IsAbstract)).LastOrDefault();
+            var factory = _assemblies.Select(a 
+                    => a.DefinedTypes.FirstOrDefault(t 
+                        => t.ImplementedInterfaces.Any(i 
+                               => i.Name == typeof(IDeviceTypeCommClientFactory<>).Name && i.GenericTypeArguments.Contains(deviceType.GetType())) 
+                           && !t.IsInterface && !t.IsAbstract)).FirstOrDefault();
 
 
             if (factory == null)

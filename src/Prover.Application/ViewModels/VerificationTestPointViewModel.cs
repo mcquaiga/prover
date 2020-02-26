@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Items;
 using DynamicData;
 using Prover.Application.Extensions;
@@ -23,13 +24,13 @@ namespace Prover.Application.ViewModels
 
         public ICollection<VerificationViewModel> TestsCollection { get; set; } = new List<VerificationViewModel>();
 
-        public PressureFactorViewModel Pressure => this.GetPressureTest();
+        public PressureFactorViewModel Pressure => TestsCollection.OfType<PressureFactorViewModel>().FirstOrDefault();
 
-        public TemperatureFactorViewModel Temperature => this.GetTemperatureTest();
+        public TemperatureFactorViewModel Temperature => TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
 
-        public SuperFactorViewModel SuperFactor => this.GetSuperFactorTest();
+        public SuperFactorViewModel SuperFactor => TestsCollection.OfType<SuperFactorViewModel>().FirstOrDefault();
 
-        public VolumeViewModelBase Volume => this.GetVolumeTest();
+        public VolumeViewModelBase Volume => TestsCollection.OfType<VolumeViewModelBase>().FirstOrDefault();
 
         public void UpdateItemValues(ICollection<ItemValue> itemValues)
         {

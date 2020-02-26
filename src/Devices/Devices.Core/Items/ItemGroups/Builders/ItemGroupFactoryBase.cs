@@ -11,16 +11,14 @@ namespace Devices.Core.Items.ItemGroups.Builders
         protected readonly Dictionary<Type, IBuildItemsFor<ItemGroup>> BuildersCache =
             new Dictionary<Type, IBuildItemsFor<ItemGroup>>();
 
-        protected readonly DeviceType DeviceType;
+        //private protected readonly DeviceType DeviceType;
         protected ItemGroupBuilderBase<ItemGroup> BasicGroupBuilder;
 
         protected HashSet<Type> BuilderTypes;
-
+        
         protected ItemGroupFactoryBase()
         {
         }
-
-        protected ItemGroupFactoryBase(DeviceType deviceType) => DeviceType = deviceType;
 
         protected abstract Assembly BaseAssembly { get; }
 
@@ -29,20 +27,20 @@ namespace Devices.Core.Items.ItemGroups.Builders
         //var builder = findGroupBuilder(typeof(TGroup));
         //if (builder != null)
         //    return (TGroup) builder.Build(DeviceType, values);
-        public virtual TGroup Create<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup =>
-            (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values);
+        public virtual TGroup Create<TGroup>(DeviceType deviceType, IEnumerable<ItemValue> values) where TGroup : ItemGroup =>
+            (TGroup) BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values, deviceType);
 
-        public virtual ItemGroup Create(IEnumerable<ItemValue> values, Type groupType)
+        public virtual ItemGroup Create(DeviceType deviceType, IEnumerable<ItemValue> values, Type groupType)
         {
-            return BasicGroupBuilder.GetItemGroupInstance(groupType, values);
+            return BasicGroupBuilder.GetItemGroupInstance(groupType, values, deviceType);
         }
         #endregion
 
-        protected IBuildItemsFor<ItemGroup> findGroupBuilder(Type type)
+        protected IBuildItemsFor<ItemGroup> findGroupBuilder(Type type, DeviceType deviceType)
         {
-            loadGroupBuilders();
+            loadGroupBuilders(deviceType);
 
-            var groupClass = type.GetMatchingItemGroupClass(DeviceType);
+            var groupClass = type.GetMatchingItemGroupClass(deviceType);
 
             if (groupClass != null)
             {
@@ -55,7 +53,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 if (builder != null)
                 {
-                    var instance = Activator.CreateInstance(builder, DeviceType) as IBuildItemsFor<ItemGroup>;
+                    var instance = Activator.CreateInstance(builder) as IBuildItemsFor<ItemGroup>;
 
                     BuildersCache.Add(groupClass, instance);
                     return instance;
@@ -69,7 +67,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
             return null;
         }
 
-        protected virtual void loadGroupBuilders()
+        protected virtual void loadGroupBuilders(DeviceType deviceType)
         {
             if (BuilderTypes == null)
             {
@@ -77,7 +75,7 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
                 var myType = typeof(IBuildItemsFor<>);
 
-                var builders = Assembly.GetAssembly(DeviceType.GetType()).GetTypes().Where(p =>
+                var builders = Assembly.GetAssembly(deviceType.GetType()).GetTypes().Where(p =>
                     p.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == myType));
                 BuilderTypes.UnionWith(builders.ToList());
 

@@ -25,7 +25,6 @@ namespace Tests.Romet.Comm
             _adem = (RometDeviceType) Repository.GetByName("Adem");
         }
 
-        [TestMethod]
         public async Task TestingSerialCommunications()
         {
             //var commPort = new SerialPort("COM1", 9600);

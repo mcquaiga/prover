@@ -14,11 +14,6 @@ namespace Devices.Honeywell.Comm
         {
             var client = new HoneywellClient(commPort, deviceType);
 
-            //if (statusObserver != null)
-            //    client.StatusMessages.Subscribe(statusObserver);
-
-            //await client.ConnectAsync(retryAttempts, timeout);
-
             return client;
         }
 

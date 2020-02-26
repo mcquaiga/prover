@@ -12,7 +12,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
     {
         #region Public Methods
 
-        public PressureItemsBuilder(DeviceType deviceType) : base(deviceType)
+        public PressureItemsBuilder() 
         {
         }
 
@@ -20,7 +20,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         {
             var items = values.ToList();
 
-            var site = device.GetGroupValues<global::Devices.Core.Items.ItemGroups.SiteInformationItems>(items);
+            var site = device.GetGroupValues<SiteInformationItems>(items);
             if (site.PressureFactor == CorrectionFactorType.Fixed) return default;
 
             var p = new PressureItemsHoneywell();

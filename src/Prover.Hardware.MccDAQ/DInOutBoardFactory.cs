@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using MccDaq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Shared;
+using Prover.Shared.Hardware;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ExternalDevices.DInOutBoards
+namespace Prover.Hardware.MccDAQ
 {
-    public interface IInputChannelFactory
-    {
-        IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel);
-    }
-
-    public interface IOutputChannelFactory
-    {
-        
-        IOutputChannel CreateOutputChannel(OutputChannelType channelType);
-    }
 
     public class DaqBoardChannelFactory : IInputChannelFactory, IOutputChannelFactory
     {
-        private int BoardNumber = 0;
+        private MccBoard Board;
 
         private readonly Dictionary<PulseOutputChannel, int> _channelNumberMappings =
             new Dictionary<PulseOutputChannel, int>
@@ -41,57 +34,66 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
 
         public DaqBoardChannelFactory(ILoggerFactory logFactory)
         {
-            _inputLogger = logFactory.CreateLogger<InputChannelDataAcqBoard>();
-            _outputLogger = logFactory.CreateLogger<OutputChannelDataAcqBoard>();
+            _inputLogger = logFactory?.CreateLogger<InputChannelDataAcqBoard>() ?? NullLogger<InputChannelDataAcqBoard>.Instance;
+            _outputLogger = logFactory?.CreateLogger<OutputChannelDataAcqBoard>() ?? NullLogger<OutputChannelDataAcqBoard>.Instance;
 
-            FindBoardNumber();
+            Board = FindBoard();
         }
 
         //int boardNumber, DigitalPortType channelType, int channelNumber
         public IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel)
         {
-            try
+            if (Board != null)
             {
-                var channelType = _portTypeMappings[pulseChannel];
-                var channelNumber = _channelNumberMappings[pulseChannel];
+                try
+                {
 
-                var board = new InputChannelDataAcqBoard(_inputLogger, BoardNumber, channelType, channelNumber);
+                    var channelType = _portTypeMappings[pulseChannel];
+                    var channelNumber = _channelNumberMappings[pulseChannel];
 
-                return board;
+                    return new InputChannelDataAcqBoard(_inputLogger, Board, channelType, channelNumber);
+                }
+                catch (Exception ex)
+                {
+                    _inputLogger.LogError(ex, "An error occured creating input channel.");
+                }
             }
-            catch (Exception)
-            {
-                return new EmptyDInOutBoard(_inputLogger);
-            }
+
+            return new EmptyDInOutBoard(_inputLogger);
         }
         
         public IOutputChannel CreateOutputChannel(OutputChannelType channelType)
         {
             var channelNumber = (int)channelType;
-
-            try
+            if (Board != null)
             {
-                var board = new OutputChannelDataAcqBoard(_outputLogger, BoardNumber, channelNumber);
+                try
+                {
+                    var board = new OutputChannelDataAcqBoard(_outputLogger, Board, channelNumber);
 
-                return board;
+                    return board;
+                }
+                catch (Exception ex)
+                {
+                    _outputLogger.LogError(ex,  "An error occured creating input channel.");
+                }
             }
-            catch (Exception)
-            {
-                return new EmptyDInOutBoard(_outputLogger);
-            }
+
+            return new EmptyDInOutBoard(_outputLogger);
         }
 
-        private int FindBoardNumber()
+        private MccBoard FindBoard()
         {
             var boardFound = false;
+            MccBoard board = null;
+            int boardNumber;
 
-            for (BoardNumber = 0; BoardNumber < 99; BoardNumber++)
+            for (boardNumber = 0; boardNumber < 99; boardNumber++)
             {
-                var board = new MccBoard(BoardNumber);
+                board = new MccBoard(boardNumber);
                 if (board.BoardName.Contains("1208LS"))
                 {
                     boardFound = true;
-                    board.FlashLED();
                     break;
                 }
             }
@@ -99,10 +101,9 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
             if (boardFound == false)
             {
                 _inputLogger.LogWarning("USB-1208LS not found  Please run InstaCal.");
-                return -1;
             }
 
-            return BoardNumber;
+            return board;
         }
     }
 }

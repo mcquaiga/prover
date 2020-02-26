@@ -15,8 +15,8 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.ExternalDevices.DInOutBoards;
 using Prover.Application.Services;
+using Prover.Hardware.MccDAQ;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
 
@@ -88,8 +88,7 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => RometJsonDeviceTypeDataSource.Instance);
 
             services.AddScoped<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
-
-            services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, KeyValueDeviceTypeDataSource>();
+            services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, DeviceTypeCacheSource>();
             //services.AddSingleton<IDeviceTypeCacheSource<DeviceType>>(c =>
             //    new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
@@ -6,65 +5,63 @@ using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Devices.Romet.Core.Repository;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Infrastructure;
 
 namespace Devices
 {
     public class RepositoryFactory
     {
-        private static DeviceRepository _instance;
-
         public RepositoryFactory(ILogger logger)
         {
-
         }
 
-        public static DeviceRepository Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    throw new InvalidOperationException("Call Create method first.");
+        //if (DeviceRepository.Instance == null)
+        //    throw new InvalidOperationException("Call Create method first.");
+        public static IDeviceRepository Instance => DeviceRepository.Instance;
 
-                return _instance;
-            }
-        }
+        public static IDeviceRepository Get => Instance;
 
-        public static DeviceRepository Get => Instance;
-
-        public static async Task<DeviceRepository> Create(IDeviceTypeCacheSource<DeviceType> cacheSource,
+        public static async Task<IDeviceRepository> Create(IDeviceTypeCacheSource<DeviceType> cacheSource,
             IEnumerable<IDeviceTypeDataSource<DeviceType>> sources = null)
         {
-            if (_instance == null)
-                _instance = new DeviceRepository(cacheSource);
+            var instance = Instance;
 
-            await _instance.UpdateCachedTypes();
+            if (Instance == null)
+            {
+                instance = new DeviceRepository(cacheSource);
+            }
 
-            if (_instance.Devices.Count == 0 && sources != null)
-                await _instance.UpdateCachedTypes(sources);
+            await instance.UpdateCachedTypes();
 
-            return _instance;
+            if (instance.Devices.Count == 0 && sources != null)
+                await instance.UpdateCachedTypes(sources);
+
+            return instance;
         }
 
-        public static async Task<DeviceRepository> Create(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
+        public static async Task<IDeviceRepository> Create(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
         {
-            if (_instance == null)
-               _instance = new DeviceRepository();
+            var instance = Instance;
 
-            await _instance.UpdateCachedTypes(sources);
-            return _instance;
+            if (Instance == null)
+                instance = new DeviceRepository();
+
+            await instance.UpdateCachedTypes(sources);
+
+            return instance;
         }
 
-        public static async Task<DeviceRepository> CreateDefaultAsync()
+        public static IDeviceRepository CreateDefault()
         {
-            return await Create((IEnumerable<IDeviceTypeDataSource<DeviceType>>) new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
-        }
-
-        public static DeviceRepository CreateDefault()
-        {
-            var task = Task.Run<DeviceRepository>(() => Create((IEnumerable<IDeviceTypeDataSource<DeviceType>>) new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance}));
+            var task = Task.Run(CreateDefaultAsync);
             task.Wait();
             return task.Result;
+        }
+
+        public static async Task<IDeviceRepository> CreateDefaultAsync()
+        {
+            return await Create(StorageDefaults.CreateDefaultDeviceTypeCache(),
+                new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
         }
     }
 }

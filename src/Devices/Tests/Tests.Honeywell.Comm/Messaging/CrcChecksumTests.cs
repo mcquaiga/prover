@@ -28,16 +28,16 @@ namespace Tests.Honeywell.Comm.Messaging
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void CrcLibrary()
-        {
-            var expected = "415D";
-            var cmd = $"SN,33333{ControlCharacters.STX}vq03{ControlCharacters.ETX}";
+        //[TestMethod]
+        //public void CrcLibrary()
+        //{
+        //    var expected = "415D";
+        //    var cmd = $"SN,33333{ControlCharacters.STX}vq03{ControlCharacters.ETX}";
 
-            var crc = CrcAlgorithm.CreateCrc16CcittFalse();
-            crc.Append(Encoding.ASCII.GetBytes(cmd));
-            Assert.AreEqual(expected, crc.ToHexString());
-        }
+        //    var crc = CrcAlgorithm.CreateCrc16CcittFalse();
+        //    crc.Append(Encoding.ASCII.GetBytes(cmd));
+        //    Assert.AreEqual(expected, crc.ToHexString());
+        //}
 
 
         [TestMethod]

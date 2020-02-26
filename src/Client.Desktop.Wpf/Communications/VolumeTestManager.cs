@@ -7,10 +7,10 @@ using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
-using Prover.Application.ExternalDevices;
-using Prover.Application.ExternalDevices.DInOutBoards;
+using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume;
+using Prover.Shared.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Communications

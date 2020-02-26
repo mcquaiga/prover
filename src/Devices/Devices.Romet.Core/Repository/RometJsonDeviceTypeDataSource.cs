@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Core.Repository.JsonConverters;
 
 namespace Devices.Romet.Core.Repository
 {
+    public class RometDeviceRepository
+    {
+        public static async Task<IDeviceRepository> CreateDefault()
+        {
+            var repo = new DeviceRepository();
+            return await repo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
+        }
+    }
+
 
     public class RometJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<RometDeviceType>
     {

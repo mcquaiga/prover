@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Tests.Shared
+namespace Tests.Application
 {
     public static class ItemFiles
     {
@@ -28,7 +28,7 @@ namespace Tests.Shared
 
         private static Dictionary<int, string> ConvertToItemValues(Dictionary<string, string> dict)
         {
-            return dict.ToDictionary(k => int.Parse(k.Key), v => v.Value);
+            return dict.ToDictionary(k => int.Parse((string) k.Key), v => v.Value);
         }
 
         private static Dictionary<int, string> DeserializeItemFile(string jsonString)

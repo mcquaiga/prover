@@ -15,7 +15,7 @@ namespace Tests.Honeywell.Core
         #region Properties
 
         public static string MeterTypeDescriptionsJson => @"{
-                'type': 'Devices.Core.Items.MeterIndexItemDescription, Devices.Core, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null',
+                'type': 'Devices.Core.Items.Descriptions.RotaryMeterTypeDescription, Devices.Core, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null',
                   'ItemDescriptions': [
                     {
                       'description': 'No Meter Type',

@@ -13,7 +13,7 @@ namespace Web.Api.Controllers
     [Route("[controller]")]
     public class DevicesController : ControllerBase
     {
-        private DeviceRepository _deviceRepository;
+        private IDeviceRepository _deviceRepository;
 
         private readonly ILogger<DevicesController> _logger;
 

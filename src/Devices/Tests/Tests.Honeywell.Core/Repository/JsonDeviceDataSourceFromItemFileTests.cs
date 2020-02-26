@@ -38,9 +38,6 @@ namespace Tests.Honeywell.Core.Repository
                     Assert.IsNotNull(d.CanUseIrDaPort);
                     Assert.IsTrue(d.Id != Guid.Empty);
 
-                    Assert.IsFalse(d.Items
-                        .GroupBy(n => n.Number)
-                        .Any(c => c.Count() > 1));
                     devices.Add(d);
                 });
 

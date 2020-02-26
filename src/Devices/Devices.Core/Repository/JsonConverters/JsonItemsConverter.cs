@@ -34,8 +34,7 @@ namespace Devices.Core.Repository.JsonConverters
 
         protected override ItemDescription Create(Type objectType, JObject jObject)
         {
-            var numericToken = jObject["numericvalue"];
-            if (numericToken != null)
+            if (jObject.TryGetValue("numericvalue", StringComparison.CurrentCultureIgnoreCase, out var numberToken))
             {
                 return new ItemDescriptionWithNumericValue();
             }

@@ -15,14 +15,12 @@ namespace Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
         {
             VolumeItems = volumeItems;
             RotaryItems = rotaryItems;
-
-            MeterDisplacement = RotaryItems.MeterType?.MeterDisplacement ??
-                                (RotaryItems.MeterDisplacement != 0 ? RotaryItems.MeterDisplacement : -1);
         }
 
         public RotaryVolumeInputType(RotaryMeterItems rotaryItems) => RotaryItems = rotaryItems;
 
-        public decimal MeterDisplacement { get; }
+        public decimal MeterDisplacement => RotaryItems.MeterType?.MeterDisplacement ??
+                                            (RotaryItems.MeterDisplacement != 0 ? RotaryItems.MeterDisplacement : -1);
 
         public VolumeItems VolumeItems { get; set; }
         public RotaryMeterItems RotaryItems { get; set; }

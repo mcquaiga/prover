@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Devices;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
@@ -12,13 +13,13 @@ namespace Tests.Honeywell.Core.Items
     [TestClass]
     public class PressureItemsTest : BaseHoneywellTest
     {
-        private DeviceRepository _repo;
+        private IDeviceRepository _repo;
 
         [TestInitialize]
         public async Task Initialize()
         {
-            _repo = new DeviceRepository();
-            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+            _repo = await RepositoryFactory.Create(new [] {MiJsonDeviceTypeDataSource.Instance});
+            //await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
         }
 
         [TestMethod]
@@ -29,8 +30,6 @@ namespace Tests.Honeywell.Core.Items
             var pItems = device.GetItemMetadata<PressureItems>();
             Assert.IsNotNull(instance.Values);
             Assert.IsFalse(instance.Values.Count == 0);
-
-            Console.WriteLine("");
         }
 
         [TestMethod]

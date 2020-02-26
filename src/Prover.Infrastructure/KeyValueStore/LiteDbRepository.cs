@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
 using LiteDB;
 using Prover.Shared.Domain;
 using Prover.Shared.Interfaces;
@@ -19,8 +18,9 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public LiteDbRepository(ILiteDatabase context)
         {
-            Context = context;
+            Context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
         public T Add(T entity)
         {
             Context.GetCollection<T>().Upsert(entity);
@@ -100,21 +100,6 @@ namespace Prover.Infrastructure.KeyValueStore
                 return Context.GetCollection<T>().FindAll().ToObservable();
 
             return Context.GetCollection<T>().Find(predicate).ToObservable();
-        }
-    }
-
-    public class DeviceTypeLiteDbRepository : LiteDbRepository<DeviceType>
-    {
-        public DeviceTypeLiteDbRepository(ILiteDatabase context) : base(context)
-        {
-            ConfigMappings();
-        }
-
-        private void ConfigMappings()
-        {
-            var mapper = BsonMapper.Global;
-
-            mapper.Entity<DeviceType>().Ignore(d => d.Factory);
         }
     }
 }

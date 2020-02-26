@@ -1,13 +1,14 @@
 ﻿using MccDaq;
 using Microsoft.Extensions.Logging;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ExternalDevices.DInOutBoards
+namespace Prover.Hardware.MccDAQ
 {
     public class InputChannelDataAcqBoard : DataAcqBoardBase, IInputChannel
     {
         private const int OffSignalValue = 255;
 
-        public InputChannelDataAcqBoard(ILogger logger, int boardNumber, DigitalPortType channelType,
+        public InputChannelDataAcqBoard(ILogger logger, MccBoard boardNumber, DigitalPortType channelType,
             int channelNumber)
             : base(logger, boardNumber, channelType, channelNumber)
         {
@@ -20,19 +21,6 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
             if (UlStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors)
             {
                 return value;
-                //if (value != OffSignalValue)
-                //{
-                //    if (_pulseIsCleared)
-                //    {
-                //        Log.LogTrace($"Pulse value read -> value = {value}");
-                //        _pulseIsCleared = false;
-                //        return 1;
-                //    }
-                //}
-                //else
-                //{
-                //    _pulseIsCleared = true;
-                //}
             }
 
             if (UlStatErrorInfo.Value != ErrorInfo.ErrorCode.BadBoard)

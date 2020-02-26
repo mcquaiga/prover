@@ -14,6 +14,12 @@ namespace Tests.Honeywell.Comm.Messaging.Responses
     [TestClass]
     public class ResponseMessageTests : BaseHoneywellTest
     {
+        [TestInitialize]
+        public async Task Init()
+        {
+          
+        }
+
         [TestMethod]
         [ExpectedException(typeof(HoneywellResponseException))]
         public async Task FramingError()
@@ -28,14 +34,14 @@ namespace Tests.Honeywell.Comm.Messaging.Responses
             await TryConnection(ResponseCode.SignOnError);
         }
 
-        private Task<ICommunicationsClient> TryConnection(ResponseCode response)
+        private async Task<ICommunicationsClient> TryConnection(ResponseCode response)
         {
             var commMock = new Mock<ICommPort>();
             var incoming = new Subject<string>();
             var outgoing = new Subject<string>();
 
             SetupComm(commMock, incoming, outgoing);
-
+            
             commMock.Setup(c => c.Send(It.IsAny<string>()))
              .Returns(Task.FromResult(default(object)));
 
@@ -45,7 +51,9 @@ namespace Tests.Honeywell.Comm.Messaging.Responses
             commMock.Setup(c => c.Send(It.Is<string>(s => s.Length > 1)))
                 .Callback(() => incoming.OnNext(Messages.Incoming.GetResponse(response)));
 
-            return Device.ConnectAsync(commMock.Object, 0, TimeSpan.FromMilliseconds(50));
+            var client = CommunicationsClientFactory.CreateClient(Device, commMock.Object); 
+            await client.ConnectAsync(0, TimeSpan.FromMilliseconds(50));
+            return client;
         }
     }
 }

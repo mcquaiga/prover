@@ -19,7 +19,7 @@ namespace Devices.Honeywell.Core
         public HoneywellDeviceType(IEnumerable<ItemMetadata> items) : base(items)
         {
             Factory = new HoneywellDeviceInstanceFactory(this);
-            ItemFactory = new HoneywellItemGroupFactory(this);
+            ItemFactory = new HoneywellItemGroupFactory();
 
             Items = Items.OrderBy(i => i.Number).ToList();
         }
@@ -27,7 +27,7 @@ namespace Devices.Honeywell.Core
         public HoneywellDeviceType()
         {
             Factory = new HoneywellDeviceInstanceFactory(this);
-            ItemFactory = new HoneywellItemGroupFactory(this);
+            ItemFactory = new HoneywellItemGroupFactory();
         }
 
         #region Public Properties
@@ -48,11 +48,11 @@ namespace Devices.Honeywell.Core
 
         public override TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues)
         {
-            return (TGroup) ItemFactory.Create<TGroup>(itemValues);
+            return (TGroup) ItemFactory.Create<TGroup>(this, itemValues);
         }
 
         public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
-            => ItemFactory.Create(itemValues, groupType);
+            => ItemFactory.Create(this, itemValues, groupType);
 
         public override Type GetBaseItemGroupClass(Type itemGroupType)
         {

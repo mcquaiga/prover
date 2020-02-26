@@ -10,11 +10,11 @@ using Prover.Shared.Interfaces;
 
 namespace Devices.Core.Repository
 {
-    public class KeyValueDeviceTypeDataSource : IDeviceTypeCacheSource<DeviceType>
+    public class DeviceTypeCacheSource : IDeviceTypeCacheSource<DeviceType>
     {
         private readonly IRepository<DeviceType> _keyValueRepository;
 
-        public KeyValueDeviceTypeDataSource(IRepository<DeviceType> keyValueRepository)
+        public DeviceTypeCacheSource(IRepository<DeviceType> keyValueRepository)
         {
             _keyValueRepository = keyValueRepository;
         }

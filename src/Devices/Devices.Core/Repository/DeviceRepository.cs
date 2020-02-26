@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -12,10 +13,27 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Devices.Core.Repository
 {
-    public class DeviceRepository : IDisposable
+    public interface IDeviceRepository
     {
-        private readonly SourceList<IDeviceTypeDataSource<DeviceType>> _dataSources =
-            new SourceList<IDeviceTypeDataSource<DeviceType>>();
+        ReadOnlyObservableCollection<DeviceType> Devices { get; }
+        IObservableCache<DeviceType, Guid> All { get; }
+        IObservable<IChangeSet<DeviceType, Guid>> Connect();
+        void Dispose();
+        IEnumerable<T> FilterCacheByType<T>() where T : DeviceType;
+        T Find<T>(Func<T, bool> predicate) where T : DeviceType;
+        IEnumerable<T> GetAll<T>() where T : DeviceType;
+        IEnumerable<DeviceType> GetAll();
+        DeviceType GetById(Guid id);
+        DeviceType GetByName(string name);
+        void Save();
+        Task<DeviceRepository> UpdateCachedTypes();
+        Task<DeviceRepository> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource);
+        Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources);
+    }
+
+    public class DeviceRepository : IDisposable, IDeviceRepository
+    {
+        public static IDeviceRepository Instance => _instance;
 
         private readonly SourceCache<DeviceType, Guid>
             _deviceSourceCache = new SourceCache<DeviceType, Guid>(v => v.Id);
@@ -24,6 +42,7 @@ namespace Devices.Core.Repository
         private readonly ILogger _logger;
 
         internal IDeviceTypeCacheSource<DeviceType> CacheSource;
+        private static IDeviceRepository _instance;
 
         public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository, ILogger logger = null) : this()
         {
@@ -32,8 +51,10 @@ namespace Devices.Core.Repository
             CacheSource = cacheRepository;
         }
 
-        public DeviceRepository()
+        public DeviceRepository() 
         {
+            _logger = NullLogger.Instance;
+
             var devices = _deviceSourceCache.Connect().Publish();
             All = devices.AsObservableCache();
 
@@ -42,7 +63,9 @@ namespace Devices.Core.Repository
                 .Subscribe();
             Devices = deviceTypes;
 
-            _disposer = new CompositeDisposable(All, _deviceSourceCache, _dataSources, devices.Connect(), allDevice);
+            _disposer = new CompositeDisposable(All, _deviceSourceCache, devices.Connect(), allDevice);
+
+            _instance = this;
         }
 
         public ReadOnlyObservableCollection<DeviceType> Devices { get; }
@@ -53,10 +76,7 @@ namespace Devices.Core.Repository
 
         public void Dispose()
         {
-            _deviceSourceCache?.Dispose();
-            _dataSources?.Dispose();
             _disposer?.Dispose();
-            All?.Dispose();
         }
 
         public IEnumerable<T> FilterCacheByType<T>() where T : DeviceType => All.Items.OfType<T>();
@@ -72,7 +92,7 @@ namespace Devices.Core.Repository
 
         public DeviceType GetByName(string name) => FindInSetByName(GetAll(), name);
 
-        private void Save()
+        public void Save()
         {
             _logger.LogDebug("Saving device types to cache.");
             CacheSource.Save(_deviceSourceCache.Items);
@@ -103,7 +123,7 @@ namespace Devices.Core.Repository
         public async Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
         {
             foreach (var s in sources) await UpdateCachedTypes(s);
-
+            //Save();
             return this;
         }
 

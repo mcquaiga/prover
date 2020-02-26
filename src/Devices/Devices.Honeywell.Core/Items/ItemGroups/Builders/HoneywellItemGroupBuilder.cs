@@ -6,7 +6,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
     public class HoneywellItemGroupBuilder<TGroup> : ItemGroupBuilderBase<TGroup>
         where TGroup : ItemGroup
     {
-        public HoneywellItemGroupBuilder(HoneywellDeviceType deviceType) : base(deviceType)
+        public HoneywellItemGroupBuilder()
         {
         }
     }

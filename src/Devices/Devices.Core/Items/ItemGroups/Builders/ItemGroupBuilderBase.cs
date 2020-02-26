@@ -9,20 +9,19 @@ namespace Devices.Core.Items.ItemGroups.Builders
 {
     public abstract class ItemGroupBuilderBase<TGroup> where TGroup : ItemGroup
     {
-        protected DeviceType DeviceType { get; }
-
-        protected ItemGroupBuilderBase(DeviceType deviceType)
+        
+        protected ItemGroupBuilderBase()
         {
-            DeviceType = deviceType;
+          
         }
 
         #region Public Methods
 
-        public virtual TGroup GetItemGroupInstance(Type type, IEnumerable<ItemValue> itemValues)
+        public virtual TGroup GetItemGroupInstance(Type type, IEnumerable<ItemValue> itemValues, DeviceType deviceType)
         {
-            var itemGroup = GetItemGroupInstance(type);
+            var itemGroup = GetItemGroupInstance(type, deviceType);
 
-            return (TGroup) itemGroup.SetValues(DeviceType, itemValues);
+            return (TGroup) itemGroup.SetValues(deviceType, itemValues);
         }
 
         #endregion
@@ -31,9 +30,9 @@ namespace Devices.Core.Items.ItemGroups.Builders
 
         protected virtual Assembly BaseAssembly { get; }
 
-        protected virtual ItemGroup GetItemGroupInstance(Type groupType)
+        protected virtual ItemGroup GetItemGroupInstance(Type groupType, DeviceType deviceType)
         {
-            var itemType = groupType.GetMatchingItemGroupClass(DeviceType);
+            var itemType = groupType.GetMatchingItemGroupClass(deviceType);
             if (itemType == null)
                 throw new Exception($"Type {groupType.Name} could not be found.");
 

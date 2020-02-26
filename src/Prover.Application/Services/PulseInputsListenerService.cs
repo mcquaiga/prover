@@ -12,75 +12,58 @@ using Devices.Core.Items.ItemGroups;
 using DynamicData;
 using DynamicData.Kernel;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Shared;
-using ReactiveUI;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ExternalDevices.DInOutBoards
+namespace Prover.Application.Services
 {
-    public interface ISchedulerProvider
+    public class PulseInputsListenerService : IDisposable
     {
-        IScheduler CurrentThread { get; }
-        IScheduler Dispatcher { get; }
-        IScheduler Immediate { get; }
-        IScheduler NewThread { get; }
-
-        IScheduler ThreadPool { get; }
-//IScheduler TaskPool { get; } 
-    }
-
-    public sealed class SchedulerProvider : ISchedulerProvider
-    {
-        public IScheduler CurrentThread => Scheduler.CurrentThread;
-
-        public IScheduler Dispatcher => RxApp.MainThreadScheduler;
-
-        public IScheduler Immediate => Scheduler.Immediate;
-
-        public IScheduler NewThread => NewThreadScheduler.Default;
-
-        public IScheduler ThreadPool => ThreadPoolScheduler.Instance;
-
-        //public IScheduler TaskPool { get { return Scheduler.TaskPool; } } 
-    }
-
-    public class PulseInputsListenerService
-    {
+        private const double CheckIntervalTime = 31.25;
+        private readonly IScheduler _background;
         private readonly IInputChannelFactory _channelFactory;
         private CancellationTokenSource _cancellation;
         private CompositeDisposable _cleanup = new CompositeDisposable();
         private ICollection<PulseChannelListener> _inputChannels = new List<PulseChannelListener>();
         private ILogger _logger;
-        private IScheduler _scheduler;
+        private IConnectableObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> _listeners;
 
-        public PulseInputsListenerService(ILoggerFactory loggerFactory, IInputChannelFactory channelFactory)
+        public PulseInputsListenerService(ILoggerFactory loggerFactory, IInputChannelFactory channelFactory,
+            IScheduler backgroundThread)
         {
             _channelFactory = channelFactory;
-            _logger = loggerFactory.CreateLogger(typeof(PulseInputsListenerService));
+            _logger = loggerFactory?.CreateLogger(typeof(PulseInputsListenerService)) ?? NullLogger.Instance;
+
+            _background = backgroundThread;
+
+            _listeners = PulseCheckerObservable().Publish();
+
+            PulseListener = _listeners.AsObservableCache();
         }
 
-        public void Initialize(PulseOutputItems pulseOutputItems)
+        public void Dispose()
         {
-            _inputChannels =
-                pulseOutputItems.Channels
-                    .Where(p => p.Units == PulseOutputUnitType.CorVol || p.Units == PulseOutputUnitType.UncVol)
-                    .Select(pout => new PulseChannelListener(pout, _channelFactory.CreateInputChannel(pout.Name)))
-                    .ToList();
+            _cancellation?.Dispose();
+            _cleanup?.Dispose();
         }
 
-        public void StartListening()
+        public IObservableCache<PulseChannelListener, PulseOutputChannel> StartListening(PulseOutputItems pulseOutputItems)
         {
-            if (_inputChannels.Count == 0)
-                throw new NullReferenceException(
-                    "Initialize must be called before StartListening on PulseInputsListenerService.");
+            if (pulseOutputItems?.Channels == null || pulseOutputItems.Channels.Count == 0)
+                throw new NullReferenceException(nameof(pulseOutputItems));
 
-            var pulses = _inputChannels.Select(c => c.PulseListener.Connect());
+            _inputChannels = pulseOutputItems.Channels
+                .Where(p => p.Units == PulseOutputUnitType.CorVol || p.Units == PulseOutputUnitType.UncVol)
+                .Select(pout => new PulseChannelListener(pout, _channelFactory.CreateInputChannel(pout.Name)))
+                .ToList();
 
-            _cleanup = new CompositeDisposable(
-                pulses.Select(p =>
-                    p.Subscribe()
-                )
-            );
+            _cleanup = new CompositeDisposable(_listeners.Connect());
+
+            return PulseListener;
         }
+
+        public IObservableCache<PulseChannelListener, PulseOutputChannel> PulseListener { get; set; }
 
         private IObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> PulseCheckerObservable()
         {
@@ -88,27 +71,18 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
 
             return ObservableChangeSet.Create<PulseChannelListener, PulseOutputChannel>(cache =>
             {
-                //var recurring = _scheduler.Schedule(() =>
-                //{
-                //    do
-                //    {
-                //        _inputChannels.ForEach(async i =>
-                //        {
-                //            var newPulse = await i.CheckForPulseAsync(_cancellation.Token);
-                //            if (newPulse)
-                //                cache.AddOrUpdate(i);
-                //        });
-                //    } while (!_cancellation.Token.IsCancellationRequested);
-                //});
-
-                var recurring = 
-                    _inputChannels.ForEach(i =>
-                        _scheduler.ScheduleRecurringAction(TimeSpan.FromMilliseconds(15.625), () =>
+                var recurring = _inputChannels.ForEach(i =>
+                    {
+                        cache.AddOrUpdate(i);
+                        _background.ScheduleRecurringAction(TimeSpan.FromMilliseconds(CheckIntervalTime), () =>
                         {
                             var newPulse = i.CheckForPulse();
                             if (newPulse)
                                 cache.AddOrUpdate(i);
-                        }));
+                        });
+                    });
+                       
+                        
 
                 return new CompositeDisposable(recurring);
             }, listener => listener.Name);
@@ -131,28 +105,13 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
         // If we have more than one subscriber, and the subscribers are known, 
         // it is recommended you look into the Reactive Extension method Publish().
 
-        public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel,
-            ISchedulerProvider scheduler = null)
+        public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel
+        )
         {
             Items = items;
             Channel = channel;
 
-            scheduler = scheduler ?? new SchedulerProvider();
-
-            _scheduler = scheduler;
-
             OffValue = Channel.GetValue();
-
-            //_listener = ChannelListenerObservable().Publish();
-            ////var listener = ChannelListenerObservable()
-            ////    //.ObserveOn(scheduler.Dispatcher)
-            ////    .Publish();
-
-            //PulseListener = _listener.AsObservableList();
-
-            //listener.Count()
-            //    .Subscribe(x => TotalPulses = x);
-            //_listener = listener;
         }
 
         public int TotalPulses { get; private set; }
@@ -168,25 +127,22 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
         public bool CheckForPulse()
         {
             var pulseOn = Channel.GetValue() != OffValue;
-            Debug.WriteLine($"Pulse Channel {Name} - Value = {pulseOn}");
+            Debug.WriteLine($"[{Name}] = {pulseOn}");
 
             if (pulseOn && !_previousPulseOn)
             {
                 TotalPulses++;
-                Debug.WriteLine($"Pulse Channel {Name} = {TotalPulses} pulses");
+                Debug.WriteLine($"[{Name}] = {TotalPulses}");
 
                 _previousPulseOn = true;
                 return true;
             }
 
-            _previousPulseOn = false;
+            _previousPulseOn = pulseOn;
             return false;
         }
 
-        public async Task<bool> CheckForPulseAsync(CancellationToken token)
-        {
-            return await Task.Run(CheckForPulse, token);
-        }
+        public async Task<bool> CheckForPulseAsync(CancellationToken token) => await Task.Run(CheckForPulse, token);
 
         public void Dispose()
         {
@@ -213,16 +169,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
 
                 if (_scheduler.ThreadPool is ThreadPoolScheduler poolScheduler)
                 {
-                    //var listen = poolScheduler.ScheduleLongRunning(cancel =>
-                    //{
-                    //    do
-                    //    {
-                    //        ListenForPulses();
-                    //    } while (true);
-
-                    //});
-                    //cleanup = new CompositeDisposable(cleanup, listen);
-                    //TaskPoolScheduler.Default
+                 
                 }
                 else
                 {
@@ -239,7 +186,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
                     do
                     {
                         var value = Channel.GetValue();
-                        Debug.WriteLine($"Pulse Channel {Name} - Value = {value}");
+                        Debug.WriteLine($"Pulse Channel {Name} = {value}");
                         if (value != offValue)
                         {
                             if (isPulseCleared)
@@ -273,3 +220,16 @@ namespace Prover.Application.ExternalDevices.DInOutBoards
         #endregion
     }
 }
+
+//var recurring = _scheduler.Schedule(() =>
+//{
+//    do
+//    {
+//        _inputChannels.ForEach(async i =>
+//        {
+//            var newPulse = await i.CheckForPulseAsync(_cancellation.Token);
+//            if (newPulse)
+//                cache.AddOrUpdate(i);
+//        });
+//    } while (!_cancellation.Token.IsCancellationRequested);
+//});

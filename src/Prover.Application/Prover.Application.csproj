@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
     <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
@@ -28,19 +27,10 @@
     <PackageReference Include="ReactiveUI" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
+    <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MccDaq">
-      <HintPath>..\lib\MccDaq.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
