@@ -38,11 +38,11 @@ namespace Client.Desktop.Wpf.Startup
             services.AddStartTask<Storage>();
 
             var connectionString = Environment.ExpandEnvironmentVariables(
-                host.Configuration.GetConnectionString(KeyValueStoreConnectionString)
-                );
+                host.Configuration.GetConnectionString(KeyValueStoreConnectionString));
 
             //LiteDb
-            services.AddSingleton(c => StorageDefaults.CreateDatabase(connectionString));
+            var db = StorageDefaults.CreateDatabase(connectionString);
+            services.AddSingleton(c => db);
 
             services.AddScoped<EvcVerificationTestService>();
             services.AddScoped<VerificationViewModelService>();

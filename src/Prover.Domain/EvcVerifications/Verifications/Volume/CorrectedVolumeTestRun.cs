@@ -6,14 +6,13 @@ namespace Prover.Domain.EvcVerifications.Verifications.Volume
 {
     public class CorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>
     {
-        private CorrectedVolumeTestRun() : base()
+        private CorrectedVolumeTestRun()
         {
-
         }
 
-        #region Public Properties
-
-        public CorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified, decimal totalCorrectionFactor, decimal uncorrectedInputVolume) 
+        public CorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue,
+            decimal actualValue, decimal percentError, bool verified, decimal totalCorrectionFactor,
+            decimal uncorrectedInputVolume)
             : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
         {
             TotalCorrectionFactor = totalCorrectionFactor;
@@ -44,6 +43,5 @@ namespace Prover.Domain.EvcVerifications.Verifications.Volume
         {
             UncorrectedInputVolume = driveInputType.UnCorrectedInputVolume(appliedInput);
         }
-        #endregion
     }
 }

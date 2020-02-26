@@ -37,11 +37,11 @@ namespace Client.Desktop.Wpf.Views.Verifications
         }
 
         public static readonly DependencyProperty VolumeTestContentTemplateProperty =
-            DependencyProperty.Register(nameof(VolumeTestContentTemplate), typeof(object), typeof(ContentControl));
+            DependencyProperty.Register(nameof(VolumeTestContentTemplate), typeof(DataTemplate), typeof(ContentControl));
 
-        public object  VolumeTestContentTemplate
+        public DataTemplate  VolumeTestContentTemplate
         {
-            get => GetValue(VolumeTestContentTemplateProperty);
+            get => (DataTemplate)GetValue(VolumeTestContentTemplateProperty);
             set => SetValue(VolumeTestContentTemplateProperty, value);
         }
     }

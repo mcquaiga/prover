@@ -19,16 +19,17 @@ namespace Client.Desktop.Wpf.Views.Verifications
             InitializeComponent();
 
             var correctionsItemTemplate = FindResource("CorrectionsTestDataTemplate");
-            var volumeContent = FindResource("VolumeTestButton");
+            var volumeContent = FindResource("RotaryVolumeContentControlTemplate");
 
             this.WhenActivated(d =>
                 {
                     this.OneWayBind(ViewModel, vm => vm.TestViewModel, v => v.TestViewContent.ViewModel).DisposeWith(d);
                     this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
                     this.BindCommand(ViewModel, vm => vm.PrintTestReport, v => v.PrintButton).DisposeWith(d);
+                    //this.BindCommand(ViewModel, vm => vm.RunVolumeTest, v => v.).DisposeWith(d);
                     
                     //this.BindCommand(ViewModel, vm => vm., v => v.).DisposeWith(d);
-
+                    
 
                     TestViewContent.Content.SetPropertyValue("CorrectionTestsItemTemplate", correctionsItemTemplate);
                     TestViewContent.Content.SetPropertyValue("VolumeTestContentTemplate", volumeContent);
@@ -36,12 +37,4 @@ namespace Client.Desktop.Wpf.Views.Verifications
         }
     }
 
-    public class CorrectionItemsDataTemplateSelector : DataTemplateSelector
-    {
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
-        {
-            FrameworkElement elemnt = container as FrameworkElement;
-            return elemnt.FindResource("CorrectionControlTemplate") as DataTemplate;
-        }
-    }
 }

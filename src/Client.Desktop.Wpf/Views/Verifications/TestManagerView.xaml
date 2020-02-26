@@ -79,12 +79,15 @@
             </StackPanel>
         </DataTemplate>
 
-        <Button
-            x:Key="VolumeTestButton"
-            Margin="15,5"
-            Command="{Binding ViewModel.VolumeTestManager.StartVolumeTest, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
-            Content="Run Volume Test"
-            Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+        <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
+            <StackPanel>
+                <Button
+                    Margin="15,5"
+                    Command="{Binding ViewModel.VolumeTestManager.StartVolumeTest, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
+                    Content="Run Volume Test"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+            </StackPanel>
+        </DataTemplate>
 
     </UserControl.Resources>
     <Grid>

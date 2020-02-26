@@ -33,7 +33,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 SetLastUsedSettings();
-                var testManager = await testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
+                var testManager = await testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
                 await ScreenManager.ChangeView(testManager);
             }, canStartTest);
 

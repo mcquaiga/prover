@@ -15,15 +15,15 @@ namespace Prover.Domain.EvcVerifications.Verifications
         #endregion
     }
 
-
-    public abstract class VerificationTestEntity : VerificationEntity, IVerificationTest
+    public abstract class VerificationEntity<TValue> : VerificationEntity
+      
     {
-        protected VerificationTestEntity()
+        protected VerificationEntity()
         {
         }
 
-        protected VerificationTestEntity(decimal expectedValue, decimal actualValue,
-            decimal percentError) : base()
+        protected VerificationEntity(TValue expectedValue, TValue actualValue,
+            TValue percentError) : base()
         {
             ExpectedValue = expectedValue;
             ActualValue = actualValue;
@@ -32,14 +32,31 @@ namespace Prover.Domain.EvcVerifications.Verifications
 
         #region Public Properties
 
-        public decimal ExpectedValue { get; protected set; }
-        public decimal ActualValue { get; protected set; }
-        public decimal PercentError { get; protected set; }
+        public TValue ExpectedValue { get; protected set; }
+        public TValue ActualValue { get; protected set; }
+        public TValue PercentError { get; protected set; }
 
         #endregion
     }
 
-    public abstract class VerificationTestEntity<T> : VerificationTestEntity
+    public abstract class VerificationTestEntity : VerificationEntity<decimal>, IVerificationTest
+    {
+        protected VerificationTestEntity()
+        {
+        }
+
+        protected VerificationTestEntity(decimal expectedValue, decimal actualValue,
+            decimal percentError) : base(expectedValue, actualValue, percentError)
+        {
+        }
+
+        #region Public Properties
+
+        #endregion
+    }
+
+
+    public abstract class VerificationTestEntity<T> : VerificationEntity<decimal>, IVerificationTest
         where T : ItemGroup
     {
         protected VerificationTestEntity() {}

@@ -23,7 +23,7 @@ namespace Prover.Application.Services
         private const double CheckIntervalTime = 31.25;
         private readonly IScheduler _background;
         private readonly Func<PulseOutputChannel, IInputChannel> _channelFactoryFunc;
-        private readonly IConnectableObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> _listeners;
+        private readonly IConnectableObservable<IChangeSet<PulseChannel, PulseOutputChannel>> _listeners;
         private CancellationTokenSource _cancellation;
         private CompositeDisposable _cleanup;
         private ICollection<PulseChannelListener> _inputChannels = new List<PulseChannelListener>();
@@ -41,15 +41,23 @@ namespace Prover.Application.Services
             _cleanup = new CompositeDisposable(PulseListener);
         }
 
-        public PulseInputsListenerService(ILoggerFactory loggerFactory, IInputChannelFactory channelFactory,
-            IScheduler backgroundThread)
-            : this(loggerFactory, backgroundThread) => _channelFactoryFunc = channelFactory.CreateInputChannel;
+        public PulseInputsListenerService(
+            ILoggerFactory loggerFactory, 
+            IInputChannelFactory channelFactory,
+            IScheduler backgroundThread = null
 
-        public PulseInputsListenerService(ILoggerFactory loggerFactory,
-            Func<PulseOutputChannel, IInputChannel> channelFactoryFunc, IScheduler backgroundThread)
-            : this(loggerFactory, backgroundThread) => _channelFactoryFunc = channelFactoryFunc;
+        ) : this(loggerFactory, backgroundThread) 
+            => _channelFactoryFunc = channelFactory.CreateInputChannel;
 
-        public IObservableCache<PulseChannelListener, PulseOutputChannel> PulseListener { get; }
+        public PulseInputsListenerService(
+            ILoggerFactory loggerFactory,
+            Func<PulseOutputChannel, IInputChannel> channelFactoryFunc, 
+            IScheduler backgroundThread = null
+
+        ) : this(loggerFactory, backgroundThread) 
+            => _channelFactoryFunc = channelFactoryFunc;
+
+        public IObservableCache<PulseChannel, PulseOutputChannel> PulseListener { get; }
 
         public void Dispose()
         {
@@ -68,7 +76,7 @@ namespace Prover.Application.Services
                 .ToList();
         }
 
-        public IObservableCache<PulseChannelListener, PulseOutputChannel> StartListening()
+        public IObservableCache<PulseChannel, PulseOutputChannel> StartListening()
         {
             if (!_inputChannels.Any())
                 throw new Exception("Pulse input channels haven't been configured. Call Initialize first.");
@@ -78,38 +86,46 @@ namespace Prover.Application.Services
             return PulseListener;
         }
 
-        private IObservable<IChangeSet<PulseChannelListener, PulseOutputChannel>> PulseCheckerObservable()
+        private IObservable<IChangeSet<PulseChannel, PulseOutputChannel>> PulseCheckerObservable()
         {
             _cancellation = new CancellationTokenSource();
 
-            return ObservableChangeSet.Create<PulseChannelListener, PulseOutputChannel>(cache =>
+            return ObservableChangeSet.Create<PulseChannel, PulseOutputChannel>(cache =>
             {
                 var recurring = _inputChannels.ForEach(i =>
                 {
-                    cache.AddOrUpdate(i);
+                    cache.AddOrUpdate(i.Pulser);
                     _background.ScheduleRecurringAction(TimeSpan.FromMilliseconds(CheckIntervalTime), () =>
                     {
                         var newPulse = i.CheckForPulse();
                         if (newPulse)
-                            cache.AddOrUpdate(i);
+                            cache.AddOrUpdate(i.Pulser);
                     });
                 });
 
 
                 return new CompositeDisposable(recurring);
-            }, listener => listener.Name);
+            }, pulser => pulser.Channel);
         }
+    }
+
+    public class PulseChannel
+    {
+        public PulseOutputChannel Channel { get; set; }
+
+        public int PulseCount { get; set; }
+
+        public PulseOutputItems.ChannelItems Items { get; set; }
     }
 
     public class PulseChannelListener : IDisposable
     {
-        private readonly IConnectableObservable<IChangeSet<int>> _listener;
-        private readonly ISchedulerProvider _scheduler;
-
         private CancellationTokenSource _cancellation;
-        private CompositeDisposable _cleanup;
+        private readonly CompositeDisposable _cleanup;
 
         private bool _previousPulseOn;
+
+        protected IInputChannel Channel;
         //private readonly IObservableList<int> _pulses;
 
         //public IObservableList<int> Pulses => _pulses;
@@ -119,33 +135,39 @@ namespace Prover.Application.Services
 
         public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel)
         {
-            Items = items;
+            Pulser = new PulseChannel
+            {
+                Items = items, 
+                Channel = items.Name, 
+                PulseCount = 0
+            };
+
             Channel = channel;
 
             OffValue = Channel.GetValue();
+
+            _cleanup = new CompositeDisposable();
         }
 
-        public int TotalPulses { get; private set; }
-
-        public PulseOutputChannel Name => Items.Name;
-        public PulseOutputItems.ChannelItems Items { get; }
-        public IInputChannel Channel { get; }
+        public PulseChannel Pulser { get; set; }
 
         public int OffValue { get; }
 
-        public IObservableList<int> PulseListener { get; set; }
+        //public IObservableList<int> PulseListener { get; set; }
 
         public bool CheckForPulse()
         {
             var pulseOn = Channel.GetValue() != OffValue;
-            Debug.WriteLine($"[{Name}] = {pulseOn}");
+            Debug.WriteLine($"[{Pulser.Channel}] = {pulseOn}");
 
             if (pulseOn && !_previousPulseOn)
             {
-                TotalPulses++;
-                Debug.WriteLine($"[{Name}] = {TotalPulses}");
-
                 _previousPulseOn = true;
+
+                Pulser.PulseCount++;
+
+                Debug.WriteLine($"[{Pulser.Channel}] = {Pulser.PulseCount}");
+
                 return true;
             }
 
@@ -159,75 +181,6 @@ namespace Prover.Application.Services
         {
             _cleanup?.Dispose();
         }
-
-        public IObservable<IChangeSet<int>> Start()
-        {
-            _cleanup = new CompositeDisposable(_listener.Connect());
-            return _listener.AsObservable();
-        }
-
-        private IObservable<IChangeSet<int>> ChannelListenerObservable()
-        {
-            var offValue = Channel.GetValue();
-
-            return ObservableChangeSet.Create<int>(obs =>
-            {
-                var isPulseCleared = true;
-                var total = 0;
-                var cleanup = new CompositeDisposable();
-
-                _cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-
-                if (_scheduler.ThreadPool is ThreadPoolScheduler poolScheduler)
-                {
-                }
-                else
-                {
-                    var listen2 = _scheduler.ThreadPool
-                        .Schedule(() => ListenForPulses(_cancellation.Token));
-
-                    cleanup = new CompositeDisposable(cleanup, listen2);
-                }
-
-                return cleanup;
-
-                void ListenForPulses(CancellationToken token)
-                {
-                    do
-                    {
-                        var value = Channel.GetValue();
-                        Debug.WriteLine($"Pulse Channel {Name} = {value}");
-                        if (value != offValue)
-                        {
-                            if (isPulseCleared)
-                            {
-                                isPulseCleared = false;
-                                total++;
-                                obs.Add(total);
-                                Debug.WriteLine($"Pulse Channel {Name} = {total} pulses");
-                            }
-                        }
-                        else
-                        {
-                            Debug.WriteLine($"Pulse Channel {Name} Pulse cleared = {isPulseCleared}");
-                            isPulseCleared = true;
-                        }
-                    } while (!token.IsCancellationRequested);
-
-                    Debug.WriteLine($"Cancellation requested {token.IsCancellationRequested}");
-                }
-            });
-        }
-
-        #region Nested type: PulseValue
-
-        private enum PulseValue
-        {
-            On = 1,
-            Off = 0
-        }
-
-        #endregion
     }
 }
 

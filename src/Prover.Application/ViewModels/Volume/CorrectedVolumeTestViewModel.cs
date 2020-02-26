@@ -20,10 +20,11 @@ namespace Prover.Application.ViewModels.Volume
         {
             Uncorrected = uncorrected;
             this.WhenAnyValue(x => x.StartValues, x => x.EndValues,
-                    (s, e) => VolumeCalculator.TotalVolume(s.CorrectedReading, e.CorrectedReading))
+                    (start, end) => VolumeCalculator.TotalVolume(start.CorrectedReading, end.CorrectedReading))
                 .ToPropertyEx(this, x => x.ActualValue);
 
-            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume).CombineLatest(this.WhenAnyValue(x => x.TotalCorrectionFactor),
+            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume).CombineLatest(
+                    this.WhenAnyValue(x => x.TotalCorrectionFactor),
                     (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
                 .ToPropertyEx(this, x => x.ExpectedValue);
 
@@ -34,9 +35,23 @@ namespace Prover.Application.ViewModels.Volume
         public UncorrectedVolumeTestViewModel Uncorrected { get; }
 
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
+
+        [Reactive] public PulseOutputTestViewModel PulseOutput { get; set; }
     }
 
-    public class PulseOutputTestViewModel : VarianceTestViewModel
+    public class PulseOutputTestViewModel : DeviationTestViewModel<PulseOutputItems.ChannelItems>
     {
+        private readonly VolumeTestRunViewModelBase _volumeTest;
+
+        public PulseOutputTestViewModel(PulseOutputItems.ChannelItems pulseChannelItems,
+            VolumeTestRunViewModelBase volumeTest) : base(Global.PULSE_VARIANCE_THRESHOLD)
+        {
+            _volumeTest = volumeTest;
+            Items = pulseChannelItems;
+
+            this.WhenAnyValue(x => x._volumeTest.ActualValue)
+                .Select(x => x.ToInt32())
+                .ToPropertyEx(this, x => x.ActualValue);
+        }
     }
 }

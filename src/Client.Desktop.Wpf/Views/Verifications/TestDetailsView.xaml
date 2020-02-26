@@ -68,11 +68,11 @@
                         <ContentControl
                             x:Name="VolumeTestContent"
                             HorizontalAlignment="Center"
-                            Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                            ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
                         <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
                     </StackPanel>
-
+                    <!--  Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}"  -->
                 </Border>
             </Grid>
 

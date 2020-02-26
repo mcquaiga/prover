@@ -90,22 +90,22 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             Assert.IsTrue(pulses.Count == 1);
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(60.5);
-            Assert.IsTrue(pulses[0].TotalPulses == 0); // 61.5 ms  Off
+            Assert.IsTrue(pulses[0].PulseCount == 0); // 61.5 ms  Off
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(61.5);
-            Assert.IsTrue(pulses[0].TotalPulses == 1); // 123 ms  On
+            Assert.IsTrue(pulses[0].PulseCount == 1); // 123 ms  On
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(3);
-            Assert.IsTrue(pulses[0].TotalPulses == 1); // 126 ms Off
+            Assert.IsTrue(pulses[0].PulseCount == 1); // 126 ms Off
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(62.5);
-            Assert.IsTrue(pulses[0].TotalPulses == 2); // 188.5 On
+            Assert.IsTrue(pulses[0].PulseCount == 2); // 188.5 On
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(186.5);
 
             _schedulers.Dispatcher.AdvanceBySeconds(1);
 
-            Assert.IsTrue(pulses[0].TotalPulses == 3);
+            Assert.IsTrue(pulses[0].PulseCount == 3);
         }
 
         [TestMethod] 
@@ -219,8 +219,8 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             _schedulers.TaskPool.AdvanceByMilliSeconds(testTimeMs);
             _schedulers.Dispatcher.AdvanceBySeconds(1);
 
-            Assert.IsTrue(pulses[0].TotalPulses == expected);
-            Assert.IsTrue(pulses[1].TotalPulses == expected);
+            Assert.IsTrue(pulses[0].PulseCount == expected);
+            Assert.IsTrue(pulses[1].PulseCount == expected);
         }
 
 

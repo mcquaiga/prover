@@ -9,29 +9,18 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Corrections
 {
-    public interface IVerify
+    public interface ISetVerified : IAssertVerification
     {
-        bool Verified { get; }
         void SetVerified(bool verified);
     }
 
-    public abstract class VerificationTestProxy : AbstractNotifyPropertyChanged, IVerify
-    {
-        public virtual bool Verified { get; }
-        public void SetVerified(bool verified)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public abstract class VerificationViewModel : BaseViewModel, IVerify
+    public abstract class VerificationViewModel : BaseViewModel, IAssertVerification
     {
         private readonly ReactiveCommand<bool, bool> _setVerified;
 
         protected VerificationViewModel()
         {
             _setVerified = ReactiveCommand.Create<bool, bool>(v => v);
-
             _setVerified.ToPropertyEx(this, x => x.Verified);
 
             //this.WhenAnyValue(x => x.IsVerified)
@@ -44,42 +33,23 @@ namespace Prover.Application.ViewModels.Corrections
 
         public void SetVerified(bool verified)
         {
+            verified = SetOverrideVerify(verified);
             _setVerified.Execute(verified);
         }
+
+        protected virtual bool SetOverrideVerify(bool verified) => verified;
     }
 
-    //public abstract class VarianceTestProxy : AbstractNotifyPropertyChanged, IVerify
-    //{
-    //    public IProperty<decimal> PassTolerance { get; protected set; }
-    //    public virtual decimal ExpectedValue { get; protected set; }
-    //    public virtual decimal ActualValue { get; protected set; }
+    public interface IAssertExpectedActual
+    {
+        decimal PassTolerance { get; }
+        decimal ExpectedValue { get; }
+        decimal ActualValue { get; }
+        decimal PercentError { get; }
+        bool Verified { get; }
+    }
 
-    //    public virtual decimal PercentError { get; protected set; }
-    //    public virtual bool Verified { get; }
-    //    public void SetVerified(bool verified)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //public abstract class VarianceTestViewModelTest : ReactiveObject
-    //{
-    //    public VarianceTestProxy Proxy { get; }
-
-    //    protected VarianceTestViewModelTest(VarianceTestProxy proxy)
-    //    {
-    //        Proxy = proxy;
-
-    //        this.WhenAnyValue(x => x.Proxy.PercentError)
-    //            .Select(p => p.IsBetween(Proxy.PassTolerance))
-    //            .ToPropertyEx(this, x => x.Proxy.Verified, deferSubscription: true);
-
-    //        this.WhenAnyValue(x => x.Proxy.ExpectedValue, x => x.Proxy.ActualValue, Calculators.PercentDeviation)
-    //            .ToPropertyEx(this, x => x.PercentError, 100m, true);
-    //    }
-    //}
-
-    public abstract class VarianceTestViewModel : VerificationViewModel
+    public abstract class VarianceTestViewModel : VerificationViewModel, IAssertExpectedActual
     {
         protected VarianceTestViewModel()
         {
@@ -102,6 +72,33 @@ namespace Prover.Application.ViewModels.Corrections
         public extern decimal ActualValue { [ObservableAsProperty] get; }
 
         public extern decimal PercentError { [ObservableAsProperty] get; }
+    }
+
+    public abstract class DeviationTestViewModel<T> : BaseViewModel, IAssertVerification
+        where T : class
+    {
+        protected DeviationTestViewModel()
+        {
+        }
+
+        protected DeviationTestViewModel(int passTolerance)
+        {
+            PassTolerance = passTolerance;
+
+            this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.Deviation)
+                .ToPropertyEx(this, x => x.Deviation, 100, true);
+
+            this.WhenAnyValue(x => x.Deviation)
+                .Select(p => p.IsBetween(PassTolerance))
+                .ToPropertyEx(this, x => x.Verified, deferSubscription: true);
+        }
+
+        [Reactive] public T Items { get; set; }
+        [Reactive] public int PassTolerance { get; protected set; }
+        [Reactive] public int ExpectedValue { get; set; }
+        public extern int ActualValue { [ObservableAsProperty] get; }
+        public extern int Deviation { [ObservableAsProperty] get; }
+        public extern bool Verified { [ObservableAsProperty] get; }
     }
 
     public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel

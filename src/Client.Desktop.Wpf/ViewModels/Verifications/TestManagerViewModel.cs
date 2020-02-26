@@ -71,54 +71,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         private readonly IScreenManager _screenManager;
         private readonly VerificationViewModelService _testViewModelService;
 
-        public TestManagerViewModel(ILoggerFactory loggerFactory,
-            IScreenManager screenManager,
-            DeviceSessionManager deviceManager,
-            VerificationViewModelService testViewModelService,
-            DialogServiceManager dialogService,
-            IVolumeTestManagerFactory volumeTestManagerFactory)
-        {
-            _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
-
-            _screenManager = screenManager;
-            _deviceManager = deviceManager;
-            _testViewModelService = testViewModelService;
-            _dialogService = dialogService;
-            _volumeTestManagerFactory = volumeTestManagerFactory;
-
-            SaveCommand = ReactiveCommand.CreateFromTask(() => _testViewModelService.AddOrUpdate(TestViewModel));
-
-            DownloadCommand =
-                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
-
-            PrintTestReport =
-                ReactiveCommand.CreateFromTask(ResetCurrentTest);
-        }
-
-        private TestManagerViewModel(ILogger logger, IScreenManager screenManager,
-            DeviceSessionManager deviceManager, VerificationViewModelService testViewModelService,
-            DialogServiceManager dialogService, EvcVerificationViewModel testViewModel,
-            VolumeTestManager volumeTestManager)
-        {
-            _logger = logger ?? NullLogger.Instance;
-
-            _screenManager = screenManager;
-            _deviceManager = deviceManager;
-            _testViewModelService = testViewModelService;
-            _dialogService = dialogService;
-
-            TestViewModel = testViewModel;
-            VolumeTestManager = volumeTestManager;
-
-            SaveCommand = ReactiveCommand.CreateFromTask(() => _testViewModelService.AddOrUpdate(TestViewModel));
-
-            DownloadCommand =
-                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
-
-            PrintTestReport =
-                ReactiveCommand.CreateFromTask(ResetCurrentTest);
-        }
-
         [Reactive] public EvcVerificationViewModel TestViewModel { get; protected set; }
 
         [Reactive] public VolumeTestManager VolumeTestManager { get; protected set; }
@@ -152,10 +104,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             }
         }
 
-        public async Task ResetCurrentTest()
-        {
-        }
-
         private ICollection<ItemMetadata> GetItemsToDownload(CompositionType compType)
         {
             var items = new List<ItemMetadata>();
@@ -172,17 +120,44 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             return items;
         }
 
-       
+        private void SetupRxUI()
+        {
+            SaveCommand = ReactiveCommand.CreateFromTask(() => _testViewModelService.AddOrUpdate(TestViewModel));
+
+            DownloadCommand =
+                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
+
+            PrintTestReport =
+                ReactiveCommand.CreateFromTask(Complete);
+
+            RunVolumeTest = ReactiveCommand.CreateFromTask(VolumeTestManager.RunAsync);
+        }
     }
 
     public partial class TestManagerViewModel : ITestManagerViewModelFactory
     {
+        public TestManagerViewModel(ILoggerFactory loggerFactory,
+            IScreenManager screenManager,
+            DeviceSessionManager deviceManager,
+            VerificationViewModelService testViewModelService,
+            DialogServiceManager dialogService,
+            IVolumeTestManagerFactory volumeTestManagerFactory)
+        {
+            _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
+
+            _screenManager = screenManager;
+            _deviceManager = deviceManager;
+            _testViewModelService = testViewModelService;
+            _dialogService = dialogService;
+            _volumeTestManagerFactory = volumeTestManagerFactory;
+        }
+
         public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate, string tachPortName)
         {
             await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
             TestViewModel = _testViewModelService.NewTest(_deviceManager.Device);
-            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager.Device, TestViewModel.VolumeTest, tachPortName);
-
+            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
+            SetupRxUI();
             return this;
         }
     }

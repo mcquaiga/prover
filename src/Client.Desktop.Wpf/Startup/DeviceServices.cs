@@ -38,8 +38,9 @@ namespace Client.Desktop.Wpf.Startup
             services.AddTransient<VolumeTestManager>();
             services.AddTransient<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
 
-            services.AddTransient<DeviceSessionManager>();
-            services.AddScoped<VerificationViewModelService>();
+            services.AddScoped<DeviceSessionManager>();
+
+
 
             // Port Setup
             var portFactory = new CommPortFactory();

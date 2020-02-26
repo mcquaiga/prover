@@ -13,18 +13,6 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    public interface IScreenManager : IScreen
-    {
-        Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel);
-        Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel;
-
-        bool? ShowDialog<TViewModel>(ReactiveObject owner, IModalDialogViewModel viewModel)
-            where TViewModel : IWindow;
-
-        void ShowDialog(INotifyPropertyChanged viewModel);
-        void ShowModalDialog(ReactiveObject owner, IModalDialogViewModel viewModel);
-    }
-
     public class MainViewModel : ReactiveObject, IScreenManager, IDisposable
     {
         private readonly DialogServiceManager _dialogService;

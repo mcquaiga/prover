@@ -45,18 +45,18 @@ namespace Devices.Communications.Interfaces
 
         private static TypeInfo LocateFactory<T>(T deviceType)
         {
-            var factory = _assemblies.Select(a 
-                    => a.DefinedTypes.FirstOrDefault(t 
-                        => t.ImplementedInterfaces.Any(i 
-                               => i.Name == typeof(IDeviceTypeCommClientFactory<>).Name && i.GenericTypeArguments.Contains(deviceType.GetType())) 
-                           && !t.IsInterface && !t.IsAbstract)).FirstOrDefault();
+            foreach (var assembly in _assemblies)
+            {
+                var factory = assembly.DefinedTypes.FirstOrDefault(t => 
+                    !t.IsInterface && !t.IsAbstract && t.ImplementedInterfaces.Any(i => 
+                        i.Name == typeof(IDeviceTypeCommClientFactory<>).Name && i.GenericTypeArguments.Contains(deviceType.GetType())) 
+                    );
 
-
-            if (factory == null)
-                throw new ArgumentNullException($"Could not locate factory method for device type {typeof(T)}.");
-
-
-            return factory;
+                if (factory != null)
+                    return factory;
+            }
+            
+            throw new ArgumentNullException($"Could not locate factory method for device type {typeof(T)}.");
         }
     }
 }
