@@ -5,7 +5,7 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items.ItemGroups;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Romet.Core.Items.ItemGroups
 {

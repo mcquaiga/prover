@@ -4,7 +4,7 @@ using System.Threading;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.Screens.Dialogs
+namespace Client.Desktop.Wpf.Screens.Dialogs
 {
 
     public interface IDialogViewModel : IReactiveObject

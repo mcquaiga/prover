@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Client.Wpf.Converters
+namespace Client.Desktop.Wpf.Converters
 {
     public class BooleanToPassConverter : IValueConverter
     {

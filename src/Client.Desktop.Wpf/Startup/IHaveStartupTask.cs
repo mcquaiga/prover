@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Client.Wpf.Startup
+namespace Client.Desktop.Wpf.Startup
 {
     public interface IHaveStartupTask
     {

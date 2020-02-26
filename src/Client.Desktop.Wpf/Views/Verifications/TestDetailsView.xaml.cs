@@ -1,13 +1,15 @@
-﻿using Client.Wpf.ViewModels.Verifications;
+﻿using System.Reactive.Disposables;
+using System.Windows;
+using System.Windows.Controls;
+using Prover.Application.ViewModels;
 using ReactiveUI;
-using System.Reactive.Disposables;
 
-namespace Client.Wpf.Views.Verifications
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     /// Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class TestDetailsView : ReactiveUserControl<TestDetailsViewModel>
+    public partial class TestDetailsView : ReactiveUserControl<EvcVerificationViewModel>
     {
         public TestDetailsView()
         {
@@ -15,14 +17,34 @@ namespace Client.Wpf.Views.Verifications
 
             this.WhenActivated(d =>
                 {
-                    this.OneWayBind(ViewModel, vm => vm.EvcVerification.Tests, v => v.TestPointItems.ItemsSource).DisposeWith(d);
 
-                    this.OneWayBind(ViewModel, vm => vm.EvcVerification, v => v.SiteInfoContent.ViewModel).DisposeWith(d);
-                    this.OneWayBind(ViewModel, vm => vm.EvcVerification.VolumeTest, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
-
-                    this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
-                    
+                    this.OneWayBind(ViewModel, vm => vm.Tests, v => v.TestPointItems.ItemsSource).DisposeWith(d);
+                    this.OneWayBind(ViewModel, vm => vm.DeviceInfo, v => v.SiteInfoContent.ViewModel).DisposeWith(d);
+                    this.OneWayBind(ViewModel, vm => vm.VolumeTest, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
                 });
+
+            if (CorrectionTestsItemTemplate == null)
+                CorrectionTestsItemTemplate = (DataTemplate)FindResource("CorrectionsReadOnlyDataTemplate");
+        }
+
+        public static readonly DependencyProperty CorrectionTestsItemTemplateProperty =
+            DependencyProperty.Register(nameof(CorrectionTestsItemTemplate), typeof(DataTemplate), typeof(ItemsControl));
+
+        public DataTemplate  CorrectionTestsItemTemplate
+        {
+            get => (DataTemplate)GetValue(CorrectionTestsItemTemplateProperty);
+            set => SetValue(CorrectionTestsItemTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty VolumeTestContentTemplateProperty =
+            DependencyProperty.Register(nameof(VolumeTestContentTemplate), typeof(object), typeof(ContentControl));
+
+        public object  VolumeTestContentTemplate
+        {
+            get => GetValue(VolumeTestContentTemplateProperty);
+            set => SetValue(VolumeTestContentTemplateProperty, value);
         }
     }
+
+  
 }

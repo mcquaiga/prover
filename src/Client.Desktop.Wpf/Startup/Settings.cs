@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application;
-using Application.Services;
-using Application.Settings;
-using Client.Wpf.Extensions;
+using Client.Desktop.Wpf.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Shared.Interfaces;
+using Prover.Application;
+using Prover.Application.Services;
+using Prover.Application.Settings;
+using Prover.Shared.Interfaces;
 
-namespace Client.Wpf.Startup
+namespace Client.Desktop.Wpf.Startup
 {
     public class Settings : IHaveStartupTask, IHostedService
     {

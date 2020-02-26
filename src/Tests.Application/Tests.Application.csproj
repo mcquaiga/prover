@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -21,12 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
     <ProjectReference Include="..\Tests\Tests.Shared\Tests.Shared.csproj" />
   </ItemGroup>
 

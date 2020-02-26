@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Client.Wpf.Common
+namespace Client.Desktop.Wpf.Common
 {
     public abstract class BackgroundService : IHostedService, IDisposable
     {

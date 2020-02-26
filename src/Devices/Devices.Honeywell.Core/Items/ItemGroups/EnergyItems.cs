@@ -1,6 +1,6 @@
 ﻿using Devices.Core.Items.Attributes;
 using Devices.Core.Items.DriveTypes;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {

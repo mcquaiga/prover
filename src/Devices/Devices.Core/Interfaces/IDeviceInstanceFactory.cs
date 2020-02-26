@@ -6,6 +6,5 @@ namespace Devices.Core.Interfaces
     public interface IDeviceInstanceFactory
     {
         DeviceInstance CreateInstance(IEnumerable<ItemValue> itemValues = null);
-        DeviceType DeviceType { get; }
     }
 }

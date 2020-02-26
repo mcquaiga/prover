@@ -7,7 +7,7 @@ using System.Windows;
 using ReactiveUI;
 using Expression = System.Linq.Expressions.Expression;
 
-namespace Client.Wpf.Controls
+namespace Client.Desktop.Wpf.Controls
 {
     public class CustomPropertyResolver : ICreatesObservableForProperty
     {

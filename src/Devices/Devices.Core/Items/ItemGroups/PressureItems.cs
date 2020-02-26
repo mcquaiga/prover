@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Interfaces;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Core.Items.ItemGroups
 {

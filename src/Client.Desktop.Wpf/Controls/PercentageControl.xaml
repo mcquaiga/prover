@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="Client.Wpf.Controls.PercentageControl"
+﻿<UserControl x:Class="Client.Desktop.Wpf.Controls.PercentageControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:Client.Desktop.Wpf.Converters"
              mc:Ignorable="d"
              x:Name="PercentUserControl"
-             xmlns:converters1="clr-namespace:Client.Wpf.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,7 +15,7 @@
             <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
             
-            <converters1:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
+            <converters:BoolToVisibilityConverter x:Key="BoolToHiddenConverter"
                                                   TrueValue="Collapsed"
                                                   FalseValue="Visible" />
         </ResourceDictionary>

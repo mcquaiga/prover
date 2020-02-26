@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Prover.Shared;
 
 namespace Devices.Core.Interfaces
 {
@@ -66,5 +67,10 @@ namespace Devices.Core.Interfaces
         protected abstract void SetValues(IEnumerable<ItemValue> itemValues);
 
         #endregion
+    }
+
+    public static class DeviceInstanceEx
+    {
+        public static CompositionType Composition(this DeviceInstance device) => device.ItemGroup<SiteInformationItems>().CompositionType;
     }
 }

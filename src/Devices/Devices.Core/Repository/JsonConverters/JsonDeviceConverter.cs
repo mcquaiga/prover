@@ -4,7 +4,7 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Shared.Json;
+using Prover.Shared.Json;
 
 namespace Devices.Core.Repository.JsonConverters
 {

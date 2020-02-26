@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Client.Wpf.Startup
+namespace Client.Desktop.Wpf.Startup
 {
     public interface IConfigureModule
     {

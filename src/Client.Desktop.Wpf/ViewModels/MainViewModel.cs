@@ -5,7 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Client.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.Screens.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using MvvmDialogs;
 using ReactiveUI;

@@ -50,13 +50,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
       <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </PackageReference>
-    <PackageReference Include="NLog" Version="4.6.8" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
   </ItemGroup>
 
   <ItemGroup>
 
-    <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
 
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
   </ItemGroup>

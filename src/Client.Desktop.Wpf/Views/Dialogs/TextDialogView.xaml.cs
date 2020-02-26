@@ -1,8 +1,8 @@
-﻿using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Wpf.Screens;
+﻿using Client.Desktop.Wpf.Screens;
+using Client.Desktop.Wpf.ViewModels.Dialogs;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Dialogs
+namespace Client.Desktop.Wpf.Views.Dialogs
 {
     public partial class TextDialogView : ReactiveDialog<TextDialogViewModel>
     {

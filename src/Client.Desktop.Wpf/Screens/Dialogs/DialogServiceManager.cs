@@ -1,18 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Client.Desktop.Wpf.ViewModels.Devices;
-using Client.Wpf.Views.Devices;
+using Client.Desktop.Wpf.Views.Devices;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.Screens.Dialogs
+namespace Client.Desktop.Wpf.Screens.Dialogs
 {
     public class DialogServiceManager : ReactiveObject
     {
         private readonly IServiceProvider _services;
-
+        private readonly SerialDisposable _disposer = new SerialDisposable();
         public DialogServiceManager(IServiceProvider services)
         {
             _services = services;
@@ -25,7 +26,7 @@ namespace Client.Wpf.Screens.Dialogs
                         throw new Exception("ShowDialog must be call on an IDialogViewModel.");
                     }
 
-                    var locator = ReactiveUI.ViewLocator.Current;
+                    var locator = ViewLocator.Current;
                     var view = locator.ResolveView(vm);
 
                     if (view == null)
@@ -35,10 +36,9 @@ namespace Client.Wpf.Screens.Dialogs
 
                     view.ViewModel = vm;
                     DialogView = view;
-
                     vm.IsOpen = true;
 
-                    vm.WhenAnyValue(vm => vm.IsOpen)
+                    vm.WhenAnyValue(innervm => innervm.IsOpen)
                         .Subscribe(x => IsOpen = x);
 
                     vm.CloseCommand
@@ -60,6 +60,18 @@ namespace Client.Wpf.Screens.Dialogs
                 outputScheduler: RxApp.MainThreadScheduler);
         }
 
+        //private void Testing()
+        //{
+        //    _disposer.Disposable = Disposable.Empty;
+
+        //    _disposer.Disposable = Disposable.Create(() =>
+        //    {
+        //        closedCallback.Dispose();
+        //        view.IsDialogOpen = false;
+        //        onClosed?.Invoke(view.DialogContent);
+        //    });
+        //}
+
         [Reactive] public bool IsOpen { get; set; }
         
         [Reactive] public IViewFor DialogView { get; set; }
@@ -69,7 +81,7 @@ namespace Client.Wpf.Screens.Dialogs
         public ReactiveCommand<Unit, bool> CloseDialog { get; protected set; }
 
         public void Show<T>(INotifyPropertyChanged ownerViewModel, DialogViewModel viewModel)
-            where T : ReactiveDialog<DialogViewModel>
+           where T : ReactiveDialog
         {
             //if (ownerViewModel == null) throw new ArgumentNullException(nameof(ownerViewModel));
             //if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
@@ -80,7 +92,7 @@ namespace Client.Wpf.Screens.Dialogs
             //DialogView.ViewModel = DialogViewModel;
         }
 
-        public void Show(SessionDialogView view, SessionDialogViewModel viewModel)
+        public void Show(object view, IDialogViewModel viewModel)
         {
 
         }

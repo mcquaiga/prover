@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Client.Wpf.Controls
+namespace Client.Desktop.Wpf.Controls
 {
     public class PercentageControlViewModel
     {

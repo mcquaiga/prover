@@ -41,6 +41,11 @@ namespace Devices.Core.Items
             return x.Value;
         }
 
+        public static T GetItemValue<T>(this IEnumerable<ItemValue> items, int itemNumber)
+        {
+            return (T) GetItem(items, itemNumber).GetValue();
+        }
+
         public static decimal? GetItemValueNullable(this IEnumerable<ItemValue> items, int itemNumber)
         {
             return GetItem(items, itemNumber)?.DecimalValue();

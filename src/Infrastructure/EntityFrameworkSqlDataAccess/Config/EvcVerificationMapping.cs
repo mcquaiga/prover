@@ -1,4 +1,0 @@
-﻿namespace Infrastructure.EntityFrameworkSqlDataAccess.Config
-{
-
-}

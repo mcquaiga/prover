@@ -1,4 +1,4 @@
-﻿namespace Client.Wpf.Common
+﻿namespace Client.Desktop.Wpf.Common
 {
 
     //public class CommunicationsService

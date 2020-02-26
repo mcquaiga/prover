@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Disposables;
-using Application.ViewModels.Volume;
+using Prover.Application.ViewModels.Volume;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume

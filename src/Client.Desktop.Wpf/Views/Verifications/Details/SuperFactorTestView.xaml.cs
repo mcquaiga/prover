@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Disposables;
-using Application.ViewModels.Corrections;
+using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details

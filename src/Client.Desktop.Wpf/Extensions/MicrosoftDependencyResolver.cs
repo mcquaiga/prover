@@ -11,7 +11,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Splat;
 
-namespace Client.Wpf.Extensions
+namespace Client.Desktop.Wpf.Extensions
 {
     /// <summary>
     /// Microsoft DI implementation for <see cref="IDependencyResolver"/>.

@@ -29,14 +29,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Client.Core\Client.Core.csproj" />
     <ProjectReference Include="..\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj" />
     <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

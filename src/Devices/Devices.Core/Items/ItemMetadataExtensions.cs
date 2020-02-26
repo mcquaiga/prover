@@ -13,18 +13,18 @@ namespace Devices.Core.Items
     {
         #region Public Methods
 
-        public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
-            IDictionary<int, string> itemValuesDictionary)
-        {
-            var items = ToItemValuesEnumerable(factory.DeviceType, itemValuesDictionary);
-            return factory.CreateInstance(items);
-        }
+        //public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
+        //    IDictionary<int, string> itemValuesDictionary)
+        //{
+        //    var items = ToItemValuesEnumerable(factory.DeviceType, itemValuesDictionary);
+        //    return factory.CreateInstance(items);
+        //}
 
-        public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
+        public static DeviceInstance CreateInstance(this DeviceType deviceType,
             IDictionary<string, string> itemValuesDictionary)
         {
-            var items = factory.DeviceType.ToItemValuesEnumerable(itemValuesDictionary);
-            return factory.CreateInstance(items);
+            var items = deviceType.ToItemValuesEnumerable(itemValuesDictionary);
+            return deviceType.Factory.CreateInstance(items);
         }
 
         public static DeviceInstance CreateInstance(this DeviceType deviceType,

@@ -5,7 +5,7 @@ using System.Reflection;
 using MvvmDialogs.DialogTypeLocators;
 using ReactiveUI;
 
-namespace Client.Wpf.Screens
+namespace Client.Desktop.Wpf.Screens
 {
     public class DialogTypeLocator : IDialogTypeLocator
     {

@@ -1,20 +1,31 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Wpf.Views.Verifications.TestDetailsView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.TestDetailsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Client.Wpf.Views.Verifications.Details"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:verifications="clr-namespace:Client.Wpf.ViewModels.Verifications"
+    xmlns:viewModels1="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
     x:Name="TestDetailsUserControl"
-    d:DataContext="{d:DesignInstance verifications:TestDetailsViewModel,
+    d:DataContext="{d:DesignInstance viewModels1:EvcVerificationViewModel,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="verifications:TestDetailsViewModel"
+    x:TypeArguments="viewModels1:EvcVerificationViewModel"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="CorrectionsReadOnlyDataTemplate">
+            <Border
+                MaxWidth="300"
+                Padding="4"
+                BorderThickness="0,0,1,0"
+                Style="{StaticResource SubSectionDividerBorder}">
+
+                <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
+
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid Grid.Row="1" Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -39,36 +50,13 @@
                 <ItemsControl
                     x:Name="TestPointItems"
                     Grid.Row="0"
-                    DataContext="{Binding}">
+                    DataContext="{Binding}"
+                    ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="1" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border
-                                MaxWidth="300"
-                                Padding="4"
-                                BorderThickness="0,0,1,0"
-                                Style="{StaticResource SubSectionDividerBorder}">
-                                <StackPanel>
-                                    <Button
-                                        x:Name="DownloadButton"
-                                        Margin="8,4"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Command="{Binding ViewModel.DownloadCommand, ElementName=TestDetailsUserControl}"
-                                        CommandParameter="{Binding}"
-                                        Content="Run Test"
-                                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-                                    <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
-                                </StackPanel>
-                                <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
-
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
                 <Border
@@ -77,14 +65,11 @@
                     VerticalAlignment="Stretch"
                     Style="{StaticResource SubSectionDividerBorder}">
                     <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
-                            <Button
-                                x:Name="RunVolumeTestButton"
-                                Margin="15,5"
-                                Content="Run Volume Test"
-                                Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-                        </StackPanel>
+                        <ContentControl
+                            x:Name="VolumeTestContent"
+                            HorizontalAlignment="Center"
+                            Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
                         <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
                     </StackPanel>
 

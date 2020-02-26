@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Client.Wpf.Controls
+namespace Client.Desktop.Wpf.Controls
 {
     /// <summary>
     ///     Interaction logic for InstrumentField.xaml

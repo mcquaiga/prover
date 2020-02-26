@@ -6,6 +6,7 @@ using Devices.Core.Items;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Items.ItemGroups.Builders;
+using Prover.Shared.Domain;
 
 namespace Devices.Core.Interfaces
 {
@@ -24,11 +25,8 @@ namespace Devices.Core.Interfaces
         {
             Items = new List<ItemMetadata>();
         }
-
-        public string ClientFactoryType { get; set; }
-
+        public Guid Id { get; set; }
         #region Public Properties
-        public virtual Guid Id { get; set; }
         public virtual bool? CanUseIrDaPort { get; set; }
         public virtual bool IsHidden { get; set; }
         public ICollection<ItemMetadata> Items { get; set; }

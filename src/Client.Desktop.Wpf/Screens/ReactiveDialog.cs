@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
-using Client.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.Screens.Dialogs;
 using ReactiveUI;
 
-namespace Client.Wpf.Screens
+namespace Client.Desktop.Wpf.Screens
 {
     public class ReactiveDialog<T> : ReactiveUserControl<T> 
         where T : DialogViewModel

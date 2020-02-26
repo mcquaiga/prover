@@ -13,7 +13,7 @@ using MvvmDialogs.FrameworkDialogs.SaveFile;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Wpf.Screens.Dialogs
+namespace Client.Desktop.Wpf.Screens.Dialogs
 {
     public class DialogManager : ReactiveObject, IDialogService
     {

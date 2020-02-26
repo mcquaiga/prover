@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Client.Wpf.Controls.PercentageControlNew"
+﻿<UserControl x:Class="Client.Desktop.Wpf.Controls.PercentageControlNew"
              x:Name="PercentUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

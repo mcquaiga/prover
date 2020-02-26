@@ -1,7 +1,7 @@
 ﻿using Client.Desktop.Wpf.ViewModels.Clients;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Clients
+namespace Client.Desktop.Wpf.Views.Clients
 {
     /// <summary>
     ///     Interaction logic for ClientManager.xaml

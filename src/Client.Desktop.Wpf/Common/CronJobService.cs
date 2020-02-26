@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Hosting;
 
-namespace Client.Wpf.Common
+namespace Client.Desktop.Wpf.Common
 {
     public abstract class CronJobService : IHostedService, IDisposable
     {

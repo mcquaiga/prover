@@ -5,7 +5,7 @@ using Devices.Core.Items;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items.Attributes;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {

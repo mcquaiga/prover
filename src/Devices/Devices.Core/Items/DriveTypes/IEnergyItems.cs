@@ -1,5 +1,5 @@
 ﻿using Devices.Core.Items.ItemGroups;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Core.Items.DriveTypes
 {

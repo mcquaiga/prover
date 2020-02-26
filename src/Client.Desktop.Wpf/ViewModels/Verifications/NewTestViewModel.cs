@@ -2,40 +2,29 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Application.Services;
-using Client.Wpf.Communications;
-using Client.Wpf.ViewModels.Verifications;
+using Client.Desktop.Wpf.Communications;
 using Devices;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
-using Domain.EvcVerifications;
 using DynamicData;
 using DynamicData.Binding;
+using Prover.Application.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
     public class NewTestViewModel : ViewModelBase, IRoutableViewModel, IDisposable
     {
-        private readonly IAsyncRepository<EvcVerificationTest> _repository;
-        private readonly VerificationViewModelService _service;
-        private readonly VerificationTestManager _testManager;
-
+        private CompositeDisposable _cleanup;
 
         public NewTestViewModel(IScreenManager screenManager,
-            VerificationTestManager testManager,
-            IAsyncRepository<EvcVerificationTest> repository,
-            VerificationViewModelService service) : base(screenManager)
+            ITestManagerViewModelFactory testManagerViewModelFactory) : base(screenManager)
         {
-            _testManager = testManager;
-            _repository = repository;
-            _service = service;
-
-            var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort, x => x.SelectedBaudRate,
+            var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
+                x => x.SelectedBaudRate,
                 (device, comm, baud) =>
                     device != null &&
                     !string.IsNullOrEmpty(comm) &&
@@ -44,10 +33,10 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 SetLastUsedSettings();
-                await _testManager.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
-                var vm = new TestDetailsViewModel(ScreenManager, _testManager);
-                await ScreenManager.ChangeView(vm);
+                var testManager = await testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
+                await ScreenManager.ChangeView(testManager);
             }, canStartTest);
+
 
             SetupScreenData();
         }
@@ -71,7 +60,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public void Dispose()
         {
             StartTestCommand?.Dispose();
-            Task.Run(() => _testManager.Complete());
+            _cleanup?.Dispose();
         }
 
         private void SetLastUsedSettings()
@@ -112,17 +101,9 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             BaudRates = baudRates;
 
             SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
+
+            _cleanup = new CompositeDisposable(devTypes);
         }
 
-//        private async Task LoadStatic()
-//        {
-//            var mini = await _repository.GetAsync(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
-
-////            var testVm = await _service.CreateViewModelFromVerification(mini);
-//            var testVm = _service.NewTest(mini.Device);
-//            var vm = new TestManagerViewModel(ScreenManager, testVm);
-
-//            await ScreenManager.ChangeView(vm);
-//        }
     }
 }

@@ -1,11 +1,10 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Wpf.Views.Devices.SessionDialogView"
+    x:Class="Client.Desktop.Wpf.Views.Devices.SessionDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:screens="clr-namespace:Client.Wpf.Screens"
     xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels.Devices"
     x:TypeArguments="viewModels:SessionDialogViewModel"
     mc:Ignorable="d">

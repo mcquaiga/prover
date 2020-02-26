@@ -1,4 +1,4 @@
-﻿using Shared.Extensions;
+﻿using Prover.Shared.Extensions;
 
 namespace Core.GasCalculations
 {

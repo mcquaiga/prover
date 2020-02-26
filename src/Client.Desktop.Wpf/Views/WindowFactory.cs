@@ -2,7 +2,7 @@
 using Client.Desktop.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Client.Wpf.Views
+namespace Client.Desktop.Wpf.Views
 {
     public class WindowFactory : IWindowFactory
     {

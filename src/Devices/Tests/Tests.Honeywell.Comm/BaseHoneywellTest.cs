@@ -31,7 +31,6 @@ namespace Tests.Honeywell.Comm
                 })
             {
                 Name = "Mini-At",
-                Id = Guid.NewGuid(),
                 AccessCode = "3"
             };
         }

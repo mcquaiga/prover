@@ -93,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Prover.Shared\Prover.Shared.csproj">
+      <Project>{22A1D2D7-C25D-4F4E-94AF-77E1E639CC78}</Project>
+      <Name>Prover.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Devices.Communications\Devices.Communications.csproj">
       <Project>{a4e19dbe-f582-45b7-ab39-5afbd8b3fe97}</Project>
       <Name>Devices.Communications</Name>

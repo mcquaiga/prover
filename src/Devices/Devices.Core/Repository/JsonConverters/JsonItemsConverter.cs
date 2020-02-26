@@ -6,7 +6,7 @@ using Devices.Core.Items;
 using Devices.Core.Items.Descriptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Shared.Json;
+using Prover.Shared.Json;
 
 namespace Devices.Core.Repository.JsonConverters
 {

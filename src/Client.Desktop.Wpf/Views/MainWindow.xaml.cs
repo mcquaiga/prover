@@ -2,7 +2,7 @@
 using Client.Desktop.Wpf.ViewModels;
 using ReactiveUI;
 
-namespace Client.Wpf.Views
+namespace Client.Desktop.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

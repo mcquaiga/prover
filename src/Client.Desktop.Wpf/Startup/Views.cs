@@ -1,14 +1,16 @@
-﻿using Client.Desktop.Wpf.ViewModels;
-using Client.Wpf.Controls;
-using Client.Wpf.Extensions;
-using Client.Wpf.Screens.Dialogs;
-using Client.Wpf.Views;
+﻿using Client.Desktop.Wpf.Controls;
+using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Reports;
+using Client.Desktop.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.ViewModels;
+using Client.Desktop.Wpf.ViewModels.Verifications;
+using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using Splat;
 
-namespace Client.Wpf.Startup
+namespace Client.Desktop.Wpf.Startup
 {
     public class UserInterface
     {
@@ -25,13 +27,13 @@ namespace Client.Wpf.Startup
 
             //services.AddSingleton(c => new MainViewModel(c, c.GetRequiredService<IDialogService>()));
             //services.AddSingleton<ReactiveDialog<DialogManager>, DialogUserControl>(c => new DialogUserControl(){ ViewModel = (DialogManager)c.GetService<IDialogService>()});
-
             
-
             services.AddSingleton(c => new MainWindow());
             services.AddSingleton(c => new MainViewModel(c, c.GetService<DialogServiceManager>()));
             services.AddSingleton<IScreen, MainViewModel>(c => c.GetService<MainViewModel>());
             services.AddSingleton<IScreenManager, MainViewModel>(c => c.GetService<MainViewModel>());
+
+            //services.AddSingleton<ITestManagerViewModelFactory, TestManagerViewModel>();
 
             services.AddMainMenuItems();
             services.AddSingleton<HomeViewModel>();
@@ -40,6 +42,13 @@ namespace Client.Wpf.Startup
             services.AddViewsAndViewModels();
 
             AddDialogs(services);
+
+            AddReporting(services);
+        }
+
+        private static void AddReporting(IServiceCollection services)
+        {
+            services.AddSingleton<VerificationTestReportGenerator>();
         }
 
         private static void AddDialogs(IServiceCollection services)

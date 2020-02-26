@@ -1,23 +1,23 @@
-﻿using System;
+﻿using Client.Desktop.Wpf.Startup;
+using Client.Desktop.Wpf.ViewModels;
+using Client.Desktop.Wpf.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Client.Desktop.Wpf.ViewModels;
-using Client.Wpf.Startup;
-using Client.Wpf.Views;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-namespace Client.Wpf
+namespace Client.Desktop.Wpf
 {
     internal static class Program
     {
-        private static App _app;
-        private static AppBootstrapper _bootstrapper;
+        private static readonly App App = new App {ShutdownMode = ShutdownMode.OnExplicitShutdown};
         private static MainWindow _mainWindow;
-        private static IHost _host => _bootstrapper.AppHost;
+        private static IHost _host;
 
         /// <summary>
         ///     The main entry point for the application.
@@ -25,27 +25,23 @@ namespace Client.Wpf
         [STAThread]
         public static void Main(string[] args)
         {
-            _app = new App();
-
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
-
-            _app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            var task = Initialize(args);
-            HandleExceptions(task);
-
-            try
+            
+            using (var splashScreen = new StartScreen())
             {
-                _app.InitializeComponent();
-                _app.Run();
+                splashScreen.Show();
+
+                var task = Initialize(args);
+                HandleExceptions(task);
+                _host = task.Result;
+
+                splashScreen.Owner = LoadMainWindow();
+                splashScreen.Close();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"Unhandled error occured. {Environment.NewLine} Exception: {ex.Message} {Environment.NewLine} {ex.InnerException?.Message}.");
-                Console.WriteLine(ex.Message);
-                ShutdownApp();
-            }
+
+            App.InitializeComponent();
+            _host.Services.GetService<UnhandledExceptionHandler>();
+            App.Run();
         }
 
         public static event EventHandler<EventArgs> ExitRequested;
@@ -60,30 +56,22 @@ namespace Client.Wpf
             catch (AggregateException aggEx)
             {
                 foreach (var ex in aggEx.InnerExceptions) Console.WriteLine(ex.Message);
-                _app.Shutdown();
+                App.Shutdown();
             }
 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                _app.Shutdown();
+                App.Shutdown();
             }
         }
 
-        [STAThread]
+        //[STAThread]
         private static async Task<IHost> Initialize(string[] args)
         {
-            using (var splashScreen = new StartScreen())
-            {
-                splashScreen.Show();
+            var bootstrapper = await new AppBootstrapper().StartAsync(args);
 
-                _bootstrapper = await new AppBootstrapper().StartAsync(args);
-
-                splashScreen.Owner = LoadMainWindow();
-                splashScreen.Close();
-            }
-
-            return _host;
+            return bootstrapper.AppHost;
         }
 
         private static MainWindow LoadMainWindow()
@@ -111,14 +99,14 @@ namespace Client.Wpf
         {
             (_mainWindow?.ViewModel as IDisposable)?.Dispose();
             ShutdownHostedServices();
-            _app.Shutdown();
+            App.Shutdown();
         }
 
         private static void ShutdownHostedServices()
         {
             using (_host)
             {
-                var services = _bootstrapper.AppHost.Services.GetServices<IHostedService>().ToList();
+                var services = _host.Services.GetServices<IHostedService>().ToList();
 
                 var t = Task.WhenAll(services.Select(s =>
                     Task.Run(() => s.StopAsync(new CancellationToken()))));

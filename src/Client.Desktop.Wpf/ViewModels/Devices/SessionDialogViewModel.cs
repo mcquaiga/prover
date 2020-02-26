@@ -2,7 +2,7 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using Client.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.Screens.Dialogs;
 using Devices.Communications.Status;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;

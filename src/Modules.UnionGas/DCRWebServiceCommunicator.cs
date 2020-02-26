@@ -5,7 +5,8 @@ using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using DcrWebService;
-using NLog;
+using Microsoft.Extensions.Logging;
+
 
 namespace Modules.UnionGas
 {
@@ -24,7 +25,7 @@ namespace Modules.UnionGas
         /// <summary>
         /// Defines the _log
         /// </summary>
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger _log;
 
         #endregion
 
@@ -34,9 +35,10 @@ namespace Modules.UnionGas
         /// Initializes a new instance of the <see cref="DCRWebServiceCommunicator"/> class.
         /// </summary>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceSoap"/></param>
-        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService)
+        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService, ILogger log)
         {
             _dcrWebService = dcrWebService;
+            _log = log;
         }
 
         #endregion
@@ -59,7 +61,7 @@ namespace Modules.UnionGas
         /// <returns>The <see cref="Task{MeterDTO}"/></returns>
         public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber)
         {
-            _log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
+            _log.LogDebug($"Finding meter with inventory number {companyNumber} in MASA.");
 
             var request = new GetValidatedEvcDeviceByInventoryCodeRequest
             {
@@ -79,7 +81,7 @@ namespace Modules.UnionGas
         /// <returns>The <see cref="Task{EmployeeDTO}"/></returns>
         public async Task<EmployeeDTO> GetEmployee(string username)
         {
-            _log.Debug($"Getting employee with #{username} from MASA.");
+            _log.LogDebug($"Getting employee with #{username} from MASA.");
 
             var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
             var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployeeAsync(employeeRequest)).ConfigureAwait(false);
@@ -122,12 +124,12 @@ namespace Modules.UnionGas
 
             if (string.Equals(result, "success", StringComparison.OrdinalIgnoreCase))
             {
-                _log.Info($"Web service returned successfully!");
+                _log.LogInformation($"Web service returned successfully!");
                 return true;
             }
             else
             {
-                _log.Error($"Web service return an error: {Environment.NewLine} {result}");
+                _log.LogInformation($"Web service return an error: {Environment.NewLine} {result}");
                 return false;
             }
         }
@@ -149,13 +151,13 @@ namespace Modules.UnionGas
             }
             catch (OperationCanceledException)
             {
-                _log.Warn($"Timed out contacting the web service. Skipping company number verification.");
+                _log.LogWarning($"Timed out contacting the web service. Skipping company number verification.");
                 throw;
             }
 
             catch (EndpointNotFoundException ex)
             {
-                _log.Error(ex, $"MASA Web service could not be reached. {Environment.NewLine}" +
+                _log.LogError(ex, $"MASA Web service could not be reached. {Environment.NewLine}" +
                     $" Endpoint: {SoapClient.Endpoint.Address} {Environment.NewLine}" +
                     $" State: {SoapClient.State.ToString()}");
                 throw;
@@ -163,7 +165,7 @@ namespace Modules.UnionGas
 
             catch (Exception ex)
             {
-                _log.Error(ex, $"An error occured contacting the web service. Skipping company number verification.");
+                _log.LogError(ex, $"An error occured contacting the web service. Skipping company number verification.");
                 throw;
             }
         }

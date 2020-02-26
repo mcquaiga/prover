@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 
 </Project>

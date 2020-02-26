@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Shared.Interfaces;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Core.Repository
 {
     public class KeyValueDeviceTypeDataSource : IDeviceTypeCacheSource<DeviceType>
     {
-        private readonly IKeyValueStore _keyValueRepository;
+        private readonly IRepository<DeviceType> _keyValueRepository;
 
-        public KeyValueDeviceTypeDataSource(IKeyValueStore keyValueRepository)
+        public KeyValueDeviceTypeDataSource(IRepository<DeviceType> keyValueRepository)
         {
             _keyValueRepository = keyValueRepository;
         }
 
         public IObservable<DeviceType> GetDeviceTypes()
         {
-            return _keyValueRepository.GetAll<DeviceType>().ToObservable();
+            return _keyValueRepository.GetAll().ToObservable();
         }
 
         public IObservable<ItemMetadata> GetItems()
@@ -29,10 +31,22 @@ namespace Devices.Core.Repository
 
         public void Save(IEnumerable<DeviceType> deviceTypes)
         {
-            deviceTypes.ToList().ForEach(d =>
+            try
             {
-                _keyValueRepository.AddOrUpdate(d);
-            });
+                deviceTypes.ToList().ForEach(d => { _keyValueRepository.Update(d); });
+            }
+            catch (AggregateException aggEx)
+            {
+                foreach (var ex in aggEx.InnerExceptions)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+          
         }
     }
 }

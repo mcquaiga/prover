@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Core.Items.Descriptions
 {

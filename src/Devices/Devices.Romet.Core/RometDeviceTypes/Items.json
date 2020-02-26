@@ -323,6 +323,12 @@
     "isVolumeTest": "true"
   },
   {
+    "number": "115",
+    "code": "PULSER_SCALING",
+    "shortDescription": "Pulse Scaling",
+    "description": "Output Pulse Spacing"
+  },
+  {
     "number": "122",
     "code": "FIRMWARE",
     "shortDescription": "Firm. Ver.",
@@ -399,5 +405,17 @@
     "description": "High Resolution Uncor. Volume",
     "isVolume": "true",
     "isVolumeTest": "true"
+  },
+  {
+    "number": "816",
+    "code": "PULSER_A",
+    "shortDescription": "Pulser A #",
+    "description": "Pulser A # o"
+  },
+  {
+    "number": "817",
+    "code": "PULSER_B",
+    "shortDescription": "Pulser B #",
+    "description": "Pulser B # o"
   }
 ]

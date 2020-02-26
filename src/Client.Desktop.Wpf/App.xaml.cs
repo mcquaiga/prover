@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Hosting;
 
-namespace Client.Wpf
+namespace Client.Desktop.Wpf
 {
     /// <summary>
     ///     Interaction logic for App.xaml

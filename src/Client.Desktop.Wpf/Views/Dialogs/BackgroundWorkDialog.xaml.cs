@@ -1,9 +1,9 @@
 ﻿using System.Reactive.Disposables;
+using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Wpf.Screens;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Dialogs
+namespace Client.Desktop.Wpf.Views.Dialogs
 {
     /// <summary>
     /// Interaction logic for StatusDialog.xaml

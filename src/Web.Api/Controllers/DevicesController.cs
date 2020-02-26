@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Devices;
+using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +25,7 @@ namespace Web.Api.Controllers
         [HttpGet]
         public async Task< IEnumerable<DeviceType>> GetDeviceTypes()
         {
-            _deviceRepository = await Devices.RepositoryFactory.CreateDefaultAsync();
+            _deviceRepository = await RepositoryFactory.CreateDefaultAsync();
 
             return _deviceRepository.GetAll();
         }

@@ -1,4 +1,4 @@
-using Shared;
+using Prover.Shared;
 
 namespace Devices.Core.Items.ItemGroups
 {

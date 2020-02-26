@@ -1,14 +1,11 @@
-﻿using System.Reactive;
+﻿using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Screens;
+using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
-using Client.Wpf.Extensions;
-using Client.Wpf.Screens;
-using Client.Wpf.Startup;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Modules.UnionGas.Exporter.Views;
-using ReactiveUI;
 
 namespace Modules.UnionGas
 {

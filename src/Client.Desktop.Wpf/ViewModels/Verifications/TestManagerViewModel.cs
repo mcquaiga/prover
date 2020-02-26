@@ -1,140 +1,184 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Application.Services;
-using Application.Settings;
-using Application.ViewModels;
-using Application.ViewModels.Volume;
-using Client.Wpf.Communications;
-using Devices;
-using Devices.Communications.IO;
+using Client.Desktop.Wpf.Communications;
+using Client.Desktop.Wpf.Screens.Dialogs;
 using Devices.Core.Interfaces;
-using Domain.EvcVerifications;
-using DynamicData;
-using DynamicData.Binding;
+using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Extensions;
+using Prover.Application.Services;
+using Prover.Application.ViewModels;
+using Prover.Application.ViewModels.Corrections;
+using Prover.Shared;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public class TestManagerViewModel : ViewModelBase, IRoutableViewModel
+    public interface ITestManagerViewModelFactory
     {
-        public enum TestManagerState
+        Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
+            string tachPortName);
+    }
+
+    //public class TestManagerViewModelFactory : ITestManagerViewModelFactory
+    //{
+    //    private readonly DeviceSessionManager _deviceManager;
+    //    private readonly DialogServiceManager _dialogService;
+    //    private readonly ILoggerFactory _loggerFactory;
+    //    private readonly IScreenManager _screenManager;
+    //    private readonly VerificationViewModelService _testViewModelService;
+    //    private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
+
+    //    public TestManagerViewModelFactory(
+    //        ILoggerFactory loggerFactory,
+    //        IScreenManager screenManager,
+    //        DeviceSessionManager deviceManager,
+    //        VerificationViewModelService testViewModelService,
+    //        DialogServiceManager dialogService,
+    //        IVolumeTestManagerFactory volumeTestManagerFactory)
+    //    {
+    //        _loggerFactory = loggerFactory;
+    //        _screenManager = screenManager;
+    //        _deviceManager = deviceManager;
+    //        _testViewModelService = testViewModelService;
+    //        _dialogService = dialogService;
+    //        _volumeTestManagerFactory = volumeTestManagerFactory;
+    //    }
+
+    //    public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
+    //        string tachPortName)
+    //    {
+    //        await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
+    //        var testViewModel = _testViewModelService.NewTest(_deviceManager.Device);
+    //        var volumeTestManager =
+    //            _volumeTestManagerFactory.CreateInstance(_deviceManager.Device, testViewModel.VolumeTest);
+
+    //        return new TestManagerViewModel(_loggerFactory.CreateLogger(nameof(TestManagerViewModel)), _screenManager, _deviceManager, _testViewModelService,
+    //            _dialogService, testViewModel, volumeTestManager);
+    //    }
+    //}
+
+    public class TestManagerViewModel : ReactiveObject, IRoutableViewModel, ITestManagerViewModelFactory
+    {
+        private readonly DeviceSessionManager _deviceManager;
+        private readonly DialogServiceManager _dialogService;
+        private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
+        private readonly ILogger _logger;
+        private readonly IScreenManager _screenManager;
+        private readonly VerificationViewModelService _testViewModelService;
+
+        public TestManagerViewModel(ILoggerFactory loggerFactory,
+            IScreenManager screenManager,
+            DeviceSessionManager deviceManager,
+            VerificationViewModelService testViewModelService,
+            DialogServiceManager dialogService,
+            IVolumeTestManagerFactory volumeTestManagerFactory)
         {
-            Start,
-            InProgress
+            _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
+
+            _screenManager = screenManager;
+            _deviceManager = deviceManager;
+            _testViewModelService = testViewModelService;
+            _dialogService = dialogService;
+            _volumeTestManagerFactory = volumeTestManagerFactory;
+
+            SaveCommand = ReactiveCommand.CreateFromTask(() => _testViewModelService.AddOrUpdate(TestViewModel));
+
+            DownloadCommand =
+                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
+
+            PrintTestReport =
+                ReactiveCommand.CreateFromTask(ResetCurrentTest);
         }
 
-        public TestManagerViewModel(IScreenManager screenManager, VerificationTestManager testManager) : base(screenManager)
+        private TestManagerViewModel(ILogger logger, IScreenManager screenManager,
+            DeviceSessionManager deviceManager, VerificationViewModelService testViewModelService,
+            DialogServiceManager dialogService, EvcVerificationViewModel testViewModel,
+            VolumeTestManager volumeTestManager)
         {
-            TestManager = testManager;
+            _logger = logger ?? NullLogger.Instance;
 
-            var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort, x => x.SelectedBaudRate,
-                (device, comm, baud) => device != null && !string.IsNullOrEmpty(comm) && baud != 0);
+            _screenManager = screenManager;
+            _deviceManager = deviceManager;
+            _testViewModelService = testViewModelService;
+            _dialogService = dialogService;
 
-            StartTestCommand = ReactiveCommand.CreateFromTask(StartTest, canStartTest);
-            StartTestCommand.Subscribe(_ => SetLastUsedSettings());
+            TestViewModel = testViewModel;
+            VolumeTestManager = volumeTestManager;
 
-            StartTestCommand
-                .Select(x => TestManagerState.InProgress)
-                .ToPropertyEx(this, x => x.TestManagerScreenState, TestManagerState.Start);
+            SaveCommand = ReactiveCommand.CreateFromTask(() => _testViewModelService.AddOrUpdate(TestViewModel));
 
-            SetupNewTestView();
+            DownloadCommand =
+                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
+
+            PrintTestReport =
+                ReactiveCommand.CreateFromTask(ResetCurrentTest);
         }
 
-        public LocalSettings Settings => ApplicationSettings.Local;
+        [Reactive] public EvcVerificationViewModel TestViewModel { get; protected set; }
 
-        public extern TestManagerState TestManagerScreenState { [ObservableAsProperty] get; }
+        [Reactive] public VolumeTestManager VolumeTestManager { get; protected set; }
 
-        public VerificationTestManager TestManager { get; protected set; }
-
-        [Reactive] public VolumeViewModelBase VolumeViewModel { get; set; }
-
-        public ReactiveCommand<Unit, Unit> SaveCommand { get; protected set; }
-
+        public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
         public ReactiveCommand<VerificationTestPointViewModel, Unit> DownloadCommand { get; protected set; }
-
-        //[Reactive] public EvcVerificationViewModel EvcVerification { get; set; }
+        public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
+        public ReactiveCommand<Unit, Unit> RunVolumeTest { get; protected set; }
 
         public string UrlPathSegment => "/VerificationTests/Details";
-        public IScreen HostScreen => ScreenManager;
+        public IScreen HostScreen => _screenManager;
 
-        public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
-
-        public ReadOnlyObservableCollection<int> BaudRates { get; set; }
-
-        public ReadOnlyObservableCollection<string> CommPorts { get; set; }
-
-        public ReactiveCommand<Unit, Unit> StartTestCommand { get; set; }
-
-        [Reactive] public string SelectedTachCommPort { get; set; }
-        public string SelectedCommPort
+        public async Task Complete()
         {
-            get => ApplicationSettings.Local.InstrumentCommPort;
-            set => ApplicationSettings.Local.InstrumentCommPort = value;
+            //await SaveCurrentState();
         }
 
-        [Reactive] public DeviceType SelectedDeviceType { get; set; }
-        [Reactive] public int SelectedBaudRate { get; set; }
-
-        private void SetLastUsedSettings()
+        public async Task DownloadItems(VerificationTestPointViewModel test)
         {
-            ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
-            ApplicationSettings.Local.InstrumentCommPort = SelectedCommPort;
-            ApplicationSettings.Local.InstrumentBaudRate = SelectedBaudRate;
-            ApplicationSettings.Instance.SaveSettings();
+            var toDownload = GetItemsToDownload(_deviceManager.Device.Composition());
+
+            var values = await _deviceManager.DownloadCorrectionItems(toDownload);
+
+            test.UpdateItemValues(values);
+
+            foreach (var correction in test.GetCorrectionTests())
+            {
+                var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+                itemType?.SetValue(correction,
+                    _deviceManager.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            }
         }
 
-        private void SetupNewTestView()
+        public async Task ResetCurrentTest()
         {
-            var devTypes = RepositoryFactory.Instance.Connect()
-                .Filter(d => !d.IsHidden)
-                .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var deviceTypes)
-                .DisposeMany()
-                .Filter(d => d.Id == ApplicationSettings.Local.LastDeviceTypeUsed)
-                .Select(d => d.FirstOrDefault().Current)
-                .Do(d => SelectedDeviceType = d)
-                .Subscribe();
-
-            DeviceTypes = deviceTypes;
-
-            SerialPort.GetPortNames().AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var ports)
-                .Subscribe();
-            CommPorts = ports;
-
-            SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
-
-            SerialPort.BaudRates.AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var baudRates)
-                .Subscribe();
-            BaudRates = baudRates;
-
-            SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
         }
 
-        private async Task StartTest()
+        private ICollection<ItemMetadata> GetItemsToDownload(CompositionType compType)
         {
-            SetLastUsedSettings();
+            var items = new List<ItemMetadata>();
 
-            await TestManager.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, "COM3");
+            if (compType == CompositionType.P || compType == CompositionType.PTZ)
+                items.AddRange(_deviceManager.DeviceType.GetItemMetadata<PressureItems>());
 
-            SetupTestManagerView();
+            if (compType == CompositionType.T || compType == CompositionType.PTZ)
+                items.AddRange(_deviceManager.DeviceType.GetItemMetadata<TemperatureItems>());
+
+            if (compType == CompositionType.PTZ)
+                items.AddRange(_deviceManager.DeviceType.GetItemMetadata<SuperFactorItems>());
+
+            return items;
         }
 
-        private void SetupTestManagerView()
+        public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate, string tachPortName)
         {
-            //EvcVerification = TestManager.TestViewModel;
-            SaveCommand = ReactiveCommand.CreateFromTask(() => TestManager.SaveCurrentState());
-            DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(test => TestManager.DownloadItems(test));
+            await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
+            TestViewModel = _testViewModelService.NewTest(_deviceManager.Device);
+            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager.Device, TestViewModel.VolumeTest, tachPortName);
+
+            return this;
         }
     }
 }

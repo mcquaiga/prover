@@ -5,9 +5,9 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
-using Client.Wpf.Screens.Dialogs;
-using Client.Wpf.Views.Devices;
+using Client.Desktop.Wpf.Views.Devices;
 using Devices.Communications.Interfaces;
 using Devices.Communications.IO;
 using Devices.Communications.Status;
@@ -16,7 +16,7 @@ using Devices.Core.Items;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
-namespace Client.Wpf.Communications
+namespace Client.Desktop.Wpf.Communications
 {
     public class DeviceSessionManager
     {
@@ -27,8 +27,8 @@ namespace Client.Wpf.Communications
         private ICommunicationsClient _activeClient;
         private ICommPort _activeCommPort;
         private CancellationTokenSource _cancellationToken;
-        private SessionDialogViewModel _dialogViewModel;
         private SessionDialogView _dialogView;
+        private SessionDialogViewModel _dialogViewModel;
 
         public DeviceSessionManager()
         {
@@ -43,11 +43,26 @@ namespace Client.Wpf.Communications
             _commPortFactory = commPortFactory;
         }
 
-        public DeviceInstance Instance { get; private set; }
+        public DeviceInstance Device { get; private set; }
         public DeviceType DeviceType { get; private set; }
         public bool SessionInProgress { get; private set; }
 
         public ReactiveObject CurrentOwnerViewModel { get; set; }
+
+        public async Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items,
+            IObserver<ItemReadStatusMessage> itemsObserver = null)
+        {
+            if (itemsObserver != null)
+                _activeClient.StatusMessageObservable
+                    .OfType<ItemReadStatusMessage>()
+                    .Subscribe(itemsObserver);
+
+            await Connect();
+            var values = await _activeClient.GetItemsAsync(items);
+            await Disconnect();
+
+            return values.ToList();
+        }
 
         public async Task EndSession()
         {
@@ -69,7 +84,7 @@ namespace Client.Wpf.Communications
             var obser = new Subject<ItemValue>();
 
             var vm = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken);
-            _dialogService.ShowDialog.Execute(vm);
+            await _dialogService.ShowDialog.Execute(vm);
             await Connect();
 
             await _activeClient.LiveReadItemValue(26, obser, _cancellationToken.Token);
@@ -110,24 +125,8 @@ namespace Client.Wpf.Communications
                 _logger.LogError(ex, "An error occured starting session with device.");
                 await EndSession();
             }
-   
+
             return this;
-        }
-
-        public async Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items, IObserver<ItemReadStatusMessage> itemsObserver = null)
-        {
-            if (itemsObserver != null)
-            {
-                _activeClient.StatusMessageObservable
-                    .OfType<ItemReadStatusMessage>()
-                    .Subscribe(itemsObserver);
-            }
-
-            await Connect();
-            var values = await _activeClient.GetItemsAsync(items);
-            await Disconnect();
-
-            return values.ToList();
         }
 
         private async Task<DeviceSessionManager> Connect()
@@ -149,22 +148,28 @@ namespace Client.Wpf.Communications
             {
                 _dialogViewModel.TitleText = "Disconnecting";
                 await _activeClient.Disconnect();
-                _dialogService.CloseDialog.Execute();
+                await _dialogService.CloseDialog.Execute();
             }
+
             return this;
         }
 
-        private async Task SetupDeviceInstance()
+        internal async Task<IEnumerable<ItemValue>> GetItemValues()
         {
             await Connect();
 
             _dialogViewModel.TitleText = "Downloading items...";
             var itemValues = await _activeClient.GetItemsAsync();
-            
-            await Disconnect();
 
-            Instance = DeviceType.Factory.CreateInstance(itemValues);
+            await Disconnect();
+            return itemValues;
         }
 
+        private async Task SetupDeviceInstance()
+        {
+            var itemValues = await GetItemValues();
+
+            Device = DeviceType.Factory.CreateInstance(itemValues);
+        }
     }
 }

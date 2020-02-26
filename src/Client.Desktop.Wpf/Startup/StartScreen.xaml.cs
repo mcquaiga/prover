@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Client.Wpf.Startup
+namespace Client.Desktop.Wpf.Startup
 {
     /// <summary>
     /// Interaction logic for StartScreen.xaml

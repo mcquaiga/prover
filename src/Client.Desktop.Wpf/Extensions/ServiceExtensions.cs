@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Client.Desktop.Wpf.Screens;
+using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
-using Client.Wpf.Screens;
-using Client.Wpf.Startup;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 
-namespace Client.Wpf.Extensions
+namespace Client.Desktop.Wpf.Extensions
 {
     public static class ServiceExtensions
     {

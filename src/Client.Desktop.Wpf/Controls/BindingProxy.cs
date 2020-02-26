@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Client.Wpf.Controls
+namespace Client.Desktop.Wpf.Controls
 {
     public class BindingProxy : Freezable
     {

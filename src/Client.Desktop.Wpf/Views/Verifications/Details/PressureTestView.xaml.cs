@@ -1,8 +1,8 @@
 ﻿using System.Reactive.Disposables;
 using System.Windows;
-using Application.ViewModels.Corrections;
+using Prover.Application.ViewModels.Corrections;
+using Prover.Shared;
 using ReactiveUI;
-using Shared;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details
 {

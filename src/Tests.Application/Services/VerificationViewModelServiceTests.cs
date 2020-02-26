@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using DeepEqual.Syntax;
+using Devices;
+using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Domain.EvcVerifications;
 using Moq;
-using Shared.Interfaces;
+using Prover.Application.Services;
+using Prover.Domain.EvcVerifications;
+using Prover.Shared.Interfaces;
 using Tests.Shared;
 
 
@@ -37,7 +40,7 @@ namespace Application.Services.Tests
             _service = new VerificationViewModelService(_serviceMock.Object);
 
             _instance = new Mock<DeviceInstance>();
-            _repo = await Devices.RepositoryFactory.CreateDefaultAsync();
+            _repo = await RepositoryFactory.CreateDefaultAsync();
             _deviceType = _repo.GetByName("Mini-Max");
 
             var items = ItemFiles.MiniMaxItemFile;

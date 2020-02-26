@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Client.Wpf.Controls
+namespace Client.Desktop.Wpf.Controls
 {
     public static class InputBindingsManager
     {

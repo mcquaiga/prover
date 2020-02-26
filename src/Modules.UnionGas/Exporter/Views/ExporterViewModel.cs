@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using Application.Services;
-using Client.Desktop.Wpf.ViewModels;
-using Domain.EvcVerifications;
+﻿using Client.Desktop.Wpf.ViewModels;
+using Prover.Application.Services;
 using ReactiveUI;
-using Shared.Interfaces;
 
 namespace Modules.UnionGas.Exporter.Views
 {

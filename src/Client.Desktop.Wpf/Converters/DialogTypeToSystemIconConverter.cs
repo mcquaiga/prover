@@ -1,4 +1,4 @@
-﻿namespace Client.Wpf.Converters
+﻿namespace Client.Desktop.Wpf.Converters
 {
     /// <summary>
     /// Converts a DialogType to the corresponding system icon.

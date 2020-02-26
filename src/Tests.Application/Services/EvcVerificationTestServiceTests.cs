@@ -3,14 +3,11 @@ using Devices;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Domain.EvcVerifications;
 using DynamicData;
-using Infrastructure.KeyValueStore;
 using LiteDB;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReactiveUI;
-using Shared.Interfaces;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -18,6 +15,11 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Devices.Core;
+using Prover.Application.Services;
+using Prover.Domain.EvcVerifications;
+using Prover.Infrastructure.KeyValueStore;
+using Prover.Shared.Interfaces;
 using Tests.Shared;
 
 namespace Application.Services.Tests

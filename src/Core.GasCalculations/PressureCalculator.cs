@@ -1,6 +1,6 @@
 ﻿using System;
-using Shared;
-using Shared.Extensions;
+using Prover.Shared;
+using Prover.Shared.Extensions;
 
 namespace Core.GasCalculations
 {

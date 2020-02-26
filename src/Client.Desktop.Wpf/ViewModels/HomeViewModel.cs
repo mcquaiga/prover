@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Client.Wpf.Screens;
+using Client.Desktop.Wpf.Screens;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

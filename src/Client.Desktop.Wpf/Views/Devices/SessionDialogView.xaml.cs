@@ -3,7 +3,7 @@ using System.Reactive.Disposables;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using ReactiveUI;
 
-namespace Client.Wpf.Views.Devices
+namespace Client.Desktop.Wpf.Views.Devices
 {
     /// <summary>
     /// Interaction logic for SessionDialogView.xaml

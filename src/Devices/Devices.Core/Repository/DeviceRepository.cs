@@ -7,6 +7,8 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Devices.Core.Repository
 {
@@ -19,11 +21,16 @@ namespace Devices.Core.Repository
             _deviceSourceCache = new SourceCache<DeviceType, Guid>(v => v.Id);
 
         private readonly CompositeDisposable _disposer;
+        private readonly ILogger _logger;
 
         internal IDeviceTypeCacheSource<DeviceType> CacheSource;
 
-        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository) : this() =>
+        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository, ILogger logger = null) : this()
+        {
+            _logger = logger ?? NullLogger.Instance;
+
             CacheSource = cacheRepository;
+        }
 
         public DeviceRepository()
         {
@@ -42,7 +49,7 @@ namespace Devices.Core.Repository
 
         public IObservableCache<DeviceType, Guid> All { get; }
 
-        #region IDisposable Members
+        public IObservable<IChangeSet<DeviceType, Guid>> Connect() => _deviceSourceCache.Connect();
 
         public void Dispose()
         {
@@ -51,10 +58,6 @@ namespace Devices.Core.Repository
             _disposer?.Dispose();
             All?.Dispose();
         }
-
-        #endregion
-
-        public IObservable<IChangeSet<DeviceType, Guid>> Connect() => _deviceSourceCache.Connect();
 
         public IEnumerable<T> FilterCacheByType<T>() where T : DeviceType => All.Items.OfType<T>();
 
@@ -68,6 +71,12 @@ namespace Devices.Core.Repository
         public DeviceType GetById(Guid id) => All.Lookup(id).Value;
 
         public DeviceType GetByName(string name) => FindInSetByName(GetAll(), name);
+
+        private void Save()
+        {
+            _logger.LogDebug("Saving device types to cache.");
+            CacheSource.Save(_deviceSourceCache.Items);
+        }
 
         //public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
         //{
@@ -83,15 +92,12 @@ namespace Devices.Core.Repository
             if (dataSource == null)
                 return this;
 
+            _logger.LogDebug($"Loading devices for {dataSource.GetType()}.");
+
             await dataSource.GetDeviceTypes()
                 .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
 
             return this;
-        }
-
-        public void Save()
-        {
-            CacheSource.Save(_deviceSourceCache.Items);
         }
 
         public async Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
