@@ -45,8 +45,8 @@ artifacts:
 
          # start SQL Server 2014 Express
 
-#install:
-#  - ps: .\src\.nuget\NuGet.exe update -self
+before-build:
+  - ps: .\src\.nuget\NuGet.exe update -self
 
 deploy:
 # Deploy to GitHub Releases
