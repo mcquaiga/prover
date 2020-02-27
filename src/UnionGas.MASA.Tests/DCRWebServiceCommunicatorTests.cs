@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using UnionGas.MASA;
 using UnionGas.MASA.DCRWebService;
 
-namespace UnionGas.MASATests
+namespace UnionGas.MASA.Tests
 {
     [TestClass()]
     public class DCRWebServiceCommunicatorTests

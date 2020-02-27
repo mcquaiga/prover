@@ -168,7 +168,7 @@ namespace UnionGas.MASA
                     $"Endpoint: {SoapClient.Endpoint.Address} {Environment.NewLine}";
 
                 _log.Error(ex, msg);
-                MessageBox.Show(msg, "MASA Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                
                 throw;
             }
 

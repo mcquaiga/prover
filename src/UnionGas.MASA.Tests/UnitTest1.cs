@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnionGas.MASATests
+namespace UnionGas.MASA.Tests
 {
     [TestClass]
     public class UnitTest1

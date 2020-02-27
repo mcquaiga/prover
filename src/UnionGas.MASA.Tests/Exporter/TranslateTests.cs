@@ -2,7 +2,7 @@
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 
-namespace UnionGas.MASATests.Exporter
+namespace UnionGas.MASA.Tests.Exporter
 {
     [TestClass()]
     public class TranslateTests

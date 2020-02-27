@@ -5,11 +5,10 @@ using Prover.Core.Login;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Services;
 using Prover.Core.Shared.Data;
-using UnionGas.MASA;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 
-namespace UnionGas.MASATests.Exporter
+namespace UnionGas.MASA.Tests.Exporter
 {
     [TestClass()]
     public class ExportToMasaManagerTests
