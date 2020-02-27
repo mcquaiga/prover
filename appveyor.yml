@@ -49,7 +49,7 @@ artifacts:
 
 before_build:
   - cmd: .\src\.nuget\NuGet.exe update -self
-  - cmd: .\nuget restore \src\EvcProver.sln
+  - ps: .\src\.nuget\NuGet.exe restore .\src\EvcProver.sln
 
 deploy:
 # Deploy to GitHub Releases
