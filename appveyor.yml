@@ -32,10 +32,9 @@ branches:
 #  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 #  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
 #  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
-cache:
-  - packages -> **\packages.config
+#cache:
+#  - packages -> **\packages.config
   #- packages -> appveyor.yml 
-
 
 skip_tags: true
 
@@ -51,6 +50,9 @@ before_build:
   - cmd: .\src\.nuget\NuGet.exe update -self
   - ps: .\src\.nuget\NuGet.exe restore .\src\EvcProver.sln
 
+environment:
+  - EnableNuGetPackageRestore: false
+  
 deploy:
 # Deploy to GitHub Releases
 # RC branch
