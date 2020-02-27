@@ -50,7 +50,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications.Dialogs
 
         public void CloseDialog()
         {
-            IsOpen = false;
+            IsDialogOpen = false;
         }
 
         public void Dispose()

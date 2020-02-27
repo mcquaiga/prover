@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.Screens.Dialogs;
+﻿using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using Client.Desktop.Wpf.Views.Devices;
 using Devices.Communications.Interfaces;
@@ -15,6 +8,13 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Client.Desktop.Wpf.Communications
 {
@@ -29,10 +29,6 @@ namespace Client.Desktop.Wpf.Communications
         private CancellationTokenSource _cancellationToken;
         private SessionDialogView _dialogView;
         private SessionDialogViewModel _dialogViewModel;
-
-        public DeviceSessionManager()
-        {
-        }
 
         public DeviceSessionManager(ILogger<DeviceSessionManager> logger, DialogServiceManager dialogService,
             ICommClientFactory commClientFactory, ICommPortFactory commPortFactory)

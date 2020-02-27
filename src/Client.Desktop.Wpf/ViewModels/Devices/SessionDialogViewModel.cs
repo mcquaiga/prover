@@ -49,7 +49,7 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
 
         public void CloseDialog()
         {
-            IsOpen = false;
+            IsDialogOpen = false;
         }
 
         public void Dispose()

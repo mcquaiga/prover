@@ -23,23 +23,6 @@
             DockPanel.Dock="Top"
             Mode="PrimaryDark">
             <DockPanel>
-                <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Path=NavigationItems}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button
-                                Width="48"
-                                Height="48"
-                                Command="{Binding Path=NavigationCommand}">
-                                <materialDesign:PackIcon Foreground="White" Kind="{Binding Path=IconKind}" />
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
                 <StackPanel
                     Margin="15"
                     DockPanel.Dock="Left"
@@ -51,17 +34,15 @@
                         Click="GoBackButton_Click"
                         Content="Go back" />
 
-                    <!--<Button
-                        x:Name="ShowDialogButton"
-                        Margin="5,0,0,0"
-                        Content="Show Dialog" />-->
-
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Right">
-                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
+                    <ItemsControl x:Name="NavigationMenuItems" DockPanel.Dock="Left">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
+                                <Button
+                                    Width="48"
+                                    Height="48"
+                                    Command="{Binding NavigationCommand}">
+                                    <materialDesign:PackIcon Foreground="White" Kind="{Binding IconKind}" />
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
@@ -70,13 +51,35 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                </StackPanel>
 
+                    <!--<Button
+                        x:Name="ShowDialogButton"
+                        Margin="5,0,0,0"
+                        Content="Show Dialog" />-->
+
+                </StackPanel>
                 <Grid DockPanel.Dock="Top">
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="22"><Run Text="EVC Prover" /></TextBlock>
+
+                    <StackPanel DockPanel.Dock="Right">
+                        <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+
+
                 </Grid>
             </DockPanel>
         </materialDesign:ColorZone>

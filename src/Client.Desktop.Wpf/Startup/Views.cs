@@ -6,6 +6,7 @@ using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using ReactiveUI;
 using Splat;
@@ -30,11 +31,13 @@ namespace Client.Desktop.Wpf.Startup
             
             services.AddSingleton(c => new MainWindow());
             services.AddSingleton(c => new MainViewModel(c, c.GetService<DialogServiceManager>()));
+            services.AddSingleton<INavigationItem>(c => c.GetService<MainViewModel>());
             services.AddSingleton<IScreen, MainViewModel>(c => c.GetService<MainViewModel>());
             services.AddSingleton<IScreenManager, MainViewModel>(c => c.GetService<MainViewModel>());
 
             //services.AddSingleton<ITestManagerViewModelFactory, TestManagerViewModel>();
-
+            services.AddSingleton<INavigationItem, MainViewModel>();
+            
             services.AddMainMenuItems();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton(c => new HomeView());
