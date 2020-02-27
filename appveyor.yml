@@ -27,18 +27,25 @@ branches:
     - master   
     - rc
 
+# build cache to preserve files/folders between builds
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - projectA\libs
+  - node_modules                    # local npm modules
+  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
+  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+
 skip_tags: true
 
 pull_requests:
   do_not_increment_build_number: true
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 artifacts:
   - path: build\Release
     name: EvcProver-v$(appveyor_build_version)-$(APPVEYOR_REPO_BRANCH)
 
-services:
-  - mssql2014           # start SQL Server 2014 Express
+         # start SQL Server 2014 Express
 
 #install:
 #  - ps: .\src\.nuget\NuGet.exe update -self
