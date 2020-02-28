@@ -26,8 +26,13 @@
             Padding="16,8"
             DockPanel.Dock="Top"
             Mode="PrimaryLight">
-            <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline2TextBlock}" Text="QA Test Run" />
+                <Button
+                    x:Name="GoForwardButton"
+                    Content="View Test in Progress"
+                    Style="{StaticResource MaterialDesignFlatButton}" />
+
             </StackPanel>
         </materialDesign:ColorZone>
         <Grid

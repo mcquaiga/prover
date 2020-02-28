@@ -12,6 +12,7 @@ using Devices.Honeywell.Comm.Messaging.Requests;
 using Devices.Honeywell.Comm.Messaging.Responses;
 using Devices.Honeywell.Comm.Messaging.Responses.Codes;
 using Devices.Honeywell.Core;
+using Prover.Shared.IO;
 
 namespace Devices.Honeywell.Comm.CommClients
 {

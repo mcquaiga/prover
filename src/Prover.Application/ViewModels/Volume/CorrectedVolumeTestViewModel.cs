@@ -1,4 +1,5 @@
-﻿using System.Reactive.Linq;
+﻿using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interfaces;
@@ -21,15 +22,18 @@ namespace Prover.Application.ViewModels.Volume
             Uncorrected = uncorrected;
             this.WhenAnyValue(x => x.StartValues, x => x.EndValues,
                     (start, end) => VolumeCalculator.TotalVolume(start.CorrectedReading, end.CorrectedReading))
-                .ToPropertyEx(this, x => x.ActualValue);
+                .ToPropertyEx(this, x => x.ActualValue)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume).CombineLatest(
                     this.WhenAnyValue(x => x.TotalCorrectionFactor),
                     (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
-                .ToPropertyEx(this, x => x.ExpectedValue);
+                .ToPropertyEx(this, x => x.ExpectedValue)
+                .DisposeWith(Cleanup);
 
             trueCorrectedFactor.TrueCorrectedObservable
-                .ToPropertyEx(this, x => x.TotalCorrectionFactor);
+                .ToPropertyEx(this, x => x.TotalCorrectionFactor)
+                .DisposeWith(Cleanup);
         }
 
         public UncorrectedVolumeTestViewModel Uncorrected { get; }
@@ -51,7 +55,8 @@ namespace Prover.Application.ViewModels.Volume
 
             this.WhenAnyValue(x => x._volumeTest.ActualValue)
                 .Select(x => x.ToInt32())
-                .ToPropertyEx(this, x => x.ActualValue);
+                .ToPropertyEx(this, x => x.ActualValue)
+                .DisposeWith(Cleanup);
         }
     }
 }

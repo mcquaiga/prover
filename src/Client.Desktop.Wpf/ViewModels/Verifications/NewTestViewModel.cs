@@ -4,25 +4,28 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Client.Desktop.Wpf.Communications;
 using Devices;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Services;
+using Prover.Application.Settings;
+using Prover.Application.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public class NewTestViewModel : ViewModelBase, IRoutableViewModel, IDisposable
+    public class NewTestViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IActivatableViewModel
     {
-        private CompositeDisposable _cleanup;
+        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
+        [Reactive] public TestManagerViewModel TestManager { get; set; }
 
         public NewTestViewModel(IScreenManager screenManager,
             ITestManagerViewModelFactory testManagerViewModelFactory) : base(screenManager)
         {
+            
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
                 x => x.SelectedBaudRate,
                 (device, comm, baud) =>
@@ -30,16 +33,51 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                     !string.IsNullOrEmpty(comm) &&
                     baud != 0);
 
-            StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
+            StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
             {
                 SetLastUsedSettings();
-                var testManager = await testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
-                await ScreenManager.ChangeView(testManager);
+                testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
+                return Observable.Return(Unit.Default);
+                //await ScreenManager.ChangeView(TestManager);
             }, canStartTest);
 
+            var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
+            NavigateForward = ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);
 
-            SetupScreenData();
+            StartTestCommand.DisposeWith(_cleanup);
+            NavigateForward.DisposeWith(_cleanup);
+
+            RepositoryFactory.Instance.Connect()
+                .Filter(d => !d.IsHidden)
+                .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out var deviceTypes)
+                .Filter(d => d.Id == ApplicationSettings.Local.LastDeviceTypeUsed)
+                .Do(d => SelectedDeviceType = d.FirstOrDefault().Current)
+                .Subscribe()
+                .DisposeWith(_cleanup);
+            DeviceTypes = deviceTypes;
+
+            SerialPort.GetPortNames().AsObservableChangeSet()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out var ports)
+                .Subscribe().DisposeWith(_cleanup);
+            CommPorts = ports;
+
+            SerialPort.BaudRates.AsObservableChangeSet()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out var baudRates)
+                .Subscribe()
+                .DisposeWith(_cleanup);
+            BaudRates = baudRates;
+
+            SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
+            SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
+            SelectedTachCommPort = ApplicationSettings.Local.TachCommPort;
+
         }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> NavigateForward { get; set; }
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
 
@@ -49,17 +87,18 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
         public ReactiveCommand<Unit, Unit> StartTestCommand { get; set; }
 
+        public LocalSettings PreviousSelections => ApplicationSettings.Local;
+
         [Reactive] public string SelectedTachCommPort { get; set; }
         [Reactive] public string SelectedCommPort { get; set; }
         [Reactive] public DeviceType SelectedDeviceType { get; set; }
         [Reactive] public int SelectedBaudRate { get; set; }
 
-        public string UrlPathSegment => "/VerificationTests";
-        public IScreen HostScreen => ScreenManager;
+        public override string UrlPathSegment => "/VerificationTests";
+        public override IScreen HostScreen => ScreenManager;
 
         public void Dispose()
         {
-            StartTestCommand?.Dispose();
             _cleanup?.Dispose();
         }
 
@@ -68,42 +107,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
             ApplicationSettings.Local.InstrumentCommPort = SelectedCommPort;
             ApplicationSettings.Local.InstrumentBaudRate = SelectedBaudRate;
+            ApplicationSettings.Local.TachCommPort = SelectedTachCommPort;
             ApplicationSettings.Instance.SaveSettings();
         }
-
-        private void SetupScreenData()
-        {
-            var devTypes = RepositoryFactory.Instance.Connect()
-                .Filter(d => !d.IsHidden)
-                .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var deviceTypes)
-                .DisposeMany()
-                .Filter(d => d.Id == ApplicationSettings.Local.LastDeviceTypeUsed)
-                .Select(d => d.FirstOrDefault().Current)
-                .Do(d => SelectedDeviceType = d)
-                .Subscribe();
-
-            DeviceTypes = deviceTypes;
-
-            SerialPort.GetPortNames().AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var ports)
-                .Subscribe();
-            CommPorts = ports;
-
-            SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
-
-            SerialPort.BaudRates.AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var baudRates)
-                .Subscribe();
-            BaudRates = baudRates;
-
-            SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
-
-            _cleanup = new CompositeDisposable(devTypes);
-        }
-
     }
 }

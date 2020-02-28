@@ -1,4 +1,5 @@
 ﻿using Devices.Communications.IO;
+using Prover.Shared.IO;
 
 namespace Devices.Communications.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Devices.Communications.Interfaces
     public class CommPortFactory : ICommPortFactory
     {
         private static SerialPort _serialPort;
-        private static IrDAPort _irDaPort;
+        private static ICommPort _irDaPort;
         private static ICommPort _currentPort;
 
         public ICommPort Create(string portName = null, int? baudRate = null)
@@ -24,7 +25,7 @@ namespace Devices.Communications.Interfaces
             }
             else
             {
-                _irDaPort = new IrDAPort();
+                //_irDaPort = new IrDAPort();
                 _currentPort = _irDaPort;
             }
 

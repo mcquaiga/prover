@@ -35,7 +35,7 @@
                                     CommandParameter="{Binding}"
                                     Content="Run Test"
                                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-                                <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
+                                <reactiveUi:ViewModelViewHost x:Name="CorrectionTestStyleViewHost" ViewModel="{Binding}" />
                             </StackPanel>
                             <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
 
@@ -61,7 +61,7 @@
                         CommandParameter="{Binding}"
                         Content="Run Test"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-                    <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
+                    <reactiveUi:ViewModelViewHost x:Name="CorrectionsTestManagerViewHost" ViewModel="{Binding}" />
                 </StackPanel>
                 <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
             </Border>
@@ -119,19 +119,22 @@
                         Content="{materialDesign:PackIcon ContentSave}"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}" />
 
-                    <!--<Button
-                        Width="150"
-                        Margin="8,2"
-                        HorizontalAlignment="Right"
-                        Command="{Binding NextTestCommand}"
-                        Content="Next Test"
-                        Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}" />-->
                     <Button
                         x:Name="PrintButton"
                         Margin="8,0"
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Left"
                         Content="{materialDesign:PackIcon Printer}"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+
+
+                    <Button
+                        x:Name="SubmitTestButton"
+                        Width="Auto"
+                        Margin="8,2"
+                        HorizontalAlignment="Right"
+                        Content="SUBMIT TEST"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}" />
+
                 </StackPanel>
 
             </Grid>

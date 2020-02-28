@@ -48,11 +48,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications.Dialogs
         [Reactive] public int Progress { get; set; }
         [Reactive] public int ProgressTotal { get; set; }
 
-        public void CloseDialog()
-        {
-            IsDialogOpen = false;
-        }
-
         public void Dispose()
         {
             CancelCommand?.Dispose();

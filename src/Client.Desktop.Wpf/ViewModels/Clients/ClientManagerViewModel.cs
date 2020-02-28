@@ -1,8 +1,9 @@
-﻿using ReactiveUI;
+﻿using Prover.Application.ViewModels;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Clients
 {
-    public class ClientManagerViewModel : ViewModelBase, IRoutableViewModel
+    public class ClientManagerViewModel : RoutableViewModelBase, IRoutableViewModel
     {
         public ClientManagerViewModel(IScreenManager screenManager) : base(screenManager)
         {
@@ -10,8 +11,8 @@ namespace Client.Desktop.Wpf.ViewModels.Clients
         }
 
 
-        public string UrlPathSegment { get; } = "/ClientManager";
-        public IScreen HostScreen { get; }
+        public override string UrlPathSegment { get; } = "/ClientManager";
+        public override IScreen HostScreen { get; }
     }
 
     

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Devices.Communications.Status;
 using Devices.Core.Items.ItemGroups;
+using Prover.Shared.IO;
 
 namespace Devices.Communications.Interfaces
 {

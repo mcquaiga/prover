@@ -1,4 +1,5 @@
-﻿using System.Reactive.Linq;
+﻿using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Prover.Domain;
@@ -17,14 +18,17 @@ namespace Prover.Application.ViewModels.Volume
         {
             this.WhenAnyValue(x => x.StartValues, x => x.EndValues, (s, e) =>
                     VolumeCalculator.TotalVolume(s.UncorrectedReading, e.UncorrectedReading))
-                .ToPropertyEx(this, x => x.ActualValue);
+                .ToPropertyEx(this, x => x.ActualValue)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.AppliedInput)
                 .Select(a => DriveType.UnCorrectedInputVolume(a))
-                .ToPropertyEx(this, x => x.ExpectedValue);
+                .ToPropertyEx(this, x => x.ExpectedValue)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.ExpectedValue)
-                .ToPropertyEx(this, x => x.UncorrectedInputVolume);
+                .ToPropertyEx(this, x => x.UncorrectedInputVolume)
+                .DisposeWith(Cleanup);
         }
 
         [Reactive] public decimal AppliedInput { get; set; }
@@ -32,5 +36,10 @@ namespace Prover.Application.ViewModels.Volume
         public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
 
         [Reactive] public PulseOutputTestViewModel PulseOutput { get; set; }
+
+        protected override void Disposing()
+        {
+           
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
@@ -24,6 +25,8 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                     this.OneWayBind(ViewModel, vm => vm.SiteInfo.SiteId2, v => v.SiteId2Text.Text).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.SiteInfo.SerialNumber, v => v.SerialNumberText.Text).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.SiteInfo.FirmwareVersion, v => v.FirmwareText.Text).DisposeWith(d);
+
+                    this.CleanUpDefaults().DisposeWith(d);
                 });
         }
     }

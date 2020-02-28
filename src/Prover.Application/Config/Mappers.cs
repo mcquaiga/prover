@@ -18,7 +18,7 @@ namespace Prover.Application.Config
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<BaseViewModel, VerificationEntity>()
+                cfg.CreateMap<ViewModelWithIdBase, VerificationEntity>()
                     .Include<CorrectionTestViewModel<ItemGroup>, VerificationTestEntity<ItemGroup>>()
                     .Include<TemperatureFactorViewModel, TemperatureCorrectionTest>()
                     .Include<PressureFactorViewModel, PressureCorrectionTest>()

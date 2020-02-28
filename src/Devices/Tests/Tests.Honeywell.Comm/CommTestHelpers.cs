@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Devices.Communications.IO;
 using Devices.Honeywell.Core;
 using Moq;
+using Prover.Shared.IO;
 using Tests.Honeywell.Comm.Messaging;
 
 namespace Tests.Honeywell.Comm

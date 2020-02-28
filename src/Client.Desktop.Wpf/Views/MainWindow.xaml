@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
     xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels"
+    x:Name="MainWindowView"
     Title="EVC Prover"
     Width="964"
     Height="750"
@@ -17,32 +18,58 @@
 
 
     <DockPanel>
+
         <materialDesign:ColorZone
+            x:Name="HeaderColorZone"
             Padding="4"
             materialDesign:ShadowAssist.ShadowDepth="Depth0"
             DockPanel.Dock="Top"
             Mode="PrimaryDark">
-            <DockPanel>
+
+            <Grid x:Name="HeaderDockPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
                 <StackPanel
+                    x:Name="NavigationBar"
+                    Grid.Column="0"
                     Margin="15"
-                    DockPanel.Dock="Left"
                     Orientation="Horizontal">
 
                     <Button
-                        x:Name="GoBackButton"
-                        Margin="5,0,0,0"
-                        Click="GoBackButton_Click"
-                        Content="Go back" />
+                        x:Name="GoHomeButton"
+                        Width="48"
+                        Height="48">
+                        <materialDesign:PackIcon Foreground="White" Kind="Home" />
+                    </Button>
 
-                    <ItemsControl x:Name="NavigationMenuItems" DockPanel.Dock="Left">
+                    <Button
+                        x:Name="GoBackButton"
+                        Width="48"
+                        Height="48">
+                        <materialDesign:PackIcon Foreground="White" Kind="ArrowBack" />
+                    </Button>
+
+                    <Button
+                        x:Name="ShowDialogButton"
+                        Margin="5,0,0,0"
+                        Content="Show Dialog" />
+
+                </StackPanel>
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"><Run Text="EVC Prover" /></TextBlock>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button
-                                    Width="48"
-                                    Height="48"
-                                    Command="{Binding NavigationCommand}">
-                                    <materialDesign:PackIcon Foreground="White" Kind="{Binding IconKind}" />
-                                </Button>
+                                <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
@@ -51,41 +78,11 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-
-                    <!--<Button
-                        x:Name="ShowDialogButton"
-                        Margin="5,0,0,0"
-                        Content="Show Dialog" />-->
-
                 </StackPanel>
-                <Grid DockPanel.Dock="Top">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="22"><Run Text="EVC Prover" /></TextBlock>
-
-                    <StackPanel DockPanel.Dock="Right">
-                        <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-
-
-                </Grid>
-            </DockPanel>
+            </Grid>
         </materialDesign:ColorZone>
 
         <Grid>
-
             <materialDesign:DialogHost x:Name="DialogHost" Identifier="ActiveItemDialog">
                 <materialDesign:DialogHost.DialogContent>
                     <ContentControl x:Name="DialogContent" />
@@ -96,23 +93,15 @@
                 </materialDesign:DialogHost.Content>
             </materialDesign:DialogHost>
 
-
-            <!--<Grid HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            <Grid
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
                 d:LayoutOverrides="Width">
-                <materialDesign:Snackbar x:Name="NotificationSnackbar" IsActive="{Binding ShowNotificationSnackbar}">
+                <materialDesign:Snackbar x:Name="NotificationSnackBar" IsActive="{Binding ShowNotificationSnackBar}">
                     <materialDesign:SnackbarMessage HorizontalAlignment="Center" Content="{Binding NotificationMessage}" />
                 </materialDesign:Snackbar>
-            </Grid>-->
+            </Grid>
         </Grid>
-
-
-
-
-
-
-
-
-
 
     </DockPanel>
 

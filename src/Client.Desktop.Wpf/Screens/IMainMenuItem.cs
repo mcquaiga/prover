@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 
@@ -9,7 +10,7 @@ namespace Client.Desktop.Wpf.Screens
         PackIconKind MenuIconKind { get; }
         string MenuTitle { get; }
 
-        ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
+        ReactiveCommand<IScreenManager, IRoutableViewModel> OpenCommand { get; }
 
         int? Order { get; }
     }

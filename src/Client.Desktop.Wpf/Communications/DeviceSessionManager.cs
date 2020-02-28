@@ -15,6 +15,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Prover.Shared.IO;
 
 namespace Client.Desktop.Wpf.Communications
 {
@@ -41,7 +42,7 @@ namespace Client.Desktop.Wpf.Communications
 
         public DeviceInstance Device { get; private set; }
         public DeviceType DeviceType { get; private set; }
-        public bool SessionInProgress { get; private set; }
+        public bool SessionInProgress { get; private set; } = false;
 
         public ReactiveObject CurrentOwnerViewModel { get; set; }
 
@@ -69,10 +70,6 @@ namespace Client.Desktop.Wpf.Communications
             _activeClient?.Dispose();
 
             SessionInProgress = false;
-
-            //var newSession = CreateNew();
-            //this = newSession;
-            //return this;
         }
 
         public async Task LiveReadItem()
@@ -100,7 +97,14 @@ namespace Client.Desktop.Wpf.Communications
             ReactiveObject owner)
         {
             if (SessionInProgress)
-                throw new InvalidOperationException("Close the current session before starting a new one.");
+            {
+                var answer = 
+                    await _dialogService.ShowQuestion("Device session already in progress. Start new session?");
+                if (answer)
+                {
+                    await EndSession();
+                }
+            }
 
             try
             {

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.Startup;
@@ -22,7 +24,7 @@ namespace Client.Desktop.Wpf.Extensions
                     ti.BaseType?.IsGenericType == true &&
                     ti.BaseType?.GetGenericTypeDefinition() == typeof(ReactiveDialog<>).GetGenericTypeDefinition() &&
                     !ti.IsAbstract))
-                services.AddTransient(ti, ti);
+                services.TryAddTransient(ti, ti);
         }
 
         public static void AddMainMenuItems(this IServiceCollection services)
@@ -31,12 +33,11 @@ namespace Client.Desktop.Wpf.Extensions
             var items = assembly.DefinedTypes.FirstOrDefault(t => t == typeof(MainMenuItems));
 
             if (items != null)
-                items.DeclaredMethods
+                items.DeclaredProperties
                     .ToList()
-                    .ForEach(m =>
+                    .ForEach(prop =>
                     {
-                        services.AddSingleton(typeof(IMainMenuItem),
-                            c => m.Invoke(null, new[] {c.GetService<IScreenManager>()}));
+                        services.AddSingleton(typeof(IMainMenuItem), c => prop.GetValue(items));
                     });
 
             //assembly.DefinedTypes
@@ -54,11 +55,51 @@ namespace Client.Desktop.Wpf.Extensions
         {
             var assembly = GetAssembly;
 
-            AddViews(services, assembly);
-
-            AddViewModels(services, assembly);
+            AddViews();
+            AddViewModels();
 
             //AddReactiveObjects(services, assembly);
+
+            void AddViews()
+            {
+                // for each type that implements IViewFor
+                foreach (var ti in assembly.DefinedTypes
+                    .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IViewFor)) && !ti.IsAbstract))
+                {
+                    // grab the first _implemented_ interface that also implements IViewFor, this should be the expected IViewFor<>
+                    var ivf = ti.ImplementedInterfaces.FirstOrDefault(t =>
+                        t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IViewFor)));
+
+
+                    // need to check for null because some classes may implement IViewFor but not IViewFor<T> - we don't care about those
+                    if (ivf != null && !ivf.ContainsGenericParameters)
+                    {
+                        //RegisterType(services, ti, ivf);
+                        if (ti.GetCustomAttribute<SingleInstanceViewAttribute>() != null)
+                        {
+                            services.TryAddSingleton(ivf, ti);
+                            //RegisterType(services, ti, ivf);
+                        }
+                        else
+                        {
+                            services.TryAddTransient(ivf, ti);
+                        }
+                    }
+                }
+            }
+
+            void AddViewModels()
+            {
+                foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+                    //var a = Assembly.Load(ass);
+                foreach (var ti in ass.DefinedTypes
+                    .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
+                    if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
+                    {
+                        services.TryAddTransient(ti, ti);
+                        services.TryAddTransient(typeof(IRoutableViewModel), ti);
+                    }
+            }
         }
 
         public static void ConfigureModules(this HostBuilderContext builder, IServiceCollection services)
@@ -93,35 +134,32 @@ namespace Client.Desktop.Wpf.Extensions
                 if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
                     services.TryAddTransient(ti, ti);
         }
+        
+     
 
-        private static void AddViewModels(IServiceCollection services, Assembly assembly)
+        private static void RegisterType(IServiceCollection services, TypeInfo ti, Type serviceType)
         {
-            foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
-                //var a = Assembly.Load(ass);
-            foreach (var ti in ass.DefinedTypes
-                .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
-                if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
-                {
-                    services.AddTransient(ti, ti);
-                    services.AddTransient(typeof(IRoutableViewModel), ti);
-                }
+            var factory = TypeFactory(ti);
+            if (ti.GetCustomAttribute<SingleInstanceViewAttribute>() != null)
+            {
+                services.TryAddSingleton(serviceType, factory);
+            }
+            else
+            {
+                services.TryAddTransient(serviceType, factory);
+            }
         }
 
-        private static void AddViews(IServiceCollection services, Assembly assembly)
+        [SuppressMessage("Redundancy", "CA1801: Redundant parameter", Justification = "Used on some platforms")]
+        private static Func<IServiceProvider, object> TypeFactory(TypeInfo typeInfo)
         {
-            // for each type that implements IViewFor
-            foreach (var ti in assembly.DefinedTypes
-                .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IViewFor)) && !ti.IsAbstract))
-            {
-                // grab the first _implemented_ interface that also implements IViewFor, this should be the expected IViewFor<>
-                var ivf = ti.ImplementedInterfaces.FirstOrDefault(t =>
-                    t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IViewFor)));
+            var exp = Expression.Lambda<Func<object>>(Expression.New(
+                typeInfo.DeclaredConstructors.First(ci => ci.IsPublic && !ci.GetParameters().Any()))).Compile();
 
-
-                // need to check for null because some classes may implement IViewFor but not IViewFor<T> - we don't care about those
-                if (ivf != null && !ivf.ContainsGenericParameters)
-                    services.AddTransient(ivf, ti);
-            }
+            return provider => exp;
+            //return Expression.Lambda<Func<IServiceProvider, object>>
+            //(Expression.New(
+            //    typeInfo.DeclaredConstructors.First(ci => ci.IsPublic && !ci.GetParameters().Any()))).Compile();
         }
     }
 }

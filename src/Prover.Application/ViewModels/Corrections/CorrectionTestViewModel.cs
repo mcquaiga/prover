@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Core.GasCalculations;
-using DynamicData.Binding;
 using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -14,7 +14,7 @@ namespace Prover.Application.ViewModels.Corrections
         void SetVerified(bool verified);
     }
 
-    public abstract class VerificationViewModel : BaseViewModel, IAssertVerification
+    public abstract class VerificationViewModel : ViewModelWithIdBase, IAssertVerification
     {
         private readonly ReactiveCommand<bool, bool> _setVerified;
 
@@ -23,11 +23,9 @@ namespace Prover.Application.ViewModels.Corrections
             _setVerified = ReactiveCommand.Create<bool, bool>(v => v);
             _setVerified.ToPropertyEx(this, x => x.Verified);
 
-            //this.WhenAnyValue(x => x.IsVerified)
-            //    .ToPropertyEx(this, x => x.Verified);
+            _setVerified.DisposeWith(Cleanup);
         }
 
-        //[Reactive] private bool IsVerified { get; set; }
 
         public extern bool Verified { [ObservableAsProperty] get; }
 
@@ -61,10 +59,12 @@ namespace Prover.Application.ViewModels.Corrections
 
             this.WhenAnyValue(x => x.PercentError)
                 .Select(p => p.IsBetween(PassTolerance))
-                .ToPropertyEx(this, x => x.Verified, deferSubscription: true);
+                .ToPropertyEx(this, x => x.Verified, deferSubscription: true)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)
-                .ToPropertyEx(this, x => x.PercentError, 100m, true);
+                .ToPropertyEx(this, x => x.PercentError, 100m, true)
+                .DisposeWith(Cleanup);
         }
 
         [Reactive] public decimal PassTolerance { get; protected set; }
@@ -74,7 +74,7 @@ namespace Prover.Application.ViewModels.Corrections
         public extern decimal PercentError { [ObservableAsProperty] get; }
     }
 
-    public abstract class DeviationTestViewModel<T> : BaseViewModel, IAssertVerification
+    public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification
         where T : class
     {
         protected DeviationTestViewModel()
@@ -86,11 +86,13 @@ namespace Prover.Application.ViewModels.Corrections
             PassTolerance = passTolerance;
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.Deviation)
-                .ToPropertyEx(this, x => x.Deviation, 100, true);
+                .ToPropertyEx(this, x => x.Deviation, 100, true)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Deviation)
                 .Select(p => p.IsBetween(PassTolerance))
-                .ToPropertyEx(this, x => x.Verified, deferSubscription: true);
+                .ToPropertyEx(this, x => x.Verified, deferSubscription: true)
+                .DisposeWith(Cleanup);
         }
 
         [Reactive] public T Items { get; set; }
@@ -127,7 +129,10 @@ namespace Prover.Application.ViewModels.Corrections
         {
             UpdateFactor = ReactiveCommand.Create<Unit, decimal>(_ => CalculatorFactory.Invoke().CalculateFactor());
 
-            UpdateFactor.ToPropertyEx(this, x => x.ExpectedValue);
+            UpdateFactor.ToPropertyEx(this, x => x.ExpectedValue)
+                .DisposeWith(Cleanup);
+
+            UpdateFactor.DisposeWith(Cleanup);
         }
 
         protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }

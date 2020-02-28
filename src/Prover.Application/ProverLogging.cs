@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Prover.Application
 {
@@ -23,15 +24,17 @@ namespace Prover.Application
 
         private static ILoggerFactory CreateDefaultFactory()
         {
-            return LoggerFactory.Create(builder => { 
-                builder
-                    .AddFilter("Microsoft", LogLevel.Warning)
-                    .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("Prover.", LogLevel.Debug)
-                    .AddFilter("Devices", LogLevel.Information)
-                    .AddFilter("Client.", LogLevel.Trace)
-                    .AddDebug()
-                    .AddConsole(); });
+            return NullLoggerFactory.Instance;
+
+            //LoggerFactory.Create(builder => { 
+            //builder
+            //    .AddFilter("Microsoft", LogLevel.Warning)
+            //    .AddFilter("System", LogLevel.Warning)
+            //    .AddFilter("Prover.", LogLevel.Debug)
+            //    .AddFilter("Devices", LogLevel.Information)
+            //    .AddFilter("Client.", LogLevel.Trace)
+            //    .AddDebug()
+            //    .AddConsole(); });
         }
 
         public static ILogger CreateLogger(string categoryName) => LogFactory.CreateLogger(categoryName);

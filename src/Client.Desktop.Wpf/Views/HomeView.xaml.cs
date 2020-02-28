@@ -4,9 +4,11 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views
 {
+   
     /// <summary>
     ///     Interaction logic for MainMenuView.xaml
     /// </summary>
+    [SingleInstanceView]
     public partial class HomeView : ReactiveUserControl<HomeViewModel>
     {
         public HomeView()

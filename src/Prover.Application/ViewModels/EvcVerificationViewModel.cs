@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
@@ -12,7 +13,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class EvcVerificationViewModel : BaseViewModel
+    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable
     {
         private EvcVerificationViewModel()
         {
@@ -43,6 +44,13 @@ namespace Prover.Application.ViewModels
         public void Initialize()
         {
             DeviceInfo = new DeviceInfoViewModel(Device, this);
+        }
+
+        protected override void Disposing()
+        {
+            Tests.ForEach(t => t.DisposeWith(Cleanup));
+            OtherTests.ForEach(t => t.DisposeWith(Cleanup));
+            Tests.Clear();
         }
     }
 

@@ -40,8 +40,6 @@ namespace Client.Desktop.Wpf.Startup
 
             services.AddScoped<DeviceSessionManager>();
 
-
-
             // Port Setup
             var portFactory = new CommPortFactory();
             services.AddSingleton<ICommPortFactory>(c => portFactory);
@@ -54,13 +52,9 @@ namespace Client.Desktop.Wpf.Startup
 
             //Pulse Outputs
             //services.AddTransient(c => new PulseInputsListenerService(c))
-
             //services.AddSingleton<IInputChannelFactory>(c => new SimulatorPulseChannelFactory());
 
             services.AddTransient<PulseInputsListenerService>();
-
-
-            //=> new PulseInputsListenerService(c.GetService<ILoggerFactory>(), , null));
             services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
             services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 

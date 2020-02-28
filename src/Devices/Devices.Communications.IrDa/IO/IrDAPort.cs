@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using InTheHand.Net;
 using InTheHand.Net.Sockets;
 using Microsoft.Extensions.Logging;
+using Prover.Shared.IO;
 
 namespace Devices.Communications.IO
 {
@@ -22,7 +23,7 @@ namespace Devices.Communications.IO
         private readonly CompositeDisposable _cleanup;
         private readonly ISubject<string> _dataSentObservable = new Subject<string>();
         private readonly Encoding _encoding;
-        private readonly Logger<ICommPort> _log;
+        private readonly ILogger _log;
         private IrDAClient _client;
         private IDisposable _dataReceivedObs;
         private IObservable<char> _dataReceivedObservable;

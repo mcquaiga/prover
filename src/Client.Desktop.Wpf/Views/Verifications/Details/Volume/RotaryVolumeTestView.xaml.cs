@@ -1,4 +1,6 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
+using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
 
@@ -24,6 +26,17 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest.ActualValue, v => v.RotaryEvcMeterDisplacementControl.Value).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest.ExpectedValue, v => v.RotaryExpectedMeterDisplacementControl.Value).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest.Items.MeterType, v => v.RotaryMeterTypeText.Text).DisposeWith(d);
+
+                    this.CleanUpDefaults().DisposeWith(d);
+
+                    Disposable.Create(() =>
+                    {
+                        UncorrectedVolumeContent.DisposeWith(d);
+                        UncorrectedVolumeContent = null;
+                        
+                        CorrectedVolumeContent.DisposeWith(d);
+                        CorrectedVolumeContent = null;
+                    }).DisposeWith(d);
                 });
         }
     }

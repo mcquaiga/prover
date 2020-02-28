@@ -3,7 +3,7 @@
     "Client.Wpf": {
       "commandName": "Project",
       "environmentVariables": {
-        "PROVER_ENVIRONMENT": "Developement"
+        "DOTNET_ENVIRONMENT": "Developement"
       }
     }
   }

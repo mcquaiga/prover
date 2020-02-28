@@ -1,5 +1,6 @@
 using Devices.Communications.IO;
 using Devices.Honeywell.Core;
+using Prover.Shared.IO;
 
 namespace Devices.Honeywell.Comm.CommClients
 {

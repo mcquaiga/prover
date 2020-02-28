@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Microsoft.Extensions.Logging;
+using Prover.Application.ViewModels;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 
@@ -19,6 +21,7 @@ namespace Prover.Application.Hardware
 
     public class SimulatedOutputChannel : IOutputChannel
     {
+        private static ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
         public static Dictionary<OutputChannelType, SimulatedOutputChannel> OutputSimulators =
             new Dictionary<OutputChannelType, SimulatedOutputChannel>
             {
@@ -41,23 +44,24 @@ namespace Prover.Application.Hardware
 
         public void OutputValue(short value)
         {
-            Debug.WriteLine($"Output channel -> value {value} sent.");
+            _logger.LogDebug($"Output channel -> value {value} sent.");
         }
 
         public void SignalStart()
         {
-            Debug.WriteLine("START Signal called on output channel.");
+            _logger.LogDebug("START Signal called on output channel.");
             _inputChannels?.ForEach(i => i.Start());
         }
 
         public void SignalStop()
         {
-            Debug.WriteLine("Signal Stop called on output channel.");
+            _logger.LogDebug("Signal Stop called on output channel.");
         }
     }
 
     public class SimulatedInputChannel : IInputChannel, IDisposable
     {
+        private static ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
         public PulseOutputChannel Channel { get; }
 
         public static Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =
@@ -107,7 +111,7 @@ namespace Prover.Application.Hardware
                         x => OffValue - _currentValue,
                         x => pulseIntervalMs ?? random.Next(500, 3000),
                         x => TimeSpan.FromMilliseconds(x), _scheduler)
-                    .Do(t => Debug.WriteLine($"Interval - {t} ms"))
+                    .LogDebug($"Generated Pulse", _logger, true)
                     .Select(_ => onValue)
                     .Publish();
 
@@ -115,7 +119,6 @@ namespace Prover.Application.Hardware
                     .Where(x => x == onValue)
                     .Timestamp()
                     .Delay(TimeSpan.FromTicks(ticks))
-                    .Do(t => Debug.WriteLine($"Pulse Width - {(DateTimeOffset.Now - t.Timestamp).Milliseconds} ms"))
                     .Select(_ => OffValue);
 
                 var cleanup = randomInterval.Merge(onOffSwitch).DelaySubscription(TimeSpan.FromSeconds(1))

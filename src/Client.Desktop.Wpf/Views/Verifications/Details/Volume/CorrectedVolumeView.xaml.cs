@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Disposables;
+using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Volume;
 using ReactiveUI;
 
@@ -24,7 +25,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                 this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.ExpectedValueControl.Value).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
 
-
+                this.CleanUpDefaults().DisposeWith(d);
             });
         }
     }

@@ -11,17 +11,17 @@ namespace Client.Desktop.Wpf.ViewModels
 {
     internal static class MainMenuItems
     {
-        public static IMainMenuItem CertificatesMainMenu(IScreenManager screenManager)
-            => new MainMenu(screenManager, "Certificates", PackIconKind.ClipboardText,
-                s => s.ChangeView<ClientManagerViewModel>(), 4);
+        public static IMainMenuItem CertificatesMainMenu
+            => new MainMenu("Certificates", PackIconKind.ClipboardText, order: 4,
+                openFunc: s => s.ChangeView<ClientManagerViewModel>());
 
-        public static IMainMenuItem ClientsMainMenu(IScreenManager screenManager)
-            => new MainMenu(screenManager, "Clients", PackIconKind.User, s => s.ChangeView<ClientManagerViewModel>(),
-                2);
+        public static IMainMenuItem ClientsMainMenu
+            => new MainMenu("Clients", PackIconKind.User, order: 2,
+                openFunc: s => s.ChangeView<ClientManagerViewModel>());
 
-        public static IMainMenuItem VerificationsMainMenu(IScreenManager screenManager)
-            => new MainMenu(screenManager, "New QA Test Run", PackIconKind.ClipboardCheck,
-                s => s.ChangeView<NewTestViewModel>(), 1);
+        public static IMainMenuItem VerificationsMainMenu
+            => new MainMenu("New QA Test Run", PackIconKind.ClipboardCheck, order: 1,
+                openFunc: s => s.ChangeView<NewTestViewModel>());
 
         //public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager) 
         //    => new MainMenu(screenManager, "Export Test Runs ", PackIconKind.CloudUpload, s => s.ChangeView<ClientManagerViewModel>(), 4);
@@ -29,51 +29,38 @@ namespace Client.Desktop.Wpf.ViewModels
 
     public class MainMenu : IMainMenuItem
     {
-        protected readonly IScreenManager ScreenManager;
-
-        protected MainMenu()
-        {
-        }
-
-        protected MainMenu(IScreenManager screenManager, PackIconKind menuIconKind, string menuTitle, int order)
-        {
-            ScreenManager = screenManager;
-            MenuIconKind = menuIconKind;
-            MenuTitle = menuTitle;
-            Order = order;
-        }
-
-        public MainMenu(IScreenManager screenManager,
+        public MainMenu(
             string menuTitle,
             PackIconKind menuIconKind,
-            Func<IScreenManager, Task<IRoutableViewModel>> openFunc, int? order = null)
+            Func<IScreenManager, Task<IRoutableViewModel>> openFunc,
+            int? order = null)
         {
-            ScreenManager = screenManager;
             MenuIconKind = menuIconKind;
             MenuTitle = menuTitle;
             Order = order;
 
-            OpenCommand =
-                ReactiveCommand.CreateFromTask<Unit, IRoutableViewModel>(_ => openFunc.Invoke(ScreenManager));
+            OpenCommand = ReactiveCommand.CreateFromTask<IScreenManager, IRoutableViewModel>(openFunc.Invoke);
         }
 
         public PackIconKind MenuIconKind { get; }
         public string MenuTitle { get; }
-        public virtual ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
+        public virtual ReactiveCommand<IScreenManager, IRoutableViewModel> OpenCommand { get; }
         public int? Order { get; }
     }
 
     //public class CertificateManagerModule : MainMenu
     //{
-    //    public override ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
-
-    //    public CertificateManagerModule(IScreenManager screenManager) 
-    //        : base(screenManager, 
-    //            PackIconKind.ClipboardText, 
-    //            "Certificates", 
+    //    public CertificateManagerModule(IScreenManager screenManager)
+    //        : base(screenManager,
+    //            PackIconKind.ClipboardText,
+    //            "Certificates",
     //            3)
     //    {
-    //        OpenCommand = ReactiveCommand.CreateFromTask<Unit, IRoutableViewModel>(_ => screenManager.ChangeView<ClientManagerViewModel>());
+    //        OpenCommand =
+    //            ReactiveCommand.CreateFromTask<Unit, IRoutableViewModel>(_ =>
+    //                screenManager.ChangeView<ClientManagerViewModel>());
     //    }
+
+    //    public override ReactiveCommand<Unit, IRoutableViewModel> OpenCommand { get; }
     //}
 }

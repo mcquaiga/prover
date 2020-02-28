@@ -12,13 +12,9 @@ namespace Client.Desktop.Wpf.ViewModels
         Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel);
         Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel;
 
-        bool? ShowDialog<TViewModel>(ReactiveObject owner, IModalDialogViewModel viewModel)
-            where TViewModel : IWindow;
+        DialogServiceManager DialogManager { get; }
 
-        void ShowDialog(INotifyPropertyChanged viewModel);
-        void ShowModalDialog(ReactiveObject owner, IModalDialogViewModel viewModel);
-
-        DialogServiceManager DialogManager { get; set; }
-
+        Task GoHome();
+        Task GoBack();
     }
 }

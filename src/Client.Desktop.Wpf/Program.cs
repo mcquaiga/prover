@@ -70,7 +70,7 @@ namespace Client.Desktop.Wpf
         private static async Task<IHost> Initialize(string[] args)
         {
             var bootstrapper = await new AppBootstrapper().StartAsync(args);
-
+           
             return bootstrapper.AppHost;
         }
 
@@ -80,7 +80,7 @@ namespace Client.Desktop.Wpf
             _mainWindow = _host.Services.GetService<MainWindow>();
             _mainWindow.ViewModel = model;
 
-            model.ShowMenu();
+            model.ShowHome();
 
             _mainWindow.Closed += (sender, args) => { ShutdownApp(); };
 

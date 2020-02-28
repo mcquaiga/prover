@@ -1,6 +1,7 @@
 ﻿using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using System;
+using Prover.Shared.IO;
 
 namespace Devices.Communications
 {

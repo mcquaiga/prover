@@ -1,7 +1,12 @@
 ﻿using System.Linq;
+using System.Reactive.Disposables;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Client.Desktop.Wpf.Extensions;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details
 {
@@ -16,11 +21,12 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
             this.WhenActivated(d =>
                 {
-                    this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}");
+                    this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}").DisposeWith(d);
 
                     this.OneWayBind(ViewModel, vm => vm.TestsCollection, v => v.TestItems.ItemsSource, 
                         tests => tests.Where(t =>
                         {
+                            var isOf = t.IsTypeOrInheritsOf(typeof(CorrectionTestViewModel<>));
                             var baseType = t.GetType().BaseType;
 
                             if (baseType != null && (baseType.IsGenericType || baseType.IsGenericTypeDefinition))
@@ -29,12 +35,18 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                                 return success;
                             }
                             return false;
-                        }));
-                    
-                    //this.OneWayBind(ViewModel, vm => vm.Pressure, v => v.PressureContent.ViewModel);
-                    //this.OneWayBind(ViewModel, vm => vm.Temperature, v => v.TemperatureContent.ViewModel);
-                    //this.OneWayBind(ViewModel, vm => vm.SuperFactor, v => v.SuperFactorContent.ViewModel);
+                        })).DisposeWith(d);
+
+                    this.CleanUpDefaults().DisposeWith(d);
+
+                    Disposable.Create(() =>
+                    {
+                        TestItems.ItemsSource = null;
+                        TestItems = null;
+                    }).DisposeWith(d);
                 });
+
+            
         }
     }
 }

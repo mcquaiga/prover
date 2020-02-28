@@ -9,6 +9,7 @@ using Devices.Core.Items;
 using Devices.Honeywell.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Prover.Shared.IO;
 using Tests.Honeywell.Comm.Messaging;
 
 namespace Tests.Honeywell.Comm

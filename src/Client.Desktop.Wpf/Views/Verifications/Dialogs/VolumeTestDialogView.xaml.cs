@@ -25,7 +25,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
                 this.OneWayBind<VolumeTestDialogViewModel, VolumeTestDialogView, int, double>(ViewModel, vm => vm.ProgressTotal, v => v.StatusProgressBar.Maximum).DisposeWith(d);
                 this.OneWayBind<VolumeTestDialogViewModel, VolumeTestDialogView, int, double>(ViewModel, vm => vm.Progress, v => v.StatusProgressBar.Value).DisposeWith(d);
 
-                this.BindCommand<VolumeTestDialogView, VolumeTestDialogViewModel, ReactiveCommand<Unit, Unit>, ICommand>(ViewModel, vm => vm.CancelCommand, v => v.CancelButton.Command).DisposeWith(d);
+                //this.BindCommand<VolumeTestDialogView, VolumeTestDialogViewModel, ReactiveCommand<Unit, Unit>, ICommand>(ViewModel, vm => vm.CancelCommand, v => v.CancelButton.Command).DisposeWith(d);
 
                 //this.WhenAnyValue(x => x.ViewModel.DialogResult)
                 //    .Where(x => x.HasValue && x.Value == true)

@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.GasCalculations\Core.GasCalculations.csproj" />
-    <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
-    <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 
 </Project>

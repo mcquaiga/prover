@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive.Linq;
 using System.Threading;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application;
-using Prover.Application.Interfaces;
 using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
@@ -18,10 +18,15 @@ namespace Client.Desktop.Wpf.Startup
     public class AppBootstrapper
     {
         public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        private ILogger _logger = NullLogger.Instance;
         public IConfiguration Config { get; set; }
 
         public IHost AppHost { get; set; }
-        private ILogger _logger = NullLogger.Instance;
+
+        public void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
+        {
+            
+        }
 
         public void AddServices(IServiceCollection services, HostBuilderContext host)
         {
@@ -39,10 +44,6 @@ namespace Client.Desktop.Wpf.Startup
             }
         }
 
-        public void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
-        {
-            config.SetBasePath(Directory.GetCurrentDirectory()); }
-
 
         public async Task<AppBootstrapper> StartAsync(string[] args)
         {
@@ -50,66 +51,58 @@ namespace Client.Desktop.Wpf.Startup
 
             InitializeLogging();
 
-            var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable().ForEachAsync(t => t.ExecuteAsync(CancellationTokenSource.Token));
+            var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
+                .ForEachAsync(t => t.ExecuteAsync(CancellationTokenSource.Token));
             await startupTask;
             if (startupTask.IsFaulted)
-            {
                 foreach (var ex in startupTask.Exception.InnerExceptions)
-                {
-                    _logger.LogError(ex, "Errors occured on start up.");       
-                }
-            }
+                    _logger.LogError(ex, "Errors occured on start up.");
 
             await AppHost.StartAsync();
 
             return this;
         }
 
+        private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
+            Host.CreateDefaultBuilder()
+                //.UseEnvironment(Environment.GetEnvironmentVariable("PROVER_ENVIRONMENT") ?? Environments.Production)
+                //.ConfigureAppConfiguration((host, config) =>
+                //{
+                //    //config.AddJsonFile();
+                //    //config.SetBasePath(Directory.GetCurrentDirectory());
+
+                //})
+                .ConfigureLogging((host, log) =>
+                {
+                    log.ClearProviders();
+                    log.AddConfiguration((IConfiguration) host.Configuration.GetSection("Logging"));
+                    log.Services.AddLogging();
+#if DEBUG
+                    //log.AddDebug();
+                    log.Services.AddSplatLogging();
+                    //log.AddFilter("ReactiveUI", LogLevel.Debug)
+                    //    .AddDebug();
+#endif
+                })
+                .ConfigureServices((host, services) =>
+                {
+                    booter.AddServices(services, host);
+                    host.ConfigureModules(services);
+                    
+                })
+                .Build();
+
         private void InitializeLogging()
         {
             _logger = AppHost.Services.GetService<ILogger>();
-            ProverLogging.LogFactory = AppHost.Services.GetService<ILoggerFactory>();
+            var logFactory = AppHost.Services.GetService<ILoggerFactory>();
+            ProverLogging.LogFactory = logFactory;
+            
+            AppHost.Services.GetService<ILoggerFactory>();
+            var config = AppHost.Services.GetService<IConfiguration>();
+
+            var logConfig = config.GetSection("Logging").GetChildren();
         }
-
-        private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
-            Host.CreateDefaultBuilder()
-               
-                .ConfigureLogging((host, log) =>
-                {
-
-                    var logConfig = host.Configuration.GetSection("Logging");
-
-                    log
-                        .AddConfiguration(host.Configuration.GetSection("Logging"))
-                        .AddFilter("Microsoft", LogLevel.Warning)
-                        .AddFilter("System", LogLevel.Warning)
-                        .AddFilter("Prover.", LogLevel.Debug)
-                        .AddFilter("Devices", LogLevel.Information)
-                        .AddFilter("Client.", LogLevel.Trace)
-                        .AddConsole()
-                        .AddEventLog();
-
-                    //log.Services.AddLogging();
-                   
-
-                })
-                
-                .ConfigureAppConfiguration((host, config) =>
-                {
-                    booter.AddConfiguration(config, host);
-                })
-                
-                .ConfigureServices((host, services) =>
-                {
-                    
-
-                    host.ConfigureModules(services);
-
-                    booter.AddServices(services, host);
-                })
-               
-                .UseEnvironment(Environment.GetEnvironmentVariable("PROVER_ENVIRONMENT") ?? Environments.Production)
-                
-                .Build();
     }
+
 }

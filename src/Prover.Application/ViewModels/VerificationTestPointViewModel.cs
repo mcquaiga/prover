@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using Devices.Core.Items;
 using DynamicData;
 using Prover.Application.Extensions;
@@ -10,7 +11,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class VerificationTestPointViewModel : BaseViewModel
+    public class VerificationTestPointViewModel : ViewModelWithIdBase
     {
 
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
@@ -35,13 +36,17 @@ namespace Prover.Application.ViewModels
         public void UpdateItemValues(ICollection<ItemValue> itemValues)
         {
             _items.Edit(update => update.AddOrUpdate(itemValues));
-
-          
         }
 
         public void AddTest(VerificationViewModel test)
         {
 
+        }
+
+        protected override void Disposing()
+        {
+            TestsCollection.ForEach(t => t.DisposeWith(Cleanup));
+            TestsCollection.Clear();
         }
     }
 }

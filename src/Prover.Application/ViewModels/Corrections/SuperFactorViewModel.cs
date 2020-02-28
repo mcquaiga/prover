@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
@@ -18,7 +19,8 @@ namespace Prover.Application.ViewModels.Corrections
         {
             this.WhenAnyValue(x => x.ExpectedValue)
                 .Select(Calculators.SquaredFactor)
-                .ToPropertyEx(this, x => x.SquaredFactor);
+                .ToPropertyEx(this, x => x.SquaredFactor)
+                .DisposeWith(Cleanup);
         }
 
         public SuperFactorViewModel(SuperFactorItems items, TemperatureFactorViewModel temperature, PressureFactorViewModel pressure)
@@ -46,11 +48,13 @@ namespace Prover.Application.ViewModels.Corrections
             this.WhenAnyValue(x => x.Pressure.Items)
                 .Where(i => i != null)
                 .Select(i => i.UnsqrFactor)
-                .ToPropertyEx(this, x => x.ActualValue, Pressure.Items.UnsqrFactor);
+                .ToPropertyEx(this, x => x.ActualValue, Pressure.Items.UnsqrFactor)
+                .DisposeWith(Cleanup);
             
             this.WhenAnyValue(x => x.Temperature.Gauge, x => x.Pressure.Gauge, x => x.Pressure.AtmosphericGauge)
                 .Select(_ => Unit.Default)
-                .InvokeCommand(UpdateFactor);
+                .InvokeCommand(UpdateFactor)
+                .DisposeWith(Cleanup);
         }
     }
 }

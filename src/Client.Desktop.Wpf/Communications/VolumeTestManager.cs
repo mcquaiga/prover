@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens.Dialogs;
@@ -7,6 +8,7 @@ using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Services;
+using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
@@ -22,8 +24,7 @@ namespace Client.Desktop.Wpf.Communications
             string tachPortName = null);
     }
 
-
-    public class VolumeTestManager : ReactiveObject
+    public class VolumeTestManager : ViewModelBase
     {
         private readonly DialogServiceManager _dialogService;
         private readonly ILogger _logger;
@@ -52,7 +53,7 @@ namespace Client.Desktop.Wpf.Communications
             DeviceManager = deviceManager;
 
             StartVolumeTest = ReactiveCommand.CreateFromTask(RunAsync);
-
+            StartVolumeTest.DisposeWith(Cleanup);
             //PulseListenerService.PulseListener.Connect();
         }
 

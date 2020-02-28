@@ -21,7 +21,7 @@
                 BorderThickness="0,0,1,0"
                 Style="{StaticResource SubSectionDividerBorder}">
 
-                <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
+                <reactiveUi:ViewModelViewHost x:Name="CorrectionsReadOnlyViewHost" ViewModel="{Binding}" />
 
             </Border>
         </DataTemplate>

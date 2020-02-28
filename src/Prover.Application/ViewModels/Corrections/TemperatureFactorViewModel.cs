@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
@@ -21,11 +22,13 @@ namespace Prover.Application.ViewModels.Corrections
 
             this.WhenAnyValue(x => x.Items)
                 .Select(i => i.Factor)
-                .ToPropertyEx(this, x => x.ActualValue, Items.Factor);
+                .ToPropertyEx(this, x => x.ActualValue, Items.Factor)
+                .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Gauge)
                 .Select(i => Unit.Default)
-                .InvokeCommand(UpdateFactor);
+                .InvokeCommand(UpdateFactor)
+                .DisposeWith(Cleanup);
         }
 
         protected override Func<ICorrectionCalculator> CalculatorFactory

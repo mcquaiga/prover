@@ -1,11 +1,11 @@
-﻿<screens:ReactiveDialog
+﻿<reactiveUi:ReactiveUserControl
     x:Class="Client.Desktop.Wpf.Views.Dialogs.TextDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dialogs="clr-namespace:Client.Desktop.Wpf.ViewModels.Dialogs"
-    xmlns:screens="clr-namespace:Client.Desktop.Wpf.Screens"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
     x:TypeArguments="dialogs:TextDialogViewModel"
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -15,22 +15,38 @@
             Orientation="Vertical">
             <TextBlock
                 x:Name="TitleText"
+                Margin="4,4,4,12"
                 Foreground="Black"
                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 Text="Title" />
             <TextBlock
                 x:Name="MessageText"
+                Margin="15,4,15,4"
                 Foreground="Black"
-                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                Style="{StaticResource MaterialDesignBody1TextBlock}"
                 Text="Here's a message." />
-
-            <Button
-                x:Name="OkButton"
-                Margin="0,15,0,5"
+            <StackPanel
                 HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Content="OK"
-                Style="{StaticResource MaterialDesignFlatAccentButton}" />
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="OkButton"
+                    Margin="0,15,0,5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Click="OkButton_Click"
+                    Content="OK"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}" />
+
+                <Button
+                    x:Name="CancelButton"
+                    Margin="0,15,0,5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Click="CancelButton_Click"
+                    Content="Cancel"
+                    Style="{StaticResource MaterialDesignFlatAccentButton}" />
+            </StackPanel>
         </StackPanel>
     </Grid>
-</screens:ReactiveDialog>
+</reactiveUi:ReactiveUserControl>

@@ -10,7 +10,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Devices
 {
-    public class SessionDialogViewModel : DialogViewModel
+    public class SessionDialogViewModel : DialogViewModel, IDialogViewModel
     {
         private readonly CompositeDisposable _cleanup;
 
@@ -31,31 +31,30 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(msg =>
                 {
-                    //TitleText = msg.TitleMessage;
-                    //StatusText = msg.ToString();
+                    if (ProgressTotal == null)
+                        ProgressTotal = msg.TotalCount;
 
                     Progress = msg.ReadCount;
-                    ProgressTotal = msg.TotalCount;
                 });
 
             _cleanup = new CompositeDisposable(a, b);
         }
 
-
         [Reactive] public string TitleText { get; set; }
         [Reactive] public string StatusText { get; set; }
-        [Reactive] public int Progress { get; set; }
-        [Reactive] public int ProgressTotal { get; set; }
+        [Reactive] public int? Progress { get; set; }
+        [Reactive] public int? ProgressTotal { get; set; }
 
         public void CloseDialog()
         {
-            IsDialogOpen = false;
+            CloseCommand.Execute();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             CancelCommand?.Dispose();
             _cleanup.Dispose();
+            base.Dispose();
         }
     }
 }

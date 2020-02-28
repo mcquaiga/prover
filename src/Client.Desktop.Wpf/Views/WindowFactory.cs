@@ -21,7 +21,7 @@ namespace Client.Desktop.Wpf.Views
             window.ViewModel = model;
             
             if (showMenu) 
-                model.ShowMenu();
+                model.ShowHome();
 
             
             window.Closing += (sender, e) =>

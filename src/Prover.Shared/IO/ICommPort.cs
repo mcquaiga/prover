@@ -3,7 +3,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Devices.Communications.IO
+namespace Prover.Shared.IO
 {
     public interface ICommPort : IDisposable
     {

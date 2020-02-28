@@ -1,18 +1,31 @@
-﻿using ReactiveUI;
+﻿using System;
+using System.Reactive.Linq;
+using Client.Desktop.Wpf.ViewModels.Verifications;
+using Prover.Application.ViewModels;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    public abstract class ViewModelBase : ReactiveObject
+    public abstract class RoutableViewModelBase : ViewModelBase, IActivatableViewModel, IRoutableViewModel
     {
-        protected IScreenManager ScreenManager { get; }
+        public IScreenManager ScreenManager { get; }
 
-        protected ViewModelBase(IScreenManager screenManager)
+        protected RoutableViewModelBase(IScreenManager screenManager)
         {
             ScreenManager = screenManager;
+
+            //Activator.Activated
+            //    .Delay(TimeSpan.FromMilliseconds(500))
+            //    .LogDebug($"Registered VMs - {ViewModelRegisteration.ViewModels.Count}")
+            //    .Subscribe();
+
+            //Activator.Deactivated
+            //    //.Delay(TimeSpan.FromMilliseconds(500))
+            //    //.LogDebug($"Registered VMs - {ViewModelRegisteration.ViewModels.Count}")
+            //    .Subscribe();
         }
 
-        //public virtual void Dispose()
-        //{
-        //}
+        public abstract string UrlPathSegment { get; } 
+        public abstract IScreen HostScreen { get; }
     }
 }

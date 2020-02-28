@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels.Corrections;
@@ -14,9 +15,10 @@ namespace Prover.Application.ViewModels.Volume
         {
             StartValues = startValues;
             EndValues = endValues;
+
+            Id = Guid.Empty;
         }
 
-        public override Guid Id => Guid.Empty;
         [Reactive] public VolumeItems StartValues { get; set; }
         [Reactive] public VolumeItems EndValues { get; set; }
         [Reactive] public decimal AppliedInput { get; set; }
@@ -31,6 +33,11 @@ namespace Prover.Application.ViewModels.Volume
             tests.AddRange(new VerificationViewModel [] { Corrected, Uncorrected });
 
              return tests;
+        }
+
+        protected override void Disposing()
+        {
+            AllTests().ForEach(t => t.DisposeWith(Cleanup));
         }
 
         public virtual void UpdateStartValues(IEnumerable<ItemValue> values)
