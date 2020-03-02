@@ -20,10 +20,19 @@ variables:
   verbosityLevel: 'minimal'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    version: '3.0.x'
+
+- task: UseDotNet@2
+  inputs:
+    version: '2.2.x'
+    packageType: runtime
+
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
-    restoreSolution: '$(solution)'
+    restoreSolution: 'source\Devices\Tests\**\packages.config'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
@@ -36,3 +45,4 @@ steps:
     PathtoPublish: 'build\$(buildConfiguration)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
