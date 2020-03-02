@@ -28,6 +28,7 @@ stages:
     jobs:
     - job: build
       steps:
+      - script: echo $(versionNumber) # display versionNumber
       - task: NuGetCommand@2
         inputs:
           command: 'restore'
