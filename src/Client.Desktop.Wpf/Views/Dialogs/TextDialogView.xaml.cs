@@ -1,5 +1,4 @@
-﻿using Client.Desktop.Wpf.Screens;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
+﻿using Client.Desktop.Wpf.ViewModels.Dialogs;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Dialogs

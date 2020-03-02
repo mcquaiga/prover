@@ -1,5 +1,4 @@
-﻿using System.Reactive;
-using Client.Desktop.Wpf.ViewModels;
+﻿using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text.Json;
-using Devices;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.EntityFrameworkCore;

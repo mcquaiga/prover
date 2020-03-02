@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
-using Prover.Application.Extensions;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;

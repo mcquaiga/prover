@@ -1,12 +1,4 @@
-﻿using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
-using Devices.Core.Interfaces;
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-
-namespace Devices.Communications
+﻿namespace Devices.Communications
 {
     //public static class DeviceConnection
     //{

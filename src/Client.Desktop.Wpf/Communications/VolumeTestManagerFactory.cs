@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper.Configuration;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,6 @@ namespace Client.Desktop.Wpf.Communications
 {
     public class VolumeTestManagerFactory : IVolumeTestManagerFactory
     {
-        private readonly IConfiguration _config;
         private readonly DialogServiceManager _dialogService;
         private readonly ILoggerFactory _loggerFactory;
         private readonly Func<OutputChannelType, IOutputChannel> _outputChannelFactory;

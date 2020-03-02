@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Reactive;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Interactions

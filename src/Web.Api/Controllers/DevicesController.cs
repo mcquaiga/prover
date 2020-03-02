@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.AspNetCore.Mvc;

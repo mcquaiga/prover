@@ -1,7 +1,5 @@
 ﻿
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Prover.Shared.Domain;
 
 namespace Prover.Shared.Interfaces
 {

@@ -1,5 +1,4 @@
-﻿using Devices.Communications.IO;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Prover.Shared.IO;
 
 namespace Devices.Communications.Interfaces

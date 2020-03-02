@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Devices.Core.Interfaces;
-using Devices.Core.Items.Attributes;
 using Devices.Core.Items.Descriptions;
-using Devices.Core.Items.ItemGroups;
 
 namespace Devices.Core.Items
 {

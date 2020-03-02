@@ -111,13 +111,16 @@ namespace Prover.Application.Services
         /// <returns>The <see cref="System.Threading.Tasks.Task{TResult}" /></returns>
         public async Task RefreshSettings()
         {
-            HasInitialized = false;
+            await Task.Run(() =>
+            {
+                HasInitialized = false;
 
-            //Local = await LoadLocalSettings(SettingsPath);
-            Local = _keyValueStore.GetAll<LocalSettings>().FirstOrDefault() ?? new LocalSettings();
-            Shared = _keyValueStore.GetAll<SharedSettings>().FirstOrDefault() ?? new SharedSettings();
+                //Local = await LoadLocalSettings(SettingsPath);
+                Local = _keyValueStore.GetAll<LocalSettings>().FirstOrDefault() ?? new LocalSettings();
+                Shared = _keyValueStore.GetAll<SharedSettings>().FirstOrDefault() ?? new SharedSettings();
 
-            HasInitialized = true;
+                HasInitialized = true;
+            });
         }
 
         /// <summary>

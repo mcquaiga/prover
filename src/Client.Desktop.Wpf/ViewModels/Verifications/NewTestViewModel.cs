@@ -11,7 +11,6 @@ using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Services;
 using Prover.Application.Settings;
-using Prover.Application.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

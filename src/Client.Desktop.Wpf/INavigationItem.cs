@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reactive;
-using System.Reactive.Linq;
-using Client.Desktop.Wpf.ViewModels;
+﻿using System.Reactive;
 using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 

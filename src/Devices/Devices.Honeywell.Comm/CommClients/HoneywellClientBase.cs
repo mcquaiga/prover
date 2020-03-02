@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Devices.Communications;
-using Devices.Communications.IO;
 using Devices.Communications.Status;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.Messaging.Requests;

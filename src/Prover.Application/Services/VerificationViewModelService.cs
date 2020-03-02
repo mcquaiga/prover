@@ -14,7 +14,9 @@ namespace Prover.Application.Services
 {
     public class VerificationViewModelService
     {
+/*
         private readonly IAsyncRepository<EvcVerificationTest> _evcVerificationRepository;
+*/
         private readonly EvcVerificationTestService _testService;
 
         private readonly VerificationViewModelTestCreator _verificationTestCreator;

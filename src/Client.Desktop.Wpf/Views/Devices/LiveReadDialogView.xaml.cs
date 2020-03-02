@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Reactive.Disposables;
-using System.Windows.Controls;
 using Client.Desktop.Wpf.Communications;
-using Client.Desktop.Wpf.ViewModels.Devices;
-using Client.Desktop.Wpf.ViewModels.Verifications;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Devices

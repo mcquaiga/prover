@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Screens.Dialogs;
-using Devices.Communications.Status;
-using Microsoft.Extensions.Logging;
-using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications.Dialogs

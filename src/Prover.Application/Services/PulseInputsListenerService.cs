@@ -120,7 +120,9 @@ namespace Prover.Application.Services
 
     public class PulseChannelListener : IDisposable
     {
+/*
         private CancellationTokenSource _cancellation;
+*/
         private readonly CompositeDisposable _cleanup;
 
         private bool _previousPulseOn;

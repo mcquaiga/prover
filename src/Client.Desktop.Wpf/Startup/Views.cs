@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using Client.Desktop.Wpf.Controls;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Reports;
 using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels;
-using Client.Desktop.Wpf.ViewModels.Verifications;
 using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using Splat;
 

@@ -9,10 +9,6 @@ namespace Prover.Domain.EvcVerifications.Verifications
     {
         private string _itemsType;
 
-        private string _postTestItemData;
-
-        private string _preTestItemData;
-
         public FrequencyTest()
         {
         }

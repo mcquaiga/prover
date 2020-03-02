@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.ViewModels.Clients;

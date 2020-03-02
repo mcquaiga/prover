@@ -1,14 +1,6 @@
-﻿using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using Application.ExternalDevices.DInOutBoards.Tests;
-using Devices.Core.Items.ItemGroups;
-using DynamicData;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Application.ExternalDevices.DInOutBoards;
-using Prover.Application.Interfaces;
-using Prover.Application.Services;
 using Prover.Shared.Interfaces;
 using Tests.Application;
 

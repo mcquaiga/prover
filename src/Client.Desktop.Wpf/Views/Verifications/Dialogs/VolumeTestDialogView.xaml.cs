@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Disposables;
-using System.Windows.Input;
 using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
 using ReactiveUI;
 

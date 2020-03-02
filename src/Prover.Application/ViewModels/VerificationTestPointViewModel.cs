@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using Devices.Core.Items;
 using DynamicData;
-using Prover.Application.Extensions;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using ReactiveUI.Fody.Helpers;

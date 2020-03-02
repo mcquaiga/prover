@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 using Prover.Shared;
 

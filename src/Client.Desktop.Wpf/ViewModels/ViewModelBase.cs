@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reactive.Linq;
-using Client.Desktop.Wpf.ViewModels.Verifications;
-using Prover.Application.ViewModels;
+﻿using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels

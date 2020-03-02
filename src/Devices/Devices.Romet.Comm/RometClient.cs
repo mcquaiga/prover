@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Devices.Communications.IO;
 using Devices.Communications.Status;
 using Devices.Core.Items;
 using Devices.Honeywell.Comm.CommClients;

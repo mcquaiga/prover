@@ -1,5 +1,4 @@
 ﻿using System.Reactive.Concurrency;
-using Prover.Application.Interfaces;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 

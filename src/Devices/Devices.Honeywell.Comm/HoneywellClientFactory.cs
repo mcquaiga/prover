@@ -1,5 +1,4 @@
 ﻿using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
 using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Core;
 using Prover.Shared.IO;

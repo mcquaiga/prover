@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
 using Devices.Core.Repository;
-using LiteDB;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

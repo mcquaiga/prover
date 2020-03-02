@@ -3,9 +3,6 @@ using System.Reactive.Disposables;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Client.Desktop.Wpf.Extensions;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details

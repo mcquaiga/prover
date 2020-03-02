@@ -6,12 +6,10 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Splat;
 
 namespace Client.Desktop.Wpf.ViewModels
 {

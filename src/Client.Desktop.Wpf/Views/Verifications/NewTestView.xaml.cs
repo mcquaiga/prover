@@ -3,7 +3,6 @@ using ReactiveUI;
 using System.Linq;
 using System.Reactive.Disposables;
 using Client.Desktop.Wpf.Extensions;
-using Prover.Application.Services;
 
 namespace Client.Desktop.Wpf.Views.Verifications
 {

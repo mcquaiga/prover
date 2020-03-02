@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Prover.Shared.Interfaces;

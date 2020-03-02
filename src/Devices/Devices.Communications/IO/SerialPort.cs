@@ -15,9 +15,11 @@ namespace Devices.Communications.IO
     {
         public static List<int> BaudRates = new List<int> {300, 600, 1200, 2400, 4800, 9600, 19200, 38400};
 
+/*
         private IObservable<char> _dataStream;
+*/
         private readonly SerialPortStream _serialStream;
-        private ISubject<string> _dataSent = new Subject<string>();
+        private readonly ISubject<string> _dataSent = new Subject<string>();
         private IDisposable _dataReceivedConnection;
 
         public SerialPort(string portName, int baudRate, int timeoutMs = 250)
@@ -81,12 +83,16 @@ namespace Devices.Communications.IO
 
         public async Task Open(CancellationToken ct = new CancellationToken())
         {
-            if (_serialStream.IsOpen)
-                return;
+            await Task.Run(() =>
+            {
+                if (_serialStream.IsOpen)
+                    return;
 
-            _serialStream.Open();
-            _serialStream.DiscardInBuffer();
-            _serialStream.DiscardOutBuffer();
+                _serialStream.Open();
+                _serialStream.DiscardInBuffer();
+                _serialStream.DiscardOutBuffer();
+            }, ct);
+
         }
 
         public async Task Send(string data)

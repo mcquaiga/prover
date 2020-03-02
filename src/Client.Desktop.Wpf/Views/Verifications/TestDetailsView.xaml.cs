@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
 using Client.Desktop.Wpf.Extensions;

@@ -1,9 +1,6 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens.Dialogs;
-using MvvmDialogs;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {

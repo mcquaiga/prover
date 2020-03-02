@@ -1,5 +1,4 @@
 ﻿using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
 using Devices.Romet.Core;
 using Prover.Shared.IO;
 

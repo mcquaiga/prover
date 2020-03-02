@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Prover.Shared.IO;
 

@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Devices;
-using Devices.Core;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using Microsoft.EntityFrameworkCore;

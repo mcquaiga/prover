@@ -1,20 +1,15 @@
-﻿using System.Linq;
-using System.Text.Json;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using DeepEqual.Syntax;
 using Devices;
-using Devices.Core;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Moq;
-using Newtonsoft.Json;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 using Tests.Application;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 
 namespace Application.Services.Tests

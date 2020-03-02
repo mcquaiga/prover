@@ -3,7 +3,6 @@ using Devices.Core.Items.ItemGroups;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Packaging;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using MvvmDialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

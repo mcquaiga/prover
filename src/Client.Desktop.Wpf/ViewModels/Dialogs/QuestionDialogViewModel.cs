@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive;
-using System.Text;
+﻿using System.Reactive;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

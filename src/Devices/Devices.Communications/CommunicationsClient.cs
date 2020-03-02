@@ -6,7 +6,6 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
 using Devices.Communications.Messaging;
 using Devices.Communications.Status;
 using Devices.Core.Interfaces;

@@ -1,11 +1,6 @@
-﻿using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
+﻿using Devices.Core.Repository;
 using LiteDB;
 using Prover.Domain.EvcVerifications;
-using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Prover.Infrastructure.KeyValueStore
 {

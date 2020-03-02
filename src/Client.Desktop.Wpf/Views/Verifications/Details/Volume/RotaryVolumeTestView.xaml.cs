@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
