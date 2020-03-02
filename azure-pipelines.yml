@@ -24,7 +24,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: '--solution $(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
+    arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
 
 - task: PublishBuildArtifacts@1
   inputs:
