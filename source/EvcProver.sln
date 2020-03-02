@@ -51,7 +51,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Comm", "Devices
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Core", "Devices\Tests\Tests.Romet.Core\Tests.Romet.Core.csproj", "{D65A94A6-8E8F-4AAF-87B1-34843308896E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core.GasCalculations", "Tests.Core.GasCalculations\Tests.Core.GasCalculations.csproj", "{94C5CA2B-9EBB-4926-A042-A504FD99845F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core.GasCalculations", "Tests\Tests.Core.GasCalculations\Tests.Core.GasCalculations.csproj", "{94C5CA2B-9EBB-4926-A042-A504FD99845F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Application", "Prover.Application\Prover.Application.csproj", "{A6CC2DC9-558B-4DBF-8DAA-DDBACB0EEDD5}"
 EndProject
@@ -66,7 +66,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "Tests.Application\Tests.Application.csproj", "{F437379B-8C22-4674-B038-36734091F480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "Tests\Tests.Application\Tests.Application.csproj", "{F437379B-8C22-4674-B038-36734091F480}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DF087FF4-7AC1-4423-AC12-638B206D4684}"
 EndProject

@@ -2,8 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildOutputDir>..\..\..\build\tests</BuildOutputDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(BuildOutputDir)\Release\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,13 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
-    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
-    <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
-    <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
-    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\Tests\Tests.Shared\Tests.Shared.csproj" />
+    <ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
+    <ProjectReference Include="..\..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+    <ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+    <ProjectReference Include="..\Tests.Shared\Tests.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
