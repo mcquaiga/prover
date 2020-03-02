@@ -31,12 +31,8 @@ steps:
     command: 'build'
     arguments: '--solution $(solution) --configuration $(buildConfiguration) -v' 
 
-- task: VSTest@2
-  displayName: 'Unit Tests'
+- task: PublishBuildArtifacts@1
   inputs:
-    testAssemblyVer2: |
-     **\$(buildConfiguration)\*test*.dll
-     !**\obj\**
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
+    PathtoPublish: 'build\$(buildConfiguration)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
