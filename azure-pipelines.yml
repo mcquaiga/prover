@@ -61,8 +61,8 @@ stages:
         inputs:
           testSelector: 'testAssemblies'
           testAssemblyVer2: |
-            'Tests.Application.dll'
-            'Tests.Core.GasCalculations.dll'
+            Tests.Application.dll
+            Tests.Core.GasCalculations.dll
           searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
           otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
 
@@ -70,9 +70,9 @@ stages:
         inputs:
           testSelector: 'testAssemblies'
           testAssemblyVer2: |
-            'Tests.**.dll'
-            !'Tests.Application.dll'
-            !'Tests.Shared.dll'
-            !'Tests.Core.GasCalculations.dll'
+            Tests.**.dll
+            !Tests.Application.dll
+            !Tests.Shared.dll
+            !Tests.Core.GasCalculations.dll
           searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
           otherConsoleOptions: '/Framework:Framework47'
