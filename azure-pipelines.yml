@@ -1,4 +1,4 @@
-name: EvcProver_$(SourceBranchName)_v$(versionNumber)
+name: EvcProver_$(SourceBranchName)_v$(Date:yyMM)$(Rev:.r)
 
 trigger:
 - dev
