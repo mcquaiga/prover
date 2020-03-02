@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildOutputDir>..\..\build</BuildOutputDir>
+    <BuildOutputDir>..\..\build\</BuildOutputDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,7 +24,16 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Compile Remove="build\**" />
+    <EmbeddedResource Remove="build\**" />
+    <None Remove="build\**" />
+    <Page Remove="build\**" />
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Remove="appsettings.Developement.json" />
@@ -66,6 +75,7 @@
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
     <PackageReference Include="Splat" Version="9.3.11" />
+    <PackageReference Include="squirrel.windows" Version="1.9.1" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
@@ -177,8 +187,49 @@
 
   <ItemGroup>
     <Folder Include="Modules\UnionGas\Exporter\" />
+    <Folder Include="Installer\" />
     <Folder Include="ViewModels\Certificates\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="DeltaCompressionDotNet">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.MsDelta">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.MsDelta.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.PatchApi">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.PatchApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\lib\squirrel\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Squirrel">
+      <HintPath>..\lib\squirrel\NuGet.Squirrel.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\lib\squirrel\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="Squirrel">
+      <HintPath>..\lib\squirrel\Squirrel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release'">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <Exec Command="..\..\tools\nuget.exe pack $(BuildOutputDir)\EvcProver.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(BuildOutputDir) -BasePath $(BuildOutputDir) -Verbosity detailed" />
+    <Exec WorkingDirectory="$(BuildOutputDir)" Command="..\tools\squirrel\squirrel.exe --releasify EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
+  </Target>
 </Project>

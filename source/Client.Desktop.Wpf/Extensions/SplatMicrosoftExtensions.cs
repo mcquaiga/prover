@@ -20,11 +20,11 @@ namespace Client.Desktop.Wpf.Extensions
     {
         public static void AddSplatLogging(this IServiceCollection services)
         {
-            services.AddSingleton<SplatILogger>(c =>
-            {
-                var logger = c.GetService<ILoggerFactory>().CreateLogger("ReactiveUI");
-                return new RxLogging(logger);
-            });
+            //services.AddSingleton<SplatILogger>(c =>
+            //{
+            //    var logger = c.GetService<ILoggerFactory>().CreateLogger("ReactiveUI");
+            //    return new RxLogging(logger);
+            //});
         }
 
         /// <summary>
