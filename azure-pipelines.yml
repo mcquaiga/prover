@@ -21,7 +21,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
   verbosityLevel: 'minimal'
-  versionNumber: $(Date:yy.MM).$(Rev:.r)
+  versionNumber: '$(Date:yy.MM).$(Rev:.r)'
 
 stages:
   - stage: Building
@@ -37,7 +37,7 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=$(versionNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\$(buildConfiguration)'
@@ -63,4 +63,4 @@ stages:
         inputs:
           testSelector: 'testAssemblies'
           testAssemblyVer2: 'Tests.**.dll'
-          searchFolder: '$(System.ArtifactsDirectory)'
+          searchFolder: '$(System.ArtifactsDirectory)\Tests_$(Build.BuildNumber)'
