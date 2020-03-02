@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Modules.UnionGas.Models
+namespace Prover.Modules.UnionGas.Models
 {
     [Serializable]
     public class EvcQARun

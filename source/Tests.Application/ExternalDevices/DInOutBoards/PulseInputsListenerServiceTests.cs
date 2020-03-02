@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using Application.ExternalDevices.DInOutBoards.Tests;
 using Devices.Core.Items.ItemGroups;
 using DynamicData;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -69,7 +70,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             StartPulseGenerator(_channelAMock, _schedulers.TaskPool);
 
             var service = new PulseInputsListenerService(null, _channelMockFactory.Object, _schedulers.TaskPool);
-
+            service.Initialize(_pulseOutputItems);
             var listener = service.PulseListener.Connect()
                 .Bind(out var pulses)
                 .Subscribe();
@@ -111,16 +112,15 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
         [TestMethod] 
         public void RandomIntervalSimulatorInputChannelTest()
         {
-            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, _schedulers.TaskPool);
+            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, _schedulers.TaskPool);
 
             var value = 0;
             var changes = 0;
             var pulses = 0;
 
             simulator.GetRandomSimulator()
-                //.Do(v => Debug.WriteLine($"Pulse Received {v}"))
                 .ObserveOn(_schedulers.Dispatcher)
-                .Subscribe(v =>
+                .Do(v =>
                 {
                     value = v;
                     changes++;
@@ -131,25 +131,31 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
                     }
 
                     Assert.IsTrue(simulator.GetValue() == value);
-                });
+                })
+                .Subscribe();
 
+            //var result = _schedulers.TaskPool.Start(() => random);
+            
+            //_schedulers.TaskPool.AdvanceBySeconds(1);
             //_schedulers.TaskPool.AdvanceBySeconds(5);
-            _schedulers.TaskPool.Start();
+            //_schedulers.Dispatcher.AdvanceBySeconds(1);
             
             do
             {
+                _schedulers.TaskPool.AdvanceByMilliSeconds(60);
                 _schedulers.Dispatcher.AdvanceByMilliSeconds(60);
             } while (pulses < 10);
+
+            //Assert.IsTrue(result.Messages.Count == 10);
             Assert.IsTrue(changes > 0);
-            Assert.IsTrue(pulses == 10);
+            Assert.IsTrue(pulses >= 10);
         }
 
         [TestMethod] 
         public void ConstantIntervalSimulatorInputChannelTest()
         {
-            var myThread = _schedulers.TaskPool;
 
-            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, myThread);
+            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, _schedulers.TaskPool);
 
             var value = 0;
             var changes = 0;
@@ -171,15 +177,16 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
 
                     Assert.IsTrue(simulator.GetValue() == value);
                 });
-
-            //_schedulers.TaskPool.AdvanceBySeconds(5);
-            myThread.Start();
-            do
-            {
-                _schedulers.Dispatcher.AdvanceByMilliSeconds(60);
-            } while (pulses < 10);
+            //_schedulers.TaskPool.Start();
+            _schedulers.TaskPool.AdvanceBySeconds(5);
+            _schedulers.Dispatcher.AdvanceBySeconds(5);
+            //do
+            //{
+                
+            //    Debug.WriteLine($"Total = {pulses}");
+            //} while (pulses < 10);
             Assert.IsTrue(changes > 0);
-            Assert.IsTrue(pulses == 10);
+            Assert.IsTrue(pulses > 10);
         }
 
         [TestMethod]
@@ -201,6 +208,7 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             _pulseOutputItems.Channels.Add(_channelBItems);
 
             var service = new PulseInputsListenerService(null, _channelMockFactory.Object, _schedulers.TaskPool);
+            service.Initialize(_pulseOutputItems);
 
             var listener = service.PulseListener.Connect()
                 .Bind(out var pulses)

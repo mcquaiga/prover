@@ -2,7 +2,7 @@
 using Prover.Application.Services;
 using ReactiveUI;
 
-namespace Modules.UnionGas.Exporter.Views
+namespace Prover.Modules.UnionGas.Exporter.Views
 {
     public class ExporterViewModel : ReactiveObject, IRoutableViewModel
     {

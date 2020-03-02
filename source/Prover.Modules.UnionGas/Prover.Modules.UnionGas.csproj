@@ -5,13 +5,23 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <BuildOutputDir>..\..\build</BuildOutputDir>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>C:\Users\mcqua\source\repos\EvcProver\build\Debug\</OutputPath>
+    <OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>C:\Users\mcqua\source\repos\EvcProver\build\Release\</OutputPath>
+    <OutputPath>$(BuildOutputDir)\Release\</OutputPath>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <None Remove="dcrwebservice.xml" />

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using DcrWebService;
 using Microsoft.Extensions.Logging;
 
-
-namespace Modules.UnionGas
+namespace Prover.Modules.UnionGas
 {
     /// <summary>
     /// Defines the <see cref="DCRWebServiceCommunicator" />

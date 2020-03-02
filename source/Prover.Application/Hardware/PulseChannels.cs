@@ -19,12 +19,15 @@ namespace Prover.Application.Hardware
 
     public class SimulatedOutputChannel : IOutputChannel
     {
-        private static ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
+        private static readonly ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
+
         public static Dictionary<OutputChannelType, SimulatedOutputChannel> OutputSimulators =
             new Dictionary<OutputChannelType, SimulatedOutputChannel>
             {
                 {
-                    OutputChannelType.Motor, new SimulatedOutputChannel(OutputChannelType.Motor, SimulatedInputChannel.PulseInputSimulators.Values)
+                    OutputChannelType.Motor,
+                    new SimulatedOutputChannel(OutputChannelType.Motor,
+                        SimulatedInputChannel.PulseInputSimulators.Values)
                 },
                 {
                     OutputChannelType.Tachometer, new SimulatedOutputChannel(OutputChannelType.Tachometer)
@@ -32,9 +35,10 @@ namespace Prover.Application.Hardware
             };
 
         private readonly OutputChannelType _channel;
-        private readonly IEnumerable<SimulatedInputChannel> _inputChannels ;
+        private readonly IEnumerable<SimulatedInputChannel> _inputChannels;
 
-        public SimulatedOutputChannel(OutputChannelType channel, IEnumerable<SimulatedInputChannel> inputChannels= null)
+        public SimulatedOutputChannel(OutputChannelType channel,
+            IEnumerable<SimulatedInputChannel> inputChannels = null)
         {
             _channel = channel;
             _inputChannels = inputChannels ?? new List<SimulatedInputChannel>();
@@ -59,9 +63,6 @@ namespace Prover.Application.Hardware
 
     public class SimulatedInputChannel : IInputChannel, IDisposable
     {
-        private static ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
-        public PulseOutputChannel Channel { get; }
-
         public static Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =
             new Dictionary<PulseOutputChannel, SimulatedInputChannel>
             {
@@ -77,13 +78,17 @@ namespace Prover.Application.Hardware
         private CompositeDisposable _cleanup;
 
         private int _currentValue = 255;
+        private readonly ILogger _logger;
         private IObservable<int> _simulator;
 
-        public SimulatedInputChannel(PulseOutputChannel channel, IScheduler scheduler = null)
+        public SimulatedInputChannel(PulseOutputChannel channel, ILogger logger = null, IScheduler scheduler = null)
         {
+            _logger = logger ?? ProverLogging.CreateLogger("SimulatedInputChannel");
             Channel = channel;
             _scheduler = scheduler ?? TaskPoolScheduler.Default;
         }
+
+        public PulseOutputChannel Channel { get; }
 
         public int OffValue => 255;
 
@@ -108,8 +113,9 @@ namespace Prover.Application.Hardware
                         onValue, x => true,
                         x => OffValue - _currentValue,
                         x => pulseIntervalMs ?? random.Next(500, 3000),
-                        x => TimeSpan.FromMilliseconds(x), _scheduler)
-                    .LogDebug($"Generated Pulse", _logger, true)
+                        x => TimeSpan.FromMilliseconds(x), 
+                        _scheduler)
+                    .LogDebug("Generated Pulse", _logger, true)
                     .Select(_ => onValue)
                     .Publish();
 
@@ -132,7 +138,7 @@ namespace Prover.Application.Hardware
         public void Start()
         {
             _simulator = GetRandomSimulator();
-            
+
             _cleanup = new CompositeDisposable(_simulator.Subscribe());
         }
 

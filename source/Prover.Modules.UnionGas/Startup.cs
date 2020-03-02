@@ -5,14 +5,14 @@ using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Modules.UnionGas.Exporter.Views;
+using Prover.Modules.UnionGas.Exporter.Views;
 
-namespace Modules.UnionGas
+namespace Prover.Modules.UnionGas
 {
     internal static class MainMenuItems
     {
         public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager)
-            => new MainMenu(screenManager, "Export Test Run", PackIconKind.CloudUpload, screen => screen.ChangeView<ExporterViewModel>(), 4);
+            => new MainMenu("Export Test Run", PackIconKind.CloudUpload, screen => screen.ChangeView<ExporterViewModel>(), 4);
     }
 
 

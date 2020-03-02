@@ -1,6 +1,6 @@
 ﻿
 
-namespace Modules.UnionGas
+namespace Prover.Modules.UnionGas
 {
     //public class UnionGasModule : Module
     //{

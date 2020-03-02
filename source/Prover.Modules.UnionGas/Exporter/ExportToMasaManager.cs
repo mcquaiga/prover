@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Modules.UnionGas.Exporter
+﻿namespace Prover.Modules.UnionGas.Exporter
 {
     /// <summary>
     ///// Defines the <see cref="ExportToMasaManager" />
