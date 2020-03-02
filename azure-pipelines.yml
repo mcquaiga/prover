@@ -57,8 +57,10 @@ stages:
           downloadType: 'specific'
           itemPattern: 'Tests_$(Build.BuildNumber)/**'
           downloadPath: '$(System.ArtifactsDirectory)'
+
       - task: VSTest@2
         inputs:
           testSelector: 'testAssemblies'
           testAssemblyVer2: 'Tests.**.dll'
           searchFolder: '$(System.ArtifactsDirectory)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
