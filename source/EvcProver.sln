@@ -70,8 +70,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "Tests.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DF087FF4-7AC1-4423-AC12-638B206D4684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Hardware.MccDAQ", "Prover.Hardware.MccDAQ\Prover.Hardware.MccDAQ.csproj", "{DF8CECBC-66E5-42EB-83B8-92E457369B87}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -586,30 +584,6 @@ Global
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhone.Build.0 = Release|Any CPU
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|Any CPU.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|Any CPU.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|iPhone.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|iPhone.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.MiProtocolConsole|iPhoneSimulator.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|iPhone.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|iPhone.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release - Union Gas|iPhoneSimulator.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|iPhone.Build.0 = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{DF8CECBC-66E5-42EB-83B8-92E457369B87}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
