@@ -1,9 +1,12 @@
+name: EvcProver_$(SourceBranchName)_v$(Date:yy.MM)$(Rev:.r)
+
 trigger:
 - dev
 
 resources:
 - repo: self
-  clean: true
+  clean: false
+  fetchDepth: 5
 
 pool:
   vmImage: 'windows-latest'
