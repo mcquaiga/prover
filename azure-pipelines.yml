@@ -24,9 +24,9 @@ variables:
   versionNumber: $(Date:yy.MM).$(Rev:.r)
 
 stages:
-  - stage: Build
+  - stage: Building
     jobs:
-    - job: A
+    - job: build
       steps:
       - task: NuGetCommand@2
         inputs:
@@ -34,17 +34,22 @@ stages:
           restoreSolution: 'source\Devices\Tests\**\*packages.config'
           feedsToUse: 'select'
           restoreDirectory: '..\..\..\..\packages'
-
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
           arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
+      
+    - job: publish
+      dependsOn: build
+      steps:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\$(buildConfiguration)'
           ArtifactName: '$(Build.BuildNumber)'
           publishLocation: 'Container'
-
+    - job: publishTests
+      dependsOn: build
+      steps:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\tests\$(buildConfiguration)'
@@ -53,7 +58,7 @@ stages:
   
   - stage: Testing
     jobs:
-    - job: UnitTests
+    - job: unitTests
       steps:
       - task: DownloadBuildArtifacts@0
         inputs:
