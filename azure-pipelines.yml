@@ -19,7 +19,6 @@ variables:
   solution: 'source\EvcProver.sln'
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Debug'
   verbosityLevel: 'minimal'
 
 stages:
@@ -27,7 +26,6 @@ stages:
     jobs:
     - job: build
       steps:
-      - script: echo $(versionNumber) # display versionNumber
       - task: NuGetCommand@2
         inputs:
           command: 'restore'
@@ -37,7 +35,7 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) -p:Version=$(versionNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\$(buildConfiguration)'
