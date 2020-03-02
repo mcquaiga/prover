@@ -71,7 +71,7 @@ namespace Client.Desktop.Wpf.Communications
             SessionInProgress = false;
         }
 
-        public async Task LiveReadItem()
+        internal async Task LiveReadItem()
         {
             var obser = new Subject<ItemValue>();
 
@@ -141,7 +141,7 @@ namespace Client.Desktop.Wpf.Communications
             return itemValues;
         }
 
-        private async Task<DeviceSessionManager> Connect()
+        private async Task Connect()
         {
             if (!_activeClient.IsConnected)
             {
@@ -150,15 +150,13 @@ namespace Client.Desktop.Wpf.Communications
                     {
                         StatusText = "Connecting ... "
                     };
-                //await _dialogService.Show(_dialogViewModel);
+                await _dialogService.ShowDialog.Execute(_dialogViewModel);
 
                 await _activeClient.ConnectAsync();
             }
-
-            return this;
         }
 
-        private async Task<DeviceSessionManager> Disconnect()
+        private async Task Disconnect()
         {
             if (_activeClient.IsConnected)
             {
@@ -166,8 +164,6 @@ namespace Client.Desktop.Wpf.Communications
                 await _activeClient.Disconnect();
                 await _dialogService.CloseDialog.Execute();
             }
-
-            return this;
         }
 
         private async Task SetupDeviceInstance()

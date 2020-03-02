@@ -5,108 +5,108 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4CE11F70-ED31-4B4D-BD73-7B48F3054030}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Infrastructure", "src\Prover.Infrastructure\Prover.Infrastructure.csproj", "{DB6AB39C-5A1A-4562-B6F1-1D8FE24143E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Infrastructure", "source\Prover.Infrastructure\Prover.Infrastructure.csproj", "{DB6AB39C-5A1A-4562-B6F1-1D8FE24143E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{2B104496-42CD-4694-9BB1-1565AB8EE67A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculations", "Calculations", "{2AA6FDFF-13A4-426B-96F6-775B0F489987}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Core.GasCalculations.ZFactor", "src\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj", "{3E4389CC-C2A9-48E8-8403-737FA0B310BE}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Core.GasCalculations.ZFactor", "source\Core.GasCalculations.ZFactor\Core.GasCalculations.ZFactor.vbproj", "{3E4389CC-C2A9-48E8-8403-737FA0B310BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Domain", "src\Prover.Domain\Prover.Domain.csproj", "{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Domain", "source\Prover.Domain\Prover.Domain.csproj", "{C5F7681B-F4FA-4065-A0E1-1EC3BD4D972D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.GasCalculations", "src\Core.GasCalculations\Core.GasCalculations.csproj", "{E9DC511A-9EE0-4205-97A3-1C18992A0263}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.GasCalculations", "source\Core.GasCalculations\Core.GasCalculations.csproj", "{E9DC511A-9EE0-4205-97A3-1C18992A0263}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.ConsoleApp", "src\Console\Prover.ConsoleApp.csproj", "{49F9F849-F81A-4E47-A9A3-953AE5486EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.ConsoleApp", "source\Console\Prover.ConsoleApp.csproj", "{49F9F849-F81A-4E47-A9A3-953AE5486EC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeviceProtocol", "DeviceProtocol", "{3B647860-A3F7-4AAD-A1D7-73292B55FCC3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "src\Devices\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Communications", "source\Devices\Devices.Communications\Devices.Communications.csproj", "{A4E19DBE-F582-45B7-AB39-5AFBD8B3FE97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Honeywell", "Honeywell", "{0454CC76-EF8F-4580-B5BD-5A6E24623504}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "src\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Core", "source\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj", "{2BF8E6E5-96BC-4A74-BF64-24FCE75FBA01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "src\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Comm", "source\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj", "{229AE6F4-1BD2-4B75-A97E-4E928B903323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "src\Devices\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Communications.IrDa", "source\Devices\Devices.Communications.IrDa\Devices.Communications.IrDa.csproj", "{DADBA878-F46B-49A4-A7EA-B92CE0A5A366}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "src\Devices\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core", "source\Devices\Devices.Core\Devices.Core.csproj", "{EC7DDF34-F555-414F-9998-744A85516ED4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AE41EBB1-18AA-4D75-B51B-9541D519D81B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "src\Devices\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices.Terminal.Wpf", "source\Devices\Devices.Terminal.Wpf\Devices.Terminal.Wpf.csproj", "{1159271F-6F9C-4B73-BBC3-3942579D2B88}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toys", "Toys", "{0EF988B9-EAF3-4315-A751-7BD23C31B872}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protocols", "Protocols", "{107D240B-8287-4DD7-801C-C002E0E7FFAF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "src\Devices\Devices.WebApi\Devices.WebApi.csproj", "{19D1E2E0-84B8-4E5B-9F30-A2AD7E448968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.WebApi", "source\Devices\Devices.WebApi\Devices.WebApi.csproj", "{19D1E2E0-84B8-4E5B-9F30-A2AD7E448968}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.SignalRClient.ConsoleApp", "src\Devices\Devices.SignalRClient.Console\Devices.SignalRClient.ConsoleApp.csproj", "{5FDBC91F-8308-4722-A6EE-18B5E84B74C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.SignalRClient.ConsoleApp", "source\Devices\Devices.SignalRClient.Console\Devices.SignalRClient.ConsoleApp.csproj", "{5FDBC91F-8308-4722-A6EE-18B5E84B74C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Romet", "Romet", "{293B67AD-EE10-45CE-A00A-E2DB82532CCB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Core", "src\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj", "{10E39EA5-E6B5-4300-BD4B-F6BACC76D3F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Core", "source\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj", "{10E39EA5-E6B5-4300-BD4B-F6BACC76D3F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Shared", "src\Prover.Shared\Prover.Shared.csproj", "{22A1D2D7-C25D-4F4E-94AF-77E1E639CC78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Shared", "source\Prover.Shared\Prover.Shared.csproj", "{22A1D2D7-C25D-4F4E-94AF-77E1E639CC78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Honeywell.Comm", "src\Devices\Tests\Tests.Honeywell.Comm\Tests.Honeywell.Comm.csproj", "{EB52DEBE-3D2F-470B-8CB3-2926F0CD69CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Honeywell.Comm", "source\Devices\Tests\Tests.Honeywell.Comm\Tests.Honeywell.Comm.csproj", "{EB52DEBE-3D2F-470B-8CB3-2926F0CD69CD}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Devices.Honeywell.Comm.Crc", "src\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj", "{D4A4DE0B-C310-4183-9E8C-389794D1DB79}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Devices.Honeywell.Comm.Crc", "source\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj", "{D4A4DE0B-C310-4183-9E8C-389794D1DB79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Honeywell.Core", "src\Devices\Tests\Tests.Honeywell.Core\Tests.Honeywell.Core.csproj", "{B5FD4950-6004-473D-A08C-3C275CD43F07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Honeywell.Core", "source\Devices\Tests\Tests.Honeywell.Core\Tests.Honeywell.Core.csproj", "{B5FD4950-6004-473D-A08C-3C275CD43F07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core.Database", "src\Devices\Devices.Core.Sql\Devices.Core.Database.csproj", "{AB5A9F9D-DDEC-474F-A818-4A4D8591013A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Core.Database", "source\Devices\Devices.Core.Sql\Devices.Core.Database.csproj", "{AB5A9F9D-DDEC-474F-A818-4A4D8591013A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Comm", "src\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj", "{B833D521-075E-4D98-9CCB-7DE1A7A1106E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Comm", "source\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj", "{B833D521-075E-4D98-9CCB-7DE1A7A1106E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DDC548BC-7EA0-4CC1-B77B-E112F5BA72E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Comm", "src\Devices\Tests\Tests.Romet.Comm\Tests.Romet.Comm.csproj", "{44B479FE-76A4-4821-AFE4-9FD165527B86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Comm", "source\Devices\Tests\Tests.Romet.Comm\Tests.Romet.Comm.csproj", "{44B479FE-76A4-4821-AFE4-9FD165527B86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Core", "src\Devices\Tests\Tests.Romet.Core\Tests.Romet.Core.csproj", "{D65A94A6-8E8F-4AAF-87B1-34843308896E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Romet.Core", "source\Devices\Tests\Tests.Romet.Core\Tests.Romet.Core.csproj", "{D65A94A6-8E8F-4AAF-87B1-34843308896E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices", "src\Devices\Devices\Devices.csproj", "{B65FBC23-DE8D-4186-BA84-32871107AEF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices", "source\Devices\Devices\Devices.csproj", "{B65FBC23-DE8D-4186-BA84-32871107AEF0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core.GasCalculations", "src\Tests.Core.GasCalculations\Tests.Core.GasCalculations.csproj", "{94C5CA2B-9EBB-4926-A042-A504FD99845F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Core.GasCalculations", "source\Tests.Core.GasCalculations\Tests.Core.GasCalculations.csproj", "{94C5CA2B-9EBB-4926-A042-A504FD99845F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Application", "src\Prover.Application\Prover.Application.csproj", "{A6CC2DC9-558B-4DBF-8DAA-DDBACB0EEDD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Application", "source\Prover.Application\Prover.Application.csproj", "{A6CC2DC9-558B-4DBF-8DAA-DDBACB0EEDD5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Shared", "src\Tests\Tests.Shared\Tests.Shared.csproj", "{F8C63C15-8E6B-4DD6-832A-B591FEC85021}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Shared", "source\Tests\Tests.Shared\Tests.Shared.csproj", "{F8C63C15-8E6B-4DD6-832A-B591FEC85021}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Api", "src\Web.Api\Web.Api.csproj", "{84D06844-2A7A-45E8-B79D-8FCC4C6413F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Api", "source\Web.Api\Web.Api.csproj", "{84D06844-2A7A-45E8-B79D-8FCC4C6413F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Console", "src\Infrastructure.Console\Infrastructure.Console.csproj", "{9A179FF5-636A-4864-B0BA-13647619ADDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Console", "source\Infrastructure.Console\Infrastructure.Console.csproj", "{9A179FF5-636A-4864-B0BA-13647619ADDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{203DCF2E-BDCE-4485-A691-C2082CB6AA53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Desktop.Wpf", "src\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj", "{974780A5-0E91-4EE9-82D4-929BEFABD4F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Desktop.Wpf", "source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj", "{974780A5-0E91-4EE9-82D4-929BEFABD4F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "src_old\Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.GUI", "source_old\Prover.GUI\Prover.GUI.csproj", "{5D29B63B-D73F-4B8D-B004-ADBA15CD75F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core", "src_old\Prover.Core\Prover.Core.csproj", "{DE48160F-095D-40B1-8790-6CB560024CE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Core", "source_old\Prover.Core\Prover.Core.csproj", "{DE48160F-095D-40B1-8790-6CB560024CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Common", "src_old\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj", "{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.CommProtocol.Common", "source_old\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj", "{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnionGas.MASA", "src_old\UnionGas.MASA\UnionGas.MASA.csproj", "{1C42434C-8218-44AA-B132-A5A57B9DE8B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnionGas.MASA", "source_old\UnionGas.MASA\UnionGas.MASA.csproj", "{1C42434C-8218-44AA-B132-A5A57B9DE8B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Core", "src\Client.Core\Client.Core.csproj", "{E26664F8-B807-4260-B198-89B67170121C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Core", "source\Client.Core\Client.Core.csproj", "{E26664F8-B807-4260-B198-89B67170121C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Desktop.Installer", "src\Client.Desktop.Installer\Client.Desktop.Installer.csproj", "{29EB69AD-CC0D-486B-B43E-6AE6BA9D6C95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Desktop.Installer", "source\Client.Desktop.Installer\Client.Desktop.Installer.csproj", "{29EB69AD-CC0D-486B-B43E-6AE6BA9D6C95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05DF01DB-5B1B-4A6E-BC60-37E2AD7077E2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "src\Tests.Application\Tests.Application.csproj", "{F437379B-8C22-4674-B038-36734091F480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "source\Tests.Application\Tests.Application.csproj", "{F437379B-8C22-4674-B038-36734091F480}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DF087FF4-7AC1-4423-AC12-638B206D4684}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.UnionGas", "src\Modules.UnionGas\Modules.UnionGas.csproj", "{A52E48F3-10CF-443E-8FDD-4F8221FED440}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.UnionGas", "source\Modules.UnionGas\Modules.UnionGas.csproj", "{A52E48F3-10CF-443E-8FDD-4F8221FED440}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Hardware.MccDAQ", "src\Prover.Hardware.MccDAQ\Prover.Hardware.MccDAQ.csproj", "{DF8CECBC-66E5-42EB-83B8-92E457369B87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Hardware.MccDAQ", "source\Prover.Hardware.MccDAQ\Prover.Hardware.MccDAQ.csproj", "{DF8CECBC-66E5-42EB-83B8-92E457369B87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
