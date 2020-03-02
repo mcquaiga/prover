@@ -41,11 +41,11 @@ namespace Client.Desktop.Wpf.Views.Verifications
                
             });
 
-            DeviceInteractions.LiveReadItems.RegisterHandler(async i =>
-            {
-                await ViewModel.DialogManager.ShowMessage(i.Input, "Message");
-                i.SetOutput(Unit.Default);
-            });
+            //DeviceInteractions.LiveReadItems.RegisterHandler(async i =>
+            //{
+            //    await ViewModel.DialogManager.ShowMessage(i.Input, "Message");
+            //    i.SetOutput(Unit.Default);
+            //});
 
         }
 

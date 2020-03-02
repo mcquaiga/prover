@@ -150,7 +150,7 @@ namespace Client.Desktop.Wpf.Communications
                     {
                         StatusText = "Connecting ... "
                     };
-                await _dialogService.Show(_dialogViewModel);
+                //await _dialogService.Show(_dialogViewModel);
 
                 await _activeClient.ConnectAsync();
             }
