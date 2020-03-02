@@ -17,9 +17,14 @@ variables:
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
-  verbosityLevel: 'detailed'
+  verbosityLevel: 'minimal'
 
 steps:
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(solution)'
+    feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
   inputs:
