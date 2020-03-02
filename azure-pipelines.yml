@@ -13,6 +13,7 @@ pool:
   - vstest
 
 variables:
+  solution: 'source\EvcProver.sln'
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
@@ -23,3 +24,20 @@ steps:
   inputs:
     command: 'build'
     projects: '$(project)'
+    arguments: '-v --configuration $(buildConfiguration)' 
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    arguments: '-v --configuration $(buildConfiguration)' 
+    workingDirectory: 'source'
+
+- task: VSTest@2
+  displayName: 'Unit Tests'
+  inputs:
+    testAssemblyVer2: |
+     **\$(buildConfiguration)\*test*.dll
+     !**\obj\**
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
