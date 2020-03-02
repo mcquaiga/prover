@@ -18,12 +18,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.Development.json" />
+    <None Remove="appsettings.Developement.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.Development.json">
+    <Content Include="appsettings.Developement.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -54,13 +54,13 @@
     <PackageReference Include="ReactiveUI" Version="11.2.1" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="11.2.1" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.2.1" />
+    <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
     <PackageReference Include="Splat" Version="9.3.11" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Core\Client.Core.csproj" />
     <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj" />
     <ProjectReference Include="..\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />

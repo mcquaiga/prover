@@ -8,19 +8,21 @@ using Client.Desktop.Wpf.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Configuration;
 using Prover.Application;
 using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {
-    public class AppBootstrapper
+    public class AppBootstrapper : IHostApplicationLifetime
     {
         public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private ILogger _logger = NullLogger.Instance;
-        public IConfiguration Config { get; set; }
 
+        public IConfiguration Config { get; set; }
         public IHost AppHost { get; set; }
 
         public void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
@@ -49,8 +51,6 @@ namespace Client.Desktop.Wpf.Startup
         {
             AppHost = ConfigureBuilder(this, args);
 
-            InitializeLogging();
-
             var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
                 .ForEachAsync(t => t.ExecuteAsync(CancellationTokenSource.Token));
             await startupTask;
@@ -59,29 +59,19 @@ namespace Client.Desktop.Wpf.Startup
                     _logger.LogError(ex, "Errors occured on start up.");
 
             await AppHost.StartAsync();
+            
+            InitializeLogging();
 
             return this;
         }
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
             Host.CreateDefaultBuilder()
-                //.UseEnvironment(Environment.GetEnvironmentVariable("PROVER_ENVIRONMENT") ?? Environments.Production)
-                //.ConfigureAppConfiguration((host, config) =>
-                //{
-                //    //config.AddJsonFile();
-                //    //config.SetBasePath(Directory.GetCurrentDirectory());
-
-                //})
                 .ConfigureLogging((host, log) =>
                 {
-                    log.ClearProviders();
-                    log.AddConfiguration((IConfiguration) host.Configuration.GetSection("Logging"));
-                    log.Services.AddLogging();
 #if DEBUG
-                    //log.AddDebug();
                     log.Services.AddSplatLogging();
-                    //log.AddFilter("ReactiveUI", LogLevel.Debug)
-                    //    .AddDebug();
+                    log.AddDebug();
 #endif
                 })
                 .ConfigureServices((host, services) =>
@@ -94,15 +84,38 @@ namespace Client.Desktop.Wpf.Startup
 
         private void InitializeLogging()
         {
-            _logger = AppHost.Services.GetService<ILogger>();
             var logFactory = AppHost.Services.GetService<ILoggerFactory>();
             ProverLogging.LogFactory = logFactory;
-            
-            AppHost.Services.GetService<ILoggerFactory>();
-            var config = AppHost.Services.GetService<IConfiguration>();
 
-            var logConfig = config.GetSection("Logging").GetChildren();
+            _logger = logFactory.CreateLogger<AppBootstrapper>();
+            
+            var config = AppHost.Services.GetService<IConfiguration>();
+            //var logConfig = config.GetSection("Logging").GetChildren();
+
+            var host = AppHost.Services.GetService<IHostEnvironment>();
+            _logger.LogInformation($"Loggers Hosting App Name: {host.ApplicationName}");
+            _logger.LogInformation($"Loggers Hosting Env: {host.EnvironmentName}");
+
+            var level = config.GetValue<LogLevel>("Logging:LogLevel:Default");
+            _logger.LogInformation($"Log Level = {level}");
+
+            //_logger.LogInformation($"Logger Settings");
+            //_logger.LogInformation($"Log Level = {config.GetValue("Logging:LogLevel:Default", typeof(LogLevel))}");
+            //foreach (var section in logConfig)
+            //{
+            //    _logger.LogInformation($"{section} = {section}");
+            //}
+            
         }
+
+        public void StopApplication()
+        {
+            Debug.WriteLine("Stopping Application.");
+        }
+
+        public CancellationToken ApplicationStarted { get; }
+        public CancellationToken ApplicationStopping { get; }
+        public CancellationToken ApplicationStopped { get; }
     }
 
 }

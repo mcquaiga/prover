@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
   </ItemGroup>
 

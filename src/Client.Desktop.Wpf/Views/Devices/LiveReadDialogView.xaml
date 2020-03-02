@@ -1,12 +1,13 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Desktop.Wpf.Views.Devices.SessionDialogView"
+    x:Class="Client.Desktop.Wpf.Views.Devices.LiveReadDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:communications="clr-namespace:Client.Desktop.Wpf.Communications"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels.Devices"
-    x:TypeArguments="viewModels:SessionDialogViewModel"
+    xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
+    x:TypeArguments="communications:DeviceSessionManager"
     mc:Ignorable="d">
     <Grid
         MinWidth="350"

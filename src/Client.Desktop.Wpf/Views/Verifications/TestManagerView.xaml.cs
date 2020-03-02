@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using ReactiveUI;
 
@@ -37,6 +39,12 @@ namespace Client.Desktop.Wpf.Views.Verifications
 
                 this.CleanUpDefaults().DisposeWith(d);
                
+            });
+
+            DeviceInteractions.LiveReadItems.RegisterHandler(async i =>
+            {
+                await ViewModel.DialogManager.ShowMessage(i.Input, "Message");
+                i.SetOutput(Unit.Default);
             });
 
         }

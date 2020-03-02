@@ -50,10 +50,6 @@ namespace Client.Desktop.Wpf.Startup
 
             //Tachometer
 
-            //Pulse Outputs
-            //services.AddTransient(c => new PulseInputsListenerService(c))
-            //services.AddSingleton<IInputChannelFactory>(c => new SimulatorPulseChannelFactory());
-
             services.AddTransient<PulseInputsListenerService>();
             services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
             services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
@@ -64,6 +60,10 @@ namespace Client.Desktop.Wpf.Startup
             //services.AddSingleton<DaqBoardChannelFactory>();
             //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
             //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
+
+            //Pulse Outputs
+            //services.AddTransient(c => new PulseInputsListenerService(c))
+            //services.AddSingleton<IInputChannelFactory>(c => new SimulatorPulseChannelFactory());
 
 
             services.AddStartTask<DeviceServices>();

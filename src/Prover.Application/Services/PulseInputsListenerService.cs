@@ -166,7 +166,7 @@ namespace Prover.Application.Services
 
                 Pulser.PulseCount++;
 
-                Debug.WriteLine($"[{Pulser.Channel}] = {Pulser.PulseCount}");
+                //Debug.WriteLine($"[{Pulser.Channel}] = {Pulser.PulseCount}");
 
                 return true;
             }

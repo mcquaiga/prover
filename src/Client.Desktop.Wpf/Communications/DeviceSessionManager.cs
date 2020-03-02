@@ -1,25 +1,24 @@
-﻿using Client.Desktop.Wpf.Screens.Dialogs;
-using Client.Desktop.Wpf.ViewModels.Devices;
-using Client.Desktop.Wpf.Views.Devices;
-using Devices.Communications.Interfaces;
-using Devices.Communications.IO;
-using Devices.Communications.Status;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Microsoft.Extensions.Logging;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.ViewModels.Devices;
+using Client.Desktop.Wpf.Views.Devices;
+using Devices.Communications.Interfaces;
+using Devices.Communications.Status;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Microsoft.Extensions.Logging;
 using Prover.Shared.IO;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Communications
 {
-    public class DeviceSessionManager
+    public class DeviceSessionManager : DialogViewModel
     {
         private readonly ICommClientFactory _commClientFactory;
         private readonly ICommPortFactory _commPortFactory;
@@ -42,7 +41,7 @@ namespace Client.Desktop.Wpf.Communications
 
         public DeviceInstance Device { get; private set; }
         public DeviceType DeviceType { get; private set; }
-        public bool SessionInProgress { get; private set; } = false;
+        public bool SessionInProgress { get; private set; }
 
         public ReactiveObject CurrentOwnerViewModel { get; set; }
 
@@ -76,11 +75,13 @@ namespace Client.Desktop.Wpf.Communications
         {
             var obser = new Subject<ItemValue>();
 
-            var vm = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken);
-            await _dialogService.ShowDialog.Execute(vm);
+            var view = new LiveReadDialogView {ViewModel = this};
+
+            //var vm = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken);
+            //await _dialogService.ShowDialog.Execute(vm);
             await Connect();
 
-            await _activeClient.LiveReadItemValue(26, obser, _cancellationToken.Token);
+            await _activeClient.LiveReadItemValue(26, obser, CancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -98,22 +99,24 @@ namespace Client.Desktop.Wpf.Communications
         {
             if (SessionInProgress)
             {
-                var answer = 
+                var answer =
                     await _dialogService.ShowQuestion("Device session already in progress. Start new session?");
+
                 if (answer)
-                {
                     await EndSession();
-                }
             }
 
             try
             {
                 SessionInProgress = true;
                 DeviceType = deviceType;
+
                 CurrentOwnerViewModel = owner;
+
                 _activeCommPort = _commPortFactory.Create(commPortName, baudRate);
                 _activeClient = _commClientFactory.Create(deviceType, _activeCommPort);
-                _cancellationToken = new CancellationTokenSource();
+
+                CancellationTokenSource = new CancellationTokenSource();
 
                 _activeClient.StatusMessageObservable
                     .Subscribe(msg => _logger.Log(msg.LogLevel, msg.ToString()));
@@ -129,12 +132,25 @@ namespace Client.Desktop.Wpf.Communications
             return this;
         }
 
+        internal async Task<IEnumerable<ItemValue>> GetItemValues()
+        {
+            await Connect();
+            _dialogViewModel.StatusText = "Downloading items ...";
+            var itemValues = await _activeClient.GetItemsAsync();
+            await Disconnect();
+            return itemValues;
+        }
+
         private async Task<DeviceSessionManager> Connect()
         {
             if (!_activeClient.IsConnected)
             {
-                _dialogViewModel = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken);
-                await _dialogService.ShowDialog.Execute(_dialogViewModel);
+                _dialogViewModel =
+                    new SessionDialogViewModel(_activeClient.StatusMessageObservable, CancellationTokenSource)
+                    {
+                        StatusText = "Connecting ... "
+                    };
+                await _dialogService.Show(_dialogViewModel);
 
                 await _activeClient.ConnectAsync();
             }
@@ -146,23 +162,12 @@ namespace Client.Desktop.Wpf.Communications
         {
             if (_activeClient.IsConnected)
             {
-                _dialogViewModel.TitleText = "Disconnecting";
+                _dialogViewModel.StatusText = "Disconnecting ...";
                 await _activeClient.Disconnect();
                 await _dialogService.CloseDialog.Execute();
             }
 
             return this;
-        }
-
-        internal async Task<IEnumerable<ItemValue>> GetItemValues()
-        {
-            await Connect();
-
-            _dialogViewModel.TitleText = "Downloading items...";
-            var itemValues = await _activeClient.GetItemsAsync();
-
-            await Disconnect();
-            return itemValues;
         }
 
         private async Task SetupDeviceInstance()

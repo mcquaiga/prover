@@ -28,8 +28,8 @@
 
             <Grid x:Name="HeaderDockPanel">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="600" />
-                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 

@@ -19,4 +19,11 @@ namespace Client.Desktop.Wpf.Interactions
     {
         public static Interaction<string, Unit> SnackBarMessage { get; } = new Interaction<string, Unit>();
     }
+
+    public static class DeviceInteractions
+    {
+        public static Interaction<string, Unit> Connect { get; } = new Interaction<string, Unit>();
+        public static Interaction<string, Unit> DownloadItems { get; } = new Interaction<string, Unit>();
+        public static Interaction<string, Unit> LiveReadItems { get; } = new Interaction<string, Unit>();
+    }
 }

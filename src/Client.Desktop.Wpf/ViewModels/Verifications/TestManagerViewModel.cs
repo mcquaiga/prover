@@ -28,46 +28,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
             string tachPortName);
     }
-
-    //public class TestManagerViewModelFactory : ITestManagerViewModelFactory
-    //{
-    //    private readonly DeviceSessionManager _deviceManager;
-    //    private readonly DialogServiceManager _dialogService;
-    //    private readonly ILoggerFactory _loggerFactory;
-    //    private readonly IScreenManager _screenManager;
-    //    private readonly VerificationViewModelService _testViewModelService;
-    //    private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
-
-    //    public TestManagerViewModelFactory(
-    //        ILoggerFactory loggerFactory,
-    //        IScreenManager screenManager,
-    //        DeviceSessionManager deviceManager,
-    //        VerificationViewModelService testViewModelService,
-    //        DialogServiceManager dialogService,
-    //        IVolumeTestManagerFactory volumeTestManagerFactory)
-    //    {
-    //        _loggerFactory = loggerFactory;
-    //        _screenManager = screenManager;
-    //        _deviceManager = deviceManager;
-    //        _testViewModelService = testViewModelService;
-    //        _dialogService = dialogService;
-    //        _volumeTestManagerFactory = volumeTestManagerFactory;
-    //    }
-
-    //    public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
-    //        string tachPortName)
-    //    {
-    //        await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
-    //        var testViewModel = _testViewModelService.NewTest(_deviceManager.Device);
-    //        var volumeTestManager =
-    //            _volumeTestManagerFactory.CreateInstance(_deviceManager.Device, testViewModel.VolumeTest);
-
-    //        return new TestManagerViewModel(_loggerFactory.CreateLogger(nameof(TestManagerViewModel)), _screenManager, _deviceManager, _testViewModelService,
-    //            _dialogService, testViewModel, volumeTestManager);
-    //    }
-    //}
-
-    public partial class TestManagerViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable
+    
+    public partial class TestManagerViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IDialogViewModel
     {
         private readonly DeviceSessionManager _deviceManager;
         private readonly DialogServiceManager _dialogService;
@@ -169,17 +131,25 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             DownloadCommand.DisposeWith(_cleanup);
             PrintTestReport.DisposeWith(_cleanup);
             RunVolumeTest.DisposeWith(_cleanup);
-        }
+            
+            void SetupAutoSave()
+            {
+                DownloadCommand
+                    .InvokeCommand(SaveCommand);
 
-        private void SetupAutoSave()
-        {
-            this.WhenAnyValue(x => x.TestViewModel);
+                //this.WhenAnyValue(x => x.TestViewModel);
+
+            }
         }
 
         async Task Reset()
         {
             await _deviceManager.EndSession();
         }
+
+        public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
+        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+        public bool IsDialogOpen { get; }
     }
 
     public partial class TestManagerViewModel : ITestManagerViewModelFactory
@@ -211,8 +181,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                     RunNavigatingAwayActions();
                 })
                 .DisposeWith(_cleanup);
-
-           
         }
 
         public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
@@ -236,32 +204,4 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         }
     }
 
-    //public static class MyExtensions
-    //{
-    //    public static IObservable<Exception> LogErrors(this IObservable<Exception> source, string message = null, ILogger logger = null)
-    //    {
-    //        var time = DateTime.Now;
-
-    //        if (logger != null)
-    //            return source.Do(ex => logger.LogError(ex, $"{time} - {message}."));
-
-    //        return source.Do(ex =>
-    //        {
-    //            Debug.WriteLine($"{time} - {message}. {Environment.NewLine}" +
-    //                            $"Exception: {ex}");
-    //        });
-    //    }
-
-    //    public static IObservable<T> LogErrors<T>(this IObservable<T> source, ILogger logger)
-    //    {
-    //        var time = DateTime.Now;
-    //        return source.Do(changes => { }, ex => logger.LogError(ex, $"{time} - Error on {source} of {typeof(T)}."));
-    //    }
-
-    //    public static IObservable<T> LogDebug<T>(this IObservable<T> source, string message)
-    //    {
-    //        var time = DateTime.Now;
-    //        return source.Do(x => Debug.WriteLine($"{time} - {message}"));
-    //    }
-    //}
 }

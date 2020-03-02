@@ -62,7 +62,7 @@ namespace Client.Desktop.Wpf.Views
                     DialogHost.IsOpen = false;
                 };
                 view.OkButton.Click += callback;
-                view.CancelButton.Click += callback;
+              
                 
                 i.SetOutput(answer);
             });
@@ -72,7 +72,7 @@ namespace Client.Desktop.Wpf.Views
                     NotificationSnackBar.Message.Content = message.Input;
                     NotificationSnackBar.IsActive = true;
 
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.Delay(TimeSpan.FromSeconds(2));
 
                     NotificationSnackBar.IsActive = false;
                     NotificationSnackBar.Message.Content = string.Empty;

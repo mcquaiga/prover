@@ -17,36 +17,22 @@
                 x:Name="TitleText"
                 Margin="4,4,4,12"
                 Foreground="Black"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                Text="Title" />
+                Style="{StaticResource MaterialDesignCaptionTextBlock}" />
             <TextBlock
                 x:Name="MessageText"
                 Margin="15,4,15,4"
                 Foreground="Black"
                 Style="{StaticResource MaterialDesignBody1TextBlock}"
                 Text="Here's a message." />
-            <StackPanel
+            <Button
+                x:Name="OkButton"
+                Margin="0,15,0,5"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
-                <Button
-                    x:Name="OkButton"
-                    Margin="0,15,0,5"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Click="OkButton_Click"
-                    Content="OK"
-                    Style="{StaticResource MaterialDesignFlatAccentButton}" />
+                VerticalAlignment="Bottom"
+                Click="OkButton_Click"
+                Content="OK"
+                Style="{StaticResource MaterialDesignFlatAccentButton}" />
 
-                <Button
-                    x:Name="CancelButton"
-                    Margin="0,15,0,5"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Click="CancelButton_Click"
-                    Content="Cancel"
-                    Style="{StaticResource MaterialDesignFlatAccentButton}" />
-            </StackPanel>
         </StackPanel>
     </Grid>
 </reactiveUi:ReactiveUserControl>

@@ -83,6 +83,11 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
 
         }
 
+        public void Show(IViewFor<IDialogViewModel> dialogView)
+        {
+
+        }
+
         public void Show<T>() 
             where T : class, IDialogViewModel
         {
