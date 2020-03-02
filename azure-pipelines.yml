@@ -3,7 +3,7 @@ resources:
   clean: true
 
 pool:
-  vmImage: Hosted VS2017
+  vmImage: Hosted VS2019
   demands:
   - msbuild
   - visualstudio
@@ -20,20 +20,11 @@ pool:
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 
 steps:
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.3.0'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
+- task: DotNetCoreCLI@2
   inputs:
-    restoreSolution: '$(Parameters.solution)'
-
-- task: VSBuild@1
-  displayName: 'Build solution EvcProver.sln'
-  inputs:
-    solution: '$(Parameters.solution)'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    command: 'build'
+    projects: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
 
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
