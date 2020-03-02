@@ -37,19 +37,12 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
-      
-    - job: publish
-      dependsOn: build
-      steps:
+          arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\$(buildConfiguration)'
           ArtifactName: '$(Build.BuildNumber)'
           publishLocation: 'Container'
-    - job: publishTests
-      dependsOn: build
-      steps:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: 'build\tests\$(buildConfiguration)'
