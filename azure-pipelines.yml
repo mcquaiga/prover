@@ -26,18 +26,21 @@ steps:
     command: 'restore'
     restoreSolution: 'source\Devices\Tests\Tests.Honeywell.Core\packages.config'
     feedsToUse: 'select'
+    restoreDirectory: 'packages'
 
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
     restoreSolution: 'source\Devices\Tests\Tests.Honeywell.Comm\packages.config'
     feedsToUse: 'select'
+    restoreDirectory: 'packages'
 
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
     restoreSolution: 'source\Devices\Tests\**\*packages.config'
     feedsToUse: 'select'
+    restoreDirectory: 'packages'
 
 - task: DotNetCoreCLI@2
   inputs:
