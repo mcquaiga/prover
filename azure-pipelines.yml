@@ -61,6 +61,19 @@ stages:
       - task: VSTest@2
         inputs:
           testSelector: 'testAssemblies'
-          testAssemblyVer2: 'Tests.**.dll'
+          testAssemblyVer2: |
+            'Tests.Application.dll'
+            'Tests.Core.GasCalculations.dll'
           searchFolder: '$(System.ArtifactsDirectory)\Tests_$(Build.BuildNumber)'
           otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
+
+      - task: VSTest@2
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            'Tests.**.dll'
+            !'Tests.Application.dll'
+            !'Tests.Shared.dll'
+            !'Tests.Core.GasCalculations.dll'
+          searchFolder: '$(System.ArtifactsDirectory)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:Framework47'
