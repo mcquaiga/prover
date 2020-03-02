@@ -37,7 +37,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: 'Tests.**.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)\build\tests\$(buildConfiguration)'
+    searchFolder: 'build\tests\$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
   inputs:
