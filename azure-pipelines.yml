@@ -29,8 +29,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: '-v --configuration $(buildConfiguration)' 
-    workingDirectory: 'source'
+    arguments: '--solution $(solution) --configuration $(buildConfiguration) -v' 
 
 - task: VSTest@2
   displayName: 'Unit Tests'
