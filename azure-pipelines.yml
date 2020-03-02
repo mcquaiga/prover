@@ -24,13 +24,6 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
-    restoreSolution: 'source\Devices\Tests\Tests.Honeywell.Core\packages.config'
-    feedsToUse: 'select'
-    restoreDirectory: '..\..\..\..\packages'
-
-- task: NuGetCommand@2
-  inputs:
-    command: 'restore'
     restoreSolution: 'source\Devices\Tests\**\*packages.config'
     feedsToUse: 'select'
     restoreDirectory: '..\..\..\..\packages'
@@ -39,6 +32,12 @@ steps:
   inputs:
     command: 'build'
     arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: 'Tests.**.dll'
+    searchFolder: '$(System.DefaultWorkingDirectory)\build\tests\$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
   inputs:
