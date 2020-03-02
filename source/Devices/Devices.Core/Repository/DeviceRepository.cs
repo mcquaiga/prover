@@ -43,14 +43,15 @@ namespace Devices.Core.Repository
         internal IDeviceTypeCacheSource<DeviceType> CacheSource;
         private static IDeviceRepository _instance;
 
-        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository, ILogger logger = null) : this()
+        //IEnumerable<IDeviceTypeDataSource<DeviceType>> deviceRepositories,
+        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository = null, ILogger logger = null) : this()
         {
             _logger = logger ?? NullLogger.Instance;
 
             CacheSource = cacheRepository;
         }
 
-        public DeviceRepository() 
+        private DeviceRepository() 
         {
             _logger = NullLogger.Instance;
 
@@ -97,6 +98,20 @@ namespace Devices.Core.Repository
             CacheSource.Save(_deviceSourceCache.Items);
         }
 
+        public async Task<DeviceRepository> Load(ICollection<IDeviceTypeDataSource<DeviceType>> sources)
+        {
+            if (CacheSource != null)
+                await UpdateCachedTypes();
+
+            if (Devices.Count == 0 && sources.Any())
+            {
+                await UpdateCachedTypes(sources);
+
+                if (CacheSource != null) Save();
+            }
+
+            return this;
+        }
         //public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
         //{
         //    CacheSource = cacheSource;

@@ -7,9 +7,12 @@ using DynamicData;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Devices.Honeywell.Core.Repository.JsonRepository;
+using Microsoft.Extensions.Logging;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
 using Prover.Infrastructure;
@@ -125,7 +128,8 @@ namespace Application.Services.Tests
         [TestInitialize]
         public async Task Init()
         {
-            _repo = await RepositoryFactory.CreateDefaultAsync();
+            _repo = new DeviceRepository();
+            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
             _deviceType = _repo.GetByName("Mini-Max");
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
 
@@ -140,4 +144,61 @@ namespace Application.Services.Tests
     {
 
     }
+
+    //class RepositoryFactory
+    //{
+    //    //public RepositoryFactory(ILogger logger)
+    //    //{
+    //    //}
+
+    //    //if (DeviceRepository.Instance == null)
+    //    //    throw new InvalidOperationException("Call Create method first.");
+    //    public static IDeviceRepository Instance => DeviceRepository.Instance;
+
+    //    public static IDeviceRepository Get => Instance;
+
+    //    public static async Task<IDeviceRepository> Create(IDeviceTypeCacheSource<DeviceType> cacheSource,
+    //        IEnumerable<IDeviceTypeDataSource<DeviceType>> sources = null)
+    //    {
+    //        var instance = Instance;
+
+    //        if (Instance == null)
+    //        {
+    //            instance = new DeviceRepository(cacheSource);
+    //        }
+
+    //        await instance.UpdateCachedTypes();
+
+    //        if (instance.Devices.Count == 0 && sources != null)
+    //            await instance.UpdateCachedTypes(sources);
+
+    //        return instance;
+    //    }
+
+    //    public static async Task<IDeviceRepository> Create(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
+    //    {
+    //        var instance = Instance;
+
+    //        if (Instance == null)
+    //            instance = new DeviceRepository(null);
+
+    //        await instance.UpdateCachedTypes(sources);
+
+    //        return instance;
+    //    }
+
+    //    public static IDeviceRepository CreateDefault()
+    //    {
+    //        var task = Task.Run(CreateDefaultAsync);
+    //        task.Wait();
+    //        return task.Result;
+    //    }
+
+    //    public static async Task<IDeviceRepository> CreateDefaultAsync()
+    //    {
+    //        return await Create(StorageDefaults.CreateDefaultDeviceTypeCache(),
+    //            new[] { MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance });
+    //    }
+    //}
+
 }

@@ -70,26 +70,25 @@ namespace Client.Desktop.Wpf.Startup
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var repo = await RepositoryFactory.Create(
-                _provider.GetService<IDeviceTypeCacheSource<DeviceType>>(),
-                _provider.GetServices<IDeviceTypeDataSource<DeviceType>>());
+            //var repo = await RepositoryFactory.Create(
+            //    _provider.GetService<IDeviceTypeCacheSource<DeviceType>>(),
+            //    _provider.GetServices<IDeviceTypeDataSource<DeviceType>>());
 
+            var repo = _provider.GetService<DeviceRepository>();
+            await repo.Load(new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
 
             _provider.GetService<IInputChannelFactory>();
         }
 
         private static void RegisterTypeDataSources(IServiceCollection services)
         {
-            services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => MiJsonDeviceTypeDataSource.Instance);
-            services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => RometJsonDeviceTypeDataSource.Instance);
+            //services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => MiJsonDeviceTypeDataSource.Instance);
+            //services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => RometJsonDeviceTypeDataSource.Instance);
 
-            services.AddScoped<IRepository<DeviceType>>(c =>
-                new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
+            services.AddScoped<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
             services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, DeviceTypeCacheSource>();
-            //services.AddSingleton<IDeviceTypeCacheSource<DeviceType>>(c =>
-            //    new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
 
-            services.AddSingleton(c => RepositoryFactory.Instance);
+            services.AddSingleton<DeviceRepository>();
         }
     }
 }

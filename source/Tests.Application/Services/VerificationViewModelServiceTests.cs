@@ -5,6 +5,7 @@ using Devices;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
+using Devices.Honeywell.Core.Repository.JsonRepository;
 using Moq;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
@@ -35,13 +36,13 @@ namespace Application.Services.Tests
         public async Task Init()
         {
             _serviceMock = new Mock<EvcVerificationTestService>(_repoMock.Object);
-            
             _service = new VerificationViewModelService(_serviceMock.Object);
-
             _instance = new Mock<DeviceInstance>();
-            _repo = await RepositoryFactory.CreateDefaultAsync();
-            _deviceType = _repo.GetByName("Mini-Max");
 
+            _repo = new DeviceRepository();
+            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+
+            _deviceType = _repo.GetByName("Mini-Max");
             var items = ItemFiles.MiniMaxItemFile;
             _device = _deviceType.CreateInstance(items);
         }

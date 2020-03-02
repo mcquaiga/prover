@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using Devices;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
+using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Services;
@@ -22,7 +23,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         [Reactive] public TestManagerViewModel TestManager { get; set; }
 
         public NewTestViewModel(IScreenManager screenManager,
-            ITestManagerViewModelFactory testManagerViewModelFactory) : base(screenManager)
+            ITestManagerViewModelFactory testManagerViewModelFactory,
+            DeviceRepository deviceRepository) : base(screenManager)
         {
             
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
@@ -46,7 +48,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand.DisposeWith(_cleanup);
             NavigateForward.DisposeWith(_cleanup);
 
-            RepositoryFactory.Instance.Connect()
+            deviceRepository.Connect()
                 .Filter(d => !d.IsHidden)
                 .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)

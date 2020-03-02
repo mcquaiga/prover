@@ -76,7 +76,6 @@
     <ProjectReference Include="..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
     <ProjectReference Include="..\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
     <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
-    <ProjectReference Include="..\Devices\Devices\Devices.csproj" />
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
     <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />

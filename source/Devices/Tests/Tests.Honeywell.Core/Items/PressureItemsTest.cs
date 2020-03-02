@@ -18,8 +18,8 @@ namespace Tests.Honeywell.Core.Items
         [TestInitialize]
         public async Task Initialize()
         {
-            _repo = await RepositoryFactory.Create(new [] {MiJsonDeviceTypeDataSource.Instance});
-            //await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+            _repo = new DeviceRepository();
+            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
         }
 
         [TestMethod]
