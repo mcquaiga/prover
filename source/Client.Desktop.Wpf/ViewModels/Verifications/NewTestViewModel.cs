@@ -48,7 +48,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand.DisposeWith(_cleanup);
             NavigateForward.DisposeWith(_cleanup);
 
-            deviceRepository.Connect()
+            deviceRepository.All.Connect()
                 .Filter(d => !d.IsHidden)
                 .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
                 .ObserveOn(RxApp.MainThreadScheduler)

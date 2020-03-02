@@ -11,8 +11,6 @@ namespace Devices.Romet.Core
     {
         private HoneywellDeviceBuilder _deviceBuilder;
 
-        protected RometDeviceInstanceFactory() { }
-
         public RometDeviceInstanceFactory(RometDeviceType deviceType)
         {
             _deviceType = deviceType;

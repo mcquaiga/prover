@@ -50,6 +50,7 @@ namespace Client.Desktop.Wpf.Startup
             var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
                 .ForEachAsync(t => t.ExecuteAsync(CancellationTokenSource.Token));
             await startupTask;
+
             if (startupTask.IsFaulted)
                 foreach (var ex in startupTask.Exception.InnerExceptions)
                     _logger.LogError(ex, "Errors occured on start up.");

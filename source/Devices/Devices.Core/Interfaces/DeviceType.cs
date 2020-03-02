@@ -12,7 +12,7 @@ namespace Devices.Core.Interfaces
     {
         //protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
 
-        protected ItemGroupFactoryBase ItemFactory;
+        protected virtual ItemGroupFactoryBase ItemFactory { get; }
 
         protected DeviceType(IEnumerable<ItemMetadata> itemDefinitions) =>
             Items = new List<ItemMetadata>(itemDefinitions);
@@ -22,11 +22,11 @@ namespace Devices.Core.Interfaces
         public Guid Id { get; set; }
         public virtual bool? CanUseIrDaPort { get; set; }
         public virtual bool IsHidden { get; set; }
-        public ICollection<ItemMetadata> Items { get; set; }
+        public ICollection<ItemMetadata> Items { get; protected set; }
         public virtual int? MaxBaudRate { get; set; }
         public virtual string Name { get; set; }
 
-        public IDeviceInstanceFactory Factory { get; protected set; }
+        public virtual IDeviceInstanceFactory Factory { get; protected set; }
 
         public abstract Type GetBaseItemGroupClass(Type itemGroupType);
 

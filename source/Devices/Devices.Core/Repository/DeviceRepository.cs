@@ -32,28 +32,26 @@ namespace Devices.Core.Repository
 
     public class DeviceRepository : IDisposable, IDeviceRepository
     {
-        public static IDeviceRepository Instance => _instance;
+        private readonly IDeviceTypeCacheSource<DeviceType> _cacheSource;
 
         private readonly SourceCache<DeviceType, Guid>
             _deviceSourceCache = new SourceCache<DeviceType, Guid>(v => v.Id);
 
         private readonly CompositeDisposable _disposer;
-        private readonly ILogger _logger;
-
-        internal IDeviceTypeCacheSource<DeviceType> CacheSource;
-        private static IDeviceRepository _instance;
+        private readonly ILogger<DeviceRepository> _logger;
 
         //IEnumerable<IDeviceTypeDataSource<DeviceType>> deviceRepositories,
-        public DeviceRepository(IDeviceTypeCacheSource<DeviceType> cacheRepository = null, ILogger logger = null) : this()
+        public DeviceRepository(ILogger<DeviceRepository> logger = null,
+            IDeviceTypeCacheSource<DeviceType> cacheRepository = null) : this()
         {
-            _logger = logger ?? NullLogger.Instance;
+            _logger = logger ?? NullLogger<DeviceRepository>.Instance;
 
-            CacheSource = cacheRepository;
+            _cacheSource = cacheRepository;
         }
 
-        private DeviceRepository() 
+        private DeviceRepository()
         {
-            _logger = NullLogger.Instance;
+            _logger = NullLogger<DeviceRepository>.Instance;
 
             var devices = _deviceSourceCache.Connect().Publish();
             All = devices.AsObservableCache();
@@ -65,8 +63,10 @@ namespace Devices.Core.Repository
 
             _disposer = new CompositeDisposable(All, _deviceSourceCache, devices.Connect(), allDevice);
 
-            _instance = this;
+            Instance = this;
         }
+
+        public static IDeviceRepository Instance { get; private set; }
 
         public ReadOnlyObservableCollection<DeviceType> Devices { get; }
 
@@ -92,41 +92,45 @@ namespace Devices.Core.Repository
 
         public DeviceType GetByName(string name) => FindInSetByName(GetAll(), name);
 
-        public void Save()
-        {
-            _logger.LogDebug("Saving device types to cache.");
-            CacheSource.Save(_deviceSourceCache.Items);
-        }
-
         public async Task<DeviceRepository> Load(ICollection<IDeviceTypeDataSource<DeviceType>> sources)
         {
-            if (CacheSource != null)
+            _logger.LogDebug("Importing Device Types...");
+
+            if (_cacheSource != null)
+            {
+                _logger.LogDebug("Cache source registered. Searching cached data first.");
                 await UpdateCachedTypes();
+            }
 
             if (Devices.Count == 0 && sources.Any())
             {
+                _logger.LogDebug("No device types found in cache. Searching local data sources...");
+                _deviceSourceCache.Clear();
                 await UpdateCachedTypes(sources);
 
-                if (CacheSource != null) Save();
+                if (_cacheSource != null) Save();
             }
 
             return this;
         }
-        //public async Task<bool> RegisterCacheSource(IDeviceTypeCacheSource<DeviceType> cacheSource)
-        //{
-        //    CacheSource = cacheSource;
 
-        //    return await UpdateCachedTypes(cacheSource);
-        //}
+        public void Save()
+        {
+            if (_cacheSource != null)
+            {
+                _logger.LogDebug("Saving device types to cache.");
+                _cacheSource?.Save(_deviceSourceCache.Items);
+            }
+        }
 
-        public async Task<DeviceRepository> UpdateCachedTypes() => await UpdateCachedTypes(CacheSource);
+        public async Task<DeviceRepository> UpdateCachedTypes() => await UpdateCachedTypes(_cacheSource);
 
         public async Task<DeviceRepository> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource)
         {
             if (dataSource == null)
                 return this;
 
-            _logger.LogDebug($"Loading devices for {dataSource.GetType()}.");
+            _logger.LogDebug($"Scanning data from {dataSource.GetType().Name}.");
 
             await dataSource.GetDeviceTypes()
                 .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
@@ -136,8 +140,9 @@ namespace Devices.Core.Repository
 
         public async Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources)
         {
-            foreach (var s in sources) await UpdateCachedTypes(s);
-            //Save();
+            foreach (var s in sources)
+                await UpdateCachedTypes(s);
+
             return this;
         }
 

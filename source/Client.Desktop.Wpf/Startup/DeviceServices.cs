@@ -29,8 +29,6 @@ namespace Client.Desktop.Wpf.Startup
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
-            RegisterTypeDataSources(services);
-
             services.AddTransient<TestManagerViewModel>();
             services.AddTransient<ITestManagerViewModelFactory, TestManagerViewModel>();
 
@@ -49,13 +47,16 @@ namespace Client.Desktop.Wpf.Startup
 
             //Tachometer
 
-            services.AddTransient<PulseInputsListenerService>();
-            services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
-            services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 
             /*
              * DAQ Board Setup 
              */
+
+            // Simulator
+            services.AddTransient<PulseInputsListenerService>();
+            services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
+            services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
+
             //services.AddSingleton<DaqBoardChannelFactory>();
             //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
             //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
@@ -70,25 +71,10 @@ namespace Client.Desktop.Wpf.Startup
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            //var repo = await RepositoryFactory.Create(
-            //    _provider.GetService<IDeviceTypeCacheSource<DeviceType>>(),
-            //    _provider.GetServices<IDeviceTypeDataSource<DeviceType>>());
-
             var repo = _provider.GetService<DeviceRepository>();
             await repo.Load(new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
 
             _provider.GetService<IInputChannelFactory>();
-        }
-
-        private static void RegisterTypeDataSources(IServiceCollection services)
-        {
-            //services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => MiJsonDeviceTypeDataSource.Instance);
-            //services.AddSingleton<IDeviceTypeDataSource<DeviceType>>(c => RometJsonDeviceTypeDataSource.Instance);
-
-            services.AddScoped<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
-            services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, DeviceTypeCacheSource>();
-
-            services.AddSingleton<DeviceRepository>();
         }
     }
 }
