@@ -21,7 +21,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
   verbosityLevel: 'minimal'
-  versionNumber: '$(Date:yy.MM).$(Rev:.r)'
 
 stages:
   - stage: Building
