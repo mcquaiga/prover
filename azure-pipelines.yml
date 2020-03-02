@@ -17,7 +17,7 @@ variables:
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
-  verbosityLevel: ''
+  verbosityLevel: 'detailed'
 
 steps:
 
