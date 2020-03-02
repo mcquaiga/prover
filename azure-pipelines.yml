@@ -17,19 +17,14 @@ variables:
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
+  verbosityLevel: ''
 
 steps:
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '$(project)'
-    arguments: '-v --configuration $(buildConfiguration)' 
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '--solution $(solution) --configuration $(buildConfiguration) -v' 
+    arguments: '--solution $(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
 
 - task: PublishBuildArtifacts@1
   inputs:
