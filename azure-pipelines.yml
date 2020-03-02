@@ -23,42 +23,46 @@ variables:
   verbosityLevel: 'minimal'
   versionNumber: $(Date:yy.MM).$(Rev:.r)
 
-jobs:
-- job: Build
-  steps:
-  - task: NuGetCommand@2
-    inputs:
-      command: 'restore'
-      restoreSolution: 'source\Devices\Tests\**\*packages.config'
-      feedsToUse: 'select'
-      restoreDirectory: '..\..\..\..\packages'
+stages:
+  - stage: Build
+    jobs:
+    - job: A
+      steps:
+      - task: NuGetCommand@2
+        inputs:
+          command: 'restore'
+          restoreSolution: 'source\Devices\Tests\**\*packages.config'
+          feedsToUse: 'select'
+          restoreDirectory: '..\..\..\..\packages'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'build'
-      arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: 'build\$(buildConfiguration)'
-      ArtifactName: '$(Build.BuildNumber)'
-      publishLocation: 'Container'
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+          arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)' 
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: 'build\$(buildConfiguration)'
+          ArtifactName: '$(Build.BuildNumber)'
+          publishLocation: 'Container'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: 'build\tests\$(buildConfiguration)'
-      ArtifactName: 'Tests_$(Build.BuildNumber)'
-      publishLocation: 'Container'
-
-- job: Testing
-  steps:
-  - task: DownloadBuildArtifacts@0
-    inputs:
-      buildType: 'current'
-      downloadType: 'specific'
-      itemPattern: 'Tests_$(Build.BuildNumber)/**'
-      downloadPath: '$(System.ArtifactsDirectory)'
-  - task: VSTest@2
-    inputs:
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: 'Tests.**.dll'
-      searchFolder: '$(System.ArtifactsDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: 'build\tests\$(buildConfiguration)'
+          ArtifactName: 'Tests_$(Build.BuildNumber)'
+          publishLocation: 'Container'
+  
+  - stage: Testing
+    jobs:
+    - job: UnitTests
+      steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          itemPattern: 'Tests_$(Build.BuildNumber)/**'
+          downloadPath: '$(System.ArtifactsDirectory)'
+      - task: VSTest@2
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: 'Tests.**.dll'
+          searchFolder: '$(System.ArtifactsDirectory)'
