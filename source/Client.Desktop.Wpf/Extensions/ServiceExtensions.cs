@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -104,25 +105,24 @@ namespace Client.Desktop.Wpf.Extensions
 
         public static void ConfigureModules(this HostBuilderContext builder, IServiceCollection services)
         {
-            return;
-            //var modules = builder.Configuration.GetSection("Modules")?.GetChildren();
+            var modules = builder.Configuration.GetSection("Modules")?.GetChildren();
 
-            //if (modules != null)
-            //    foreach (var mod in modules)
-            //    {
-            //        var ass = Assembly.LoadFrom(mod.Value);
+            if (modules != null)
+                foreach (var mod in modules)
+                {
+                    var ass = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mod.Value));
 
-            //        var moduleConfig =
-            //            ass.GetTypes().FirstOrDefault(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
+                    var moduleConfig =
+                        ass.GetExportedTypes().FirstOrDefault(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
 
-            //        if (moduleConfig != null)
-            //        {
-            //            var instance = Activator.CreateInstance(moduleConfig);
+                    if (moduleConfig != null)
+                    {
+                        var instance = Activator.CreateInstance(moduleConfig);
 
-            //            moduleConfig
-            //                .GetMethod(nameof(IConfigureModule.Configure))?.Invoke(instance, new object[] {builder, services});
-            //        }
-            //    }
+                        moduleConfig
+                            .GetMethod(nameof(IConfigureModule.Configure))?.Invoke(instance, new object[] { builder, services });
+                    }
+                }
         }
 
         private static void AddReactiveObjects(IServiceCollection services, Assembly assembly)

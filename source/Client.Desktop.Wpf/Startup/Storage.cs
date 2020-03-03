@@ -45,14 +45,15 @@ namespace Client.Desktop.Wpf.Startup
             var db = StorageDefaults.CreateDatabase(connectionString);
             services.AddSingleton(c => db);
 
-            services.AddScoped<EvcVerificationTestService>();
-            services.AddScoped<VerificationViewModelService>();
-            services.AddScoped<IAsyncRepository<EvcVerificationTest>>(c 
+            services.AddSingleton<EvcVerificationTestService>();
+            services.AddSingleton<VerificationViewModelService>();
+
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c 
                 => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
 
             //services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, DeviceTypeCacheSource>();
             services.AddSingleton<DeviceRepository>();
-            services.AddScoped<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(c.GetService<ILiteDatabase>()));
+            services.AddSingleton<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(db));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

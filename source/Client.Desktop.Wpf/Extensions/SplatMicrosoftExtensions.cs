@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Splat;
+using Squirrel;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using SplatILogger = Splat.ILogger;
@@ -92,6 +93,31 @@ namespace Client.Desktop.Wpf.Extensions
             SplatLogLevel logLevel)
         {
             _dotnetLogger.Log(_levels[logLevel], exception, message, type);
+        }
+    }
+
+    public class ProverLogManager : ILogManager
+    {
+        private readonly ILoggerFactory _loggerFactory;
+        private WrappingFullLogger _updateManagerLog;
+
+        public ProverLogManager(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+
+            var logger = _loggerFactory.CreateLogger(typeof(IUpdateManager));
+            var dotNetToSplatLogger = new RxLogging(logger);
+            _updateManagerLog = new WrappingFullLogger(dotNetToSplatLogger);
+        }
+
+        public IFullLogger GetLogger(Type type)
+        {
+            if (type is IUpdateManager)
+                return _updateManagerLog;
+
+            var logger = _loggerFactory.CreateLogger(type);
+            var dotNetToSplatLogger = new RxLogging(logger);
+            return new WrappingFullLogger(dotNetToSplatLogger);
         }
     }
 }

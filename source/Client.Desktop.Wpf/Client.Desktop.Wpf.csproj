@@ -10,29 +10,45 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildOutputDir>..\..\build</BuildOutputDir>
+    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
   </PropertyGroup>
 
+  <!--<Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <ConvertToAbsolutePath Paths="$(BuildPath)">
+      <Output TaskParameter="AbsolutePaths" PropertyName="BuildOutputDir"/>
+    </ConvertToAbsolutePath>
+    <Message Text="Build Output Dir = $(BuildPath)"/>
+  </Target>-->
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
+    <OutputPath>$(BuildPath)\Debug\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Release\</OutputPath>
+    <OutputPath>$(BuildPath)\Release\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
+  <!--<ItemGroup>
+    <Compile Remove="build\**" />
+    <EmbeddedResource Remove="build\**" />
+    <None Remove="build\**" />
+    <Page Remove="build\**" />
+  </ItemGroup>-->
+
   <ItemGroup>
-    <None Remove="appsettings.Developement.json" />
+    <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.Developement.json">
+    <Content Include="appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -66,6 +82,8 @@
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
     <PackageReference Include="Splat" Version="9.3.11" />
+    <PackageReference Include="squirrel.windows" Version="1.9.1" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
@@ -177,8 +195,52 @@
 
   <ItemGroup>
     <Folder Include="Modules\UnionGas\Exporter\" />
+    <Folder Include="Installer\" />
     <Folder Include="ViewModels\Certificates\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="DeltaCompressionDotNet">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.MsDelta">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.MsDelta.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.PatchApi">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.PatchApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\lib\squirrel\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Squirrel">
+      <HintPath>..\lib\squirrel\NuGet.Squirrel.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\lib\squirrel\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="Squirrel">
+      <HintPath>..\lib\squirrel\Squirrel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release'">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <Message Text='Build Output Dir = "$(BuildPath)"'/>
+    <Exec Command="..\..\tools\nuget.exe pack $(BuildPath)..\EvcProver.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(BuildPath) -BasePath $(BuildPath) -Verbosity detailed" />
+    <Exec WorkingDirectory="$(BuildPath)" Command="..\tools\squirrel\squirrel.exe --releasify EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
+  </Target>
 </Project>

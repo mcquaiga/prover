@@ -1,4 +1,4 @@
-name: EvcProver_$(SourceBranchName)_$(Build.BuildId)
+name: EvcProver_$(SourceBranchName)_v$(Date:yy.MM)$(Rev:.r)
 
 trigger:
 - dev
@@ -16,12 +16,10 @@ pool:
   - vstest
 
 variables:
-  solution: 'source\EvcProver.sln'
+  solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Debug'
   verbosityLevel: 'minimal'
-  versionNumber: $(Date:yy.MM).$(Rev:.r)
 
 stages:
   - stage: Building
@@ -31,36 +29,21 @@ stages:
       - task: NuGetCommand@2
         inputs:
           command: 'restore'
-          restoreSolution: 'source\Devices\Tests\**\*packages.config'
+          restoreSolution: '$(Build.Repository.LocalPath)\source\Devices\Tests\**\*packages.config'
           feedsToUse: 'select'
-          restoreDirectory: '..\..\..\..\packages'
+          restoreDirectory: '$(Build.Repository.LocalPath)\packages'
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: 'build\$(buildConfiguration)'
+          PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
           ArtifactName: '$(Build.BuildNumber)'
           publishLocation: 'Container'
-      - task: PublishBuildArtifacts@1
+
+      - task: PublishPipelineArtifact@1
         inputs:
-          PathtoPublish: 'build\tests\$(buildConfiguration)'
-          ArtifactName: 'Tests_$(Build.BuildNumber)'
-          publishLocation: 'Container'
-  
-  - stage: Testing
-    jobs:
-    - job: unitTests
-      steps:
-      - task: DownloadBuildArtifacts@0
-        inputs:
-          buildType: 'current'
-          downloadType: 'specific'
-          itemPattern: 'Tests_$(Build.BuildNumber)/**'
-          downloadPath: '$(System.ArtifactsDirectory)'
-      - task: VSTest@2
-        inputs:
-          testSelector: 'testAssemblies'
-          testAssemblyVer2: 'Tests.**.dll'
-          searchFolder: '$(System.ArtifactsDirectory)'
+          targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+          artifact: 'Tests_$(Build.BuildNumber)'
+          publishLocation: 'pipeline' 

@@ -10,7 +10,6 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         public HomeViewModel(IScreenManager screen, IEnumerable<IMainMenuItem> appMainMenus) : base(screen)
         {
-            
             HostScreen = screen;
             AppMainMenus = appMainMenus.OrderBy(x => x.Order).ToList();
         }

@@ -36,10 +36,7 @@ namespace Client.Desktop.Wpf.Startup
             UserInterface.AddServices(services, host);
             DeviceServices.AddServices(services, host);
 
-            if (host.HostingEnvironment.EnvironmentName != Environments.Development)
-            {
-                //UpdaterService.AddServices(services, host);
-            }
+            UpdaterService.AddServices(services, host);
         }
 
 
@@ -66,10 +63,13 @@ namespace Client.Desktop.Wpf.Startup
             Host.CreateDefaultBuilder()
                 .ConfigureLogging((host, log) =>
                 {
+                    log.AddEventLog();
 #if DEBUG
                     log.Services.AddSplatLogging();
                     log.AddDebug();
 #endif
+
+
                 })
                 .ConfigureServices((host, services) =>
                 {

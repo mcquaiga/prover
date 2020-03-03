@@ -34,7 +34,7 @@ namespace Prover.Modules.UnionGas
         /// Initializes a new instance of the <see cref="DCRWebServiceCommunicator"/> class.
         /// </summary>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceSoap"/></param>
-        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService, ILogger log)
+        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService, ILogger<DCRWebServiceCommunicator> log)
         {
             _dcrWebService = dcrWebService;
             _log = log;

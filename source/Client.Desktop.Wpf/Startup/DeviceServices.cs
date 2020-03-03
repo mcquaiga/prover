@@ -29,13 +29,13 @@ namespace Client.Desktop.Wpf.Startup
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
-            services.AddTransient<TestManagerViewModel>();
-            services.AddTransient<ITestManagerViewModelFactory, TestManagerViewModel>();
+            services.AddTransient<TestManager>();
+            services.AddTransient<ITestManagerViewModelFactory, TestManager>();
 
-            services.AddTransient<VolumeTestManager>();
+            //services.AddTransient<VolumeTestManager>();
             services.AddTransient<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
 
-            services.AddScoped<DeviceSessionManager>();
+            services.AddSingleton<IDeviceSessionManager, DeviceSessionManager>();
 
             // Port Setup
             var portFactory = new CommPortFactory();
@@ -46,7 +46,7 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<ICommClientFactory>(c => clientFactory);
 
             //Tachometer
-
+            //services.AddScoped<ITachometerService, TachometerService>();
 
             /*
              * DAQ Board Setup 

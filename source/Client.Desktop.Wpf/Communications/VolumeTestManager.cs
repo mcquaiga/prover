@@ -20,7 +20,7 @@ namespace Client.Desktop.Wpf.Communications
     public interface IVolumeTestManagerFactory
     {
         //VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
-        VolumeTestManager CreateInstance(DeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
+        VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
             string tachPortName = null);
     }
 
@@ -35,15 +35,15 @@ namespace Client.Desktop.Wpf.Communications
 
         protected IObservable<VolumeTestStatusMessage> TestStatusObservable;
 
-        internal VolumeTestManager(ILogger logger,
+        internal VolumeTestManager(ILogger<VolumeTestManager> logger,
             DialogServiceManager dialogService,
-            DeviceSessionManager deviceManager,
+            IDeviceSessionManager deviceManager,
             ITachometerService tachometerService,
             PulseInputsListenerService pulseListenerService,
             VolumeViewModelBase volumeTest,
             IOutputChannel motorControl)
         {
-            _logger = logger ?? NullLogger.Instance;
+            _logger = logger ?? NullLogger<VolumeTestManager>.Instance;
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(DialogServiceManager));
             _motorControl = motorControl ?? throw new ArgumentNullException(nameof(motorControl));
 
@@ -60,7 +60,7 @@ namespace Client.Desktop.Wpf.Communications
         [Reactive] public ReactiveCommand<Unit, Unit> StartVolumeTest { get; protected set; }
 
         public VolumeViewModelBase VolumeTest { get; protected set; }
-        public DeviceSessionManager DeviceManager { get; protected set; }
+        public IDeviceSessionManager DeviceManager { get; protected set; }
 
         public async Task RunAsync()
         {

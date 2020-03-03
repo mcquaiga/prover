@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core.GasCalculations\Core.GasCalculations.csproj" />
+    <ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
   </ItemGroup>
 
 </Project>
