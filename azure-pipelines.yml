@@ -36,11 +36,18 @@ stages:
         inputs:
           command: 'build'
           arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
-      - task: PublishBuildArtifacts@1
+          
+      - task: PublishPipelineArtifact@1
         inputs:
-          PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-          ArtifactName: '$(Build.BuildNumber)'
-          publishLocation: 'Container'
+          targetPath: '$(Pipeline.Workspace)\build\$(buildConfiguration)'
+          artifact: '$(Build.BuildNumber)'
+          publishLocation: 'pipeline'
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Pipeline.Workspace)\build\*.nupkg'
+          artifact: '$(Build.BuildNumber).nupkg'
+          publishLocation: 'pipeline'
 
       - task: PublishPipelineArtifact@1
         inputs:
