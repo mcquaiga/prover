@@ -10,15 +10,22 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildOutputDir>..\..\build\</BuildOutputDir>
+    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
   </PropertyGroup>
 
+  <!--<Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <ConvertToAbsolutePath Paths="$(BuildPath)">
+      <Output TaskParameter="AbsolutePaths" PropertyName="BuildOutputDir"/>
+    </ConvertToAbsolutePath>
+    <Message Text="Build Output Dir = $(BuildPath)"/>
+  </Target>-->
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
+    <OutputPath>$(BuildPath)\Debug\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Release\</OutputPath>
+    <OutputPath>$(BuildPath)\Release\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -226,11 +233,14 @@
     </Reference>
   </ItemGroup>
 
+
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
-    <Exec Command="..\..\tools\nuget.exe pack $(BuildOutputDir)\EvcProver.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(BuildOutputDir) -BasePath $(BuildOutputDir) -Verbosity detailed" />
-    <Exec WorkingDirectory="$(BuildOutputDir)" Command="..\tools\squirrel\squirrel.exe --releasify EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
+    <Message Text='Build Output Dir = "$(BuildPath)"'/>
+    <Exec Command="..\..\tools\nuget.exe pack $(BuildPath)..\EvcProver.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(BuildPath) -BasePath $(BuildPath) -Verbosity detailed" />
+    <Exec WorkingDirectory="$(BuildPath)" Command="..\tools\squirrel\squirrel.exe --releasify EvcProver.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
   </Target>
 </Project>
