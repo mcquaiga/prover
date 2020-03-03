@@ -16,7 +16,7 @@ pool:
   - vstest
 
 variables:
-  solution: 'source\EvcProver.sln'
+  solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
@@ -29,22 +29,22 @@ stages:
       - task: NuGetCommand@2
         inputs:
           command: 'restore'
-          restoreSolution: 'source\Devices\Tests\**\*packages.config'
+          restoreSolution: '$(Build.Repository.LocalPath)\source\Devices\Tests\**\*packages.config'
           feedsToUse: 'select'
-          restoreDirectory: '..\..\..\..\packages'
+          restoreDirectory: '$(Build.Repository.LocalPath)\packages'
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
           arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: 'build\$(buildConfiguration)'
+          PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
           ArtifactName: '$(Build.BuildNumber)'
           publishLocation: 'Container'
 
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: 'build\tests\$(buildConfiguration)'
+          targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
           artifact: 'Tests_$(Build.BuildNumber)'
           publishLocation: 'pipeline'
       
