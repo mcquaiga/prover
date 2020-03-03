@@ -70,8 +70,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Application", "Tests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{DF087FF4-7AC1-4423-AC12-638B206D4684}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Installer", "Prover.Installer\Prover.Installer.csproj", "{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Modules.UnionGas", "Prover.Modules.UnionGas\Prover.Modules.UnionGas.csproj", "{37F544C0-FB4C-4ADA-9200-E54CD85E8AC7}"
 EndProject
 Global
@@ -588,30 +586,6 @@ Global
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhone.Build.0 = Release|Any CPU
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{F437379B-8C22-4674-B038-36734091F480}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|iPhone.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|iPhone.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.MiProtocolConsole|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|iPhone.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|iPhone.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release - Union Gas|iPhoneSimulator.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|iPhone.Build.0 = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{2DD01F20-21FF-4CB4-834E-3DFAE1EE22C7}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{37F544C0-FB4C-4ADA-9200-E54CD85E8AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37F544C0-FB4C-4ADA-9200-E54CD85E8AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37F544C0-FB4C-4ADA-9200-E54CD85E8AC7}.Debug|iPhone.ActiveCfg = Debug|Any CPU
