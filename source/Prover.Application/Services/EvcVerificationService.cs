@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -26,22 +27,27 @@ namespace Prover.Application.Services
         public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
         {
             _verificationRepository = verificationRepository;
-
-            VerificationTests = _tests.Connect().RemoveKey().AsObservableList();
-
-            //var dbQuery = GetTests()
-            //    .Subscribe(test => { _tests.Edit(innerCache => { innerCache.AddOrUpdate(test); }); });
-
-            _cleanup = new CompositeDisposable();
+            VerificationTests = _tests;
         }
 
-        public IObservableList<EvcVerificationTest> VerificationTests { get; }
+        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; }
 
         public async Task<EvcVerificationTest> AddOrUpdateVerificationTest(EvcVerificationTest evcVerificationTest)
         {
             await _verificationRepository.AddAsync(evcVerificationTest);
 
             return evcVerificationTest;
+        }
+
+        public IObservableCache<EvcVerificationTest, Guid> FetchTests()
+        {
+            var allTests = GetTests().Publish();
+
+            VerificationTests = allTests.AsObservableCache();
+
+            _cleanup = new CompositeDisposable(VerificationTests, allTests.Connect());
+
+            return VerificationTests;
         }
 
         public IObservable<EvcVerificationTest> AllNotExported()
@@ -52,9 +58,9 @@ namespace Prover.Application.Services
         public EvcVerificationTestCreator Factory(DeviceInstance device) =>
             new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
 
-        private IObservable<EvcVerificationTest> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
+        private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
         {
-            return _verificationRepository.List();
+            return _verificationRepository.List().ToObservableChangeSet(t => t.Id);
         }
 
         //private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTestChangeSetObservable()

@@ -8,7 +8,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// <summary>
     /// Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class TestManagerView : ReactiveUserControl<TestManagerViewModel>
+    public partial class TestManagerView : ReactiveUserControl<TestManager>
     {
         public TestManagerView()
         {

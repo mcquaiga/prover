@@ -18,7 +18,35 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Communications
 {
-    public class DeviceSessionManager : DialogViewModel
+    public interface IDeviceSessionManager
+    {
+        DeviceInstance Device { get; }
+        DeviceType DeviceType { get; }
+        bool SessionInProgress { get; }
+
+        Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items,
+            IObserver<ItemReadStatusMessage> itemsObserver = null);
+
+        Task EndSession();
+
+        Task<IEnumerable<ItemValue>> GetItemValues();
+        Task LiveReadItem();
+
+        /// <summary>
+        ///     Configures required resources for device communication
+        ///     Tries to connect to device and download full item file
+        ///     A device instance will be available in Instance when done
+        /// </summary>
+        /// <param name="deviceType"></param>
+        /// <param name="commPortName"></param>
+        /// <param name="baudRate"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        Task<DeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
+            ReactiveObject owner);
+    }
+
+    public class DeviceSessionManager : DialogViewModel, IDeviceSessionManager
     {
         private readonly ICommClientFactory _commClientFactory;
         private readonly ICommPortFactory _commPortFactory;
@@ -71,7 +99,16 @@ namespace Client.Desktop.Wpf.Communications
             SessionInProgress = false;
         }
 
-        internal async Task LiveReadItem()
+        public async Task<IEnumerable<ItemValue>> GetItemValues()
+        {
+            await Connect();
+            _dialogViewModel.StatusText = "Downloading items ...";
+            var itemValues = await _activeClient.GetItemsAsync();
+            await Disconnect();
+            return itemValues;
+        }
+
+        public async Task LiveReadItem()
         {
             var obser = new Subject<ItemValue>();
 
@@ -130,15 +167,6 @@ namespace Client.Desktop.Wpf.Communications
             }
 
             return this;
-        }
-
-        internal async Task<IEnumerable<ItemValue>> GetItemValues()
-        {
-            await Connect();
-            _dialogViewModel.StatusText = "Downloading items ...";
-            var itemValues = await _activeClient.GetItemsAsync();
-            await Disconnect();
-            return itemValues;
         }
 
         private async Task Connect()

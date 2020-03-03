@@ -9,7 +9,6 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// <summary>
     /// Interaction logic for VerificationTest.xaml
     /// </summary>
-    [SingleInstanceView]
     public partial class NewTestView : ReactiveUserControl<NewTestViewModel>
     {
         public NewTestView()

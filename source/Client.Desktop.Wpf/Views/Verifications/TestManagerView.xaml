@@ -9,11 +9,11 @@
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:verifications="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
     x:Name="TestManager"
-    d:DataContext="{d:DesignInstance verifications:TestManagerViewModel,
+    d:DataContext="{d:DesignInstance verifications:TestManager,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="verifications:TestManagerViewModel"
+    x:TypeArguments="verifications:TestManager"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="CorrectionTestStyles" TargetType="{x:Type ItemsControl}">

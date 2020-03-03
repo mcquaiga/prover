@@ -36,12 +36,12 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <None Remove="appsettings.Developement.json" />
+    <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.Developement.json">
+    <Content Include="appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -76,6 +76,7 @@
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
     <PackageReference Include="Splat" Version="9.3.11" />
     <PackageReference Include="squirrel.windows" Version="1.9.1" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 

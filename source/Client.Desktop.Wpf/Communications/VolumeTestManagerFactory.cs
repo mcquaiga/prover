@@ -24,7 +24,8 @@ namespace Client.Desktop.Wpf.Communications
         {
         }
 
-        public VolumeTestManagerFactory(ILoggerFactory loggerFactory,
+        public VolumeTestManagerFactory(
+            ILoggerFactory loggerFactory,
             DialogServiceManager dialogService,
             PulseInputsListenerService pulseListenerService,
             Func<OutputChannelType, IOutputChannel> outputChannelFactory)
@@ -35,10 +36,10 @@ namespace Client.Desktop.Wpf.Communications
             _outputChannelFactory = outputChannelFactory;
         }
 
-        public VolumeTestManager CreateInstance(DeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
+        public VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
             string tachPortName = null)
         {
-            var logger = _loggerFactory.CreateLogger(typeof(VolumeTestManager));
+            var logger = _loggerFactory.CreateLogger<VolumeTestManager>();
             var tachometerService = GetTachometerService(tachPortName);
             var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>());
             var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
@@ -46,6 +47,7 @@ namespace Client.Desktop.Wpf.Communications
             return new VolumeTestManager(logger, _dialogService, deviceManager, tachometerService,
                 pulseInputListener, volumeTest, motorControl);
         }
+
 
         private PulseInputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems)
         {

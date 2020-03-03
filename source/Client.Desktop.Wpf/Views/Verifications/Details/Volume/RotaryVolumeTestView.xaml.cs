@@ -31,10 +31,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                     Disposable.Create(() =>
                     {
                         UncorrectedVolumeContent.DisposeWith(d);
-                        UncorrectedVolumeContent = null;
-                        
                         CorrectedVolumeContent.DisposeWith(d);
-                        CorrectedVolumeContent = null;
                     }).DisposeWith(d);
                 });
         }

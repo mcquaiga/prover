@@ -28,9 +28,13 @@ namespace Client.Desktop.Wpf.Startup
             _logger = logger;
             _releasePath = releasePath;
 
-            //var splatLogger = new RxLogging(_logger);
-            //var splatLog = new WrappingFullLogger(splatLogger);
-            //Splat.Locator.CurrentMutable.Register(() => splatLog, typeof(Splat.ILogger));
+            var splatLogger = new RxLogging(_logger);
+            var splatLog = new WrappingFullLogger(splatLogger);
+            var logManager = Locator.Current.GetService<ILogManager>((string)null);
+            
+            var sLog = logManager.GetLogger<UpdateManager>();
+
+            Locator.CurrentMutable.Register(() => splatLog, typeof(Splat.ILogger));
         }
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
@@ -38,11 +42,16 @@ namespace Client.Desktop.Wpf.Startup
             var path = host.Configuration.GetValue<string>(AppSettingsReleasesConfigKey);
             var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
 
+            if (string.IsNullOrEmpty(path)) return;
+
             services.AddHostedService(c =>
                 ActivatorUtilities.CreateInstance<UpdaterService>(c,
                     path,
                     cronTime,
                     TimeZoneInfo.Local));
+
+            services.AddSingleton<ILogManager, ProverLogManager>();
+            //services.AddSingleton<ILogger<UpdateManager>>(c => )
         }
 
         public override async Task DoWork(CancellationToken cancellationToken)
@@ -62,14 +71,13 @@ namespace Client.Desktop.Wpf.Startup
         private async Task CheckForUpdate(CancellationToken cancellationToken)
         {
             using var mgr = await GetUpdateManager();
-
-            await mgr.UpdateApp();
-            //var updateInfo = await mgr.CheckForUpdate();
-            //if (updateInfo.ReleasesToApply.Any())
-            //{
-                
-            //    MessageBox.Show("Update applied.");
-            //}
+            
+            var updateInfo = await mgr.CheckForUpdate();
+            if (updateInfo.ReleasesToApply.Any())
+            {
+                await mgr.UpdateApp();
+                MessageBox.Show("Update applied.");
+            }
         }
 
         private async Task<UpdateManager> GetUpdateManager()

@@ -27,7 +27,6 @@ namespace Prover.Application.Services
 
         public VerificationViewModelService(EvcVerificationTestService testService)
         {
-       
             _testService = testService;
             _verificationTestCreator = new VerificationViewModelTestCreator();
 

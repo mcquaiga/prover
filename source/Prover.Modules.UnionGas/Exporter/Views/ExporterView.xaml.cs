@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using System.Reactive.Disposables;
+using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -10,6 +11,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public ExporterView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                this.OneWayBind(ViewModel, vm => vm.VisibleTests, v => v.VisibleItemsListBox.ItemsSource).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource)
+                    .DisposeWith(d);
+               
+            });
         }
     }
 }

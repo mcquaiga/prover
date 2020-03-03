@@ -27,7 +27,9 @@ namespace Client.Desktop.Wpf.Views.Verifications
 
                     Disposable.Create(() =>
                     {
-                        TestPointItems.ItemsSource = null;
+                        if (TestPointItems != null)
+                            TestPointItems.ItemsSource = null;
+
                         TestPointItems = null;
                     }).DisposeWith(d);
                 });

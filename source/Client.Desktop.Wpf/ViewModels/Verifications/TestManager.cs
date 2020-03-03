@@ -22,21 +22,17 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public interface ITestManagerViewModelFactory
+
+
+    public partial class TestManager : RoutableViewModelBase, IRoutableViewModel, IDisposable, IDialogViewModel
     {
-        Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
-            string tachPortName);
-    }
-    
-    public partial class TestManagerViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IDialogViewModel
-    {
-        private readonly DeviceSessionManager _deviceManager;
+        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
+        private readonly IDeviceSessionManager _deviceManager;
         private readonly DialogServiceManager _dialogService;
         private readonly ILogger _logger;
         private readonly IScreenManager _screenManager;
         private readonly VerificationViewModelService _testViewModelService;
         private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
-        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
         [Reactive] public EvcVerificationViewModel TestViewModel { get; protected set; }
 
@@ -52,15 +48,13 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public override string UrlPathSegment => "/VerificationTests/Details";
         public override IScreen HostScreen => _screenManager;
 
+        public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
+        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+        public bool IsDialogOpen { get; }
+
         public async Task Complete()
         {
             //await SaveCurrentState();
-        }
-
-        public void Dispose()
-        {
-            _logger.LogDebug($"Disposing instance created at {_dateCreated}." );
-            _cleanup?.Dispose();
         }
 
         public async Task DownloadItems(VerificationTestPointViewModel test)
@@ -79,6 +73,12 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             }
         }
 
+        protected override void Disposing()
+        {
+            _logger.LogDebug($"Disposing instance created at {_dateCreated}.");
+            _cleanup?.Dispose();
+        }
+
         private ICollection<ItemMetadata> GetItemsToDownload(CompositionType compType)
         {
             var items = new List<ItemMetadata>();
@@ -95,13 +95,17 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             return items;
         }
 
+        private async Task Reset()
+        {
+            await _deviceManager.EndSession();
+        }
+
         private void RunNavigatingAwayActions()
         {
-            
             // Ask if they want to save
         }
 
-        private void SetupRxUi()
+        protected void SetupRxUi()
         {
             SaveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -114,7 +118,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
             DownloadCommand.ThrownExceptions.LogErrors("Error downloading items from instrument.").Subscribe();
 
-            PrintTestReport = ReactiveCommand.CreateFromObservable(() => MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
+            PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
+                MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
 
             RunVolumeTest = ReactiveCommand.CreateFromTask(VolumeTestManager.RunAsync);
 
@@ -130,77 +135,16 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             DownloadCommand.DisposeWith(_cleanup);
             PrintTestReport.DisposeWith(_cleanup);
             RunVolumeTest.DisposeWith(_cleanup);
-            
+
             void SetupAutoSave()
             {
                 DownloadCommand
                     .InvokeCommand(SaveCommand);
 
                 //this.WhenAnyValue(x => x.TestViewModel);
-
             }
         }
-
-        async Task Reset()
-        {
-            await _deviceManager.EndSession();
-        }
-
-        public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
-        public bool IsDialogOpen { get; }
     }
 
-    public partial class TestManagerViewModel : ITestManagerViewModelFactory
-    {
-        private readonly DateTime _dateCreated;
-
-        public TestManagerViewModel(ILoggerFactory loggerFactory,
-            IScreenManager screenManager,
-            DeviceSessionManager deviceManager,
-            VerificationViewModelService testViewModelService,
-            DialogServiceManager dialogService,
-            IVolumeTestManagerFactory volumeTestManagerFactory) : base(screenManager)
-        {
-            _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
-
-            _screenManager = screenManager;
-            _deviceManager = deviceManager;
-            _testViewModelService = testViewModelService;
-            _dialogService = dialogService;
-            _volumeTestManagerFactory = volumeTestManagerFactory;
-
-            _dateCreated = DateTime.Now;
-
-            this.WhenNavigatingFromObservable()
-                .Subscribe(async _ =>
-                {
-                    _logger.LogDebug($"Navigating away from Cleaning up.");
-                    await _deviceManager.EndSession();
-                    RunNavigatingAwayActions();
-                })
-                .DisposeWith(_cleanup);
-        }
-
-        public async Task<TestManagerViewModel> StartNew(DeviceType deviceType, string commPortName, int baudRate,
-            string tachPortName)
-        {
-            if (_deviceManager.SessionInProgress) await Reset();
-
-            await _deviceManager.StartSession(deviceType, commPortName, baudRate, null);
-            
-            TestViewModel = _testViewModelService.NewTest(_deviceManager.Device);
-            TestViewModel.DisposeWith(_cleanup);
-
-            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
-            VolumeTestManager.DisposeWith(_cleanup);
-
-            SetupRxUi();
-
-            await _screenManager.ChangeView(this);
-            
-            return this;
-        }
-    }
-
+    
 }

@@ -20,7 +20,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
     public class NewTestViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IActivatableViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
-        [Reactive] public TestManagerViewModel TestManager { get; set; }
+        [Reactive] public TestManager TestManager { get; set; }
 
         public NewTestViewModel(IScreenManager screenManager,
             ITestManagerViewModelFactory testManagerViewModelFactory,
