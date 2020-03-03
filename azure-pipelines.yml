@@ -75,4 +75,4 @@ stages:
             !Tests.Shared.dll
             !Tests.Core.GasCalculations.dll
           searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
-          otherConsoleOptions: '/Framework:.NETFramework,Version=v4.7'
+          otherConsoleOptions: '/Framework:.NETFramework,Version=v4.7.2'
