@@ -39,13 +39,13 @@ stages:
           
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Pipeline.Workspace)\build\$(buildConfiguration)'
+          targetPath: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
           artifact: '$(Build.BuildNumber)'
           publishLocation: 'pipeline'
 
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Pipeline.Workspace)\build\*.nupkg'
+          targetPath: '$(Build.Repository.LocalPath)\build\*.nupkg'
           artifact: '$(Build.BuildNumber).nupkg'
           publishLocation: 'pipeline'
 
