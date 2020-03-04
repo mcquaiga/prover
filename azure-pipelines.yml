@@ -1,4 +1,4 @@
-name: EvcProver_$(SourceBranchName)_v$(VersionNumber)
+name: $(Date:yy.MM)$(Rev:.r)
 
 trigger:
 - dev
@@ -35,12 +35,12 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) -p:Version=$(VersionNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=$(Build.BuildNumber)--configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
           
       - task: PublishPipelineArtifact@1
         inputs:
           targetPath: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-          artifact: '$(Build.BuildNumber)'
+          artifact: 'Release'
           publishLocation: 'pipeline'
 
       - task: PublishPipelineArtifact@1
@@ -52,5 +52,5 @@ stages:
       - task: PublishPipelineArtifact@1
         inputs:
           targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-          artifact: 'Tests_$(Build.BuildNumber)'
+          artifact: 'Tests)'
           publishLocation: 'pipeline' 
