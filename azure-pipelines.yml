@@ -45,8 +45,8 @@ stages:
 
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Build.Repository.LocalPath)\build\*.nupkg'
-          artifact: '$(Build.BuildNumber).nupkg'
+          targetPath: '$(Build.Repository.LocalPath)\EvcProver.nuspec'
+          artifact: 'EvcProver.nuspec'
           publishLocation: 'pipeline'
 
       - task: PublishPipelineArtifact@1
