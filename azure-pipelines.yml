@@ -19,7 +19,7 @@ variables:
   solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
   project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
   buildPlatform: 'Any CPU'
-  verbosityLevel: 'minimal'
+  verbosityLevel: 'detailed'
 
 stages:
   - stage: Building
@@ -35,7 +35,7 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=$(Date:yy.MM)$(Rev:.r).0 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
           
       - task: PublishPipelineArtifact@1
         inputs:
