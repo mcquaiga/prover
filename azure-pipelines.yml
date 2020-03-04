@@ -52,5 +52,5 @@ stages:
       - task: PublishPipelineArtifact@1
         inputs:
           targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-          artifact: 'Tests)'
+          artifact: 'Tests'
           publishLocation: 'pipeline' 
