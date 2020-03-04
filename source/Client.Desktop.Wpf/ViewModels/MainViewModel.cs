@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens.Dialogs;
@@ -46,6 +47,8 @@ namespace Client.Desktop.Wpf.ViewModels
             //    .ToPropertyEx(this, x => x.CurrentViewModel);
         }
 
+        public string AppTitle { get; } = $"EVC Prover - v{GetVersionNumber()}";
+
         public IRoutableViewModel HomeViewModel { get; }
 
         [Reactive] public ICollection<INavigationItem> NavigationItems { get; protected set; }
@@ -67,6 +70,13 @@ namespace Client.Desktop.Wpf.ViewModels
         public void ShowHome()
         {
             GoNext.Execute(HomeViewModel);
+        }
+
+        private static string GetVersionNumber()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersionInfo.FileVersion;
         }
     }
 

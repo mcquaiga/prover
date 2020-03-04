@@ -23,6 +23,7 @@ namespace Client.Desktop.Wpf.Views
 
             this.WhenActivated(d =>
             {
+                this.OneWayBind(ViewModel, x => x.AppTitle, x => x.MainWindowView.Title).DisposeWith(d);
                 // Bind the view model router to RoutedViewHost.Router property.
                 this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router).DisposeWith(d);
                 this.OneWayBind(ViewModel, x => x.DialogManager.DialogContent, x => x.DialogHost.DialogContent).DisposeWith(d);
