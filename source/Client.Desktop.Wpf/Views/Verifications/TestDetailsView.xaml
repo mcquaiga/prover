@@ -26,57 +26,65 @@
             </Border>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Grid.Row="1" Margin="5">
+
+    <Grid Margin="5" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
         <Viewbox Grid.Column="0" Stretch="Uniform">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
         </Viewbox>
 
-        <Viewbox
-            x:Name="TestPointsViewBox"
+        <ScrollViewer
             Grid.Column="1"
-            Stretch="Uniform">
-            <Grid VerticalAlignment="Center">
-                <Grid.RowDefinitions>
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            VerticalScrollBarVisibility="Auto">
+            <Viewbox
+                x:Name="TestPointsViewBox"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Stretch="Uniform">
+                <Grid VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
 
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <ItemsControl
-                    x:Name="TestPointItems"
-                    Grid.Row="0"
-                    DataContext="{Binding}"
-                    ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Rows="1" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                    <ItemsControl
+                        x:Name="TestPointItems"
+                        Grid.Row="0"
+                        DataContext="{Binding}"
+                        ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
 
-                <Border
-                    Grid.Row="1"
-                    Padding="4"
-                    VerticalAlignment="Stretch"
-                    Style="{StaticResource SubSectionDividerBorder}">
-                    <StackPanel Orientation="Vertical">
-                        <ContentControl
-                            x:Name="VolumeTestContent"
-                            HorizontalAlignment="Center"
-                            ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                    <Border
+                        Grid.Row="1"
+                        Padding="4"
+                        VerticalAlignment="Stretch"
+                        Style="{StaticResource SubSectionDividerBorder}">
+                        <StackPanel Orientation="Vertical">
+                            <ContentControl
+                                x:Name="VolumeTestContent"
+                                HorizontalAlignment="Center"
+                                ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
-                        <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
-                    </StackPanel>
-                    <!--  Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}"  -->
-                </Border>
-            </Grid>
+                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                        </StackPanel>
+                        <!--  Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}"  -->
+                    </Border>
+                </Grid>
 
-        </Viewbox>
+            </Viewbox>
+        </ScrollViewer>
 
     </Grid>
 
