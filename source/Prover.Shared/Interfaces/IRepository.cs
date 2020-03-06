@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Prover.Shared.Interfaces
@@ -13,5 +14,7 @@ namespace Prover.Shared.Interfaces
         bool Delete(T entity);
 
         IEnumerable<T> GetAll();
+
+        T Get(Guid id);
     }
 }

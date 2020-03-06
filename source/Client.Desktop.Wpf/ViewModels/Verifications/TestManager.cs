@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Interactions;
@@ -11,7 +13,6 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
@@ -22,8 +23,6 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-
-
     public partial class TestManager : RoutableViewModelBase, IRoutableViewModel, IDisposable, IDialogViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
@@ -57,26 +56,92 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             //await SaveCurrentState();
         }
 
-        public async Task DownloadItems(VerificationTestPointViewModel test)
+        public async Task RunCorrectionTests(VerificationTestPointViewModel test)
         {
             var toDownload = GetItemsToDownload(_deviceManager.Device.Composition());
 
-            var values = await _deviceManager.DownloadCorrectionItems(toDownload);
+            //Wait for temperature/pressure to stabilize
+            await StabilizeLiveReadings(test);
 
-            test.UpdateItemValues(values);
+            //var values = await _deviceManager.DownloadCorrectionItems(toDownload);
 
-            foreach (var correction in test.GetCorrectionTests())
+            //test.UpdateItemValues(values);
+
+            //foreach (var correction in test.GetCorrectionTests())
+            //{
+            //    var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+            //    itemType?.SetValue(correction,
+            //        _deviceManager.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            //}
+        }
+
+        private async Task StabilizeLiveReadings(VerificationTestPointViewModel test)
+        {
+            var liveItems = new Dictionary<ItemMetadata, AveragedReadingStabilizer>();
+            var toDownload = GetItemsToDownload(_deviceManager.Device.Composition());
+            var items = new List<ItemMetadata>();
+
+            if (test.Pressure != null)
             {
-                var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
-                itemType?.SetValue(correction,
-                    _deviceManager.DeviceType.GetGroupValues(values, itemType.PropertyType));
+                var pressureItem = toDownload.First(i => i.IsLiveReadPressure == true);
+                liveItems.Add(pressureItem, new AveragedReadingStabilizer(test.Pressure.GetTotalGauge()));
+                items.Add(pressureItem);
             }
+            
+            if (test.Temperature != null)
+            {
+                var tempItem = toDownload.First(i => i.IsLiveReadTemperature == true);
+                liveItems.Add(tempItem, new AveragedReadingStabilizer(test.Temperature.Gauge));
+                items.Add(tempItem);
+            }
+
+            await _deviceManager.LiveReadItem(items, new CancellationTokenSource());
         }
 
         protected override void Disposing()
         {
             _logger.LogDebug($"Disposing instance created at {_dateCreated}.");
             _cleanup?.Dispose();
+        }
+
+        protected void SetupRxUi()
+        {
+            SaveCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var success = await _testViewModelService.AddOrUpdate(TestViewModel);
+                if (success) await NotificationInteractions.SnackBarMessage.Handle("Saved Successfully!");
+                return success;
+            });
+            SaveCommand.ThrownExceptions.LogErrors("Error saving test.").Subscribe();
+
+            DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(RunCorrectionTests);
+            DownloadCommand.ThrownExceptions.LogErrors("Error downloading items from instrument.").Subscribe();
+
+            PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
+                MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
+
+            RunVolumeTest = ReactiveCommand.CreateFromTask(VolumeTestManager.RunAsync);
+
+            CompleteTest = ReactiveCommand.CreateFromTask(async () =>
+            {
+                await SaveCommand.Execute();
+                await _deviceManager.EndSession();
+            });
+
+            SetupAutoSave();
+
+            SaveCommand.DisposeWith(_cleanup);
+            DownloadCommand.DisposeWith(_cleanup);
+            PrintTestReport.DisposeWith(_cleanup);
+            RunVolumeTest.DisposeWith(_cleanup);
+
+            void SetupAutoSave()
+            {
+                //DownloadCommand
+                //    .InvokeCommand(SaveCommand);
+
+                //this.WhenAnyValue(x => x.TestViewModel);
+            }
         }
 
         private ICollection<ItemMetadata> GetItemsToDownload(CompositionType compType)
@@ -104,47 +169,5 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         {
             // Ask if they want to save
         }
-
-        protected void SetupRxUi()
-        {
-            SaveCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var success = await _testViewModelService.AddOrUpdate(TestViewModel);
-                if (success) await NotificationInteractions.SnackBarMessage.Handle("Saved Successfully!");
-                return success;
-            });
-            SaveCommand.ThrownExceptions.LogErrors("Error saving test.").Subscribe();
-
-            DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(DownloadItems);
-            DownloadCommand.ThrownExceptions.LogErrors("Error downloading items from instrument.").Subscribe();
-
-            PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
-                MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
-
-            RunVolumeTest = ReactiveCommand.CreateFromTask(VolumeTestManager.RunAsync);
-
-            CompleteTest = ReactiveCommand.CreateFromTask(async () =>
-            {
-                await SaveCommand.Execute();
-                await _deviceManager.EndSession();
-            });
-
-            SetupAutoSave();
-
-            SaveCommand.DisposeWith(_cleanup);
-            DownloadCommand.DisposeWith(_cleanup);
-            PrintTestReport.DisposeWith(_cleanup);
-            RunVolumeTest.DisposeWith(_cleanup);
-
-            void SetupAutoSave()
-            {
-                DownloadCommand
-                    .InvokeCommand(SaveCommand);
-
-                //this.WhenAnyValue(x => x.TestViewModel);
-            }
-        }
     }
-
-    
 }

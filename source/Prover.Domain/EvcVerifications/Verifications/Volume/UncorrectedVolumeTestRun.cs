@@ -2,27 +2,19 @@
 
 namespace Prover.Domain.EvcVerifications.Verifications.Volume
 {
-    
-    public class UncorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>
+    public class UncorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>, IPulseOutputVerification
     {
-        private UncorrectedVolumeTestRun() {}
-
-        #region Public Properties
-
-        public UncorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified, decimal appliedInput) 
-            : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
+        private UncorrectedVolumeTestRun()
         {
-            AppliedInput = appliedInput;
         }
+
+        public UncorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue,
+            decimal actualValue, decimal percentError, bool verified, decimal appliedInput)
+            : base(startValues, endValues, expectedValue, actualValue, percentError, verified) =>
+            AppliedInput = appliedInput;
 
         public decimal AppliedInput { get; set; }
 
-        #endregion
-
-        //public void Calculate(IVolumeInputType driveInputType)
-        //{
-        //    ActualValue = VolumeCalculator.TotalVolume(StartValues.UncorrectedReading, EndValues.UncorrectedReading);
-        //    ExpectedValue = driveInputType.UnCorrectedInputVolume(AppliedInput);
-        //}
+        public PulseOutputVerification PulseOutputTest { get; set; }
     }
 }

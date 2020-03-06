@@ -8,14 +8,20 @@ using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable
+    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable, IRoutableViewModel
     {
-        private EvcVerificationViewModel()
+        //private EvcVerificationViewModel()
+        //{
+        //}
+
+        public EvcVerificationViewModel()
         {
+
         }
 
         [Reactive] public DeviceInstance Device { get; set; }
@@ -51,6 +57,9 @@ namespace Prover.Application.ViewModels
             OtherTests.ForEach(t => t.DisposeWith(Cleanup));
             Tests.Clear();
         }
+
+        public string UrlPathSegment { get; }
+        public IScreen HostScreen { get; }
     }
 
     public class DeviceInfoViewModel

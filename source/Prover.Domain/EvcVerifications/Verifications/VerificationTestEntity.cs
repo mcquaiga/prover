@@ -3,20 +3,19 @@ using Prover.Shared.Domain;
 
 namespace Prover.Domain.EvcVerifications.Verifications
 {
-    public class VerificationEntity : BaseEntity, IVerification
+    public interface IVerification<out TValue> : IVerification
     {
-        public VerificationEntity() { }
-
-        #region Public Properties
-
-
-        public virtual bool Verified { get; protected set; } = false;
-
-        #endregion
+        TValue ExpectedValue { get; }
+        TValue ActualValue { get; }
+        TValue PercentError { get; }
     }
 
-    public abstract class VerificationEntity<TValue> : VerificationEntity
-      
+    public class VerificationEntity : BaseEntity, IVerification
+    {
+        public virtual bool Verified { get; set; }
+    }
+
+    public abstract class VerificationEntity<TValue> : VerificationEntity, IVerification<TValue>
     {
         protected VerificationEntity()
         {
@@ -37,9 +36,11 @@ namespace Prover.Domain.EvcVerifications.Verifications
         public TValue PercentError { get; protected set; }
 
         #endregion
+
+        //public bool Verified { get; set; }
     }
 
-    public abstract class VerificationTestEntity : VerificationEntity<decimal>, IVerificationTest
+    public abstract class VerificationTestEntity : VerificationEntity<decimal>
     {
         protected VerificationTestEntity()
         {
@@ -56,7 +57,7 @@ namespace Prover.Domain.EvcVerifications.Verifications
     }
 
 
-    public abstract class VerificationTestEntity<T> : VerificationEntity<decimal>, IVerificationTest
+    public abstract class VerificationTestEntity<T> : VerificationEntity<decimal>
         where T : ItemGroup
     {
         protected VerificationTestEntity() {}

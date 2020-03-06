@@ -19,6 +19,8 @@ using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
 using Tests.Application;
+using Devices.Romet.Core.Repository;
+using Prover.Application.ViewModels;
 
 namespace Application.Services.Tests
 {
@@ -56,10 +58,14 @@ namespace Application.Services.Tests
         [TestMethod]
         public async Task EvcVerificationTestServiceTest()
         {
+            await CreateAndSaveNewTest();
             var tests = await _testRepo.ListAsync();
-
             var success = tests.All(t => t.Tests.OfType<VerificationTestPoint>().Count() == 3);
+            Assert.IsTrue(success);
             success = tests.All(t => t.Tests.OfType<VerificationTestPoint>().All(p => p.Tests.Count > 0));
+            Assert.IsTrue(success);
+            success = tests.All(t => t.Tests.OfType<VerificationTestPoint>().All(p => p.Tests.All(v => v != null)));
+            Assert.IsTrue(success);
         }
 
         [TestMethod]
@@ -68,17 +74,23 @@ namespace Application.Services.Tests
             var x = 0;
             do
             {
-                var newTest = _viewModelService.NewTest(_device);
-                //newTest.ExportedDateTime = DateTime.Now;
-                var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
-                await _testRepo.AddAsync(model);
+                var newTest = await CreateAndSaveNewTest();
+                var dbTest = await _testRepo.GetAsync(newTest.Id);
+                Assert.IsNotNull(dbTest);
                 x++;
-            } while (x < 1);
-
-            var tests = await _testRepo.ListAsync();
-            var views = await _viewModelService.GetVerificationTests(tests);
+            } while (x < 5);
+            //var views = await _viewModelService.GetVerificationTests(tests);
 
             //Assert.IsFalse(views.ElementAt(0).IsDeepEqual(views.ElementAt(5)));
+        }
+
+        private async Task<EvcVerificationViewModel> CreateAndSaveNewTest()
+        {
+            var newTest = _viewModelService.NewTest(_device);
+            //newTest.ExportedDateTime = DateTime.Now;
+            var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
+            await _testRepo.AddAsync(model);
+            return newTest;
         }
 
         [TestMethod]
@@ -130,6 +142,7 @@ namespace Application.Services.Tests
         {
             _repo = new DeviceRepository();
             await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+            await _repo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
             _deviceType = _repo.GetByName("Mini-Max");
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
 

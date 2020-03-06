@@ -109,6 +109,8 @@ namespace Prover.Application.ViewModels.Services
 
     public class VolumeViewModelFactory
     {
+        protected static CalculationsViewModel SharedCalculator;
+
         //private static readonly Dictionary<VolumeInputType, Func<>> _volumeInputTypeBuilders =
         //    new Dictionary<VolumeInputType, Func<VolumeInputBuilder>>
         //    {
@@ -124,8 +126,6 @@ namespace Prover.Application.ViewModels.Services
 
         public VolumeItems StartVolumeItems { get; }
         public VolumeItems EndVolumeItems { get; }
-
-        protected static CalculationsViewModel SharedCalculator;
 
         public static void Create(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
@@ -153,7 +153,43 @@ namespace Prover.Application.ViewModels.Services
             factory.CreateSpecificTests(device, viewModel, testPoint);
         }
 
-        protected static CalculationsViewModel GetSharedCalculator(DeviceInstance device, VerificationTestPointViewModel testPoint)
+        protected void CreateCorrectedUncorrectedDefault(DeviceInstance device,
+            EvcVerificationViewModel viewModel,
+            VerificationTestPointViewModel testPoint)
+        {
+            var uncorModel = new UncorrectedVolumeTestViewModel(viewModel.DriveType, StartVolumeItems, EndVolumeItems);
+            
+            var corModel = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, SharedCalculator,
+                StartVolumeItems, EndVolumeItems);
+
+            CreatePulseOutputTests(device, uncorModel, corModel);
+
+            testPoint.GetVolumeTest().Corrected = corModel;
+            testPoint.GetVolumeTest().Uncorrected = uncorModel;
+        }
+
+        private static void CreatePulseOutputTests(DeviceInstance device, UncorrectedVolumeTestViewModel uncorModel,
+            CorrectedVolumeTestViewModel corModel)
+        {
+            var pulseOutputs = device.ItemGroup<PulseOutputItems>();
+
+            uncorModel.PulseOutputTest = new PulseOutputTestViewModel(
+                pulseOutputs.ChannelByUnitType(PulseOutputUnitType.UncVol),
+                uncorModel);
+
+            corModel.PulseOutputTest = new PulseOutputTestViewModel(
+                pulseOutputs.ChannelByUnitType(PulseOutputUnitType.CorVol),
+                corModel);
+        }
+
+
+        protected virtual void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
+            VerificationTestPointViewModel testPoint)
+        {
+        }
+
+        protected static CalculationsViewModel GetSharedCalculator(DeviceInstance device,
+            VerificationTestPointViewModel testPoint)
         {
             switch (device.ItemGroup<SiteInformationItems>().CompositionType)
             {
@@ -162,27 +198,11 @@ namespace Prover.Application.ViewModels.Services
                 case CompositionType.P:
                     return new CalculationsViewModel(testPoint.GetPressureTest());
                 case CompositionType.PTZ:
-                    return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(), testPoint.GetSuperFactorTest());
+                    return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
+                        testPoint.GetSuperFactorTest());
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-        }
-
-        protected virtual void CreateCorrectedUncorrectedDefault(DeviceInstance device,
-            EvcVerificationViewModel viewModel,
-            VerificationTestPointViewModel testPoint)
-        {
-            var uncorModel = new UncorrectedVolumeTestViewModel(viewModel.DriveType, StartVolumeItems, EndVolumeItems);
-            var corModel = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, SharedCalculator,
-                StartVolumeItems, EndVolumeItems);
-            testPoint.GetVolumeTest().Corrected = corModel;
-            testPoint.GetVolumeTest().Uncorrected = uncorModel;
-        }
-
-        protected virtual void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
-            VerificationTestPointViewModel testPoint)
-        {
         }
     }
 

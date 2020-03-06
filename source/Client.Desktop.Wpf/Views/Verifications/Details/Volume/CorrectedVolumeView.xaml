@@ -13,34 +13,17 @@
     mc:Ignorable="d">
     <StackPanel VerticalAlignment="Top">
         <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}" Text="Corrected" />
-        <controls:PercentageControlNew
-            x:Name="PercentErrorControl"
-            HorizontalAlignment="Center"
-            DisplayValue="{Binding Volume.CorrectedPercentError}"
-            Passed="{Binding Volume.CorrectedHasPassed}" />
+        <controls:PercentageControlNew x:Name="PercentErrorControl" HorizontalAlignment="Center" />
         <UniformGrid Columns="2">
-            <controls:ValueDescriptionControl
-                x:Name="StartReadingControl"
-                Label="Start"
-                Value="{Binding StartCorrected}" />
+            <controls:ValueDescriptionControl x:Name="StartReadingControl" Label="Start" />
             <controls:ValueDescriptionControl
                 x:Name="EndReadingControl"
-                Label="End"
-                Value="{Binding EndCorrected}" />
-            <controls:ValueDescriptionControl
-                x:Name="ExpectedValueControl"
-                Label="Actual"
-                Value="{Binding TrueCorrected}" />
-            <controls:ValueDescriptionControl
-                x:Name="ActualValueControl"
-                Label="EVC"
-                Value="{Binding EvcCorrected}" />
-            <controls:ValueDescriptionControl
                 IsReadOnly="False"
-                Label="Cor Pulses"
-                TabIndex="2"
-                Value="{Binding CorrectedPulseCount, Mode=TwoWay}" />
-            <controls:ValueDescriptionControl Label="Pulses Ver'd" Value="{Binding Volume.CorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
+                Label="End" />
+            <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="Actual" />
+            <controls:ValueDescriptionControl x:Name="ActualValueControl" Label="EVC" />
+
+            <controls:ValueDescriptionControl x:Name="PulsesVerifiedControl" Label="Pulses Ver'd" />
         </UniformGrid>
 
     </StackPanel>

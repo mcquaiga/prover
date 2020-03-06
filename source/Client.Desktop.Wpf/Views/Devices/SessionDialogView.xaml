@@ -19,8 +19,7 @@
             <TextBlock
                 x:Name="TitleText"
                 HorizontalAlignment="Center"
-                Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                Text="Here is a title message." />
+                Style="{DynamicResource MaterialDesignTitleTextBlock}" />
             <ProgressBar
                 x:Name="StatusProgressBar"
                 Width="56"
@@ -33,8 +32,7 @@
                 x:Name="StatusText"
                 HorizontalAlignment="Center"
                 Foreground="Black"
-                Style="{DynamicResource MaterialDesignSubheadingTextBlock}"
-                Text="Here is a status message." />
+                Style="{DynamicResource MaterialDesignSubheadingTextBlock}" />
 
             <Button
                 x:Name="CancelButton"

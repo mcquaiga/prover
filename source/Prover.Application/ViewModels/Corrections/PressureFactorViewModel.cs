@@ -34,9 +34,13 @@ namespace Prover.Application.ViewModels.Corrections
 
         [Reactive] public decimal Gauge { get; set; }
         [Reactive] public decimal AtmosphericGauge { get; set; }
-
+        
         protected override Func<ICorrectionCalculator> CalculatorFactory
             => () => new PressureCalculator(Items.UnitType, Items.TransducerType, Items.Base, Gauge, AtmosphericGauge);
-        
+
+        public decimal GetTotalGauge()
+        {
+            return PressureCalculator.GetGasPressure(Items.TransducerType, Gauge, AtmosphericGauge);
+        }
     }
 }

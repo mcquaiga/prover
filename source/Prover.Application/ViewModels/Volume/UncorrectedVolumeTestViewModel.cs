@@ -16,7 +16,7 @@ namespace Prover.Application.ViewModels.Volume
         public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues,
             VolumeItems endValues) : base(Tolerance, driveType, startValues, endValues)
         {
-            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, (s, e) =>
+            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, x => x.AppliedInput, (s, e, a) =>
                     VolumeCalculator.TotalVolume(s.UncorrectedReading, e.UncorrectedReading))
                 .ToPropertyEx(this, x => x.ActualValue)
                 .DisposeWith(Cleanup);
@@ -35,7 +35,6 @@ namespace Prover.Application.ViewModels.Volume
 
         public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
 
-        [Reactive] public PulseOutputTestViewModel PulseOutput { get; set; }
 
         protected override void Disposing()
         {

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -8,13 +12,17 @@ using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using Client.Desktop.Wpf.Views.Devices;
+using Client.Desktop.Wpf.Views.Verifications.Dialogs;
 using Devices.Communications.Interfaces;
 using Devices.Communications.Status;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using DynamicData;
 using Microsoft.Extensions.Logging;
+using Prover.Application.ViewModels;
 using Prover.Shared.IO;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.Communications
 {
@@ -30,8 +38,8 @@ namespace Client.Desktop.Wpf.Communications
         Task EndSession();
 
         Task<IEnumerable<ItemValue>> GetItemValues();
-        Task LiveReadItem();
-
+        ReactiveCommand<Unit, Unit> RequestCancellation { get; set; }
+        Task LiveReadItem(ICollection<ItemMetadata> items, CancellationTokenSource cts);
         /// <summary>
         ///     Configures required resources for device communication
         ///     Tries to connect to device and download full item file
@@ -54,7 +62,7 @@ namespace Client.Desktop.Wpf.Communications
         private readonly ILogger<DeviceSessionManager> _logger;
         private ICommunicationsClient _activeClient;
         private ICommPort _activeCommPort;
-        private CancellationTokenSource _cancellationToken;
+        private CancellationTokenSource _cancellationToken = new CancellationTokenSource();
         private SessionDialogView _dialogView;
         private SessionDialogViewModel _dialogViewModel;
 
@@ -65,13 +73,17 @@ namespace Client.Desktop.Wpf.Communications
             _dialogService = dialogService;
             _commClientFactory = commClientFactory;
             _commPortFactory = commPortFactory;
+            
+            RequestCancellation = ReactiveCommand.Create(() => _cancellationToken.Cancel());
         }
+
+        public ReactiveCommand<Unit, Unit> RequestCancellation { get; set; }
 
         public DeviceInstance Device { get; private set; }
         public DeviceType DeviceType { get; private set; }
         public bool SessionInProgress { get; private set; }
-
         public ReactiveObject CurrentOwnerViewModel { get; set; }
+
 
         public async Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items,
             IObserver<ItemReadStatusMessage> itemsObserver = null)
@@ -95,6 +107,7 @@ namespace Client.Desktop.Wpf.Communications
 
             _activeCommPort?.Dispose();
             _activeClient?.Dispose();
+            _cancellationToken.Dispose();
 
             SessionInProgress = false;
         }
@@ -108,18 +121,68 @@ namespace Client.Desktop.Wpf.Communications
             return itemValues;
         }
 
-        public async Task LiveReadItem()
+        public async Task LiveReadItem(ICollection<ItemMetadata> items, CancellationTokenSource cts)
         {
-            var obser = new Subject<ItemValue>();
-
-            var view = new LiveReadDialogView {ViewModel = this};
-
-            //var vm = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken);
-            //await _dialogService.ShowDialog.Execute(vm);
+            var cleanup = new CompositeDisposable();
+            _cancellationToken = cts ?? _cancellationToken;
+            _cancellationToken.Token.Register(async () => await StopLiveReading());
+            
             await Connect();
+            await _dialogService.CloseDialog.Execute();
+            
+            var live = SetupLiveReadObservable();
+            
+            await ShowLiveReadDialog();
 
-            await _activeClient.LiveReadItemValue(26, obser, CancellationTokenSource.Token);
+
+            cleanup.Add(live.Connect());
+            
+            async Task StopLiveReading()
+            {
+                cleanup.Dispose();
+                await Task.Delay(500);
+
+                await Disconnect();
+
+                await CloseCommand.Execute();
+                _cancellationToken = new CancellationTokenSource();
+            }
+
+            async Task ShowLiveReadDialog()
+            {
+                var liveDialog = new LiveReadDialogView { ViewModel = this };
+                await _dialogService.ShowDialogView.Execute(liveDialog);
+            }
+
+            IConnectableObservable<IChangeSet<ItemValue, ItemMetadata>> SetupLiveReadObservable()
+            {
+                var liveReads = StartLiveRead(items).Publish();
+
+                liveReads.Bind(out var reads)
+                    .Subscribe();
+                LiveReadingUpdates = reads;
+
+                LiveReadUpdates = liveReads.AsObservableCache();
+
+                LiveUpdates = LiveReadUpdates
+                    .Connect()
+                    .RemoveKey()
+                    .AsObservableList();
+                    //.LogDebug(x => $"{x.Metadata.ShortDescription} - {x.DecimalValue()}")
+                    //.Subscribe();
+
+
+
+                return liveReads;
+            }
         }
+
+        public IObservableList<ItemValue> LiveUpdates { get; set; }
+
+        public ReadOnlyObservableCollection<ItemValue> LiveReadingUpdates { get; set; }
+
+        public IObservableCache<ItemValue, ItemMetadata> LiveReadUpdates { get; set; }
+        
 
         /// <summary>
         ///     Configures required resources for device communication
@@ -145,6 +208,8 @@ namespace Client.Desktop.Wpf.Communications
 
             try
             {
+                _cancellationToken = new CancellationTokenSource();
+
                 SessionInProgress = true;
                 DeviceType = deviceType;
 
@@ -152,8 +217,6 @@ namespace Client.Desktop.Wpf.Communications
 
                 _activeCommPort = _commPortFactory.Create(commPortName, baudRate);
                 _activeClient = _commClientFactory.Create(deviceType, _activeCommPort);
-
-                CancellationTokenSource = new CancellationTokenSource();
 
                 _activeClient.StatusMessageObservable
                     .Subscribe(msg => _logger.Log(msg.LogLevel, msg.ToString()));
@@ -169,12 +232,11 @@ namespace Client.Desktop.Wpf.Communications
             return this;
         }
 
-        private async Task Connect()
+        protected async Task Connect()
         {
             if (!_activeClient.IsConnected)
             {
-                _dialogViewModel =
-                    new SessionDialogViewModel(_activeClient.StatusMessageObservable, CancellationTokenSource)
+                _dialogViewModel = new SessionDialogViewModel(_activeClient.StatusMessageObservable, _cancellationToken)
                     {
                         StatusText = "Connecting ... "
                     };
@@ -184,7 +246,7 @@ namespace Client.Desktop.Wpf.Communications
             }
         }
 
-        private async Task Disconnect()
+        protected async Task Disconnect()
         {
             if (_activeClient.IsConnected)
             {
@@ -192,6 +254,23 @@ namespace Client.Desktop.Wpf.Communications
                 await _activeClient.Disconnect();
                 await _dialogService.CloseDialog.Execute();
             }
+        }
+
+        protected IObservable<IChangeSet<ItemValue, ItemMetadata>> StartLiveRead(ICollection<ItemMetadata> items)
+        {
+            return ObservableChangeSet.Create<ItemValue, ItemMetadata>(cache =>
+                {
+                    var liveRead = TaskPoolScheduler.Default.SchedulePeriodic(TimeSpan.FromMilliseconds(1000), () =>
+                    {
+                        items.ForEach(async i =>
+                        {
+                            var value = await _activeClient.LiveReadItemValue(i);
+                            cache.AddOrUpdate(value);
+                        });
+                    });
+
+                    return liveRead;
+                }, value => value.Metadata);
         }
 
         private async Task SetupDeviceInstance()

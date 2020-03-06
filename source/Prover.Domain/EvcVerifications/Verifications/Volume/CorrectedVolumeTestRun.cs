@@ -4,7 +4,9 @@ using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
 namespace Prover.Domain.EvcVerifications.Verifications.Volume
 {
-    public class CorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>
+
+
+    public class CorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>, IPulseOutputVerification
     {
         private CorrectedVolumeTestRun()
         {
@@ -24,7 +26,7 @@ namespace Prover.Domain.EvcVerifications.Verifications.Volume
         public decimal UncorrectedInputVolume { get; set; }
 
         public decimal PassTolerance => Global.COR_ERROR_THRESHOLD;
-
+        public PulseOutputVerification PulseOutputTest { get; set; }
 
         public void Calculate()
         {

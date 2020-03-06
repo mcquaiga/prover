@@ -36,13 +36,25 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                     _disposer.Disposable = Disposable.Empty;
                     _disposer.Disposable = Disposable.Create(() => { 
                         
-                        model?.Dispose();
+                        (model as IDisposable)?.Dispose();
                         (view as IDisposable)?.Dispose();    
                         //onClosed?.Invoke(view.DialogContent);
                     });
                     
                     return Observable.Return(view);
                 },
+                outputScheduler: RxApp.MainThreadScheduler);
+
+            ShowDialogView = ReactiveCommand.CreateFromObservable<IViewFor, IViewFor>(view =>
+            {
+                _disposer.Disposable = Disposable.Empty;
+                _disposer.Disposable = Disposable.Create(() =>
+                {
+                    (view as IDisposable)?.Dispose();
+                    //onClosed?.Invoke(view.DialogContent);
+                });
+                return Observable.Return(view);
+            },
                 outputScheduler: RxApp.MainThreadScheduler);
 
             CloseDialog = ReactiveCommand.CreateFromObservable(() =>
@@ -53,20 +65,24 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                 outputScheduler: RxApp.MainThreadScheduler);
 
             this.WhenAnyValue(x => x.DialogViewModel.IsDialogOpen)
-                .ObserveOn(RxApp.MainThreadScheduler)
+                //.ObserveOn(RxApp.TaskpoolScheduler)
                 .Where(open => !open)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(CloseDialog);
 
             ShowDialog
+                .Merge(ShowDialogView)
                 .Merge(CloseDialog)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, x => x.DialogContent);
 
             this.WhenAnyValue(x => x.DialogContent)
-                .ObserveOn(RxApp.MainThreadScheduler)
+                //.ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(v => v?.ViewModel as IDialogViewModel)
                 .ToPropertyEx(this, x => x.DialogViewModel);
         }
+
+        [Reactive] public ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; protected set; }
 
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
         public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get;  }
@@ -79,16 +95,16 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
 
         }
 
-        public void Show(IViewFor<IDialogViewModel> dialogView)
+        public async Task Show<TView>(TView dialogView) where TView : IViewFor
         {
-
+            await ShowDialogView.Execute(dialogView);
         }
 
-        public void Show<T>() 
+        public async Task Show<T>() 
             where T : class, IDialogViewModel
         {
             var model = _services.GetService<T>();
-            ShowDialog.Execute(model);
+            await ShowDialog.Execute(model);
         }
 
         public async Task ShowMessage(string message, string title)

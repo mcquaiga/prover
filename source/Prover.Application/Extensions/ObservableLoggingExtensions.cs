@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
 
@@ -34,6 +35,13 @@ namespace Prover.Application.ViewModels
             logger = logger ?? _logger;
             var dateTime = includeTime ? DateTime.Now.ToString() : string.Empty;
             return source.Do(x => logger.LogDebug($"{dateTime} {source.GetType()} - {message}"));
+        }
+
+        public static IObservable<T> LogDebug<T>(this IObservable<T> source, Func<T, string> message, ILogger logger = null, bool includeTime = false)
+        {
+            logger = logger ?? _logger;
+            var dateTime = includeTime ? DateTime.Now.ToString() : string.Empty;
+            return source.Do(x => logger.LogDebug($"{dateTime} {source.GetType()} - {message.Invoke(x)}"));
         }
     }
 }

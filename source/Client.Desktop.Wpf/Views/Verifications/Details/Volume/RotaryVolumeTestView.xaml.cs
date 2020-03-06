@@ -26,6 +26,11 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest.ExpectedValue, v => v.RotaryExpectedMeterDisplacementControl.Value).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest.Items.MeterType, v => v.RotaryMeterTypeText.Text).DisposeWith(d);
 
+
+                    this.Bind(ViewModel, vm => vm.Uncorrected.AppliedInput, v => v.AppliedInputControl.Value).DisposeWith(d);
+                    this.Bind(ViewModel, vm => vm.Corrected.PulseOutputTest.ExpectedValue, v => v.CorrectedPulseCountControl.Value).DisposeWith(d);
+                    this.Bind(ViewModel, vm => vm.Uncorrected.PulseOutputTest.ExpectedValue, v => v.UncorrectedPulseCountControl.Value).DisposeWith(d);
+
                     this.CleanUpDefaults().DisposeWith(d);
 
                     Disposable.Create(() =>

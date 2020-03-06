@@ -20,13 +20,12 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                 this.OneWayBind(ViewModel, vm => vm.Verified, v => v.PercentErrorControl.Passed).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.StartValues.UncorrectedReading, v => v.StartReadingControl.Value).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.EndValues.UncorrectedReading, v => v.EndReadingControl.Value).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.EndValues.UncorrectedReading, v => v.EndReadingControl.Value).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.ExpectedValueControl.Value).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
-
-                this.Bind(ViewModel, vm => vm.AppliedInput, v => v.AppliedInputControl.Value).DisposeWith(d);
-
+                this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value).DisposeWith(d);
+                //Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}"
                 this.CleanUpDefaults().DisposeWith(d);
             });
         }

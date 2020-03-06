@@ -20,7 +20,7 @@ namespace Core.GasCalculations
             ? 100m
             : Round.Factor((actual - expected) / expected);
 
-        public static int Deviation(int expected, int actual) => expected == 0 ? 100 : (actual - expected) / expected;
+        public static int Deviation(int expected, int actual) => expected == 0 ? 100 : (actual - expected);
 
         //public static PressureCalculator GetCalculator(this PressureItems items, decimal gauge,
         //    decimal? atmosphericGauge)

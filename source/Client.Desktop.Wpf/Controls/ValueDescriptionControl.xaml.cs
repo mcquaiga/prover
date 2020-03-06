@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Client.Desktop.Wpf.Controls
@@ -32,9 +33,28 @@ namespace Client.Desktop.Wpf.Controls
             DependencyProperty.Register(nameof(ControlBackground), typeof(Brush), typeof(ValueDescriptionControl),
                 new UIPropertyMetadata(Brushes.White));
 
+        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
+            "IsReadOnly", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(true));
+
+        // Using a DependencyProperty as the backing store for ShowEditSymbol.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowEditSymbolProperty =
+            DependencyProperty.Register("ShowEditSymbol", typeof(bool), typeof(ValueDescriptionControl),
+                new PropertyMetadata(false));
+
         public ValueDescriptionControl()
         {
             InitializeComponent();
+
+            //EventManager.RegisterClassHandler(typeof(TextBox),
+            //    GotFocusEvent,
+            //    new RoutedEventHandler(TextBox_GotFocus));
+
+            //EventManager.RegisterClassHandler(typeof(TextBox), PreviewMouseLeftButtonDownEvent,
+            //    new MouseButtonEventHandler(SelectivelyIgnoreMouseButton));
+            //EventManager.RegisterClassHandler(typeof(TextBox), GotKeyboardFocusEvent,
+            //    new RoutedEventHandler(SelectAllText));
+            //EventManager.RegisterClassHandler(typeof(TextBox), MouseDoubleClickEvent,
+            //    new RoutedEventHandler(SelectAllText));
         }
 
         public string Label
@@ -67,9 +87,6 @@ namespace Client.Desktop.Wpf.Controls
             set => SetValue(ControlBackgroundProperty, value);
         }
 
-        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
-            "IsReadOnly", typeof(bool), typeof(ValueDescriptionControl), new PropertyMetadata(true));
-
         public bool IsReadOnly
         {
             get => (bool) GetValue(IsReadOnlyProperty);
@@ -86,9 +103,36 @@ namespace Client.Desktop.Wpf.Controls
             set => SetValue(ShowEditSymbolProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for ShowEditSymbol.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ShowEditSymbolProperty =
-            DependencyProperty.Register("ShowEditSymbol", typeof(bool), typeof(ValueDescriptionControl),
-                new PropertyMetadata(false));
+        private static void SelectAllText(object sender, RoutedEventArgs e)
+        {
+            var textBox = e.OriginalSource as TextBox;
+            if (textBox != null)
+                textBox.SelectAll();
+        }
+
+        private static void SelectivelyIgnoreMouseButton(object sender, MouseButtonEventArgs e)
+        {
+            // Find the TextBox
+            DependencyObject parent = e.OriginalSource as UIElement;
+            while (parent != null && !(parent is TextBox))
+                parent = VisualTreeHelper.GetParent(parent);
+
+            if (parent != null)
+            {
+                var textBox = (TextBox) parent;
+                if (!textBox.IsKeyboardFocusWithin)
+                {
+                    // If the text box is not yet focused, give it the focus and
+                    // stop further processing of this click event.
+                    textBox.Focus();
+                    e.Handled = true;
+                }
+            }
+        }
+
+        //private static void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    (sender as TextBox)?.SelectAll();
+        //}
     }
 }

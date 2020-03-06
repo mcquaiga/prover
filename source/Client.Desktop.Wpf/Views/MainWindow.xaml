@@ -82,14 +82,18 @@
             </Grid>
         </materialDesign:ColorZone>
 
-        <Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <materialDesign:DialogHost x:Name="DialogHost" Identifier="ActiveItemDialog">
                 <materialDesign:DialogHost.DialogContent>
                     <ContentControl x:Name="DialogContent" />
                 </materialDesign:DialogHost.DialogContent>
 
                 <materialDesign:DialogHost.Content>
-                    <rxui:RoutedViewHost x:Name="RoutedViewHost" DockPanel.Dock="Bottom" />
+                    <rxui:RoutedViewHost
+                        x:Name="RoutedViewHost"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        DockPanel.Dock="Bottom" />
                 </materialDesign:DialogHost.Content>
             </materialDesign:DialogHost>
 

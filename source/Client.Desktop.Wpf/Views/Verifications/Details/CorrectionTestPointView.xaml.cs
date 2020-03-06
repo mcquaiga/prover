@@ -4,6 +4,7 @@ using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 using Client.Desktop.Wpf.Extensions;
+using Prover.Application.ViewModels.Volume;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details
 {
@@ -31,9 +32,14 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                                 var success = baseType.GetGenericTypeDefinition() == typeof(CorrectionTestViewModel<>);
                                 return success;
                             }
+
+                            //if (t.IsTypeOrInheritsOf(typeof(VolumeViewModelBase)))
+                            //{
+                            //    return true;
+                            //}
                             return false;
                         })).DisposeWith(d);
-
+                    //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentHost.ViewModel, value => value ?? null).DisposeWith(d);
                     this.CleanUpDefaults().DisposeWith(d);
 
                     Disposable.Create(() =>

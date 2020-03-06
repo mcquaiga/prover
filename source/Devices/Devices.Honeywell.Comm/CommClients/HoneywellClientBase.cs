@@ -22,7 +22,13 @@ namespace Devices.Honeywell.Comm.CommClients
         {
         }
 
-        #region Public Methods
+        public override bool IsConnected { get; protected set; }
+
+        public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
+        {
+            var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));
+            return ItemValue.Create(itemNumber, response.RawValue);
+        }
 
         public override async Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
@@ -40,7 +46,7 @@ namespace Devices.Honeywell.Comm.CommClients
             items = items.OrderBy(x => x).ToArray();
 
             var y = 0;
-            
+
             while (true)
             {
                 var set = items.Skip(y).Take(15).ToList();
@@ -63,32 +69,25 @@ namespace Devices.Honeywell.Comm.CommClients
             return results;
         }
 
-        #endregion
-
-        #region Protected
-
-        //public override async Task<bool> SetItemValue(string itemCode, long value)
-        //    => await SetItemValue(ItemDetails.GetItem(itemCode), value);
-
-        protected override async Task EstablishConnectionAsync(CancellationToken ct)
+        public override async Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber)
         {
-            if (await WakeUpInstrument(ct))
-            {
-                var response = 
-                        await ExecuteCommandAsync(
-                            Commands.SignOn((TDevice)DeviceType)
-                            );
+            //var itemDetails = DeviceType.Items.GetItem(itemNumber);
+            //if (itemDetails == null)
+            //    throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
 
-                if (HandleResponseMessage<HoneywellDeviceType>(response))
-                {
-                    IsConnected = true;
-                    this.MessageDebug($"Connected to {DeviceType.Name}!");
-                }
-                else
-                {
-                    IsConnected = false;
-                }
-            }
+            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber.Number));
+            return ItemValue.Create(itemNumber, response.RawValue);
+        }
+
+        public override async Task LiveReadItemValue(ItemMetadata itemNumber, IObserver<ItemValue> updates,
+            CancellationToken ct)
+        {
+            do
+            {
+                var i = await LiveReadItemValue(itemNumber);
+                updates.OnNext(i);
+                await Task.Delay(500, ct);
+            } while (!ct.IsCancellationRequested);
         }
 
         public override async Task<bool> SetItemValue(int itemNumber, string value)
@@ -103,6 +102,41 @@ namespace Devices.Honeywell.Comm.CommClients
 
         public override async Task<bool> SetItemValue(int itemNumber, long value)
             => await SetItemValue(itemNumber, value.ToString());
+
+        //public override async Task<bool> SetItemValue(string itemCode, long value)
+        //    => await SetItemValue(ItemDetails.GetItem(itemCode), value);
+
+        protected override async Task EstablishConnectionAsync(CancellationToken ct)
+        {
+            if (await WakeUpInstrument(ct))
+            {
+                var response =
+                    await ExecuteCommandAsync(
+                        Commands.SignOn((TDevice) DeviceType)
+                    );
+
+                if (HandleResponseMessage<HoneywellDeviceType>(response))
+                {
+                    IsConnected = true;
+                    this.MessageDebug($"Connected to {DeviceType.Name}!");
+                }
+                else
+                {
+                    IsConnected = false;
+                }
+            }
+        }
+
+        protected override async Task TryDisconnect()
+        {
+            if (IsConnected)
+            {
+                var response = await ExecuteCommandAsync(Commands.SignOffCommand());
+
+                if (response.IsSuccess)
+                    IsConnected = false;
+            }
+        }
 
         protected async Task<bool> WakeUpInstrument(CancellationToken ct)
         {
@@ -129,10 +163,6 @@ namespace Devices.Honeywell.Comm.CommClients
             return false;
         }
 
-        #endregion
-
-        #region Private
-
         private bool HandleResponseMessage<T>(StatusResponseMessage response)
         {
             if (response.IsSuccess)
@@ -147,59 +177,5 @@ namespace Devices.Honeywell.Comm.CommClients
 
             return false;
         }
-
-        #endregion
-
-        #region Public
-
-        #region Properties
-
-        public override bool IsConnected { get; protected set; }
-
-        #endregion
-
-        #region Methods
-
-        public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
-        {
-            var response = await ExecuteCommandAsync(Commands.ReadItem(itemNumber.Number));
-            return ItemValue.Create(itemNumber, response.RawValue);
-        }
-
-        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
-        {
-            var itemDetails = DeviceType.Items.GetItem(itemNumber);
-            if (itemDetails == null)
-                throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
-
-            var response = await ExecuteCommandAsync(Commands.LiveReadItem(itemNumber));
-            return ItemValue.Create(itemDetails, response.RawValue);
-        }
-
-        public override async Task LiveReadItemValue(int itemNumber, IObserver<ItemValue> updates,
-            CancellationToken ct)
-        {
-            do
-            {
-                var i = await LiveReadItemValue(itemNumber);
-                updates.OnNext(i);
-                await Task.Delay(500, ct);
-            } while (!ct.IsCancellationRequested);
-        }
-
-        protected override async Task TryDisconnect()
-        {
-            if (IsConnected)
-            {
-                var response = await ExecuteCommandAsync(Commands.SignOffCommand());
-
-                if (response.IsSuccess)
-                    IsConnected = false;
-            }
-        }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Devices;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
@@ -39,9 +40,9 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 SetLastUsedSettings();
                 testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
                 return Observable.Return(Unit.Default);
-                //await ScreenManager.ChangeView(TestManager);
             }, canStartTest);
 
+            
             var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
             NavigateForward = ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);
 
@@ -76,6 +77,17 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
             SelectedTachCommPort = ApplicationSettings.Local.TachCommPort;
 
+
+            //async Task LoadStatic()
+            //{
+            //    var mini = deviceRepository.GetById(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
+
+            //    //            var testVm = await _service.CreateViewModelFromVerification(mini);
+            //    var testVm = _service.NewTest(mini.Device);
+            //    var vm = new TestDetailsViewModel(ScreenManager, testVm);
+
+            //    await ScreenManager.ChangeView(vm);
+            //}
         }
 
         public ReactiveCommand<Unit, IRoutableViewModel> NavigateForward { get; set; }
@@ -110,6 +122,11 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ApplicationSettings.Local.InstrumentBaudRate = SelectedBaudRate;
             ApplicationSettings.Local.TachCommPort = SelectedTachCommPort;
             ApplicationSettings.Instance.SaveSettings();
+        }
+
+        private async Task LoadStatic()
+        {
+            
         }
     }
 }

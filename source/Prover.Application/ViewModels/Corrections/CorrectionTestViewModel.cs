@@ -1,11 +1,12 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Core.GasCalculations;
+﻿using Core.GasCalculations;
 using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -86,12 +87,14 @@ namespace Prover.Application.ViewModels.Corrections
             PassTolerance = passTolerance;
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.Deviation)
-                .ToPropertyEx(this, x => x.Deviation, 100, true)
+                //.Select((values) => Calculators.Deviation(values.Item1, values.Item2))
+                .Select(x => ActualValue == 0 && ExpectedValue == 0 ? 100 : x)
+                .ToPropertyEx(this, x => x.Deviation, 100)
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Deviation)
                 .Select(p => p.IsBetween(PassTolerance))
-                .ToPropertyEx(this, x => x.Verified, deferSubscription: true)
+                .ToPropertyEx(this, x => x.Verified)
                 .DisposeWith(Cleanup);
         }
 
@@ -139,4 +142,5 @@ namespace Prover.Application.ViewModels.Corrections
 
         //public IItemGroup TestItems { get; set; }
     }
+    
 }

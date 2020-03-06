@@ -21,7 +21,7 @@ namespace Prover.Application.ViewModels.Volume
 
         [Reactive] public VolumeItems StartValues { get; set; }
         [Reactive] public VolumeItems EndValues { get; set; }
-        [Reactive] public decimal AppliedInput { get; set; }
+        //[Reactive] public decimal AppliedInput { get; set; }
 
         [Reactive] public CorrectedVolumeTestViewModel Corrected { get; set; }
         [Reactive] public UncorrectedVolumeTestViewModel Uncorrected { get; set; }

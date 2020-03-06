@@ -134,8 +134,21 @@
                         Grid.Row="1"
                         Margin="5"
                         HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch"
-                        DisplayMemberPath="Id" />
+                        VerticalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Id}" />
+                                    <TextBlock Text="{Binding TestDateTime}" />
+                                    <Button
+                                        Command="{Binding ViewModel.PrintReport, ElementName=ExporterViewControl}"
+                                        CommandParameter="{Binding}"
+                                        Content="{materialDesign:PackIcon PrintPreview}" />
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                     <!--<ListBox
                         x:Name="VisibleItemsListBox"
                         Grid.Row="1"

@@ -5,7 +5,7 @@ using Prover.Domain.EvcVerifications.Verifications;
 
 namespace Prover.Domain.EvcVerifications
 {
-    public class VerificationTestPoint : VerificationEntity, IVerification
+    public class VerificationTestPoint : VerificationEntity
     {
         private ICollection<VerificationEntity> _tests = new List<VerificationEntity>();
 

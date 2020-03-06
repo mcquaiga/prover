@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interfaces;
-using Prover.Application.ViewModels.Corrections;
 using Prover.Domain;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using ReactiveUI;
@@ -40,23 +39,6 @@ namespace Prover.Application.ViewModels.Volume
 
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
 
-        [Reactive] public PulseOutputTestViewModel PulseOutput { get; set; }
-    }
-
-    public class PulseOutputTestViewModel : DeviationTestViewModel<PulseOutputItems.ChannelItems>
-    {
-        private readonly VolumeTestRunViewModelBase _volumeTest;
-
-        public PulseOutputTestViewModel(PulseOutputItems.ChannelItems pulseChannelItems,
-            VolumeTestRunViewModelBase volumeTest) : base(Global.PULSE_VARIANCE_THRESHOLD)
-        {
-            _volumeTest = volumeTest;
-            Items = pulseChannelItems;
-
-            this.WhenAnyValue(x => x._volumeTest.ActualValue)
-                .Select(x => x.ToInt32())
-                .ToPropertyEx(this, x => x.ActualValue)
-                .DisposeWith(Cleanup);
-        }
+        
     }
 }

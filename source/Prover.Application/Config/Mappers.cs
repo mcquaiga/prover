@@ -45,11 +45,16 @@ namespace Prover.Application.Config
                 cfg.CreateMap<UncorrectedVolumeTestRun, UncorrectedVolumeTestViewModel>();
                 cfg.CreateMap<UncorrectedVolumeTestViewModel, UncorrectedVolumeTestRun>();
 
+                cfg.CreateMap<PulseOutputTestViewModel, PulseOutputVerification>();
+                cfg.CreateMap<PulseOutputVerification, PulseOutputTestViewModel>();
+
                 cfg.CreateMap<RotaryMeterTestViewModel, RotaryMeterTest>();
                 cfg.CreateMap<RotaryMeterTest, RotaryMeterTestViewModel>();
 
                 cfg.CreateMap<VerificationTestPointViewModel, VerificationTestPoint>();
                 cfg.CreateMap<VerificationTestPoint, VerificationTestPointViewModel>();
+
+
 
                 cfg.CreateMap<EvcVerificationViewModel, EvcVerificationTest>();
                 cfg.CreateMap<EvcVerificationTest, EvcVerificationViewModel>()

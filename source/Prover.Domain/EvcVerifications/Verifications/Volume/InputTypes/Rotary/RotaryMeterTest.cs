@@ -5,7 +5,7 @@ using Prover.Shared.Extensions;
 
 namespace Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary
 {
-    public class RotaryMeterTest : VerificationTestEntity<RotaryMeterItems>
+    public sealed class RotaryMeterTest : VerificationTestEntity<RotaryMeterItems>
     {
         private RotaryMeterTest()
         {

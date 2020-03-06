@@ -129,9 +129,9 @@ namespace Devices.Communications
 
         public abstract Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers);
 
-        public abstract Task<ItemValue> LiveReadItemValue(int itemNumber);
+        public abstract Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber);
 
-        public abstract Task LiveReadItemValue(int itemNumber, IObserver<ItemValue> updates,
+        public abstract Task LiveReadItemValue(ItemMetadata itemNumber, IObserver<ItemValue> updates,
             CancellationToken ct);
 
         public abstract Task<bool> SetItemValue(int itemNumber, decimal value);

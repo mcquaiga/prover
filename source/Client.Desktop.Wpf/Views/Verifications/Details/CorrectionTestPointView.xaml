@@ -15,7 +15,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -35,15 +35,10 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border
-                        MaxWidth="300"
                         Padding="4"
                         BorderThickness="0,0,0,0"
                         Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel>
-                            <reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}" />
-                        </StackPanel>
-                        <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
-
+                        <reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}" />
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

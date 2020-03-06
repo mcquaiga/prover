@@ -22,8 +22,7 @@
                 x:Name="MessageText"
                 Margin="15,4,15,4"
                 Foreground="Black"
-                Style="{StaticResource MaterialDesignBody1TextBlock}"
-                Text="Here's a message." />
+                Style="{StaticResource MaterialDesignBody1TextBlock}" />
             <Button
                 x:Name="OkButton"
                 Margin="0,15,0,5"

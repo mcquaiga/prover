@@ -23,8 +23,8 @@ namespace Devices.Communications.Interfaces
         Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers);
         Task<IEnumerable<ItemValue>> GetItemsAsync();
         Task<T> GetItemsAsync<T>() where T : ItemGroup;
-        Task<ItemValue> LiveReadItemValue(int itemNumber);
-        Task LiveReadItemValue(int itemNumber, IObserver<ItemValue> updates, CancellationToken ct);
+        Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber);
+        Task LiveReadItemValue(ItemMetadata itemNumber, IObserver<ItemValue> updates, CancellationToken ct);
         Task<bool> SetItemValue(int itemNumber, decimal value);
         Task<bool> SetItemValue(int itemNumber, long value);
         Task<bool> SetItemValue(int itemNumber, string value);

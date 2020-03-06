@@ -6,6 +6,7 @@ using Prover.Application.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Services;
+using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications;
 using Prover.Domain.EvcVerifications.Verifications;
 using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
@@ -47,7 +48,14 @@ namespace Prover.Application.Services
                             throw new Exception($"Couldn't find a mapping for source type {v.GetType()}.");
 
                         var obj = Activator.CreateInstance(destinationType, true);
-                        return (VerificationEntity) _mapper.Map(v, obj, v.GetType(), destinationType);
+                        var instance = (VerificationEntity) _mapper.Map(v, obj, v.GetType(), destinationType);
+                        //if (instance is IPulseOutputVerification)
+                        //{
+                        //    if (v is VolumeTestRunViewModelBase vmBase)
+                        //        (instance as IPulseOutputVerification).PulseOutputTest = _mapper.Map<PulseOutputVerification>(vmBase.PulseOutputTest);
+                        //}
+
+                        return instance;
                     }).ToList();
 
                     tp.AddTests(volumeTests);
@@ -74,17 +82,22 @@ namespace Prover.Application.Services
                     var pointViewModel = _mapper.Map<VerificationTestPoint, VerificationTestPointViewModel>(point);
 
                     var pressure = _mapper.Map<PressureFactorViewModel>(point.GetTest<PressureCorrectionTest>());
-                    pointViewModel.TestsCollection.Add(pressure);
+                    
+                    if (pressure != null)
+                        pointViewModel.TestsCollection.Add(pressure);
 
                     var temp = _mapper.Map<TemperatureFactorViewModel>(point.GetTest<TemperatureCorrectionTest>());
-                    pointViewModel.TestsCollection.Add(temp);
+                    if (temp != null)
+                        pointViewModel.TestsCollection.Add(temp);
 
                     var superModel = point.GetTest<SuperCorrectionTest>();
+                    if (superModel != null)
+                    {
+                        var super = _mapper.Map<SuperFactorViewModel>(superModel);
+                        super.Setup(temp, pressure);
 
-                    var super = _mapper.Map<SuperFactorViewModel>(superModel);
-                    super.Setup(temp, pressure);
-
-                    pointViewModel.TestsCollection.Add(super);
+                        pointViewModel.TestsCollection.Add(super);
+                    }
 
                     if (point.HasVolume())
                     {

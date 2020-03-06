@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Prover.Shared;
 
 namespace Devices.Core.Items.ItemGroups
@@ -31,5 +32,18 @@ namespace Devices.Core.Items.ItemGroups
         }
 
         #endregion
+    }
+
+    public static class PulseOutputItemEx
+    {
+        public static PulseOutputItems.ChannelItems UncorrectedChannel(this PulseOutputItems items)
+        {
+            return items.Channels.FirstOrDefault(c => c.Units == PulseOutputUnitType.UncVol);
+        }
+
+        public static PulseOutputItems.ChannelItems ChannelByUnitType(this PulseOutputItems items, PulseOutputUnitType unitType)
+        {
+            return items.Channels.FirstOrDefault(c => c.Units == unitType);
+        }
     }
 }

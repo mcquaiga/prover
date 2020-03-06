@@ -17,7 +17,7 @@ namespace Prover.Infrastructure
         private static readonly Lazy<ILiteDatabase> Lazy =
             new Lazy<ILiteDatabase>(CreateDatabaseForLazy);
 
-        public static string ConnectionString { get; private set; } = "prover_data.db";
+        public static string ConnectionString { get; private set; } = ".\\prover_data.db";
         public static ILiteDatabase Database => Lazy.Value;
 
         private static void ConfigureMappings(ILiteDatabase db = null)

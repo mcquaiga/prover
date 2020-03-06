@@ -11,6 +11,7 @@ using System.Windows.Xps.Packaging;
 using Prover.Application;
 using Prover.Application.Settings;
 using Prover.Application.ViewModels;
+using Prover.Domain.EvcVerifications;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Reports
@@ -29,17 +30,28 @@ namespace Client.Desktop.Wpf.Reports
 
         public async Task GenerateAndViewReport(EvcVerificationViewModel verificationTest)
         {
+            await _screenManager.ChangeView(verificationTest);
+            return;
+
+
             var locator = ViewLocator.Current;
 
-            var reportView = locator.ResolveView(verificationTest); //new TestDetailsView {ViewModel = verificationTest};
+            var reportView = locator.ResolveView(verificationTest);
+            reportView.ViewModel = verificationTest;
+
+            //reportView.
+
             var filePath = CreateFileName(verificationTest);
 
             var fixedDoc = new FixedDocument();
             fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
             fixedDoc.Pages.Add(CreatePage(reportView));
             WriteDocument(fixedDoc, filePath);
+        }
 
-            Process.Start(filePath);
+        public async Task GenerateAndViewReport(EvcVerificationTest verificationTest)
+        {
+
         }
 
         //public async Task GeneratePdfReport(EvcVerificationViewModel test)
@@ -60,9 +72,9 @@ namespace Client.Desktop.Wpf.Reports
         //    var package = Package.Open(lMemoryStream, FileMode.Create);
         //    var doc = new XpsDocument(package);
         //    var writer = XpsDocument.CreateXpsDocumentWriter(doc);
-            
+
         //    writer.Write(fixedDoc);
-            
+
         //    doc.Close();
         //    package.Close();
 

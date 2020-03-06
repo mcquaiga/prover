@@ -32,6 +32,11 @@ namespace Prover.Infrastructure.KeyValueStore
             throw new NotImplementedException();
         }
 
+        public T Get(Guid id)
+        {
+            return Context.GetCollection<T>().FindById(id);
+        }
+
         public IEnumerable<T> GetAll()
         {
             return Context.GetCollection<T>().FindAll();

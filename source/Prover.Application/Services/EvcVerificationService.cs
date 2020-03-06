@@ -50,26 +50,18 @@ namespace Prover.Application.Services
             return VerificationTests;
         }
 
-        public IObservable<EvcVerificationTest> AllNotExported()
-        {
-            return _verificationRepository.List(test => test.ExportedDateTime == null);
-        }
+        //public IObservable<EvcVerificationTest> AllNotExported()
+        //{
+        //    return _verificationRepository.List(test => test.ExportedDateTime == null);
+        //}
 
-        public EvcVerificationTestCreator Factory(DeviceInstance device) =>
-            new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
+        //public EvcVerificationTestCreator Factory(DeviceInstance device) =>
+        //    new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
 
         private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
         {
             return _verificationRepository.List().ToObservableChangeSet(t => t.Id);
         }
-
-        //private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTestChangeSetObservable()
-        //{
-        //    return ObservableChangeSet.Create<EvcVerificationTest, Guid>(cache =>
-        //    {
-
-        //    })
-        //}
     }
 
     public class EvcVerificationTestCreator
@@ -121,7 +113,7 @@ namespace Prover.Application.Services
 
             if (correctionTest.GetVolumeTest() != null)
                 builder.BuildVolumeTest(correctionTest.GetVolumeTest().StartValues, correctionTest.GetVolumeTest().EndValues,
-                    correctionTest.GetVolumeTest().AppliedInput);
+                    correctionTest.GetVolumeTest().Uncorrected.AppliedInput);
 
             builder.Commit();
         }

@@ -40,13 +40,13 @@ namespace Devices.Romet.Comm
             return results;
         }
 
-        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
+        public override async Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber)
         {
-            var itemDetails = DeviceType.Items.GetItem(itemNumber);
-            if (itemDetails == null)
-                throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
+            //var itemDetails = DeviceType.Items.GetItem(itemNumber);
+            //if (itemDetails == null)
+            //    throw new Exception($"Item with #{itemNumber} does not exist in metadata.");
             
-            return await GetItemValue(itemDetails);
+            return await GetItemValue(itemNumber);
         }
     }
 }

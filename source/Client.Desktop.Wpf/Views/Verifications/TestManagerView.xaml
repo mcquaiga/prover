@@ -16,12 +16,11 @@
     x:TypeArguments="verifications:TestManager"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="CorrectionTestStyles" TargetType="{x:Type ItemsControl}">
+        <!--<Style x:Key="CorrectionTestStyles" TargetType="{x:Type ItemsControl}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
                         <Border
-                            MaxWidth="300"
                             Padding="4"
                             BorderThickness="0,0,1,0"
                             Style="{StaticResource SubSectionDividerBorder}">
@@ -37,17 +36,18 @@
                                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
                                 <reactiveUi:ViewModelViewHost x:Name="CorrectionTestStyleViewHost" ViewModel="{Binding}" />
                             </StackPanel>
-                            <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
+        -->
+        <!--  Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DownloadCommand}"  -->
+        <!--
 
                         </Border>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
+        </Style>-->
 
         <DataTemplate x:Key="CorrectionsTestDataTemplate">
             <Border
-                MaxWidth="300"
                 Padding="4"
                 BorderThickness="0,0,1,0"
                 Style="{StaticResource SubSectionDividerBorder}">
@@ -67,7 +67,7 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate x:Key="RotaryVolumeTestDataTemplate">
+        <!--<DataTemplate x:Key="RotaryVolumeTestDataTemplate">
             <StackPanel>
                 <Button
                     x:Name="RunVolumeTestButton"
@@ -77,11 +77,12 @@
 
                 <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
             </StackPanel>
-        </DataTemplate>
+        </DataTemplate>-->
 
         <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
             <StackPanel>
                 <Button
+                    Width="150"
                     Margin="15,5"
                     Command="{Binding ViewModel.VolumeTestManager.StartVolumeTest, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
                     Content="Run Volume Test"
@@ -90,19 +91,14 @@
         </DataTemplate>
 
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
         <materialDesign:ColorZone
-            Grid.Row="0"
             Padding="16,2"
             DockPanel.Dock="Top"
             Mode="PrimaryLight">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="QA Test Run" />
@@ -140,9 +136,7 @@
             </Grid>
         </materialDesign:ColorZone>
 
-        <reactiveUi:ViewModelViewHost x:Name="TestViewContent" Grid.Row="1" />
+        <reactiveUi:ViewModelViewHost x:Name="TestViewContent" DockPanel.Dock="Bottom" />
 
-
-
-    </Grid>
+    </DockPanel>
 </reactiveUi:ReactiveUserControl>
