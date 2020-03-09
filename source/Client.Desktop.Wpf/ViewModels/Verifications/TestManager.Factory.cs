@@ -2,12 +2,11 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
-using Client.Desktop.Wpf.Screens.Dialogs;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
@@ -21,11 +20,11 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
     {
         private readonly DateTime _dateCreated;
 
-        public TestManager(ILoggerFactory loggerFactory,
+        public TestManager(
+            ILoggerFactory loggerFactory,
             IScreenManager screenManager,
             IDeviceSessionManager deviceManager,
             VerificationViewModelService testViewModelService,
-            DialogServiceManager dialogService,
             IVolumeTestManagerFactory volumeTestManagerFactory) : base(screenManager)
         {
             _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
@@ -33,22 +32,13 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             _screenManager = screenManager;
             _deviceManager = deviceManager;
             _testViewModelService = testViewModelService;
-            _dialogService = dialogService;
             _volumeTestManagerFactory = volumeTestManagerFactory;
 
             _dateCreated = DateTime.Now;
-
-            //this.WhenNavigatingFromObservable()
-            //    .Subscribe(async _ =>
-            //    {
-            //        _logger.LogDebug("Navigating away from Cleaning up.");
-            //        await _deviceManager.EndSession();
-            //        RunNavigatingAwayActions();
-            //    })
-            //    .DisposeWith(_cleanup);
         }
 
-        public async Task<TestManager> StartNew(DeviceType deviceType, string commPortName, int baudRate, string tachPortName)
+        public async Task<TestManager> StartNew(DeviceType deviceType, string commPortName, int baudRate,
+            string tachPortName)
         {
             if (_deviceManager.SessionInProgress) await Reset();
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using MccDaq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -13,6 +15,8 @@ namespace Prover.Hardware.MccDAQ
     public class DaqBoardChannelFactory : IInputChannelFactory, IOutputChannelFactory
     {
         private MccBoard Board;
+        private const string InstaCalPath = "C:\\Program Files (x86)\\Measurement Computing\\DAQ\\inscal32.exe";
+
 
         private readonly Dictionary<PulseOutputChannel, int> _channelNumberMappings =
             new Dictionary<PulseOutputChannel, int>
@@ -100,7 +104,9 @@ namespace Prover.Hardware.MccDAQ
 
             if (boardFound == false)
             {
-                _inputLogger.LogWarning("USB-1208LS not found  Please run InstaCal.");
+                _inputLogger.LogWarning("USB-1208LS not found. Attempting to start InstaCal.");
+                if (File.Exists(InstaCalPath))
+                    Process.Start(InstaCalPath);
             }
 
             return board;

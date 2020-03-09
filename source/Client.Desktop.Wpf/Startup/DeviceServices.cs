@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using Devices;
 using Devices.Communications.Interfaces;
@@ -14,7 +15,9 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Hardware;
+using Prover.Application.Interfaces;
 using Prover.Application.Services;
+using Prover.Hardware.MccDAQ;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
@@ -54,27 +57,34 @@ namespace Client.Desktop.Wpf.Startup
 
             // Simulator
             services.AddTransient<PulseInputsListenerService>();
-            services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
-            services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
+            //services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
+            //services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 
-            //services.AddSingleton<DaqBoardChannelFactory>();
-            //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
-            //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
+            services.AddSingleton<DeviceSessionDialogManager>();
+
+            services.AddSingleton<DaqBoardChannelFactory>();
+            services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
+            services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
 
             //Pulse Outputs
             //services.AddTransient(c => new PulseInputsListenerService(c))
             //services.AddSingleton<IInputChannelFactory>(c => new SimulatorPulseChannelFactory());
-
 
             services.AddStartTask<DeviceServices>();
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            _provider.GetService<IInputChannelFactory>();
+            _provider.GetService<DaqBoardChannelFactory>();
+           
+            _provider.GetService<DeviceSessionDialogManager>();
+           
+
             var repo = _provider.GetService<DeviceRepository>();
             await repo.Load(new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
 
-            _provider.GetService<IInputChannelFactory>();
+
         }
     }
 }

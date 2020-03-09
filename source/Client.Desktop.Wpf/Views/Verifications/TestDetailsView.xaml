@@ -46,7 +46,7 @@
                         x:Name="TestPointItems"
                         Grid.Row="0"
                         DataContext="{Binding}"
-                        ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue='CorrectionsReadOnlyDataTemplate'}"
+                        ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue={StaticResource CorrectionsReadOnlyDataTemplate}}"
                         ItemsSource="{Binding Tests}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>

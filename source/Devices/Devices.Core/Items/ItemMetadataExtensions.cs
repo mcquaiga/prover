@@ -8,8 +8,6 @@ namespace Devices.Core.Items
 {
     public static class ItemMetadataExtensions
     {
-        #region Public Methods
-
         //public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
         //    IDictionary<int, string> itemValuesDictionary)
         //{
@@ -92,7 +90,7 @@ namespace Devices.Core.Items
             string code)
         {
             var result = items.GetItemString(itemValues, code);
-            return decimal.Parse(result);
+            return Decimal.Parse(result);
         }
 
         public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
@@ -122,7 +120,7 @@ namespace Devices.Core.Items
         public static IEnumerable<ItemValue> ToItemValuesEnumerable(this DeviceType deviceType,
             IDictionary<string, string> itemValuesDictionary)
         {
-            var dict = itemValuesDictionary.ToDictionary(k => int.Parse(k.Key), v => v.Value);
+            var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
             return deviceType.ToItemValuesEnumerable(dict);
         }
 
@@ -153,6 +151,14 @@ namespace Devices.Core.Items
             return items.Where(i => i.IsVolumeTest == true);
         }
 
-        #endregion
+        public static ItemMetadata GetLivePressureItem(this DeviceType deviceType)
+        {
+            return deviceType.Items.FirstOrDefault(i => i.IsLiveReadPressure == true);
+        }
+
+        public static ItemMetadata GetLiveTemperatureItem(this DeviceType deviceType)
+        {
+            return deviceType.Items.FirstOrDefault(i => i.IsLiveReadTemperature == true);
+        }
     }
 }

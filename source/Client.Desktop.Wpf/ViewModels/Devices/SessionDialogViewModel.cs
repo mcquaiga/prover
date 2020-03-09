@@ -10,11 +10,11 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Devices
 {
-    public class SessionDialogViewModel : DialogViewModel, IDialogViewModel
+    public class SessionStatusDialogViewModel : ReactiveObject
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
-        public SessionDialogViewModel(IObservable<StatusMessage> statusStream, CancellationTokenSource cts) : base(cts)
+        public SessionStatusDialogViewModel(IObservable<StatusMessage> statusStream, CancellationTokenSource cts)
         {
             statusStream
                 .Where(x => x.LogLevel >= LogLevel.Information)
@@ -28,6 +28,7 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
             statusStream
                 .OfType<ItemReadStatusMessage>()
                 .Where(x => x.LogLevel >= LogLevel.Debug)
+                .SubscribeOn(RxApp.TaskpoolScheduler)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(msg =>
                 {
@@ -44,16 +45,6 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
         [Reactive] public int? Progress { get; set; }
         [Reactive] public int? ProgressTotal { get; set; }
 
-        public void CloseDialog()
-        {
-            CloseCommand.Execute();
-        }
 
-        public override void Dispose()
-        {
-            CancelCommand?.Dispose();
-            _cleanup.Dispose();
-            base.Dispose();
-        }
     }
 }

@@ -1,6 +1,10 @@
-﻿using System.Reactive.Disposables;
+﻿using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.ViewModels.Verifications;
+using Client.Desktop.Wpf.Views.Devices;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications
@@ -10,6 +14,8 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// </summary>
     public partial class TestManagerView : ReactiveUserControl<TestManager>
     {
+
+
         public TestManagerView()
         {
             InitializeComponent();
@@ -32,12 +38,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
                
             });
 
-            //DeviceInteractions.LiveReadItems.RegisterHandler(async i =>
-            //{
-            //    await ViewModel.DialogManager.ShowMessage(i.Input, "Message");
-            //    i.SetOutput(Unit.Default);
-            //});
-
+            
         }
 
     }

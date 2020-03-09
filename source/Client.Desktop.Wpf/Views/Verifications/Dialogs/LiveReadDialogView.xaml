@@ -5,75 +5,94 @@
     xmlns:communications="clr-namespace:Client.Desktop.Wpf.Communications"
     xmlns:controls="clr-namespace:Client.Desktop.Wpf.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Client.Desktop.Wpf.Views.Verifications.Dialogs"
+    xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
-    x:TypeArguments="communications:DeviceSessionManager"
+    d:DesignHeight="400"
+    d:DesignWidth="500"
+    x:TypeArguments="communications:LiveReadCoordinator"
     mc:Ignorable="d">
-    <Grid>
+    <UniformGrid Columns="2">
+
+
         <StackPanel
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            x:Name="PressureStackPanelControl"
+            Margin="10"
+            IsManipulationEnabled="True"
             Orientation="Horizontal">
+            <materialDesign:PackIcon
+                Width="36"
+                Height="36"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="Gauge" />
+            <StackPanel Margin="4" Orientation="Horizontal">
 
-            <StackPanel Margin="5" Orientation="Horizontal">
-                <materialDesign:PackIcon
-                    Width="36"
-                    Height="36"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Kind="Gauge" />
-                <StackPanel Margin="4" Orientation="Vertical">
-
-                    <controls:ValueDescriptionControl
-                        x:Name="PressureItemValueControl"
-                        IsReadOnly="True"
-                        Label="Actual" />
-                    <controls:ValueDescriptionControl
-                        x:Name="PressureTargetValueControl"
-                        IsReadOnly="True"
-                        Label="Target" />
-                </StackPanel>
+                <controls:ValueDescriptionControl
+                    x:Name="PressureItemValueControl"
+                    IsReadOnly="True"
+                    Label="Actual" />
+                <controls:ValueDescriptionControl
+                    x:Name="PressureTargetValueControl"
+                    IsReadOnly="True"
+                    Label="Target" />
             </StackPanel>
+        </StackPanel>
 
-            <StackPanel Margin="5" Orientation="Horizontal">
+        <materialDesign:Card x:Name="TemperatureStackPanelControl" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+            <StackPanel Margin="10" Orientation="Vertical">
+                <materialDesign:ColorZone
+                    Margin="2"
+                    Padding="3"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    Content="Temperature"
+                    Mode="Light" />
+
+
+
                 <materialDesign:PackIcon
-                    Width="36"
-                    Height="36"
+                    Width="48"
+                    Height="48"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Kind="Thermometer" />
                 <StackPanel Margin="4" Orientation="Vertical">
 
+                    <StackPanel Margin="4" Orientation="Horizontal">
+                        <TextBlock
+                            x:Name="TemperatureValueTextBlock"
+                            VerticalAlignment="Bottom"
+                            Style="{StaticResource MaterialDesignHeadline1TextBlock}"
+                            Text="50.5" />
 
-                    <controls:ValueDescriptionControl
-                        x:Name="TempItemValueControl"
-                        IsReadOnly="True"
-                        Label="Actual" />
+                        <materialDesign:PackIcon
+                            Width="48"
+                            Height="Auto"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Kind="TemperatureFahrenheit" />
+                    </StackPanel>
 
 
-                    <controls:ValueDescriptionControl
-                        x:Name="TempTargetValueControl"
-                        IsReadOnly="True"
-                        Label="Target" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                        Text="/" />
+                    <TextBlock
+                        x:Name="TemperatureTargetValueTextBlock"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                        Text="32" />
+
 
                 </StackPanel>
             </StackPanel>
+        </materialDesign:Card>
 
 
-        </StackPanel>
 
 
-        <Button
-            x:Name="CancelButton"
-            Width="100"
-            Margin="8,25"
-            VerticalAlignment="Bottom"
-            Click="CancelButton_Click"
-            Content="Cancel"
-            Style="{StaticResource MaterialDesignFlatAccentButton}" />
-    </Grid>
+
+    </UniformGrid>
 </reactiveUi:ReactiveUserControl>

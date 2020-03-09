@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -110,18 +111,28 @@ namespace Client.Desktop.Wpf.Extensions
             if (modules != null)
                 foreach (var mod in modules)
                 {
-                    var ass = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mod.Value));
-
-                    var moduleConfig =
-                        ass.GetExportedTypes().FirstOrDefault(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
-
-                    if (moduleConfig != null)
+                    try
                     {
-                        var instance = Activator.CreateInstance(moduleConfig);
+                        var ass = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mod.Value));
 
-                        moduleConfig
-                            .GetMethod(nameof(IConfigureModule.Configure))?.Invoke(instance, new object[] { builder, services });
+                        var moduleConfig =
+                            ass.GetExportedTypes().FirstOrDefault(t =>
+                                t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
+
+                        if (moduleConfig != null)
+                        {
+                            var instance = Activator.CreateInstance(moduleConfig);
+
+                            moduleConfig
+                                .GetMethod(nameof(IConfigureModule.Configure))
+                                ?.Invoke(instance, new object[] {builder, services});
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"An error occured loading module {mod.Value}. {Environment.NewLine} Exception: {ex.Message}.");
+                    }
+                   
                 }
         }
 

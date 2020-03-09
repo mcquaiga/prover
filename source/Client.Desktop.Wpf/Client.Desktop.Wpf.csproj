@@ -55,6 +55,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
+      <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -103,6 +112,7 @@
     <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\Prover.Hardware.MccDAQ\Prover.Hardware.MccDAQ.csproj" />
     <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
   </ItemGroup>
 

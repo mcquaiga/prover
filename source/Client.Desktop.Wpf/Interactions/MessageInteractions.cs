@@ -9,17 +9,11 @@ namespace Client.Desktop.Wpf.Interactions
         public static Interaction<string, Unit> ShowError { get; } = new Interaction<string, Unit>();
 
         public static Interaction<string, bool> ShowYesNo { get; } = new Interaction<string, bool>();
+        public static Interaction<string, bool> ShowQuestion { get; } = new Interaction<string, bool>();
     }
 
     public static class NotificationInteractions
     {
         public static Interaction<string, Unit> SnackBarMessage { get; } = new Interaction<string, Unit>();
-    }
-
-    public static class DeviceInteractions
-    {
-        public static Interaction<string, Unit> Connect { get; } = new Interaction<string, Unit>();
-        public static Interaction<string, Unit> DownloadItems { get; } = new Interaction<string, Unit>();
-        public static Interaction<string, Unit> LiveReadItems { get; } = new Interaction<string, Unit>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Client.Desktop.Wpf.Startup
 {
     public class AppBootstrapper : IHostApplicationLifetime
     {
-        public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        public static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private ILogger _logger = NullLogger.Instance;
 
         public IConfiguration Config { get; set; }
@@ -43,20 +44,24 @@ namespace Client.Desktop.Wpf.Startup
         public async Task<AppBootstrapper> StartAsync(string[] args)
         {
             AppHost = ConfigureBuilder(this, args);
+            await AppHost.StartAsync();
 
+            await ExecuteStartUpTasks();
+
+            InitializeLogging();
+
+            return this;
+        }
+
+        private async Task ExecuteStartUpTasks()
+        {
             var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
-                .ForEachAsync(t => t.ExecuteAsync(CancellationTokenSource.Token));
+                .ForEachAsync(async t => await t.ExecuteAsync(CancellationTokenSource.Token));
             await startupTask;
 
             if (startupTask.IsFaulted)
                 foreach (var ex in startupTask.Exception.InnerExceptions)
                     _logger.LogError(ex, "Errors occured on start up.");
-
-            await AppHost.StartAsync();
-            
-            InitializeLogging();
-
-            return this;
         }
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
@@ -68,14 +73,11 @@ namespace Client.Desktop.Wpf.Startup
                     log.Services.AddSplatLogging();
                     log.AddDebug();
 #endif
-
-
                 })
                 .ConfigureServices((host, services) =>
                 {
                     booter.AddServices(services, host);
                     host.ConfigureModules(services);
-                    
                 })
                 .Build();
 

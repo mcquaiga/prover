@@ -11,15 +11,16 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
     public interface IDialogViewModel
     {
         //ReactiveCommand<Unit, bool> CancelCommand { get; set; }
+        ReactiveCommand<Unit, bool> CloseCommand { get; set; }
         bool IsDialogOpen { get; }
     }
 
-    public abstract class DialogViewModel : ReactiveObject, IDialogViewModel, IDisposable
+    public class DialogViewModel : ReactiveObject, IDialogViewModel, IDisposable
     {
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
         protected CancellationTokenSource CancellationTokenSource;
 
-        protected DialogViewModel(CancellationTokenSource cancellationTokenSource)
+        public DialogViewModel(CancellationTokenSource cancellationTokenSource)
         {
             ShowCommand = ReactiveCommand.Create(() => true);
             CloseCommand = ReactiveCommand.Create(() => false);
