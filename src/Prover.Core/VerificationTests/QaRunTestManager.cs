@@ -155,10 +155,11 @@
             var items = await _communicationClient.GetAllItems();
 
             Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
-
             if (runVerifiers)
             {
                 await TestActionsManager.ExecuteValidations(VerificationStep.PreVerification, _communicationClient, Instrument);
+                items = await _communicationClient.GetAllItems();
+                Instrument = Instrument.Create(instrumentType, items, testSettings.TestSettings, client);
             }
 
             await _communicationClient.Disconnect();
