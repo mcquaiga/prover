@@ -19,7 +19,7 @@ namespace Prover.Application.ViewModels.Volume
         [Reactive] public VolumeItems StartValues { get; set; }
         [Reactive] public VolumeItems EndValues { get; set; }
 
-        [Reactive] public IVolumeInputType DriveType { get; set; }
+        public IVolumeInputType DriveType { get; set; }
 
         public virtual PulseOutputTestViewModel PulseOutputTest { get; set; }
     }

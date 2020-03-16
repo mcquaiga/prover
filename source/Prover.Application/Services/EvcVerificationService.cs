@@ -111,9 +111,9 @@ namespace Prover.Application.Services
             if (correctionTest.GetSuperFactorTest() != null)
                 builder.BuildSuperFactorTest(correctionTest.GetSuperFactorTest().Items);
 
-            if (correctionTest.GetVolumeTest() != null)
-                builder.BuildVolumeTest(correctionTest.GetVolumeTest().StartValues, correctionTest.GetVolumeTest().EndValues,
-                    correctionTest.GetVolumeTest().Uncorrected.AppliedInput);
+            //if (correctionTest.GetVolumeTest() != null)
+            //    builder.BuildVolumeTest(correctionTest.GetVolumeTest().StartValues, correctionTest.GetVolumeTest().EndValues,
+            //        correctionTest.GetVolumeTest().Uncorrected.AppliedInput);
 
             builder.Commit();
         }

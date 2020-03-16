@@ -27,6 +27,7 @@ namespace Client.Desktop.Wpf.Communications
                 var pressureItem = session.Device.DeviceType.GetLivePressureItem();
                 liveReader.AddReadingStabilizer(pressureItem, test.Pressure.GetTotalGauge());
             }
+
             if (test.Temperature != null)
             {
                 var tempItem = session.Device.DeviceType.GetLiveTemperatureItem();
@@ -45,24 +46,17 @@ namespace Client.Desktop.Wpf.Communications
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
         private readonly Dictionary<ItemMetadata, AveragedReadingStabilizer> _liveReadItems;
-        
-        private LiveReadCoordinator()
-        {
-            _liveReadItems = new Dictionary<ItemMetadata, AveragedReadingStabilizer>();
-        }
+
+        private LiveReadCoordinator() => _liveReadItems = new Dictionary<ItemMetadata, AveragedReadingStabilizer>();
 
         public Dictionary<ItemMetadata, decimal> ItemTargets { get; } = new Dictionary<ItemMetadata, decimal>();
 
         public IObservable<ItemValue> LiveReadUpdates { get; set; }
+        public DeviceType DeviceType { get; private set; }
 
         public void Dispose()
         {
             _cleanup?.Dispose();
-        }
-        public DeviceType DeviceType { get; private set; }
-        private void RegisterCallback(Action callbackAction, IScheduler scheduler = null)
-        {
-            _callbacks.Add(callbackAction, scheduler ?? CurrentThreadScheduler.Instance);
         }
 
         public async Task<IObservable<ItemValue>> Start(IDeviceSessionManager deviceSession)
@@ -118,8 +112,7 @@ namespace Client.Desktop.Wpf.Communications
                         obs.OnNext(value);
                     });
 
-                    if (_liveReadItems.All(i => i.Value.CheckIfStable())
-                        || cancellationToken.IsCancellationRequested)
+                    if (_liveReadItems.All(i => i.Value.CheckIfStable()) || cancellationToken.IsCancellationRequested)
                         obs.OnCompleted();
                 });
 
@@ -130,6 +123,11 @@ namespace Client.Desktop.Wpf.Communications
         private void InvokeCallbacks()
         {
             _callbacks.ForEach(kv => kv.Value?.Schedule(kv.Key));
+        }
+
+        private void RegisterCallback(Action callbackAction, IScheduler scheduler = null)
+        {
+            _callbacks.Add(callbackAction, scheduler ?? CurrentThreadScheduler.Instance);
         }
 
         private async Task StopLiveReading()

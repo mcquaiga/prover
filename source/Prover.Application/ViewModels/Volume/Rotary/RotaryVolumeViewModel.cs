@@ -10,11 +10,11 @@ namespace Prover.Application.ViewModels.Volume.Rotary
         {
         }
 
+        public CorrectedVolumeTestViewModel Corrected { get; set; }
+        public UncorrectedVolumeTestViewModel Uncorrected { get; set; }
         public RotaryMeterTestViewModel RotaryMeterTest { get; set; }
 
-        protected override ICollection<VerificationViewModel> GetSpecificTests()
-        {
-            return new List<VerificationViewModel>{ RotaryMeterTest };
-        }
+        protected override ICollection<VerificationViewModel> GetSpecificTests() =>
+            new List<VerificationViewModel> {RotaryMeterTest, Corrected, Uncorrected};
     }
 }

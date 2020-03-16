@@ -57,6 +57,7 @@ namespace Devices.Core.Repository
             All = devices.AsObservableCache();
 
             var allDevice = All.Connect()
+                .Filter(t => t.IsHidden == false)
                 .Bind(out var deviceTypes)
                 .Subscribe();
             Devices = deviceTypes;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -23,7 +24,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
                 var tempItem = ViewModel.DeviceType.GetLiveTemperatureItem();
                 if (tempItem != null && ViewModel.ItemTargets.ContainsKey(tempItem))
                 {
-                    TemperatureTargetValueTextBlock.Text = ViewModel.ItemTargets[tempItem].ToString();
+                    TemperatureTargetValueTextBlock.Text = ViewModel.ItemTargets[tempItem].ToString(CultureInfo.CurrentCulture);
 
                     ViewModel.LiveReadUpdates
                         .Where(i => i.Metadata.IsLiveReadTemperature == true)
@@ -40,13 +41,13 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
                 var pressureItem = ViewModel.DeviceType.GetLivePressureItem();
                 if (pressureItem != null && ViewModel.ItemTargets.ContainsKey(pressureItem))
                 {
-                    PressureTargetValueControl.Value = ViewModel.ItemTargets[pressureItem].ToString();
+                    PressureTargetValueTextBlock.Text = ViewModel.ItemTargets[pressureItem].ToString(CultureInfo.CurrentCulture);
 
                     ViewModel.LiveReadUpdates
                         .Where(i => i.Metadata.IsLiveReadPressure == true)
                         .Select(i => i.DecimalValue()?.ToString() ?? "")
                         .ObserveOn(RxApp.MainThreadScheduler)
-                        .BindTo(this, view => view.PressureItemValueControl.Value)
+                        .BindTo(this, view => view.PressureValueTextBlock.Text)
                         .DisposeWith(d);
                 }
                 else

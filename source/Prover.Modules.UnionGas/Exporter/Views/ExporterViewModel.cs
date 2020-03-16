@@ -4,6 +4,7 @@ using ReactiveUI;
 using DynamicData;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             ScreenManager = screenManager;
             HostScreen = screenManager;
 
-            DeviceTypes = deviceRepository.Devices;
+            DeviceTypes = deviceRepository.Devices.Where(d => d.IsHidden == false).ToObservable();
             //DeviceTypes.Add(new DeviceType() { Id = Guid.Empty, Name = "All" } );
 
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, DeviceType>(f => f);

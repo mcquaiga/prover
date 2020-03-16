@@ -14,6 +14,7 @@ using Devices.Romet.Core.Repository;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -62,13 +63,14 @@ namespace Client.Desktop.Wpf.Startup
 
             services.AddSingleton<DeviceSessionDialogManager>();
 
-            services.AddSingleton<DaqBoardChannelFactory>();
-            services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
-            services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
+            //services.AddSingleton<DaqBoardChannelFactory>();
+            //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
+            //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
 
             //Pulse Outputs
-            //services.AddTransient(c => new PulseInputsListenerService(c))
-            //services.AddSingleton<IInputChannelFactory>(c => new SimulatorPulseChannelFactory());
+            services.AddSingleton(c => new SimulatorPulseChannelFactory(c.GetService<ILogger>()));
+            services.AddSingleton<IInputChannelFactory, SimulatorPulseChannelFactory>();
+            services.AddSingleton<IOutputChannelFactory, SimulatorPulseChannelFactory>();
 
             services.AddStartTask<DeviceServices>();
         }

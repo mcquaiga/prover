@@ -9,6 +9,7 @@ using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Domain.EvcVerifications;
+using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
 
 namespace Prover.Application.ViewModels.Services
@@ -118,7 +119,8 @@ namespace Prover.Application.ViewModels.Services
         //        {VolumeInputType.Mechanical, () => new MechanicalVolumeInputBuilder()},
         //        {VolumeInputType.PulseInput, () => new PulseInputVolumeBuilder()}
         //    };
-        protected VolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems)
+        protected VolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems,
+            VolumeInputType driveTypeInputType)
         {
             StartVolumeItems = startVolumeItems;
             EndVolumeItems = endVolumeItems;
@@ -140,35 +142,32 @@ namespace Prover.Application.ViewModels.Services
             switch (viewModel.DriveType.InputType)
             {
                 case VolumeInputType.Rotary:
-                    factory = new RotaryVolumeViewModelFactory(startVolumeItems, endVolumeItems);
+                    factory = new RotaryVolumeViewModelFactory(startVolumeItems, endVolumeItems, viewModel.DriveType.InputType);
                     break;
                 case VolumeInputType.Mechanical:
-                    factory = new MechanicalVolumeViewModelFactory(startVolumeItems, endVolumeItems);
+                    factory = new MechanicalVolumeViewModelFactory(startVolumeItems, endVolumeItems, viewModel.DriveType.InputType);
                     break;
                 default:
-                    factory = new PulseInputVolumeViewModelFactory(startVolumeItems, endVolumeItems);
+                    factory = new PulseInputVolumeViewModelFactory(startVolumeItems, endVolumeItems, viewModel.DriveType.InputType);
                     break;
             }
 
             factory.CreateSpecificTests(device, viewModel, testPoint);
         }
 
-        protected void CreateCorrectedUncorrectedDefault(DeviceInstance device,
-            EvcVerificationViewModel viewModel,
-            VerificationTestPointViewModel testPoint)
+        protected UncorrectedVolumeTestViewModel CreateUncorrectedVolumeTest(IVolumeInputType volumeInputType)
         {
-            var uncorModel = new UncorrectedVolumeTestViewModel(viewModel.DriveType, StartVolumeItems, EndVolumeItems);
-            
-            var corModel = new CorrectedVolumeTestViewModel(viewModel.DriveType, uncorModel, SharedCalculator,
-                StartVolumeItems, EndVolumeItems);
-
-            CreatePulseOutputTests(device, uncorModel, corModel);
-
-            testPoint.GetVolumeTest().Corrected = corModel;
-            testPoint.GetVolumeTest().Uncorrected = uncorModel;
+            return new UncorrectedVolumeTestViewModel(volumeInputType, StartVolumeItems, EndVolumeItems);
         }
 
-        private static void CreatePulseOutputTests(DeviceInstance device, UncorrectedVolumeTestViewModel uncorModel,
+        protected CorrectedVolumeTestViewModel CreateCorrectedVolumeTest(IVolumeInputType volumeInputType,
+            UncorrectedVolumeTestViewModel uncorrectedTest)
+        {
+            return new CorrectedVolumeTestViewModel(volumeInputType, uncorrectedTest, SharedCalculator,
+                StartVolumeItems, EndVolumeItems);
+        }
+
+        protected void CreatePulseOutputTests(DeviceInstance device, UncorrectedVolumeTestViewModel uncorModel,
             CorrectedVolumeTestViewModel corModel)
         {
             var pulseOutputs = device.ItemGroup<PulseOutputItems>();
@@ -208,42 +207,58 @@ namespace Prover.Application.ViewModels.Services
 
     internal class RotaryVolumeViewModelFactory : VolumeViewModelFactory
     {
-        public RotaryVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
-            startVolumeItems, endVolumeItems)
+        public RotaryVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems,
+            VolumeInputType driveTypeInputType) : base(
+            startVolumeItems, endVolumeItems, driveTypeInputType)
         {
         }
 
         protected override void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
-            var vm = new RotaryVolumeViewModel(StartVolumeItems, EndVolumeItems);
-            var rotary = new RotaryMeterTestViewModel(device.ItemGroup<RotaryMeterItems>());
+            var vm = new RotaryVolumeViewModel(StartVolumeItems, EndVolumeItems)
+            {
+                Uncorrected = CreateUncorrectedVolumeTest(viewModel.DriveType)
+            };
+            vm.Corrected = CreateCorrectedVolumeTest(viewModel.DriveType, vm.Uncorrected);
 
+            CreatePulseOutputTests(device, vm.Uncorrected, vm.Corrected);
+
+            var rotary = new RotaryMeterTestViewModel(device.ItemGroup<RotaryMeterItems>());
             vm.RotaryMeterTest = rotary;
             testPoint.TestsCollection.Add(vm);
-
-            CreateCorrectedUncorrectedDefault(device, viewModel, testPoint);
         }
     }
 
     internal class MechanicalVolumeViewModelFactory : VolumeViewModelFactory
     {
-        public MechanicalVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
-            startVolumeItems, endVolumeItems)
+        public MechanicalVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems,
+            VolumeInputType driveTypeInputType) : base(
+            startVolumeItems, endVolumeItems, driveTypeInputType)
         {
         }
 
         protected override void CreateSpecificTests(DeviceInstance device, EvcVerificationViewModel viewModel,
             VerificationTestPointViewModel testPoint)
         {
-            base.CreateSpecificTests(device, viewModel, testPoint);
+            //var vm = new MechanicalVolumeViewModel(StartVolumeItems, EndVolumeItems)
+            //{
+            //    Uncorrected = CreateUncorrectedVolumeTest(viewModel.DriveType)
+            //};
+
+            //vm.Corrected = CreateCorrectedVolumeTest(viewModel.DriveType, vm.Uncorrected);
+            //CreatePulseOutputTests(device, vm.Uncorrected, vm.Corrected);
+
+           
+            //testPoint.TestsCollection.Add(vm);
         }
     }
 
     internal class PulseInputVolumeViewModelFactory : VolumeViewModelFactory
     {
-        public PulseInputVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems) : base(
-            startVolumeItems, endVolumeItems)
+        public PulseInputVolumeViewModelFactory(VolumeItems startVolumeItems, VolumeItems endVolumeItems,
+            VolumeInputType driveTypeInputType) : base(
+            startVolumeItems, endVolumeItems, driveTypeInputType)
         {
         }
 

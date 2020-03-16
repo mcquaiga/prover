@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.ViewModels;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
@@ -12,36 +13,65 @@ namespace Prover.Application.Hardware
 {
     public class SimulatorPulseChannelFactory : IInputChannelFactory, IOutputChannelFactory
     {
-        public IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel) => throw new NotImplementedException();
+        private readonly ILogger _logger;
+        private readonly IScheduler _scheduler;
 
-        public IOutputChannel CreateOutputChannel(OutputChannelType channelType) => throw new NotImplementedException();
+        public SimulatorPulseChannelFactory(ILogger logger = null, IScheduler scheduler = null)
+        {
+            _logger = logger;
+            _scheduler = scheduler;
+        }
+
+        public IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel)
+        {
+            return SimulatedInputChannel.PulseInputSimulators[pulseChannel];
+        }
+
+        public IOutputChannel CreateOutputChannel(OutputChannelType channelType)
+        {
+            return SimulatedOutputChannel.OutputSimulators[channelType];
+        }
+            
     }
 
     public class SimulatedOutputChannel : IOutputChannel
     {
-        private static readonly ILogger _logger = ProverLogging.CreateLogger("SimulatedOutputChannel");
+        private static Dictionary<OutputChannelType, SimulatedOutputChannel> _outputSimulators;
 
-        public static Dictionary<OutputChannelType, SimulatedOutputChannel> OutputSimulators =
-            new Dictionary<OutputChannelType, SimulatedOutputChannel>
+        public static Dictionary<OutputChannelType, SimulatedOutputChannel> OutputSimulators
+        {
+            get
             {
-                {
-                    OutputChannelType.Motor,
-                    new SimulatedOutputChannel(OutputChannelType.Motor,
-                        SimulatedInputChannel.PulseInputSimulators.Values)
-                },
-                {
-                    OutputChannelType.Tachometer, new SimulatedOutputChannel(OutputChannelType.Tachometer)
-                }
-            };
+                if (_outputSimulators == null)
+                    _outputSimulators = new Dictionary<OutputChannelType, SimulatedOutputChannel>
+                    {
+                        {
+                            OutputChannelType.Motor,
+                            new SimulatedOutputChannel(OutputChannelType.Motor,
+                                SimulatedInputChannel.PulseInputSimulators.Values)
+                        },
+                        {
+                            OutputChannelType.Tachometer, new SimulatedOutputChannel(OutputChannelType.Tachometer)
+                        }
+                    };
+
+                return _outputSimulators;
+            }
+        }
+            
 
         private readonly OutputChannelType _channel;
-        private readonly IEnumerable<SimulatedInputChannel> _inputChannels;
+        private readonly IEnumerable<SimulatedInputChannel> _inputChannels = new List<SimulatedInputChannel>();
+        private readonly ILogger _logger;
 
         public SimulatedOutputChannel(OutputChannelType channel,
-            IEnumerable<SimulatedInputChannel> inputChannels = null)
+            IEnumerable<SimulatedInputChannel> inputChannels, ILogger logger = null)
+            : this(channel, logger) => _inputChannels = inputChannels ?? new List<SimulatedInputChannel>();
+
+        public SimulatedOutputChannel(OutputChannelType channel, ILogger logger = null)
         {
             _channel = channel;
-            _inputChannels = inputChannels ?? new List<SimulatedInputChannel>();
+            _logger = logger ?? NullLogger.Instance;
         }
 
         public void OutputValue(short value)
@@ -58,27 +88,20 @@ namespace Prover.Application.Hardware
         public void SignalStop()
         {
             _logger.LogDebug("Signal Stop called on output channel.");
+            _inputChannels?.ForEach(i => i.Stop());
         }
     }
 
     public class SimulatedInputChannel : IInputChannel, IDisposable
     {
-        public static Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =
-            new Dictionary<PulseOutputChannel, SimulatedInputChannel>
-            {
-                {
-                    PulseOutputChannel.Channel_A, new SimulatedInputChannel(PulseOutputChannel.Channel_A)
-                },
-                {
-                    PulseOutputChannel.Channel_B, new SimulatedInputChannel(PulseOutputChannel.Channel_B)
-                }
-            };
+        private static Dictionary<PulseOutputChannel, SimulatedInputChannel> _pulseInputSimulators;
+
+        private readonly ILogger _logger;
 
         private readonly IScheduler _scheduler;
         private CompositeDisposable _cleanup;
 
         private int _currentValue = 255;
-        private readonly ILogger _logger;
         private IObservable<int> _simulator;
 
         public SimulatedInputChannel(PulseOutputChannel channel, ILogger logger = null, IScheduler scheduler = null)
@@ -87,6 +110,12 @@ namespace Prover.Application.Hardware
             Channel = channel;
             _scheduler = scheduler ?? TaskPoolScheduler.Default;
         }
+
+        public static Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =>
+            _pulseInputSimulators ?? (_pulseInputSimulators = new Dictionary<PulseOutputChannel, SimulatedInputChannel> {
+                    {PulseOutputChannel.Channel_A, new SimulatedInputChannel(PulseOutputChannel.Channel_A)},
+                    {PulseOutputChannel.Channel_B, new SimulatedInputChannel(PulseOutputChannel.Channel_B)}
+                });
 
         public PulseOutputChannel Channel { get; }
 
@@ -113,7 +142,7 @@ namespace Prover.Application.Hardware
                         onValue, x => true,
                         x => OffValue - _currentValue,
                         x => pulseIntervalMs ?? random.Next(500, 3000),
-                        x => TimeSpan.FromMilliseconds(x), 
+                        x => TimeSpan.FromMilliseconds(x),
                         _scheduler)
                     .LogDebug("Generated Pulse", _logger, true)
                     .Select(_ => onValue)

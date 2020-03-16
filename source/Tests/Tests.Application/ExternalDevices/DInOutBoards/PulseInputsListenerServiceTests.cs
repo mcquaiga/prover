@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using Application.ExternalDevices.DInOutBoards.Tests;
 using Devices.Core.Items.ItemGroups;
 using DynamicData;
-using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -26,6 +25,43 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
         private Mock<IInputChannelFactory> _channelMockFactory;
         private PulseOutputItems _pulseOutputItems;
         private TestSchedulers _schedulers;
+
+        [TestMethod]
+        public void ConstantIntervalSimulatorInputChannelTest()
+        {
+            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, _schedulers.TaskPool);
+
+            var value = 0;
+            var changes = 0;
+            var pulses = 0;
+
+            simulator.GetRandomSimulator(1000)
+                //.Do(v => Debug.WriteLine($"Pulse Received {v}")
+                .ObserveOn(_schedulers.Dispatcher)
+                //.SubscribeOn(_schedulers.TaskPool)
+                .Subscribe(v =>
+                {
+                    value = v;
+                    changes++;
+                    if (value != simulator.OffValue)
+                    {
+                        pulses++;
+                        Debug.WriteLine($"Total = {pulses}");
+                    }
+
+                    Assert.IsTrue(simulator.GetValue() == value);
+                });
+            //_schedulers.TaskPool.Start();
+            _schedulers.TaskPool.AdvanceBySeconds(5);
+            _schedulers.Dispatcher.AdvanceBySeconds(5);
+            //do
+            //{
+
+            //    Debug.WriteLine($"Total = {pulses}");
+            //} while (pulses < 10);
+            Assert.IsTrue(changes > 0);
+            Assert.IsTrue(pulses > 10);
+        }
 
         [TestInitialize]
         public void Init()
@@ -70,8 +106,8 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             StartPulseGenerator(_channelAMock, _schedulers.TaskPool);
 
             var service = new PulseInputsListenerService(null, _channelMockFactory.Object, _schedulers.TaskPool);
-            service.Initialize(_pulseOutputItems);
-            var listener = service.PulseListener.Connect()
+            service.Initialize(_pulseOutputItems, null);
+            var listener = service.PulseCountUpdates.Connect()
                 .Bind(out var pulses)
                 .Subscribe();
 
@@ -109,7 +145,43 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             Assert.IsTrue(pulses[0].PulseCount == 3);
         }
 
-        [TestMethod] 
+        [TestMethod]
+        public void ListenToTwoPulseOutChannels()
+        {
+            var testTimeMs = 5000;
+            var expected = testTimeMs / 125;
+
+            StartPulseGenerator(_channelAMock, _schedulers.TaskPool);
+            StartPulseGenerator(_channelBMock, _schedulers.TaskPool);
+
+            _pulseOutputItems.Channels.Add(_channelAItems);
+            _pulseOutputItems.Channels.Add(_channelBItems);
+
+            var service = new PulseInputsListenerService(null, _channelMockFactory.Object, _schedulers.TaskPool);
+            service.Initialize(_pulseOutputItems, null);
+
+            var listener = service.PulseCountUpdates.Connect()
+                .Bind(out var pulses)
+                .Subscribe();
+
+            service.StartListening();
+            Assert.IsTrue(pulses.Count == 2); // Assert Pulse Output channel objects are initialized
+            /*            
+             *   off      on        off        on         off         on
+             *        __________           __________            ___________
+             *       |          |         |          |          |           |    
+             *  _____|          |_________|          |__________|           |
+             *
+             *  0   62.5       125      187.5       250        312.5       375   
+             */
+            _schedulers.TaskPool.AdvanceByMilliSeconds(testTimeMs);
+            _schedulers.Dispatcher.AdvanceBySeconds(1);
+
+            Assert.IsTrue(pulses[0].PulseCount == expected);
+            Assert.IsTrue(pulses[1].PulseCount == expected);
+        }
+
+        [TestMethod]
         public void RandomIntervalSimulatorInputChannelTest()
         {
             var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, _schedulers.TaskPool);
@@ -135,11 +207,11 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
                 .Subscribe();
 
             //var result = _schedulers.TaskPool.Start(() => random);
-            
+
             //_schedulers.TaskPool.AdvanceBySeconds(1);
             //_schedulers.TaskPool.AdvanceBySeconds(5);
             //_schedulers.Dispatcher.AdvanceBySeconds(1);
-            
+
             do
             {
                 _schedulers.TaskPool.AdvanceByMilliSeconds(60);
@@ -151,84 +223,9 @@ namespace Prover.Application.ExternalDevices.DInOutBoards.Tests
             Assert.IsTrue(pulses >= 10);
         }
 
-        [TestMethod] 
-        public void ConstantIntervalSimulatorInputChannelTest()
-        {
-
-            var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, _schedulers.TaskPool);
-
-            var value = 0;
-            var changes = 0;
-            var pulses = 0;
-
-            simulator.GetRandomSimulator(1000)
-                //.Do(v => Debug.WriteLine($"Pulse Received {v}")
-                .ObserveOn(_schedulers.Dispatcher)
-                //.SubscribeOn(_schedulers.TaskPool)
-                .Subscribe(v =>
-                {
-                    value = v;
-                    changes++;
-                    if (value != simulator.OffValue)
-                    {
-                        pulses++;
-                        Debug.WriteLine($"Total = {pulses}");
-                    }
-
-                    Assert.IsTrue(simulator.GetValue() == value);
-                });
-            //_schedulers.TaskPool.Start();
-            _schedulers.TaskPool.AdvanceBySeconds(5);
-            _schedulers.Dispatcher.AdvanceBySeconds(5);
-            //do
-            //{
-                
-            //    Debug.WriteLine($"Total = {pulses}");
-            //} while (pulses < 10);
-            Assert.IsTrue(changes > 0);
-            Assert.IsTrue(pulses > 10);
-        }
-
         [TestMethod]
         public void TwoInputChannelsStartedByOutputChannel()
         {
-
-        }
-
-        [TestMethod]
-        public void ListenToTwoPulseOutChannels()
-        {
-            var testTimeMs = 5000;
-            var expected = testTimeMs / 125;
-
-            StartPulseGenerator(_channelAMock, _schedulers.TaskPool);
-            StartPulseGenerator(_channelBMock, _schedulers.TaskPool);
-
-            _pulseOutputItems.Channels.Add(_channelAItems);
-            _pulseOutputItems.Channels.Add(_channelBItems);
-
-            var service = new PulseInputsListenerService(null, _channelMockFactory.Object, _schedulers.TaskPool);
-            service.Initialize(_pulseOutputItems);
-
-            var listener = service.PulseListener.Connect()
-                .Bind(out var pulses)
-                .Subscribe();
-
-            service.StartListening();
-            Assert.IsTrue(pulses.Count == 2);
-            /*            
-             *   off      on        off        on         off         on
-             *        __________           __________            ___________
-             *       |          |         |          |          |           |    
-             *  _____|          |_________|          |__________|           |
-             *
-             *  0   62.5       125      187.5       250        312.5       375   
-             */
-            _schedulers.TaskPool.AdvanceByMilliSeconds(testTimeMs);
-            _schedulers.Dispatcher.AdvanceBySeconds(1);
-
-            Assert.IsTrue(pulses[0].PulseCount == expected);
-            Assert.IsTrue(pulses[1].PulseCount == expected);
         }
 
 

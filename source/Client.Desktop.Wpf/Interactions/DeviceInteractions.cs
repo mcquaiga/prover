@@ -33,22 +33,29 @@ namespace Client.Desktop.Wpf.Interactions
 
         public static Interaction<DeviceSessionManager, Unit> Unlinked { get; } =
             new Interaction<DeviceSessionManager, Unit>();
+
+        public static Interaction<VolumeTestManager, CancellationToken> StartVolumeTest { get; } =
+            new Interaction<VolumeTestManager, CancellationToken>(); 
+        public static Interaction<VolumeTestManager, CancellationToken> CompleteVolumeTest { get; } =
+            new Interaction<VolumeTestManager, CancellationToken>();
+        
     }
 
     public class DeviceSessionDialogManager : DialogViewModel
     {
         private readonly ILogger<DeviceSessionDialogManager> _logger;
-        private SessionDialogView _dialogView;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CompositeDisposable _cleanup;
+        private SessionDialogView _dialogView;
         private SessionStatusDialogView _sessionStatusView;
 
-        public DeviceSessionDialogManager(ILogger<DeviceSessionDialogManager> logger, DialogServiceManager dialogManager)
+        public DeviceSessionDialogManager(ILogger<DeviceSessionDialogManager> logger,
+            DialogServiceManager dialogManager)
         {
             _logger = logger ?? NullLogger<DeviceSessionDialogManager>.Instance;
-            
+
             RegisterDeviceInteractions(dialogManager);
-            
+
             RequestCancellation = ReactiveCommand.CreateFromTask(async () =>
             {
                 _logger.LogDebug("Cancellation Requested.");
@@ -65,7 +72,7 @@ namespace Client.Desktop.Wpf.Interactions
         {
             DeviceInteractions.Connecting.RegisterHandler(async context =>
             {
-                _dialogView = new SessionDialogView { ViewModel = this };
+                _dialogView = new SessionDialogView {ViewModel = this};
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 SessionStatusUpdates = new SessionStatusDialogViewModel(context.Input, _cancellationTokenSource)
@@ -107,6 +114,20 @@ namespace Client.Desktop.Wpf.Interactions
             {
                 await dialogManager.CloseDialog.Execute();
                 context.SetOutput(Unit.Default);
+            });
+
+            DeviceInteractions.StartVolumeTest.RegisterHandler(async context =>
+            {
+                SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
+               
+                await dialogManager.ShowDialogView.Execute(_dialogView);
+                context.SetOutput(_cancellationTokenSource.Token);
+            }); 
+            DeviceInteractions.CompleteVolumeTest.RegisterHandler(async context =>
+            {
+                //SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
+                await dialogManager.CloseDialog.Execute();
+                context.SetOutput(_cancellationTokenSource.Token);
             });
         }
     }

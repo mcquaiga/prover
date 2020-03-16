@@ -31,5 +31,10 @@ namespace Prover.Application.Extensions
                                               typeof(CorrectionTestViewModel<>));
             }).ToList();
         }
+
+        public static VolumeTestRunViewModelBase GetUncorrectedTest(this VolumeViewModelBase volumeTest)
+        {
+            return (VolumeTestRunViewModelBase) volumeTest.AllTests().FirstOrDefault();
+        }
     }
 }

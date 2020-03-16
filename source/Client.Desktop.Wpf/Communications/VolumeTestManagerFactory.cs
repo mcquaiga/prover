@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume;
+using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Communications
@@ -42,7 +43,7 @@ namespace Client.Desktop.Wpf.Communications
         {
             var logger = _loggerFactory.CreateLogger<VolumeTestManager>();
             var tachometerService = GetTachometerService(tachPortName);
-            var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>());
+            var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>(), volumeTest.DriveType);
             var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
 
             return new VolumeTestManager(logger, _dialogService, deviceManager, tachometerService,
@@ -50,9 +51,9 @@ namespace Client.Desktop.Wpf.Communications
         }
 
 
-        private PulseInputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems)
+        private PulseInputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems, IVolumeInputType volumeInputType)
         {
-            _pulseListenerService.Initialize(pulseOutputItems);
+            _pulseListenerService.Initialize(pulseOutputItems, volumeInputType);
             return _pulseListenerService;
         }
 
