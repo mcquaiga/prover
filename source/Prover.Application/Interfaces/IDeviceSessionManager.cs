@@ -20,7 +20,7 @@ namespace Prover.Application.Interfaces
 
         Task EndSession();
         ICollection<ItemMetadata> GetItemsToDownload();
-        Task<IEnumerable<ItemValue>> GetItemValues();
+        Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemsToDownload = null);
 
         Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 

@@ -27,7 +27,7 @@ namespace Devices.Core.Items.ItemGroups
 
             var site = deviceType.GetGroupValues<SiteInformationItems>(items);
             
-            if (site.PressureFactor == CorrectionFactorType.Fixed) 
+            if (site.LivePressureFactor == CorrectionFactorType.Fixed) 
                 return null;
 
             return base.SetValues(deviceType, items);

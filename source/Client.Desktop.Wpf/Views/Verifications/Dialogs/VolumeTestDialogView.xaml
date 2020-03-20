@@ -9,85 +9,93 @@
     xmlns:reactiveUi="http://reactiveui.net"
     x:TypeArguments="communications:VolumeTestManager"
     mc:Ignorable="d">
-    <StackPanel
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Orientation="Horizontal">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <UniformGrid
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Rows="1">
 
-        <materialDesign:Card
-            x:Name="UncorrectedStackPanelControl"
-            Margin="10"
-            Padding="15"
-            materialDesign:ShadowAssist.ShadowDepth="Depth2">
-            <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone
-                    Padding="15"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                    Content="Uncorrected"
-                    FontSize="36"
-                    Mode="PrimaryLight" />
-                <StackPanel
-                    Grid.Row="1"
-                    Margin="8,4"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
+            <materialDesign:Card
+                x:Name="UncorrectedStackPanelControl"
+                Margin="10"
+                Padding="15"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <StackPanel Orientation="Vertical">
+                    <materialDesign:ColorZone
+                        Padding="15"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        Content="Uncorrected"
+                        FontSize="36"
+                        Mode="PrimaryLight" />
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            x:Name="UncorrectedPulseValueTextBlock"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Style="{StaticResource MaterialDesignHeadline1TextBlock}"
+                            Text="0" />
+
+                        <StackPanel
+                            Margin="25,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <TextBlock
+                                x:Name="UncorrectedTargetValueTextBlock"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                Text="100" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="Target" />
+                        </StackPanel>
+                    </StackPanel>
                     <TextBlock
-                        x:Name="UncorrectedPulseValueTextBlock"
+                        x:Name="UncorrectedChannelNameTextBlock"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                        Text="Channel A" />
+                </StackPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card
+                x:Name="CorrectedStackPanelControl"
+                Margin="10"
+                Padding="15"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                <StackPanel Orientation="Vertical">
+                    <materialDesign:ColorZone
+                        Padding="15"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                        Content="Corrected"
+                        FontSize="36"
+                        Mode="PrimaryLight" />
+                    <TextBlock
+                        x:Name="CorrectedPulseValueTextBlock"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
                         Style="{StaticResource MaterialDesignHeadline1TextBlock}"
-                        Text="8" />
-
-                    <StackPanel
-                        Margin="25,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Orientation="Vertical">
-                        <TextBlock
-                            x:Name="UncorrectedTargetValueTextBlock"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                            Text="100" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                            Text="Target" />
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-        </materialDesign:Card>
-
-        <materialDesign:Card
-            x:Name="CorrectedStackPanelControl"
-            Margin="10"
-            Padding="15"
-            materialDesign:ShadowAssist.ShadowDepth="Depth2">
-            <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone
-                    Padding="15"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                    Content="Corrected"
-                    FontSize="36"
-                    Mode="PrimaryLight" />
-                <TextBlock
-                    x:Name="CorrectedPulseValueTextBlock"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"
-                    Text="8" />
-                <!--<controls:ValueDescriptionControl
+                        Text="0" />
+                    <!--<controls:ValueDescriptionControl
                     IsReadOnly="True"
                     Label="Actual"
                     Value="{Binding UncorPulseCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=25}" />-->
+                    <TextBlock
+                        x:Name="CorrectedChannelNameTextBlock"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                        Text="Channel B" />
+                </StackPanel>
+            </materialDesign:Card>
 
-            </StackPanel>
-        </materialDesign:Card>
 
-
-    </StackPanel>
-
+        </UniformGrid>
+    </Grid>
 
 </reactiveUi:ReactiveUserControl>

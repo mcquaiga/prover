@@ -84,7 +84,7 @@
                 <Button
                     Width="150"
                     Margin="15,5"
-                    Command="{Binding ViewModel.VolumeTestManager.StartVolumeTest, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
+                    Command="{Binding ViewModel.VolumeTestManager.StartTest, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
                     Content="Run Volume Test"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
             </StackPanel>

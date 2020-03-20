@@ -87,12 +87,13 @@ namespace Prover.Application.ViewModels.Corrections
             PassTolerance = passTolerance;
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.Deviation)
-                //.Select((values) => Calculators.Deviation(values.Item1, values.Item2))
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Select(x => ActualValue == 0 && ExpectedValue == 0 ? 100 : x)
                 .ToPropertyEx(this, x => x.Deviation, 100)
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Deviation)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Select(p => p.IsBetween(PassTolerance))
                 .ToPropertyEx(this, x => x.Verified)
                 .DisposeWith(Cleanup);

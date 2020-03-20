@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.ViewModels;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 
@@ -22,21 +22,30 @@ namespace Prover.Application.Hardware
             _scheduler = scheduler;
         }
 
-        public IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel)
-        {
-            return SimulatedInputChannel.PulseInputSimulators[pulseChannel];
-        }
+        public IInputChannel CreateInputChannel(PulseOutputChannel pulseChannel) =>
+            SimulatedInputChannel.PulseInputSimulators[pulseChannel];
 
-        public IOutputChannel CreateOutputChannel(OutputChannelType channelType)
-        {
-            return SimulatedOutputChannel.OutputSimulators[channelType];
-        }
-            
+        public IOutputChannel CreateOutputChannel(OutputChannelType channelType) =>
+            SimulatedOutputChannel.OutputSimulators[channelType];
     }
 
     public class SimulatedOutputChannel : IOutputChannel
     {
         private static Dictionary<OutputChannelType, SimulatedOutputChannel> _outputSimulators;
+
+        private readonly OutputChannelType _channel;
+        private readonly ICollection<SimulatedInputChannel> _inputChannels = new List<SimulatedInputChannel>();
+        private readonly ILogger _logger;
+
+        public SimulatedOutputChannel(OutputChannelType channel, ICollection<SimulatedInputChannel> inputChannels,
+            ILogger logger = null) : this(channel, logger)
+            => _inputChannels = inputChannels ?? new List<SimulatedInputChannel>();
+
+        public SimulatedOutputChannel(OutputChannelType channel, ILogger logger = null)
+        {
+            _channel = channel;
+            _logger = logger ?? NullLogger.Instance;
+        }
 
         public static Dictionary<OutputChannelType, SimulatedOutputChannel> OutputSimulators
         {
@@ -58,21 +67,6 @@ namespace Prover.Application.Hardware
                 return _outputSimulators;
             }
         }
-            
-
-        private readonly OutputChannelType _channel;
-        private readonly IEnumerable<SimulatedInputChannel> _inputChannels = new List<SimulatedInputChannel>();
-        private readonly ILogger _logger;
-
-        public SimulatedOutputChannel(OutputChannelType channel,
-            IEnumerable<SimulatedInputChannel> inputChannels, ILogger logger = null)
-            : this(channel, logger) => _inputChannels = inputChannels ?? new List<SimulatedInputChannel>();
-
-        public SimulatedOutputChannel(OutputChannelType channel, ILogger logger = null)
-        {
-            _channel = channel;
-            _logger = logger ?? NullLogger.Instance;
-        }
 
         public void OutputValue(short value)
         {
@@ -88,34 +82,41 @@ namespace Prover.Application.Hardware
         public void SignalStop()
         {
             _logger.LogDebug("Signal Stop called on output channel.");
-            _inputChannels?.ForEach(i => i.Stop());
+            _inputChannels.First(p => p.Channel == PulseOutputChannel.Channel_A).Stop();
+
+            TaskPoolScheduler.Default.Schedule(TimeSpan.FromSeconds(15),
+                () => _inputChannels.First(p => p.Channel == PulseOutputChannel.Channel_B).Stop());
         }
     }
 
     public class SimulatedInputChannel : IInputChannel, IDisposable
     {
-        private static Dictionary<PulseOutputChannel, SimulatedInputChannel> _pulseInputSimulators;
+        public static readonly Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =
+            new Dictionary<PulseOutputChannel, SimulatedInputChannel>
+            {
+                {PulseOutputChannel.Channel_A, new SimulatedInputChannel(PulseOutputChannel.Channel_A, 1000)},
+                {PulseOutputChannel.Channel_B, new SimulatedInputChannel(PulseOutputChannel.Channel_B)}
+            };
+
+        private readonly int? _intervalMs;
 
         private readonly ILogger _logger;
 
         private readonly IScheduler _scheduler;
         private CompositeDisposable _cleanup;
 
-        private int _currentValue = 255;
-        private IObservable<int> _simulator;
+        private int _currentValue;
 
-        public SimulatedInputChannel(PulseOutputChannel channel, ILogger logger = null, IScheduler scheduler = null)
+        public SimulatedInputChannel(PulseOutputChannel channel, int? intervalMs = null, ILogger logger = null,
+            IScheduler scheduler = null)
         {
+            _intervalMs = intervalMs;
             _logger = logger ?? ProverLogging.CreateLogger("SimulatedInputChannel");
             Channel = channel;
             _scheduler = scheduler ?? TaskPoolScheduler.Default;
-        }
 
-        public static Dictionary<PulseOutputChannel, SimulatedInputChannel> PulseInputSimulators =>
-            _pulseInputSimulators ?? (_pulseInputSimulators = new Dictionary<PulseOutputChannel, SimulatedInputChannel> {
-                    {PulseOutputChannel.Channel_A, new SimulatedInputChannel(PulseOutputChannel.Channel_A)},
-                    {PulseOutputChannel.Channel_B, new SimulatedInputChannel(PulseOutputChannel.Channel_B)}
-                });
+            _currentValue = OffValue;
+        }
 
         public PulseOutputChannel Channel { get; }
 
@@ -130,35 +131,23 @@ namespace Prover.Application.Hardware
 
         public IObservable<int> GetRandomSimulator(int? pulseIntervalMs = null)
         {
-            var ticks = TimeSpan.FromMilliseconds(62.5).Ticks;
+            pulseIntervalMs = pulseIntervalMs ?? _intervalMs;
+            var pulseSpan = TimeSpan.FromMilliseconds(62.5);
+
+            var cleanup = new CompositeDisposable();
+
+            const int onValue = 0;
 
             return Observable.Create<int>(obs =>
             {
-                _currentValue = 255;
                 var random = new Random();
-                var onValue = 0;
 
-                var randomInterval = Observable.Generate(
-                        onValue, x => true,
-                        x => OffValue - _currentValue,
-                        x => pulseIntervalMs ?? random.Next(500, 3000),
-                        x => TimeSpan.FromMilliseconds(x),
-                        _scheduler)
-                    .LogDebug("Generated Pulse", _logger, true)
-                    .Select(_ => onValue)
-                    .Publish();
-
-                var onOffSwitch = randomInterval
-                    .Where(x => x == onValue)
-                    .Timestamp()
-                    .Delay(TimeSpan.FromTicks(ticks))
-                    .Select(_ => OffValue);
-
-                var cleanup = randomInterval.Merge(onOffSwitch).DelaySubscription(TimeSpan.FromSeconds(1))
-                    .Do(x => _currentValue = x)
-                    .Subscribe(obs.OnNext);
-
-                return new CompositeDisposable(cleanup, randomInterval.Connect());
+                return Observable.Interval(TimeSpan.FromMilliseconds(pulseIntervalMs ?? random.Next(300, 3000)), _scheduler)
+                    .Do(_ => obs.OnNext(onValue))
+                    .Select(_ => Observable.Timer(pulseSpan, _scheduler))
+                    .Do(span => span.Subscribe(_ => obs.OnNext(OffValue)))
+                    .Publish()
+                    .Connect();
             });
         }
 
@@ -166,9 +155,11 @@ namespace Prover.Application.Hardware
 
         public void Start()
         {
-            _simulator = GetRandomSimulator();
+            _cleanup = new CompositeDisposable();
 
-            _cleanup = new CompositeDisposable(_simulator.Subscribe());
+            GetRandomSimulator(_intervalMs)
+                .Subscribe(x => _currentValue = x)
+                .DisposeWith(_cleanup);
         }
 
         public void Stop()

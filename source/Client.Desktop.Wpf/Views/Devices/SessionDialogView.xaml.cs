@@ -25,9 +25,7 @@ namespace Client.Desktop.Wpf.Views.Devices
                     .DisposeWith(d);
             });
         }
-
-
-
+        
         public void Dispose()
         {
         }

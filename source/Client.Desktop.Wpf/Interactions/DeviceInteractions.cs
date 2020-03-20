@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
@@ -35,14 +37,15 @@ namespace Client.Desktop.Wpf.Interactions
             new Interaction<DeviceSessionManager, Unit>();
 
         public static Interaction<VolumeTestManager, CancellationToken> StartVolumeTest { get; } =
-            new Interaction<VolumeTestManager, CancellationToken>(); 
+            new Interaction<VolumeTestManager, CancellationToken>();
+
         public static Interaction<VolumeTestManager, CancellationToken> CompleteVolumeTest { get; } =
             new Interaction<VolumeTestManager, CancellationToken>();
-        
     }
 
     public class DeviceSessionDialogManager : DialogViewModel
     {
+        public DialogServiceManager DialogManager { get; }
         private readonly ILogger<DeviceSessionDialogManager> _logger;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CompositeDisposable _cleanup;
@@ -52,9 +55,10 @@ namespace Client.Desktop.Wpf.Interactions
         public DeviceSessionDialogManager(ILogger<DeviceSessionDialogManager> logger,
             DialogServiceManager dialogManager)
         {
+            DialogManager = dialogManager;
             _logger = logger ?? NullLogger<DeviceSessionDialogManager>.Instance;
 
-            RegisterDeviceInteractions(dialogManager);
+            RegisterDeviceInteractions();
 
             RequestCancellation = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -64,41 +68,33 @@ namespace Client.Desktop.Wpf.Interactions
             });
         }
 
-        public ReactiveCommand<Unit, Unit> RequestCancellation { get; set; }
-        [Reactive] public SessionStatusDialogViewModel SessionStatusUpdates { get; protected set; }
+        public ReactiveCommand<Unit, Unit> RequestCancellation { get; protected set; }
+
+        protected SessionStatusDialogViewModel SessionStatusUpdates;
         [Reactive] public IViewFor SessionDialogContent { get; protected set; }
 
-        private void RegisterDeviceInteractions(DialogServiceManager dialogManager)
+        public void RegisterDeviceInteractions()
         {
             DeviceInteractions.Connecting.RegisterHandler(async context =>
             {
-                _dialogView = new SessionDialogView {ViewModel = this};
-
                 _cancellationTokenSource = new CancellationTokenSource();
-                SessionStatusUpdates = new SessionStatusDialogViewModel(context.Input, _cancellationTokenSource)
-                {
-                    StatusText = "Connecting ... "
-                };
 
-                _sessionStatusView = new SessionStatusDialogView {ViewModel = SessionStatusUpdates};
-                SessionDialogContent = _sessionStatusView;
+                SetSessionStatusDialog("Connecting", context.Input);
 
-                await dialogManager.ShowDialogView.Execute(_dialogView);
+                await DialogManager.ShowDialogView.Execute(_dialogView);
                 context.SetOutput(_cancellationTokenSource.Token);
             });
 
             DeviceInteractions.Disconnecting.RegisterHandler(async context =>
             {
-                SessionDialogContent = _sessionStatusView;
-                SessionStatusUpdates.StatusText = "Disconnecting ...";
+                SetSessionStatusDialog("Disconnecting");
 
                 context.SetOutput(_cancellationTokenSource.Token);
             });
 
             DeviceInteractions.DownloadingItems.RegisterHandler(async context =>
             {
-                SessionDialogContent = _sessionStatusView;
-                SessionStatusUpdates.StatusText = "Downloading items ...";
+                SetSessionStatusDialog("Downloading items");
 
                 context.SetOutput(_cancellationTokenSource.Token);
             });
@@ -112,22 +108,43 @@ namespace Client.Desktop.Wpf.Interactions
 
             DeviceInteractions.Unlinked.RegisterHandler(async context =>
             {
-                await dialogManager.CloseDialog.Execute();
+                await DialogManager.CloseDialog.Execute();
                 context.SetOutput(Unit.Default);
             });
 
             DeviceInteractions.StartVolumeTest.RegisterHandler(async context =>
             {
                 SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
-               
-                await dialogManager.ShowDialogView.Execute(_dialogView);
+
+                await DialogManager.ShowDialogView.Execute(_dialogView);
                 context.SetOutput(_cancellationTokenSource.Token);
-            }); 
+            });
+
             DeviceInteractions.CompleteVolumeTest.RegisterHandler(async context =>
             {
-                //SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
-                await dialogManager.CloseDialog.Execute();
+                await DialogManager.CloseDialog.Execute();
                 context.SetOutput(_cancellationTokenSource.Token);
+            });
+        }
+
+        private void SetSessionStatusDialog(string message, IObservable<StatusMessage> statusMessageObservable = null)
+        {
+            if (_dialogView == null) _dialogView = new SessionDialogView {ViewModel = this};
+            if (_sessionStatusView == null)
+            {
+                SessionStatusUpdates =
+                    new SessionStatusDialogViewModel(statusMessageObservable, _cancellationTokenSource)
+                    {
+                        StatusText = message
+                    };
+
+                _sessionStatusView = new SessionStatusDialogView {ViewModel = SessionStatusUpdates};
+            }
+            
+            RxApp.MainThreadScheduler.Schedule(() =>
+            {
+                SessionStatusUpdates.StatusText = message;
+                SessionDialogContent = _sessionStatusView;
             });
         }
     }

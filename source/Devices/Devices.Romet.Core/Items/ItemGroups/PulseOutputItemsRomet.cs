@@ -13,7 +13,6 @@ namespace Devices.Romet.Core.Items.ItemGroups
         private const int Channel_A_Units = 93;
         private const int Channel_A_Scaling = 115;
 
-   
         private const int Channel_B_Units = 94;
         private const int Channel_B_Scaling = 115;
 

@@ -20,8 +20,8 @@ namespace Devices.Core.Repository
         void Dispose();
         IEnumerable<T> FilterCacheByType<T>() where T : DeviceType;
         T Find<T>(Func<T, bool> predicate) where T : DeviceType;
-        IEnumerable<T> GetAll<T>() where T : DeviceType;
-        IEnumerable<DeviceType> GetAll();
+        IEnumerable<T> GetAll<T>(bool includeHidden = false) where T : DeviceType;
+        IEnumerable<DeviceType> GetAll(bool includeHidden = false);
         DeviceType GetById(Guid id);
         DeviceType GetByName(string name);
         void Save();
@@ -85,9 +85,9 @@ namespace Devices.Core.Repository
         public T Find<T>(Func<T, bool> predicate) where T : DeviceType
             => FilterCacheByType<T>().FirstOrDefault(predicate);
 
-        public IEnumerable<T> GetAll<T>() where T : DeviceType => FilterCacheByType<T>();
+        public IEnumerable<T> GetAll<T>(bool includeHidden = false) where T : DeviceType => FilterCacheByType<T>();
 
-        public IEnumerable<DeviceType> GetAll() => All.Items;
+        public IEnumerable<DeviceType> GetAll(bool includeHidden = false) => All.Items.Where(d => includeHidden || d.IsHidden == false);
 
         public DeviceType GetById(Guid id) => All.Lookup(id).Value;
 

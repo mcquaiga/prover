@@ -41,7 +41,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
                 return Observable.Return(Unit.Default);
             }, canStartTest);
-
             
             var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
             NavigateForward = ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);

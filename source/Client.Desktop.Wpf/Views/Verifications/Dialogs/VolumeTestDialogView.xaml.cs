@@ -1,15 +1,16 @@
-﻿using System;
-using System.Reactive.Disposables;
-using Client.Desktop.Wpf.Communications;
-using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
+﻿using Prover.Shared;
 using ReactiveUI;
+using System;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
 {
     /// <summary>
     /// Interaction logic for SessionDialogView.xaml
     /// </summary>
-    public partial class VolumeTestDialogView : ReactiveUserControl<VolumeTestManager>, IDisposable
+    public partial class VolumeTestDialogView : IDisposable
     {
         public VolumeTestDialogView()
         {
@@ -17,15 +18,26 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
 
             this.WhenActivated(d =>
             {
-             
-                //this.OneWayBind(ViewModel, vm => vm.TitleText, v => v.TitleText.Text).DisposeWith(d);
-                //this.OneWayBind<VolumeTestDialogViewModel, VolumeTestDialogView, string, string>(this.ViewModel, vm => vm.StatusText, v => v.StatusText.Text).DisposeWith(d);
+                UncorrectedTargetValueTextBlock.Text = ViewModel.TargetUncorrectedPulses.ToString();
+                UncorrectedChannelNameTextBlock.Text = ViewModel.PulseListenerService.PulseChannels
+                    .FirstOrDefault(p => p.Items.Units == PulseOutputUnitType.UncVol)?.Channel.ToString();
 
-                //this.OneWayBind<VolumeTestDialogViewModel, VolumeTestDialogView, int, double>(ViewModel, vm => vm.ProgressTotal, v => v.StatusProgressBar.Maximum).DisposeWith(d);
-                //this.OneWayBind<VolumeTestDialogViewModel, VolumeTestDialogView, int, double>(ViewModel, vm => vm.Progress, v => v.StatusProgressBar.Value).DisposeWith(d);
+                ViewModel.PulseListenerService.PulseCountUpdates
+                    .Where(p => p.Items.Units == PulseOutputUnitType.UncVol)
+                    .Select(p => p.PulseCount.ToString())
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .BindTo(this, view => view.UncorrectedPulseValueTextBlock.Text)
+                    .DisposeWith(d);
 
-                //this.BindCommand<VolumeTestDialogView, VolumeTestDialogViewModel, ReactiveCommand<Unit, Unit>, ICommand>(ViewModel, vm => vm.CancelCommand, v => v.CancelButton.Command).DisposeWith(d);
-                
+                CorrectedChannelNameTextBlock.Text = ViewModel.PulseListenerService.PulseChannels
+                    .FirstOrDefault(p => p.Items.Units == PulseOutputUnitType.CorVol)?.Channel.ToString();
+
+                ViewModel.PulseListenerService.PulseCountUpdates
+                    .Where(p => p.Items.Units == PulseOutputUnitType.CorVol)
+                    .Select(p => p.PulseCount.ToString())
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .BindTo(this, view => view.CorrectedPulseValueTextBlock.Text)
+                    .DisposeWith(d);
             });
         }
 

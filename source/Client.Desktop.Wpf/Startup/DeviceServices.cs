@@ -57,7 +57,7 @@ namespace Client.Desktop.Wpf.Startup
              */
 
             // Simulator
-            services.AddTransient<PulseInputsListenerService>();
+            services.AddTransient<PulseOutputsListenerService>();
             //services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
             //services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 

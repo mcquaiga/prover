@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
+using Client.Desktop.Wpf.Interactions;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -18,15 +19,19 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
     public partial class TestManager : ITestManagerViewModelFactory
     {
+        public DeviceSessionDialogManager DeviceInteractions { get; }
         private readonly DateTime _dateCreated;
+        private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
 
         public TestManager(
             ILoggerFactory loggerFactory,
             IScreenManager screenManager,
             IDeviceSessionManager deviceManager,
             VerificationViewModelService testViewModelService,
-            IVolumeTestManagerFactory volumeTestManagerFactory) : base(screenManager)
+            IVolumeTestManagerFactory volumeTestManagerFactory,
+            DeviceSessionDialogManager deviceInteractions) : base(screenManager)
         {
+            DeviceInteractions = deviceInteractions;
             _logger = loggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
 
             _screenManager = screenManager;
@@ -37,8 +42,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             _dateCreated = DateTime.Now;
         }
 
-        public async Task<TestManager> StartNew(DeviceType deviceType, string commPortName, int baudRate,
-            string tachPortName)
+        public async Task<TestManager> StartNew(DeviceType deviceType, string commPortName, int baudRate, string tachPortName)
         {
             if (_deviceManager.SessionInProgress) await Reset();
 
@@ -47,8 +51,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             TestViewModel = _testViewModelService.NewTest(_deviceManager.Device);
             TestViewModel.DisposeWith(_cleanup);
 
-            VolumeTestManager =
-                _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
+            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
             VolumeTestManager.DisposeWith(_cleanup);
 
             SetupRxUi();

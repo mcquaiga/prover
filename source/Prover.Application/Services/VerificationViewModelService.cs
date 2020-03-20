@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Services;
+using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 
@@ -62,7 +62,7 @@ namespace Prover.Application.Services
         {
             var testModel = new EvcVerificationTest(device);
 
-            var  testViewModel = VerificationMapper.MapModelToViewModel(testModel);
+            //var testViewModel = VerificationMapper.MapModelToViewModel(testModel);
 
             return _verificationTestCreator.BuildEvcVerificationViewModel(testModel);
         }

@@ -37,9 +37,13 @@
 
   <ItemGroup>
     <Compile Remove="Modules\**" />
+    <Compile Remove="ViewModels\Certificates\**" />
     <EmbeddedResource Remove="Modules\**" />
+    <EmbeddedResource Remove="ViewModels\Certificates\**" />
     <None Remove="Modules\**" />
+    <None Remove="ViewModels\Certificates\**" />
     <Page Remove="Modules\**" />
+    <Page Remove="ViewModels\Certificates\**" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -213,7 +217,6 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
-    <Folder Include="ViewModels\Certificates\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 

@@ -88,11 +88,11 @@ namespace Client.Desktop.Wpf.Communications
             return items;
         }
 
-        public async Task<IEnumerable<ItemValue>> GetItemValues()
+        public async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemsToDownload = null)
         {
             await Connect();
             var cancelToken = await DeviceInteractions.DownloadingItems.Handle(this);
-            var itemValues = await _activeClient.GetItemsAsync();
+            var itemValues = await _activeClient.GetItemsAsync(itemsToDownload);
             await Disconnect();
             return itemValues;
         }

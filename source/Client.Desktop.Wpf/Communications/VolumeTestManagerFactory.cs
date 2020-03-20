@@ -5,22 +5,28 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Communications
 {
+    public interface IVolumeTestManagerFactory
+    {
+        //VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
+        VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
+            string tachPortName = null);
+    }
+
     public class VolumeTestManagerFactory : IVolumeTestManagerFactory
     {
         private readonly DialogServiceManager _dialogService;
         private readonly ILoggerFactory _loggerFactory;
         private readonly Func<OutputChannelType, IOutputChannel> _outputChannelFactory;
-        private readonly PulseInputsListenerService _pulseListenerService;
+        private readonly PulseOutputsListenerService _pulseListenerService;
 
         public VolumeTestManagerFactory(
             ILoggerFactory loggerFactory,
             DialogServiceManager dialogService,
-            PulseInputsListenerService pulseListenerService,
+            PulseOutputsListenerService pulseListenerService,
             IOutputChannelFactory outputChannelFactory)
             : this(loggerFactory, dialogService, pulseListenerService, outputChannelFactory.CreateOutputChannel)
         {
@@ -29,7 +35,7 @@ namespace Client.Desktop.Wpf.Communications
         public VolumeTestManagerFactory(
             ILoggerFactory loggerFactory,
             DialogServiceManager dialogService,
-            PulseInputsListenerService pulseListenerService,
+            PulseOutputsListenerService pulseListenerService,
             Func<OutputChannelType, IOutputChannel> outputChannelFactory)
         {
             _loggerFactory = loggerFactory;
@@ -42,18 +48,17 @@ namespace Client.Desktop.Wpf.Communications
             string tachPortName = null)
         {
             var logger = _loggerFactory.CreateLogger<VolumeTestManager>();
+
             var tachometerService = GetTachometerService(tachPortName);
-            var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>(), volumeTest.DriveType);
+            var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>());
             var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
 
-            return new VolumeTestManager(logger, _dialogService, deviceManager, tachometerService,
-                pulseInputListener, volumeTest, motorControl);
+            return new VolumeTestManager(logger, deviceManager, tachometerService, pulseInputListener, volumeTest, motorControl);
         }
 
-
-        private PulseInputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems, IVolumeInputType volumeInputType)
+        private PulseOutputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems)
         {
-            _pulseListenerService.Initialize(pulseOutputItems, volumeInputType);
+            _pulseListenerService.Initialize(pulseOutputItems);
             return _pulseListenerService;
         }
 

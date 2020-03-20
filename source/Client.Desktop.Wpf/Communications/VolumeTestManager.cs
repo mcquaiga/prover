@@ -1,59 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Interactions;
-using Client.Desktop.Wpf.Screens.Dialogs;
-using Client.Desktop.Wpf.ViewModels.Verifications.Dialogs;
-using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using DynamicData;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.Communications
 {
-    public interface IVolumeTestManagerFactory
-    {
-        //VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
-        VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
-            string tachPortName = null);
-    }
-
     public class VolumeTestManager : ViewModelBase
     {
-        private readonly DialogServiceManager _dialogService;
+        private const int WaitTimeForResidualPulsesSeconds = 5;
         private readonly ILogger _logger;
         private readonly IOutputChannel _motorControl;
-        protected readonly PulseInputsListenerService PulseListenerService;
         protected readonly ITachometerService TachometerService;
-        private CancellationTokenSource _cancellationToken;
-
-        protected IObservable<VolumeTestStatusMessage> TestStatusObservable;
 
         internal VolumeTestManager(ILogger<VolumeTestManager> logger,
-            DialogServiceManager dialogService,
             IDeviceSessionManager deviceManager,
             ITachometerService tachometerService,
-            PulseInputsListenerService pulseListenerService,
+            PulseOutputsListenerService pulseListenerService,
             VolumeViewModelBase volumeTest,
             IOutputChannel motorControl)
         {
             _logger = logger ?? NullLogger<VolumeTestManager>.Instance;
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(DialogServiceManager));
             _motorControl = motorControl ?? throw new ArgumentNullException(nameof(motorControl));
 
             TachometerService = tachometerService;
@@ -61,84 +40,100 @@ namespace Client.Desktop.Wpf.Communications
             VolumeTest = volumeTest;
             DeviceManager = deviceManager;
 
-            StartVolumeTest = ReactiveCommand.CreateFromTask(RunAsync);
-            StartVolumeTest.DisposeWith(Cleanup);
-            //PulseListenerService.PulseListener.Connect();
+            StartTest = ReactiveCommand.CreateFromTask(async () =>
+            {
+                _logger.LogInformation("Starting volume test.");
+                await PreTestActions();
+                await ExecuteTestAsync();
+            }, outputScheduler: RxApp.MainThreadScheduler);
+
+            InitiateTestCompletion = ReactiveCommand.Create(() =>
+            {
+                _logger.LogDebug("Stopping test.");
+                _motorControl.SignalStop();
+
+                _logger.LogDebug(
+                    $"Waiting for residual pulses. Timeout period = {WaitTimeForResidualPulsesSeconds} seconds.");
+
+                PulseListenerService.PulseCountUpdates
+                    .Throttle(TimeSpan.FromSeconds(WaitTimeForResidualPulsesSeconds))
+                    .LogDebug(x => "Timed out listening for residual pulses.")
+                    .Select(_ => Unit.Default)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .InvokeCommand(CompleteTest)
+                    .DisposeWith(Cleanup);
+            }, outputScheduler: RxApp.MainThreadScheduler);
+
+            CompleteTest = ReactiveCommand.CreateFromTask(async () =>
+            {
+                _logger.LogInformation("Completing test.");
+
+                PulseListenerService.Stop();
+                UpdatePulseOutputTestCounts();
+
+                await DeviceInteractions.CompleteVolumeTest.Handle(this);
+                await PostTestActions();
+            }, outputScheduler: RxApp.MainThreadScheduler);
+
+            StartTest.DisposeWith(Cleanup);
+            CompleteTest.DisposeWith(Cleanup);
+            InitiateTestCompletion.DisposeWith(Cleanup);
         }
 
-        [Reactive] public ReactiveCommand<Unit, Unit> StartVolumeTest { get; protected set; }
+        public PulseOutputsListenerService PulseListenerService { get; }
+        public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
+        public ReactiveCommand<Unit, Unit> CompleteTest { get; protected set; }
+        public ReactiveCommand<Unit, Unit> InitiateTestCompletion { get; protected set; }
 
-        public VolumeViewModelBase VolumeTest { get; protected set; }
-        public IDeviceSessionManager DeviceManager { get; protected set; }
+        public VolumeViewModelBase VolumeTest { get; }
+        public IDeviceSessionManager DeviceManager { get; }
 
-        public ReadOnlyObservableCollection<PulseChannel> PulseOutputCounters { get; protected set; }
+        public int TargetUncorrectedPulses => VolumeTest.AllTests().OfType<UncorrectedVolumeTestViewModel>().First().DriveType.MaxUncorrectedPulses();
 
-        public async Task RunAsync()
+        protected virtual async Task ExecuteTestAsync()
         {
-            _cancellationToken = new CancellationTokenSource();
+            _logger.LogDebug("Executing automated volume test.");
 
-            var startValues = await DeviceManager.GetItemValues();
-            UpdateStartValues(startValues);
+            var cancelToken = await DeviceInteractions.StartVolumeTest.Handle(this);
+            cancelToken.Register(() =>
+            {
+                _logger.LogWarning("Cancelling test...");
+                _motorControl.SignalStop();
+                PulseListenerService.Stop();
+            });
 
-            var cancelToken =
-                await DeviceInteractions.StartVolumeTest.Handle(this);
-
-            PulseListenerService.StartListening().Connect()
-                .Bind(out var pulseUpdates)
-                .Subscribe()
+            PulseListenerService.StartListening()
+                .Where(p =>
+                    p.Items.Units == PulseOutputUnitType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+                .Select(_ => Unit.Default)
+                .InvokeCommand(InitiateTestCompletion)
                 .DisposeWith(Cleanup);
 
-            PulseListenerService.PulseCountUpdates.Connect().AsObservable()
-            //    .LogDebug(set => $"Pulse {set.Updates}")
-            //    .Subscribe()
-            //    .DisposeWith(Cleanup);
-
-            PulseOutputCounters = pulseUpdates;
-            
             _motorControl.SignalStart();
-
-            await Task.Delay(TimeSpan.FromSeconds(15));
-
-            await CompleteAsync();
         }
 
-        protected async Task CompleteAsync()
+        protected virtual async Task PostTestActions()
         {
-            _motorControl.SignalStop();
-            PulseListenerService.Dispose();
-
-            var cancelToken =
-                await DeviceInteractions.CompleteVolumeTest.Handle(this);
-
             var endValues = await DeviceManager.GetItemValues();
-            UpdateEndValues(endValues);
+            VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(endValues);
         }
 
-        //protected void DisplayDialog()
-        //{
-        //    DeviceInteractions.StartVolumeTest.Handle(this);
-
-        //    var dialog = new VolumeTestDialogViewModel(TestStatusObservable, _cancellationToken);
-        //    _dialogService.ShowDialog.Execute(dialog);
-        //}
-
-        public virtual void UpdateStartValues(IEnumerable<ItemValue> values)
+        protected virtual async Task PreTestActions()
         {
-            VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(values);
+            var startValues = await DeviceManager.GetItemValues();
+            VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(startValues);
         }
 
-        public virtual void UpdateEndValues(IEnumerable<ItemValue> values)
+        protected virtual void UpdatePulseOutputTestCounts()
         {
-            VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(values);
-        }
+            foreach (var test in VolumeTest.AllTests().OfType<VolumeTestRunViewModelBase>())
+            {
+                var pulseTest = test.PulseOutputTest;
 
+                var pulser = PulseListenerService.PulseChannels.FirstOrDefault(p => p.Channel == pulseTest.Items.Name);
 
-    }
-
-    public class VolumeTestStatusMessage
-    {
-        public VolumeTestStatusMessage(PulseOutputChannel channel)
-        {
+                if (pulser != null) pulseTest.ExpectedValue = pulser.PulseCount;
+            }
         }
     }
 }

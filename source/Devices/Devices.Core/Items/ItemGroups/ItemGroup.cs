@@ -16,6 +16,8 @@ namespace Devices.Core.Items.ItemGroups
 
     public abstract class ItemGroup : IItemGroup
     {
+        protected ItemGroup() { }
+
         public virtual void SetPropertyValue(PropertyInfo property, ItemValue value)
         {
             var valueString = value.GetValue().ToString();

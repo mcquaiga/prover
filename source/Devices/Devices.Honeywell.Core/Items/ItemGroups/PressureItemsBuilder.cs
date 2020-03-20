@@ -21,7 +21,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
             var items = values.ToList();
 
             var site = device.GetGroupValues<SiteInformationItems>(items);
-            if (site.PressureFactor == CorrectionFactorType.Fixed) return default;
+            if (site.LivePressureFactor == CorrectionFactorType.Fixed) return default;
 
             var p = new PressureItemsHoneywell();
             return SetValues(p, items);

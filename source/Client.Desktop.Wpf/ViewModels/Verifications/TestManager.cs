@@ -18,37 +18,28 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public partial class TestManager : RoutableViewModelBase, IRoutableViewModel, IDisposable, IDialogViewModel
+    public partial class TestManager : RoutableViewModelBase, IRoutableViewModel, IDisposable
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
         private readonly ILogger _logger;
         private readonly IScreenManager _screenManager;
         private readonly VerificationViewModelService _testViewModelService;
-        private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
 
-        [Reactive] public EvcVerificationViewModel TestViewModel { get; protected set; }
-
-        [Reactive] public VolumeTestManager VolumeTestManager { get; protected set; }
+        public EvcVerificationViewModel TestViewModel { get; protected set; }
+        public VolumeTestManager VolumeTestManager { get; protected set; }
 
         public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
         public ReactiveCommand<VerificationTestPointViewModel, Unit> DownloadCommand { get; protected set; }
         public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
-        public ReactiveCommand<Unit, Unit> CompleteTest { get; protected set; }
-
-        public ReactiveCommand<Unit, Unit> RunVolumeTest { get; protected set; }
+        public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
 
         public override string UrlPathSegment => "/VerificationTests/Details";
         public override IScreen HostScreen => _screenManager;
 
-        public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
-        public bool IsDialogOpen { get; }
-
-        public async Task Complete()
-        {
-            //await SaveCurrentState();
-        }
+        //public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
+        //public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+        //public bool IsDialogOpen { get; }
 
         public async Task RunCorrectionTests(VerificationTestPointViewModel test)
         {
@@ -90,9 +81,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
                 MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
 
-            RunVolumeTest = ReactiveCommand.CreateFromTask(VolumeTestManager.RunAsync);
-
-            CompleteTest = ReactiveCommand.CreateFromTask(async () =>
+            SubmitTest = ReactiveCommand.CreateFromTask(async () =>
             {
                 await SaveCommand.Execute();
                 await _deviceManager.EndSession();
@@ -103,7 +92,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SaveCommand.DisposeWith(_cleanup);
             DownloadCommand.DisposeWith(_cleanup);
             PrintTestReport.DisposeWith(_cleanup);
-            RunVolumeTest.DisposeWith(_cleanup);
 
             void SetupAutoSave()
             {
