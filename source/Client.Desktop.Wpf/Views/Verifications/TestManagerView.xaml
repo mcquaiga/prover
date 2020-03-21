@@ -110,29 +110,24 @@
 
                     <Button
                         x:Name="SaveButton"
-                        Margin="8,0"
                         HorizontalAlignment="Left"
                         Content="{materialDesign:PackIcon ContentSave}"
-                        Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+                        Style="{StaticResource MaterialDesignIconButton}" />
 
                     <Button
                         x:Name="PrintButton"
-                        Margin="8,0"
                         HorizontalAlignment="Left"
                         Content="{materialDesign:PackIcon Printer}"
-                        Style="{StaticResource MaterialDesignRaisedAccentButton}" />
-
+                        Style="{StaticResource MaterialDesignIconButton}" />
 
                     <Button
                         x:Name="SubmitTestButton"
                         Width="Auto"
-                        Margin="8,2"
+                        Margin="25,0,5,0"
                         HorizontalAlignment="Right"
                         Content="SUBMIT TEST"
-                        Style="{StaticResource MaterialDesignFlatAccentButton}" />
-
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
                 </StackPanel>
-
             </Grid>
         </materialDesign:ColorZone>
 

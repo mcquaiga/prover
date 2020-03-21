@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.Interactions;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Shared;
 using Prover.Shared.IO;
@@ -24,7 +24,8 @@ namespace Client.Desktop.Wpf.Communications
         private ICommunicationsClient _activeClient;
         private ICommPort _activeCommPort;
 
-        public DeviceSessionManager(ILogger<DeviceSessionManager> logger, ICommClientFactory commClientFactory, ICommPortFactory commPortFactory)
+        public DeviceSessionManager(ILogger<DeviceSessionManager> logger, ICommClientFactory commClientFactory,
+            ICommPortFactory commPortFactory)
         {
             _logger = logger;
             _commClientFactory = commClientFactory;
@@ -34,6 +35,19 @@ namespace Client.Desktop.Wpf.Communications
         public DeviceInstance Device { get; private set; }
 
         public bool SessionInProgress { get; private set; }
+
+        public async Task Connect()
+        {
+            if (!_activeClient.IsConnected)
+            {
+                var cancelToken =
+                    await DeviceInteractions.Connecting.Handle(_activeClient.StatusMessageObservable);
+
+                cancelToken.Register(() => _activeClient.Cancel());
+
+                await _activeClient.ConnectAsync();
+            }
+        }
 
         public async Task Disconnect()
         {
@@ -96,11 +110,9 @@ namespace Client.Desktop.Wpf.Communications
             await Disconnect();
             return itemValues;
         }
-        
-        public async Task<ItemValue> LiveReadItemValue(ItemMetadata item)
-        {
-            return await _activeClient.LiveReadItemValue(item);
-        }
+
+        public async Task<ItemValue> LiveReadItemValue(ItemMetadata item) =>
+            await _activeClient.LiveReadItemValue(item);
 
         /// <summary>
         ///     Configures required resources for device communication
@@ -116,9 +128,12 @@ namespace Client.Desktop.Wpf.Communications
             ReactiveObject owner)
         {
             if (SessionInProgress)
-                if (await MessageInteractions.ShowYesNo.Handle("Device session already in progress. Start new session?")
-                )
-                    await EndSession();
+            {
+                var response = await MessageInteractions.ShowYesNo.Handle(
+                        "Device session already in progress. Start new session?");
+
+                if (response) await EndSession();
+            }
 
             try
             {
@@ -139,19 +154,6 @@ namespace Client.Desktop.Wpf.Communications
             }
 
             return this;
-        }
-
-        public async Task Connect()
-        {
-            if (!_activeClient.IsConnected)
-            {
-                var cancelToken =
-                    await DeviceInteractions.Connecting.Handle(_activeClient.StatusMessageObservable);
-
-                cancelToken.Register(() => _activeClient.Cancel());
-
-                await _activeClient.ConnectAsync();
-            }
         }
     }
 }

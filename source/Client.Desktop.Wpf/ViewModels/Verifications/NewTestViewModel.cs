@@ -5,7 +5,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Devices;
+using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
@@ -21,13 +21,12 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
     public class NewTestViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IActivatableViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
-        [Reactive] public TestManager TestManager { get; set; }
 
         public NewTestViewModel(IScreenManager screenManager,
             ITestManagerViewModelFactory testManagerViewModelFactory,
-            DeviceRepository deviceRepository) : base(screenManager)
+            DeviceRepository deviceRepository,
+            DeviceSessionDialogManager deviceInteractions) : base(screenManager)
         {
-            
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
                 x => x.SelectedBaudRate,
                 (device, comm, baud) =>
@@ -38,15 +37,14 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
             {
                 SetLastUsedSettings();
-                testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate, SelectedTachCommPort);
+                testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate,
+                    SelectedTachCommPort);
                 return Observable.Return(Unit.Default);
             }, canStartTest);
-            
-            var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
-            NavigateForward = ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);
 
-            StartTestCommand.DisposeWith(_cleanup);
-            NavigateForward.DisposeWith(_cleanup);
+            //var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
+            //NavigateForward =
+            //    ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);
 
             deviceRepository.All.Connect()
                 .Filter(d => !d.IsHidden)
@@ -76,20 +74,9 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
             SelectedTachCommPort = ApplicationSettings.Local.TachCommPort;
 
-
-            //async Task LoadStatic()
-            //{
-            //    var mini = deviceRepository.GetById(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
-
-            //    //            var testVm = await _service.CreateViewModelFromVerification(mini);
-            //    var testVm = _service.NewTest(mini.Device);
-            //    var vm = new TestDetailsViewModel(ScreenManager, testVm);
-
-            //    await ScreenManager.ChangeView(vm);
-            //}
+            StartTestCommand.DisposeWith(_cleanup);
         }
 
-        public ReactiveCommand<Unit, IRoutableViewModel> NavigateForward { get; set; }
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
 
@@ -114,6 +101,17 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             _cleanup?.Dispose();
         }
 
+        private async Task LoadStatic()
+        {
+            //    var mini = deviceRepository.GetById(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
+
+            //    //            var testVm = await _service.CreateViewModelFromVerification(mini);
+            //    var testVm = _service.NewTest(mini.Device);
+            //    var vm = new TestDetailsViewModel(ScreenManager, testVm);
+
+            //    await ScreenManager.ChangeView(vm);
+        }
+
         private void SetLastUsedSettings()
         {
             ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
@@ -121,11 +119,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ApplicationSettings.Local.InstrumentBaudRate = SelectedBaudRate;
             ApplicationSettings.Local.TachCommPort = SelectedTachCommPort;
             ApplicationSettings.Instance.SaveSettings();
-        }
-
-        private async Task LoadStatic()
-        {
-            
         }
     }
 }
