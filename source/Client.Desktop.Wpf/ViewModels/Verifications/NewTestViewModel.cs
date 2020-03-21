@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
@@ -76,7 +77,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
             StartTestCommand.DisposeWith(_cleanup);
         }
-
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
 

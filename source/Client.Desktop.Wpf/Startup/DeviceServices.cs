@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Interactions;
+using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using Devices;
 using Devices.Communications.Interfaces;
@@ -61,7 +62,7 @@ namespace Client.Desktop.Wpf.Startup
             //services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
             //services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 
-            services.AddSingleton<DeviceSessionDialogManager>();
+            services.AddTransient<DeviceSessionDialogManager>();
 
             //services.AddSingleton<DaqBoardChannelFactory>();
             //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();

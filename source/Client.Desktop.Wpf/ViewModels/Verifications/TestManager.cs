@@ -1,18 +1,18 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.Communications;
+﻿using Client.Desktop.Wpf.Communications;
+using Client.Desktop.Wpf.Interactions;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {

@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
+﻿using Client.Desktop.Wpf.Interactions;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Shared;
 using Prover.Shared.IO;
 using ReactiveUI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Client.Desktop.Wpf.Communications
 {
