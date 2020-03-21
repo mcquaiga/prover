@@ -1,7 +1,4 @@
-﻿using System.Reactive;
-using ReactiveUI;
-
-namespace Client.Desktop.Wpf.Interactions
+﻿namespace Prover.Application.Interactions
 {
     public static class MessageInteractions
     {

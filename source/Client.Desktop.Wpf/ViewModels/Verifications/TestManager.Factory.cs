@@ -2,7 +2,7 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
-using Client.Desktop.Wpf.Interactions;
+using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -51,8 +51,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             TestViewModel = _testViewModelService.NewTest(_deviceManager.Device);
             TestViewModel.DisposeWith(_cleanup);
 
-            VolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
-            VolumeTestManager.DisposeWith(_cleanup);
+            RotaryVolumeTestManager = _volumeTestManagerFactory.CreateInstance(_deviceManager, TestViewModel.VolumeTest, tachPortName);
+            RotaryVolumeTestManager.DisposeWith(_cleanup);
 
             SetupRxUi();
 

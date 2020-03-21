@@ -4,10 +4,10 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.Interactions;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
@@ -18,86 +18,94 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Communications
 {
-    public class VolumeTestManager : ViewModelBase
+    public interface IVolumeTestManager
+    {
+        public Task RunFinishActions();
+        public Task RunStartActions();
+    }
+
+    public abstract class VolumeTestManagerBase : ViewModelBase, IVolumeTestManager
+    {
+        protected ILogger Logger;
+
+        protected VolumeTestManagerBase(ILogger logger, IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest)
+        {
+            DeviceManager = deviceManager;
+            VolumeTest = volumeTest;
+            Logger = logger;
+
+            StartTest = ReactiveCommand.CreateFromTask(async () => { await RunStartActions(); },
+                outputScheduler: RxApp.MainThreadScheduler);
+
+            FinishTest = ReactiveCommand.CreateFromTask(async () => { await RunFinishActions(); },
+                outputScheduler: RxApp.MainThreadScheduler);
+
+            StartTest.DisposeWith(Cleanup);
+            FinishTest.DisposeWith(Cleanup);
+        }
+
+        public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
+        public ReactiveCommand<Unit, Unit> FinishTest { get; protected set; }
+        public VolumeViewModelBase VolumeTest { get; }
+        public IDeviceSessionManager DeviceManager { get; }
+        public virtual async Task RunFinishActions() { }
+        public virtual async Task RunStartActions() { }
+    }
+
+    public class RotaryVolumeTestManager : VolumeTestManagerBase
     {
         private const int WaitTimeForResidualPulsesSeconds = 5;
-        private readonly ILogger _logger;
         private readonly IOutputChannel _motorControl;
         protected readonly ITachometerService TachometerService;
 
-        internal VolumeTestManager(ILogger<VolumeTestManager> logger,
+        internal RotaryVolumeTestManager(ILogger<RotaryVolumeTestManager> logger,
             IDeviceSessionManager deviceManager,
             ITachometerService tachometerService,
             PulseOutputsListenerService pulseListenerService,
             VolumeViewModelBase volumeTest,
-            IOutputChannel motorControl)
+            IOutputChannel motorControl) : base(logger, deviceManager, volumeTest)
         {
-            _logger = logger ?? NullLogger<VolumeTestManager>.Instance;
+            Logger = logger ?? NullLogger<RotaryVolumeTestManager>.Instance;
             _motorControl = motorControl ?? throw new ArgumentNullException(nameof(motorControl));
 
             TachometerService = tachometerService;
             PulseListenerService = pulseListenerService;
-            VolumeTest = volumeTest;
-            DeviceManager = deviceManager;
-
-            StartTest = ReactiveCommand.CreateFromTask(async () =>
-            {
-                _logger.LogInformation("Starting volume test.");
-                await PreTestActions();
-                await ExecuteTestAsync();
-            }, outputScheduler: RxApp.MainThreadScheduler);
 
             InitiateTestCompletion = ReactiveCommand.Create(() =>
             {
-                _logger.LogDebug("Stopping test.");
+                Logger.LogDebug("Stopping test.");
                 _motorControl.SignalStop();
 
-                _logger.LogDebug(
-                    $"Waiting for residual pulses. Timeout period = {WaitTimeForResidualPulsesSeconds} seconds.");
-
+                Logger.LogDebug(
+                    $"Listening for residual pulses. Timeout period = {WaitTimeForResidualPulsesSeconds} seconds.");
                 PulseListenerService.PulseCountUpdates
                     .Throttle(TimeSpan.FromSeconds(WaitTimeForResidualPulsesSeconds))
-                    .LogDebug(x => "Timed out listening for residual pulses.")
+                    .LogDebug(x =>
+                        $"No new pulses received in {WaitTimeForResidualPulsesSeconds} seconds. Initiating test completion...")
                     .Select(_ => Unit.Default)
                     .ObserveOn(RxApp.MainThreadScheduler)
-                    .InvokeCommand(CompleteTest)
+                    .InvokeCommand(FinishTest)
                     .DisposeWith(Cleanup);
+
             }, outputScheduler: RxApp.MainThreadScheduler);
 
-            CompleteTest = ReactiveCommand.CreateFromTask(async () =>
-            {
-                _logger.LogInformation("Completing test.");
-
-                PulseListenerService.Stop();
-                UpdatePulseOutputTestCounts();
-
-                await DeviceInteractions.CompleteVolumeTest.Handle(this);
-                await PostTestActions();
-            }, outputScheduler: RxApp.MainThreadScheduler);
-
-            StartTest.DisposeWith(Cleanup);
-            CompleteTest.DisposeWith(Cleanup);
             InitiateTestCompletion.DisposeWith(Cleanup);
         }
 
         public PulseOutputsListenerService PulseListenerService { get; }
-        public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
-        public ReactiveCommand<Unit, Unit> CompleteTest { get; protected set; }
         public ReactiveCommand<Unit, Unit> InitiateTestCompletion { get; protected set; }
 
-        public VolumeViewModelBase VolumeTest { get; }
-        public IDeviceSessionManager DeviceManager { get; }
-
-        public int TargetUncorrectedPulses => VolumeTest.AllTests().OfType<UncorrectedVolumeTestViewModel>().First().DriveType.MaxUncorrectedPulses();
+        public int TargetUncorrectedPulses => VolumeTest.AllTests().OfType<UncorrectedVolumeTestViewModel>().First()
+            .DriveType.MaxUncorrectedPulses();
 
         protected virtual async Task ExecuteTestAsync()
         {
-            _logger.LogDebug("Executing automated volume test.");
+            Logger.LogDebug("Executing automated volume test.");
 
             var cancelToken = await DeviceInteractions.StartVolumeTest.Handle(this);
             cancelToken.Register(() =>
             {
-                _logger.LogWarning("Cancelling test...");
+                Logger.LogWarning("Cancelling test...");
                 _motorControl.SignalStop();
                 PulseListenerService.Stop();
             });
@@ -112,16 +120,27 @@ namespace Client.Desktop.Wpf.Communications
             _motorControl.SignalStart();
         }
 
-        protected virtual async Task PostTestActions()
+        public override async Task RunFinishActions()
         {
+            Logger.LogDebug("Completing test...");
+
+            PulseListenerService.Stop();
+            UpdatePulseOutputTestCounts();
+
+            await DeviceInteractions.CompleteVolumeTest.Handle(this);
+
             var endValues = await DeviceManager.GetItemValues();
             VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(endValues);
         }
 
-        protected virtual async Task PreTestActions()
+        public override async Task RunStartActions()
         {
+            Logger.LogInformation(
+                $"Starting {VolumeTest.DriveType.InputType} test for {DeviceManager.Device.DeviceType}.");
             var startValues = await DeviceManager.GetItemValues();
             VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(startValues);
+
+            await ExecuteTestAsync();
         }
 
         protected virtual void UpdatePulseOutputTestCounts()

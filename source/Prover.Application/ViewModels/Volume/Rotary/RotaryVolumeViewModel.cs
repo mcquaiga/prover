@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using Devices.Core.Items.ItemGroups;
+using Microsoft.Extensions.Logging;
+using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Application.ViewModels.Corrections;
+using Prover.Shared.Interfaces;
 
 namespace Prover.Application.ViewModels.Volume.Rotary
 {
@@ -16,5 +20,18 @@ namespace Prover.Application.ViewModels.Volume.Rotary
 
         protected override ICollection<VerificationViewModel> GetSpecificTests() =>
             new List<VerificationViewModel> {RotaryMeterTest, Corrected, Uncorrected};
+    }
+
+    public class RotaryVolumeManager : RotaryVolumeViewModel
+    {
+        public RotaryVolumeManager(
+            ILogger<RotaryVolumeManager> logger,
+            IDeviceSessionManager deviceManager,
+            ITachometerService tachometerService,
+            PulseOutputsListenerService pulseListenerService,
+            IOutputChannel motorControl,
+            VolumeItems startValues, VolumeItems endValues) : base(startValues, endValues)
+        {
+        }
     }
 }

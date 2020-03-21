@@ -20,7 +20,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 DataContext = ViewModel;
 
                 this.BindCommand(ViewModel, vm => vm.StartTestCommand, v => v.StartTestButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.NavigateForward, v => v.GoForwardButton).DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.NavigateForward, v => v.GoForwardButton).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedDeviceType, v => v.DeviceTypes.SelectedItem).DisposeWith(d);

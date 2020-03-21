@@ -33,6 +33,8 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <FileVersion>1.0.2.0</FileVersion>
+    <PackageIcon>clipboard-check-blue.ico</PackageIcon>
+    <ApplicationIcon>clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +44,10 @@
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
     <None Remove="Modules\**" />
     <None Remove="ViewModels\Certificates\**" />
+    <Resource Include="clipboard-check-blue.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </Resource>
     <Page Remove="Modules\**" />
     <Page Remove="ViewModels\Certificates\**" />
   </ItemGroup>
@@ -217,6 +223,7 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
+    <Folder Include="Interactions\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 

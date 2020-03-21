@@ -53,10 +53,10 @@
                         <materialDesign:PackIcon Foreground="White" Kind="ArrowBack" />
                     </Button>
 
-                    <Button
+                    <!--<Button
                         x:Name="ShowDialogButton"
                         Margin="5,0,0,0"
-                        Content="Show Dialog" />
+                        Content="Show Dialog" />-->
 
                 </StackPanel>
                 <TextBlock

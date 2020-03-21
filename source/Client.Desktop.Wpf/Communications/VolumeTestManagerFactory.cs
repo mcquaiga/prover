@@ -12,7 +12,7 @@ namespace Client.Desktop.Wpf.Communications
     public interface IVolumeTestManagerFactory
     {
         //VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
-        VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
+        RotaryVolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
             string tachPortName = null);
     }
 
@@ -44,16 +44,16 @@ namespace Client.Desktop.Wpf.Communications
             _outputChannelFactory = outputChannelFactory;
         }
 
-        public VolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
+        public RotaryVolumeTestManager CreateInstance(IDeviceSessionManager deviceManager, VolumeViewModelBase volumeTest,
             string tachPortName = null)
         {
-            var logger = _loggerFactory.CreateLogger<VolumeTestManager>();
+            var logger = _loggerFactory.CreateLogger<RotaryVolumeTestManager>();
 
             var tachometerService = GetTachometerService(tachPortName);
             var pulseInputListener = GetPulseOutputListener(deviceManager.Device.ItemGroup<PulseOutputItems>());
             var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
 
-            return new VolumeTestManager(logger, deviceManager, tachometerService, pulseInputListener, volumeTest, motorControl);
+            return new RotaryVolumeTestManager(logger, deviceManager, tachometerService, pulseInputListener, volumeTest, motorControl);
         }
 
         private PulseOutputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems)

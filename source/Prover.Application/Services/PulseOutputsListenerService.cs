@@ -99,18 +99,18 @@ namespace Prover.Application.Services
 
             return Observable.Create<PulseChannel>(observer =>
             {
-                var recurring = _background.SchedulePeriodic(TimeSpan.FromMilliseconds(CheckIntervalTime), () =>
-                {
-                    _inputChannels.ForEach(i =>
-                        {
-                            if (!i.CheckForPulse()) return;
+                var cleanup = new CompositeDisposable();
 
+                _inputChannels.ForEach(i =>
+                {
+                    _background.SchedulePeriodic(TimeSpan.FromMilliseconds(CheckIntervalTime), () => {
+                            if (!i.CheckForPulse()) return;
                             observer.OnNext(i.Pulser);
-                        }
-                    );
+                        })
+                        .DisposeWith(cleanup);
                 });
 
-                return recurring;
+                return cleanup;
             });
         }
 

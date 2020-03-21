@@ -16,6 +16,11 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
 
         public SessionStatusDialogViewModel(IObservable<StatusMessage> statusStream, CancellationTokenSource cts)
         {
+            RegisterStatusStream(statusStream);
+        }
+
+        public void RegisterStatusStream(IObservable<StatusMessage> statusStream)
+        {
             statusStream
                 .Where(x => x.LogLevel >= LogLevel.Information)
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -37,7 +42,6 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
 
                     Progress = msg.ReadCount;
                 }).DisposeWith(_cleanup);
-
         }
 
         [Reactive] public string TitleText { get; set; }

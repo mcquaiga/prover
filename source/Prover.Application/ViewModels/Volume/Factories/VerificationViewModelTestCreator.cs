@@ -29,12 +29,16 @@ namespace Prover.Application.ViewModels.Volume.Factories
         public virtual EvcVerificationViewModel BuildEvcVerificationViewModel(EvcVerificationTest evcTest)
         {
             var viewModel = evcTest.ToViewModel();
-            _testDefinitions
-                .ForEach(td =>
-                    BuildTestPointViewModel(evcTest.Device, viewModel, td)
-                );
+
+            _testDefinitions.ForEach(td => 
+                BuildTestPointViewModel(evcTest.Device, viewModel, td));
 
             return viewModel;
+        }
+
+        public virtual EvcVerificationViewModel CreateManager(EvcVerificationTest evcTest)
+        {
+
         }
 
         protected virtual void BuildTestPointViewModel(DeviceInstance device,

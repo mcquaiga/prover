@@ -4,7 +4,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
@@ -13,36 +12,12 @@ using Client.Desktop.Wpf.Views.Verifications.Dialogs;
 using Devices.Communications.Status;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.Interfaces;
+using Prover.Application.Interactions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Desktop.Wpf.Interactions
+namespace Client.Desktop.Wpf.ViewModels.Dialogs
 {
-    public static class DeviceInteractions
-    {
-        public static Interaction<IObservable<StatusMessage>, CancellationToken> Connecting { get; } =
-            new Interaction<IObservable<StatusMessage>, CancellationToken>();
-
-        public static Interaction<DeviceSessionManager, CancellationToken> Disconnecting { get; } =
-            new Interaction<DeviceSessionManager, CancellationToken>();
-
-        public static Interaction<DeviceSessionManager, CancellationToken> DownloadingItems { get; } =
-            new Interaction<DeviceSessionManager, CancellationToken>();
-
-        public static Interaction<ILiveReadHandler, CancellationToken> LiveReading { get; } =
-            new Interaction<ILiveReadHandler, CancellationToken>();
-
-        public static Interaction<DeviceSessionManager, Unit> Unlinked { get; } =
-            new Interaction<DeviceSessionManager, Unit>();
-
-        public static Interaction<VolumeTestManager, CancellationToken> StartVolumeTest { get; } =
-            new Interaction<VolumeTestManager, CancellationToken>();
-
-        public static Interaction<VolumeTestManager, CancellationToken> CompleteVolumeTest { get; } =
-            new Interaction<VolumeTestManager, CancellationToken>();
-    }
-
     public class DeviceSessionDialogManager : DialogViewModel
     {
         public DialogServiceManager DialogManager { get; }
@@ -132,15 +107,12 @@ namespace Client.Desktop.Wpf.Interactions
             if (_dialogView == null) _dialogView = new SessionDialogView {ViewModel = this};
             if (_sessionStatusView == null)
             {
-                SessionStatusUpdates =
-                    new SessionStatusDialogViewModel(statusMessageObservable, _cancellationTokenSource)
-                    {
-                        StatusText = message
-                    };
-
+                SessionStatusUpdates = new SessionStatusDialogViewModel(statusMessageObservable, _cancellationTokenSource) { StatusText = message };
                 _sessionStatusView = new SessionStatusDialogView {ViewModel = SessionStatusUpdates};
             }
             
+            if (statusMessageObservable != null) SessionStatusUpdates.RegisterStatusStream(statusMessageObservable);
+
             RxApp.MainThreadScheduler.Schedule(() =>
             {
                 SessionStatusUpdates.StatusText = message;

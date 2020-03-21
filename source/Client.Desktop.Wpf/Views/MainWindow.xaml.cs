@@ -1,17 +1,12 @@
-﻿using System;
+﻿using Client.Desktop.Wpf.ViewModels;
+using ReactiveUI;
+using System;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using Client.Desktop.Wpf.Interactions;
-using Client.Desktop.Wpf.Screens.Dialogs;
-using Client.Desktop.Wpf.ViewModels;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Desktop.Wpf.Views.Devices;
-using Client.Desktop.Wpf.Views.Dialogs;
-using Client.Desktop.Wpf.Views.Verifications.Dialogs;
-using ReactiveUI;
+using Prover.Application.Interactions;
 
 namespace Client.Desktop.Wpf.Views
 {
@@ -21,8 +16,6 @@ namespace Client.Desktop.Wpf.Views
     [SingleInstanceView]
     public partial class MainWindow : ReactiveWindow<MainViewModel>
     {
-        
-
         public MainWindow()
         {
             InitializeComponent();
@@ -30,8 +23,8 @@ namespace Client.Desktop.Wpf.Views
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, x => x.AppTitle, x => x.MainWindowView.Title).DisposeWith(d);
-                // Bind the view model router to RoutedViewHost.Router property.
                 this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, x => x.DialogManager.DialogContent, x => x.DialogHost.DialogContent)
                     .DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.DialogManager.DialogContent, v => v.DialogHost.IsOpen,
@@ -40,15 +33,11 @@ namespace Client.Desktop.Wpf.Views
                 this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);
-
-                this.BindCommand(ViewModel, x => x.ShowTestDialog, x => x.ShowDialogButton).DisposeWith(d);
             });
 
             RegisterMessageInteractions();
         }
-
         
-
         private void RegisterMessageInteractions()
         {
             MessageInteractions.ShowMessage.RegisterHandler(async i =>
@@ -79,13 +68,16 @@ namespace Client.Desktop.Wpf.Views
 
             NotificationInteractions.SnackBarMessage.RegisterHandler(async message =>
             {
-                NotificationSnackBar.Message.Content = message.Input;
-                NotificationSnackBar.IsActive = true;
+                RxApp.MainThreadScheduler.Schedule(async () =>
+                {
+                    NotificationSnackBar.Message.Content = message.Input;
+                    NotificationSnackBar.IsActive = true;
 
-                await Task.Delay(TimeSpan.FromSeconds(2));
+                    await Task.Delay(TimeSpan.FromSeconds(2));
 
-                NotificationSnackBar.IsActive = false;
-                NotificationSnackBar.Message.Content = string.Empty;
+                    NotificationSnackBar.IsActive = false;
+                    NotificationSnackBar.Message.Content = string.Empty;
+                });
 
                 message.SetOutput(Unit.Default);
             });

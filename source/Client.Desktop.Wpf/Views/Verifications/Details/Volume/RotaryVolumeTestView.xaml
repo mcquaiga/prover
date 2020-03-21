@@ -6,9 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:rotary1="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
+    xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
     d:DesignHeight="450"
-    x:TypeArguments="rotary1:RotaryVolumeViewModel"
+    x:TypeArguments="rotary:RotaryVolumeViewModel"
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch">
         <StackPanel Orientation="Horizontal">

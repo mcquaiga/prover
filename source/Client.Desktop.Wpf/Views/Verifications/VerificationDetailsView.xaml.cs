@@ -10,7 +10,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// <summary>
     ///     Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class TestDetailsView : ReactiveUserControl<EvcVerificationViewModel>
+    public partial class VerificationDetailsView : ReactiveUserControl<EvcVerificationViewModel>
     {
         public static readonly DependencyProperty CorrectionTestsItemTemplateProperty =
             DependencyProperty.Register(nameof(CorrectionTestsItemTemplate), typeof(DataTemplate),
@@ -20,7 +20,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
             DependencyProperty.Register(nameof(VolumeTestContentTemplate), typeof(DataTemplate),
                 typeof(ContentControl));
 
-        public TestDetailsView()
+        public VerificationDetailsView()
         {
             InitializeComponent();
 
