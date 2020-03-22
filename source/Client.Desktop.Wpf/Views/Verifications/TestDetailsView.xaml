@@ -14,7 +14,7 @@
     x:TypeArguments="viewModels1:EvcVerificationViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <DataTemplate x:Key="CorrectionsReadOnlyDataTemplate">
+        <!--<DataTemplate x:Key="CorrectionsReadOnlyDataTemplate">
             <Border
                 Padding="4"
                 BorderThickness="0,0,1,0"
@@ -23,60 +23,64 @@
                 <reactiveUi:ViewModelViewHost x:Name="CorrectionsReadOnlyViewHost" ViewModel="{Binding}" />
 
             </Border>
-        </DataTemplate>
+        </DataTemplate>-->
     </UserControl.Resources>
     <Grid>
-        <DockPanel
-            Margin="5"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top">
-            <reactiveUi:ViewModelViewHost
-                x:Name="SiteInfoContent"
-                Width="Auto"
-                DockPanel.Dock="Left" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <Viewbox DockPanel.Dock="Right" Stretch="Uniform">
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+        <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
 
-                    <ItemsControl
-                        x:Name="TestPointItems"
-                        Grid.Row="0"
-                        DataContext="{Binding}"
-                        ItemTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue={StaticResource CorrectionsReadOnlyDataTemplate}}"
-                        ItemsSource="{Binding Tests}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+        <Viewbox Grid.Column="1" Stretch="Uniform">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                    <Border
-                        Grid.Row="1"
-                        Padding="4"
-                        Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
-                                <ContentControl x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                            </StackPanel>
-                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                <ItemsControl
+                    x:Name="TestPointItems"
+                    Grid.Row="0"
+                    DataContext="{Binding}"
+                    ItemsSource="{Binding Tests}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Padding="4"
+                                BorderThickness="0,0,1,0"
+                                Style="{StaticResource SubSectionDividerBorder}">
+                                <StackPanel>
+                                    <ContentControl ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                    <reactiveUi:ViewModelViewHost x:Name="CorrectionsTestManagerViewHost" ViewModel="{Binding}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Border
+                    Grid.Row="1"
+                    Padding="4"
+                    Style="{StaticResource SubSectionDividerBorder}">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
+                            <ContentControl x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
                         </StackPanel>
-                        <!--  Content="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}"  -->
-                    </Border>
-                </Grid>
-            </Viewbox>
+                        <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Viewbox>
 
-            <!--
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-            -->
-        </DockPanel>
+
+
 
     </Grid>
 </reactiveUi:ReactiveUserControl>

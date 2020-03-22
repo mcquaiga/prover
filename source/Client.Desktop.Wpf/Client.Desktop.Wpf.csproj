@@ -34,7 +34,7 @@
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <FileVersion>1.0.2.0</FileVersion>
     <PackageIcon>clipboard-check-blue.ico</PackageIcon>
-    <ApplicationIcon>clipboard-check-blue.ico</ApplicationIcon>
+    <ApplicationIcon>clipboard-check-white.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,10 +44,11 @@
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
     <None Remove="Modules\**" />
     <None Remove="ViewModels\Certificates\**" />
-    <Resource Include="clipboard-check-blue.ico">
+    <Resource Include="Resources\clipboard-check-blue.ico">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </Resource>
+    <Resource Include="Resources\clipboard-check-white.ico" />
     <Page Remove="Modules\**" />
     <Page Remove="ViewModels\Certificates\**" />
   </ItemGroup>
@@ -62,6 +63,7 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
+    <None Remove="Resources\clipboard-check-white.ico" />
   </ItemGroup>
 
   <ItemGroup>

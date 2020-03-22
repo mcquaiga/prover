@@ -9,7 +9,6 @@
     Width="300"
     Height="300"
     Background="DarkBlue"
-    Icon="../clipboard-check-blue.ico"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterScreen"
