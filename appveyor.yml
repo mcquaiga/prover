@@ -27,6 +27,15 @@ branches:
     - master   
     - rc
 
+# build cache to preserve files/folders between builds
+#cache:
+#  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+#  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
+#  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+#cache:
+#  - packages -> **\packages.config
+  #- packages -> appveyor.yml 
+
 skip_tags: true
 
 pull_requests:
@@ -37,12 +46,10 @@ artifacts:
   - path: build\Release
     name: EvcProver-v$(appveyor_build_version)-$(APPVEYOR_REPO_BRANCH)
 
-services:
-  - mssql2014           # start SQL Server 2014 Express
-
-#install:
-#  - ps: .\src\.nuget\NuGet.exe update -self
-
+before_build:
+  - cmd: .\src\.nuget\NuGet.exe update -self
+  - ps: .\src\.nuget\NuGet.exe restore .\src\EvcProver.sln
+  
 deploy:
 # Deploy to GitHub Releases
 # RC branch
