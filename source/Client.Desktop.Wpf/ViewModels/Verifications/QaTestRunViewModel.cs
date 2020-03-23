@@ -5,27 +5,30 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
+using Microsoft.Extensions.Logging;
+using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.Settings;
+using Prover.Application.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public class NewTestViewModel : RoutableViewModelBase, IRoutableViewModel, IDisposable, IActivatableViewModel
+    public class QaTestRunViewModel : RoutableViewModelBase, IDisposable
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
-        public NewTestViewModel(IScreenManager screenManager,
-            ITestManagerViewModelFactory testManagerViewModelFactory,
-            DeviceRepository deviceRepository,
-            DeviceSessionDialogManager deviceInteractions) : base(screenManager)
+        public QaTestRunViewModel(ILogger<QaTestRunViewModel> logger, IScreenManager screenManager,
+            VerificationTestService verificationService,
+            DeviceRepository deviceRepository)
+            : base(screenManager)
         {
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
                 x => x.SelectedBaudRate,
@@ -34,12 +37,13 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                     !string.IsNullOrEmpty(comm) &&
                     baud != 0);
 
-            StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
+            StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 SetLastUsedSettings();
-                testManagerViewModelFactory.StartNew(SelectedDeviceType, SelectedCommPort, SelectedBaudRate,
-                    SelectedTachCommPort);
-                return Observable.Return(Unit.Default);
+
+                TestManager = await verificationService.NewTestManager(SelectedDeviceType);
+                
+                //CurrentStateView = ScreenManager.ViewLocator.ResolveView(TestManager);
             }, canStartTest);
 
             //var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
@@ -75,18 +79,43 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SelectedTachCommPort = ApplicationSettings.Local.TachCommPort;
 
             StartTestCommand.DisposeWith(_cleanup);
+
+            SaveCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                logger.LogDebug("Saving test...");
+                var success = await verificationService.AddOrUpdate(TestManager.TestViewModel);
+                if (success)
+                {
+                    await NotificationInteractions.SnackBarMessage.Handle("SAVED");
+                    logger.LogDebug("Saved test successfully");
+                }
+
+                return success;
+            });
+
+            SubmitTest = ReactiveCommand.CreateFromTask(async () =>
+            {
+                await SaveCommand.Execute();
+
+                (TestManager as IDisposable)?.Dispose();
+
+                await ScreenManager.GoHome();
+            });
+
+            PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
+                MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented."));
         }
 
+        [Reactive] public ITestManager TestManager { get; private set; }
+
+        public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
+        public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
+        public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
-
         public ReadOnlyObservableCollection<int> BaudRates { get; set; }
-
         public ReadOnlyObservableCollection<string> CommPorts { get; set; }
-
         public ReactiveCommand<Unit, Unit> StartTestCommand { get; set; }
-
-        public LocalSettings PreviousSelections => ApplicationSettings.Local;
 
         [Reactive] public string SelectedTachCommPort { get; set; }
         [Reactive] public string SelectedCommPort { get; set; }
@@ -97,19 +126,9 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public override IScreen HostScreen => ScreenManager;
 
         public void Dispose()
-        {
+        { 
+            (TestManager as IDisposable)?.Dispose();
             _cleanup?.Dispose();
-        }
-
-        private async Task LoadStatic()
-        {
-            //    var mini = deviceRepository.GetById(Guid.Parse("05d12ea8-76d9-4ac1-9fb4-5d08a58ce04d"));
-
-            //    //            var testVm = await _service.CreateViewModelFromVerification(mini);
-            //    var testVm = _service.NewTest(mini.Device);
-            //    var vm = new TestDetailsViewModel(ScreenManager, testVm);
-
-            //    await ScreenManager.ChangeView(vm);
         }
 
         private void SetLastUsedSettings()

@@ -13,7 +13,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Communications
+namespace Prover.Application.Services.LiveReadCorrections
 {
     public partial class LiveReadCoordinator
     {
@@ -66,7 +66,7 @@ namespace Client.Desktop.Wpf.Communications
             var cancellationToken =
                 await DeviceInteractions.LiveReading.Handle(this);
 
-            var live = CreateLiveItemReadObservable(deviceSession, cancellationToken).Publish();
+            var live = Observable.Publish<ItemValue>(CreateLiveItemReadObservable(deviceSession, cancellationToken));
 
             live.ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(

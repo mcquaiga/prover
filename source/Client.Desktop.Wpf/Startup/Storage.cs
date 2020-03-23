@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
-using LiteDB;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,7 +45,7 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton(c => db);
 
             services.AddSingleton<EvcVerificationTestService>();
-            services.AddSingleton<VerificationViewModelService>();
+            services.AddSingleton<VerificationTestService>();
 
             services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c 
                 => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));

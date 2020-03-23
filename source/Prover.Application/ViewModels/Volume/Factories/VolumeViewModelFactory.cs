@@ -19,7 +19,6 @@ namespace Prover.Application.ViewModels.Volume.Factories
         {
             _startVolumeItems = device.CreateItemGroup<VolumeItems>();
             _endVolumeItems = device.CreateItemGroup<VolumeItems>();
-
             _sharedCalculator = GetSharedCalculator(device, testPoint);
         }
 

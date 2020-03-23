@@ -8,9 +8,14 @@ using Prover.Domain.EvcVerifications;
 
 namespace Prover.Application.ViewModels.Volume.Factories
 {
-    public class VerificationViewModelTestCreator
+    public interface IVerificationViewModelFactory
     {
-        private readonly List<CorrectionTestDefinition> _testDefinitions = new List<CorrectionTestDefinition>
+        EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest);
+    }
+
+    public class VerificationViewModelFactory : IVerificationViewModelFactory
+    {
+        private readonly ICollection<CorrectionTestDefinition> _testDefinitions = new List<CorrectionTestDefinition>
         {
             new CorrectionTestDefinition
             {
@@ -26,22 +31,19 @@ namespace Prover.Application.ViewModels.Volume.Factories
             }
         };
 
-        public virtual EvcVerificationViewModel BuildEvcVerificationViewModel(EvcVerificationTest evcTest)
+        public VerificationViewModelFactory(ICollection<CorrectionTestDefinition> testDefinitions = null) =>
+            _testDefinitions = testDefinitions ?? _testDefinitions;
+
+        public EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest)
         {
             var viewModel = evcTest.ToViewModel();
 
-            _testDefinitions.ForEach(td => 
-                BuildTestPointViewModel(evcTest.Device, viewModel, td));
+            _testDefinitions.ForEach(td => BuildTestPointViewModel(evcTest.Device, viewModel, td));
 
             return viewModel;
         }
 
-        public virtual EvcVerificationViewModel CreateManager(EvcVerificationTest evcTest)
-        {
-
-        }
-
-        protected virtual void BuildTestPointViewModel(DeviceInstance device,
+        private void BuildTestPointViewModel(DeviceInstance device,
             EvcVerificationViewModel viewModel,
             CorrectionTestDefinition definition)
         {

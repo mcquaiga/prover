@@ -89,11 +89,13 @@
                 </materialDesign:DialogHost.DialogContent>
 
                 <materialDesign:DialogHost.Content>
+
                     <rxui:RoutedViewHost
                         x:Name="RoutedViewHost"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
                         DockPanel.Dock="Bottom" />
+
                 </materialDesign:DialogHost.Content>
             </materialDesign:DialogHost>
 

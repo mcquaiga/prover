@@ -21,17 +21,4 @@ namespace Prover.Application.ViewModels.Volume.Rotary
         protected override ICollection<VerificationViewModel> GetSpecificTests() =>
             new List<VerificationViewModel> {RotaryMeterTest, Corrected, Uncorrected};
     }
-
-    public class RotaryVolumeManager : RotaryVolumeViewModel
-    {
-        public RotaryVolumeManager(
-            ILogger<RotaryVolumeManager> logger,
-            IDeviceSessionManager deviceManager,
-            ITachometerService tachometerService,
-            PulseOutputsListenerService pulseListenerService,
-            IOutputChannel motorControl,
-            VolumeItems startValues, VolumeItems endValues) : base(startValues, endValues)
-        {
-        }
-    }
 }

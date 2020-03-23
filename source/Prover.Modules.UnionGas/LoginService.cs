@@ -4,6 +4,7 @@ using Prover.Modules.UnionGas;
 using Prover.Shared.Interfaces;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Interfaces;
 
 namespace Modules.UnionGas
 {

@@ -5,7 +5,7 @@ using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications
+namespace Client.Desktop.Wpf.Views.Verifications.Details
 {
     /// <summary>
     ///     Interaction logic for EditTestView.xaml
@@ -41,8 +41,8 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 }).DisposeWith(d);
             });
 
-            if (CorrectionTestsItemTemplate == null)
-                CorrectionTestsItemTemplate = (DataTemplate) FindResource("CorrectionsReadOnlyDataTemplate");
+            //if (CorrectionTestsItemTemplate == null)
+            //    CorrectionTestsItemTemplate = (DataTemplate) FindResource("CorrectionsReadOnlyDataTemplate");
         }
 
         public DataTemplate CorrectionTestsItemTemplate

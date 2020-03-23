@@ -8,17 +8,18 @@ using Client.Desktop.Wpf.Views.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.Screens.Dialogs
 {
-    public class DialogServiceManager : ReactiveObject, IDialogViewModel
+    public class DialogServiceManager : ReactiveObject, IDialogViewModel, IDialogServiceManager
     {
         private readonly SerialDisposable _disposer = new SerialDisposable();
         private readonly ILogger<DialogServiceManager> _logger;
         private readonly IServiceProvider _services;
-
+ 
         public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
             IViewLocator viewLocator = null)
         {
@@ -66,10 +67,8 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                 },
                 outputScheduler: RxApp.MainThreadScheduler);
 
-           
 
             this.WhenAnyValue(x => x.DialogViewModel.IsDialogOpen)
-                //.ObserveOn(RxApp.TaskpoolScheduler)
                 .Where(open => !open)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(CloseDialog);
@@ -81,24 +80,23 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                 .ToPropertyEx(this, x => x.DialogContent);
 
             this.WhenAnyValue(x => x.DialogContent)
-                //.ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(v => v?.ViewModel as IDialogViewModel)
                 .ToPropertyEx(this, x => x.DialogViewModel);
         }
 
-        [Reactive] public ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; protected set; }
+        public ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; }
+        public ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; protected set; }
+        public ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
+        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
 
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
         public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
-
-        [Reactive] public ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; protected set; }
-        [Reactive] public ReactiveCommand<Unit, IViewFor> CloseDialog { get; protected set; }
-
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
         public extern bool IsDialogOpen { [ObservableAsProperty] get; }
 
-        public void Show(IDialogViewModel viewModel, IViewFor view)
+
+        public async Task Close()
         {
+            await CloseDialog.Execute();
         }
 
         public async Task Show<TView>(TView dialogView) where TView : IViewFor

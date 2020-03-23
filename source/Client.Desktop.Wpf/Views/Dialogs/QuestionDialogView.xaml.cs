@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Reactive.Linq;
 using System.Windows;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.Views.Dialogs
 {
-    public partial class QuestionDialogView : ReactiveUserControl<IDialogViewModel>
+    public partial class QuestionDialogView
     {
         [Reactive] public bool? Answer { get; set; } = null;
 

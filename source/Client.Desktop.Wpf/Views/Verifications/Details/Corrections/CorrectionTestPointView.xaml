@@ -1,5 +1,5 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.CorrectionTestPointView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.Corrections.CorrectionTestPointView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,6 +7,7 @@
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:verifications="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
     xmlns:viewModels1="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
+    x:Name="CorrectionTestPointViewControl"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:TypeArguments="viewModels1:VerificationTestPointViewModel"

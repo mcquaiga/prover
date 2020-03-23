@@ -2,6 +2,7 @@
 using ReactiveUI;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Windows;
 using Client.Desktop.Wpf.Extensions;
 
 namespace Client.Desktop.Wpf.Views.Verifications
@@ -9,15 +10,18 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// <summary>
     /// Interaction logic for VerificationTest.xaml
     /// </summary>
-    public partial class NewTestView : ReactiveUserControl<NewTestViewModel>
+    public partial class QaTestRunView : ReactiveUserControl<QaTestRunViewModel>
     {
-        public NewTestView()
+        public QaTestRunView()
         {
             InitializeComponent();
 
             this.WhenActivated(d =>
             {
-                DataContext = ViewModel;
+                this.OneWayBind(ViewModel, vm => vm.TestManager, view => view.NewTestSettingsSection.Visibility,
+                    value => value == null ? Visibility.Visible : Visibility.Collapsed);
+
+                this.OneWayBind(ViewModel, vm => vm.TestManager, view => view.TestManagerView.ViewModel).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.StartTestCommand, v => v.StartTestButton).DisposeWith(d);
                 //this.BindCommand(ViewModel, vm => vm.NavigateForward, v => v.GoForwardButton).DisposeWith(d);
@@ -37,11 +41,14 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.TachCommPorts.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedTachCommPort, v => v.TachCommPorts.SelectedItem).DisposeWith(d);
 
+                this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.PrintTestReport, v => v.PrintButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.SubmitTest, v => v.SubmitTestButton).DisposeWith(d);
 
                 this.CleanUpDefaults().DisposeWith(d);
             });
 
-            
+
         }
 
         

@@ -8,6 +8,7 @@ using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 using Splat;
 
@@ -28,13 +29,18 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton(c => new MainWindow());
 
             //var homeViewModelFactory = (s) => new HomeViewModel(s, )
-            services.AddSingleton(c => new HomeView());
-            services.AddSingleton<Func<IScreenManager, IRoutableViewModel>>(c =>
+            //services.AddSingleton<IViewFor<HomeViewModel>>(c => new HomeView());
+
+            services.AddSingleton<Func<IScreenManager, HomeViewModel>>(c =>
                 (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
 
-            services.AddSingleton(c => new HomeViewModel(c.GetService<IScreenManager>(), c.GetServices<IMainMenuItem>()));
+            services.AddSingleton<HomeViewModel>(c =>
+                c.GetService<Func<IScreenManager, HomeViewModel>>().Invoke(c.GetService<IScreenManager>()));
 
-            services.AddSingleton(c => new MainViewModel(c, c.GetService<DialogServiceManager>(), c.GetService<Func<IScreenManager, IRoutableViewModel>>()));
+            //services.AddSingleton(c => new HomeViewModel(c.GetService<IScreenManager>(), c.GetServices<IMainMenuItem>()));
+
+            services.AddSingleton(c => new MainViewModel(c, c.GetService<IDialogServiceManager>(), c.GetService<Func<IScreenManager, HomeViewModel>>()));
+            //services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreen, MainViewModel>(c => c.GetService<MainViewModel>());
             services.AddSingleton<IScreenManager, MainViewModel>(c => c.GetService<MainViewModel>());
 
@@ -52,7 +58,7 @@ namespace Client.Desktop.Wpf.Startup
 
         private static void AddDialogs(IServiceCollection services)
         {
-            services.AddSingleton<DialogServiceManager>();
+            services.AddSingleton<IDialogServiceManager, DialogServiceManager>();
             //services.AddDialogViews();
         }
     }

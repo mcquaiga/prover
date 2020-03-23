@@ -3,6 +3,8 @@ using System.Reactive;
 using System.Threading;
 using Devices.Communications.Status;
 using Prover.Application.Interfaces;
+using Prover.Application.Services.VerificationManager;
+using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
 
 namespace Prover.Application.Interactions
@@ -24,10 +26,10 @@ namespace Prover.Application.Interactions
         public static Interaction<IDeviceSessionManager, Unit> Unlinked { get; } =
             new Interaction<IDeviceSessionManager, Unit>();
 
-        public static Interaction<RotaryVolumeTestManager, CancellationToken> StartVolumeTest { get; } =
-            new Interaction<RotaryVolumeTestManager, CancellationToken>();
+        public static Interaction<RotaryVolumeManager, CancellationToken> StartVolumeTest { get; } =
+            new Interaction<RotaryVolumeManager, CancellationToken>();
 
-        public static Interaction<RotaryVolumeTestManager, CancellationToken> CompleteVolumeTest { get; } =
-            new Interaction<RotaryVolumeTestManager, CancellationToken>();
+        public static Interaction<RotaryVolumeManager, CancellationToken> CompleteVolumeTest { get; } =
+            new Interaction<RotaryVolumeManager, CancellationToken>();
     }
 }

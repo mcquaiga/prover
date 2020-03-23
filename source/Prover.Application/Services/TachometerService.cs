@@ -30,7 +30,8 @@ namespace Prover.Application.Services
     {
         public async Task<int> ReadTach()
         {
-            return await Task.Run(() => 0);
+            await Task.CompletedTask;
+            return 0;
         }
 
         public async Task ResetTach()

@@ -5,7 +5,7 @@ using Prover.Application.ViewModels.Corrections;
 using Prover.Shared;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details
+namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
 {
     /// <summary>
     ///     Interaction logic for CorrectionTestPointView.xaml

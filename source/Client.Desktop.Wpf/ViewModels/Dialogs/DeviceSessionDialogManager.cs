@@ -4,7 +4,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
-using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using Client.Desktop.Wpf.Views.Devices;
@@ -13,6 +12,8 @@ using Devices.Communications.Status;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
+using Prover.Application.Services.LiveReadCorrections;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -20,15 +21,16 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
 {
     public class DeviceSessionDialogManager : DialogViewModel
     {
-        public DialogServiceManager DialogManager { get; }
         private readonly ILogger<DeviceSessionDialogManager> _logger;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CompositeDisposable _cleanup;
         private SessionDialogView _dialogView;
         private SessionStatusDialogView _sessionStatusView;
 
+        protected SessionStatusDialogViewModel SessionStatusUpdates;
+
         public DeviceSessionDialogManager(ILogger<DeviceSessionDialogManager> logger,
-            DialogServiceManager dialogManager)
+            IDialogServiceManager dialogManager)
         {
             DialogManager = dialogManager;
             _logger = logger ?? NullLogger<DeviceSessionDialogManager>.Instance;
@@ -39,13 +41,12 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
             {
                 _logger.LogDebug("Cancellation Requested.");
                 _cancellationTokenSource?.Cancel();
-                await dialogManager.CloseDialog.Execute();
+                await dialogManager.Close();
             });
         }
 
+        public IDialogServiceManager DialogManager { get; }
         public ReactiveCommand<Unit, Unit> RequestCancellation { get; protected set; }
-
-        protected SessionStatusDialogViewModel SessionStatusUpdates;
         [Reactive] public IViewFor SessionDialogContent { get; protected set; }
 
         public void RegisterDeviceInteractions()
@@ -56,7 +57,7 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
 
                 SetSessionStatusDialog("Connecting", context.Input);
 
-                await DialogManager.ShowDialogView.Execute(_dialogView);
+                await DialogManager.Show(_dialogView);
                 context.SetOutput(_cancellationTokenSource.Token);
             });
 
@@ -83,7 +84,7 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
 
             DeviceInteractions.Unlinked.RegisterHandler(async context =>
             {
-                await DialogManager.CloseDialog.Execute();
+                await DialogManager.Close();
                 context.SetOutput(Unit.Default);
             });
 
@@ -91,13 +92,13 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
             {
                 SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
 
-                await DialogManager.ShowDialogView.Execute(_dialogView);
+                await DialogManager.Show(_dialogView);
                 context.SetOutput(_cancellationTokenSource.Token);
             });
 
             DeviceInteractions.CompleteVolumeTest.RegisterHandler(async context =>
             {
-                await DialogManager.CloseDialog.Execute();
+                await DialogManager.Close();
                 context.SetOutput(_cancellationTokenSource.Token);
             });
         }
@@ -107,10 +108,12 @@ namespace Client.Desktop.Wpf.ViewModels.Dialogs
             if (_dialogView == null) _dialogView = new SessionDialogView {ViewModel = this};
             if (_sessionStatusView == null)
             {
-                SessionStatusUpdates = new SessionStatusDialogViewModel(statusMessageObservable, _cancellationTokenSource) { StatusText = message };
+                SessionStatusUpdates =
+                    new SessionStatusDialogViewModel(statusMessageObservable, _cancellationTokenSource)
+                        {StatusText = message};
                 _sessionStatusView = new SessionStatusDialogView {ViewModel = SessionStatusUpdates};
             }
-            
+
             if (statusMessageObservable != null) SessionStatusUpdates.RegisterStatusStream(statusMessageObservable);
 
             RxApp.MainThreadScheduler.Schedule(() =>

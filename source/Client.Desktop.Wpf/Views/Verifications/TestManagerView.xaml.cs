@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Disposables;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.ViewModels.Verifications;
+using Prover.Application.Services.VerificationManager;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications
@@ -8,7 +9,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
     /// <summary>
     ///     Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class TestManagerView : ReactiveUserControl<TestManager>
+    public partial class TestManagerView
     {
         public TestManagerView()
         {
@@ -22,9 +23,9 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 //ViewModel.DeviceInteractions.RegisterDeviceInteractions();
 
                 this.OneWayBind(ViewModel, vm => vm.TestViewModel, v => v.TestViewContent.ViewModel).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.PrintTestReport, v => v.PrintButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.SubmitTest, v => v.SubmitTestButton).DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.PrintTestReport, v => v.PrintButton).DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.SubmitTest, v => v.SubmitTestButton).DisposeWith(d);
                 
                 TestViewContent.Content.SetPropertyValue("CorrectionTestsItemTemplate", correctionsItemTemplate);
                 TestViewContent.Content.SetPropertyValue("VolumeTestContentTemplate", volumeContent);

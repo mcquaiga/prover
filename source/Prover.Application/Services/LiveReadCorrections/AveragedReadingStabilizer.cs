@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Client.Desktop.Wpf.Communications
+namespace Prover.Application.Services.LiveReadCorrections
 {
     /// <summary>
     ///     Defines the <see cref="AveragedReadingStabilizer" />

@@ -1,4 +1,7 @@
-﻿namespace Prover.Application.Interactions
+﻿using System.Reactive;
+using ReactiveUI;
+
+namespace Prover.Application.Interactions
 {
     public static class MessageInteractions
     {

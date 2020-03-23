@@ -60,15 +60,15 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public async Task<T> AddAsync(T entity)
         {
-            Context.GetCollection<T>().Upsert(entity);
-            return entity;
+            var success = Context.GetCollection<T>().Upsert(entity);
+
+            return success ? entity : null;
         }
 
         public async Task UpdateAsync(T entity)
         {
             try
             {
-                
                 Context.GetCollection<T>().Upsert(entity);
             }
             catch (Exception ex)

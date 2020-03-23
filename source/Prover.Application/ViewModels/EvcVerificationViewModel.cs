@@ -15,15 +15,6 @@ namespace Prover.Application.ViewModels
 {
     public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable, IRoutableViewModel
     {
-        //private EvcVerificationViewModel()
-        //{
-        //}
-
-        public EvcVerificationViewModel()
-        {
-
-        }
-
         [Reactive] public DeviceInstance Device { get; set; }
 
         [Reactive] public CompositionType CompositionType { get; set; }
@@ -32,7 +23,7 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public DateTime TestDateTime { get; set; } = DateTime.Now;
 
-        [Reactive]public DateTime? ExportedDateTime { get; set; }
+        [Reactive] public DateTime? ExportedDateTime { get; set; }
 
         [Reactive] public DateTime? ArchivedDateTime { get; set; }
 
@@ -46,6 +37,9 @@ namespace Prover.Application.ViewModels
 
         public VolumeViewModelBase VolumeTest => Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
 
+        public string UrlPathSegment { get; }
+        public IScreen HostScreen { get; }
+
         public void Initialize()
         {
             DeviceInfo = new DeviceInfoViewModel(Device, this);
@@ -57,15 +51,14 @@ namespace Prover.Application.ViewModels
             OtherTests.ForEach(t => t.DisposeWith(Cleanup));
             Tests.Clear();
         }
-
-        public string UrlPathSegment { get; }
-        public IScreen HostScreen { get; }
     }
 
     public class DeviceInfoViewModel
     {
         public DeviceInfoViewModel(DeviceInstance device, EvcVerificationViewModel test)
         {
+            VerificationTest = test;
+            Device = device;
             SiteInfo = device.ItemGroup<SiteInformationItems>();
             Pressure = device.ItemGroup<PressureItems>();
             Temperature = device.ItemGroup<TemperatureItems>();
@@ -74,16 +67,17 @@ namespace Prover.Application.ViewModels
             PulseOutput = device.ItemGroup<PulseOutputItems>();
         }
 
+        public EvcVerificationViewModel VerificationTest { get; protected set; }
+        public DeviceInstance Device { get; }
         public SiteInformationItems SiteInfo { get; protected set; }
-
         public PressureItems Pressure { get; protected set; }
-
         public TemperatureItems Temperature { get; protected set; }
-
         public SuperFactorItems SuperFactor { get; protected set; }
-
         public PulseOutputItems PulseOutput { get; protected set; }
-
         public VolumeItems Volume { get; protected set; }
+
+        public string TestDateTimePretty => $"{VerificationTest.TestDateTime:g}";
+
+        public string CompanyNumber => SiteInfo.SiteId2;
     }
 }

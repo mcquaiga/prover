@@ -9,8 +9,8 @@
     xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
     d:DataContext="{d:DesignInstance viewModels:EvcVerificationViewModel,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="925"
+    d:DesignWidth="400"
     x:TypeArguments="viewModels:DeviceInfoViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -19,7 +19,7 @@
                 <ResourceDictionary Source="/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="{x:Type materialDesign:PackIcon}">
+            <Style TargetType="materialDesign:PackIcon">
                 <Setter Property="Foreground" Value="Gray" />
                 <Setter Property="Width" Value="48" />
                 <Setter Property="Height" Value="48" />
@@ -28,12 +28,18 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="LabelFontStyle" TargetType="{x:Type TextBlock}">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="Opacity" Value=".80" />
-                <Setter Property="Foreground" Value="Black" />
+            <Style
+                x:Key="LabelFontStyle"
+                BasedOn="{StaticResource MaterialDesignBody1TextBlock}"
+                TargetType="{x:Type TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
+            <!--
+             <Setter Property="FontSize" Value="16" />
+                <Setter Property="Opacity" Value=".80" />
+                <Setter Property="Foreground" Value="Black" />-->
+
+            <Style BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}" TargetType="{x:Type TextBlock}" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderThickness="0,0,1,0" Style="{StaticResource TestSectionOuterBorder}">
@@ -43,29 +49,31 @@
                 <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
 
                 <TextBlock
+                    x:Name="DeviceNameTextBlock"
                     Margin="0,10,0,5"
                     HorizontalAlignment="Center"
-                    FontSize="28"
-                    Text="{Binding DeviceType.Name}" />
+                    FontSize="28" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock x:Name="CompositionType" />
+                    <TextBlock x:Name="CompositionTypeTextBlock" Text="PTZ" />
                     <TextBlock FontWeight="UltraLight" Text=" | " />
-                    <TextBlock x:Name="DriveType" />
+                    <TextBlock x:Name="DriveTypeTextBlock" Text="Rotary" />
                 </StackPanel>
 
                 <TextBlock
+                    x:Name="ClientTextBlock"
                     Margin="0,5,0,0"
-                    HorizontalAlignment="Center"
-                    Text="Client" />
+                    HorizontalAlignment="Center" />
                 <!--  Visibility="{Binding Instrument.Client, Converter={StaticResource NullToVisibilityConverter}}"  -->
                 <TextBlock
                     Margin="0,5,0,0"
                     HorizontalAlignment="Center"
-                    Text="Job Id" />
+                    Text="Job #">
+                    <TextBlock x:Name="JobIdTextBlock" />
+                </TextBlock>
+
                 <!--
                     Text="{Binding JobIdDisplay}"
-                    Visibility="{Binding JobIdDisplay, Converter={StaticResource NullToVisibilityConverter}}"
                 -->
             </StackPanel>
 
@@ -86,7 +94,10 @@
                         HorizontalAlignment="Stretch"
                         Columns="2">
                         <StackPanel Margin="10">
-                            <TextBlock x:Name="SiteId2Text" HorizontalAlignment="Center" />
+                            <TextBlock
+                                x:Name="CompanyNumberText"
+                                HorizontalAlignment="Center"
+                                Text="123456789" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Company No." />
                         </StackPanel>
                         <StackPanel Margin="10">
@@ -95,7 +106,7 @@
                         </StackPanel>
                         <StackPanel Margin="10">
                             <TextBlock x:Name="FirmwareText" HorizontalAlignment="Center" />
-                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="Firm. Ver." />
+                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="Firmware" />
                         </StackPanel>
                     </UniformGrid>
 
@@ -113,22 +124,22 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center">
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Volume.UncorrectedUnits}" />
+                            <TextBlock x:Name="UncorUnitsTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Uncor. Units" />
                         </StackPanel>
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Volume.CorrectedUnits}" />
+                            <TextBlock x:Name="CorUnitsTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Cor. Units" />
                         </StackPanel>
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Volume.DriveRateDescription}" />
+                            <TextBlock x:Name="DriveRateTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Drive Rate" />
                         </StackPanel>
                     </UniformGrid>
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource SubSectionDividerBorder}">
+            <Border x:Name="PressureInfoSection" Style="{StaticResource SubSectionDividerBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -141,20 +152,20 @@
                         VerticalAlignment="Center"
                         Columns="2">
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Pressure.Range}" />
+                            <TextBlock x:Name="PressureRangeTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Range" />
                         </StackPanel>
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Pressure.TransducerType}" />
+                            <TextBlock x:Name="PressureTransducerTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Transducer" />
                         </StackPanel>
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Pressure.Base}" />
+                            <TextBlock x:Name="BasePressureTextBlock" HorizontalAlignment="Center" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Base" />
                         </StackPanel>
                         <StackPanel Margin="10">
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Pressure.AtmosphericPressure}" />
-                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="Atm" />
+                            <TextBlock x:Name="AtmPressureTextBlock" HorizontalAlignment="Center" />
+                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="ATM" />
                         </StackPanel>
 
 
@@ -162,7 +173,7 @@
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource SubSectionDividerBorder}">
+            <Border x:Name="TemperatureInfoSection" Style="{StaticResource SubSectionDividerBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -180,16 +191,21 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         Columns="2">
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Temperature.Base}">
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding Temperature.Units}" />
-                            </TextBlock>
-                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="Base." />
-                        </StackPanel>
+
                         <!--<StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding Temperature}">
+                            <TextBlock
+                                x:Name="TempUnits2TextBlock"
+                                HorizontalAlignment="Center"
+                                Text="{Binding Temperature}" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Units" />
                         </StackPanel>-->
+                        <StackPanel>
+                            <TextBlock x:Name="BaseTempTextBlock" HorizontalAlignment="Center">
+                                <TextBlock x:Name="TempUnitsTextBlock" HorizontalAlignment="Center" />
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LabelFontStyle}" Text="Base" />
+                        </StackPanel>
+
                     </UniformGrid>
                 </Grid>
             </Border>
@@ -209,18 +225,19 @@
                         <!--  Region Pulser A  -->
                         <StackPanel Margin="5" HorizontalAlignment="Center">
                             <TextBlock
+                                x:Name="ChannelAUnitsTextBlock"
                                 HorizontalAlignment="Center"
                                 FontSize="12"
                                 FontWeight="Bold"
                                 Foreground="Gray"
                                 Text="Pulser A" />
 
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding PulseOutput.A_Units}" />
+                            <TextBlock HorizontalAlignment="Center" />
 
                             <TextBlock
+                                x:Name="ChannelAScalingTextBlock"
                                 HorizontalAlignment="Center"
-                                FontSize="12"
-                                Text="{Binding PulseOutput.A_Scaling}" />
+                                FontSize="12" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Scaling" />
                         </StackPanel>
                         <!--  End Region  -->
@@ -232,12 +249,12 @@
                                 Foreground="Gray"
                                 Text="Pulser B" />
 
-                            <TextBlock HorizontalAlignment="Center" Text="{Binding PulseOutput.B_Units}" />
+                            <TextBlock x:Name="ChannelBUnitsTextBlock" HorizontalAlignment="Center" />
 
                             <TextBlock
+                                x:Name="ChannelBScalingTextBlock"
                                 HorizontalAlignment="Center"
-                                FontSize="12"
-                                Text="{Binding PulseOutput.B_Scaling}" />
+                                FontSize="12" />
                             <TextBlock Style="{StaticResource LabelFontStyle}" Text="Scaling" />
                         </StackPanel>
 
