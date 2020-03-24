@@ -12,9 +12,7 @@ jobs:
  
   build:
 
-    runs-on: windows-latest
-    env:
-      solution_path: source/Evc-Prover.sln
+    runs-on: windows-latest    
                   
     steps:
     - uses: actions/checkout@v2
@@ -30,4 +28,5 @@ jobs:
       run: dotnet build --configuration Release --no-restore $solution_path
     - name: Test
       run: dotnet test --no-restore --verbosity normal $solution_path
-
+      env:
+        solution_path: ./source/Evc-Prover.sln
