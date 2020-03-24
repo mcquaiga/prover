@@ -1,4 +1,4 @@
-name: .NET Core
+name: EvcProver - Windows .Net Core
 
 on:
   push:
