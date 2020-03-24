@@ -24,7 +24,7 @@ jobs:
     - name: Current Directory
       run: echo ${solution_path}
     - name: Install dependencies
-      run: dotnet restore --verbosity verbose source\Evc-Prover.sln
+      run: dotnet restore --verbosity d source\Evc-Prover.sln
     - name: Build
       run: dotnet build --configuration Release --no-restore source\Evc-Prover.sln
     - name: Test
