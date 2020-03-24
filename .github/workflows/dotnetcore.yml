@@ -22,11 +22,11 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Current Directory
-      run: echo ${solution_path}
+      run: echo ${{solution_path}}
     - name: Install dependencies
-      run: dotnet restore --verbosity d source\Evc-Prover.sln
+      run: dotnet restore --verbosity d source\EvcProver.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore source\Evc-Prover.sln
+      run: dotnet build --configuration Release --no-restore source\EvcProver.sln
     - name: Test
-      run: dotnet test --no-restore --verbosity normal source\Evc-Prover.sln
+      run: dotnet test --no-restore --verbosity normal source\EvcProver.sln
      
