@@ -5,7 +5,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+    
+env:
+  solution_path: source/Evc-Prover.sln
+  
 jobs:
   build:
 
@@ -17,9 +20,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Current Directory
+      run: pwd
     - name: Install dependencies
-      run: dotnet restore ./source/Evc-Prover.sln
+      run: dotnet restore ${{ solution_path }}
     - name: Build
-      run: dotnet build --configuration Release --no-restore ./source/Evc-Prover.sln
+      run: dotnet build --configuration Release --no-restore ${{ solution_path }}
     - name: Test
-      run: dotnet test --no-restore --verbosity normal ./source/Evc-Prover.sln
+      run: dotnet test --no-restore --verbosity normal ${{ solution_path }}
