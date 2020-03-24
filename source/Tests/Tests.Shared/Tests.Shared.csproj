@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MiniMax.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="MiniMax.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Reactive.Testing" Version="4.3.2" />
+    <PackageReference Include="System.Text.Json" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

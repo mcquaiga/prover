@@ -1,0 +1,252 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>Client.Desktop.Wpf.Program</StartupObject>
+    <AssemblyName>Client.Desktop.Wpf</AssemblyName>
+    <RootNamespace>Client.Desktop.Wpf</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
+  </PropertyGroup>
+
+  <!--<Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <ConvertToAbsolutePath Paths="$(BuildPath)">
+      <Output TaskParameter="AbsolutePaths" PropertyName="BuildOutputDir"/>
+    </ConvertToAbsolutePath>
+    <Message Text="Build Output Dir = $(BuildPath)"/>
+  </Target>-->
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(BuildPath)\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(BuildPath)\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <PackageIcon>clipboard-check-blue.ico</PackageIcon>
+    <ApplicationIcon>clipboard-check-white.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Modules\**" />
+    <Compile Remove="ViewModels\Certificates\**" />
+    <EmbeddedResource Remove="Modules\**" />
+    <EmbeddedResource Remove="ViewModels\Certificates\**" />
+    <None Remove="Modules\**" />
+    <None Remove="ViewModels\Certificates\**" />
+    <Resource Include="Resources\clipboard-check-blue.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </Resource>
+    <Resource Include="clipboard-check-white.ico" />
+    <Page Remove="Modules\**" />
+    <Page Remove="ViewModels\Certificates\**" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <Compile Remove="build\**" />
+    <EmbeddedResource Remove="build\**" />
+    <None Remove="build\**" />
+    <Page Remove="build\**" />
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <None Remove="appsettings.Development.json" />
+    <None Remove="appsettings.json" />
+    <None Remove="Resources\clipboard-check-white.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cronos" Version="0.7.0" />
+    <PackageReference Include="DynamicData" Version="6.14.8" />
+    <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.2" />
+    <PackageReference Include="MvvmDialogs" Version="7.0.0" />
+    <PackageReference Include="ReactiveUI" Version="11.2.1" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.2.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.2.1" />
+    <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
+    <PackageReference Include="Splat" Version="9.3.11" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Comm.Crc\Devices.Honeywell.Comm.Crc.vbproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
+    <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Controls\LabelValueControl.xaml.cs">
+      <DependentUpon>LabelValueControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\MainMenuButton.xaml.cs">
+      <DependentUpon>MainMenuButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PercentageControl.xaml.cs">
+      <DependentUpon>PercentageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PercentageControlNew.xaml.cs">
+      <DependentUpon>PercentageControlNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\ValueDescriptionControl.xaml.cs">
+      <DependentUpon>ValueDescriptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Startup\StartScreen.xaml.cs">
+      <DependentUpon>StartScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Clients\ClientManagerView.xaml.cs">
+      <DependentUpon>ClientManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Dialogs\QuestionDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialogs\TextDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Verifications\Details\PressureTestView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\LabelValueControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\MainMenuButton.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\PercentageControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\PercentageControlNew.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\ValueDescriptionControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Startup\StartScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Clients\ClientManagerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialogs\QuestionDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialogs\TextDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Details\PressureTestView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Verifications\Styles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Installer\" />
+    <Folder Include="Views\Certificates\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DeltaCompressionDotNet">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.MsDelta">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.MsDelta.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaCompressionDotNet.PatchApi">
+      <HintPath>..\lib\squirrel\DeltaCompressionDotNet.PatchApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\lib\squirrel\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\lib\squirrel\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Squirrel">
+      <HintPath>..\lib\squirrel\NuGet.Squirrel.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\lib\squirrel\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="Squirrel">
+      <HintPath>..\lib\squirrel\Squirrel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

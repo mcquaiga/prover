@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rxui:ReactiveContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
+                            x:TypeArguments="vm:NewConnectionViewModel"
+                xmlns:vm="clr-namespace:Devices.Mobile.ViewModels"
+             x:Class="Devices.Mobile.Views.NewConnectionView">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Device: " />
+            <Label x:Name="DeviceNameLabel"
+                    Text="{Binding Device.Name}" />
+
+            <Label Text="Port: " />
+            <Label x:Name="PortNameLabel"
+                   Text="{Binding PortName}" />
+
+            <Button Text="CONNECT"
+                    x:Name="ConnectButton" />
+
+            <Button Text="DISCONNECT"
+                    x:Name="DisconnectButton" />
+
+            <Button x:Name="FetchPressureItemsButton"
+                    Text="Pressure" />
+
+            <StackLayout>
+                <Label x:Name="ConnectionInfoLabel"
+                   Margin="3, 15"
+                    Text="{Binding ResponseMessage}" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</rxui:ReactiveContentPage>
+
+<!--IsVisible="{Binding ConnectionInfo.IsConnected, Mode=TwoWay}-->

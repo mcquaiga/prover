@@ -1,0 +1,114 @@
+﻿<rxui:ReactiveWindow
+    x:Class="Client.Desktop.Wpf.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels"
+    x:Name="MainWindowView"
+    Title="EVC Prover"
+    Width="964"
+    Height="750"
+    x:TypeArguments="viewModels:MainViewModel"
+    mc:Ignorable="d">
+
+    <Window.Resources />
+
+
+    <DockPanel>
+
+        <materialDesign:ColorZone
+            x:Name="HeaderColorZone"
+            Padding="4"
+            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+            DockPanel.Dock="Top"
+            Mode="PrimaryDark">
+
+            <Grid x:Name="HeaderDockPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    x:Name="NavigationBar"
+                    Grid.Column="0"
+                    Margin="15"
+                    Orientation="Horizontal">
+
+                    <Button
+                        x:Name="GoHomeButton"
+                        Width="48"
+                        Height="48">
+                        <materialDesign:PackIcon Foreground="White" Kind="Home" />
+                    </Button>
+
+                    <Button
+                        x:Name="GoBackButton"
+                        Width="48"
+                        Height="48">
+                        <materialDesign:PackIcon Foreground="White" Kind="ArrowBack" />
+                    </Button>
+
+                    <!--<Button
+                        x:Name="ShowDialogButton"
+                        Margin="5,0,0,0"
+                        Content="Show Dialog" />-->
+
+                </StackPanel>
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"><Run Text="EVC Prover" /></TextBlock>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <materialDesign:DialogHost x:Name="DialogHost" Identifier="ActiveItemDialog">
+                <materialDesign:DialogHost.DialogContent>
+                    <ContentControl x:Name="DialogContent" />
+                </materialDesign:DialogHost.DialogContent>
+
+                <materialDesign:DialogHost.Content>
+
+                    <rxui:RoutedViewHost
+                        x:Name="RoutedViewHost"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        DockPanel.Dock="Bottom" />
+
+                </materialDesign:DialogHost.Content>
+            </materialDesign:DialogHost>
+
+            <Grid
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                d:LayoutOverrides="Width">
+                <materialDesign:Snackbar x:Name="NotificationSnackBar" IsActive="{Binding ShowNotificationSnackBar}">
+                    <materialDesign:SnackbarMessage HorizontalAlignment="Center" Content="{Binding NotificationMessage}" />
+                </materialDesign:Snackbar>
+            </Grid>
+        </Grid>
+
+    </DockPanel>
+
+</rxui:ReactiveWindow>

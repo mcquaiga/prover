@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Client.Desktop.Wpf.Controls.LabelValueControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Name="LabelValue"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+
+    <Grid DataContext="{Binding ElementName=LabelValue}">
+
+        <Grid Background="{Binding ControlBackground}">
+            <StackPanel Margin="4 0">
+                <TextBlock Text="{Binding Path=Value}"
+                           FontSize="{Binding ValueFontSize}"
+                           HorizontalAlignment="Left"
+                           Foreground="{DynamicResource PrimaryHueDarkBrush}" />
+                <Border Margin="0 3" BorderBrush="SlateGray" BorderThickness="0 1 0 0" />
+                <TextBlock Text="{Binding Path=Label}"
+                           HorizontalAlignment="Left"
+                           FontSize="8"
+                           FontWeight="Medium"
+                           Foreground="{DynamicResource SecondaryTextColor}" />
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

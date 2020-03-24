@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Screens;
 using Prover.GUI.Screens.Modules.QAProver.Screens;

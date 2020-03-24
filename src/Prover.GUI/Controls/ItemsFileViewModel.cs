@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using Caliburn.Micro.ReactiveUI;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Items;
 using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.Core.Models.Clients;

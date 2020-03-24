@@ -1,7 +1,6 @@
 ﻿namespace UnionGas.MASA.Screens.TestsByJobNumber
 {
     using Caliburn.Micro;
-    using Prover.Core.Models.Instruments;
     using Prover.Core.Services;
     using Prover.GUI.Screens;
     using ReactiveUI;
@@ -9,7 +8,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
-    using System.Windows;
     using UnionGas.MASA.DCRWebService;
     using UnionGas.MASA.Dialogs.MeterDTODialog;
 

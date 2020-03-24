@@ -1,9 +1,4 @@
 ﻿using Prover.Core.Models.Instruments;
-using Prover.Core.Extensions;
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Prover.Core.VerificationTests.Events
 {

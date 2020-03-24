@@ -1,0 +1,27 @@
+﻿<rxui:ReactiveWindow
+    x:Class="Devices.Terminal.Wpf.MainWindow"
+    xmlns:vm="clr-namespace:Devices.Terminal.Wpf"
+    x:TypeArguments="vm:MainViewModel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+        Title="Comm Terminal" Height="450" Width="800"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <DockPanel>
+        <rxui:ViewModelViewHost x:Name="SettingsItem"
+                                  DockPanel.Dock="Top" />
+
+        <TextBlock x:Name="CommWindow"
+                   DockPanel.Dock="Bottom" />
+    </DockPanel>
+</rxui:ReactiveWindow>
