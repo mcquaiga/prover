@@ -24,18 +24,13 @@ jobs:
   
     - name: Install dependencies
       run: dotnet restore "source\EvcProver - Windows.sln"
-    
-    - name: Generate build number
-      uses: einaregilsson/build-number@v2 
-      with:
-        token: ${{secrets.github_token}}
-    
+       
     - name: Build
-      run: dotnet build -p:Version=${env:VERSION_NUMBER} --configuration Release --no-restore "source\EvcProver - Windows.sln"   
+      run: dotnet build -p:Version=${{ env.VERSION_NUMBER }} --configuration Release --no-restore "source\EvcProver - Windows.sln"   
        
     - name: Upload Artificat
       uses: actions/upload-artifact@v1
       with:
-        name: EvcProver-v${env:VERSION_NUMBER}
+        name: EvcProver-v${{ env.VERSION_NUMBER }}
         path: build\Release
      
