@@ -100,7 +100,9 @@ namespace Prover.Core
 
         private static void RegisterTestActions(ContainerBuilder builder)
         {
-            builder.RegisterType<TestActionsManager>().As<ITestActionsManager>();
+            builder.RegisterType<TestActionsManager>()
+                .As<ITestActionsManager>()
+                .SingleInstance();
 
             builder.Register(c =>
             {
