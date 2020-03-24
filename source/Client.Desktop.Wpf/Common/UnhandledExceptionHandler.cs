@@ -2,7 +2,7 @@
 using System.Windows.Threading;
 using Microsoft.Extensions.Logging;
 
-namespace Client.Desktop.Wpf
+namespace Client.Desktop.Wpf.Common
 {
     public class UnhandledExceptionHandler
     {

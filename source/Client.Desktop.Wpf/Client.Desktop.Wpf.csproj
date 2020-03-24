@@ -141,10 +141,10 @@
     <Compile Update="Views\Clients\ClientManagerView.xaml.cs">
       <DependentUpon>ClientManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Dialogs\QuestionDialogView.xaml.cs">
+    <Compile Update="Dialogs\QuestionDialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Dialogs\TextDialogView.xaml.cs">
+    <Compile Update="Dialogs\TextDialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\HomeView.xaml.cs">
@@ -186,10 +186,10 @@
     <Page Update="Views\Clients\ClientManagerView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Dialogs\QuestionDialogView.xaml">
+    <Page Update="Dialogs\QuestionDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Dialogs\TextDialogView.xaml">
+    <Page Update="Dialogs\TextDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Verifications\Details\PressureTestView.xaml">
@@ -214,6 +214,7 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
+    <Folder Include="Screens\Dialogs\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 

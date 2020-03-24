@@ -9,8 +9,8 @@ namespace Prover.Application.ViewModels.Volume.Factories
 {
     public partial class VolumeViewModelFactory
     {
-        private readonly CalculationsViewModel _sharedCalculator;
         private readonly VolumeItems _endVolumeItems;
+        private readonly CalculationsViewModel _sharedCalculator;
 
         private readonly VolumeItems _startVolumeItems;
 
@@ -19,7 +19,25 @@ namespace Prover.Application.ViewModels.Volume.Factories
         {
             _startVolumeItems = device.CreateItemGroup<VolumeItems>();
             _endVolumeItems = device.CreateItemGroup<VolumeItems>();
-            _sharedCalculator = GetSharedCalculator(device, testPoint);
+            
+            _sharedCalculator = GetSharedCalculator();
+            
+
+            CalculationsViewModel GetSharedCalculator()
+            {
+                switch (device.ItemGroup<SiteInformationItems>().CompositionType)
+                {
+                    case CompositionType.T:
+                        return new CalculationsViewModel(testPoint.GetTemperatureTest());
+                    case CompositionType.P:
+                        return new CalculationsViewModel(testPoint.GetPressureTest());
+                    case CompositionType.PTZ:
+                        return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
+                            testPoint.GetSuperFactorTest());
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         public static void Create(DeviceInstance device, EvcVerificationViewModel viewModel,
@@ -41,10 +59,12 @@ namespace Prover.Application.ViewModels.Volume.Factories
             }
         }
 
-        private CorrectedVolumeTestViewModel CreateCorrectedVolumeTest(IVolumeInputType volumeInputType,
-            UncorrectedVolumeTestViewModel uncorrectedTest) => new CorrectedVolumeTestViewModel(volumeInputType,
-            uncorrectedTest, _sharedCalculator,
-            _startVolumeItems, _endVolumeItems);
+        private CorrectedVolumeTestViewModel CreateCorrectedVolumeTest(IVolumeInputType volumeInputType, UncorrectedVolumeTestViewModel uncorrectedTest)
+        {
+            return new CorrectedVolumeTestViewModel(uncorrectedTest,
+                _sharedCalculator,
+                _startVolumeItems, _endVolumeItems);
+        }
 
         private void CreatePulseOutputTests(DeviceInstance device, UncorrectedVolumeTestViewModel uncorModel,
             CorrectedVolumeTestViewModel corModel)
@@ -63,21 +83,21 @@ namespace Prover.Application.ViewModels.Volume.Factories
         private UncorrectedVolumeTestViewModel CreateUncorrectedVolumeTest(IVolumeInputType volumeInputType) =>
             new UncorrectedVolumeTestViewModel(volumeInputType, _startVolumeItems, _endVolumeItems);
 
-        private static CalculationsViewModel GetSharedCalculator(DeviceInstance device,
-            VerificationTestPointViewModel testPoint)
-        {
-            switch (device.ItemGroup<SiteInformationItems>().CompositionType)
-            {
-                case CompositionType.T:
-                    return new CalculationsViewModel(testPoint.GetTemperatureTest());
-                case CompositionType.P:
-                    return new CalculationsViewModel(testPoint.GetPressureTest());
-                case CompositionType.PTZ:
-                    return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
-                        testPoint.GetSuperFactorTest());
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        //private static CalculationsViewModel GetSharedCalculator(DeviceInstance device,
+        //    VerificationTestPointViewModel testPoint)
+        //{
+        //    switch (device.ItemGroup<SiteInformationItems>().CompositionType)
+        //    {
+        //        case CompositionType.T:
+        //            return new CalculationsViewModel(testPoint.GetTemperatureTest());
+        //        case CompositionType.P:
+        //            return new CalculationsViewModel(testPoint.GetPressureTest());
+        //        case CompositionType.PTZ:
+        //            return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
+        //                testPoint.GetSuperFactorTest());
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+        //}
     }
 }

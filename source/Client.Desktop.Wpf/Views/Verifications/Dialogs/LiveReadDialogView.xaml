@@ -11,129 +11,138 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     d:DesignHeight="400"
-    d:DesignWidth="700"
+    d:DesignWidth="800"
     x:TypeArguments="liveReadCorrections:LiveReadCoordinator"
     mc:Ignorable="d">
-    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+    <UserControl.Resources>
+        <Style TargetType="materialDesign:Card">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="25" />
+        </Style>
+        <Style TargetType="{x:Type StackPanel}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+    <Grid
+        Margin="30,30,30,0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!--<TextBlock
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Margin="5"
+            Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+            Text="Live Read" />-->
 
-        <materialDesign:Card
-            x:Name="PressureStackPanelControl"
-            Margin="10"
-            Padding="15"
-            materialDesign:ShadowAssist.ShadowDepth="Depth2">
-            <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone
-                    Padding="15"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                    FontSize="36"
-                    Mode="PrimaryLight">
-                    <materialDesign:ColorZone.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="48"
-                                Height="48"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Kind="Gauge" />
-                            <TextBlock VerticalAlignment="Center" Text="Pressure" />
-                        </StackPanel>
-                    </materialDesign:ColorZone.Content>
-                </materialDesign:ColorZone>
+        <UniformGrid
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Rows="1">
 
-                <StackPanel
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Orientation="Vertical">
-
-                    <StackPanel Margin="4" Orientation="Horizontal">
+            <materialDesign:Card x:Name="PressureStackPanelControl" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Pressure" />
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Width="48"
+                            Height="48"
+                            Margin="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Kind="Gauge" />
                         <TextBlock
                             x:Name="PressureValueTextBlock"
                             VerticalAlignment="Bottom"
                             Style="{StaticResource MaterialDesignHeadline1TextBlock}"
                             Text="80.5" />
-                        <!--<TextBlock
-                        x:Name="PressureUnitsTextBlock"
-                        Margin="0,0,0,25"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                        Text="PSI" />-->
 
-                    </StackPanel>
-
-                    <TextBlock
-                        x:Name="PressureTargetValueTextBlock"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                        Text="100" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                        Text="Target" />
-
-                </StackPanel>
-            </StackPanel>
-        </materialDesign:Card>
-        <materialDesign:Card
-            x:Name="TemperatureStackPanelControl"
-            Margin="10"
-            Padding="15"
-            materialDesign:ShadowAssist.ShadowDepth="Depth2">
-            <StackPanel Orientation="Vertical">
-                <materialDesign:ColorZone
-                    Padding="15"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                    FontSize="36"
-                    Mode="PrimaryLight">
-                    <materialDesign:ColorZone.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="48"
-                                Height="48"
+                        <StackPanel
+                            Margin="25,0"
+                            HorizontalAlignment="Right"
+                            Orientation="Vertical">
+                            <TextBlock
+                                x:Name="PressureTargetValueTextBlock"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Kind="Thermometer" />
-                            <TextBlock VerticalAlignment="Center" Text="Temperature" />
+                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                Text="100" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="Target" />
                         </StackPanel>
-                    </materialDesign:ColorZone.Content>
-                </materialDesign:ColorZone>
 
-                <StackPanel
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Orientation="Vertical">
+                    </StackPanel>
+                    <!--<materialDesign:PackIcon
+                        Width="48"
+                        Height="48"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Kind="Gauge" />-->
+                    <TextBlock
+                        x:Name="PressureUnitsTextBlock"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="PSIA" />
+                </StackPanel>
 
-                    <StackPanel Margin="4" Orientation="Horizontal">
+            </materialDesign:Card>
+            <materialDesign:Card x:Name="TemperatureStackPanelControl" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Temperature" />
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Width="48"
+                            Height="48"
+                            Margin="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Kind="ThermometerLow" />
                         <TextBlock
                             x:Name="TemperatureValueTextBlock"
                             VerticalAlignment="Bottom"
                             Style="{StaticResource MaterialDesignHeadline1TextBlock}"
                             Text="50.5" />
-                        <materialDesign:PackIcon
-                            Width="42"
-                            Height="42"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Kind="TemperatureFahrenheit" />
 
+                        <StackPanel Margin="25,0" Orientation="Vertical">
+                            <TextBlock
+                                x:Name="TemperatureTargetValueTextBlock"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                Text="100" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="Target" />
+
+                        </StackPanel>
                     </StackPanel>
-
-                    <TextBlock
-                        x:Name="TemperatureTargetValueTextBlock"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                        Text="100" />
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                        Text="Target" />
-
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="F" />
                 </StackPanel>
-            </StackPanel>
-        </materialDesign:Card>
-    </StackPanel>
+            </materialDesign:Card>
+        </UniformGrid>
+    </Grid>
 </reactiveUi:ReactiveUserControl>

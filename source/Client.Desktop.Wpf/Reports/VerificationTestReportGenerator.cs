@@ -1,5 +1,4 @@
-﻿using Client.Desktop.Wpf.ViewModels;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using System;
 using System.IO;
 using System.Threading.Tasks;

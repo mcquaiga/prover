@@ -14,7 +14,7 @@ namespace Prover.Application.ViewModels.Volume
         private const decimal Tolerance = Global.UNCOR_ERROR_THRESHOLD;
 
         public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues,
-            VolumeItems endValues) : base(Tolerance, driveType, startValues, endValues)
+            VolumeItems endValues) : base(Tolerance, startValues, endValues)
         {
             this.WhenAnyValue(x => x.StartValues, x => x.EndValues, x => x.AppliedInput, (s, e, a) =>
                     VolumeCalculator.TotalVolume(s.UncorrectedReading, e.UncorrectedReading))
@@ -22,7 +22,7 @@ namespace Prover.Application.ViewModels.Volume
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.AppliedInput)
-                .Select(a => DriveType.UnCorrectedInputVolume(a))
+                .Select(driveType.UnCorrectedInputVolume)
                 .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
 

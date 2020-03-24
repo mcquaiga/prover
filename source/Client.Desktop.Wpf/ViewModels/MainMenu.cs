@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.ViewModels.Clients;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using MaterialDesignThemes.Wpf;
@@ -25,6 +24,16 @@ namespace Client.Desktop.Wpf.ViewModels
 
         //public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager) 
         //    => new MainMenu(screenManager, "Export Test Runs ", PackIconKind.CloudUpload, s => s.ChangeView<ClientManagerViewModel>(), 4);
+    }
+
+    public interface IMainMenuItem
+    {
+        PackIconKind MenuIconKind { get; }
+        string MenuTitle { get; }
+
+        ReactiveCommand<IScreenManager, IRoutableViewModel> OpenCommand { get; }
+
+        int? Order { get; }
     }
 
     public class MainMenu : IMainMenuItem

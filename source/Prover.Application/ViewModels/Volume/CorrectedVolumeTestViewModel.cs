@@ -1,5 +1,7 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interfaces;
@@ -14,13 +16,13 @@ namespace Prover.Application.ViewModels.Volume
     {
         private const decimal Tolerance = Global.COR_ERROR_THRESHOLD;
 
-        public CorrectedVolumeTestViewModel(IVolumeInputType driveType, UncorrectedVolumeTestViewModel uncorrected,
+        public CorrectedVolumeTestViewModel(UncorrectedVolumeTestViewModel uncorrected,
             ICalculateTrueCorrectedFactor trueCorrectedFactor, VolumeItems startValues, VolumeItems endValues)
-            : base(Tolerance, driveType, startValues, endValues)
+            : base(Tolerance, startValues, endValues)
         {
             Uncorrected = uncorrected;
-            this.WhenAnyValue(x => x.StartValues, x => x.EndValues,
-                    (start, end) => VolumeCalculator.TotalVolume(start.CorrectedReading, end.CorrectedReading))
+            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, x => x.ExpectedValue,
+                    (start, end, expected) => VolumeCalculator.TotalVolume(start.CorrectedReading, end.CorrectedReading))
                 .ToPropertyEx(this, x => x.ActualValue)
                 .DisposeWith(Cleanup);
 
@@ -33,12 +35,19 @@ namespace Prover.Application.ViewModels.Volume
             trueCorrectedFactor.TrueCorrectedObservable
                 .ToPropertyEx(this, x => x.TotalCorrectionFactor)
                 .DisposeWith(Cleanup);
+
+            this.WhenAnyValue(x => x.StartValues)
+                .Subscribe(v => StartCorrectedReading = v.CorrectedReading);
+
+            this.WhenAnyValue(x => x.EndValues)
+                .Subscribe(v => EndCorrectedReading = v.CorrectedReading);
         }
 
         public UncorrectedVolumeTestViewModel Uncorrected { get; }
 
-        public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
+        [Reactive] public decimal StartCorrectedReading { get; set; }
+        [Reactive] public decimal EndCorrectedReading { get; set; }
 
-        
+        public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
     }
 }

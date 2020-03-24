@@ -12,7 +12,6 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Shared;
 using Prover.Shared.IO;
-using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Communications
 {

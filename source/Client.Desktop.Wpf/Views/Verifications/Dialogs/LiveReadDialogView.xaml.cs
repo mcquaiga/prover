@@ -2,9 +2,7 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using Client.Desktop.Wpf.Communications;
 using Devices.Core.Items;
-using Prover.Application.Services.LiveReadCorrections;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Dialogs

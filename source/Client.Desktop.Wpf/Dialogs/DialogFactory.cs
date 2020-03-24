@@ -2,7 +2,7 @@
 using MvvmDialogs;
 using MvvmDialogs.DialogFactories;
 
-namespace Client.Desktop.Wpf.Views.Dialogs
+namespace Client.Desktop.Wpf.Dialogs
 {
     public class DialogFactory : IDialogFactory
     {

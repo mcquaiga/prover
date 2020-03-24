@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Client.Desktop.Wpf.Screens;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;

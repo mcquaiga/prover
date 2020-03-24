@@ -1,19 +1,17 @@
 using System;
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
-namespace Prover.Application.Services.VerificationManager
+namespace Prover.Application.VerificationManager
 {
     public class TestManager : ReactiveObject, ITestManager, IDisposable
     {

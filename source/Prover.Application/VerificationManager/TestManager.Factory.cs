@@ -1,13 +1,11 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
-using Prover.Application.ViewModels;
+using Prover.Application.VerificationManager.Volume;
 
-namespace Prover.Application.Services.VerificationManager
+namespace Prover.Application.VerificationManager
 {
     public class TestManagerFactory : ITestManagerFactory
     {

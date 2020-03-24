@@ -1,9 +1,8 @@
 ﻿using System;
 using Client.Desktop.Wpf.Controls;
+using Client.Desktop.Wpf.Dialogs;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Reports;
-using Client.Desktop.Wpf.Screens;
-using Client.Desktop.Wpf.Screens.Dialogs;
 using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;

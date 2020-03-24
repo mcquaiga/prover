@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +20,12 @@ namespace Client.Desktop.Wpf.Extensions
 
         public static void AddDialogViews(this IServiceCollection services)
         {
-            foreach (var ti in GetAssembly.DefinedTypes.Where(t => t.Name.Contains("Dialog"))
-                .Where(ti =>
-                    ti.BaseType?.IsGenericType == true &&
-                    ti.BaseType?.GetGenericTypeDefinition() == typeof(ReactiveDialog<>).GetGenericTypeDefinition() &&
-                    !ti.IsAbstract))
-                services.TryAddTransient(ti, ti);
+            //foreach (var ti in GetAssembly.DefinedTypes.Where(t => t.Name.Contains("Dialog"))
+            //    .Where(ti =>
+            //        ti.BaseType?.IsGenericType == true &&
+            //        ti.BaseType?.GetGenericTypeDefinition() == typeof(ReactiveDialog<>).GetGenericTypeDefinition() &&
+            //        !ti.IsAbstract))
+            //    services.TryAddTransient(ti, ti);
         }
 
         public static void AddMainMenuItems(this IServiceCollection services)

@@ -14,6 +14,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
                 Uncorrected = CreateUncorrectedVolumeTest(viewModel.DriveType)
             };
             vm.Corrected = CreateCorrectedVolumeTest(viewModel.DriveType, vm.Uncorrected);
+            vm.DriveType = viewModel.DriveType;
 
             CreatePulseOutputTests(device, vm.Uncorrected, vm.Corrected);
 

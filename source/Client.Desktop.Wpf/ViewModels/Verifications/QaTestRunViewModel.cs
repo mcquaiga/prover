@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
@@ -14,14 +13,13 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using Prover.Application.Settings;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public class QaTestRunViewModel : RoutableViewModelBase, IDisposable
+    public class QaTestRunViewModel : RoutableViewModelBase, IDisposable, IDialogViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
@@ -124,6 +122,10 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
         public override string UrlPathSegment => "/VerificationTests";
         public override IScreen HostScreen => ScreenManager;
+
+        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+
+        [Reactive] public bool IsDialogOpen { get; private set; }
 
         public void Dispose()
         { 

@@ -1,7 +1,7 @@
 ﻿using Client.Desktop.Wpf.ViewModels.Dialogs;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Dialogs
+namespace Client.Desktop.Wpf.Dialogs
 {
     public partial class TextDialogView : ReactiveUserControl<TextDialogViewModel>
     {

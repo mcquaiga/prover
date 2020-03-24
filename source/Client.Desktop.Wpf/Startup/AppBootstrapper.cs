@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.Common;
 using Client.Desktop.Wpf.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -9,12 +9,13 @@ using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.Services.VerificationManager
+namespace Prover.Application.VerificationManager.Volume
 {
     public abstract class AutomatedVolumeTestManagerBase : IVolumeTestManager, IDisposable
     {

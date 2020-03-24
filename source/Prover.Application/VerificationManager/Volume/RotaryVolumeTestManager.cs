@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Application.ViewModels.Volume;
+using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.Services.VerificationManager
+namespace Prover.Application.VerificationManager.Volume
 {
     public class RotaryVolumeManager : AutomatedVolumeTestManagerBase
     {
@@ -31,8 +31,7 @@ namespace Prover.Application.Services.VerificationManager
 
         public RotaryVolumeViewModel RotaryVolume { get; }
 
-        public int TargetUncorrectedPulses => RotaryVolume.Uncorrected
-            .DriveType.MaxUncorrectedPulses();
+        public int TargetUncorrectedPulses => RotaryVolume.DriveType.MaxUncorrectedPulses();
 
         public override async Task PublishCompleteInteraction() =>
             await DeviceInteractions.CompleteVolumeTest.Handle(this);

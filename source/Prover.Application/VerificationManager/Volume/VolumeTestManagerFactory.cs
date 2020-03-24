@@ -2,11 +2,12 @@
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Shared.Interfaces;
 
-namespace Prover.Application.Services.VerificationManager
+namespace Prover.Application.VerificationManager.Volume
 {
     public interface IVolumeTestManagerFactory
     {

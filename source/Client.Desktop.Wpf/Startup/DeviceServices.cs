@@ -1,7 +1,6 @@
 ﻿using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Desktop.Wpf.ViewModels.Verifications;
 using Devices.Communications.Interfaces;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
@@ -12,17 +11,16 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
-using Prover.Application.Services.VerificationManager;
+using Prover.Application.VerificationManager;
+using Prover.Application.VerificationManager.Volume;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;
-using Prover.Shared;
 
 namespace Client.Desktop.Wpf.Startup
 {

@@ -1,16 +1,15 @@
-﻿using Client.Desktop.Wpf.ViewModels.Verifications;
-using ReactiveUI;
-using System.Linq;
+﻿using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using Client.Desktop.Wpf.Extensions;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
-    /// Interaction logic for VerificationTest.xaml
+    ///     Interaction logic for VerificationTest.xaml
     /// </summary>
-    public partial class QaTestRunView : ReactiveUserControl<QaTestRunViewModel>
+    public partial class QaTestRunView
     {
         public QaTestRunView()
         {
@@ -19,12 +18,16 @@ namespace Client.Desktop.Wpf.Views.Verifications
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.TestManager, view => view.NewTestSettingsSection.Visibility,
-                    value => value == null ? Visibility.Visible : Visibility.Collapsed);
+                        value => value == null ? Visibility.Visible : Visibility.Collapsed)
+                    .DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.TestManager, v => v.EditTestToolBarControl.Visibility,
+                        value => value != null ? Visibility.Visible : Visibility.Collapsed)
+                    .DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.TestManager, view => view.TestManagerView.ViewModel).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.StartTestCommand, v => v.StartTestButton).DisposeWith(d);
-                //this.BindCommand(ViewModel, vm => vm.NavigateForward, v => v.GoForwardButton).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedDeviceType, v => v.DeviceTypes.SelectedItem).DisposeWith(d);
@@ -32,9 +35,12 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.CommPorts.ItemsSource).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.SelectedCommPort, v => v.CommPorts.SelectedItem).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.BaudRates, v => v.BaudRates.ItemsSource, value => value.Select(x => x.ToString()))
+                this.OneWayBind(ViewModel, vm => vm.BaudRates, v => v.BaudRates.ItemsSource,
+                        value => value.Select(x => x.ToString()))
                     .DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.SelectedBaudRate, v => v.BaudRates.SelectedItem, vmp => vmp.ToString(), vp => string.IsNullOrEmpty(vp?.ToString()) ? 0 : int.Parse(vp.ToString()))
+
+                this.Bind(ViewModel, vm => vm.SelectedBaudRate, v => v.BaudRates.SelectedItem, vmp => vmp.ToString(),
+                        vp => string.IsNullOrEmpty(vp?.ToString()) ? 0 : int.Parse(vp.ToString()))
                     .DisposeWith(d);
 
                 //Tach Settings
@@ -47,10 +53,6 @@ namespace Client.Desktop.Wpf.Views.Verifications
 
                 this.CleanUpDefaults().DisposeWith(d);
             });
-
-
         }
-
-        
     }
 }

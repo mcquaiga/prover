@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Client.Desktop.Wpf.Common;
 using Client.Desktop.Wpf.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Splat;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Client.Desktop.Wpf.Startup
 {

@@ -2,7 +2,7 @@
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf
+namespace Client.Desktop.Wpf.Common
 {
     public sealed class SchedulerProvider : ISchedulerProvider
     {

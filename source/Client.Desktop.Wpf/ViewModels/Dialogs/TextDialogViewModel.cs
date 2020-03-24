@@ -1,4 +1,4 @@
-using Client.Desktop.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.Dialogs;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Dialogs

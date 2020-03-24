@@ -4,7 +4,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Desktop.Wpf.Views.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,14 +11,15 @@ using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Desktop.Wpf.Screens.Dialogs
+namespace Client.Desktop.Wpf.Dialogs
 {
     public class DialogServiceManager : ReactiveObject, IDialogViewModel, IDialogServiceManager
     {
         private readonly SerialDisposable _disposer = new SerialDisposable();
         private readonly ILogger<DialogServiceManager> _logger;
         private readonly IServiceProvider _services;
- 
+        private Action _onClosed;
+
         public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
             IViewLocator viewLocator = null)
         {
@@ -67,7 +67,6 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                 },
                 outputScheduler: RxApp.MainThreadScheduler);
 
-
             this.WhenAnyValue(x => x.DialogViewModel.IsDialogOpen)
                 .Where(open => !open)
                 .Select(_ => Unit.Default)
@@ -84,27 +83,26 @@ namespace Client.Desktop.Wpf.Screens.Dialogs
                 .ToPropertyEx(this, x => x.DialogViewModel);
         }
 
-        public ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; }
-        public ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; protected set; }
-        public ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
         public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+        private ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; }
+        private ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; }
+        private ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
 
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
-        public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
+        protected extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
         public extern bool IsDialogOpen { [ObservableAsProperty] get; }
-
 
         public async Task Close()
         {
             await CloseDialog.Execute();
         }
 
-        public async Task Show<TView>(TView dialogView) where TView : IViewFor
+        public async Task Show<TView>(TView dialogView, Action onClosed = null) where TView : IViewFor
         {
             await ShowDialogView.Execute(dialogView);
         }
 
-        public async Task Show<T>()
+        public async Task Show<T>(Action onClosed = null)
             where T : class, IDialogViewModel
         {
             var model = _services.GetService<T>();

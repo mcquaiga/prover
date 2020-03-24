@@ -15,13 +15,12 @@ namespace Prover.Application.ViewModels.Volume
     {
         private ICollection<VerificationViewModel> _allTests = new List<VerificationViewModel>();
 
-        protected VolumeViewModelBase(VolumeItems startValues, VolumeItems endValues, IVolumeInputType driveType = null)
+        protected VolumeViewModelBase(VolumeItems startValues, VolumeItems endValues)
         {
             Id = Guid.Empty;
 
             StartValues = startValues;
             EndValues = endValues;
-            DriveType = driveType;
         }
 
         [Reactive] public VolumeItems StartValues { get; set; }
@@ -30,7 +29,7 @@ namespace Prover.Application.ViewModels.Volume
         public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
         public ReactiveCommand<Unit, Unit> FinishTest { get; protected set; }
 
-        public IVolumeInputType DriveType { get; set; }
+        public virtual IVolumeInputType DriveType { get; set; }
 
         public virtual ICollection<VerificationViewModel> AllTests() => GetSpecificTests().ToList();
 

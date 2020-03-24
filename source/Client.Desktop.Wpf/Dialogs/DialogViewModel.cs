@@ -7,7 +7,7 @@ using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Desktop.Wpf.Screens.Dialogs
+namespace Client.Desktop.Wpf.Dialogs
 {
     public class DialogViewModel : ReactiveObject, IDialogViewModel, IDisposable
     {

@@ -3,7 +3,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.Screens.Dialogs;
+using Client.Desktop.Wpf.Dialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

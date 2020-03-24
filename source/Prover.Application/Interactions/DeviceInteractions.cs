@@ -3,7 +3,7 @@ using System.Reactive;
 using System.Threading;
 using Devices.Communications.Status;
 using Prover.Application.Interfaces;
-using Prover.Application.Services.VerificationManager;
+using Prover.Application.VerificationManager.Volume;
 using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
 
