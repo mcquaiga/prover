@@ -22,16 +22,11 @@ jobs:
     - name: Install dependencies
       run: dotnet restore "source\EvcProver - Windows.sln"
     - name: Build
-      run: dotnet build --configuration Release --no-restore "source\EvcProver - Windows.sln"
-    
-    - name: Zip Release
-      uses: TheDoctor0/zip-release@v0.2.1
-      with:               
-        path: build\Release
+      run: dotnet build --configuration Release --no-restore "source\EvcProver - Windows.sln"   
        
     - name: Upload Artificat
       uses: actions/upload-artifact@v1
       with:
         name: EvcProver
-        path: release.zip
+        path: build\Release
      
