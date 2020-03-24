@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Screens.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -19,47 +20,31 @@ namespace Client.Desktop.Wpf.ViewModels
         //private readonly DialogServiceManager _dialogService;
         private readonly IServiceProvider _services;
 
-        public MainViewModel(IServiceProvider services, DialogServiceManager dialogManager,
-            Func<IScreenManager, IRoutableViewModel> homeViewFactoryFunc)
+        public MainViewModel(IServiceProvider services, IDialogServiceManager dialogManager, Func<IScreenManager, HomeViewModel> homeViewFactoryFunc)
         {
             _services = services;
 
             Router = new RoutingState();
 
             DialogManager = dialogManager;
+           
 
             HomeViewModel = homeViewFactoryFunc.Invoke(this);
 
             GoNext = ReactiveCommand.CreateFromObservable<IRoutableViewModel, IRoutableViewModel>(Router.Navigate.Execute);
             NavigateBack = Router.NavigateBack;
             NavigateHome = ReactiveCommand.CreateFromTask(GoHome);
-
-            ShowTestDialog = ReactiveCommand.CreateFromTask(async ()
-                =>
-            {
-                //await MessageInteractions.ShowMessage.Handle("This is from an interaction!");
-                var result = await DialogManager.ShowQuestion("Would you like to continue?");
-                Debug.WriteLine($"Answer = {result}");
-                //await MessageInteractions.ShowYesNo.Handle("Would you like to continue?");
-            });
-
-            //Router.CurrentViewModel
-            //    .ToPropertyEx(this, x => x.CurrentViewModel);
         }
 
         public string AppTitle { get; } = $"EVC Prover - v{GetVersionNumber()}";
 
         public IRoutableViewModel HomeViewModel { get; }
-
-        [Reactive] public ICollection<INavigationItem> NavigationItems { get; protected set; }
-
         public extern IRoutableViewModel CurrentViewModel { [ObservableAsProperty] get; }
 
         // The command that navigates a user to first view model.
         public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> GoNext { get; }
         public ReactiveCommand<Unit, Unit> NavigateBack { get; }
         public ReactiveCommand<Unit, Unit> NavigateHome { get; }
-        public ReactiveCommand<Unit, Unit> ShowTestDialog { get; protected set; }
 
         public void Dispose()
         {
@@ -84,20 +69,20 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         public RoutingState Router { get; }
 
-        [Reactive] public DialogServiceManager DialogManager { get; set; }
+        public IDialogServiceManager DialogManager { get; private set; }
+        //public IViewLocator ViewLocator { get; }
 
         public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-            Router.Navigate.Execute(viewModel).Subscribe();
+            await Router.Navigate.Execute(viewModel);
             return viewModel;
-            //return await GoNext.Execute(viewModel).RunAsync(cts.Token);
         }
 
         public async Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
         {
             var model = _services.GetService<TViewModel>();
-            Router.Navigate.Execute(model).Subscribe();
+            await Router.Navigate.Execute(model);
             return model;
         }
 
@@ -108,8 +93,6 @@ namespace Client.Desktop.Wpf.ViewModels
             await Router.NavigateBack.Execute();
 
             (current as IDisposable)?.Dispose();
-
-            // return await Router.CurrentViewModel.LastAsync();
         }
 
         public async Task GoHome()

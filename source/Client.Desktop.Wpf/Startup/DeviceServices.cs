@@ -1,18 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.Communications;
+﻿using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.Extensions;
-using Client.Desktop.Wpf.Interactions;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Client.Desktop.Wpf.ViewModels.Verifications;
-using Devices;
 using Devices.Communications.Interfaces;
-using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Devices.Romet.Core.Repository;
-using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,9 +13,15 @@ using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Hardware.MccDAQ;
-using Prover.Infrastructure.KeyValueStore;
-using Prover.Shared;
 using Prover.Shared.Interfaces;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Devices.Core.Interfaces;
+using Prover.Application.Services.VerificationManager;
+using Prover.Application.ViewModels;
+using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Shared;
 
 namespace Client.Desktop.Wpf.Startup
 {
@@ -34,44 +33,46 @@ namespace Client.Desktop.Wpf.Startup
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
-            services.AddTransient<TestManager>();
-            services.AddTransient<ITestManagerViewModelFactory, TestManager>();
+            services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
 
-            //services.AddTransient<VolumeTestManager>();
-            services.AddTransient<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
-
-            services.AddSingleton<IDeviceSessionManager, DeviceSessionManager>();
+            services.AddSingleton<Func<EvcVerificationViewModel, VerificationTestService, ITestManager>>(c =>
+                (test, service) =>
+                {
+                    return new TestManager(
+                        c.GetService<ILogger<TestManager>>(), 
+                        c.GetService<IDeviceSessionManager>(),
+                        test,
+                        c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>());
+                });
+            //services.AddTransient<ITestManagerFactory, TestManager>();
+            
+            services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
+            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => (evcTest) =>
+                {
+                    var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
+                    return volumeFactory.CreateVolumeManager(evcTest);
+                });
 
             // Port Setup
             var portFactory = new CommPortFactory();
-            services.AddSingleton<ICommPortFactory>(c => portFactory);
+            var clientFactory = new CommunicationsClientFactory(portFactory);
 
             // Device Clients
-            var clientFactory = new CommunicationsClientFactory(portFactory);
-            services.AddSingleton<ICommClientFactory>(c => clientFactory);
+            //services.AddSingleton<ICommPortFactory>(c => portFactory);
+            //services.AddSingleton<ICommClientFactory>(c => clientFactory);
+            services.AddSingleton<Func<DeviceType, ICommunicationsClient>>(c => (device) =>
+                {
+                    var port = portFactory.Create(ApplicationSettings.Local.InstrumentCommPort,
+                        ApplicationSettings.Local.InstrumentBaudRate);
 
-            //Tachometer
-            //services.AddScoped<ITachometerService, TachometerService>();
+                    return clientFactory.Create(device, port);
+                });
+            services.AddSingleton<IDeviceSessionManager, DeviceSessionManager>();
 
-            /*
-             * DAQ Board Setup 
-             */
+            services.AddPulseOutputListeners();
+            services.AddTachometer();
 
-            // Simulator
-            services.AddTransient<PulseOutputsListenerService>();
-            //services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
-            //services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
-
-            services.AddTransient<DeviceSessionDialogManager>();
-
-            //services.AddSingleton<DaqBoardChannelFactory>();
-            //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
-            //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
-
-            //Pulse Outputs
-            services.AddSingleton(c => new SimulatorPulseChannelFactory(c.GetService<ILogger>()));
-            services.AddSingleton<IInputChannelFactory, SimulatorPulseChannelFactory>();
-            services.AddSingleton<IOutputChannelFactory, SimulatorPulseChannelFactory>();
+            services.AddSingleton<DeviceSessionDialogManager>();
 
             services.AddStartTask<DeviceServices>();
         }
@@ -80,14 +81,56 @@ namespace Client.Desktop.Wpf.Startup
         {
             _provider.GetService<IInputChannelFactory>();
             _provider.GetService<DaqBoardChannelFactory>();
-           
+
             _provider.GetService<DeviceSessionDialogManager>();
-           
 
             var repo = _provider.GetService<DeviceRepository>();
             await repo.Load(new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance});
+        }
+        
+    }
+
+    internal static class DeviceServiceEx
+    {
+        public static void AddTachometer(this IServiceCollection services)
+        {
+            services.AddSingleton<Func<ITachometerService>>(c =>
+                () =>
+                {
+                    if (ApplicationSettings.Local.TachIsNotUsed) return new NullTachometerService();
+
+                    return new TachometerService(
+                        c.GetService<ILogger<TachometerService>>(),
+                        ApplicationSettings.Local.TachCommPort,
+                        c.GetService<Func<OutputChannelType, IOutputChannel>>().Invoke(OutputChannelType.Tachometer)
+                    );
+                });
+        }
+
+        public static void AddPulseOutputListeners(this IServiceCollection services)
+        {
+            services.AddTransient<PulseOutputsListenerService>();
+            services.AddSingleton<Func<PulseOutputsListenerService>>(c => c.GetService<PulseOutputsListenerService>);
+
+            services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel =>
+            {
+                return SimulatedInputChannel.PulseInputSimulators[channel];
+            });
+            services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel =>
+            {
+                return SimulatedOutputChannel.OutputSimulators[channel];
+            });
 
 
+            //services.AddSingleton<DaqBoardChannelFactory>();
+            //services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
+            //services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
+
+            // Pulse Outputs
+            // Simulator
+            //services.AddSingleton(c => new SimulatorPulseChannelFactory(c.GetService<ILogger>()));
+            //services.AddSingleton<IInputChannelFactory, SimulatorPulseChannelFactory>();
+            //services.AddSingleton<IOutputChannelFactory, SimulatorPulseChannelFactory>();
         }
     }
 }

@@ -7,7 +7,9 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    x:TypeArguments="communications:VolumeTestManager"
+    xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
+    xmlns:verificationManager="clr-namespace:Prover.Application.Services.VerificationManager;assembly=Prover.Application"
+    x:TypeArguments="verificationManager:RotaryVolumeManager"
     mc:Ignorable="d">
     <Grid
         Margin="15,15,15,0"

@@ -50,5 +50,10 @@ namespace Devices.Core.Interfaces
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

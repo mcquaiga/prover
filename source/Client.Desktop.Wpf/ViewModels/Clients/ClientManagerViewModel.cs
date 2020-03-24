@@ -1,4 +1,6 @@
-﻿using ReactiveUI;
+﻿using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Clients
 {

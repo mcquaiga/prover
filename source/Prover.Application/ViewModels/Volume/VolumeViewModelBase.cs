@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Volume
@@ -25,6 +27,9 @@ namespace Prover.Application.ViewModels.Volume
         [Reactive] public VolumeItems StartValues { get; set; }
         [Reactive] public VolumeItems EndValues { get; set; }
 
+        public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
+        public ReactiveCommand<Unit, Unit> FinishTest { get; protected set; }
+
         public IVolumeInputType DriveType { get; set; }
 
         public virtual ICollection<VerificationViewModel> AllTests() => GetSpecificTests().ToList();
@@ -33,7 +38,6 @@ namespace Prover.Application.ViewModels.Volume
         {
             AllTests().ForEach(t => t.DisposeWith(Cleanup));
         }
-
 
         protected abstract ICollection<VerificationViewModel> GetSpecificTests();
     }

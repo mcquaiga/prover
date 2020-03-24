@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using Client.Desktop.Wpf.Communications;
 using Devices.Core.Items;
-using Prover.Application.Interfaces;
+using Prover.Application.Services.LiveReadCorrections;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
@@ -13,7 +12,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
     /// <summary>
     ///     Interaction logic for LiveReadDialogView.xaml
     /// </summary>
-    public partial class LiveReadDialogView : ReactiveUserControl<LiveReadCoordinator>
+    public partial class LiveReadDialogView
     {
         public LiveReadDialogView()
         {

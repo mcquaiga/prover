@@ -1,7 +1,6 @@
 ﻿using Client.Desktop.Wpf.ViewModels;
 using Devices.Core.Items.ItemGroups;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
 using Prover.Application;
+using Prover.Application.Interfaces;
 using Prover.Application.Settings;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;

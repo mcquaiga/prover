@@ -1,5 +1,6 @@
 ﻿using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Screens

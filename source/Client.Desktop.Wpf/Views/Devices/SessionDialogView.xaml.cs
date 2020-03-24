@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using Client.Desktop.Wpf.Interactions;
+using Client.Desktop.Wpf.ViewModels.Dialogs;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Devices

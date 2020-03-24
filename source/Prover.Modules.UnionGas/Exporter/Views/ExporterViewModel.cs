@@ -15,6 +15,7 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
+using Prover.Application.Interfaces;
 using Prover.Domain.EvcVerifications;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
@@ -24,7 +25,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         private readonly EvcVerificationTestService _service;
         private readonly VerificationTestReportGenerator _reportService;
 
-        public ExporterViewModel(IScreenManager screenManager, EvcVerificationTestService service, VerificationViewModelService viewModelService, DeviceRepository deviceRepository, VerificationTestReportGenerator reportService)
+        public ExporterViewModel(IScreenManager screenManager, EvcVerificationTestService service, VerificationTestService viewModelService, DeviceRepository deviceRepository, VerificationTestReportGenerator reportService)
         {
             _service = service;
             _reportService = reportService;
@@ -38,7 +39,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             PrintReport =
                 ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
                 {
-                    var viewModel = await viewModelService.GetTest(test);
+                    var viewModel = await viewModelService.GetVerificationTest(test);
                     await _reportService.GenerateAndViewReport(viewModel);
                 });
 

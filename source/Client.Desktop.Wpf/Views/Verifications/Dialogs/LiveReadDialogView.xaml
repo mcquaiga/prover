@@ -6,12 +6,13 @@
     xmlns:controls="clr-namespace:Client.Desktop.Wpf.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
+    xmlns:liveReadCorrections="clr-namespace:Prover.Application.Services.LiveReadCorrections;assembly=Prover.Application"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     d:DesignHeight="400"
     d:DesignWidth="700"
-    x:TypeArguments="communications:LiveReadCoordinator"
+    x:TypeArguments="liveReadCorrections:LiveReadCoordinator"
     mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 

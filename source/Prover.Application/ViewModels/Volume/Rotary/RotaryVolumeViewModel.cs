@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using Devices.Core.Items.ItemGroups;
+using Microsoft.Extensions.Logging;
+using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Application.ViewModels.Corrections;
+using Prover.Shared.Interfaces;
 
 namespace Prover.Application.ViewModels.Volume.Rotary
 {

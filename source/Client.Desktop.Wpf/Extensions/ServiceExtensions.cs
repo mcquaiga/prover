@@ -72,7 +72,6 @@ namespace Client.Desktop.Wpf.Extensions
                     var ivf = ti.ImplementedInterfaces.FirstOrDefault(t =>
                         t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IViewFor)));
 
-
                     // need to check for null because some classes may implement IViewFor but not IViewFor<T> - we don't care about those
                     if (ivf != null && !ivf.ContainsGenericParameters)
                     {

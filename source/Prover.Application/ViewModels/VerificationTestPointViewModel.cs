@@ -16,6 +16,7 @@ namespace Prover.Application.ViewModels
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
 
         public IObservable<IChangeSet<ItemValue, int>> Connect() => _items.Connect();
+
         public VerificationTestPointViewModel()
         {
         }
@@ -39,7 +40,7 @@ namespace Prover.Application.ViewModels
 
         public void AddTest(VerificationViewModel test)
         {
-
+            TestsCollection.Add(test);
         }
 
         protected override void Disposing()

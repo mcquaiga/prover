@@ -4,6 +4,7 @@ using Client.Desktop.Wpf.Screens;
 using Client.Desktop.Wpf.ViewModels.Clients;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using MaterialDesignThemes.Wpf;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
@@ -20,7 +21,7 @@ namespace Client.Desktop.Wpf.ViewModels
 
         public static IMainMenuItem VerificationsMainMenu
             => new MainMenu("New QA Test Run", PackIconKind.ClipboardCheck, order: 1,
-                openFunc: s => s.ChangeView<NewTestViewModel>());
+                openFunc: s => s.ChangeView<QaTestRunViewModel>());
 
         //public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager) 
         //    => new MainMenu(screenManager, "Export Test Runs ", PackIconKind.CloudUpload, s => s.ChangeView<ClientManagerViewModel>(), 4);

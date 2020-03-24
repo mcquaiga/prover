@@ -1,65 +1,39 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DeepEqual.Syntax;
-using Devices;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 using Tests.Application;
 
-
 namespace Application.Services.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class VerificationViewModelServiceTests
     {
-        private Mock<DeviceInstance> _instance;
         private DeviceInstance _device;
         private DeviceType _deviceType;
+        private Mock<DeviceInstance> _instance;
         private IDeviceRepository _repo;
 
-        private Mock<IAsyncRepository<EvcVerificationTest>> _repoMock = new Mock<IAsyncRepository<EvcVerificationTest>>();
-        private Mock<EvcVerificationTestService> _serviceMock = new Mock<EvcVerificationTestService>();
+        private readonly Mock<IAsyncRepository<EvcVerificationTest>> _repoMock =
+            new Mock<IAsyncRepository<EvcVerificationTest>>();
 
-        private EvcVerificationTestService _testService;
-        private VerificationViewModelService _service;
-        //private IAsyncRepository<EvcVerificationTest> _repository;
+        private VerificationTestService _service;
 
-        //private static LiteDatabase 
-
-        [TestInitialize]
-        public async Task Init()
-        {
-            _serviceMock = new Mock<EvcVerificationTestService>(_repoMock.Object);
-            _service = new VerificationViewModelService(_serviceMock.Object);
-            _instance = new Mock<DeviceInstance>();
-
-            _repo = new DeviceRepository();
-            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
-
-            _deviceType = _repo.GetByName("Mini-Max");
-            var items = ItemFiles.MiniMaxItemFile;
-            _device = _deviceType.CreateInstance(items);
-        }
-
-        [TestMethod()]
-        public void VerificationViewModelServiceTest()
-        {
-        }
-
-        [TestMethod()]
+        [TestMethod]
         public async Task CreateVerificationTestFromViewModelTest()
         {
             var newTest = _service.NewTest(_device);
 
             var model = _service.CreateVerificationTestFromViewModel(newTest);
             Assert.AreEqual(newTest.Id, model.Id);
-            
+
             var viewModel = await _service.GetVerificationTest(model);
             newTest.WithDeepEqual(viewModel)
                 .IgnoreSourceProperty(t => t.Device.DeviceType)
@@ -72,17 +46,36 @@ namespace Application.Services.Tests
             //Assert.IsTrue(newTest.IsDeepEqual(viewModel));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetVerificationTestsTest()
         {
         }
 
-        [TestMethod()]
+        [TestInitialize]
+        public async Task Init()
+        {
+            _service = new VerificationTestService(_repoMock.Object, null, null, null);
+            _instance = new Mock<DeviceInstance>();
+
+            _repo = new DeviceRepository();
+            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+
+            _deviceType = _repo.GetByName("Mini-Max");
+            var items = ItemFiles.MiniMaxItemFile;
+            _device = _deviceType.CreateInstance(items);
+        }
+
+        [TestMethod]
         public void NewTestTest()
         {
             var newTest = _service.NewTest(_device);
 
             Assert.IsNotNull(newTest);
+        }
+
+        [TestMethod]
+        public void VerificationViewModelServiceTest()
+        {
         }
     }
 }

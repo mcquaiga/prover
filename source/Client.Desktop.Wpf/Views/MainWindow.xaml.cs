@@ -1,18 +1,10 @@
-﻿using System;
+﻿using Client.Desktop.Wpf.ViewModels;
+using ReactiveUI;
+using System;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Client.Desktop.Wpf.Interactions;
-using Client.Desktop.Wpf.Screens.Dialogs;
-using Client.Desktop.Wpf.ViewModels;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
-using Client.Desktop.Wpf.Views.Devices;
-using Client.Desktop.Wpf.Views.Dialogs;
-using Client.Desktop.Wpf.Views.Verifications.Dialogs;
-using ReactiveUI;
+using Prover.Application.Interactions;
 
 namespace Client.Desktop.Wpf.Views
 {
@@ -20,7 +12,7 @@ namespace Client.Desktop.Wpf.Views
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
     [SingleInstanceView]
-    public partial class MainWindow : ReactiveWindow<MainViewModel>
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -74,11 +66,10 @@ namespace Client.Desktop.Wpf.Views
 
             NotificationInteractions.SnackBarMessage.RegisterHandler(async message =>
             {
-               
                 NotificationSnackBar.Message.Content = message.Input;
                 NotificationSnackBar.IsActive = true;
 
-                //await Task.Delay(TimeSpan.FromSeconds(2));
+
 
                 Observable.Timer(TimeSpan.FromSeconds(2))
                     .ObserveOn(RxApp.MainThreadScheduler)

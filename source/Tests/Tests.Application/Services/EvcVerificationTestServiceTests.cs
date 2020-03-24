@@ -32,7 +32,7 @@ namespace Application.Services.Tests
         private IDeviceRepository _repo;
 
         private IAsyncRepository<EvcVerificationTest> _testRepo;
-        private VerificationViewModelService _viewModelService;
+        private VerificationTestService _viewModelService;
         private EvcVerificationTestService _modelService;
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace Application.Services.Tests
 
             _testRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, _repo);
             _modelService = new EvcVerificationTestService(_testRepo);
-            _viewModelService = new VerificationViewModelService(_modelService);
+            _viewModelService = new VerificationTestService(_testRepo, null, null, null);
         }
     }
 

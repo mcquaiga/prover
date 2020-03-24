@@ -24,7 +24,9 @@ namespace Prover.Application.Interfaces
 
         Task<ItemValue> LiveReadItemValue(ItemMetadata item);
 
-        Task<IDeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
-            ReactiveObject owner);
+        //Task<IDeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
+        //    ReactiveObject owner);
+
+        Task<IDeviceSessionManager> StartSession(DeviceType deviceType);
     }
 }

@@ -3,18 +3,12 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.Screens.Dialogs
 {
-    public interface IDialogViewModel
-    {
-        //ReactiveCommand<Unit, bool> CancelCommand { get; set; }
-        ReactiveCommand<Unit, bool> CloseCommand { get; set; }
-        bool IsDialogOpen { get; }
-    }
-
     public class DialogViewModel : ReactiveObject, IDialogViewModel, IDisposable
     {
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
