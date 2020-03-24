@@ -1,11 +1,11 @@
-name: Pull Request
+name: Development build
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 env:
-  VERSION_NUMBER: 4.${{ github.run_id }}
+  VERSION_NUMBER: 4.${{ github.run_number }}
 
 jobs:
  
@@ -31,4 +31,3 @@ jobs:
       with:
         name: EvcProver-v${{ env.VERSION_NUMBER }}
         path: build\Release
-     
