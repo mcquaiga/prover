@@ -48,7 +48,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </Resource>
-    <Resource Include="Resources\clipboard-check-white.ico" />
+    <Resource Include="clipboard-check-white.ico" />
     <Page Remove="Modules\**" />
     <Page Remove="ViewModels\Certificates\**" />
   </ItemGroup>
