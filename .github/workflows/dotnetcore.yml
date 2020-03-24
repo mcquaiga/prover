@@ -1,13 +1,11 @@
-name: EvcProver - Windows .Net Core
+name: Windows Desktop - Pull Request
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 env:
-  VERSION_NUMBER: 4.${{ github.run_number }}
+  VERSION_NUMBER: 4.${{ github.run_id }}
 
 jobs:
  
