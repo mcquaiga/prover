@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 env:
-  VERSION_NUMBER: 4.${{ github.run_id }}
+  VERSION_NUMBER: 99.${{ github.run_number }}
 
 jobs:
  
@@ -29,6 +29,6 @@ jobs:
     - name: Upload Artificat
       uses: actions/upload-artifact@v1
       with:
-        name: EvcProver-v${{ env.VERSION_NUMBER }}
+        name: EvcProver-PR-v${{ github.run_id }}
         path: build\Release
      
