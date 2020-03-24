@@ -31,9 +31,14 @@ skip_tags: true
 
 pull_requests:
   do_not_increment_build_number: true
+  
 image: Visual Studio 2019
 
-artifacts:
+before_build:
+  - cmd: .\source\.nuget\NuGet.exe update -self
+  - ps: .\source\.nuget\NuGet.exe restore .\source\EvcProver.sln
+
+  artifacts:
   - path: build\Release
     name: EvcProver-v$(appveyor_build_version)-$(APPVEYOR_REPO_BRANCH)
 
