@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 3.1.101
   
     - name: Install dependencies
-      run: dotnet restore --verbosity d source\EvcProver.sln
+      run: dotnet restore source\EvcProver.sln
     - name: Build
       run: dotnet build --configuration Release --no-restore source\EvcProver.sln
     - name: Test
