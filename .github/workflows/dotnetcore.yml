@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore .\source\Evc-Prover.sln
+      run: dotnet restore ./source/Evc-Prover.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore .\source\Evc-Prover.sln
+      run: dotnet build --configuration Release --no-restore ./source/Evc-Prover.sln
     - name: Test
-      run: dotnet test --no-restore --verbosity normal .\source\Evc-Prover.sln
+      run: dotnet test --no-restore --verbosity normal ./source/Evc-Prover.sln
