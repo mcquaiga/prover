@@ -12,7 +12,8 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using Prover.Hardware.MccDAQ;
+using Prover.Infrastructure.KeyValueStore;
+using Prover.Shared;
 using Prover.Shared.Interfaces;
 using System;
 using System.Threading;
@@ -80,8 +81,8 @@ namespace Client.Desktop.Wpf.Startup
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             _provider.GetService<IInputChannelFactory>();
-            _provider.GetService<DaqBoardChannelFactory>();
-
+            //_provider.GetService<DaqBoardChannelFactory>();
+           
             _provider.GetService<DeviceSessionDialogManager>();
 
             var repo = _provider.GetService<DeviceRepository>();

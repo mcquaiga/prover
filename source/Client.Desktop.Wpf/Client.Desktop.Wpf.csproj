@@ -125,7 +125,6 @@
     <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Domain\Prover.Domain.csproj" />
-    <ProjectReference Include="..\Prover.Hardware.MccDAQ\Prover.Hardware.MccDAQ.csproj" />
     <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
   </ItemGroup>
 
