@@ -36,28 +36,12 @@ namespace Client.Desktop.Wpf.Dialogs
 
                     view.ViewModel = model;
 
-                    _disposer.Disposable = Disposable.Empty;
-                    _disposer.Disposable = Disposable.Create(() =>
-                    {
-                        (model as IDisposable)?.Dispose();
-                        (view as IDisposable)?.Dispose();
-                        //onClosed?.Invoke(view.DialogContent);
-                    });
-
-                    return Observable.Return(view);
+                    return SetupDialogView(view);
                 },
                 outputScheduler: RxApp.MainThreadScheduler);
 
-            ShowDialogView = ReactiveCommand.CreateFromObservable<IViewFor, IViewFor>(view =>
-                {
-                    _disposer.Disposable = Disposable.Empty;
-                    _disposer.Disposable = Disposable.Create(() =>
-                    {
-                        (view as IDisposable)?.Dispose();
-                        //onClosed?.Invoke(view.DialogContent);
-                    });
-                    return Observable.Return(view);
-                },
+            ShowDialogView = ReactiveCommand.CreateFromObservable<IViewFor, IViewFor>(
+                SetupDialogView,
                 outputScheduler: RxApp.MainThreadScheduler);
 
             CloseDialog = ReactiveCommand.CreateFromObservable(() =>
@@ -89,7 +73,7 @@ namespace Client.Desktop.Wpf.Dialogs
         private ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
 
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
-        protected extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
+        public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
         public extern bool IsDialogOpen { [ObservableAsProperty] get; }
 
         public async Task Close()
@@ -99,12 +83,14 @@ namespace Client.Desktop.Wpf.Dialogs
 
         public async Task Show<TView>(TView dialogView, Action onClosed = null) where TView : IViewFor
         {
+            _onClosed = onClosed;
             await ShowDialogView.Execute(dialogView);
         }
 
         public async Task Show<T>(Action onClosed = null)
             where T : class, IDialogViewModel
         {
+            _onClosed = onClosed;
             var model = _services.GetService<T>();
             await ShowDialog.Execute(model);
         }
@@ -122,15 +108,28 @@ namespace Client.Desktop.Wpf.Dialogs
             CloseCommand
                 .ToPropertyEx(this, x => x.IsDialogOpen, true);
 
-            var view = new QuestionDialogView();
-            view.ViewModel = this;
-            view.MessageText.Text = question;
+            var view = new QuestionDialogView
+            {
+                ViewModel = this,
+                MessageText = {Text = question}
+            };
 
             await ShowDialogView.Execute(view);
 
             await CloseDialog.FirstAsync();
 
             return view.Answer ?? false;
+        }
+
+        private IObservable<IViewFor> SetupDialogView(IViewFor view)
+        {
+            _disposer.Disposable = Disposable.Empty;
+            _disposer.Disposable = Disposable.Create(() =>
+            {
+                (view as IDisposable)?.Dispose();
+                _onClosed?.Invoke();
+            });
+            return Observable.Return(view);
         }
     }
 }

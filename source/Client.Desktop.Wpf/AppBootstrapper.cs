@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Common;
 using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Startup;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application;
 using Prover.Shared.Interfaces;
 
-namespace Client.Desktop.Wpf.Startup
+namespace Client.Desktop.Wpf
 {
     public class AppBootstrapper : IHostApplicationLifetime
     {
