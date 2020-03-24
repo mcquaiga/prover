@@ -6,15 +6,16 @@ on:
   pull_request:
     branches: [ master ]
     
-env:
-  solution_path: source/Evc-Prover.sln   
+
   
 jobs:
  
   build:
 
     runs-on: windows-latest
-              
+    env:
+      solution_path: source/Evc-Prover.sln
+                  
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -22,7 +23,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Current Directory
-      run: pwd
+      run: ls
     - name: Install dependencies
       run: dotnet restore $solution_path
     - name: Build
