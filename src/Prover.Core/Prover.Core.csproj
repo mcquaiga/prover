@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.Core</RootNamespace>
     <AssemblyName>Prover.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -122,6 +122,7 @@
     <Compile Include="Migrations\201904061226096_Init.Designer.cs">
       <DependentUpon>201904061226096_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
     <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
     <Compile Include="Exports\VerificationTypeEnum.cs" />
     <Compile Include="Models\Instruments\DriveTypes\IDriveType.cs" />

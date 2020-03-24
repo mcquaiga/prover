@@ -2,6 +2,7 @@
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 using Prover.CommProtocol.Common;
 using Prover.Core.Models.Instruments;
 using Prover.Core.VerificationTests.TestActions;

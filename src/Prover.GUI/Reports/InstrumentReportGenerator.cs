@@ -9,6 +9,8 @@ using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Shared.Data;
+using Prover.Core.Storage;
+using Prover.GUI;
 using Prover.GUI.Screens;
 
 namespace Prover.GUI.Reports

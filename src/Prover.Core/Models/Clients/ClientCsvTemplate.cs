@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell;
 using Prover.Core.Exports;

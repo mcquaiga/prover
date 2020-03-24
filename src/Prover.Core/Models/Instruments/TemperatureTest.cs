@@ -1,7 +1,9 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
+    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
     using Prover.Core.Extensions;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
@@ -10,45 +12,6 @@
     /// </summary>
     public sealed class TemperatureTest : BaseVerificationTest
     {
-        #region Constants
-
-        /// <summary>
-        /// Defines the MetericTempCorrection
-        /// </summary>
-        private const decimal MetericTempCorrection = 273.15m;
-
-        /// <summary>
-        /// Defines the TempCorrection
-        /// </summary>
-        private const decimal TempCorrection = 459.67m;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TemperatureTest"/> class.
-        /// </summary>
-        private TemperatureTest() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TemperatureTest"/> class.
-        /// </summary>
-        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
-        /// <param name="gauge">The gauge<see cref="decimal"/></param>
-        public TemperatureTest(VerificationTest verificationTest, decimal gauge)
-        {
-            Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true).ToList();
-            VerificationTest = verificationTest;
-            VerificationTestId = VerificationTest.Id;
-
-            Gauge = (double)ConvertTo(gauge, "F", VerificationTest.Instrument.TemperatureUnits());
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets the ActualFactor
         /// </summary>
@@ -92,19 +55,19 @@
         public decimal GaugeFahrenheit => ConvertToFahrenheit((decimal)Gauge, VerificationTest.Instrument.TemperatureUnits());
 
         /// <summary>
-        /// Gets the InstrumentType
+        /// Initializes a new instance of the <see cref="TemperatureTest"/> class.
         /// </summary>
+        /// <param name="verificationTest">The verificationTest<see cref="VerificationTest"/></param>
+        /// <param name="gauge">The gauge<see cref="decimal"/></param>
+        public TemperatureTest(VerificationTest verificationTest, decimal gauge)
+        {
+            //Items = verificationTest.Instrument.Items.Where(i => i.Metadata.IsTemperatureTest == true).ToList();
+            Items = new List<ItemValue>();
+            VerificationTest = verificationTest;
+            VerificationTestId = VerificationTest.Id;
 
-        /// <summary>
-        /// Gets the PassTolerance
-        /// </summary>
-        protected override decimal PassTolerance => Global.TEMP_ERROR_TOLERANCE;
-
-
-
-        #endregion
-
-        #region Methods
+            Gauge = (double)ConvertTo(gauge, "F", VerificationTest.Instrument.TemperatureUnits());
+        }
 
         /// <summary>
         /// The ConvertTo
@@ -123,9 +86,11 @@
                 case "C":
                     result = (result - 32) / 1.8m;
                     break;
+
                 case "K":
                     result = ((result - 32) / 1.8m) + 273.15m;
                     break;
+
                 case "R":
                     result = result + 459.67m;
                     break;
@@ -147,9 +112,11 @@
                 case "C":
                     value = (value * 1.8m) + 32;
                     break;
+
                 case "K":
                     value = ((value - 273.15m) * 1.8m) + 32;
                     break;
+
                 case "R":
                     value = value - 459.67m;
                     break;
@@ -158,6 +125,28 @@
             return decimal.Round(value, 2);
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the PassTolerance
+        /// </summary>
+        protected override decimal PassTolerance => Global.TEMP_ERROR_TOLERANCE;
+
+        /// <summary>
+        /// Defines the MetericTempCorrection
+        /// </summary>
+        private const decimal MetericTempCorrection = 273.15m;
+
+        /// <summary>
+        /// Defines the TempCorrection
+        /// </summary>
+        private const decimal TempCorrection = 459.67m;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TemperatureTest"/> class.
+        /// </summary>
+        private TemperatureTest() { }
+
+        /// <summary>
+        /// Gets the InstrumentType
+        /// </summary>
     }
 }

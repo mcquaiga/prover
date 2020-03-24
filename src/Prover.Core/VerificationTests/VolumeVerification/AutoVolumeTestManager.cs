@@ -19,27 +19,6 @@
     /// </summary>
     public abstract class AutoVolumeTestManager : VolumeTestManager
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the OutputBoard
-        /// </summary>
-        protected readonly IDInOutBoard OutputBoard;
-
-        /// <summary>
-        /// Defines the TachometerCommunicator
-        /// </summary>
-        protected readonly TachometerService TachometerCommunicator;
-
-        /// <summary>
-        /// Defines the _pulseInputsCancellationTokenSource
-        /// </summary>
-        private CancellationTokenSource _pulseInputsCancellationTokenSource;
-
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoVolumeTestManager"/> class.
         /// </summary>
@@ -57,10 +36,6 @@
             OutputBoard = DInOutBoardFactory.CreateBoard(0, 0, 0);
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// The PostTest
         /// </summary>
@@ -68,12 +43,13 @@
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
         public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct)
-        {            
+        {
+            Status.OnNext("Completing volume test...");
+
+            ct.ThrowIfCancellationRequested();
+
             try
             {
-                ct.ThrowIfCancellationRequested();
-                await CheckForResidualPulses(CommClient, ct);
-
                 VolumeTest.AfterTestItems = await CommClient.GetVolumeItems();
                 if (VolumeTest.VerificationTest.FrequencyTest != null)
                 {
@@ -88,7 +64,6 @@
             }
 
             await GetAppliedInput();
-
         }
 
         /// <summary>
@@ -96,11 +71,9 @@
         /// </summary>
         public override void Dispose()
         {
-            base.Dispose();
             _pulseInputsCancellationTokenSource?.Cancel();
             _pulseInputsCancellationTokenSource?.Dispose();
             TachometerCommunicator?.Dispose();
-            Status.Dispose();
         }
 
         /// <summary>
@@ -112,6 +85,8 @@
         {
             await Task.Run(async () =>
             {
+                var cts = new CancellationTokenSource();
+
                 try
                 {
                     Status.OnNext("Running volume sync test...");
@@ -119,13 +94,15 @@
                     await CommClient.Disconnect();
 
                     ResetPulseCounts(VolumeTest);
-                    OutputBoard.StartMotor();
-                    do
-                    {
-                        VolumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                        VolumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                    } while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested);
 
+                    var listen = ListenForPulseInputs(VolumeTest, cts.Token).ConfigureAwait(false);
+
+                    OutputBoard.StartMotor();
+
+                    while (VolumeTest.UncPulseCount < 1 && !ct.IsCancellationRequested) { }
+                    OutputBoard.StopMotor();
+
+                    await Task.Delay(TimeSpan.FromSeconds(10));
                 }
                 catch (OperationCanceledException)
                 {
@@ -134,10 +111,10 @@
                 }
                 finally
                 {
-                    OutputBoard.StopMotor();
+                    cts.Cancel();
+                    await CommClient.Disconnect();
                 }
-            });
-
+            }, ct);
         }
 
         /// <summary>
@@ -152,8 +129,6 @@
             {
                 CommClient = commClient;
                 VolumeTest = volumeTest;
-
-                CommClient?.Status?.Subscribe(Status);
 
                 await CommClient.Connect(ct);
 
@@ -176,7 +151,6 @@
 
                 ResetPulseCounts(VolumeTest);
             });
-
         }
 
         /// <summary>
@@ -184,35 +158,70 @@
         /// </summary>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        public override async Task RunTest(CancellationToken ct)
+        public override Task RunTest(CancellationToken ct)
         {
-            _pulseInputsCancellationTokenSource = new CancellationTokenSource();
-            var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token);
+            return Task.Run(async () =>
+              {
+                  _pulseInputsCancellationTokenSource = new CancellationTokenSource();
+                  ResetPulseCounts(VolumeTest);
 
-            try
+                  var listen = ListenForPulseInputs(VolumeTest, _pulseInputsCancellationTokenSource.Token).ConfigureAwait(false);
+
+                  try
+                  {
+                      ct.ThrowIfCancellationRequested();
+
+                      using (Observable
+                              .Interval(TimeSpan.FromSeconds(1))
+                              .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
+                      {
+                          OutputBoard?.StartMotor();
+                          WaitForTestComplete(VolumeTest, ct);
+                          OutputBoard.StopMotor();
+                          await CheckForResidualPulses(CommClient, ct);
+                      }
+
+                      ct.ThrowIfCancellationRequested();
+                  }
+                  catch (OperationCanceledException)
+                  {
+                      _pulseInputsCancellationTokenSource?.Cancel();
+                      Log.Info("Cancelling volume test.");
+                      throw;
+                  }
+                  finally
+                  {
+                      OutputBoard.StopMotor();
+                  }
+              });
+        }
+
+        /// <summary>
+        /// Defines the OutputBoard
+        /// </summary>
+        protected readonly IDInOutBoard OutputBoard;
+
+        /// <summary>
+        /// Defines the TachometerCommunicator
+        /// </summary>
+        protected readonly TachometerService TachometerCommunicator;
+
+        /// <summary>
+        /// The ListenForPulseInputs
+        /// </summary>
+        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="CancellationToken"/></returns>
+        protected virtual async Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested)
             {
-                ct.ThrowIfCancellationRequested();
+                //TODO: Raise events so the UI can respond
+                volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
 
-                using (Observable.Interval(TimeSpan.FromMilliseconds(200))                      
-                    .Subscribe(_ => this.Publish(new VolumeTestStatusEvent("Running Volume Test...", VolumeTest))))
-                    {
-                        ResetPulseCounts(VolumeTest);
-                        OutputBoard?.StartMotor();
-                        await WaitForTestComplete(VolumeTest, ct);
-                    }
-
-                ct.ThrowIfCancellationRequested();
+                await Task.Delay(25);
             }
-            catch (OperationCanceledException)
-            {
-                _pulseInputsCancellationTokenSource?.Cancel();
-                Log.Info("Cancelling volume test.");
-                throw;
-            }
-            finally
-            {
-                OutputBoard?.StopMotor();                              
-            } 
         }
 
         /// <summary>
@@ -221,7 +230,12 @@
         /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
         /// <param name="ct">The ct<see cref="CancellationToken"/></param>
         /// <returns>The <see cref="Task"/></returns>
-        protected abstract Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct);
+        protected abstract void WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct);
+
+        /// <summary>
+        /// Defines the _pulseInputsCancellationTokenSource
+        /// </summary>
+        private CancellationTokenSource _pulseInputsCancellationTokenSource;
 
         /// <summary>
         /// The CheckForResidualPulses
@@ -231,16 +245,17 @@
         /// <returns>The <see cref="Task"/></returns>
         private async Task CheckForResidualPulses(EvcCommunicationClient commClient, CancellationToken ct)
         {
-            await Task.Run(() =>
-            {
-                var pulsesWaiting = 0;
-                var lastPulsesWaiting = 0; 
-                var isComplete = false;
+            int pulsesWaiting;
+            int lastPulsesWaiting = 0;
+            bool keepWaiting = true;
 
-                using (Observable
-                       .Interval(TimeSpan.FromSeconds(10))
-                       .StartWith(-1)
-                       .Select(_ => Observable.FromAsync(async () =>
+            Status.OnNext("Waiting for residual pulses...");
+
+            using (Observable
+                   .Timer(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(20))
+                   .Subscribe(async _ =>
+                   {
+                       try
                        {
                            pulsesWaiting = 0;
 
@@ -252,10 +267,9 @@
                            foreach (CommProtocol.Common.Items.ItemValue i in await commClient.GetPulseOutputItems())
                            {
                                pulsesWaiting += (int)i.NumericValue;
-                           }                
+                           }
 
-                           //We'll stop listening if either we have no pulses left in the register or the evc hasn't spit 
-                           //anything else out since our last check (pulses waiting shouldn't be the same after 10 seconds, it means something is wrong)
+                           Status.OnNext($"Waiting for residual pulses...{Environment.NewLine} {pulsesWaiting} total pulses remaining");
                            if (pulsesWaiting > 0 && lastPulsesWaiting != pulsesWaiting)
                            {
                                await commClient.Disconnect();
@@ -263,17 +277,19 @@
                            }
                            else
                            {
-                               isComplete = true;
+                               keepWaiting = false;
                            }
-                       }))
-                       .Concat()
-                       .Subscribe())
-                {
-                    while (!isComplete && !ct.IsCancellationRequested) { }
-                }
+                       }
+                       catch (OperationCanceledException)
+                       {
+                           keepWaiting = false;
+                       }
+                   }))
+            {
+                while (keepWaiting) { }
+            }
 
-                _pulseInputsCancellationTokenSource.Cancel();
-            });
+            _pulseInputsCancellationTokenSource.Cancel();
         }
 
         /// <summary>
@@ -307,27 +323,5 @@
 
             VolumeTest.AppliedInput = result.Value;
         }
-
-        /// <summary>
-        /// The ListenForPulseInputs
-        /// </summary>   
-        /// <param name="volumeTest">The volumeTest<see cref="VolumeTest"/></param>
-        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="CancellationToken"/></returns>
-        private async Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
-        {
-            await Task.Run(() =>
-            {
-                do
-                {
-                    //TODO: Raise events so the UI can respond
-                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
-                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
-                }
-                while (!ct.IsCancellationRequested);
-            });
-        }
-
-        #endregion
     }
 }

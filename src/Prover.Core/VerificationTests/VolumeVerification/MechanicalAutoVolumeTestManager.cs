@@ -11,26 +11,37 @@
 
     public class MechanicalAutoVolumeTestManager : AutoVolumeTestManager
     {
-        private const long TachometerCount = 100;
         public MechanicalAutoVolumeTestManager(IEventAggregator eventAggregator, TachometerService tachComm, ISettingsService settingsService) : base(eventAggregator, tachComm, settingsService)
         {
-        }      
-
-        protected override async Task WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
-        {
-            await Task.Run(() =>
-            {
-                var tachCount = 0;
-
-                using (Observable
-                        .Interval(TimeSpan.FromSeconds(1))
-                        .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
-                        .Concat()
-                        .Subscribe())
-                {
-                    while (tachCount < TachometerCount && !ct.IsCancellationRequested) { }
-                }
-            });                 
         }
+
+        protected override Task ListenForPulseInputs(VolumeTest volumeTest, CancellationToken ct)
+        {
+            return Task.Run(() =>
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    //TODO: Raise events so the UI can respond
+                    volumeTest.PulseACount += FirstPortAInputBoard.ReadInput();
+                    volumeTest.PulseBCount += FirstPortBInputBoard.ReadInput();
+                }
+            });
+        }
+
+        protected override void WaitForTestComplete(VolumeTest volumeTest, CancellationToken ct)
+        {
+            var tachCount = 0;
+
+            using (Observable
+                    .Interval(TimeSpan.FromMilliseconds(500))
+                    .Select(_ => Observable.FromAsync(async () => tachCount = await TachometerCommunicator.ReadTach()))
+                    .Concat()
+                    .Subscribe())
+            {
+                while (tachCount < TachometerCount && !ct.IsCancellationRequested) { }
+            }
+        }
+
+        private readonly int TachometerCount = 100;
     }
 }

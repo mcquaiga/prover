@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests;
+using Prover.GUI.Events;
 using Prover.GUI.Screens.Dialogs;
 using ReactiveUI;
 using System;
@@ -144,6 +145,7 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             finally
             {
                 DataChangedObservable.OnNext(VerificationTest);
+                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
             }
         }
     }

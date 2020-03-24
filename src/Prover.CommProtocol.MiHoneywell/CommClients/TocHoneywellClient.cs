@@ -1,12 +1,14 @@
 ﻿namespace Prover.CommProtocol.MiHoneywell.CommClients
 {
-    using System.Reactive.Subjects;
+using System.Reactive.Subjects;
+    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
     using Prover.CommProtocol.Common.Items;
     using Prover.CommProtocol.MiHoneywell.Items;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Prover.CommProtocol.Common.Models.Instrument;
 
     /// <summary>
     /// Defines the <see cref="TocHoneywellClient" />
@@ -20,7 +22,7 @@
 
         public TocHoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {
-            _tibBoardItems = HoneywellInstrumentTypes.TibBoard.ItemDefinitions;
+            _tibBoardItems = HoneywellInstrumentTypes.TibBoard.ItemsMetadata;
         }
 
         #region Methods
@@ -31,9 +33,9 @@
         /// <returns>The <see cref="Task{IFrequencyTestItems}"/></returns>
         public override async Task<IFrequencyTestItems> GetFrequencyItems()
         {
-            var mainResults = await GetItemValues(ItemDetails.FrequencyTestItems());
-            await Disconnect();          
-
+            var mainResults = await GetItemValues(InstrumentType.ItemsMetadata.FrequencyTestItems());
+            await Disconnect();
+            Thread.Sleep(1000);
             try
             {
                 InstrumentType = HoneywellInstrumentTypes.TibBoard;

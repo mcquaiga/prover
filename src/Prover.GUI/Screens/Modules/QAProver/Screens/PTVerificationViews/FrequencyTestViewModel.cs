@@ -1,6 +1,8 @@
 ﻿using System;
 using Caliburn.Micro;
+using Prover.GUI.Events;
 using ReactiveUI;
+using System.Threading.Tasks;
 using Prover.Core.VerificationTests;
 using System.Reactive.Subjects;
 using Prover.Core.Models.Instruments;

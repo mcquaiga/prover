@@ -8,7 +8,6 @@ namespace Prover.Core.ExternalDevices.DInOutBoards
 
         public void Dispose()
         {
-            return;
         }
 
         public int ReadInput()

@@ -76,7 +76,6 @@
                     Label="Cor Pulses"
                     TabIndex="2"
                     Value="{Binding CorrectedPulseCount, Mode=TwoWay}" />
-
             </StackPanel>
 
             <Border
@@ -101,7 +100,6 @@
                     <controls1:ValueDescriptionControl Label="Pulses Ver'd" Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}" />
                 </UniformGrid>
             </StackPanel>
-
 
             <Border
                 Grid.Column="3"
@@ -137,11 +135,6 @@
                 <ContentControl
                     VerticalAlignment="Top"
                     cal:View.Context="CardNew"
-                    cal:View.Model="{Binding FrequencyTestItem}"
-                    Visibility="{Binding FrequencyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
-                <ContentControl
-                    VerticalAlignment="Top"
-                    cal:View.Context="CardNew"
                     cal:View.Model="{Binding EnergyTestItem}"
                     Visibility="{Binding EnergyTestItem, Converter={StaticResource NullToVisibilityConverter}}" />
                 <ContentControl
@@ -150,8 +143,6 @@
                     cal:View.Model="{Binding MeterDisplacementItem}"
                     Visibility="{Binding MeterDisplacementItem, Converter={StaticResource NullToVisibilityConverter}}" />
             </UniformGrid>
-
         </Grid>
     </StackPanel>
-
 </UserControl>

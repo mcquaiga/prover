@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.MiHoneywell;
+using Prover.Core.ExternalDevices;
 using Prover.Core.Models.Instruments;
 using Prover.Core.Settings;
 using Prover.Core.VerificationTests.TestActions;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 

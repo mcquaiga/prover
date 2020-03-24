@@ -14,7 +14,130 @@
     /// </summary>
     public class ProgressStatusDialogViewModel : DialogViewModel
     {
-        #region Constants
+        /// <summary>
+        /// Gets the CancelCommand
+        /// </summary>
+        public ReactiveCommand CancelCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the ContentItem
+        /// </summary>
+        public string ContentItem { get => _contentItem; set => this.RaiseAndSetIfChanged(ref _contentItem, value); }
+
+        /// <summary>
+        /// Gets or sets the CorPulseCount
+        /// </summary>
+        public int CorPulseCount { get => _corPulseCount; set => this.RaiseAndSetIfChanged(ref _corPulseCount, value); }
+
+        /// <summary>
+        /// Gets or sets the HeaderText
+        /// </summary>
+        public string HeaderText { get => _headerText; set => this.RaiseAndSetIfChanged(ref _headerText, value); }
+
+        /// <summary>
+        /// Gets or sets the LiveReadStatus
+        /// </summary>
+        public LiveReadStatusEvent LiveReadStatus { get => _liveReadStatus; set => this.RaiseAndSetIfChanged(ref _liveReadStatus, value); }
+
+        /// <summary>
+        /// Gets or sets the StatusProgress
+        /// </summary>
+        public long StatusProgress
+        {
+            get { return _statusProgress; }
+
+            set => this.RaiseAndSetIfChanged(ref _statusProgress, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the StatusText
+        /// </summary>
+        public string StatusText { get => _statusText; set => this.RaiseAndSetIfChanged(ref _statusText, value); }
+
+        /// <summary>
+        /// Gets or sets the UncorPulseCount
+        /// </summary>
+        public int UncorPulseCount { get => _uncorPulseCount; set => this.RaiseAndSetIfChanged(ref _uncorPulseCount, value); }
+
+        /// <summary>
+        /// Gets or sets the VolumeTest
+        /// </summary>
+        public VolumeTest VolumeTest { get => _volumeTest; set => this.RaiseAndSetIfChanged(ref _volumeTest, value); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressStatusDialogViewModel"/> class.
+        /// </summary>
+        /// <param name="headerText">The headerText<see cref="string"/></param>
+        /// <param name="taskFunc">The taskFunc<see cref="Func{IObserver{string}, CancellationToken, Task}"/></param>
+        public ProgressStatusDialogViewModel(string headerText,
+            Func<IObserver<string>, CancellationToken, Task> taskFunc)
+        {
+            ContentItem = StatusProgressBarView;
+            HeaderText = headerText;
+
+            CancellationTokenSource = new CancellationTokenSource();
+            var statusObserver = Observer.Create<string>(s => StatusText = s);
+            TaskCommand = ReactiveCommand.CreateFromTask(
+                () => taskFunc(statusObserver, CancellationTokenSource.Token)
+                    .ContinueWith(_ =>
+                    {
+                        statusObserver.OnCompleted();
+                        this.Unsubscribe<LiveReadStatusEvent>();
+                        this.Unsubscribe<VolumeTestStatusEvent>();
+                        this.Unsubscribe<VerificationTestEvent>();
+                        //TryClose(true);
+                    }));
+
+            TaskCommand.ThrownExceptions
+               .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
+
+            TaskCommand.IsExecuting
+                .Subscribe(x => ShowDialog = x);
+
+            CancelCommand = ReactiveCommand.Create(() =>
+                {
+                    StatusText = "Cancelling...";
+                    CancellationTokenSource?.Cancel();
+                },
+                TaskCommand.IsExecuting);
+
+            CancelCommand.ThrownExceptions
+               .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
+
+            ShowDialog = true;
+
+            this.Subscribe<LiveReadStatusEvent>(e =>
+            {
+                ContentItem = LiveReadStatusView;
+                HeaderText = e.HeaderMessage;
+                LiveReadStatus = e;
+            });
+
+            this.Subscribe<VolumeTestStatusEvent>(e =>
+            {
+                ContentItem = VolumeTestStatusView;
+                HeaderText = e.HeaderText;
+                VolumeTest = e.VolumeTest;
+                UncorPulseCount = VolumeTest.UncPulseCount;
+                CorPulseCount = VolumeTest.CorPulseCount;
+            });
+
+            this.Subscribe<VerificationTestEvent>(e =>
+            {
+                ContentItem = StatusProgressBarView;
+                StatusText = e.Message;
+            });
+        }
+
+        /// <summary>
+        /// The Dispose
+        /// </summary>
+        public override void Dispose()
+        {
+            CancelCommand?.Dispose();
+            TaskCommand?.Dispose();
+            CancellationTokenSource?.Dispose();
+        }
 
         /// <summary>
         /// Defines the LiveReadStatusView
@@ -30,10 +153,6 @@
         /// Defines the VolumeTestStatusView
         /// </summary>
         private const string VolumeTestStatusView = "VolumeTestStatusView";
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         /// Defines the _contentItem
@@ -74,146 +193,5 @@
         /// Defines the _volumeTest
         /// </summary>
         private VolumeTest _volumeTest;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressStatusDialogViewModel"/> class.
-        /// </summary>
-        /// 
-        /// <param name="headerText">The headerText<see cref="string"/></param>
-        /// <param name="taskFunc">The taskFunc<see cref="Func{IObserver{string}, CancellationToken, Task}"/></param>
-        public ProgressStatusDialogViewModel(string headerText,
-            Func<IObserver<string>, CancellationToken, Task> taskFunc)
-        {
-            ContentItem = StatusProgressBarView;
-            HeaderText = headerText;
-
-            CancellationTokenSource = new CancellationTokenSource();
-            var statusObserver = Observer.Create<string>(s => StatusText = s);
-            TaskCommand = ReactiveCommand.CreateFromTask(() => taskFunc(statusObserver, CancellationTokenSource.Token)
-                .ContinueWith(_ => {
-                    statusObserver.OnCompleted();
-                    this.Unsubscribe<LiveReadStatusEvent>();
-                    this.Unsubscribe<VolumeTestStatusEvent>();
-                    this.Unsubscribe<VerificationTestEvent>();
-                    TryClose(true);
-            }));
-
-            TaskCommand.ThrownExceptions
-                .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
-
-            TaskCommand.IsExecuting
-                .Subscribe(x => ShowDialog = x);
-
-            CancelCommand = ReactiveCommand.Create(() =>
-                {
-                    StatusText = "Cancelling...";
-                    CancellationTokenSource?.Cancel();
-                },
-                TaskCommand.IsExecuting);
-
-            CancelCommand.ThrownExceptions
-               .Subscribe(x => NLog.LogManager.GetCurrentClassLogger().Error(x));
-
-            ShowDialog = true;
-
-            this.Subscribe<LiveReadStatusEvent>(e =>
-            {
-                ContentItem = LiveReadStatusView;
-                HeaderText = e.HeaderMessage;
-                LiveReadStatus = e;
-            });
-
-            this.Subscribe<VolumeTestStatusEvent>(e =>
-            {
-                ContentItem = VolumeTestStatusView;
-                HeaderText = e.HeaderText;
-                VolumeTest = e.VolumeTest;
-                UncorPulseCount = VolumeTest.UncPulseCount;
-                CorPulseCount = VolumeTest.CorPulseCount;
-            });
-
-            this.Subscribe<VerificationTestEvent>(e =>
-            {
-                ContentItem = StatusProgressBarView;
-                StatusText = e.Message;
-            });
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the CancelCommand
-        /// </summary>
-        public ReactiveCommand CancelCommand { get; }
-
-        /// <summary>
-        /// Gets or sets the ContentItem
-        /// </summary>
-        public string ContentItem { get => _contentItem; set => this.RaiseAndSetIfChanged(ref _contentItem, value); }
-
-        /// <summary>
-        /// Gets or sets the CorPulseCount
-        /// </summary>
-        public int CorPulseCount { get => _corPulseCount; set => this.RaiseAndSetIfChanged(ref _corPulseCount, value); }
-
-        /// <summary>
-        /// Gets or sets the HeaderText
-        /// </summary>
-        public string HeaderText { get => _headerText; set => this.RaiseAndSetIfChanged(ref _headerText, value); }
-
-        /// <summary>
-        /// Gets or sets the LiveReadStatus
-        /// </summary>
-        public LiveReadStatusEvent LiveReadStatus { get => _liveReadStatus; set => this.RaiseAndSetIfChanged(ref _liveReadStatus, value); }
-
-        /// <summary>
-        /// Gets or sets the StatusProgress
-        /// </summary>
-        public long StatusProgress
-        {
-            get
-            {
-                return _statusProgress;
-            }
-
-            set => this.RaiseAndSetIfChanged(ref _statusProgress, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the StatusText
-        /// </summary>
-        public string StatusText { get => _statusText; set => this.RaiseAndSetIfChanged(ref _statusText, value); }
-
-        /// <summary>
-        /// Gets or sets the UncorPulseCount
-        /// </summary>
-        public int UncorPulseCount { get => _uncorPulseCount; set => this.RaiseAndSetIfChanged(ref _uncorPulseCount, value); }
-
-        /// <summary>
-        /// Gets or sets the VolumeTest
-        /// </summary>
-        public VolumeTest VolumeTest { get => _volumeTest; set => this.RaiseAndSetIfChanged(ref _volumeTest, value); }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// The Dispose
-        /// </summary>
-        public override void Dispose()
-        {
-            CancelCommand?.Dispose();
-            TaskCommand?.Dispose();
-            CancellationTokenSource?.Dispose();
-        }
-
-        #endregion
     }
 }

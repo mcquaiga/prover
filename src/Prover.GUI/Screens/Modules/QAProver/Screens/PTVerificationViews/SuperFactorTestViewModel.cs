@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
+using System;
 using System.Reactive.Subjects;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews

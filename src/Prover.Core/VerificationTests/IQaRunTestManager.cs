@@ -2,11 +2,13 @@
 {
     using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.IO;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.Core.Models.Clients;
     using Prover.Core.Models.Instruments;
     using Prover.Core.Settings;
     using Prover.Core.VerificationTests.VolumeVerification;
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
