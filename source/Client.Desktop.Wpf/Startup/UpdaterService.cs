@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Splat;
-using Squirrel;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Client.Desktop.Wpf.Startup
@@ -28,13 +27,13 @@ namespace Client.Desktop.Wpf.Startup
             _logger = logger;
             _releasePath = releasePath;
 
-            var splatLogger = new RxLogging(_logger);
-            var splatLog = new WrappingFullLogger(splatLogger);
-            var logManager = Locator.Current.GetService<ILogManager>((string)null);
+            //var splatLogger = new RxLogging(_logger);
+            //var splatLog = new WrappingFullLogger(splatLogger);
+            //var logManager = Locator.Current.GetService<ILogManager>((string)null);
             
-            var sLog = logManager.GetLogger<UpdateManager>();
+            //var sLog = logManager.GetLogger<UpdateManager>();
 
-            Locator.CurrentMutable.Register(() => splatLog, typeof(Splat.ILogger));
+            //Locator.CurrentMutable.Register(() => splatLog, typeof(Splat.ILogger));
         }
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
@@ -70,32 +69,35 @@ namespace Client.Desktop.Wpf.Startup
 
         private async Task CheckForUpdate(CancellationToken cancellationToken)
         {
-            using var mgr = await GetUpdateManager();
-            
-            var updateInfo = await mgr.CheckForUpdate();
-            if (updateInfo.ReleasesToApply.Any())
-            {
-                await mgr.UpdateApp();
-                MessageBox.Show("Update applied.");
-            }
+            await Task.CompletedTask;
+            //using var mgr = await GetUpdateManager();
+
+            //var updateInfo = await mgr.CheckForUpdate();
+            //if (updateInfo.ReleasesToApply.Any())
+            //{
+            //    await mgr.UpdateApp();
+            //    MessageBox.Show("Update applied.");
+            //}
         }
 
-        private async Task<UpdateManager> GetUpdateManager()
-        {
-            UpdateManager mgr;
+        //private async Task<IUpdateManager> GetUpdateManager()
+        //{
+        //    await Task.CompletedTask;
+        //    return null;
+        //    //UpdateManager mgr;
 
-            if (_releasePath.Contains("github"))
-            {
-                _logger.Log(LogLevel.Information, $"Checking for updates on GitHub");
-                mgr = await UpdateManager.GitHubUpdateManager(_releasePath);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Information, $"Checking for updates at {_releasePath}");
-                mgr = new UpdateManager(_releasePath);
-            }
+        //    //if (_releasePath.Contains("github"))
+        //    //{
+        //    //    _logger.Log(LogLevel.Information, $"Checking for updates on GitHub");
+        //    //    mgr = await UpdateManager.GitHubUpdateManager(_releasePath);
+        //    //}
+        //    //else
+        //    //{
+        //    //    _logger.Log(LogLevel.Information, $"Checking for updates at {_releasePath}");
+        //    //    mgr = new UpdateManager(_releasePath);
+        //    //}
 
-            return mgr;
-        }
+        //    //return mgr;
+        //}
     }
 }

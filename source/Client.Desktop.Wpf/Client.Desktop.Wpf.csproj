@@ -67,15 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
-      <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>4</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -111,7 +102,6 @@
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.1" />
     <PackageReference Include="Splat" Version="9.3.11" />
-    <PackageReference Include="squirrel.windows" Version="1.9.1" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
