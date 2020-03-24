@@ -6,7 +6,8 @@ on:
   pull_request:
     branches: [ master ]
     
-
+env:
+  solution_path: ./source/Evc-Prover.sln
   
 jobs:
  
@@ -23,10 +24,9 @@ jobs:
     - name: Current Directory
       run: ls
     - name: Install dependencies
-      run: dotnet restore $solution_path
+      run: dotnet restore ./source/Evc-Prover.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore $solution_path
+      run: dotnet build --configuration Release --no-restore ./source/Evc-Prover.sln
     - name: Test
-      run: dotnet test --no-restore --verbosity normal $solution_path
-      env:
-        solution_path: ./source/Evc-Prover.sln
+      run: dotnet test --no-restore --verbosity normal ./source/Evc-Prover.sln
+     
