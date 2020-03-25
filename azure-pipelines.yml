@@ -1,0 +1,78 @@
+name: EvcProver_$(SourceBranchName)_v$(Date:yy.MM)$(Rev:.r)
+
+trigger:
+- dev
+
+resources:
+- repo: self
+  clean: false
+  fetchDepth: 5
+
+pool:
+  vmImage: 'windows-latest'
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+variables:
+  solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
+  project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
+  buildPlatform: 'Any CPU'
+  verbosityLevel: 'minimal'
+
+stages:
+  - stage: Building
+    jobs:
+    - job: build
+      steps:
+      - task: NuGetCommand@2
+        inputs:
+          command: 'restore'
+          restoreSolution: '$(Build.Repository.LocalPath)\source\Devices\Tests\**\*packages.config'
+          feedsToUse: 'select'
+          restoreDirectory: '$(Build.Repository.LocalPath)\packages'
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+          arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+          ArtifactName: '$(Build.BuildNumber)'
+          publishLocation: 'Container'
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+          artifact: 'Tests_$(Build.BuildNumber)'
+          publishLocation: 'pipeline'
+      
+  - stage: Testing
+    jobs:
+    - job: unitTests
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'Tests_$(Build.BuildNumber)'
+          targetPath: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
+      - task: VSTest@2
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            Tests.Application.dll
+            Tests.Core.GasCalculations.dll
+          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
+
+      - task: VSTest@2
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            Tests.**.dll
+            !Tests.Application.dll
+            !Tests.Shared.dll
+            !Tests.Core.GasCalculations.dll
+          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:.NETFramework,Version=v4.7'
