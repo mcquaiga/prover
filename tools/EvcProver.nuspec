@@ -3,7 +3,7 @@
   <metadata>
     <id>EvcProver</id>
     <!-- version will be replaced by MSBuild -->
-    <version>$version$</version>
+    <version>0.0.0.0</version>
     <title>Evc Prover</title>
     <authors>Adam</authors>
     <description>EVC Verification Software</description>
@@ -14,6 +14,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="$source$" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+    <file src="Release\**\*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
   </files>
 </package>
