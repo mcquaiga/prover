@@ -93,7 +93,7 @@ namespace Client.Desktop.Wpf.Startup
     {
         public static void AddTachometer(this IServiceCollection services)
         {
-            services.AddSingleton<Func<ITachometerService>>(c =>
+            services.AddSingleton<Func<IAppliedInputVolume>>(c =>
                 () =>
                 {
                     if (ApplicationSettings.Local.TachIsNotUsed) return new NullTachometerService();

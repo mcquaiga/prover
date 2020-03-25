@@ -10,31 +10,30 @@ using RJCP.IO.Ports;
 
 namespace Prover.Application.Services
 {
-    public interface ITachometerService
+    public interface IAppliedInputVolume
     {
-
         /// <summary>
         ///     The ReadTach
         /// </summary>
         /// <returns>The <see cref="System.Threading.Tasks.Task" /></returns>
-        Task<int> ReadTach();
+        Task<int> GetAppliedInput();
 
         /// <summary>
         ///     The ResetTach
         /// </summary>
         /// <returns>The <see cref="System.Threading.Tasks.Task{TResult}" /></returns>
-        Task ResetTach();
+        Task ResetAppliedInput();
     }
 
-    public class NullTachometerService : ITachometerService
+    public class NullTachometerService : IAppliedInputVolume
     {
-        public async Task<int> ReadTach()
+        public async Task<int> GetAppliedInput()
         {
             await Task.CompletedTask;
             return 0;
         }
 
-        public async Task ResetTach()
+        public async Task ResetAppliedInput()
         {
             await Task.CompletedTask;
         }
@@ -43,7 +42,7 @@ namespace Prover.Application.Services
     /// <summary>
     ///     Defines the <see cref="TachometerService" />
     /// </summary>
-    public class TachometerService : ITachometerService, IDisposable
+    public class TachometerService : IAppliedInputVolume, IDisposable
     {
         /// <summary>
         ///     Defines the _outputBoard
@@ -89,16 +88,11 @@ namespace Prover.Application.Services
             (_outputBoard as IDisposable)?.Dispose();
         }
 
-        public void Setup(string portName)
-        {
-          
-        }
-
         /// <summary>
         ///     The ReadTach
         /// </summary>
         /// <returns>The <see cref="System.Threading.Tasks.Task" /></returns>
-        public async Task<int> ReadTach()
+        public async Task<int> GetAppliedInput()
         {
             if (_serialPort == null)
                 return -1;
@@ -123,9 +117,9 @@ namespace Prover.Application.Services
         ///     The ResetTach
         /// </summary>
         /// <returns>The <see cref="System.Threading.Tasks.Task{TResult}" /></returns>
-        public async Task ResetTach()
+        public async Task ResetAppliedInput()
         {
-            await Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 if (_serialPort == null)
                     return;
@@ -138,15 +132,17 @@ namespace Prover.Application.Services
                 _serialPort.DiscardInBuffer();
             });
 
-            await Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 _outputBoard?.SignalStart();
                 Thread.Sleep(500);
                 _outputBoard?.SignalStop();
                 Thread.Sleep(100);
             });
+        }
 
-            //await Task.Delay(2000);
+        public void Setup(string portName)
+        {
         }
 
         /// <summary>

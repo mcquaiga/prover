@@ -24,11 +24,11 @@ namespace Prover.Application.VerificationManager.Volume
         protected ILogger Logger;
 
         protected IOutputChannel MotorControl;
-        protected ITachometerService TachometerService;
+        protected IAppliedInputVolume TachometerService;
 
         internal AutomatedVolumeTestManagerBase(ILogger<RotaryVolumeManager> logger,
             IDeviceSessionManager deviceManager,
-            ITachometerService tachometerService,
+            IAppliedInputVolume tachometerService,
             PulseOutputsListenerService pulseListenerService,
             IOutputChannel motorControl,
             VolumeViewModelBase volumeTest)
@@ -91,7 +91,7 @@ namespace Prover.Application.VerificationManager.Volume
         public virtual async Task RunFinishActions()
         {
             Logger.LogDebug("Completing test...");
-
+            await TachometerService.GetAppliedInput();
             PulseListenerService.Stop();
             UpdatePulseOutputTestCounts();
 
@@ -104,7 +104,8 @@ namespace Prover.Application.VerificationManager.Volume
         public virtual async Task RunStartActions()
         {
             Logger.LogInformation(
-                $"Starting {VolumeTest.DriveType.InputType} test for {DeviceManager.Device.DeviceType}.");
+                $"Starting {VolumeTest.DriveType.InputType} volume test for {DeviceManager.Device.DeviceType}.");
+
             var startValues = await DeviceManager.GetItemValues();
             VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(startValues);
 

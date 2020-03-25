@@ -21,14 +21,14 @@ namespace Prover.Application.VerificationManager.Volume
         private readonly IDeviceSessionManager _deviceManager;
         private readonly Func<OutputChannelType, IOutputChannel> _outputChannelFactory;
         private readonly Func<PulseOutputsListenerService> _pulseOutputServiceFactory;
-        private readonly Func<ITachometerService> _tachometerServiceFactory;
+        private readonly Func<IAppliedInputVolume> _tachometerServiceFactory;
 
         public VolumeTestManagerFactory(
             ILoggerFactory loggerFactory,
             IDeviceSessionManager deviceManager,
             Func<PulseOutputsListenerService> pulseOutputServiceFactory,
             Func<OutputChannelType, IOutputChannel> outputChannelFactory,
-            Func<ITachometerService> tachometerServiceFactory = null)
+            Func<IAppliedInputVolume> tachometerServiceFactory = null)
         {
             _loggerFactory = loggerFactory;
             _deviceManager = deviceManager;
@@ -63,7 +63,7 @@ namespace Prover.Application.VerificationManager.Volume
             return pulseService;
         }
 
-        private ITachometerService GetTachometerService(string portName)
+        private IAppliedInputVolume GetTachometerService(string portName)
         {
             if (string.IsNullOrEmpty(portName)) return new NullTachometerService();
             return _tachometerServiceFactory.Invoke();
