@@ -1,7 +1,4 @@
-﻿using System.ServiceModel;
-using Client.Desktop.Wpf.Extensions;
-using Client.Desktop.Wpf.Screens;
-using Client.Desktop.Wpf.Startup;
+﻿using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using DcrWebService;
 using MaterialDesignThemes.Wpf;

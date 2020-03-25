@@ -21,6 +21,7 @@ using Prover.Shared.Interfaces;
 using Tests.Application;
 using Devices.Romet.Core.Repository;
 using Prover.Application.ViewModels;
+using Prover.Application.ViewModels.Volume.Factories;
 
 namespace Application.Services.Tests
 {
@@ -148,7 +149,7 @@ namespace Application.Services.Tests
 
             _testRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, _repo);
             _modelService = new EvcVerificationTestService(_testRepo);
-            _viewModelService = new VerificationTestService(_testRepo, null, null, null);
+            _viewModelService = new VerificationTestService(_testRepo, new VerificationViewModelFactory(), null, null);
         }
     }
 

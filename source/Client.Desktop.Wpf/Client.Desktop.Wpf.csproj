@@ -39,10 +39,13 @@
 
   <ItemGroup>
     <Compile Remove="Modules\**" />
+    <Compile Remove="Screens\**" />
     <Compile Remove="ViewModels\Certificates\**" />
     <EmbeddedResource Remove="Modules\**" />
+    <EmbeddedResource Remove="Screens\**" />
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
     <None Remove="Modules\**" />
+    <None Remove="Screens\**" />
     <None Remove="ViewModels\Certificates\**" />
     <Resource Include="Resources\clipboard-check-blue.ico">
       <Pack>True</Pack>
@@ -50,6 +53,7 @@
     </Resource>
     <Resource Include="clipboard-check-white.ico" />
     <Page Remove="Modules\**" />
+    <Page Remove="Screens\**" />
     <Page Remove="ViewModels\Certificates\**" />
   </ItemGroup>
 
@@ -214,7 +218,6 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
-    <Folder Include="Screens\Dialogs\" />
     <Folder Include="Views\Certificates\" />
   </ItemGroup>
 
