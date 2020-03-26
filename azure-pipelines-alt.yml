@@ -1,0 +1,16 @@
+trigger:
+- dev
+
+pr:
+- dev
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: mcquaiga/EvcProver.CI
+      endpoint: mcquaiga
+
+jobs:
+- template: azure/azure-pipelines.yml@templates  # Template reference
+  parameters:
