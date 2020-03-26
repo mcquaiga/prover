@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MiniMax.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ExpectedObjects" Version="2.3.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="System.Reactive" Version="4.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Prover.Shared\Prover.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Tests\Tests.Shared\Tests.Shared.csproj" />
+    <ProjectReference Include="..\..\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\..\Devices.Core\Devices.Core.csproj" />
+    <ProjectReference Include="..\..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
+    <ProjectReference Include="..\..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
