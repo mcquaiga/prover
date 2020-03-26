@@ -33,21 +33,23 @@ stages:
           arguments: '$(solution) -p:Version=4.0.0.0 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       
       - task: VSTest@2
-        displayName: Tests - .Net Core
+        displayName: Tests
         inputs:
           testSelector: 'testAssemblies'          
           searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
           otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
       
       - task: PublishBuildArtifacts@1
+        displayName: Publish Binaries Artifact
         inputs:
           PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
           ArtifactName: 'Binaries'
           publishLocation: 'Container'
 
-      - task: PublishPipelineArtifact@1
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Test Artifact
         inputs:
-          targetPath: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-          artifact: 'Tests'
-          publishLocation: 'pipeline'
+          PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+          ArtifactName: 'Tests'
+          publishLocation: 'Container'
        
