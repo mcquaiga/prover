@@ -30,7 +30,7 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'build'
-          arguments: '$(solution) -p:Version=4.$(Rev:.r).0.0 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+          arguments: '$(solution) -p:Version=4.0.0.0 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
       
       - task: VSTest@2
         displayName: Tests - .Net Core
