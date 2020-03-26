@@ -6,7 +6,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
-    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\tests\</BuildPath>
+    <BuildPath>..\..\..\build\tests</BuildPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
