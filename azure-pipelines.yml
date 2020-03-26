@@ -35,10 +35,14 @@ stages:
       - task: VSTest@2
         displayName: Tests
         inputs:
-          testSelector: 'testAssemblies'          
+          testSelector: 'testAssemblies'  
+          testAssemblyVer2: |
+            **\*tests*.dll
+            !**\*TestAdapter.dll
+            !**\obj\**     
           searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
           otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
-      
+
       - task: PublishBuildArtifacts@1
         displayName: Publish Binaries Artifact
         inputs:
