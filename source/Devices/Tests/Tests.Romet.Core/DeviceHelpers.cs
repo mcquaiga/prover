@@ -1,4 +1,0 @@
-﻿namespace Tests.Romet.Core
-{
-
-}

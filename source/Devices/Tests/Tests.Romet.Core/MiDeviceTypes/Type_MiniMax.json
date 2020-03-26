@@ -1,9 +1,0 @@
-{
-  "Id": "f29d8c85-8183-4256-9b14-369ef440ec60",
-  "Name": "Mini-Max",
-  "AccessCode": "4",
-  "MaxBaudRate": "38400",
-  "CanUseIrDaPort": false,
-  "OverrideItems": [],
-  "ExcludeItems": []
-}

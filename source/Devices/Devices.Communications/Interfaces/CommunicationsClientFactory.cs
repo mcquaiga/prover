@@ -8,10 +8,10 @@ namespace Devices.Communications.Interfaces
 {
     public class CommunicationsClientFactory : ICommClientFactory
     {
-        private static readonly Assembly[] _assemblies =
+        private static readonly string[] _assemblies =
         {
-            Assembly.Load("Devices.Honeywell.Comm"),
-            Assembly.Load("Devices.Romet.Comm")
+            "Devices.Honeywell.Comm",
+            "Devices.Romet.Comm"
         };
 
         private readonly ICommPortFactory _commFactory;
@@ -42,16 +42,25 @@ namespace Devices.Communications.Interfaces
 
         private static TypeInfo LocateFactory<T>(T deviceType)
         {
-            foreach (var assembly in _assemblies)
+            foreach (var name in _assemblies)
             {
-                var factory = assembly.DefinedTypes.FirstOrDefault(t =>
-                    !t.IsInterface && !t.IsAbstract && t.ImplementedInterfaces.Any(i =>
-                        i.Name == typeof(IDeviceTypeCommClientFactory<>).Name &&
-                        i.GenericTypeArguments.Contains(deviceType.GetType()))
-                );
+                try
+                {
+                    var assembly = Assembly.Load(name);
 
-                if (factory != null)
-                    return factory;
+                    var factory = assembly.DefinedTypes.FirstOrDefault(t =>
+                        !t.IsInterface && !t.IsAbstract && t.ImplementedInterfaces.Any(i =>
+                            i.Name == typeof(IDeviceTypeCommClientFactory<>).Name &&
+                            i.GenericTypeArguments.Contains(deviceType.GetType()))
+                    );
+
+                    if (factory != null)
+                        return factory;
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
 
             throw new ArgumentNullException($"Could not locate factory method for device type {typeof(T)}.");
