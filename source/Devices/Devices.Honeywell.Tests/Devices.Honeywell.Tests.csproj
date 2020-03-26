@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
+    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\tests\</BuildPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,13 +18,18 @@
     <OutputPath>$(BuildPath)\Release\</OutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="MiniMax.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="MiniMax.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -39,12 +44,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\..\..\Tests\Tests.Shared\Tests.Shared.csproj" />
-    <ProjectReference Include="..\..\Devices.Communications\Devices.Communications.csproj" />
-    <ProjectReference Include="..\..\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
-    <ProjectReference Include="..\..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+    <ProjectReference Include="..\..\Tests\Tests.Shared\Tests.Shared.csproj" />
+    <ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+    <ProjectReference Include="..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
+    <ProjectReference Include="..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+    <ProjectReference Include="..\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
+    <ProjectReference Include="..\Devices.Romet.Core\Devices.Romet.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

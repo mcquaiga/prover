@@ -9,7 +9,6 @@
     <RootNamespace>Client.Desktop.Wpf</RootNamespace>
   </PropertyGroup>
 
-
   <PropertyGroup>
     <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
   </PropertyGroup>
@@ -25,8 +24,8 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
     <PackageIcon>clipboard-check-blue.ico</PackageIcon>
     <ApplicationIcon>clipboard-check-white.ico</ApplicationIcon>
   </PropertyGroup>
