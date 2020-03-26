@@ -39,7 +39,8 @@ stages:
           testAssemblyVer2: |
             **\*tests*.dll
             !**\*TestAdapter.dll
-            !**\obj\**     
+            !**\obj\**   
+            !**\Tests.Shared.dll  
           searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
           otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
