@@ -36,6 +36,29 @@ stages:
         inputs:
           command: 'build'
           arguments: '$(solution) -p:Version=1.2.3.4 --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+      
+      - task: VSTest@2
+        displayName: Tests - .Net Core
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            Tests.Application.dll
+            Tests.Core.GasCalculations.dll
+          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
+
+      - task: VSTest@2
+        displayName: Tests - .Net Framework
+        inputs:
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            Tests.**.dll
+            !Tests.Application.dll
+            !Tests.Shared.dll
+            !Tests.Core.GasCalculations.dll
+          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
+          otherConsoleOptions: '/Framework:.NETFramework,Version=v4.7'
+      
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
@@ -57,22 +80,4 @@ stages:
           buildType: 'current'
           artifactName: 'Tests_$(Build.BuildNumber)'
           targetPath: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
-      - task: VSTest@2
-        inputs:
-          testSelector: 'testAssemblies'
-          testAssemblyVer2: |
-            Tests.Application.dll
-            Tests.Core.GasCalculations.dll
-          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
-          otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'
-
-      - task: VSTest@2
-        inputs:
-          testSelector: 'testAssemblies'
-          testAssemblyVer2: |
-            Tests.**.dll
-            !Tests.Application.dll
-            !Tests.Shared.dll
-            !Tests.Core.GasCalculations.dll
-          searchFolder: '$(Pipeline.Workspace)\Tests_$(Build.BuildNumber)'
-          otherConsoleOptions: '/Framework:.NETFramework,Version=v4.7'
+      
