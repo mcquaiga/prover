@@ -16,7 +16,6 @@ namespace Client.Desktop.Wpf.Extensions
 {
     public static class ServiceExtensions
     {
-        private static Assembly GetAssembly => Assembly.GetCallingAssembly();
 
         public static void AddDialogViews(this IServiceCollection services)
         {
@@ -54,7 +53,7 @@ namespace Client.Desktop.Wpf.Extensions
 
         public static void AddViewsAndViewModels(this IServiceCollection services)
         {
-            var assembly = GetAssembly;
+            var assembly = Assembly.GetCallingAssembly();
 
             AddViews();
             AddViewModels();

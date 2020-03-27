@@ -28,13 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="dcrwebservice.xml" />
+    <Content Include="MasaWebService\dcrwebservice.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ReactiveUI" Version="11.2.3" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.2.3" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,8 +7,10 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
-    x:TypeArguments="viewModels:EvcVerificationViewModel"
+    xmlns:views="clr-namespace:Prover.Modules.UnionGas.Exporter.Views"
+    d:DataContext="{d:DesignInstance views:VerificationGridViewModel,
+                                     IsDesignTimeCreatable=False}"
+    x:TypeArguments="views:VerificationGridViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -51,11 +53,11 @@
 
             <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="True">
+                    <DataTrigger Binding="{Binding Test.Verified}" Value="True">
                         <Setter Property="Kind" Value="Check" />
                         <Setter Property="Foreground" Value="{StaticResource PassColour}" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Instrument.HasPassed}" Value="False">
+                    <DataTrigger Binding="{Binding Test.Verified}" Value="False">
                         <Setter Property="Kind" Value="AlertCircleOutline" />
                         <Setter Property="Foreground" Value="{StaticResource FailColour}" />
                     </DataTrigger>
@@ -104,20 +106,26 @@
                 Orientation="Vertical">
 
                 <TextBlock
+                    x:Name="DeviceTypeTextBlock"
                     HorizontalAlignment="Center"
                     FontSize="24"
-                    Text="{Binding Instrument.InstrumentType.Name, FallbackValue='Mini-Max'}" />
-
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Instrument.VolumeTest.DriveTypeDiscriminator, FallbackValue='Rotary'}" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    Style="{DynamicResource LabelStyle}"
-                    Text="{Binding Instrument.CompositionType, FallbackValue='PTZ'}" />
+                    Text="{Binding Test.Device.DeviceType.Name, FallbackValue='Not Found'}" />
 
                 <TextBlock
+                    x:Name="DriveTypeTextBlock"
+                    HorizontalAlignment="Center"
+                    Text="{Binding Test.DriveType.InputType}" />
+
+                <TextBlock
+                    x:Name="CompositionTypeTextBlock"
                     HorizontalAlignment="Center"
                     Style="{DynamicResource LabelStyle}"
-                    Text="{Binding DriveDescription, FallbackValue='LMMA'}" />
+                    Text="{Binding CompositionType}" />
+
+                <!--<TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{DynamicResource LabelStyle}"
+                    Text="{Binding DriveDescription}" />-->
             </StackPanel>
             <UniformGrid
                 Grid.Column="2"
@@ -127,19 +135,31 @@
                 Columns="2">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Inventory #" />
-                    <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding Instrument.SiteNumber2, FallbackValue=987654321}" />
+                    <TextBlock
+                        x:Name="SiteNumber2TextBlock"
+                        Style="{DynamicResource ValueStyle}"
+                        Text="{Binding DeviceInfo.CompanyNumber, FallbackValue=987654321}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Serial #" />
-                    <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding Instrument.SerialNumber, FallbackValue=123456789}" />
+                    <TextBlock
+                        x:Name="SerialNumberTextBlock"
+                        Style="{DynamicResource ValueStyle}"
+                        Text="{Binding DeviceInfo.SiteInfo.SerialNumber}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Job #" />
-                    <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding Instrument.JobId, FallbackValue=9999999}" />
+                    <TextBlock
+                        x:Name="JobIdTextBlock"
+                        Style="{DynamicResource ValueStyle}"
+                        Text="{Binding Test., FallbackValue=9999999}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Date/Time" />
-                    <TextBlock Style="{DynamicResource ValueStyle}" Text="{Binding DateTimePretty}" />
+                    <TextBlock
+                        x:Name="TestDateTimeTextBlock"
+                        Style="{DynamicResource ValueStyle}"
+                        Text="{Binding DateTimePretty}" />
                 </StackPanel>
             </UniformGrid>
             <StackPanel
@@ -153,7 +173,7 @@
                     Command="{Binding AddCurrentUserCommand}"
                     Style="{StaticResource FloatingActionButtonStyle}"
                     ToolTip="Add currently logged in user"
-                    Visibility="{Binding Instrument.EmployeeId, Converter={StaticResource NullToVisibilityConverter}}">
+                    Visibility="{Binding Test.EmployeeId, Converter={StaticResource NullToVisibilityConverter}}">
                     <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
                 </Button>
 

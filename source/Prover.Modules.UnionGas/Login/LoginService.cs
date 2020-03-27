@@ -1,12 +1,11 @@
-﻿using Client.Desktop.Wpf.ViewModels;
+﻿using System.Threading.Tasks;
 using DcrWebService;
-using Prover.Modules.UnionGas;
-using Prover.Shared.Interfaces;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
+using Prover.Modules.UnionGas.MasaWebService;
+using Prover.Shared.Interfaces;
 
-namespace Modules.UnionGas
+namespace Prover.Modules.UnionGas.Login
 {
     /// <summary>
     /// Defines the <see cref="LoginService" />

@@ -16,6 +16,7 @@ namespace Prover.Application.Services
 {
     public class VerificationTestService
     {
+
         private readonly ISourceCache<EvcVerificationViewModel, Guid> _testsCache =
             new SourceCache<EvcVerificationViewModel, Guid>(k => k.Id);
 
@@ -23,16 +24,21 @@ namespace Prover.Application.Services
         private readonly IVerificationViewModelFactory _verificationViewModelFactory;
         private readonly IDeviceSessionManager _deviceManager;
         private readonly Func<EvcVerificationViewModel, VerificationTestService, ITestManager> _testManagerFactory;
+        private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory = (device) => new EvcVerificationTest(device);
 
-        public VerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository, 
+        public VerificationTestService(
+            IAsyncRepository<EvcVerificationTest> verificationRepository, 
             IVerificationViewModelFactory verificationViewModelFactory,
             IDeviceSessionManager deviceManager,
-            Func<EvcVerificationViewModel, VerificationTestService, ITestManager> testManagerFactory)
+            Func<EvcVerificationViewModel, VerificationTestService, ITestManager> testManagerFactory,
+            Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null)
         {
             _testService = verificationRepository;
             _verificationViewModelFactory = verificationViewModelFactory;
             _deviceManager = deviceManager;
             _testManagerFactory = testManagerFactory;
+            _evcVerificationTestFactory = evcVerificationTestFactory ?? _evcVerificationTestFactory;
+
 
             _testsCache.Connect();
         }
@@ -68,7 +74,7 @@ namespace Prover.Application.Services
 
         public EvcVerificationViewModel NewTest(DeviceInstance device)
         {
-            var testModel = new EvcVerificationTest(device);
+            var testModel = _evcVerificationTestFactory.Invoke(device);
 
             return _verificationViewModelFactory.CreateViewModel(testModel);
         }

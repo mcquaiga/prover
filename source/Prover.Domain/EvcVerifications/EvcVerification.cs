@@ -9,7 +9,7 @@ namespace Prover.Domain.EvcVerifications
     /// <summary>
     ///     Defines the <see cref="EvcVerificationTest" />
     /// </summary>
-    public class EvcVerificationTest : AggregateRootWithChildTests<VerificationEntity>
+    public class EvcVerificationTest : AggregateRootWithChildTests<VerificationEntity>, IVerification
     {
         private EvcVerificationTest()
         {
@@ -31,14 +31,7 @@ namespace Prover.Domain.EvcVerifications
 
         public IVolumeInputType DriveType { get; set; }
 
-        /// <summary>
-        ///     Gets or sets the EventLogPassed
-        /// </summary>
-        //public bool? EventLogPassed { get; set; }
-        /// <summary>
-        ///     Gets or sets the CommPortsPassed
-        /// </summary>
-        //public bool? CommPortsPassed { get; set; }
+        public bool Verified { get; set; }
     }
 }
 

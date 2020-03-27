@@ -2,42 +2,29 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Prover.Application.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
     public partial class MainViewModel : ReactiveObject, IDisposable
     {
-        //private readonly DialogServiceManager _dialogService;
-        private readonly IServiceProvider _services;
+        public IScreenManager ScreenManager { get; }
 
-        public MainViewModel(IServiceProvider services, IDialogServiceManager dialogManager, Func<IScreenManager, HomeViewModel> homeViewFactoryFunc)
+        public MainViewModel(IScreenManager screenManager, HomeViewModel homeViewModel)
         {
-            _services = services;
+            ScreenManager = screenManager;
+            HomeViewModel = homeViewModel;
 
-            Router = new RoutingState();
-
-            DialogManager = dialogManager;
-           
-
-            HomeViewModel = homeViewFactoryFunc.Invoke(this);
-
-            GoNext = ReactiveCommand.CreateFromObservable<IRoutableViewModel, IRoutableViewModel>(Router.Navigate.Execute);
-            NavigateBack = Router.NavigateBack;
-            NavigateHome = ReactiveCommand.CreateFromTask(GoHome);
+            GoNext = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
+            NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack);
+            NavigateHome = ReactiveCommand.CreateFromTask(ScreenManager.GoHome);
         }
 
         public string AppTitle { get; } = $"EVC Prover - v{GetVersionNumber()}";
 
         public IRoutableViewModel HomeViewModel { get; }
-        public extern IRoutableViewModel CurrentViewModel { [ObservableAsProperty] get; }
 
         // The command that navigates a user to first view model.
         public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> GoNext { get; }
@@ -47,7 +34,7 @@ namespace Client.Desktop.Wpf.ViewModels
         public void Dispose()
         {
             GoNext?.Dispose();
-            Router.NavigationStack.Reverse().ForEach(vm => (vm as IDisposable)?.Dispose());
+            ScreenManager.Router.NavigationStack.Reverse().ForEach(vm => (vm as IDisposable)?.Dispose());
         }
 
         public void ShowHome()
@@ -63,40 +50,41 @@ namespace Client.Desktop.Wpf.ViewModels
         }
     }
 
-    public partial class MainViewModel : IScreenManager
-    {
-        public RoutingState Router { get; }
 
-        public IDialogServiceManager DialogManager { get; private set; }
-        //public IViewLocator ViewLocator { get; }
+    //public partial class MainViewModel : IScreenManager
+    //{
+    //    public RoutingState Router { get; }
 
-        public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
-        {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-            await Router.Navigate.Execute(viewModel);
-            return viewModel;
-        }
+    //    public IDialogServiceManager DialogManager { get; private set; }
+    //    //public IViewLocator ViewLocator { get; }
 
-        public async Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
-        {
-            var model = _services.GetService<TViewModel>();
-            await Router.Navigate.Execute(model);
-            return model;
-        }
+    //    public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
+    //    {
+    //        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+    //        await Router.Navigate.Execute(viewModel);
+    //        return viewModel;
+    //    }
 
-        public async Task GoBack()
-        {
-            var current = CurrentViewModel;
+    //    public async Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
+    //    {
+    //        var model = _services.GetService<TViewModel>();
+    //        await Router.Navigate.Execute(model);
+    //        return model;
+    //    }
 
-            await Router.NavigateBack.Execute();
+    //    public async Task GoBack()
+    //    {
+    //        var current = CurrentViewModel;
 
-            (current as IDisposable)?.Dispose();
-        }
+    //        await Router.NavigateBack.Execute();
 
-        public async Task GoHome()
-        {
-            Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
-            await Router.NavigateAndReset.Execute(HomeViewModel);
-        }
-    }
+    //        (current as IDisposable)?.Dispose();
+    //    }
+
+    //    public async Task GoHome()
+    //    {
+    //        Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
+    //        await Router.NavigateAndReset.Execute(HomeViewModel);
+    //    }
+    //}
 }

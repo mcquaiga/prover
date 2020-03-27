@@ -12,6 +12,7 @@ using Devices.Core.Repository;
 using DynamicData;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
+using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -20,13 +21,10 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 {
     public class ExporterViewModel : ReactiveObject, IRoutableViewModel
     {
-        private readonly EvcVerificationTestService _service;
-
         public ExporterViewModel(IScreenManager screenManager, EvcVerificationTestService service,
             VerificationTestService viewModelService, DeviceRepository deviceRepository,
             VerificationTestReportGenerator reportService)
         {
-            _service = service;
             ScreenManager = screenManager;
             HostScreen = screenManager;
 
@@ -44,11 +42,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             var deviceFilter = FilterByTypeCommand.Select(BuildDeviceFilter);
             var includeFilter = this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
 
-            _service.FetchTests()
+            service.FetchTests()
                 .Connect()
                 .Filter(deviceFilter)
                 .Filter(includeFilter)
                 .ObserveOn(RxApp.MainThreadScheduler)
+                .Transform(t => new VerificationGridViewModel(t))
                 .Bind(out var allNotExported)
                 .DisposeMany()
                 .Subscribe();
@@ -61,7 +60,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ReactiveCommand<DeviceType, DeviceType> FilterByTypeCommand { get; protected set; }
 
-        public ReadOnlyObservableCollection<EvcVerificationTest> VisibleTests { get; }
+        public ReadOnlyObservableCollection<VerificationGridViewModel> VisibleTests { get; }
 
         public ICollection<DeviceType> DeviceTypes { get; }
 

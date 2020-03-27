@@ -66,12 +66,12 @@
                     FontSize="22"><Run Text="EVC Prover" /></TextBlock>
 
                 <StackPanel Grid.Column="2" HorizontalAlignment="Right">
-                    <ItemsControl ItemsSource="{Binding Path=ToolbarItems}">
-                        <ItemsControl.ItemTemplate>
+                    <ItemsControl x:Name="ToolbarItemsControl">
+                        <!--<ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
+                        </ItemsControl.ItemTemplate>-->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />

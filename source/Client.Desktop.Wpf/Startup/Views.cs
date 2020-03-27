@@ -30,18 +30,17 @@ namespace Client.Desktop.Wpf.Startup
             //var homeViewModelFactory = (s) => new HomeViewModel(s, )
             //services.AddSingleton<IViewFor<HomeViewModel>>(c => new HomeView());
 
-            services.AddSingleton<Func<IScreenManager, HomeViewModel>>(c =>
-                (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
+            //services.AddSingleton<Func<IScreenManager, HomeViewModel>>(c =>
+            //    (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
 
-            services.AddSingleton<HomeViewModel>(c =>
-                c.GetService<Func<IScreenManager, HomeViewModel>>().Invoke(c.GetService<IScreenManager>()));
+            //services.AddSingleton<HomeViewModel>(c =>
+            //    c.GetService<Func<IScreenManager, HomeViewModel>>().Invoke(c.GetService<IScreenManager>()));
 
-            //services.AddSingleton(c => new HomeViewModel(c.GetService<IScreenManager>(), c.GetServices<IMainMenuItem>()));
-
-            services.AddSingleton(c => new MainViewModel(c, c.GetService<IDialogServiceManager>(), c.GetService<Func<IScreenManager, HomeViewModel>>()));
-            //services.AddSingleton<MainViewModel>();
-            services.AddSingleton<IScreen, MainViewModel>(c => c.GetService<MainViewModel>());
-            services.AddSingleton<IScreenManager, MainViewModel>(c => c.GetService<MainViewModel>());
+            //services.AddSingleton(c => new MainViewModel(c, c.GetService<IScreenManager>(), c.GetService<Func<IScreenManager, HomeViewModel>>()));
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<IScreenManager, ScreenManager>();
+            services.AddSingleton<IScreen>(c => c.GetService<ScreenManager>());
+            //services.AddSingleton<IScreen, IScreenManager>();
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();

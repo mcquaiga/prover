@@ -3,7 +3,7 @@ using Devices.Core.Items.ItemGroups;
 using Prover.Domain.Interfaces;
 using Prover.Shared.Domain;
 
-namespace Prover.Domain.EvcVerifications.Verifications
+namespace Prover.Domain.EvcVerifications.Verifications.Volume
 {
     public class FrequencyTest : BaseEntity, IAssertPassFail
     {

@@ -71,7 +71,6 @@ namespace Prover.Application.ViewModels.Corrections
         [Reactive] public decimal PassTolerance { get; protected set; }
         public extern decimal ExpectedValue { [ObservableAsProperty] get; }
         public extern decimal ActualValue { [ObservableAsProperty] get; }
-
         public extern decimal PercentError { [ObservableAsProperty] get; }
     }
 

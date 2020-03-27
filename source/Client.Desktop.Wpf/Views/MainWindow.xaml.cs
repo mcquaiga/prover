@@ -20,15 +20,13 @@ namespace Client.Desktop.Wpf.Views
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, x => x.AppTitle, x => x.MainWindowView.Title).DisposeWith(d);
-                this.OneWayBind(ViewModel, x => x.Router, x => x.RoutedViewHost.Router).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, x => x.DialogManager.DialogContent, x => x.DialogHost.DialogContent)
-                    .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.DialogManager.DialogContent, v => v.DialogHost.IsOpen,
-                    dialog => dialog != null).DisposeWith(d);
+                this.OneWayBind(ViewModel, x => x.ScreenManager.Router, x => x.RoutedViewHost.Router).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, x => x.ScreenManager.DialogManager.DialogContent, x => x.DialogHost.DialogContent).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.ScreenManager.DialogManager.DialogContent, v => v.DialogHost.IsOpen, dialog => dialog != null).DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
-
                 this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);
             });
 
@@ -39,13 +37,13 @@ namespace Client.Desktop.Wpf.Views
         {
             MessageInteractions.ShowMessage.RegisterHandler(async i =>
             {
-                await ViewModel.DialogManager.ShowMessage(i.Input, "Message");
+                await ViewModel.ScreenManager.DialogManager.ShowMessage(i.Input, "Message");
                 i.SetOutput(Unit.Default);
             });
 
             MessageInteractions.ShowYesNo.RegisterHandler(async i =>
             {
-                var answer = await ViewModel.DialogManager.ShowQuestion(i.Input);
+                var answer = await ViewModel.ScreenManager.DialogManager.ShowQuestion(i.Input);
                 //var view = new TextDialogView {MessageText = {Text = i.Input}, TitleText = {Text = "Adam"}};
                 
                 //DialogHost.DialogContent = view;
