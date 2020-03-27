@@ -59,66 +59,90 @@
 
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
+
+
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                <Grid>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone
+                        Grid.Column="0"
+                        Padding="12"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        Mode="PrimaryLight">
+                        <DockPanel>
+                            <ToggleButton
+                                x:Name="MenuToggleButton"
+                                IsChecked="False"
+                                Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                        </DockPanel>
+                    </materialDesign:ColorZone>
 
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:ColorZone
-                            Padding="12"
-                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                            Mode="PrimaryLight">
-                            <DockPanel>
-                                <ToggleButton
-                                    x:Name="MenuToggleButton"
-                                    IsChecked="False"
-                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
-                            </DockPanel>
-                        </materialDesign:ColorZone>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="8,2"
+                        Orientation="Vertical">
+                        <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
+                        <StackPanel Margin="0,2" Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="2,0" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="Height" Value="Auto" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <ItemsControl
+                                x:Name="DeviceTypes"
+                                Grid.Row="1"
+                                DataContext="{Binding}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Command="{Binding Path=ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
+                                            CommandParameter="{Binding}"
+                                            Content="{Binding Name}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
-                        <StackPanel
-                            Grid.Column="0"
-                            Margin="8"
-                            Orientation="Vertical">
-                            <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Filter by Instrument Type" />
-                            <StackPanel Margin="0,2" Orientation="Horizontal">
-                                <StackPanel.Resources>
-                                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
-                                        <Setter Property="Margin" Value="2,0" />
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Setter Property="Height" Value="Auto" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <ItemsControl
-                                    x:Name="DeviceTypes"
-                                    Grid.Row="1"
-                                    DataContext="{Binding}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Button
-                                                Command="{Binding Path=ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
-                                                CommandParameter="{Binding}"
-                                                Content="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                            </StackPanel>
                         </StackPanel>
-
                     </StackPanel>
+                    <CheckBox
+                        x:Name="IncludeExportedCheckBox"
+                        Grid.Column="2"
+                        Margin="25,15"
+                        HorizontalAlignment="Left"
+                        Content="Include Exported"
+                        Style="{StaticResource MaterialDesignCheckBox}" />
 
-                    <!--<ProgressBar
+                    <TextBlock
+                        x:Name="TestCountTextBlock"
+                        Grid.Column="3"
+                        Margin="40,5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="56">
+                        <TextBlock Text=" Records" />
+                    </TextBlock>
+                </Grid>
+
+                <!--<ProgressBar
                         Grid.Row="1"
                         Width="56"
                         Height="56"
@@ -129,27 +153,27 @@
                         Style="{StaticResource MaterialDesignCircularProgressBar}"
                         Value="0" />-->
 
-                    <ListBox
-                        x:Name="VisibleItemsListBox"
-                        Grid.Row="1"
-                        Margin="5"
-                        HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Id}" />
-                                    <TextBlock Text="{Binding TestDateTime}" />
-                                    <Button
-                                        Command="{Binding ViewModel.PrintReport, ElementName=ExporterViewControl}"
-                                        CommandParameter="{Binding}"
-                                        Content="{materialDesign:PackIcon PrintPreview}" />
+                <ListBox
+                    x:Name="VisibleItemsListBox"
+                    Grid.Row="1"
+                    Margin="5"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch">
+                    <!--<ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Id}" />
+                                <TextBlock Text="{Binding TestDateTime}" />
+                                <Button
+                                    Command="{Binding ViewModel.PrintReport, ElementName=ExporterViewControl}"
+                                    CommandParameter="{Binding}"
+                                    Content="{materialDesign:PackIcon PrintPreview}" />
 
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <!--<ListBox
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>-->
+                </ListBox>
+                <!--<ListBox
                         x:Name="VisibleItemsListBox"
                         Grid.Row="1"
                         Margin="5"
@@ -172,7 +196,7 @@
                     </ListBox>-->
 
 
-                    <!--<Button Margin="8"
+                <!--<Button Margin="8"
                     Grid.Row="2"
                     HorizontalAlignment="Left"
                     Style="{StaticResource MaterialDesignRaisedButton}"
@@ -181,8 +205,8 @@
             </Button>-->
 
 
-                </Grid>
             </Grid>
+
         </materialDesign:DrawerHost>
 
     </Grid>

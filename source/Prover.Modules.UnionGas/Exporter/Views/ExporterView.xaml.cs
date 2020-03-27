@@ -15,10 +15,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.VisibleTests, v => v.VisibleItemsListBox.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.VisibleTests.Count, v => v.TestCountTextBlock.Text).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource)
-                    .DisposeWith(d);
-               
+                this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
+
+                this.Bind(ViewModel, vm => vm.IncludeExportedTests, v => v.IncludeExportedCheckBox.IsChecked).DisposeWith(d);
             });
         }
     }
