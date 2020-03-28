@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
@@ -13,24 +9,19 @@ using Prover.Application.Interfaces;
 using Prover.Shared;
 using Prover.Shared.IO;
 
+using System;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+
 namespace Client.Desktop.Wpf.Communications
 {
     public class DeviceSessionManager : IDeviceSessionManager
     {
-        private readonly ICommClientFactory _commClientFactory;
-        private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
-        private readonly ICommPortFactory _commPortFactory;
-        private readonly ILogger<DeviceSessionManager> _logger;
-        private ICommunicationsClient _activeClient;
-        private ICommPort _activeCommPort;
-
-        //public DeviceSessionManager(ILogger<DeviceSessionManager> logger, ICommClientFactory commClientFactory,
-        //    ICommPortFactory commPortFactory)
-        //{
-        //    _logger = logger;
-        //    _commClientFactory = commClientFactory;
-        //    _commPortFactory = commPortFactory;
-        //}
+        public DeviceInstance Device { get; private set; }
+        public bool SessionInProgress { get; private set; }
 
         public DeviceSessionManager(ILogger<DeviceSessionManager> logger,
             Func<DeviceType, ICommunicationsClient> commClientFactoryFunc)
@@ -38,10 +29,6 @@ namespace Client.Desktop.Wpf.Communications
             _logger = logger;
             _commClientFactoryFunc = commClientFactoryFunc;
         }
-
-        public DeviceInstance Device { get; private set; }
-
-        public bool SessionInProgress { get; private set; }
 
         public async Task Connect()
         {
@@ -121,48 +108,6 @@ namespace Client.Desktop.Wpf.Communications
         public async Task<ItemValue> LiveReadItemValue(ItemMetadata item) =>
             await _activeClient.LiveReadItemValue(item);
 
-        /// <summary>
-        ///     Configures required resources for device communication
-        ///     Tries to connect to device and download full item file
-        ///     A device instance will be available in Instance when done
-        /// </summary>
-        /// <param name="deviceType"></param>
-        /// <param name="commPortName"></param>
-        /// <param name="baudRate"></param>
-        /// <param name="owner"></param>
-        /// <returns></returns>
-        //public async Task<IDeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
-        //    ReactiveObject owner)
-        //{
-        //    if (SessionInProgress)
-        //    {
-        //        var response = await MessageInteractions.ShowYesNo.Handle(
-        //            "Device session already in progress. Start new session?");
-
-        //        if (response) await EndSession();
-        //    }
-
-        //    try
-        //    {
-        //        _activeCommPort = _commPortFactory.Create(commPortName, baudRate);
-        //        _activeClient = _commClientFactory.Create(deviceType, _activeCommPort);
-
-        //        _activeClient.StatusMessageObservable
-        //            .Subscribe(msg => _logger.Log(msg.LogLevel, msg.ToString()));
-
-        //        var itemValues = await GetItemValues();
-        //        Device = deviceType.Factory.CreateInstance(itemValues);
-        //        SessionInProgress = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occured starting session with device.");
-        //        await EndSession();
-        //    }
-
-        //    return this;
-        //}
-
         public async Task<IDeviceSessionManager> StartSession(DeviceType deviceType)
         {
             if (SessionInProgress)
@@ -192,5 +137,10 @@ namespace Client.Desktop.Wpf.Communications
 
             return this;
         }
+
+        private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
+        private readonly ILogger<DeviceSessionManager> _logger;
+        private ICommunicationsClient _activeClient;
+        private ICommPort _activeCommPort;
     }
 }

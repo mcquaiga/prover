@@ -10,20 +10,19 @@ namespace Client.Desktop.Wpf.ViewModels
 {
     internal static class MainMenuItems
     {
-        public static IMainMenuItem CertificatesMainMenu
-            => new MainMenu("Certificates", PackIconKind.ClipboardText, order: 4,
-                openFunc: s => s.ChangeView<ClientManagerViewModel>());
-
-        public static IMainMenuItem ClientsMainMenu
-            => new MainMenu("Clients", PackIconKind.User, order: 2,
-                openFunc: s => s.ChangeView<ClientManagerViewModel>());
-
         public static IMainMenuItem VerificationsMainMenu
             => new MainMenu("New QA Test Run", PackIconKind.ClipboardCheck, order: 1,
                 openFunc: s => s.ChangeView<QaTestRunViewModel>());
 
-        //public static IMainMenuItem ExporterMainMenu(IScreenManager screenManager) 
-        //    => new MainMenu(screenManager, "Export Test Runs ", PackIconKind.CloudUpload, s => s.ChangeView<ClientManagerViewModel>(), 4);
+        /*         
+            public static IMainMenuItem CertificatesMainMenu
+           => new MainMenu("Certificates", PackIconKind.ClipboardText, order: 4,
+           openFunc: s => s.ChangeView<ClientManagerViewModel>());
+           
+           public static IMainMenuItem ClientsMainMenu
+           => new MainMenu("Clients", PackIconKind.User, order: 2,
+           openFunc: s => s.ChangeView<ClientManagerViewModel>());
+         */
     }
 
     public interface IMainMenuItem
