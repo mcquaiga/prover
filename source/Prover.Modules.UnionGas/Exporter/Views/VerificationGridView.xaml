@@ -152,14 +152,14 @@
                     <TextBlock
                         x:Name="JobIdTextBlock"
                         Style="{DynamicResource ValueStyle}"
-                        Text="{Binding Test., FallbackValue=9999999}" />
+                        Text="{Binding Test.JobId, FallbackValue=9999999}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Date/Time" />
                     <TextBlock
                         x:Name="TestDateTimeTextBlock"
                         Style="{DynamicResource ValueStyle}"
-                        Text="{Binding DateTimePretty}" />
+                        Text="{Binding DeviceInfo.TestDateTimePretty}" />
                 </StackPanel>
             </UniformGrid>
             <StackPanel

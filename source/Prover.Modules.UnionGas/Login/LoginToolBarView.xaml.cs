@@ -1,9 +1,7 @@
-﻿using System.Reactive;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Login
@@ -19,23 +17,72 @@ namespace Prover.Modules.UnionGas.Login
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.Username).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.WelcomeTextBlock.Text, value => $"Welcome, {value}").DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton.Command).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton.Command).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
 
                 ViewModel.LogIn.IsExecuting
-                    .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
-                    .BindTo(this, view => view.ExecutingContent.Visibility);
+                    .Merge(ViewModel.LoginService.LoggedIn.Select(x => false))
+                    .Select(VisibleIfTrue)
+                    .BindTo(this, view => view.ExecutingContent.Visibility).DisposeWith(d);
 
-                ViewModel.LogIn
-                    .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
-                    .BindTo(this, view => view.LoggedInContent.Visibility);
+                ViewModel.LoginService.LoggedIn
+                    .Select(VisibleIfTrue)
+                    .BindTo(this, view => view.LoggedInContent.Visibility).DisposeWith(d);
 
-                ViewModel.LogOut
-                    .Select(x => !x ? Visibility.Visible : Visibility.Collapsed)
-                    .BindTo(this, view => view.LoggedOutContent.Visibility);
+                ViewModel.LoginService.LoggedIn
+                    .Merge(ViewModel.LogIn.IsExecuting.Where(x => x))
+                    .Select(VisibleIfFalse)
+                    .BindTo(this, view => view.NotLoggedInContent.Visibility).DisposeWith(d);
             });
+
+            NotLoggedInContent.Visibility = Visibility.Visible;
+            LoggedInContent.Visibility = Visibility.Collapsed;
+            ExecutingContent.Visibility = Visibility.Collapsed;
+        }
+
+        private Visibility VisibleIfTrue(bool value)
+        {
+            return value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private Visibility VisibleIfFalse(bool value)
+        {
+            return !value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void CollapseAllContentStates()
+        {
+            NotLoggedInContent.Visibility = Visibility.Collapsed;
+            LoggedInContent.Visibility = Visibility.Collapsed;
+            ExecutingContent.Visibility = Visibility.Collapsed;
         }
     }
+
+    //public class BoolBindingTypeConverter : IBindingTypeConverter
+    //{
+    //    private readonly Visibility _trueValue;
+    //    private readonly Visibility _falseValue;
+
+    //    public BoolBindingTypeConverter(Visibility trueValue = Visibility.Visible,
+    //        Visibility falseValue = Visibility.Collapsed)
+    //    {
+    //        _trueValue = trueValue;
+    //        _falseValue = falseValue;
+    //    }
+
+    //    public int GetAffinityForObjects(Type fromType, Type toType) => 2;
+
+    //    public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+    //    {
+    //        if (value == null)
+    //            return FalseValue;
+
+    //        if (!(value is bool))
+    //            return TrueValue;
+
+    //        return (bool)value ? TrueValue : FalseValue;
+    //    }
+    //}
 }

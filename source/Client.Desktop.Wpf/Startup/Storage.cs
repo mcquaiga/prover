@@ -6,8 +6,10 @@ using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Services;
+using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
@@ -44,8 +46,8 @@ namespace Client.Desktop.Wpf.Startup
             var db = StorageDefaults.CreateDatabase(connectionString);
             services.AddSingleton(c => db);
 
-            services.AddSingleton<EvcVerificationTestService>();
-            services.AddSingleton<VerificationTestService>();
+            services.AddSingleton<EvcVerificationTestService<EvcVerificationTest>>();
+            services.AddSingleton<VerificationTestService<EvcVerificationTest, EvcVerificationViewModel>>();
 
             services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c 
                 => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));

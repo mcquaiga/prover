@@ -15,5 +15,6 @@ namespace Prover.Application.Interfaces
 
         Task ShowMessage(string message, string title);
         Task<bool> ShowQuestion(string question);
+        Task<TResult> ShowInputDialog<TResult>(string message, string title = null);
     }
 }

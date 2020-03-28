@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Prover.Modules.UnionGas.Exporter.Views
+﻿namespace Prover.Modules.UnionGas.Exporter.Views
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml

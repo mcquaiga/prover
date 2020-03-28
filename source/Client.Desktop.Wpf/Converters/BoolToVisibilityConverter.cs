@@ -9,10 +9,15 @@ namespace Client.Desktop.Wpf.Converters
     public sealed class BoolToVisibilityConverter : IValueConverter
     {
         public BoolToVisibilityConverter()
+            : this(Visibility.Visible, Visibility.Collapsed)
+        {
+        }
+
+        public BoolToVisibilityConverter(Visibility trueValue, Visibility falseValue)
         {
             // set defaults
-            TrueValue = Visibility.Visible;
-            FalseValue = Visibility.Collapsed;
+            TrueValue = trueValue;
+            FalseValue = falseValue;
         }
 
         public Visibility TrueValue { get; set; }

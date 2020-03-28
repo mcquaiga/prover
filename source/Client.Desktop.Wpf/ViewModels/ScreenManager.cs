@@ -6,31 +6,25 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Prover.Application.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
     internal class ScreenManager : IScreenManager
     {
-        private readonly IServiceProvider _services;
-        private IRoutableViewModel _currentViewModel;
-
-        public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager)
+        public IDialogServiceManager DialogManager { get; }
+        public RoutingState Router { get; }
+        public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager,
+            Func<IScreenManager, IRoutableViewModel> homeViewModelFactory)
         {
             _services = services;
 
             Router = new RoutingState();
 
             DialogManager = dialogManager;
+            _homeViewModel = homeViewModelFactory.Invoke(this);
 
             Router.CurrentViewModel.Subscribe(vm => _currentViewModel = vm);
         }
-
-        public RoutingState Router { get; }
-        public IRoutableViewModel HomeViewModel { get; }
-        //public extern IRoutableViewModel CurrentViewModel { [ObservableAsProperty] get; }
-        public IDialogServiceManager DialogManager { get; private set; }
-        //public IViewLocator ViewLocator { get; }
 
         public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
         {
@@ -58,7 +52,11 @@ namespace Client.Desktop.Wpf.ViewModels
         public async Task GoHome()
         {
             Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
-            await Router.NavigateAndReset.Execute(HomeViewModel);
+            await Router.NavigateAndReset.Execute(_homeViewModel);
         }
+
+        private readonly IServiceProvider _services;
+        private IRoutableViewModel _currentViewModel;
+        private readonly IRoutableViewModel _homeViewModel;
     }
 }

@@ -65,20 +65,21 @@
                     VerticalAlignment="Center"
                     FontSize="22"><Run Text="EVC Prover" /></TextBlock>
 
-                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
-                    <ItemsControl x:Name="ToolbarItemsControl">
-                        <!--<ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ContentControl Content="{Binding}" DataContext="{Binding Path=ViewContext}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>-->
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
+                <ItemsControl
+                    x:Name="ToolbarItemsControl"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Stretch"
+                                Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
             </Grid>
         </materialDesign:ColorZone>
 

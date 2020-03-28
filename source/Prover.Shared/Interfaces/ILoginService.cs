@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Prover.Shared.Interfaces
 {
     public interface ILoginService<T>
         where T : class
     {
-        Task<bool> GetLoginDetails();
         Task<bool> Login(string username = null, string password = null);
-        bool Logout();
+        Task<bool> Logout();
         T User { get; }
-        bool IsLoggedIn { get; }
+        IObservable<bool> LoggedIn { get; }
     }
 
 

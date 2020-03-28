@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildPath>$(MSBuildProjectDirectory)\..\..\build\</BuildPath>
+    <BuildPath>..\..\build\</BuildPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

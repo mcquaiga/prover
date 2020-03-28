@@ -14,39 +14,58 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source=""/>-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid>
 
-        <StackPanel x:Name="ExecutingContent" ZIndex="1">
-            <TextBlock x:Name="WaitingForLoginMessage" Text="Logging into MASA..." />
+
+    </UserControl.Resources>
+    <Grid
+        Margin="10,5"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+        <StackPanel
+            x:Name="ExecutingContent"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Visibility="Collapsed"
+            ZIndex="1">
+            <TextBlock
+                x:Name="WaitingForLoginMessage"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Signing in..." />
         </StackPanel>
 
-        <StackPanel x:Name="LoggedOutContent" VerticalAlignment="Center">
+        <StackPanel
+            x:Name="NotLoggedInContent"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
             <Button
                 x:Name="LoginButton"
                 Width="75"
                 Margin="5"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 materialDesign:RippleAssist.IsCentered="True"
-                Content="Login"
-                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                Content="Sign in"
+                Style="{DynamicResource MaterialDesignRaisedAccentButton}" />
         </StackPanel>
 
         <StackPanel
             x:Name="LoggedInContent"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Orientation="Vertical">
+            Orientation="Vertical"
+            Visibility="Collapsed">
             <StackPanel>
-                <TextBlock Text="Welcome, " />
+                <TextBlock x:Name="WelcomeTextBlock" Text="Welcome, " />
                 <TextBlock x:Name="Username" />
             </StackPanel>
             <Button
                 x:Name="LogoutButton"
-                Content="Logout"
+                Content="Sign out"
                 Style="{StaticResource MaterialDesignRaisedLightButton}" />
         </StackPanel>
 

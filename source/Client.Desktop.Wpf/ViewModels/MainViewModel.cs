@@ -1,32 +1,29 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
-using System.Reflection;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    public partial class MainViewModel : ReactiveObject, IDisposable
+    public class MainViewModel : ReactiveObject, IDisposable
     {
-        public IScreenManager ScreenManager { get; }
-
-        public MainViewModel(IScreenManager screenManager, HomeViewModel homeViewModel)
+        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems)
         {
             ScreenManager = screenManager;
-            HomeViewModel = homeViewModel;
+            ToolbarItems = toolbarItems;
 
             GoNext = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack);
             NavigateHome = ReactiveCommand.CreateFromTask(ScreenManager.GoHome);
         }
 
-        public string AppTitle { get; } = $"EVC Prover - v{GetVersionNumber()}";
+        public string AppTitle { get; } = $"EVC Prover - v{App.VersionNumber}";
 
-        public IRoutableViewModel HomeViewModel { get; }
+        public IScreenManager ScreenManager { get; }
+        public IEnumerable<IToolbarItem> ToolbarItems { get; }
 
-        // The command that navigates a user to first view model.
         public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> GoNext { get; }
         public ReactiveCommand<Unit, Unit> NavigateBack { get; }
         public ReactiveCommand<Unit, Unit> NavigateHome { get; }
@@ -39,52 +36,7 @@ namespace Client.Desktop.Wpf.ViewModels
 
         public void ShowHome()
         {
-            GoNext.Execute(HomeViewModel);
-        }
-
-        private static string GetVersionNumber()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fileVersionInfo.FileVersion;
+            ScreenManager.GoHome();
         }
     }
-
-
-    //public partial class MainViewModel : IScreenManager
-    //{
-    //    public RoutingState Router { get; }
-
-    //    public IDialogServiceManager DialogManager { get; private set; }
-    //    //public IViewLocator ViewLocator { get; }
-
-    //    public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
-    //    {
-    //        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-    //        await Router.Navigate.Execute(viewModel);
-    //        return viewModel;
-    //    }
-
-    //    public async Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
-    //    {
-    //        var model = _services.GetService<TViewModel>();
-    //        await Router.Navigate.Execute(model);
-    //        return model;
-    //    }
-
-    //    public async Task GoBack()
-    //    {
-    //        var current = CurrentViewModel;
-
-    //        await Router.NavigateBack.Execute();
-
-    //        (current as IDisposable)?.Dispose();
-    //    }
-
-    //    public async Task GoHome()
-    //    {
-    //        Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
-    //        await Router.NavigateAndReset.Execute(HomeViewModel);
-    //    }
-    //}
 }

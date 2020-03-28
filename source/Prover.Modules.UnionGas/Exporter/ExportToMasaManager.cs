@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DcrWebService;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
+using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Shared.Interfaces;
 

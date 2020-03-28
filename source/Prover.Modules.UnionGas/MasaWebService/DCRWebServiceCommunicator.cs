@@ -4,8 +4,8 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using DcrWebService;
 using Microsoft.Extensions.Logging;
+using Prover.Modules.UnionGas.DcrWebService;
 
 namespace Prover.Modules.UnionGas.MasaWebService
 {
@@ -34,7 +34,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
         /// Initializes a new instance of the <see cref="DCRWebServiceCommunicator"/> class.
         /// </summary>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceSoap"/></param>
-        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService, ILogger<DCRWebServiceCommunicator> log)
+        public DCRWebServiceCommunicator(ILogger<DCRWebServiceCommunicator> log, DCRWebServiceSoap dcrWebService)
         {
             _dcrWebService = dcrWebService;
             _log = log;
@@ -70,22 +70,6 @@ namespace Prover.Modules.UnionGas.MasaWebService
             var response = await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByInventoryCodeAsync(request)).ConfigureAwait(false);
 
             return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
-
-        }
-
-        /// <summary>
-        /// The GetEmployee
-        /// </summary>
-        /// <param name="username">The username<see cref="string"/></param>
-        /// <returns>The <see cref="Task{EmployeeDTO}"/></returns>
-        public async Task<EmployeeDTO> GetEmployee(string username)
-        {
-            _log.LogDebug($"Getting employee with #{username} from MASA.");
-
-            var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-            var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployeeAsync(employeeRequest)).ConfigureAwait(false);
-
-            return response.Body.GetEmployeeResult;
         }
 
         /// <summary>

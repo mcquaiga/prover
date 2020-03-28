@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Dialogs
 {
-    public partial class TextDialogView : ReactiveUserControl<TextDialogViewModel>
+    public partial class TextDialogView
     {
         public bool? Answer { get; set; } = null;
 

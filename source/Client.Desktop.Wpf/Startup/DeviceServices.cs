@@ -21,6 +21,7 @@ using Prover.Application.VerificationManager;
 using Prover.Application.VerificationManager.Volume;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Domain.EvcVerifications;
 
 namespace Client.Desktop.Wpf.Startup
 {
@@ -35,14 +36,12 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
 
             services.AddSingleton<Func<EvcVerificationViewModel, VerificationTestService, ITestManager>>(c =>
-                (test, service) =>
-                {
-                    return new TestManager(
-                        c.GetService<ILogger<TestManager>>(), 
-                        c.GetService<IDeviceSessionManager>(),
-                        test,
-                        c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>());
-                });
+                (test, service) => new TestManager(
+                    c.GetService<ILogger<TestManager>>(), 
+                    c.GetService<IDeviceSessionManager>(),
+                    test,
+                    c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>()));
+
             //services.AddTransient<ITestManagerFactory, TestManager>();
             
             services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();

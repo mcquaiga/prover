@@ -7,13 +7,52 @@ using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using ReactiveUI.Validation.Abstractions;
+using ReactiveUI.Validation.Contexts;
 
 namespace Client.Desktop.Wpf.Dialogs
 {
-    public class DialogServiceManager : ReactiveObject, IDialogViewModel, IDialogServiceManager
+    public static class DialogMessageInteractions
+    {
+        public static void Register(IDialogServiceManager dialogManager)
+        {
+            MessageInteractions.ShowMessage.RegisterHandler(async i =>
+            {
+                await dialogManager.ShowMessage(i.Input, "Message");
+                i.SetOutput(Unit.Default);
+            });
+
+            MessageInteractions.ShowYesNo.RegisterHandler(async i =>
+            {
+                var answer = await dialogManager.ShowQuestion(i.Input);
+                i.SetOutput(answer);
+            });
+
+            MessageInteractions.ShowYesNo.RegisterHandler(async i =>
+            {
+                var answer = await dialogManager.ShowQuestion(i.Input);
+                i.SetOutput(answer);
+            });
+
+            MessageInteractions.GetInputString.RegisterHandler(async i =>
+            {
+                var answer = await dialogManager.ShowInputDialog<string>(i.Input);
+                i.SetOutput(answer);
+            });
+
+            MessageInteractions.GetInputNumber.RegisterHandler(async i =>
+            {
+                var answer = await dialogManager.ShowInputDialog<decimal>(i.Input);
+                i.SetOutput(answer);
+            });
+        }
+    }
+
+    public partial class DialogServiceManager : ReactiveObject, IDialogViewModel, IDialogServiceManager, IValidatableViewModel
     {
         private readonly SerialDisposable _disposer = new SerialDisposable();
         private readonly ILogger<DialogServiceManager> _logger;
@@ -21,7 +60,7 @@ namespace Client.Desktop.Wpf.Dialogs
         private Action _onClosed;
 
         public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
-            IViewLocator viewLocator = null)
+            IViewLocator viewLocator = null, Action<IDialogServiceManager> interactionsRegistery = null)
         {
             _services = services;
             _logger = logger ?? NullLogger<DialogServiceManager>.Instance;
@@ -65,6 +104,10 @@ namespace Client.Desktop.Wpf.Dialogs
             this.WhenAnyValue(x => x.DialogContent)
                 .Select(v => v?.ViewModel as IDialogViewModel)
                 .ToPropertyEx(this, x => x.DialogViewModel);
+
+
+            DialogMessageInteractions.Register(this);
+            interactionsRegistery?.Invoke(this);
         }
 
         public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
@@ -75,6 +118,8 @@ namespace Client.Desktop.Wpf.Dialogs
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
         public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
         public extern bool IsDialogOpen { [ObservableAsProperty] get; }
+
+        public ValidationContext ValidationContext { get; } = new ValidationContext();
 
         public async Task Close()
         {
@@ -95,6 +140,20 @@ namespace Client.Desktop.Wpf.Dialogs
             await ShowDialog.Execute(model);
         }
 
+        public async Task<TResult> ShowInputDialog<TResult>(string message, string title = null)
+        {
+            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
+            CloseCommand
+                .ToPropertyEx(this, x => x.IsDialogOpen, true);
+
+            var inputDialog = new InputDialogViewModel(message, title);
+
+            await ShowDialog.Execute(inputDialog);
+            await CloseDialog.FirstAsync();
+
+            return (TResult) (object) inputDialog.InputValue;
+        }
+
         public async Task ShowMessage(string message, string title)
         {
             var model = new TextDialogViewModel(message, title);
@@ -111,7 +170,7 @@ namespace Client.Desktop.Wpf.Dialogs
             var view = new QuestionDialogView
             {
                 ViewModel = this,
-                MessageText = {Text = question}
+                MessageText = { Text = question }
             };
 
             await ShowDialogView.Execute(view);

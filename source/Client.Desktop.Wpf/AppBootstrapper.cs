@@ -20,33 +20,17 @@ namespace Client.Desktop.Wpf
         public static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private ILogger _logger = NullLogger.Instance;
 
-        public IConfiguration Config { get; set; }
-        public IHost AppHost { get; set; }
+        public IHost AppHost { get; private set; }
 
-        public void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
-        {
-            
-        }
-
-        public void AddServices(IServiceCollection services, HostBuilderContext host)
-        {
-            services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
-            services.AddSingleton<UnhandledExceptionHandler>();
-
-            Settings.AddServices(services, host);
-            Storage.AddServices(services, host);
-            UserInterface.AddServices(services, host);
-            DeviceServices.AddServices(services, host);
-
-            UpdaterService.AddServices(services, host);
-        }
-
+        public CancellationToken ApplicationStarted { get; } = new CancellationToken();
+        public CancellationToken ApplicationStopping { get; } = new CancellationToken();
+        public CancellationToken ApplicationStopped { get; } = new CancellationToken();
 
         public async Task<AppBootstrapper> StartAsync(string[] args)
         {
             AppHost = ConfigureBuilder(this, args);
-            await AppHost.StartAsync();
 
+            await AppHost.StartAsync(ApplicationStarted);
             await ExecuteStartUpTasks();
 
             InitializeLogging();
@@ -54,15 +38,25 @@ namespace Client.Desktop.Wpf
             return this;
         }
 
-        private async Task ExecuteStartUpTasks()
+        public void StopApplication()
         {
-            var startupTask = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
-                .ForEachAsync(async t => await t.ExecuteAsync(CancellationTokenSource.Token));
-            await startupTask;
+            Debug.WriteLine("Stopping Application.");
+        }
 
-            if (startupTask.IsFaulted)
-                foreach (var ex in startupTask.Exception.InnerExceptions)
-                    _logger.LogError(ex, "Errors occured on start up.");
+        private void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
+        {
+        }
+
+        private void AddServices(IServiceCollection services, HostBuilderContext host)
+        {
+            services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
+            services.AddSingleton<UnhandledExceptionHandler>();
+            
+            Settings.AddServices(services, host);
+            Storage.AddServices(services, host);
+            UserInterface.AddServices(services, host);
+            DeviceServices.AddServices(services, host);
+            UpdaterService.AddServices(services, host);
         }
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
@@ -82,40 +76,33 @@ namespace Client.Desktop.Wpf
                 })
                 .Build();
 
+        private async Task ExecuteStartUpTasks()
+        {
+            var startTasks = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
+                .ForEachAsync(async t => await t.ExecuteAsync(CancellationTokenSource.Token));
+
+            await startTasks;
+
+            if (startTasks.IsFaulted)
+                foreach (var ex in startTasks.Exception.InnerExceptions)
+                    _logger.LogError(ex, "An error occured on start up.");
+        }
+
         private void InitializeLogging()
         {
             var logFactory = AppHost.Services.GetService<ILoggerFactory>();
             ProverLogging.LogFactory = logFactory;
 
             _logger = logFactory.CreateLogger<AppBootstrapper>();
-            
-            var config = AppHost.Services.GetService<IConfiguration>();
-            //var logConfig = config.GetSection("Logging").GetChildren();
 
+            var config = AppHost.Services.GetService<IConfiguration>();
             var host = AppHost.Services.GetService<IHostEnvironment>();
+
             _logger.LogInformation($"Loggers Hosting App Name: {host.ApplicationName}");
             _logger.LogInformation($"Loggers Hosting Env: {host.EnvironmentName}");
 
             var level = config.GetValue<LogLevel>("Logging:LogLevel:Default");
             _logger.LogInformation($"Log Level = {level}");
-
-            //_logger.LogInformation($"Logger Settings");
-            //_logger.LogInformation($"Log Level = {config.GetValue("Logging:LogLevel:Default", typeof(LogLevel))}");
-            //foreach (var section in logConfig)
-            //{
-            //    _logger.LogInformation($"{section} = {section}");
-            //}
-            
         }
-
-        public void StopApplication()
-        {
-            Debug.WriteLine("Stopping Application.");
-        }
-
-        public CancellationToken ApplicationStarted { get; }
-        public CancellationToken ApplicationStopping { get; }
-        public CancellationToken ApplicationStopped { get; }
     }
-
 }

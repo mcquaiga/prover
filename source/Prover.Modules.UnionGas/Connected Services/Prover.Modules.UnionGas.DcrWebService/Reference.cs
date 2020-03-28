@@ -6,8 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-
-namespace DcrWebService
+using System.ServiceModel;
+namespace Prover.Modules.UnionGas.DcrWebService
 {
     using System.Runtime.Serialization;
     
@@ -714,12 +714,12 @@ namespace DcrWebService
     public partial class FileAsEntities : object
     {
         
-        private DcrWebService.RotaryFile RotaryFileField;
+        private Prover.Modules.UnionGas.DcrWebService.RotaryFile RotaryFileField;
         
-        private DcrWebService.TurbineFile TurbineFileField;
+        private Prover.Modules.UnionGas.DcrWebService.TurbineFile TurbineFileField;
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
-        public DcrWebService.RotaryFile RotaryFile
+        public Prover.Modules.UnionGas.DcrWebService.RotaryFile RotaryFile
         {
             get
             {
@@ -732,7 +732,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
-        public DcrWebService.TurbineFile TurbineFile
+        public Prover.Modules.UnionGas.DcrWebService.TurbineFile TurbineFile
         {
             get
             {
@@ -777,7 +777,7 @@ namespace DcrWebService
         
         private string RunResultField;
         
-        private DcrWebService.RotaryReading[] RotaryReadingsField;
+        private Prover.Modules.UnionGas.DcrWebService.RotaryReading[] RotaryReadingsField;
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
         public string Prover
@@ -949,7 +949,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=13)]
-        public DcrWebService.RotaryReading[] RotaryReadings
+        public Prover.Modules.UnionGas.DcrWebService.RotaryReading[] RotaryReadings
         {
             get
             {
@@ -1026,11 +1026,11 @@ namespace DcrWebService
         
         private string LeakStatusField;
         
-        private DcrWebService.TurbineReading[] TurbineReadingsField;
+        private Prover.Modules.UnionGas.DcrWebService.TurbineReading[] TurbineReadingsField;
         
-        private DcrWebService.TurbineReading[] GetMechanicalReadingsField;
+        private Prover.Modules.UnionGas.DcrWebService.TurbineReading[] GetMechanicalReadingsField;
         
-        private DcrWebService.TurbineReading[] GetElectronicReadingsField;
+        private Prover.Modules.UnionGas.DcrWebService.TurbineReading[] GetElectronicReadingsField;
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
         public string HeaderLeadStr
@@ -1410,7 +1410,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=29)]
-        public DcrWebService.TurbineReading[] TurbineReadings
+        public Prover.Modules.UnionGas.DcrWebService.TurbineReading[] TurbineReadings
         {
             get
             {
@@ -1423,7 +1423,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=30)]
-        public DcrWebService.TurbineReading[] GetMechanicalReadings
+        public Prover.Modules.UnionGas.DcrWebService.TurbineReading[] GetMechanicalReadings
         {
             get
             {
@@ -1436,7 +1436,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=31)]
-        public DcrWebService.TurbineReading[] GetElectronicReadings
+        public Prover.Modules.UnionGas.DcrWebService.TurbineReading[] GetElectronicReadings
         {
             get
             {
@@ -2246,13 +2246,13 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="TestResult", Namespace="http://tempuri.org/")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunRotaryTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunRotaryTestResultDetail))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTurbineTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTurbineTestResultDetail))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunEvcTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.DiaphragmTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResultDetail))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResultDetail))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunEvcTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult))]
     public partial class TestResult : object
     {
         
@@ -2335,12 +2335,12 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunTestResult", Namespace="http://tempuri.org/")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunRotaryTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunRotaryTestResultDetail))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTurbineTestResult))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTurbineTestResultDetail))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunEvcTestResult))]
-    public partial class QARunTestResult : DcrWebService.TestResult
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResultDetail))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResultDetail))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunEvcTestResult))]
+    public partial class QARunTestResult : Prover.Modules.UnionGas.DcrWebService.TestResult
     {
         
         private int JobNumberField;
@@ -2437,8 +2437,8 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunRotaryTestResult", Namespace="http://tempuri.org/")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunRotaryTestResultDetail))]
-    public partial class QARunRotaryTestResult : DcrWebService.QARunTestResult
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResultDetail))]
+    public partial class QARunRotaryTestResult : Prover.Modules.UnionGas.DcrWebService.QARunTestResult
     {
         
         private string MeterOutputDescriptionField;
@@ -2447,7 +2447,7 @@ namespace DcrWebService
         
         private string SpanTestResultField;
         
-        private DcrWebService.QARunRotaryTestResultDetail[] RotaryTestResultDetailsField;
+        private Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResultDetail[] RotaryTestResultDetailsField;
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
         public string MeterOutputDescription
@@ -2489,7 +2489,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
-        public DcrWebService.QARunRotaryTestResultDetail[] RotaryTestResultDetails
+        public Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResultDetail[] RotaryTestResultDetails
         {
             get
             {
@@ -2505,7 +2505,7 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunRotaryTestResultDetail", Namespace="http://tempuri.org/")]
-    public partial class QARunRotaryTestResultDetail : DcrWebService.QARunRotaryTestResult
+    public partial class QARunRotaryTestResultDetail : Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult
     {
         
         private int SequenceNumberField;
@@ -3067,8 +3067,8 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunTurbineTestResult", Namespace="http://tempuri.org/")]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(DcrWebService.QARunTurbineTestResultDetail))]
-    public partial class QARunTurbineTestResult : DcrWebService.QARunTestResult
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResultDetail))]
+    public partial class QARunTurbineTestResult : Prover.Modules.UnionGas.DcrWebService.QARunTestResult
     {
         
         private System.Nullable<int> ChangeGearHighField;
@@ -3119,7 +3119,7 @@ namespace DcrWebService
         
         private System.Nullable<double> DriveRateTemperatureField;
         
-        private DcrWebService.QARunTurbineTestResultDetail[] TurbineTestResultDetailsField;
+        private Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResultDetail[] TurbineTestResultDetailsField;
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
         public System.Nullable<int> ChangeGearHigh
@@ -3434,7 +3434,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=24)]
-        public DcrWebService.QARunTurbineTestResultDetail[] TurbineTestResultDetails
+        public Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResultDetail[] TurbineTestResultDetails
         {
             get
             {
@@ -3450,7 +3450,7 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunTurbineTestResultDetail", Namespace="http://tempuri.org/")]
-    public partial class QARunTurbineTestResultDetail : DcrWebService.QARunTurbineTestResult
+    public partial class QARunTurbineTestResultDetail : Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult
     {
         
         private int SequenceNumberField;
@@ -4087,7 +4087,7 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="QARunEvcTestResult", Namespace="http://tempuri.org/")]
-    public partial class QARunEvcTestResult : DcrWebService.QARunTestResult
+    public partial class QARunEvcTestResult : Prover.Modules.UnionGas.DcrWebService.QARunTestResult
     {
         
         private string InstrumentTypeField;
@@ -4112,15 +4112,15 @@ namespace DcrWebService
         
         private string EventLogPassedIndField;
         
-        private DcrWebService.PressureHeader PressureInfoField;
+        private Prover.Modules.UnionGas.DcrWebService.PressureHeader PressureInfoField;
         
-        private DcrWebService.TemperatureHeader TemperatureInfoField;
+        private Prover.Modules.UnionGas.DcrWebService.TemperatureHeader TemperatureInfoField;
         
-        private DcrWebService.SuperFactorHeader SuperFactorInfoField;
+        private Prover.Modules.UnionGas.DcrWebService.SuperFactorHeader SuperFactorInfoField;
         
-        private DcrWebService.VolumeHeader VolumeInfoField;
+        private Prover.Modules.UnionGas.DcrWebService.VolumeHeader VolumeInfoField;
         
-        private DcrWebService.VerificationTest[] VerificationTestsField;
+        private Prover.Modules.UnionGas.DcrWebService.VerificationTest[] VerificationTestsField;
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
         public string InstrumentType
@@ -4266,7 +4266,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=11)]
-        public DcrWebService.PressureHeader PressureInfo
+        public Prover.Modules.UnionGas.DcrWebService.PressureHeader PressureInfo
         {
             get
             {
@@ -4279,7 +4279,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=12)]
-        public DcrWebService.TemperatureHeader TemperatureInfo
+        public Prover.Modules.UnionGas.DcrWebService.TemperatureHeader TemperatureInfo
         {
             get
             {
@@ -4292,7 +4292,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=13)]
-        public DcrWebService.SuperFactorHeader SuperFactorInfo
+        public Prover.Modules.UnionGas.DcrWebService.SuperFactorHeader SuperFactorInfo
         {
             get
             {
@@ -4305,7 +4305,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=14)]
-        public DcrWebService.VolumeHeader VolumeInfo
+        public Prover.Modules.UnionGas.DcrWebService.VolumeHeader VolumeInfo
         {
             get
             {
@@ -4318,7 +4318,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=15)]
-        public DcrWebService.VerificationTest[] VerificationTests
+        public Prover.Modules.UnionGas.DcrWebService.VerificationTest[] VerificationTests
         {
             get
             {
@@ -4334,7 +4334,7 @@ namespace DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DiaphragmTestResult", Namespace="http://tempuri.org/")]
-    public partial class DiaphragmTestResult : DcrWebService.TestResult
+    public partial class DiaphragmTestResult : Prover.Modules.UnionGas.DcrWebService.TestResult
     {
         
         private string SerialNumberField;
@@ -4931,13 +4931,13 @@ namespace DcrWebService
         
         private string CapacityLevelTypeCodeField;
         
-        private DcrWebService.PressureTest PressureField;
+        private Prover.Modules.UnionGas.DcrWebService.PressureTest PressureField;
         
-        private DcrWebService.TemperatureTest TemperatureField;
+        private Prover.Modules.UnionGas.DcrWebService.TemperatureTest TemperatureField;
         
-        private DcrWebService.SuperFactorTest SuperFactorField;
+        private Prover.Modules.UnionGas.DcrWebService.SuperFactorTest SuperFactorField;
         
-        private DcrWebService.VolumeTest VolumeField;
+        private Prover.Modules.UnionGas.DcrWebService.VolumeTest VolumeField;
         
         [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
         public int SequenceNumber
@@ -4966,7 +4966,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
-        public DcrWebService.PressureTest Pressure
+        public Prover.Modules.UnionGas.DcrWebService.PressureTest Pressure
         {
             get
             {
@@ -4979,7 +4979,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
-        public DcrWebService.TemperatureTest Temperature
+        public Prover.Modules.UnionGas.DcrWebService.TemperatureTest Temperature
         {
             get
             {
@@ -4992,7 +4992,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
-        public DcrWebService.SuperFactorTest SuperFactor
+        public Prover.Modules.UnionGas.DcrWebService.SuperFactorTest SuperFactor
         {
             get
             {
@@ -5005,7 +5005,7 @@ namespace DcrWebService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
-        public DcrWebService.VolumeTest Volume
+        public Prover.Modules.UnionGas.DcrWebService.VolumeTest Volume
         {
             get
             {
@@ -5482,72 +5482,72 @@ namespace DcrWebService
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="DcrWebService.DCRWebServiceSoap")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap")]
     public interface DCRWebServiceSoap
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetCurrentlyConnectedDatabase", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetCurrentlyConnectedDatabaseResponse> GetCurrentlyConnectedDatabaseAsync(DcrWebService.GetCurrentlyConnectedDatabaseRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseResponse> GetCurrentlyConnectedDatabaseAsync(Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmployee", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetEmployeeResponse> GetEmployeeAsync(DcrWebService.GetEmployeeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetEmployeeResponse> GetEmployeeAsync(Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ValidateProver", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.ValidateProverResponse> ValidateProverAsync(DcrWebService.ValidateProverRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ValidateProverResponse> ValidateProverAsync(Prover.Modules.UnionGas.DcrWebService.ValidateProverRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetTestReasons", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetTestReasonsResponse> GetTestReasonsAsync(DcrWebService.GetTestReasonsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetTestReasonsResponse> GetTestReasonsAsync(Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetOpenRotaryJobNumbers", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetOpenRotaryJobNumbersResponse> GetOpenRotaryJobNumbersAsync(DcrWebService.GetOpenRotaryJobNumbersRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersResponse> GetOpenRotaryJobNumbersAsync(Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/VerifyRotaryMeterIsInJob", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.VerifyRotaryMeterIsInJobResponse> VerifyRotaryMeterIsInJobAsync(DcrWebService.VerifyRotaryMeterIsInJobRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobResponse> VerifyRotaryMeterIsInJobAsync(Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedAcceptanceSampleMeterByBarcode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> GetValidatedComplianceSampleMeterByInventoryCodeAsync(DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> GetValidatedComplianceSampleMeterByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedComplianceSampleMeterByBarcode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedEvcDeviceByInventoryCode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetMeterDataByInventoryCode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeResponse> GetMeterDataByInventoryCodeAsync(DcrWebService.GetMeterDataByInventoryCodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeResponse> GetMeterDataByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetMeterDataByInventoryCodeAndSerialNumber", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> GetMeterDataByInventoryCodeAndSerialNumberAsync(DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> GetMeterDataByInventoryCodeAndSerialNumberAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetMeterDataByBarcode", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByBarcodeResponse> GetMeterDataByBarcodeAsync(DcrWebService.GetMeterDataByBarcodeRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeResponse> GetMeterDataByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetMeterListByJobNumber", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterListByJobNumberResponse> GetMeterListByJobNumberAsync(DcrWebService.GetMeterListByJobNumberRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberResponse> GetMeterListByJobNumberAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ParseProverTestFile", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.ParseProverTestFileResponse> ParseProverTestFileAsync(DcrWebService.ParseProverTestFileRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileResponse> ParseProverTestFileAsync(Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitProdTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.SubmitProdTestResultsResponse> SubmitProdTestResultsAsync(DcrWebService.SubmitProdTestResultsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsResponse> SubmitProdTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQADiaphragmTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQADiaphragmTestResultsResponse> SubmitQADiaphragmTestResultsAsync(DcrWebService.SubmitQADiaphragmTestResultsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsResponse> SubmitQADiaphragmTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQARotaryTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQARotaryTestResultsResponse> SubmitQARotaryTestResultsAsync(DcrWebService.SubmitQARotaryTestResultsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsResponse> SubmitQARotaryTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQATurbineTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQATurbineTestResultsResponse> SubmitQATurbineTestResultsAsync(DcrWebService.SubmitQATurbineTestResultsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsResponse> SubmitQATurbineTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQAEvcTestResults", ReplyAction="*")]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQAEvcTestResultsResponse> SubmitQAEvcTestResultsAsync(DcrWebService.SubmitQAEvcTestResultsRequest request);
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsResponse> SubmitQAEvcTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -5558,13 +5558,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetCurrentlyConnectedDatabase", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetCurrentlyConnectedDatabaseRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequestBody Body;
         
         public GetCurrentlyConnectedDatabaseRequest()
         {
         }
         
-        public GetCurrentlyConnectedDatabaseRequest(DcrWebService.GetCurrentlyConnectedDatabaseRequestBody Body)
+        public GetCurrentlyConnectedDatabaseRequest(Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5590,13 +5590,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetCurrentlyConnectedDatabaseResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetCurrentlyConnectedDatabaseResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseResponseBody Body;
         
         public GetCurrentlyConnectedDatabaseResponse()
         {
         }
         
-        public GetCurrentlyConnectedDatabaseResponse(DcrWebService.GetCurrentlyConnectedDatabaseResponseBody Body)
+        public GetCurrentlyConnectedDatabaseResponse(Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseResponseBody Body)
         {
             this.Body = Body;
         }
@@ -5630,13 +5630,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetEmployee", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetEmployeeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequestBody Body;
         
         public GetEmployeeRequest()
         {
         }
         
-        public GetEmployeeRequest(DcrWebService.GetEmployeeRequestBody Body)
+        public GetEmployeeRequest(Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5670,13 +5670,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetEmployeeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetEmployeeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetEmployeeResponseBody Body;
         
         public GetEmployeeResponse()
         {
         }
         
-        public GetEmployeeResponse(DcrWebService.GetEmployeeResponseBody Body)
+        public GetEmployeeResponse(Prover.Modules.UnionGas.DcrWebService.GetEmployeeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -5690,13 +5690,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.EmployeeDTO GetEmployeeResult;
+        public Prover.Modules.UnionGas.DcrWebService.EmployeeDTO GetEmployeeResult;
         
         public GetEmployeeResponseBody()
         {
         }
         
-        public GetEmployeeResponseBody(DcrWebService.EmployeeDTO GetEmployeeResult)
+        public GetEmployeeResponseBody(Prover.Modules.UnionGas.DcrWebService.EmployeeDTO GetEmployeeResult)
         {
             this.GetEmployeeResult = GetEmployeeResult;
         }
@@ -5710,13 +5710,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="ValidateProver", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.ValidateProverRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.ValidateProverRequestBody Body;
         
         public ValidateProverRequest()
         {
         }
         
-        public ValidateProverRequest(DcrWebService.ValidateProverRequestBody Body)
+        public ValidateProverRequest(Prover.Modules.UnionGas.DcrWebService.ValidateProverRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5750,13 +5750,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="ValidateProverResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.ValidateProverResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.ValidateProverResponseBody Body;
         
         public ValidateProverResponse()
         {
         }
         
-        public ValidateProverResponse(DcrWebService.ValidateProverResponseBody Body)
+        public ValidateProverResponse(Prover.Modules.UnionGas.DcrWebService.ValidateProverResponseBody Body)
         {
             this.Body = Body;
         }
@@ -5790,13 +5790,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetTestReasons", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetTestReasonsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequestBody Body;
         
         public GetTestReasonsRequest()
         {
         }
         
-        public GetTestReasonsRequest(DcrWebService.GetTestReasonsRequestBody Body)
+        public GetTestReasonsRequest(Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5830,13 +5830,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetTestReasonsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetTestReasonsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetTestReasonsResponseBody Body;
         
         public GetTestReasonsResponse()
         {
         }
         
-        public GetTestReasonsResponse(DcrWebService.GetTestReasonsResponseBody Body)
+        public GetTestReasonsResponse(Prover.Modules.UnionGas.DcrWebService.GetTestReasonsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -5850,13 +5850,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.TestReasonDTO[] GetTestReasonsResult;
+        public Prover.Modules.UnionGas.DcrWebService.TestReasonDTO[] GetTestReasonsResult;
         
         public GetTestReasonsResponseBody()
         {
         }
         
-        public GetTestReasonsResponseBody(DcrWebService.TestReasonDTO[] GetTestReasonsResult)
+        public GetTestReasonsResponseBody(Prover.Modules.UnionGas.DcrWebService.TestReasonDTO[] GetTestReasonsResult)
         {
             this.GetTestReasonsResult = GetTestReasonsResult;
         }
@@ -5870,13 +5870,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetOpenRotaryJobNumbers", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetOpenRotaryJobNumbersRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequestBody Body;
         
         public GetOpenRotaryJobNumbersRequest()
         {
         }
         
-        public GetOpenRotaryJobNumbersRequest(DcrWebService.GetOpenRotaryJobNumbersRequestBody Body)
+        public GetOpenRotaryJobNumbersRequest(Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5902,13 +5902,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetOpenRotaryJobNumbersResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetOpenRotaryJobNumbersResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersResponseBody Body;
         
         public GetOpenRotaryJobNumbersResponse()
         {
         }
         
-        public GetOpenRotaryJobNumbersResponse(DcrWebService.GetOpenRotaryJobNumbersResponseBody Body)
+        public GetOpenRotaryJobNumbersResponse(Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersResponseBody Body)
         {
             this.Body = Body;
         }
@@ -5942,13 +5942,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="VerifyRotaryMeterIsInJob", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.VerifyRotaryMeterIsInJobRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequestBody Body;
         
         public VerifyRotaryMeterIsInJobRequest()
         {
         }
         
-        public VerifyRotaryMeterIsInJobRequest(DcrWebService.VerifyRotaryMeterIsInJobRequestBody Body)
+        public VerifyRotaryMeterIsInJobRequest(Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequestBody Body)
         {
             this.Body = Body;
         }
@@ -5986,13 +5986,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="VerifyRotaryMeterIsInJobResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.VerifyRotaryMeterIsInJobResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobResponseBody Body;
         
         public VerifyRotaryMeterIsInJobResponse()
         {
         }
         
-        public VerifyRotaryMeterIsInJobResponse(DcrWebService.VerifyRotaryMeterIsInJobResponseBody Body)
+        public VerifyRotaryMeterIsInJobResponse(Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6026,13 +6026,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedAcceptanceSampleMeterByInventoryCode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody Body;
         
         public GetValidatedAcceptanceSampleMeterByInventoryCodeRequest()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByInventoryCodeRequest(DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody Body)
+        public GetValidatedAcceptanceSampleMeterByInventoryCodeRequest(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6070,13 +6070,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedAcceptanceSampleMeterByInventoryCodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody Body;
         
         public GetValidatedAcceptanceSampleMeterByInventoryCodeResponse()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByInventoryCodeResponse(DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody Body)
+        public GetValidatedAcceptanceSampleMeterByInventoryCodeResponse(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6090,13 +6090,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByInventoryCodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByInventoryCodeResult;
         
         public GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody(DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByInventoryCodeResult)
+        public GetValidatedAcceptanceSampleMeterByInventoryCodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByInventoryCodeResult)
         {
             this.GetValidatedAcceptanceSampleMeterByInventoryCodeResult = GetValidatedAcceptanceSampleMeterByInventoryCodeResult;
         }
@@ -6110,13 +6110,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedAcceptanceSampleMeterByBarcode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody Body;
         
         public GetValidatedAcceptanceSampleMeterByBarcodeRequest()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByBarcodeRequest(DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody Body)
+        public GetValidatedAcceptanceSampleMeterByBarcodeRequest(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6154,13 +6154,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedAcceptanceSampleMeterByBarcodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponseBody Body;
         
         public GetValidatedAcceptanceSampleMeterByBarcodeResponse()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByBarcodeResponse(DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponseBody Body)
+        public GetValidatedAcceptanceSampleMeterByBarcodeResponse(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6174,13 +6174,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcodeResult;
         
         public GetValidatedAcceptanceSampleMeterByBarcodeResponseBody()
         {
         }
         
-        public GetValidatedAcceptanceSampleMeterByBarcodeResponseBody(DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcodeResult)
+        public GetValidatedAcceptanceSampleMeterByBarcodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcodeResult)
         {
             this.GetValidatedAcceptanceSampleMeterByBarcodeResult = GetValidatedAcceptanceSampleMeterByBarcodeResult;
         }
@@ -6194,13 +6194,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedComplianceSampleMeterByInventoryCode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody Body;
         
         public GetValidatedComplianceSampleMeterByInventoryCodeRequest()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByInventoryCodeRequest(DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody Body)
+        public GetValidatedComplianceSampleMeterByInventoryCodeRequest(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6234,13 +6234,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedComplianceSampleMeterByInventoryCodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponseBody Body;
         
         public GetValidatedComplianceSampleMeterByInventoryCodeResponse()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByInventoryCodeResponse(DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponseBody Body)
+        public GetValidatedComplianceSampleMeterByInventoryCodeResponse(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6254,13 +6254,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByInventoryCodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByInventoryCodeResult;
         
         public GetValidatedComplianceSampleMeterByInventoryCodeResponseBody()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByInventoryCodeResponseBody(DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByInventoryCodeResult)
+        public GetValidatedComplianceSampleMeterByInventoryCodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByInventoryCodeResult)
         {
             this.GetValidatedComplianceSampleMeterByInventoryCodeResult = GetValidatedComplianceSampleMeterByInventoryCodeResult;
         }
@@ -6274,13 +6274,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedComplianceSampleMeterByBarcode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody Body;
         
         public GetValidatedComplianceSampleMeterByBarcodeRequest()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByBarcodeRequest(DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody Body)
+        public GetValidatedComplianceSampleMeterByBarcodeRequest(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6314,13 +6314,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedComplianceSampleMeterByBarcodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponseBody Body;
         
         public GetValidatedComplianceSampleMeterByBarcodeResponse()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByBarcodeResponse(DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponseBody Body)
+        public GetValidatedComplianceSampleMeterByBarcodeResponse(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6334,13 +6334,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcodeResult;
         
         public GetValidatedComplianceSampleMeterByBarcodeResponseBody()
         {
         }
         
-        public GetValidatedComplianceSampleMeterByBarcodeResponseBody(DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcodeResult)
+        public GetValidatedComplianceSampleMeterByBarcodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcodeResult)
         {
             this.GetValidatedComplianceSampleMeterByBarcodeResult = GetValidatedComplianceSampleMeterByBarcodeResult;
         }
@@ -6354,13 +6354,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedEvcDeviceByInventoryCode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody Body;
         
         public GetValidatedEvcDeviceByInventoryCodeRequest()
         {
         }
         
-        public GetValidatedEvcDeviceByInventoryCodeRequest(DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody Body)
+        public GetValidatedEvcDeviceByInventoryCodeRequest(Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6394,13 +6394,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetValidatedEvcDeviceByInventoryCodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponseBody Body;
         
         public GetValidatedEvcDeviceByInventoryCodeResponse()
         {
         }
         
-        public GetValidatedEvcDeviceByInventoryCodeResponse(DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponseBody Body)
+        public GetValidatedEvcDeviceByInventoryCodeResponse(Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6414,13 +6414,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetValidatedEvcDeviceByInventoryCodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedEvcDeviceByInventoryCodeResult;
         
         public GetValidatedEvcDeviceByInventoryCodeResponseBody()
         {
         }
         
-        public GetValidatedEvcDeviceByInventoryCodeResponseBody(DcrWebService.MeterDTO GetValidatedEvcDeviceByInventoryCodeResult)
+        public GetValidatedEvcDeviceByInventoryCodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetValidatedEvcDeviceByInventoryCodeResult)
         {
             this.GetValidatedEvcDeviceByInventoryCodeResult = GetValidatedEvcDeviceByInventoryCodeResult;
         }
@@ -6434,13 +6434,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByInventoryCode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByInventoryCodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequestBody Body;
         
         public GetMeterDataByInventoryCodeRequest()
         {
         }
         
-        public GetMeterDataByInventoryCodeRequest(DcrWebService.GetMeterDataByInventoryCodeRequestBody Body)
+        public GetMeterDataByInventoryCodeRequest(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6474,13 +6474,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByInventoryCodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByInventoryCodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeResponseBody Body;
         
         public GetMeterDataByInventoryCodeResponse()
         {
         }
         
-        public GetMeterDataByInventoryCodeResponse(DcrWebService.GetMeterDataByInventoryCodeResponseBody Body)
+        public GetMeterDataByInventoryCodeResponse(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6494,13 +6494,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetMeterDataByInventoryCodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByInventoryCodeResult;
         
         public GetMeterDataByInventoryCodeResponseBody()
         {
         }
         
-        public GetMeterDataByInventoryCodeResponseBody(DcrWebService.MeterDTO GetMeterDataByInventoryCodeResult)
+        public GetMeterDataByInventoryCodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByInventoryCodeResult)
         {
             this.GetMeterDataByInventoryCodeResult = GetMeterDataByInventoryCodeResult;
         }
@@ -6514,13 +6514,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByInventoryCodeAndSerialNumber", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody Body;
         
         public GetMeterDataByInventoryCodeAndSerialNumberRequest()
         {
         }
         
-        public GetMeterDataByInventoryCodeAndSerialNumberRequest(DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody Body)
+        public GetMeterDataByInventoryCodeAndSerialNumberRequest(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6558,13 +6558,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByInventoryCodeAndSerialNumberResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponseBody Body;
         
         public GetMeterDataByInventoryCodeAndSerialNumberResponse()
         {
         }
         
-        public GetMeterDataByInventoryCodeAndSerialNumberResponse(DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponseBody Body)
+        public GetMeterDataByInventoryCodeAndSerialNumberResponse(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6578,13 +6578,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetMeterDataByInventoryCodeAndSerialNumberResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByInventoryCodeAndSerialNumberResult;
         
         public GetMeterDataByInventoryCodeAndSerialNumberResponseBody()
         {
         }
         
-        public GetMeterDataByInventoryCodeAndSerialNumberResponseBody(DcrWebService.MeterDTO GetMeterDataByInventoryCodeAndSerialNumberResult)
+        public GetMeterDataByInventoryCodeAndSerialNumberResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByInventoryCodeAndSerialNumberResult)
         {
             this.GetMeterDataByInventoryCodeAndSerialNumberResult = GetMeterDataByInventoryCodeAndSerialNumberResult;
         }
@@ -6598,13 +6598,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByBarcode", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByBarcodeRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequestBody Body;
         
         public GetMeterDataByBarcodeRequest()
         {
         }
         
-        public GetMeterDataByBarcodeRequest(DcrWebService.GetMeterDataByBarcodeRequestBody Body)
+        public GetMeterDataByBarcodeRequest(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6638,13 +6638,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterDataByBarcodeResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterDataByBarcodeResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeResponseBody Body;
         
         public GetMeterDataByBarcodeResponse()
         {
         }
         
-        public GetMeterDataByBarcodeResponse(DcrWebService.GetMeterDataByBarcodeResponseBody Body)
+        public GetMeterDataByBarcodeResponse(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6658,13 +6658,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO GetMeterDataByBarcodeResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByBarcodeResult;
         
         public GetMeterDataByBarcodeResponseBody()
         {
         }
         
-        public GetMeterDataByBarcodeResponseBody(DcrWebService.MeterDTO GetMeterDataByBarcodeResult)
+        public GetMeterDataByBarcodeResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO GetMeterDataByBarcodeResult)
         {
             this.GetMeterDataByBarcodeResult = GetMeterDataByBarcodeResult;
         }
@@ -6678,13 +6678,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterListByJobNumber", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterListByJobNumberRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequestBody Body;
         
         public GetMeterListByJobNumberRequest()
         {
         }
         
-        public GetMeterListByJobNumberRequest(DcrWebService.GetMeterListByJobNumberRequestBody Body)
+        public GetMeterListByJobNumberRequest(Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6718,13 +6718,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="GetMeterListByJobNumberResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.GetMeterListByJobNumberResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberResponseBody Body;
         
         public GetMeterListByJobNumberResponse()
         {
         }
         
-        public GetMeterListByJobNumberResponse(DcrWebService.GetMeterListByJobNumberResponseBody Body)
+        public GetMeterListByJobNumberResponse(Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6738,13 +6738,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.MeterDTO[] GetMeterListByJobNumberResult;
+        public Prover.Modules.UnionGas.DcrWebService.MeterDTO[] GetMeterListByJobNumberResult;
         
         public GetMeterListByJobNumberResponseBody()
         {
         }
         
-        public GetMeterListByJobNumberResponseBody(DcrWebService.MeterDTO[] GetMeterListByJobNumberResult)
+        public GetMeterListByJobNumberResponseBody(Prover.Modules.UnionGas.DcrWebService.MeterDTO[] GetMeterListByJobNumberResult)
         {
             this.GetMeterListByJobNumberResult = GetMeterListByJobNumberResult;
         }
@@ -6758,13 +6758,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="ParseProverTestFile", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.ParseProverTestFileRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequestBody Body;
         
         public ParseProverTestFileRequest()
         {
         }
         
-        public ParseProverTestFileRequest(DcrWebService.ParseProverTestFileRequestBody Body)
+        public ParseProverTestFileRequest(Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6798,13 +6798,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="ParseProverTestFileResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.ParseProverTestFileResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileResponseBody Body;
         
         public ParseProverTestFileResponse()
         {
         }
         
-        public ParseProverTestFileResponse(DcrWebService.ParseProverTestFileResponseBody Body)
+        public ParseProverTestFileResponse(Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6818,13 +6818,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.FileAsEntities ParseProverTestFileResult;
+        public Prover.Modules.UnionGas.DcrWebService.FileAsEntities ParseProverTestFileResult;
         
         public ParseProverTestFileResponseBody()
         {
         }
         
-        public ParseProverTestFileResponseBody(DcrWebService.FileAsEntities ParseProverTestFileResult)
+        public ParseProverTestFileResponseBody(Prover.Modules.UnionGas.DcrWebService.FileAsEntities ParseProverTestFileResult)
         {
             this.ParseProverTestFileResult = ParseProverTestFileResult;
         }
@@ -6838,13 +6838,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitProdTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitProdTestResultsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequestBody Body;
         
         public SubmitProdTestResultsRequest()
         {
         }
         
-        public SubmitProdTestResultsRequest(DcrWebService.SubmitProdTestResultsRequestBody Body)
+        public SubmitProdTestResultsRequest(Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6858,13 +6858,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.DiaphragmTestResult tr;
+        public Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr;
         
         public SubmitProdTestResultsRequestBody()
         {
         }
         
-        public SubmitProdTestResultsRequestBody(DcrWebService.DiaphragmTestResult tr)
+        public SubmitProdTestResultsRequestBody(Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr)
         {
             this.tr = tr;
         }
@@ -6878,13 +6878,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitProdTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitProdTestResultsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsResponseBody Body;
         
         public SubmitProdTestResultsResponse()
         {
         }
         
-        public SubmitProdTestResultsResponse(DcrWebService.SubmitProdTestResultsResponseBody Body)
+        public SubmitProdTestResultsResponse(Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6918,13 +6918,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQADiaphragmTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQADiaphragmTestResultsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequestBody Body;
         
         public SubmitQADiaphragmTestResultsRequest()
         {
         }
         
-        public SubmitQADiaphragmTestResultsRequest(DcrWebService.SubmitQADiaphragmTestResultsRequestBody Body)
+        public SubmitQADiaphragmTestResultsRequest(Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -6938,13 +6938,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.DiaphragmTestResult tr;
+        public Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr;
         
         public SubmitQADiaphragmTestResultsRequestBody()
         {
         }
         
-        public SubmitQADiaphragmTestResultsRequestBody(DcrWebService.DiaphragmTestResult tr)
+        public SubmitQADiaphragmTestResultsRequestBody(Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr)
         {
             this.tr = tr;
         }
@@ -6958,13 +6958,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQADiaphragmTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQADiaphragmTestResultsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsResponseBody Body;
         
         public SubmitQADiaphragmTestResultsResponse()
         {
         }
         
-        public SubmitQADiaphragmTestResultsResponse(DcrWebService.SubmitQADiaphragmTestResultsResponseBody Body)
+        public SubmitQADiaphragmTestResultsResponse(Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -6998,13 +6998,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQARotaryTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQARotaryTestResultsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequestBody Body;
         
         public SubmitQARotaryTestResultsRequest()
         {
         }
         
-        public SubmitQARotaryTestResultsRequest(DcrWebService.SubmitQARotaryTestResultsRequestBody Body)
+        public SubmitQARotaryTestResultsRequest(Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -7018,13 +7018,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.QARunRotaryTestResult tr;
+        public Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult tr;
         
         public SubmitQARotaryTestResultsRequestBody()
         {
         }
         
-        public SubmitQARotaryTestResultsRequestBody(DcrWebService.QARunRotaryTestResult tr)
+        public SubmitQARotaryTestResultsRequestBody(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult tr)
         {
             this.tr = tr;
         }
@@ -7038,13 +7038,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQARotaryTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQARotaryTestResultsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsResponseBody Body;
         
         public SubmitQARotaryTestResultsResponse()
         {
         }
         
-        public SubmitQARotaryTestResultsResponse(DcrWebService.SubmitQARotaryTestResultsResponseBody Body)
+        public SubmitQARotaryTestResultsResponse(Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -7078,13 +7078,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQATurbineTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQATurbineTestResultsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequestBody Body;
         
         public SubmitQATurbineTestResultsRequest()
         {
         }
         
-        public SubmitQATurbineTestResultsRequest(DcrWebService.SubmitQATurbineTestResultsRequestBody Body)
+        public SubmitQATurbineTestResultsRequest(Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -7098,13 +7098,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.QARunTurbineTestResult tr;
+        public Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult tr;
         
         public SubmitQATurbineTestResultsRequestBody()
         {
         }
         
-        public SubmitQATurbineTestResultsRequestBody(DcrWebService.QARunTurbineTestResult tr)
+        public SubmitQATurbineTestResultsRequestBody(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult tr)
         {
             this.tr = tr;
         }
@@ -7118,13 +7118,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQATurbineTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQATurbineTestResultsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsResponseBody Body;
         
         public SubmitQATurbineTestResultsResponse()
         {
         }
         
-        public SubmitQATurbineTestResultsResponse(DcrWebService.SubmitQATurbineTestResultsResponseBody Body)
+        public SubmitQATurbineTestResultsResponse(Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -7158,13 +7158,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQAEvcTestResults", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQAEvcTestResultsRequestBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequestBody Body;
         
         public SubmitQAEvcTestResultsRequest()
         {
         }
         
-        public SubmitQAEvcTestResultsRequest(DcrWebService.SubmitQAEvcTestResultsRequestBody Body)
+        public SubmitQAEvcTestResultsRequest(Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequestBody Body)
         {
             this.Body = Body;
         }
@@ -7178,13 +7178,13 @@ namespace DcrWebService
     {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
-        public DcrWebService.QARunEvcTestResult[] trs;
+        public Prover.Modules.UnionGas.DcrWebService.QARunEvcTestResult[] trs;
         
         public SubmitQAEvcTestResultsRequestBody()
         {
         }
         
-        public SubmitQAEvcTestResultsRequestBody(DcrWebService.QARunEvcTestResult[] trs)
+        public SubmitQAEvcTestResultsRequestBody(Prover.Modules.UnionGas.DcrWebService.QARunEvcTestResult[] trs)
         {
             this.trs = trs;
         }
@@ -7198,13 +7198,13 @@ namespace DcrWebService
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQAEvcTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
-        public DcrWebService.SubmitQAEvcTestResultsResponseBody Body;
+        public Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsResponseBody Body;
         
         public SubmitQAEvcTestResultsResponse()
         {
         }
         
-        public SubmitQAEvcTestResultsResponse(DcrWebService.SubmitQAEvcTestResultsResponseBody Body)
+        public SubmitQAEvcTestResultsResponse(Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsResponseBody Body)
         {
             this.Body = Body;
         }
@@ -7231,13 +7231,13 @@ namespace DcrWebService
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    public interface DCRWebServiceSoapChannel : DcrWebService.DCRWebServiceSoap, System.ServiceModel.IClientChannel
+    public interface DCRWebServiceSoapChannel : Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    public partial class DCRWebServiceSoapClient : System.ServiceModel.ClientBase<DcrWebService.DCRWebServiceSoap>, DcrWebService.DCRWebServiceSoap
+    public partial class DCRWebServiceSoapClient : System.ServiceModel.ClientBase<Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap>, Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap
     {
         
         /// <summary>
@@ -7274,299 +7274,299 @@ namespace DcrWebService
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetCurrentlyConnectedDatabaseResponse> DcrWebService.DCRWebServiceSoap.GetCurrentlyConnectedDatabaseAsync(DcrWebService.GetCurrentlyConnectedDatabaseRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetCurrentlyConnectedDatabaseAsync(Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequest request)
         {
             return base.Channel.GetCurrentlyConnectedDatabaseAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetCurrentlyConnectedDatabaseResponse> GetCurrentlyConnectedDatabaseAsync()
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseResponse> GetCurrentlyConnectedDatabaseAsync()
         {
-            DcrWebService.GetCurrentlyConnectedDatabaseRequest inValue = new DcrWebService.GetCurrentlyConnectedDatabaseRequest();
-            inValue.Body = new DcrWebService.GetCurrentlyConnectedDatabaseRequestBody();
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetCurrentlyConnectedDatabaseAsync(inValue);
+            Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetCurrentlyConnectedDatabaseRequestBody();
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetCurrentlyConnectedDatabaseAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetEmployeeResponse> DcrWebService.DCRWebServiceSoap.GetEmployeeAsync(DcrWebService.GetEmployeeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetEmployeeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetEmployeeAsync(Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequest request)
         {
             return base.Channel.GetEmployeeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetEmployeeResponse> GetEmployeeAsync(string empNumber)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetEmployeeResponse> GetEmployeeAsync(string empNumber)
         {
-            DcrWebService.GetEmployeeRequest inValue = new DcrWebService.GetEmployeeRequest();
-            inValue.Body = new DcrWebService.GetEmployeeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetEmployeeRequestBody();
             inValue.Body.empNumber = empNumber;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetEmployeeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetEmployeeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.ValidateProverResponse> DcrWebService.DCRWebServiceSoap.ValidateProverAsync(DcrWebService.ValidateProverRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ValidateProverResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.ValidateProverAsync(Prover.Modules.UnionGas.DcrWebService.ValidateProverRequest request)
         {
             return base.Channel.ValidateProverAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.ValidateProverResponse> ValidateProverAsync(string proverNbr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ValidateProverResponse> ValidateProverAsync(string proverNbr)
         {
-            DcrWebService.ValidateProverRequest inValue = new DcrWebService.ValidateProverRequest();
-            inValue.Body = new DcrWebService.ValidateProverRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.ValidateProverRequest inValue = new Prover.Modules.UnionGas.DcrWebService.ValidateProverRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.ValidateProverRequestBody();
             inValue.Body.proverNbr = proverNbr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).ValidateProverAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).ValidateProverAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetTestReasonsResponse> DcrWebService.DCRWebServiceSoap.GetTestReasonsAsync(DcrWebService.GetTestReasonsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetTestReasonsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetTestReasonsAsync(Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequest request)
         {
             return base.Channel.GetTestReasonsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetTestReasonsResponse> GetTestReasonsAsync(string reasonType)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetTestReasonsResponse> GetTestReasonsAsync(string reasonType)
         {
-            DcrWebService.GetTestReasonsRequest inValue = new DcrWebService.GetTestReasonsRequest();
-            inValue.Body = new DcrWebService.GetTestReasonsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetTestReasonsRequestBody();
             inValue.Body.reasonType = reasonType;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetTestReasonsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetTestReasonsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetOpenRotaryJobNumbersResponse> DcrWebService.DCRWebServiceSoap.GetOpenRotaryJobNumbersAsync(DcrWebService.GetOpenRotaryJobNumbersRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetOpenRotaryJobNumbersAsync(Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequest request)
         {
             return base.Channel.GetOpenRotaryJobNumbersAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetOpenRotaryJobNumbersResponse> GetOpenRotaryJobNumbersAsync()
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersResponse> GetOpenRotaryJobNumbersAsync()
         {
-            DcrWebService.GetOpenRotaryJobNumbersRequest inValue = new DcrWebService.GetOpenRotaryJobNumbersRequest();
-            inValue.Body = new DcrWebService.GetOpenRotaryJobNumbersRequestBody();
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetOpenRotaryJobNumbersAsync(inValue);
+            Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetOpenRotaryJobNumbersRequestBody();
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetOpenRotaryJobNumbersAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.VerifyRotaryMeterIsInJobResponse> DcrWebService.DCRWebServiceSoap.VerifyRotaryMeterIsInJobAsync(DcrWebService.VerifyRotaryMeterIsInJobRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.VerifyRotaryMeterIsInJobAsync(Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequest request)
         {
             return base.Channel.VerifyRotaryMeterIsInJobAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.VerifyRotaryMeterIsInJobResponse> VerifyRotaryMeterIsInJobAsync(int jobNumber, string bodyBarcode)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobResponse> VerifyRotaryMeterIsInJobAsync(int jobNumber, string bodyBarcode)
         {
-            DcrWebService.VerifyRotaryMeterIsInJobRequest inValue = new DcrWebService.VerifyRotaryMeterIsInJobRequest();
-            inValue.Body = new DcrWebService.VerifyRotaryMeterIsInJobRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequest inValue = new Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.VerifyRotaryMeterIsInJobRequestBody();
             inValue.Body.jobNumber = jobNumber;
             inValue.Body.bodyBarcode = bodyBarcode;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).VerifyRotaryMeterIsInJobAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).VerifyRotaryMeterIsInJobAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> DcrWebService.DCRWebServiceSoap.GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest request)
         {
             return base.Channel.GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(string inventoryCode, int jobNbr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(string inventoryCode, int jobNbr)
         {
-            DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest inValue = new DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest();
-            inValue.Body = new DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.jobNbr = jobNbr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> DcrWebService.DCRWebServiceSoap.GetValidatedAcceptanceSampleMeterByBarcodeAsync(DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetValidatedAcceptanceSampleMeterByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest request)
         {
             return base.Channel.GetValidatedAcceptanceSampleMeterByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(string barcode, int jobNbr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(string barcode, int jobNbr)
         {
-            DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest inValue = new DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest();
-            inValue.Body = new DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody();
             inValue.Body.barcode = barcode;
             inValue.Body.jobNbr = jobNbr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByBarcodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByBarcodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> DcrWebService.DCRWebServiceSoap.GetValidatedComplianceSampleMeterByInventoryCodeAsync(DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetValidatedComplianceSampleMeterByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest request)
         {
             return base.Channel.GetValidatedComplianceSampleMeterByInventoryCodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> GetValidatedComplianceSampleMeterByInventoryCodeAsync(string inventoryCode)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> GetValidatedComplianceSampleMeterByInventoryCodeAsync(string inventoryCode)
         {
-            DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest inValue = new DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest();
-            inValue.Body = new DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByInventoryCodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByInventoryCodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> DcrWebService.DCRWebServiceSoap.GetValidatedComplianceSampleMeterByBarcodeAsync(DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetValidatedComplianceSampleMeterByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest request)
         {
             return base.Channel.GetValidatedComplianceSampleMeterByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(string barcodeNbr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(string barcodeNbr)
         {
-            DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest inValue = new DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest();
-            inValue.Body = new DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody();
             inValue.Body.barcodeNbr = barcodeNbr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByBarcodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByBarcodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> DcrWebService.DCRWebServiceSoap.GetValidatedEvcDeviceByInventoryCodeAsync(DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetValidatedEvcDeviceByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest request)
         {
             return base.Channel.GetValidatedEvcDeviceByInventoryCodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(string inventoryCode)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(string inventoryCode)
         {
-            DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest inValue = new DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest();
-            inValue.Body = new DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByInventoryCodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByInventoryCodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeResponse> DcrWebService.DCRWebServiceSoap.GetMeterDataByInventoryCodeAsync(DcrWebService.GetMeterDataByInventoryCodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetMeterDataByInventoryCodeAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequest request)
         {
             return base.Channel.GetMeterDataByInventoryCodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeResponse> GetMeterDataByInventoryCodeAsync(string inventoryCode)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeResponse> GetMeterDataByInventoryCodeAsync(string inventoryCode)
         {
-            DcrWebService.GetMeterDataByInventoryCodeRequest inValue = new DcrWebService.GetMeterDataByInventoryCodeRequest();
-            inValue.Body = new DcrWebService.GetMeterDataByInventoryCodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByInventoryCodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByInventoryCodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> DcrWebService.DCRWebServiceSoap.GetMeterDataByInventoryCodeAndSerialNumberAsync(DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetMeterDataByInventoryCodeAndSerialNumberAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest request)
         {
             return base.Channel.GetMeterDataByInventoryCodeAndSerialNumberAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> GetMeterDataByInventoryCodeAndSerialNumberAsync(string inventoryCode, string serialNumber)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberResponse> GetMeterDataByInventoryCodeAndSerialNumberAsync(string inventoryCode, string serialNumber)
         {
-            DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest inValue = new DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest();
-            inValue.Body = new DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByInventoryCodeAndSerialNumberRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.serialNumber = serialNumber;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByInventoryCodeAndSerialNumberAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByInventoryCodeAndSerialNumberAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterDataByBarcodeResponse> DcrWebService.DCRWebServiceSoap.GetMeterDataByBarcodeAsync(DcrWebService.GetMeterDataByBarcodeRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetMeterDataByBarcodeAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequest request)
         {
             return base.Channel.GetMeterDataByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetMeterDataByBarcodeResponse> GetMeterDataByBarcodeAsync(string barcode)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeResponse> GetMeterDataByBarcodeAsync(string barcode)
         {
-            DcrWebService.GetMeterDataByBarcodeRequest inValue = new DcrWebService.GetMeterDataByBarcodeRequest();
-            inValue.Body = new DcrWebService.GetMeterDataByBarcodeRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetMeterDataByBarcodeRequestBody();
             inValue.Body.barcode = barcode;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByBarcodeAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetMeterDataByBarcodeAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.GetMeterListByJobNumberResponse> DcrWebService.DCRWebServiceSoap.GetMeterListByJobNumberAsync(DcrWebService.GetMeterListByJobNumberRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.GetMeterListByJobNumberAsync(Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequest request)
         {
             return base.Channel.GetMeterListByJobNumberAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.GetMeterListByJobNumberResponse> GetMeterListByJobNumberAsync(int jobNbr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberResponse> GetMeterListByJobNumberAsync(int jobNbr)
         {
-            DcrWebService.GetMeterListByJobNumberRequest inValue = new DcrWebService.GetMeterListByJobNumberRequest();
-            inValue.Body = new DcrWebService.GetMeterListByJobNumberRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequest inValue = new Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.GetMeterListByJobNumberRequestBody();
             inValue.Body.jobNbr = jobNbr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).GetMeterListByJobNumberAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).GetMeterListByJobNumberAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.ParseProverTestFileResponse> DcrWebService.DCRWebServiceSoap.ParseProverTestFileAsync(DcrWebService.ParseProverTestFileRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.ParseProverTestFileAsync(Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequest request)
         {
             return base.Channel.ParseProverTestFileAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.ParseProverTestFileResponse> ParseProverTestFileAsync(string fileString)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileResponse> ParseProverTestFileAsync(string fileString)
         {
-            DcrWebService.ParseProverTestFileRequest inValue = new DcrWebService.ParseProverTestFileRequest();
-            inValue.Body = new DcrWebService.ParseProverTestFileRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequest inValue = new Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.ParseProverTestFileRequestBody();
             inValue.Body.fileString = fileString;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).ParseProverTestFileAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).ParseProverTestFileAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.SubmitProdTestResultsResponse> DcrWebService.DCRWebServiceSoap.SubmitProdTestResultsAsync(DcrWebService.SubmitProdTestResultsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.SubmitProdTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequest request)
         {
             return base.Channel.SubmitProdTestResultsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.SubmitProdTestResultsResponse> SubmitProdTestResultsAsync(DcrWebService.DiaphragmTestResult tr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsResponse> SubmitProdTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr)
         {
-            DcrWebService.SubmitProdTestResultsRequest inValue = new DcrWebService.SubmitProdTestResultsRequest();
-            inValue.Body = new DcrWebService.SubmitProdTestResultsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.SubmitProdTestResultsRequestBody();
             inValue.Body.tr = tr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).SubmitProdTestResultsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).SubmitProdTestResultsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQADiaphragmTestResultsResponse> DcrWebService.DCRWebServiceSoap.SubmitQADiaphragmTestResultsAsync(DcrWebService.SubmitQADiaphragmTestResultsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.SubmitQADiaphragmTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequest request)
         {
             return base.Channel.SubmitQADiaphragmTestResultsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.SubmitQADiaphragmTestResultsResponse> SubmitQADiaphragmTestResultsAsync(DcrWebService.DiaphragmTestResult tr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsResponse> SubmitQADiaphragmTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.DiaphragmTestResult tr)
         {
-            DcrWebService.SubmitQADiaphragmTestResultsRequest inValue = new DcrWebService.SubmitQADiaphragmTestResultsRequest();
-            inValue.Body = new DcrWebService.SubmitQADiaphragmTestResultsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.SubmitQADiaphragmTestResultsRequestBody();
             inValue.Body.tr = tr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).SubmitQADiaphragmTestResultsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).SubmitQADiaphragmTestResultsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQARotaryTestResultsResponse> DcrWebService.DCRWebServiceSoap.SubmitQARotaryTestResultsAsync(DcrWebService.SubmitQARotaryTestResultsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.SubmitQARotaryTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequest request)
         {
             return base.Channel.SubmitQARotaryTestResultsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.SubmitQARotaryTestResultsResponse> SubmitQARotaryTestResultsAsync(DcrWebService.QARunRotaryTestResult tr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsResponse> SubmitQARotaryTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.QARunRotaryTestResult tr)
         {
-            DcrWebService.SubmitQARotaryTestResultsRequest inValue = new DcrWebService.SubmitQARotaryTestResultsRequest();
-            inValue.Body = new DcrWebService.SubmitQARotaryTestResultsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.SubmitQARotaryTestResultsRequestBody();
             inValue.Body.tr = tr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).SubmitQARotaryTestResultsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).SubmitQARotaryTestResultsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQATurbineTestResultsResponse> DcrWebService.DCRWebServiceSoap.SubmitQATurbineTestResultsAsync(DcrWebService.SubmitQATurbineTestResultsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.SubmitQATurbineTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequest request)
         {
             return base.Channel.SubmitQATurbineTestResultsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.SubmitQATurbineTestResultsResponse> SubmitQATurbineTestResultsAsync(DcrWebService.QARunTurbineTestResult tr)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsResponse> SubmitQATurbineTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.QARunTurbineTestResult tr)
         {
-            DcrWebService.SubmitQATurbineTestResultsRequest inValue = new DcrWebService.SubmitQATurbineTestResultsRequest();
-            inValue.Body = new DcrWebService.SubmitQATurbineTestResultsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.SubmitQATurbineTestResultsRequestBody();
             inValue.Body.tr = tr;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).SubmitQATurbineTestResultsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).SubmitQATurbineTestResultsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<DcrWebService.SubmitQAEvcTestResultsResponse> DcrWebService.DCRWebServiceSoap.SubmitQAEvcTestResultsAsync(DcrWebService.SubmitQAEvcTestResultsRequest request)
+        System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsResponse> Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap.SubmitQAEvcTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequest request)
         {
             return base.Channel.SubmitQAEvcTestResultsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<DcrWebService.SubmitQAEvcTestResultsResponse> SubmitQAEvcTestResultsAsync(DcrWebService.QARunEvcTestResult[] trs)
+        public System.Threading.Tasks.Task<Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsResponse> SubmitQAEvcTestResultsAsync(Prover.Modules.UnionGas.DcrWebService.QARunEvcTestResult[] trs)
         {
-            DcrWebService.SubmitQAEvcTestResultsRequest inValue = new DcrWebService.SubmitQAEvcTestResultsRequest();
-            inValue.Body = new DcrWebService.SubmitQAEvcTestResultsRequestBody();
+            Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequest inValue = new Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequest();
+            inValue.Body = new Prover.Modules.UnionGas.DcrWebService.SubmitQAEvcTestResultsRequestBody();
             inValue.Body.trs = trs;
-            return ((DcrWebService.DCRWebServiceSoap)(this)).SubmitQAEvcTestResultsAsync(inValue);
+            return ((Prover.Modules.UnionGas.DcrWebService.DCRWebServiceSoap)(this)).SubmitQAEvcTestResultsAsync(inValue);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()

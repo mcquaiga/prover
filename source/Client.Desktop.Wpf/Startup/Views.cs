@@ -27,20 +27,11 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<IWindowFactory, WindowFactory>();
             services.AddSingleton(c => new MainWindow());
 
-            //var homeViewModelFactory = (s) => new HomeViewModel(s, )
-            //services.AddSingleton<IViewFor<HomeViewModel>>(c => new HomeView());
-
-            //services.AddSingleton<Func<IScreenManager, HomeViewModel>>(c =>
-            //    (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
-
-            //services.AddSingleton<HomeViewModel>(c =>
-            //    c.GetService<Func<IScreenManager, HomeViewModel>>().Invoke(c.GetService<IScreenManager>()));
-
-            //services.AddSingleton(c => new MainViewModel(c, c.GetService<IScreenManager>(), c.GetService<Func<IScreenManager, HomeViewModel>>()));
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreenManager, ScreenManager>();
             services.AddSingleton<IScreen>(c => c.GetService<ScreenManager>());
-            //services.AddSingleton<IScreen, IScreenManager>();
+            services.AddSingleton<Func<IScreenManager, IRoutableViewModel>>(c =>
+                (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();

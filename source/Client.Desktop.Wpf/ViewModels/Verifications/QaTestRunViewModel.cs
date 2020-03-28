@@ -14,6 +14,7 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
+using Prover.Domain.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -23,10 +24,11 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
-        public QaTestRunViewModel(ILogger<QaTestRunViewModel> logger, IScreenManager screenManager,
+        public QaTestRunViewModel(
+            ILogger<QaTestRunViewModel> logger, 
+            IScreenManager screenManager,
             VerificationTestService verificationService,
-            DeviceRepository deviceRepository)
-            : base(screenManager)
+            DeviceRepository deviceRepository) : base(screenManager)
         {
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
                 x => x.SelectedBaudRate,

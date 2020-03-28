@@ -27,19 +27,21 @@ namespace Client.Desktop.Wpf
         {
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
             
+           
             using (var splashScreen = new StartScreen())
             {
                 splashScreen.Show();
 
                 var task = Initialize(args);
+
                 HandleExceptions(task);
                 _host = task.Result;
 
+                App.InitializeComponent();
                 splashScreen.Owner = LoadMainWindow();
                 splashScreen.Close();
             }
 
-            App.InitializeComponent();
             _host.Services.GetService<UnhandledExceptionHandler>();
             App.Run();
         }
