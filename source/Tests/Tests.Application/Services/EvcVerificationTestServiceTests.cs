@@ -33,8 +33,8 @@ namespace Application.Services.Tests
         private IDeviceRepository _repo;
 
         private IAsyncRepository<EvcVerificationTest> _testRepo;
-        private VerificationTestService<EvcVerificationTest, EvcVerificationViewModel> _viewModelService;
-        private EvcVerificationTestService<EvcVerificationTest> _modelService;
+        private VerificationTestService _viewModelService;
+        private EvcVerificationTestService _modelService;
 
         [TestMethod]
         public async Task AddOrUpdateVerificationTestTest()
@@ -148,8 +148,8 @@ namespace Application.Services.Tests
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
 
             _testRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, _repo);
-            _modelService = new EvcVerificationTestService<EvcVerificationTest>(_testRepo);
-            _viewModelService = new VerificationTestService<EvcVerificationTest, EvcVerificationViewModel>(_testRepo, new VerificationViewModelFactory(), null, null);
+            _modelService = new EvcVerificationTestService(_testRepo);
+            _viewModelService = new VerificationTestService(_testRepo, new VerificationViewModelFactory(), null, null);
         }
     }
 

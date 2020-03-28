@@ -46,8 +46,8 @@ namespace Client.Desktop.Wpf.Startup
             var db = StorageDefaults.CreateDatabase(connectionString);
             services.AddSingleton(c => db);
 
-            services.AddSingleton<EvcVerificationTestService<EvcVerificationTest>>();
-            services.AddSingleton<VerificationTestService<EvcVerificationTest, EvcVerificationViewModel>>();
+            services.AddSingleton<EvcVerificationTestService>();
+            services.AddSingleton<VerificationTestService>();
 
             services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c 
                 => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
