@@ -32,10 +32,10 @@ namespace Client.Desktop.Wpf.Dialogs
                 i.SetOutput(answer);
             });
 
-            MessageInteractions.ShowYesNo.RegisterHandler(async i =>
+            MessageInteractions.ShowError.RegisterHandler(async i =>
             {
-                var answer = await dialogManager.ShowQuestion(i.Input);
-                i.SetOutput(answer);
+                await dialogManager.ShowMessage(i.Input, "Error");
+                i.SetOutput(Unit.Default);
             });
 
             MessageInteractions.GetInputString.RegisterHandler(async i =>
@@ -104,7 +104,6 @@ namespace Client.Desktop.Wpf.Dialogs
             this.WhenAnyValue(x => x.DialogContent)
                 .Select(v => v?.ViewModel as IDialogViewModel)
                 .ToPropertyEx(this, x => x.DialogViewModel);
-
 
             DialogMessageInteractions.Register(this);
             interactionsRegistery?.Invoke(this);

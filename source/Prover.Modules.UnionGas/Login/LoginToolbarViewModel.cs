@@ -1,4 +1,5 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.ViewModels;
@@ -25,6 +26,14 @@ namespace Prover.Modules.UnionGas.Login
 
                 return await loginService.Login(result);
             });
+            LogIn.ThrownExceptions
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Do(async ex => await MessageInteractions.ShowError.Handle($"An error occured signing on. {Environment.NewLine} {ex.Message}"))
+                .Subscribe();
+
+            LogIn.Where(x => !x)
+                .Do(_ => NotificationInteractions.SnackBarMessage.Handle("Employee not found"))
+                .Subscribe();
 
             LogOut = ReactiveCommand.CreateFromTask(loginService.Logout);
 

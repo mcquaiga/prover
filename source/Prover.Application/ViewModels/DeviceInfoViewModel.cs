@@ -1,15 +1,12 @@
 ﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
+using Prover.Domain.EvcVerifications;
+using ReactiveUI;
 
 namespace Prover.Application.ViewModels
 {
-    public class DeviceInfoViewModel
+    public class DeviceInfoViewModel : ReactiveObject
     {
-        public DeviceInfoViewModel(DeviceInstance device, EvcVerificationViewModel test) : this(device)
-        {
-            VerificationTest = test;
-        }
-
         public DeviceInfoViewModel(DeviceInstance device)
         {
             Device = device;
@@ -21,7 +18,6 @@ namespace Prover.Application.ViewModels
             PulseOutput = device.ItemGroup<PulseOutputItems>();
         }
 
-        public EvcVerificationViewModel VerificationTest { get; protected set; }
         public DeviceInstance Device { get; }
         public SiteInformationItems SiteInfo { get; protected set; }
         public PressureItems Pressure { get; protected set; }
@@ -30,8 +26,16 @@ namespace Prover.Application.ViewModels
         public PulseOutputItems PulseOutput { get; protected set; }
         public VolumeItems Volume { get; protected set; }
 
-        public string TestDateTimePretty => $"{VerificationTest.TestDateTime:g}";
-
         public string CompanyNumber => SiteInfo.SiteId2;
+    }
+
+    public class SiteInformationViewModel : DeviceInfoViewModel
+    {
+        public EvcVerificationViewModel Test { get; }
+
+        public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel) : base(device)
+        {
+            Test = verificationViewModel;
+        }
     }
 }

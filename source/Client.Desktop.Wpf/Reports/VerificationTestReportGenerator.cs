@@ -29,7 +29,7 @@ namespace Client.Desktop.Wpf.Reports
 
         public async Task GenerateAndViewReport(EvcVerificationViewModel verificationTest)
         {
-            await _screenManager.ChangeView(verificationTest);
+            //await _screenManager.ChangeView(verificationTest);
             return;
 
 

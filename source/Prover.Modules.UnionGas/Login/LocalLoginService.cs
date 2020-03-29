@@ -12,7 +12,7 @@ namespace Prover.Modules.UnionGas.Login
     {
         private static readonly ICollection<EmployeeDTO> _employeeTest = new List<EmployeeDTO>
         {
-            new EmployeeDTO {EmployeeName = "Adam", EmployeeNbr = "123", Id = "1"},
+            new EmployeeDTO {EmployeeName = "Adam McQuaig", EmployeeNbr = "123", Id = "1"},
             new EmployeeDTO {EmployeeName = "Tony", EmployeeNbr = "1234", Id = "2"},
             new EmployeeDTO {EmployeeName = "Glen", EmployeeNbr = "12345", Id = "3"},
             new EmployeeDTO {EmployeeName = "Kyle", EmployeeNbr = "123456", Id = "4"}

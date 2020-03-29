@@ -43,12 +43,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
                 TestManager = await verificationService.NewTestManager(SelectedDeviceType);
                 
-                //CurrentStateView = ScreenManager.ViewLocator.ResolveView(TestManager);
             }, canStartTest);
-
-            //var canGoForward = this.WhenAnyValue(x => x.TestManager).Select(test => test != null);
-            //NavigateForward =
-            //    ReactiveCommand.CreateFromTask(async () => await screenManager.ChangeView(TestManager), canGoForward);
 
             deviceRepository.All.Connect()
                 .Filter(d => !d.IsHidden)

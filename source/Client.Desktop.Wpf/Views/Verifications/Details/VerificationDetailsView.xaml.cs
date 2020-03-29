@@ -40,9 +40,6 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                     TestPointItems = null;
                 }).DisposeWith(d);
             });
-
-            //if (CorrectionTestsItemTemplate == null)
-            //    CorrectionTestsItemTemplate = (DataTemplate) FindResource("CorrectionsReadOnlyDataTemplate");
         }
 
         public DataTemplate CorrectionTestsItemTemplate

@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using System.ServiceModel;
+
 namespace Prover.Modules.UnionGas.DcrWebService
 {
     using System.Runtime.Serialization;
@@ -7583,7 +7584,7 @@ namespace Prover.Modules.UnionGas.DcrWebService
         {
             if ((endpointConfiguration == EndpointConfiguration.DCRWebServiceSoap))
             {
-                System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
+                BasicHttpBinding result = new BasicHttpBinding();
                 result.MaxBufferSize = int.MaxValue;
                 result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
                 result.MaxReceivedMessageSize = int.MaxValue;

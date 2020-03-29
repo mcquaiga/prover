@@ -12,7 +12,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable, IRoutableViewModel
+    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable
     {
         [Reactive] public DeviceInstance Device { get; set; }
 
@@ -32,16 +32,13 @@ namespace Prover.Application.ViewModels
         [Reactive]
         public ICollection<VerificationViewModel> OtherTests { get; set; } = new List<VerificationViewModel>();
 
-        public DeviceInfoViewModel DeviceInfo { get; set; }
+        public SiteInformationViewModel DeviceInfo { get; set; }
 
         public VolumeViewModelBase VolumeTest => Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
-
-        public string UrlPathSegment { get; }
-        public IScreen HostScreen { get; }
-
+        
         public void Initialize()
         {
-            DeviceInfo = new DeviceInfoViewModel(Device, this);
+            DeviceInfo = new SiteInformationViewModel(Device, this);
         }
 
         protected override void Disposing()
@@ -50,5 +47,8 @@ namespace Prover.Application.ViewModels
             OtherTests.ForEach(t => t.DisposeWith(Cleanup));
             Tests.Clear();
         }
+
+        //public string UrlPathSegment { get; } = "EvcVerificationTest";
+        //public IScreen HostScreen { get; }
     }
 }

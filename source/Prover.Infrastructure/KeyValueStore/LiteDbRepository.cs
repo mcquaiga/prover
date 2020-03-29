@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using LiteDB;
 using Prover.Shared.Domain;
@@ -52,6 +53,7 @@ namespace Prover.Infrastructure.KeyValueStore
         where T : AggregateRoot
     {
         protected readonly ILiteDatabase Context;
+        protected ISubject<T> All;
 
         public LiteDbAsyncRepository(ILiteDatabase context)
         {
@@ -61,7 +63,7 @@ namespace Prover.Infrastructure.KeyValueStore
         public async Task<T> AddAsync(T entity)
         {
             var success = Context.GetCollection<T>().Upsert(entity);
-
+            All?.OnNext(entity);
             return success ? entity : null;
         }
 
@@ -70,6 +72,7 @@ namespace Prover.Infrastructure.KeyValueStore
             try
             {
                 Context.GetCollection<T>().Upsert(entity);
+                All?.OnNext(entity);
             }
             catch (Exception ex)
             {
@@ -91,20 +94,19 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
         {
-            return Context.GetCollection<T>().Find(spec.Criteria).ToList();
+            return await Task.Run(() =>Context.GetCollection<T>().Find(spec.Criteria).ToList());
         }
 
         public async Task<IReadOnlyList<T>> ListAsync()
         {
-            return Context.GetCollection<T>().FindAll().ToList();
+            return await Task.Run(() => Context.GetCollection<T>().FindAll().ToList());
         }
 
         public IObservable<T> List(Expression<Func<T, bool>> predicate = null)
         {
-            if (predicate == null)
-                return Context.GetCollection<T>().FindAll().ToObservable();
-
-            return Context.GetCollection<T>().Find(predicate).ToObservable();
+            All = predicate == null ? 
+                (ISubject<T>) Context.GetCollection<T>().FindAll().ToObservable() : (ISubject<T>) Context.GetCollection<T>().Find(predicate).ToObservable();
+            return All;
         }
     }
 }

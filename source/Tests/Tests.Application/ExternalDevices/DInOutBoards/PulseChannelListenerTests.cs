@@ -2,9 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Shared.Interfaces;
-using Tests.Application;
+using Tests.Shared;
 
-namespace Application.ExternalDevices.DInOutBoards.Tests
+namespace Tests.Application.ExternalDevices.DInOutBoards
 {
 
     [TestClass]

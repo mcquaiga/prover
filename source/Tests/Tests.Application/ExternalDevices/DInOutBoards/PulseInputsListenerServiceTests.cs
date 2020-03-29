@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
-using Application.ExternalDevices.DInOutBoards.Tests;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,6 +9,7 @@ using Prover.Application.Hardware;
 using Prover.Application.Services;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
+using Tests.Shared;
 
 namespace Tests.Application.ExternalDevices.DInOutBoards
 {

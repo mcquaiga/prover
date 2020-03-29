@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Prover.Domain.EvcVerifications;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
+
 // ReSharper disable RedundantTypeArgumentsOfMethod
 
 namespace Prover.Infrastructure
@@ -19,6 +20,23 @@ namespace Prover.Infrastructure
 
         public static string ConnectionString { get; private set; } = ".\\prover_data.db";
         public static ILiteDatabase Database => Lazy.Value;
+
+        public static IDeviceTypeCacheSource<DeviceType> CreateDefaultDeviceTypeCache()
+        {
+            var repo = CreateDefaultDeviceTypeRepository();
+            return new DeviceTypeCacheSource(repo);
+        }
+
+        public static IRepository<DeviceType> CreateDefaultDeviceTypeRepository() =>
+            new DeviceTypeLiteDbRepository(Database);
+
+        public static ILiteDatabase CreateLiteDb(string path)
+        {
+            if (!Lazy.IsValueCreated && !string.IsNullOrEmpty(path)) 
+                ConnectionString = path;
+
+            return Database;
+        }
 
         private static void ConfigureMappings(ILiteDatabase db = null)
         {
@@ -45,23 +63,6 @@ namespace Prover.Infrastructure
 
             mapper.Entity<DeviceType>().Ignore(d => d.Factory);
         }
-
-        public static ILiteDatabase CreateDatabase(string connectionString)
-        {
-            if (!Lazy.IsValueCreated)
-                ConnectionString = connectionString;
-
-            return Database;
-        }
-
-        public static IDeviceTypeCacheSource<DeviceType> CreateDefaultDeviceTypeCache()
-        {
-            var repo = CreateDefaultDeviceTypeRepository();
-            return new DeviceTypeCacheSource(repo);
-        }
-
-        public static IRepository<DeviceType> CreateDefaultDeviceTypeRepository() =>
-            new DeviceTypeLiteDbRepository(Database);
 
         private static ILiteDatabase CreateDatabaseForLazy()
         {

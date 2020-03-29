@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Client.Desktop.Wpf
@@ -12,11 +13,10 @@ namespace Client.Desktop.Wpf
     public partial class App : System.Windows.Application
     {
         public IHost AppHost { get; set; }
-
-        public static string VersionNumber { get; } = GetVersionNumber();
-
+        
         public App()
         {
+            _application = this;
             AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad;
         }
 
@@ -24,6 +24,13 @@ namespace Client.Desktop.Wpf
         {
             Console.WriteLine(args.LoadedAssembly);
         }
+    }
+
+    public partial class App
+    {
+        private static App _application;
+        public static string Title => GetAppTitle();
+        public static string VersionNumber { get; } = GetVersionNumber();
 
         private static string GetVersionNumber()
         {
@@ -32,5 +39,12 @@ namespace Client.Desktop.Wpf
             return fileVersionInfo.FileVersion;
         }
 
+        private static string GetAppTitle()
+        {
+            
+            return $"EVC Prover" +
+                   $" - v{GetVersionNumber()}" +
+                   $" - { _application.AppHost.Services.GetService<IHostEnvironment>().EnvironmentName }";
+        }
     }
 }

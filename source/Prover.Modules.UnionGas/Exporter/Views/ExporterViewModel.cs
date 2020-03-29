@@ -31,7 +31,6 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             DeviceTypes = deviceRepository.GetAll().ToList();
             DeviceTypes.Add(new AllDeviceType {Id = Guid.Empty, Name = "All"});
 
-            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, DeviceType>(f => f);
             PrintReport =
                 ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
                 {
@@ -39,13 +38,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     await reportService.GenerateAndViewReport(viewModel);
                 });
 
+            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, DeviceType>(f => f);
+
             var deviceFilter = FilterByTypeCommand.Select(BuildDeviceFilter);
             var includeFilter = this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
 
             service.FetchTests()
                 .Connect()
                 .Filter(deviceFilter)
-                .Filter(includeFilter)
+                //.Filter(includeFilter)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Transform(t => new VerificationGridViewModel(t))
                 .Bind(out var allNotExported)

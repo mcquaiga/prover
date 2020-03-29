@@ -12,7 +12,7 @@
     d:DesignWidth="300"
     x:TypeArguments="viewModels:HomeViewModel"
     mc:Ignorable="d">
-    <Grid>
+    <Grid VerticalAlignment="Center">
         <ItemsControl x:Name="MenuItems">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

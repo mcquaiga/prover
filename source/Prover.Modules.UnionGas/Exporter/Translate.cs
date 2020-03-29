@@ -1,22 +1,20 @@
 ﻿//using System;
 //using System.Globalization;
 //using System.Threading.Tasks;
+//using Devices.Core.Items;
+//using Microsoft.Extensions.Logging;
 //using Newtonsoft.Json;
-//using NLog;
-//using PressureTest = UnionGas.MASA.DCRWebService.PressureTest;
-//using SuperFactorTest = UnionGas.MASA.DCRWebService.SuperFactorTest;
-//using TemperatureTest = UnionGas.MASA.DCRWebService.TemperatureTest;
-//using VerificationTest = UnionGas.MASA.DCRWebService.VerificationTest;
-//using VolumeTest = UnionGas.MASA.DCRWebService.VolumeTest;
+//using Prover.Domain.EvcVerifications;
+//using Prover.Modules.UnionGas.DcrWebService;
 
-//namespace Modules.UnionGas.Exporter
+//namespace Prover.Modules.UnionGas.Exporter
 //{
 //    public static class Translate
 //    {
 //        private const int ProverNumberId = 239;
-//        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+//        //private static readonly ILogger Log = ;
 
-//        public static QARunEvcTestResult RunTranslationForExport(Instrument instrument)
+//        public static QARunEvcTestResult RunTranslationForExport(EvcVerificationTest instrument)
 //        {
 //            var qaRun = new QARunEvcTestResult
 //            {
@@ -25,7 +23,7 @@
 //                TestDate = instrument.TestDateTime,
 //                DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
 //                MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? (instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterTypeDescription : string.Empty,
-//                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ? 
+//                MeterDisplacement = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary" ?
 //                    Convert.ToDouble((instrument.VolumeTest.DriveType as RotaryDrive).Meter.MeterDisplacement) : 0,
 //                ConfirmedStatus = instrument.HasPassed ? "PASS" : "FAIL",
 //                FirmwareVersion = Convert.ToDouble(instrument.FirmwareVersion),
@@ -90,7 +88,7 @@
 //            Task.Run(() =>
 //            {
 //                var objectString = JsonConvert.SerializeObject(qaRun, Formatting.Indented,
-//                    new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
+//                    new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 //                Log.Debug($"Exporting Instrument object to MASA: {Environment.NewLine} {objectString}");
 //            });
 
@@ -162,14 +160,14 @@
 //                    SubmitRunIndicator = "Y"
 //                };
 //                Log.Info("Failed Object:" + JsonConvert.SerializeObject(qaRun).ToString());
-                
+
 //                return qaRun;
 //            }
-//            catch(Exception ex)
+//            catch (Exception ex)
 //            {
 //                Log.Error(ex);
 //            }
-            
+
 //            return null;
 //        }
 
@@ -230,7 +228,7 @@
 //            return new TemperatureTest
 //            {
 //                ActualFactor = Convert.ToDouble(RoundTo(vt.TemperatureTest.ActualFactor, 4)),
-//                GaugeTemperature = Convert.ToDouble(RoundTo((decimal) vt.TemperatureTest.Gauge, 2)),
+//                GaugeTemperature = Convert.ToDouble(RoundTo((decimal)vt.TemperatureTest.Gauge, 2)),
 //                EvcFactor = Convert.ToDouble(RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.Factor).NumericValue, 4)),
 //                EvcTemperature = Convert.ToDouble(RoundTo(vt.TemperatureTest.Items.GetItem(ItemCodes.Temperature.GasTemperature).NumericValue, 2)),
 //                PercentError = Convert.ToDouble(RoundTo(vt.TemperatureTest.PercentError, 2))

@@ -59,12 +59,6 @@ namespace Prover.Modules.UnionGas.Exporter
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// The Export
-        /// </summary>
-        /// <param name="instrumentsForExport">The instrumentsForExport<see cref="IEnumerable{Instrument}"/></param>
-        /// <returns>The <see cref="Task"/></returns>
         public async Task<bool> Export(IEnumerable<EvcVerificationTest> testsForExport)
         {
             //var forExport = testsForExport as EvcVerificationTest[] ?? testsForExport.ToArray();

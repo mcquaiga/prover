@@ -15,7 +15,7 @@ namespace Client.Desktop.Wpf
 {
     internal static class Program
     {
-        private static readonly App App = new App {ShutdownMode = ShutdownMode.OnExplicitShutdown};
+        private static App App;
         private static MainWindow _mainWindow;
         private static IHost _host;
 
@@ -27,16 +27,15 @@ namespace Client.Desktop.Wpf
         {
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
             
-           
             using (var splashScreen = new StartScreen())
             {
                 splashScreen.Show();
 
                 var task = Initialize(args);
-
                 HandleExceptions(task);
                 _host = task.Result;
 
+                App = new App { AppHost = _host, ShutdownMode = ShutdownMode.OnExplicitShutdown };
                 App.InitializeComponent();
                 splashScreen.Owner = LoadMainWindow();
                 splashScreen.Close();

@@ -10,9 +10,9 @@ using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
-using Tests.Application;
+using Tests.Shared;
 
-namespace Application.Services.Tests
+namespace Tests.Application.Services
 {
     [TestClass]
     public class VerificationViewModelServiceTests

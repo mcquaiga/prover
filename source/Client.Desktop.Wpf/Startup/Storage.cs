@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
@@ -19,7 +20,7 @@ namespace Client.Desktop.Wpf.Startup
 {
     public class Storage : IHaveStartupTask
     {
-        private const string KeyValueStoreConnectionString = "LocalData";
+        private const string KeyValueStoreConnectionString = "LiteDb";
         private readonly IServiceProvider _provider;
 
         public Storage(IServiceProvider provider) => _provider = provider;
@@ -37,24 +38,29 @@ namespace Client.Desktop.Wpf.Startup
 
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
+            var config = host.Configuration;
+
             services.AddStartTask<Storage>();
-
-            var connectionString = Environment.ExpandEnvironmentVariables(
-                host.Configuration.GetConnectionString(KeyValueStoreConnectionString));
-
-            //LiteDb
-            var db = StorageDefaults.CreateDatabase(connectionString);
-            services.AddSingleton(c => db);
+            
+            if (config.IsLiteDb())
+                AddLiteDb(services, host);
 
             services.AddSingleton<EvcVerificationTestService>();
             services.AddSingleton<VerificationTestService>();
 
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c 
-                => new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
-
-            //services.AddSingleton<IDeviceTypeCacheSource<DeviceType>, DeviceTypeCacheSource>();
             services.AddSingleton<DeviceRepository>();
-            services.AddSingleton<IRepository<DeviceType>>(c => new LiteDbRepository<DeviceType>(db));
+        }
+
+        private static void AddLiteDb(IServiceCollection services, HostBuilderContext host)
+        {
+            var db = StorageDefaults.CreateLiteDb(host.Configuration.LiteDbPath());
+            services.AddSingleton(c => db);
+
+            services.AddSingleton<IRepository<DeviceType>>(c =>
+                new LiteDbRepository<DeviceType>(db));
+
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
+                new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

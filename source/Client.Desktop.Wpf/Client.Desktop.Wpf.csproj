@@ -28,6 +28,7 @@
     <FileVersion>4.0.0.0</FileVersion>
     <PackageIcon>clipboard-check-blue.ico</PackageIcon>
     <ApplicationIcon>clipboard-check-white.ico</ApplicationIcon>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,7 +45,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </Resource>
-    <Resource Include="clipboard-check-white.ico" />
+    <Resource Include="Resources\clipboard-check-white.ico" />
     <Page Remove="Modules\**" />
     <Page Remove="Screens\**" />
     <Page Remove="ViewModels\Certificates\**" />
@@ -60,12 +61,10 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
-    <None Remove="Resources\clipboard-check-white.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -99,7 +98,11 @@
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.10" />
     <PackageReference Include="ReactiveUI.WPF" Version="11.2.3" />
     <PackageReference Include="Splat" Version="9.3.11" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
@@ -247,4 +250,8 @@
       <HintPath>..\lib\squirrel\Squirrel.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Debug copy &quot;$(ProjectDir)\appsettings.Development.json&quot; &quot;$(TargetDir)\appsettings.Development.json&quot;&#xD;&#xA;" />
+  </Target>
 </Project>

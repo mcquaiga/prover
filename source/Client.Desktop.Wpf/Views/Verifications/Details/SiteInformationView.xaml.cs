@@ -2,6 +2,8 @@
 using System.Reactive.Disposables;
 using System.Windows;
 using Client.Desktop.Wpf.Extensions;
+using Devices.Core.Interfaces;
+using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels;
 using Prover.Shared;
 using ReactiveUI;
@@ -11,7 +13,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
     /// <summary>
     ///     Interaction logic for SiteInformationView.xaml
     /// </summary>
-    public partial class SiteInformationView : ReactiveUserControl<DeviceInfoViewModel>
+    public partial class SiteInformationView
     {
         public SiteInformationView()
         {
@@ -20,14 +22,13 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
             this.WhenActivated(d =>
             {
                 DeviceNameTextBlock.Text = ViewModel.Device.DeviceType.Name;
-                TestDateBlock.Text = ViewModel.TestDateTimePretty;
+                TestDateBlock.Text = $"{ViewModel.Test.TestDateTime:g}";
                 //this.OneWayBind(ViewModel, vm => vm.VerificationTest.TestDateTime, v => v.TestDateBlock.Text, value => $"{value:g}").DisposeWith(d);
 
-                CompositionTypeTextBlock.Text =
-                    Enum.GetName(typeof(CompositionType), ViewModel.VerificationTest.CompositionType);
+                CompositionTypeTextBlock.Text = ViewModel.Device.CompositionShort();
 
                 DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
-                    ViewModel.VerificationTest.DriveType.InputType);
+                    ViewModel.Test.VolumeTest.DriveType.InputType);
 
                 CompanyNumberText.Text = ViewModel.CompanyNumber;
                 SerialNumberText.Text = ViewModel.SiteInfo.SerialNumber;
@@ -66,6 +67,15 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                     TemperatureInfoSection.Visibility = Visibility.Collapsed;
                 }
 
+
+                //Pulse Outputs
+                var channelA = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
+                ChannelAUnitsTextBlock.Text = channelA.Units.ToString();
+                ChannelAScalingTextBlock.Text = channelA.Scaling.ToString();
+
+                var channelB = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_B);
+                ChannelBUnitsTextBlock.Text = channelB.Units.ToString();
+                ChannelBScalingTextBlock.Text = channelB.Scaling.ToString();
 
                 this.CleanUpDefaults().DisposeWith(d);
             });

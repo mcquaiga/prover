@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
@@ -36,7 +37,7 @@ namespace Client.Desktop.Wpf.Startup
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-
+            await Task.CompletedTask;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

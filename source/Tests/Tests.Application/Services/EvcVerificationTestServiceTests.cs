@@ -1,29 +1,26 @@
-﻿using DeepEqual.Syntax;
-using Devices;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
-using DynamicData;
-using Microsoft.Reactive.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using DeepEqual.Syntax;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
-using Microsoft.Extensions.Logging;
+using Devices.Romet.Core.Repository;
+using DynamicData;
+using Microsoft.Reactive.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Services;
+using Prover.Application.ViewModels;
+using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
-using Tests.Application;
-using Devices.Romet.Core.Repository;
-using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
+using Tests.Shared;
 
-namespace Application.Services.Tests
+namespace Tests.Application.Services
 {
     [TestClass]
     public class EvcVerificationTestServiceTests

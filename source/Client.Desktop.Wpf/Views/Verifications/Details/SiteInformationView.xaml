@@ -11,7 +11,7 @@
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="925"
     d:DesignWidth="400"
-    x:TypeArguments="viewModels:DeviceInfoViewModel"
+    x:TypeArguments="viewModels:SiteInformationViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -55,22 +55,23 @@
                     FontSize="28" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock x:Name="CompositionTypeTextBlock" Text="PTZ" />
+                    <TextBlock x:Name="CompositionTypeTextBlock" FontWeight="Light" />
                     <TextBlock FontWeight="UltraLight" Text=" | " />
-                    <TextBlock x:Name="DriveTypeTextBlock" Text="Rotary" />
+                    <TextBlock x:Name="DriveTypeTextBlock" FontWeight="Light" />
                 </StackPanel>
 
-                <TextBlock
+                <!--<TextBlock
                     x:Name="ClientTextBlock"
                     Margin="0,5,0,0"
-                    HorizontalAlignment="Center" />
+                    HorizontalAlignment="Center" />-->
                 <!--  Visibility="{Binding Instrument.Client, Converter={StaticResource NullToVisibilityConverter}}"  -->
-                <TextBlock
+                <!--<TextBlock
+                    x:Name="JobDescriptionBlock"
                     Margin="0,5,0,0"
                     HorizontalAlignment="Center"
                     Text="Job #">
                     <TextBlock x:Name="JobIdTextBlock" />
-                </TextBlock>
+                </TextBlock>-->
 
                 <!--
                     Text="{Binding JobIdDisplay}"

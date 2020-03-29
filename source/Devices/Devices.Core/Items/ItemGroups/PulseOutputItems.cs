@@ -45,5 +45,10 @@ namespace Devices.Core.Items.ItemGroups
         {
             return items.Channels.FirstOrDefault(c => c.Units == unitType);
         }
+
+        public static PulseOutputItems.ChannelItems GetChannel(this PulseOutputItems items, PulseOutputChannel channel)
+        {
+            return items.Channels.FirstOrDefault(c => c.Name == channel);
+        }
     }
 }

@@ -15,10 +15,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
-
     </UserControl.Resources>
     <Grid
         Margin="10,5"
@@ -59,9 +58,11 @@
             VerticalAlignment="Center"
             Orientation="Vertical"
             Visibility="Collapsed">
-            <StackPanel>
-                <TextBlock x:Name="WelcomeTextBlock" Text="Welcome, " />
-                <TextBlock x:Name="Username" />
+            <StackPanel Margin="4,4,4,12">
+                <TextBlock
+                    x:Name="WelcomeTextBlock"
+                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                    Text="Hi " />
             </StackPanel>
             <Button
                 x:Name="LogoutButton"

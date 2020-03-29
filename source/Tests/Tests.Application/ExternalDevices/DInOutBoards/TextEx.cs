@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Reactive.Testing;
 
-namespace Application.ExternalDevices.DInOutBoards.Tests
+namespace Tests.Application.ExternalDevices.DInOutBoards
 {
     public static class TextEx
     {

@@ -9,7 +9,7 @@ namespace Devices.Core.Interfaces
         public static CompositionType Composition(this DeviceInstance device) =>
             device.ItemGroup<SiteInformationItems>().CompositionType;
 
-        public static string CompositionString(this DeviceInstance device) => Composition(device).ToString();
+        public static string CompositionShort(this DeviceInstance device) => Composition(device).ToString();
         public static string CompositionDescription(this DeviceInstance device)
         {
             switch (Composition(device))

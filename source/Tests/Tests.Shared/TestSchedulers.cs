@@ -2,7 +2,7 @@
 using Microsoft.Reactive.Testing;
 using Prover.Shared.Interfaces;
 
-namespace Tests.Application
+namespace Tests.Shared
 {
     public sealed class TestSchedulers : ISchedulerProvider
     {

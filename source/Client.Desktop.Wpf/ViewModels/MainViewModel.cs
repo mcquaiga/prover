@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using Microsoft.Extensions.Configuration;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 
@@ -9,8 +10,11 @@ namespace Client.Desktop.Wpf.ViewModels
 {
     public class MainViewModel : ReactiveObject, IDisposable
     {
-        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems)
+        private readonly IConfiguration _config;
+
+        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, IConfiguration config)
         {
+            _config = config;
             ScreenManager = screenManager;
             ToolbarItems = toolbarItems;
 
@@ -19,7 +23,7 @@ namespace Client.Desktop.Wpf.ViewModels
             NavigateHome = ReactiveCommand.CreateFromTask(ScreenManager.GoHome);
         }
 
-        public string AppTitle { get; } = $"EVC Prover - v{App.VersionNumber}";
+        public string AppTitle { get; } = App.Title;
 
         public IScreenManager ScreenManager { get; }
         public IEnumerable<IToolbarItem> ToolbarItems { get; }

@@ -63,7 +63,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="22"><Run Text="EVC Prover" /></TextBlock>
+                    Style="{StaticResource MaterialDesignHeadline4TextBlock}"><Run Text="EVC Prover" /></TextBlock>
 
                 <ItemsControl
                     x:Name="ToolbarItemsControl"
@@ -93,6 +93,8 @@
 
                     <rxui:RoutedViewHost
                         x:Name="RoutedViewHost"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
                         DockPanel.Dock="Bottom" />

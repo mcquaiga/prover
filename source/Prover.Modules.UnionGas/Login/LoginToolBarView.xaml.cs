@@ -17,7 +17,7 @@ namespace Prover.Modules.UnionGas.Login
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.WelcomeTextBlock.Text, value => $"Welcome, {value}").DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.WelcomeTextBlock.Text, value => $"{value}").DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
@@ -26,6 +26,8 @@ namespace Prover.Modules.UnionGas.Login
                     .Merge(ViewModel.LoginService.LoggedIn.Select(x => false))
                     .Select(VisibleIfTrue)
                     .BindTo(this, view => view.ExecutingContent.Visibility).DisposeWith(d);
+
+                ViewModel.LogIn.ThrownExceptions.Subscribe(_ => ResetState());
 
                 ViewModel.LoginService.LoggedIn
                     .Select(VisibleIfTrue)
@@ -37,6 +39,11 @@ namespace Prover.Modules.UnionGas.Login
                     .BindTo(this, view => view.NotLoggedInContent.Visibility).DisposeWith(d);
             });
 
+            ResetState();
+        }
+
+        private void ResetState()
+        {
             NotLoggedInContent.Visibility = Visibility.Visible;
             LoggedInContent.Visibility = Visibility.Collapsed;
             ExecutingContent.Visibility = Visibility.Collapsed;

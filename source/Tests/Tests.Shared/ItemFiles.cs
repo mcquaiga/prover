@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Tests.Application
+namespace Tests.Shared
 {
     public static class ItemFiles
     {
