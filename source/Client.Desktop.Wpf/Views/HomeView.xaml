@@ -8,12 +8,10 @@
     xmlns:rxui="http://reactiveui.net"
     xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels"
     x:Name="HomeScreen"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     x:TypeArguments="viewModels:HomeViewModel"
     mc:Ignorable="d">
-    <Grid VerticalAlignment="Center">
-        <ItemsControl x:Name="MenuItems">
+    <Grid VerticalAlignment="Stretch">
+        <ItemsControl x:Name="MenuItems" VerticalAlignment="Stretch">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button
@@ -42,7 +40,7 @@
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid />
+                    <UniformGrid VerticalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

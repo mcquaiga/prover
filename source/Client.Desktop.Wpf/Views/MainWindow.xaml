@@ -93,8 +93,6 @@
 
                     <rxui:RoutedViewHost
                         x:Name="RoutedViewHost"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
                         DockPanel.Dock="Bottom" />

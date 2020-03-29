@@ -19,7 +19,7 @@ namespace Prover.Application.Services
     {
         private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
 
-        private readonly SourceCache<EvcVerificationTest, Guid> _tests =
+        private IObservableCache<EvcVerificationTest, Guid> _tests =
             new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
 
         private CompositeDisposable _cleanup;
@@ -29,8 +29,9 @@ namespace Prover.Application.Services
             _verificationRepository = verificationRepository;
             VerificationTests = _tests;
         }
+        
 
-        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; }
+        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; } 
 
         public async Task<EvcVerificationTest> AddOrUpdateVerificationTest(EvcVerificationTest evcVerificationTest)
         {
@@ -41,11 +42,11 @@ namespace Prover.Application.Services
 
         public IObservableCache<EvcVerificationTest, Guid> FetchTests()
         {
-            var allTests = GetTests().Publish();
+            var tests = GetTests().Publish();
 
-            VerificationTests = allTests.AsObservableCache();
+            VerificationTests = tests.AsObservableCache();
 
-            _cleanup = new CompositeDisposable(VerificationTests, allTests.Connect());
+            _cleanup = new CompositeDisposable(VerificationTests, tests.Connect());
 
             return VerificationTests;
         }

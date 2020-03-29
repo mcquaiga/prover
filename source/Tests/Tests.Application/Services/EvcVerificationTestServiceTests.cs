@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,13 +126,13 @@ namespace Tests.Application.Services
             await _testRepo.AddAsync(model);
 
             var dbObject = await _testRepo.GetAsync(model.Id);
-
             model.WithDeepEqual(dbObject)
                 .IgnoreSourceProperty(s => s.TestDateTime)
                 .Assert();
 
             var success = dbObject.Tests.OfType<VerificationTestPoint>().Count() == 3;
             success = success && dbObject.Tests.OfType<VerificationTestPoint>().All(p => p.Tests.Count >= 3);
+            Debug.WriteLine($"Verification test point count  {dbObject.Tests.OfType<VerificationTestPoint>().Count()}");
             Assert.IsTrue(success);
         }
 

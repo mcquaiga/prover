@@ -18,7 +18,7 @@ namespace Prover.Infrastructure
         private static readonly Lazy<ILiteDatabase> Lazy =
             new Lazy<ILiteDatabase>(CreateDatabaseForLazy);
 
-        public static string ConnectionString { get; private set; } = ".\\prover_data.db";
+        public static string ConnectionString { get; private set; } = "prover_data.db";
         public static ILiteDatabase Database => Lazy.Value;
 
         public static IDeviceTypeCacheSource<DeviceType> CreateDefaultDeviceTypeCache()
@@ -32,7 +32,7 @@ namespace Prover.Infrastructure
 
         public static ILiteDatabase CreateLiteDb(string path)
         {
-            if (!Lazy.IsValueCreated && !string.IsNullOrEmpty(path)) 
+            if (!Lazy.IsValueCreated && !string.IsNullOrEmpty(path))
                 ConnectionString = path;
 
             return Database;
