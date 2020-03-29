@@ -25,7 +25,8 @@ variables:
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
 
-jobs:
+
+  jobs:
   - job: Windows
     steps:
 
@@ -45,6 +46,8 @@ jobs:
           !**\obj\**   
           !**\Tests.Shared.dll  
         searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        runTestsInIsolation: True
+        rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
     - task: PublishBuildArtifacts@1
@@ -60,4 +63,3 @@ jobs:
         PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         ArtifactName: 'Tests'
         publishLocation: 'Container'
-       
