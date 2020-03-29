@@ -25,13 +25,12 @@ variables:
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
 
-stages:
-  - stage: Building
-    jobs:
+  jobs:
     - job: Windows
       steps:
   
       - task: DotNetCoreCLI@2
+        displayName: Build
         inputs:
           command: 'build'
           arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
