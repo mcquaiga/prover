@@ -46,7 +46,6 @@ jobs:
           !**\obj\**   
           !**\Tests.Shared.dll  
         searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-        runTestsInIsolation: True
         rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
