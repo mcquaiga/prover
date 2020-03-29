@@ -63,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Honeywell.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Tests", "Devices\Devices.Romet.Tests\Devices.Romet.Tests.csproj", "{2C3DD000-D52B-463E-BED2-90B0BF2A9ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prover.Modules.UnionGas.Tests", "Prover.Modules.UnionGas.Tests\Prover.Modules.UnionGas.Tests.csproj", "{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Modules.UnionGas.Tests", "Prover.Modules.UnionGas.Tests\Prover.Modules.UnionGas.Tests.csproj", "{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
