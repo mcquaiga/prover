@@ -25,39 +25,39 @@ variables:
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
 
-  jobs:
-    - job: Windows
-      steps:
-  
-      - task: DotNetCoreCLI@2
-        displayName: Build
-        inputs:
-          command: 'build'
-          arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
-      
-      - task: VSTest@2
-        displayName: Tests
-        inputs:
-          testSelector: 'testAssemblies'  
-          testAssemblyVer2: |
-            **\*tests*.dll
-            !**\*TestAdapter.dll
-            !**\obj\**   
-            !**\Tests.Shared.dll  
-          searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-          otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
+jobs:
+  - job: Windows
+    steps:
 
-      - task: PublishBuildArtifacts@1
-        displayName: Publish Binaries Artifact
-        inputs:
-          PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-          ArtifactName: 'Binaries'
-          publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+    
+    - task: VSTest@2
+      displayName: Tests
+      inputs:
+        testSelector: 'testAssemblies'  
+        testAssemblyVer2: |
+          **\*tests*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**   
+          !**\Tests.Shared.dll  
+        searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
-      - task: PublishBuildArtifacts@1
-        displayName: Publish Test Artifact
-        inputs:
-          PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-          ArtifactName: 'Tests'
-          publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Binaries Artifact
+      inputs:
+        PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+        ArtifactName: 'Binaries'
+        publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Test Artifact
+      inputs:
+        PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        ArtifactName: 'Tests'
+        publishLocation: 'Container'
        
