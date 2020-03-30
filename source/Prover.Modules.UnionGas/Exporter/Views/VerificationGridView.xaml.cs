@@ -1,4 +1,6 @@
-﻿namespace Prover.Modules.UnionGas.Exporter.Views
+﻿using ReactiveUI;
+
+namespace Prover.Modules.UnionGas.Exporter.Views
 {
     /// <summary>
     ///     Interaction logic for InstrumentView.xaml
@@ -8,6 +10,12 @@
         public VerificationGridView()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                TestDateTimeTextBlock.Text = $"{ViewModel.Test.TestDateTime:g}";
+
+            });
         }
 
     }

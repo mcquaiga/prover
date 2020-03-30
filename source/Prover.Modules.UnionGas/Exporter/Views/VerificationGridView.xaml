@@ -138,7 +138,7 @@
                     <TextBlock
                         x:Name="SiteNumber2TextBlock"
                         Style="{DynamicResource ValueStyle}"
-                        Text="{Binding DeviceInfo.CompanyNumber, FallbackValue=987654321}" />
+                        Text="{Binding DeviceInfo.CompanyNumber}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Serial #" />
@@ -156,10 +156,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Style="{DynamicResource LabelStyle}" Text="Date/Time" />
-                    <TextBlock
-                        x:Name="TestDateTimeTextBlock"
-                        Style="{DynamicResource ValueStyle}"
-                        Text="{Binding DeviceInfo.TestDateTimePretty}" />
+                    <TextBlock x:Name="TestDateTimeTextBlock" Style="{DynamicResource ValueStyle}" />
                 </StackPanel>
             </UniformGrid>
             <StackPanel

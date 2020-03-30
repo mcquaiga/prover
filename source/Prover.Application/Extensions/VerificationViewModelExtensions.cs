@@ -36,5 +36,10 @@ namespace Prover.Application.Extensions
         {
             return (VolumeTestRunViewModelBase) volumeTest.AllTests().FirstOrDefault();
         }
+
+        public static string TestDateTimePretty(this EvcVerificationViewModel test)
+        {
+            return $"{test.TestDateTime:g}";
+        }
     }
 }
