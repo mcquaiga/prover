@@ -159,19 +159,51 @@
                     Margin="5"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch">
-                    <!--<ListBox.ItemTemplate>
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Id}" />
-                                <TextBlock Text="{Binding TestDateTime}" />
-                                <Button
-                                    Command="{Binding ViewModel.PrintReport, ElementName=ExporterViewControl}"
-                                    CommandParameter="{Binding}"
-                                    Content="{materialDesign:PackIcon PrintPreview}" />
+                            <Grid>
+                                <reactiveUi:ViewModelViewHost ViewModel="{Binding}" />
 
-                            </StackPanel>
+                                <StackPanel
+                                    Margin="5"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+
+                                    <Button
+                                        x:Name="AddUserToTest"
+                                        Command="{Binding ViewModel.AddSignedOnUser, ElementName=ExporterViewControl}"
+                                        Style="{StaticResource FloatingActionButtonStyle}"
+                                        ToolTip="Add currently logged in user"
+                                        Visibility="{Binding Test.EmployeeId, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                    </Button>
+
+                                    <Button
+                                        Command="{Binding ViewModel.ExportVerification, ElementName=ExporterViewControl}"
+                                        Style="{StaticResource FloatingActionButtonStyle}"
+                                        ToolTip="Export">
+                                        <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                    </Button>
+                                    <Button
+                                        Command="{Binding ViewModel.PrintReport, ElementName=ExporterViewControl}"
+                                        CommandParameter="{Binding}"
+                                        Style="{StaticResource FloatingActionButtonStyle}"
+                                        ToolTip="View QA Test Report">
+                                        <materialDesign:PackIcon Kind="Printer" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                    </Button>
+                                    <Button
+                                        Command="{Binding ViewModel.ArchiveVerification, ElementName=ExporterViewControl}"
+                                        Style="{StaticResource FloatingActionButtonStyle}"
+                                        ToolTip="Archive Test">
+                                        <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+
                         </DataTemplate>
-                    </ListBox.ItemTemplate>-->
+                    </ListBox.ItemTemplate>
                 </ListBox>
                 <!--<ListBox
                         x:Name="VisibleItemsListBox"

@@ -44,6 +44,12 @@ namespace Client.Desktop.Wpf.Dialogs
                 i.SetOutput(answer);
             });
 
+            MessageInteractions.GetInput.RegisterHandler(async i =>
+            {
+                var answer = await dialogManager.ShowInputDialog<object>(i.Input);
+                i.SetOutput(answer);
+            });
+
             MessageInteractions.GetInputNumber.RegisterHandler(async i =>
             {
                 var answer = await dialogManager.ShowInputDialog<decimal>(i.Input);
@@ -52,7 +58,7 @@ namespace Client.Desktop.Wpf.Dialogs
         }
     }
 
-    public partial class DialogServiceManager : ReactiveObject, IDialogViewModel, IDialogServiceManager, IValidatableViewModel
+    public partial class DialogServiceManager : ReactiveObject, IDialogServiceManager
     {
         private readonly SerialDisposable _disposer = new SerialDisposable();
         private readonly ILogger<DialogServiceManager> _logger;
@@ -61,6 +67,7 @@ namespace Client.Desktop.Wpf.Dialogs
 
         public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
             IViewLocator viewLocator = null, Action<IDialogServiceManager> interactionsRegistery = null)
+        : this()
         {
             _services = services;
             _logger = logger ?? NullLogger<DialogServiceManager>.Instance;
@@ -109,16 +116,16 @@ namespace Client.Desktop.Wpf.Dialogs
             interactionsRegistery?.Invoke(this);
         }
 
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+        
         private ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; }
         private ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; }
         private ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
 
         public extern IViewFor DialogContent { [ObservableAsProperty] get; }
-        public extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
+        private extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
         public extern bool IsDialogOpen { [ObservableAsProperty] get; }
 
-        public ValidationContext ValidationContext { get; } = new ValidationContext();
+        
 
         public async Task Close()
         {
@@ -141,9 +148,9 @@ namespace Client.Desktop.Wpf.Dialogs
 
         public async Task<TResult> ShowInputDialog<TResult>(string message, string title = null)
         {
-            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
-            CloseCommand
-                .ToPropertyEx(this, x => x.IsDialogOpen, true);
+            //CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
+            //CloseCommand
+            //    .ToPropertyEx(this, x => x.IsDialogOpen, true);
 
             var inputDialog = new InputDialogViewModel(message, title);
 
@@ -169,7 +176,7 @@ namespace Client.Desktop.Wpf.Dialogs
             var view = new QuestionDialogView
             {
                 ViewModel = this,
-                MessageText = { Text = question }
+                MessageText = {Text = question}
             };
 
             await ShowDialogView.Execute(view);
@@ -189,5 +196,19 @@ namespace Client.Desktop.Wpf.Dialogs
             });
             return Observable.Return(view);
         }
+    }
+
+    public partial class DialogServiceManager : IDialogViewModel, IValidatableViewModel
+    {
+        private DialogServiceManager()
+        {
+            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
+            CloseCommand
+                .ToPropertyEx(this, x => x.IsDialogOpen, true);
+        }
+
+        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
+
+        public ValidationContext ValidationContext { get; } = new ValidationContext();
     }
 }

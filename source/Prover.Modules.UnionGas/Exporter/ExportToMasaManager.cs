@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -27,7 +28,7 @@ namespace Prover.Modules.UnionGas.Exporter
         /// <summary>
         /// Defines the _dcrWebService
         /// </summary>
-        private readonly DCRWebServiceCommunicator _dcrWebService;
+        private readonly DCRWebServiceSoap _dcrWebService;
 
         /// <summary>
         /// Defines the _loginService
@@ -43,13 +44,7 @@ namespace Prover.Modules.UnionGas.Exporter
 
         #region Constructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExportToMasaManager"/> class.
-        /// </summary>
-        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
-        /// <param name="loginService">The loginService<see cref="ILoginService{T}"/></param>
-        /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceCommunicator"/></param>
-        public ExportToMasaManager(EvcVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService, DCRWebServiceCommunicator dcrWebService)
+        public ExportToMasaManager(EvcVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService, DCRWebServiceSoap dcrWebService)
         {
             _testRunService = testRunService;
             _dcrWebService = dcrWebService;
@@ -61,52 +56,42 @@ namespace Prover.Modules.UnionGas.Exporter
         #region Methods
         public async Task<bool> Export(IEnumerable<EvcVerificationTest> testsForExport)
         {
-            //var forExport = testsForExport as EvcVerificationTest[] ?? testsForExport.ToArray();
-            //var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
+            var forExport = testsForExport as EvcVerificationTest[] ?? testsForExport.ToArray();
+            var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
 
-            //var isSuccess = await _dcrWebService.SendQaTestResults(qaTestRuns);
+            var isSuccess = await _dcrWebService.SendQaTestResults(qaTestRuns, Log);
 
-            //if (!isSuccess)
-            //    throw new Exception(
-            //        "An error occured sending test results to web service. Please see log for details.");
+            if (!isSuccess)
+                throw new Exception(
+                    "An error occured sending test results to web service. Please see log for details.");
 
-            //foreach (var instr in forExport)
-            //{
-            //    instr.ExportedDateTime = DateTime.Now;
-            //    await _testRunService.Save(instr);
-            //}
+            foreach (var instr in forExport)
+            {
+                instr.ExportedDateTime = DateTime.Now;
+                await _testRunService.AddOrUpdateVerificationTest(instr);
+            }
 
             return true;
         }
 
-        /// <summary>
-        /// The Export
-        /// </summary>
-        /// <param name="instrumentForExport">The instrumentForExport<see cref="Instrument"/></param>
-        /// <returns>The <see cref="Task{bool}"/></returns>
         public Task<bool> Export(EvcVerificationTest instrumentForExport)
         {
             var instrumentList = new List<EvcVerificationTest> { instrumentForExport };
             return Export(instrumentList);
         }
 
-        /// <summary>
-        /// The ExportFailedTest
-        /// </summary>
-        /// <param name="companyNumber">The companyNumber<see cref="string"/></param>
-        /// <returns>The <see cref="Task{bool}"/></returns>
         public async Task<bool> ExportFailedTest(string companyNumber)
         {
-            return false;
-            //var meterDto = await _dcrWebService.FindMeterByCompanyNumber(companyNumber);
+            var meterDto = await _dcrWebService.FindMeterByCompanyNumber(companyNumber, Log);
 
-            //if (meterDto == null)
-            //    throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
+            if (meterDto == null)
+                throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
-            //var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.Id);
-            //return await _dcrWebService.SendQaTestResults(new[] { failedTest });
+            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.Id);
+            return await _dcrWebService.SendQaTestResults(new[] { failedTest });
         }
-
         #endregion
+
+
     }
 }

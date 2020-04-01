@@ -28,7 +28,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ILogger<QaTestRunViewModel> logger, 
             IScreenManager screenManager,
             VerificationTestService verificationService,
-            DeviceRepository deviceRepository) : base(screenManager)
+            IDeviceRepository deviceRepository
+            ) : base(screenManager)
         {
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort,
                 x => x.SelectedBaudRate,
@@ -40,7 +41,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             StartTestCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 SetLastUsedSettings();
-
+                
                 TestManager = await verificationService.NewTestManager(SelectedDeviceType);
                 
             }, canStartTest);

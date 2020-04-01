@@ -1,10 +1,13 @@
-﻿using Client.Desktop.Wpf.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
 using Prover.Modules.UnionGas.Exporter.Views;
@@ -30,22 +33,50 @@ namespace Prover.Modules.UnionGas
 
             services.AddViewsAndViewModels();
 
-            AddDCRWebService(services);
-
-            if (builder.HostingEnvironment.IsDevelopment())
-                services.AddSingleton<ILoginService<EmployeeDTO>, LocalLoginService>();
+            AddWebService(services);
+            
+            if (builder.HostingEnvironment.IsDevelopment()) 
+                AddDevelopmentServices(services);
             else
-                services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
-
+            {
+                AddProductionServices(services);
+            }
+            
             services.AddScoped<IExportVerificationTest, ExportToMasaManager>();
         }
 
-        private void AddDCRWebService(IServiceCollection services)
+        private void AddDevelopmentServices(IServiceCollection services)
+        {
+            AddLocalLoginService(services);
+        }
+
+        private void AddProductionServices(IServiceCollection services)
+        {
+            services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
+            services.AddSingleton<IDeviceValidation, MasaCompanyNumberValidator>();
+        }
+
+        private void AddWebService(IServiceCollection services, string remoteAddress = null)
         {
             services.AddSingleton<DCRWebServiceSoap>(c =>
-                new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap));
+                new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap, remoteAddress));
+        }
 
-            services.AddSingleton<DCRWebServiceCommunicator>();
+        private void AddLocalLoginService(IServiceCollection services)
+        {
+            var employeesLists = new List<EmployeeDTO>
+            {
+                new EmployeeDTO {EmployeeName = "Adam McQuaig", EmployeeNbr = "123", Id = "1"},
+                new EmployeeDTO {EmployeeName = "Tony", EmployeeNbr = "1234", Id = "2"},
+                new EmployeeDTO {EmployeeName = "Glen", EmployeeNbr = "12345", Id = "3"},
+                new EmployeeDTO {EmployeeName = "Kyle", EmployeeNbr = "123456", Id = "4"}
+            };
+
+            services.AddSingleton<ILoginService<EmployeeDTO>, LocalLoginService<EmployeeDTO>>(c =>
+            {
+                return new LocalLoginService<EmployeeDTO>(employeesLists,
+                    (employees, id) => employees.FirstOrDefault(e => e.EmployeeNbr == id));
+            });
         }
     }
 }

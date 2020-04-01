@@ -58,9 +58,15 @@
             VerticalAlignment="Center"
             Orientation="Vertical"
             Visibility="Collapsed">
-            <StackPanel Margin="4,4,4,12">
+            <StackPanel Margin="4,4,4,12" Orientation="Horizontal">
+                <materialDesign:PackIcon
+                    Width="32"
+                    Height="32"
+                    VerticalAlignment="Center"
+                    Kind="Account" />
                 <TextBlock
                     x:Name="WelcomeTextBlock"
+                    VerticalAlignment="Center"
                     Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                     Text="Hi " />
             </StackPanel>

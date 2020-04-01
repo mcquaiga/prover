@@ -14,35 +14,33 @@ using Prover.Shared.Interfaces;
 
 namespace Prover.Application.Services
 {
-    public class VerificationTestService
+    public class VerificationTestService : IVerificationTestService
     {
-
         private readonly ISourceCache<EvcVerificationViewModel, Guid> _testsCache =
             new SourceCache<EvcVerificationViewModel, Guid>(k => k.Id);
 
         private readonly IAsyncRepository<EvcVerificationTest> _testService;
         private readonly IVerificationViewModelFactory _verificationViewModelFactory;
         private readonly IDeviceSessionManager _deviceManager;
-        private readonly Func<EvcVerificationViewModel, VerificationTestService, ITestManager> _testManagerFactory;
         private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory = (device) => new EvcVerificationTest(device);
+        private readonly ITestManagerFactory _verificationManagerFactory;
 
         public VerificationTestService(
             IAsyncRepository<EvcVerificationTest> verificationRepository, 
             IVerificationViewModelFactory verificationViewModelFactory,
             IDeviceSessionManager deviceManager,
-            Func<EvcVerificationViewModel, VerificationTestService, ITestManager> testManagerFactory,
+            ITestManagerFactory verificationManagerFactory, 
             Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null)
         {
             _testService = verificationRepository;
             _verificationViewModelFactory = verificationViewModelFactory;
             _deviceManager = deviceManager;
-            _testManagerFactory = testManagerFactory;
+            _verificationManagerFactory = verificationManagerFactory;
             _evcVerificationTestFactory = evcVerificationTestFactory ?? _evcVerificationTestFactory;
-
-
             _testsCache.Connect();
         }
 
+      
         public async Task<bool> AddOrUpdate(EvcVerificationViewModel viewModel)
         {
             var model = VerificationMapper.MapViewModelToModel(viewModel);
@@ -79,15 +77,9 @@ namespace Prover.Application.Services
             return _verificationViewModelFactory.CreateViewModel(testModel);
         }
 
-        public async Task<ITestManager> NewTestManager(DeviceType deviceType)
-        {
-            //if (_deviceManager.SessionInProgress) throw new Exception("Device session in progress. End session before creating new test.");
+        public async Task<ITestManager> NewTestManager(DeviceType deviceType) =>
+            await _verificationManagerFactory.StartNew(this, deviceType);
 
-            await _deviceManager.StartSession(deviceType);
 
-            var testViewModel = NewTest(_deviceManager.Device);
-
-            return _testManagerFactory.Invoke(testViewModel, this);
-        }
     }
 }

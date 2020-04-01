@@ -20,6 +20,6 @@ namespace Prover.Application.Interfaces
     {
         Task<bool> Export(EvcVerificationTest instrumentForExport);
         Task<bool> Export(IEnumerable<EvcVerificationTest> instrumentsForExport);
-        Task<bool> ExportFailedTest(string companyNumber);
+        //Task<bool> ExportFailedTest(string companyNumber);
     }
 }

@@ -26,6 +26,10 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public DateTime? ArchivedDateTime { get; set; }
 
+        [Reactive] public string JobId { get; set; }
+
+        [Reactive] public string EmployeeId { get; set; }
+
         public ICollection<VerificationTestPointViewModel> Tests { get; set; } =
             new List<VerificationTestPointViewModel>();
 

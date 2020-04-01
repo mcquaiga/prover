@@ -24,23 +24,14 @@ namespace Devices.Core.Items
 
         protected ItemValue(ItemMetadata metadata, object value)
         {
-            RawValue = value;
-
-            var myVal = value.ToString().Trim();
-
-            if (decimal.TryParse(myVal, out var result))
-                Value = result;
-            else
-                Value = myVal;
-
             Metadata = metadata;
-
+            SetValue(value);
         }
 
         #region Public Properties
 
-        public object RawValue { get; }
-        protected object Value { get; set; }
+        public object RawValue { get; protected set; }
+        protected object Value { get; private set; }
         public int Id => Metadata?.Number ?? -1;
         public Type ValueType => Value.GetType();
 
@@ -64,6 +55,18 @@ namespace Devices.Core.Items
         public virtual string GetDescription()
         {
             return Value.ToString();
+        }
+
+        public void SetValue(object value)
+        {
+            RawValue = value;
+
+            var myVal = value.ToString().Trim();
+
+            if (decimal.TryParse(myVal, out var result))
+                Value = result;
+            else
+                Value = myVal;
         }
 
         #endregion

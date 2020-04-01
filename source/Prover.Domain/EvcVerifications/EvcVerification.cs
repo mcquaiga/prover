@@ -32,5 +32,9 @@ namespace Prover.Domain.EvcVerifications
         public IVolumeInputType DriveType { get; set; }
 
         public bool Verified { get; set; }
+
+        public string JobId { get; set; }
+
+        public string EmployeeId { get; set; }
     }
 }

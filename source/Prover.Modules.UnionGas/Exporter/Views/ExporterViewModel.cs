@@ -21,10 +21,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 {
     public class ExporterViewModel : ReactiveObject, IRoutableViewModel
     {
-        public ExporterViewModel(IScreenManager screenManager, EvcVerificationTestService service,
-            VerificationTestService viewModelService, DeviceRepository deviceRepository,
-            VerificationTestReportGenerator reportService)
+        private readonly IExportVerificationTest _exporter;
+
+        public ExporterViewModel(IScreenManager screenManager, 
+            EvcVerificationTestService service,
+            VerificationTestService viewModelService, 
+            IDeviceRepository deviceRepository,
+            VerificationTestReportGenerator reportService,
+            IExportVerificationTest exporter)
         {
+            _exporter = exporter;
             ScreenManager = screenManager;
             HostScreen = screenManager;
 
@@ -46,7 +52,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             service.FetchTests()
                 .Connect()
                 .Filter(deviceFilter)
-                //.Filter(includeFilter)
+                .Filter(includeFilter)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Transform(t => new VerificationGridViewModel(t))
                 .Bind(out var allNotExported)
@@ -57,8 +63,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         [Reactive] public bool IncludeExportedTests { get; set; } = false;
 
-        public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; set; }
-
+        public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; protected set; }
+        public ReactiveCommand<VerificationGridViewModel, Unit> ExportVerification { get; protected set; }
         public ReactiveCommand<DeviceType, DeviceType> FilterByTypeCommand { get; protected set; }
 
         public ReadOnlyObservableCollection<VerificationGridViewModel> VisibleTests { get; }

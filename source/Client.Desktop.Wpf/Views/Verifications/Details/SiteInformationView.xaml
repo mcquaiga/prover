@@ -225,15 +225,16 @@
                         Columns="2">
                         <!--  Region Pulser A  -->
                         <StackPanel Margin="5" HorizontalAlignment="Center">
+
+
+                            <TextBlock x:Name="ChannelAUnitsTextBlock" HorizontalAlignment="Center" />
+
                             <TextBlock
-                                x:Name="ChannelAUnitsTextBlock"
                                 HorizontalAlignment="Center"
                                 FontSize="12"
                                 FontWeight="Bold"
                                 Foreground="Gray"
-                                Text="Pulser A" />
-
-                            <TextBlock HorizontalAlignment="Center" />
+                                Text="Channel A" />
 
                             <TextBlock
                                 x:Name="ChannelAScalingTextBlock"
@@ -243,14 +244,16 @@
                         </StackPanel>
                         <!--  End Region  -->
                         <StackPanel Margin="5" HorizontalAlignment="Center">
+
+                            <TextBlock x:Name="ChannelBUnitsTextBlock" HorizontalAlignment="Center" />
+
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 FontSize="12"
                                 FontWeight="Bold"
                                 Foreground="Gray"
-                                Text="Pulser B" />
+                                Text="Channel B" />
 
-                            <TextBlock x:Name="ChannelBUnitsTextBlock" HorizontalAlignment="Center" />
 
                             <TextBlock
                                 x:Name="ChannelBScalingTextBlock"

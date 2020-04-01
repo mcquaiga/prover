@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
@@ -7,21 +11,14 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Shared;
-using Prover.Shared.IO;
-
-using System;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 
 namespace Client.Desktop.Wpf.Communications
 {
     public class DeviceSessionManager : IDeviceSessionManager
     {
-        public DeviceInstance Device { get; private set; }
-        public bool SessionInProgress { get; private set; }
+        private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
+        private readonly ILogger<DeviceSessionManager> _logger;
+        private ICommunicationsClient _activeClient;
 
         public DeviceSessionManager(ILogger<DeviceSessionManager> logger,
             Func<DeviceType, ICommunicationsClient> commClientFactoryFunc)
@@ -29,6 +26,9 @@ namespace Client.Desktop.Wpf.Communications
             _logger = logger;
             _commClientFactoryFunc = commClientFactoryFunc;
         }
+
+        public DeviceInstance Device { get; private set; }
+        public bool SessionInProgress { get; private set; }
 
         public async Task Connect()
         {
@@ -73,7 +73,6 @@ namespace Client.Desktop.Wpf.Communications
             if (_activeClient != null)
                 await _activeClient?.Disconnect();
 
-            _activeCommPort?.Dispose();
             _activeClient?.Dispose();
 
             SessionInProgress = false;
@@ -84,13 +83,13 @@ namespace Client.Desktop.Wpf.Communications
             var compType = Device.Composition();
             var items = new List<ItemMetadata>();
 
-            if (compType == CompositionType.P || compType == CompositionType.PTZ)
+            if (Device.HasLivePressure())
                 items.AddRange(Device.DeviceType.GetItemMetadata<PressureItems>());
 
-            if (compType == CompositionType.T || compType == CompositionType.PTZ)
+            if (Device.HasLiveTemperature())
                 items.AddRange(Device.DeviceType.GetItemMetadata<TemperatureItems>());
 
-            if (compType == CompositionType.PTZ)
+            if (Device.HasLiveSuper())
                 items.AddRange(Device.DeviceType.GetItemMetadata<SuperFactorItems>());
 
             return items;
@@ -108,7 +107,7 @@ namespace Client.Desktop.Wpf.Communications
         public async Task<ItemValue> LiveReadItemValue(ItemMetadata item) =>
             await _activeClient.LiveReadItemValue(item);
 
-        public async Task<IDeviceSessionManager> StartSession(DeviceType deviceType)
+        public async Task<DeviceInstance> StartSession(DeviceType deviceType)
         {
             if (SessionInProgress)
             {
@@ -135,12 +134,15 @@ namespace Client.Desktop.Wpf.Communications
                 await EndSession();
             }
 
-            return this;
+            return Device;
         }
 
-        private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
-        private readonly ILogger<DeviceSessionManager> _logger;
-        private ICommunicationsClient _activeClient;
-        private ICommPort _activeCommPort;
+        public async Task<ItemValue> WriteItemValue(ItemMetadata item, string value)
+        {
+            await Connect();
+            var success = await _activeClient.SetItemValue(item.Number, value);
+
+            return success ? ItemValue.Create(item, value) : default;
+        }
     }
 }

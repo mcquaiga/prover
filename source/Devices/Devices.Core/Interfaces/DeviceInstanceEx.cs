@@ -41,5 +41,10 @@ namespace Devices.Core.Interfaces
         {
             return device.Composition() == CompositionType.PTZ;
         }
+
+        public static string CompanyNumber(this DeviceInstance device)
+        {
+            return device.Items.SiteInfo.SiteId2;
+        }
     }
 }

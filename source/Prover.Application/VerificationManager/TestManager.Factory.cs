@@ -7,6 +7,7 @@ using Prover.Application.VerificationManager.Volume;
 
 namespace Prover.Application.VerificationManager
 {
+/*
     public class TestManagerFactory : ITestManagerFactory
     {
         private readonly IVolumeTestManagerFactory _volumeTestManagerFactory;
@@ -47,6 +48,7 @@ namespace Prover.Application.VerificationManager
             return null;
         }
     }
+*/
 
     //public partial class TestManager : ITestManagerFactory, ITestManager
     //{

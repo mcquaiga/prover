@@ -14,11 +14,16 @@ namespace Prover.Application.Interactions
 
         public static Interaction<string, string> GetInputString { get; } = new Interaction<string, string>();
 
+        public static Interaction<string, object> GetInput { get; } = new Interaction<string, object>();
+
         public static Interaction<string, decimal> GetInputNumber { get; } = new Interaction<string, decimal>();
 
         public static Interaction<string, int> GetInputInteger { get; } = new Interaction<string, int>();
 
         public static Interaction<string, decimal> GetInputDecimal { get; } = new Interaction<string, decimal>();
+
+        //public static Interaction<string, T> GetInput<T>() => new Interaction<string, T>();
+
     }
 
     public static class NotificationInteractions

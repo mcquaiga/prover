@@ -65,6 +65,7 @@ namespace Prover.Application.Services
         }
     }
 
+/*
     public class EvcVerificationTestCreator
     {
         private readonly Func<EvcVerificationTest, Task<EvcVerificationTest>> _callback;
@@ -124,4 +125,5 @@ namespace Prover.Application.Services
         //     _evcBuilder.TestPointFactory().CreateNew(level, correctionTest.BeforeValues, correctionTest.AfterValues);
         //}
     }
+*/
 }

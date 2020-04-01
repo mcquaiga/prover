@@ -27,6 +27,8 @@ namespace Prover.Application.Interfaces
         //Task<IDeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
         //    ReactiveObject owner);
 
-        Task<IDeviceSessionManager> StartSession(DeviceType deviceType);
+        Task<DeviceInstance> StartSession(DeviceType deviceType);
+
+        Task<ItemValue> WriteItemValue(ItemMetadata item, string value);
     }
 }

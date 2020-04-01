@@ -19,7 +19,7 @@
                 <ResourceDictionary Source="/Views/Verifications/Styles.xaml" />
 
                 <ResourceDictionary>
-                    <Style TargetType="{x:Type ComboBox}">
+                    <Style BasedOn="{StaticResource MaterialDesignFloatingHintComboBox}" TargetType="{x:Type ComboBox}">
                         <Setter Property="FontSize" Value="18" />
                     </Style>
                 </ResourceDictionary>
@@ -103,14 +103,30 @@
                     Grid.Row="0"
                     BorderThickness="1"
                     Header="Instrument Type">
-                    <ComboBox x:Name="DeviceTypes" DisplayMemberPath="Name" />
+                    <ListView
+                        x:Name="DeviceTypes"
+                        DisplayMemberPath="Name"
+                        FontSize="18">
+                        <!--<ListBox.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListBox.GroupStyle>-->
+                    </ListView>
                 </GroupBox>
-                <GroupBox
+                <!--<GroupBox
                     Grid.Row="1"
                     BorderThickness="1"
                     Header="Client">
                     <ComboBox x:Name="Clients" />
-                </GroupBox>
+                </GroupBox>-->
             </Grid>
 
             <GroupBox
@@ -121,19 +137,16 @@
                     <ComboBox
                         x:Name="CommPorts"
                         materialDesign:HintAssist.Hint="Port"
-                        DisplayMemberPath="."
-                        Style="{StaticResource MaterialDesignComboBox}" />
+                        DisplayMemberPath="." />
                     <ComboBox
                         x:Name="BaudRates"
                         materialDesign:HintAssist.Hint="Baud Rate"
-                        DisplayMemberPath="."
-                        Style="{StaticResource MaterialDesignComboBox}" />
+                        DisplayMemberPath="." />
                     <!--  IsEnabled="{Binding DisableCommPortAndBaudRate}"  -->
                     <CheckBox
                         x:Name="UseIrDaPort"
                         Margin="0,5"
-                        Content="IrDA"
-                        Style="{StaticResource MaterialDesignCheckBox}" />
+                        Content="IrDA" />
                     <Button
                         HorizontalAlignment="Right"
                         Command="{Binding RefreshCommPortsCommand}"
@@ -150,8 +163,7 @@
                         x:Name="TachCommPorts"
                         materialDesign:HintAssist.Hint="Tach. Comm Port"
                         DisplayMemberPath="."
-                        IsEnabled="{Binding TachDisableCommPort}"
-                        Style="{StaticResource MaterialDesignComboBox}" />
+                        IsEnabled="{Binding TachDisableCommPort}" />
 
                     <CheckBox x:Name="TachIsNotUsed" Content="Not available" />
                 </StackPanel>
